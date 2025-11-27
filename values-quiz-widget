@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Values Clarity Quiz — Emotional Intelligence Developer</title>
+<style>
+  :root{--bg:#ffffff;--card:#fbfbfd;--accent:#1f6feb;--muted:#6b7280;--cta:#f59e0b}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; margin:0; background:#f3f4f6; color:#111}
+  .wrap{max-width:760px;margin:28px auto;padding:22px}
+  .card{background:var(--card);border-radius:12px;padding:22px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
+  h1{margin:0 0 6px;font-size:20px}
+  p.lead{margin:0 0 18px;color:var(--muted)}
+  .q{margin:14px 0;padding:12px;border-radius:8px;background:#fff;border:1px solid #eee;display:flex;flex-direction:column;gap:8px}
+  .q h3{margin:0;font-size:15px}
+  .opts{display:flex;gap:8px;flex-wrap:wrap}
+  .opt{flex:1;min-width:150px;padding:10px;border-radius:8px;border:1px solid #e8e8e8;background:#fff;cursor:pointer;text-align:left}
+  .opt input{display:none}
+  .opt.selected{border-color:var(--accent);box-shadow:0 6px 16px rgba(31,111,235,0.08)}
+  .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
+  .btn{padding:10px 14px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+  .btn.secondary{background:#e5e7eb;color:#111}
+  .result{margin-top:18px;padding:14px;border-radius:8px;background:linear-gradient(180deg,#ffffff,#f8fafc);border:1px solid #eee}
+  .cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--cta);color:#111;text-decoration:none;font-weight:600}
+  footer{font-size:12px;color:var(--muted);margin-top:16px}
+  @media(max-width:520px){.opts{flex-direction:column}.wrap{padding:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="region" aria-labelledby="quiz-title">
+    <h1 id="quiz-title">Values Clarity Quiz</h1>
+    <p class="lead">Find your top personal value — quick and gentle. Count your A/B/C answers and pick the highest group.</p>
+
+    <div id="quiz">
+      <div class="q" data-q="1">
+        <h3>Question 1 — Which statement feels most true to you?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="A"> A) I want to grow and improve</label>
+          <label class="opt"><input type="radio" name="q1" value="B"> B) I want stability and emotional peace</label>
+          <label class="opt"><input type="radio" name="q1" value="C"> C) I want to make an impact</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="2">
+        <h3>Question 2 — When facing a big decision, you rely on:</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2" value="A"> A) Logic and planning</label>
+          <label class="opt"><input type="radio" name="q2" value="B"> B) Intuition and emotions</label>
+          <label class="opt"><input type="radio" name="q2" value="C"> C) Purpose and meaning</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="3">
+        <h3>Question 3 — What motivates you the most?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="A"> A) Becoming better</label>
+          <label class="opt"><input type="radio" name="q3" value="B"> B) Feeling balanced</label>
+          <label class="opt"><input type="radio" name="q3" value="C"> C) Helping others</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="4">
+        <h3>Question 4 — Which environment helps you thrive?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="A"> A) Fast-paced and challenging</label>
+          <label class="opt"><input type="radio" name="q4" value="B"> B) Calm and predictable</label>
+          <label class="opt"><input type="radio" name="q4" value="C"> C) Collaborative and purposeful</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="5">
+        <h3>Question 5 — When you imagine success, you see:</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q5" value="A"> A) Achievement</label>
+          <label class="opt"><input type="radio" name="q5" value="B"> B) Peace</label>
+          <label class="opt"><input type="radio" name="q5" value="C"> C) Impact</label>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="calcBtn" type="button">See My Result</button>
+        <button class="btn secondary" id="resetBtn" type="button">Reset</button>
+        <div style="margin-left:auto;color:var(--muted);font-size:13px">Takes 1 minute</div>
+      </div>
+
+      <div id="resultArea" class="result" aria-live="polite" style="display:none"></div>
+
+      <div style="margin-top:10px">
+        <a id="affiliateBtn" class="cta" 
+           href="https://education.pxf.io/AWMWNx" 
+           target="_blank" rel="noopener noreferrer">
+           Start Your Growth Course
+        </a>
+      </div>
+
+      <footer>Created with ♥ by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.opts').forEach(function(opts){
+    opts.addEventListener('click', function(ev){
+      var label = ev.target.closest('label.opt');
+      if(!label) return;
+      label.parentElement.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected') });
+      label.classList.add('selected');
+      var radio = label.querySelector('input[type="radio"]');
+      if(radio){ radio.checked = true; }
+    });
+  });
+
+  function calcResult(){
+    var counts = {A:0,B:0,C:0};
+    for(var i=1;i<=5;i++){
+      var val = document.querySelector('input[name="q'+i+'"]:checked');
+      if(!val){
+        alert('Please answer question ' + i);
+        return null;
+      }
+      counts[val.value]++;
+    }
+    return counts;
+  }
+
+  function topValue(counts){
+    var order = ['A','B','C'];
+    var top = order[0];
+    for(var j=1;j<order.length;j++){
+      if(counts[order[j]] > counts[top]) top = order[j];
+    }
+    return top;
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', function(){
+    var counts = calcResult();
+    if(!counts) return;
+    var t = topValue(counts);
+    var area = document.getElementById('resultArea');
+    var html = '';
+    if(t === 'A'){
+      html += '<strong>Your top value: Growth</strong><p>You thrive on improvement, learning, and progress.</p>';
+      document.getElementById('affiliateBtn').textContent = 'Start Your Growth Course';
+    } else if(t === 'B'){
+      html += '<strong>Your top value: Inner Peace</strong><p>You value calm, emotional clarity, and balance.</p>';
+      document.getElementById('affiliateBtn').textContent = 'Explore Mindful Courses';
+    } else {
+      html += '<strong>Your top value: Purpose</strong><p>You find meaning in helping others and creating impact.</p>';
+      document.getElementById('affiliateBtn').textContent = 'Discover Impact Courses';
+    }
+    area.innerHTML = html;
+    area.style.display = 'block';
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false });
+    document.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected') });
+    var area = document.getElementById('resultArea');
+    area.style.display = 'none';
+    area.innerHTML = '';
+  });
+</script>
+</body>
+</html>

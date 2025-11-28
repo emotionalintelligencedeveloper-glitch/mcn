@@ -136,7 +136,7 @@
         <a id="downloadPdfBtn" class="download" href="#" role="button">Download My Plan (PDF)</a>
       </div>
 
-      <div class="footer">Created with ♥ by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</div>
+      <div class="footer">Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</div>
     </div>
   </div>
 </div>
@@ -266,7 +266,7 @@ document.getElementById('calcBtn').addEventListener('click', function(){
 });
 /* END */
 
- // reset
+// reset
 document.getElementById('resetBtn').addEventListener('click', function(){
   document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false; });
   document.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected-blue','selected-yellow'); });
@@ -383,55 +383,6 @@ document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
 
   } catch (err) {
     alert('PDF generation failed. Please try again.');
-    console.error(err);
-  }
-});
-    }
-
-    var doc = new jsPDF({unit:'pt', format:'a4'});
-    var left = 40;
-    var y = 60;
-    // header with site URL
-    doc.setFontSize(12);
-    doc.text('https://emotionalintelligencedeveloper.com/', left, 30);
-    doc.setFontSize(18);
-    doc.text('Wellbeing Journey — Your Personalized Plan', left, y); y += 26;
-    doc.setFontSize(12);
-    doc.text('Generated: ' + (new Date()).toLocaleString(), left, y); y += 20;
-
-    doc.setFontSize(14);
-    doc.text(plan.title, left, y); y += 18;
-    doc.setFontSize(11);
-    var splitShort = doc.splitTextToSize(plan.short, 500);
-    doc.text(splitShort, left, y); y += splitShort.length*14 + 8;
-    doc.setFontSize(12);
-    doc.text('Why this helps:', left, y); y += 16;
-    var splitWhy = doc.splitTextToSize(plan.why, 500); doc.text(splitWhy, left, y); y += splitWhy.length*14 + 8;
-
-    doc.text('Recommended Steps:', left, y); y += 16;
-    plan.steps.forEach(function(s, idx){
-      var lines = doc.splitTextToSize((idx+1) + '. ' + s, 500);
-      doc.text(lines, left, y); y += lines.length*14 + 6;
-    });
-
-    y += 6;
-    doc.text('Your Answers:', left, y); y += 16;
-    answers.forEach(function(it){
-      var linesQ = doc.splitTextToSize(it.q, 500);
-      doc.text(linesQ, left, y); y += linesQ.length*12;
-      var linesA = doc.splitTextToSize('Answer: ' + it.a, 500);
-      doc.text(linesA, left+8, y); y += linesA.length*12 + 6;
-    });
-
-    // footer with site url and small credit
-    doc.setFontSize(10);
-    doc.text('Created with ♥ by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/', left, 780);
-
-    // download
-    var filename = 'Wellbeing-Journey-Plan-' + (new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-') + '.pdf';
-    doc.save(filename);
-  } catch(err){
-    alert('PDF generation library not loaded. Please try again later.');
     console.error(err);
   }
 });

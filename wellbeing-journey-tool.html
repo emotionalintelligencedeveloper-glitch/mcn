@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wellbeing Journey — Emotional Intelligence Developer</title>
+
+<!-- Styles -->
+<style>
+  :root{
+    --bg:#f3f6fb;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --accent-blue:#1f6feb;
+    --accent-yellow:#f5b942;
+    --cta:#f59e0b;
+    --text:#0f172a;
+    --radius:12px;
+  }
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; background:var(--bg); color:var(--text)}
+  .wrap{max-width:840px;margin:28px auto;padding:20px}
+  .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:0 8px 30px rgba(16,24,40,0.06)}
+  h1{margin:0 0 6px;font-size:22px}
+  .lead{color:var(--muted);margin-bottom:14px}
+  .q{margin:14px 0;padding:12px;border-radius:10px;background:#fff;border:1px solid #eee}
+  .q h3{margin:0 0 10px;font-size:15px}
+  .opts{display:flex;gap:10px;flex-wrap:wrap}
+  .opt{flex:1;min-width:160px;padding:12px 14px;border-radius:10px;border:1px solid #e6e8eb;background:#fff;cursor:pointer;text-align:left;transition:all .15s}
+  .opt input{display:none}
+  .opt:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,24,40,0.04)}
+  .selected-blue{background:linear-gradient(180deg,var(--accent-blue),#195ed6);color:#fff;border-color:rgba(0,0,0,0.06)}
+  .selected-yellow{background:linear-gradient(180deg,var(--accent-yellow),#f0a62a);color:#072034;border-color:rgba(0,0,0,0.06)}
+  .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
+  .btn{padding:10px 14px;border-radius:10px;border:0;background:var(--accent-blue);color:#fff;cursor:pointer;font-weight:600}
+  .btn.secondary{background:#eef2ff;color:var(--text);border:1px solid #e6e8eb}
+  .meta{margin-left:auto;color:var(--muted);font-size:13px}
+  .result{margin-top:18px;padding:16px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid #eee}
+  .affiliate-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+  .affiliate{display:block;padding:10px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700}
+  .aff-blue{background:var(--accent-blue);color:#fff}
+  .aff-yellow{background:var(--accent-yellow);color:#072034}
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:12px}
+  .footer{font-size:12px;color:var(--muted);margin-top:16px}
+  .download{margin-top:12px;display:inline-block;padding:10px 14px;border-radius:10px;background:#10b981;color:#fff;text-decoration:none;font-weight:700}
+  @media(max-width:720px){.opts{flex-direction:column}.affiliate-grid{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="region" aria-labelledby="title">
+    <h1 id="title">Wellbeing Journey — Quick Check & Personalized Reset</h1>
+    <p class="lead">6 quick questions (~6 minutes). Choose the option that fits you best. Click "See My Plan" for a downloadable PDF with your results and suggested resources.</p>
+
+    <div id="quiz">
+      <!-- Questions (6) -->
+      <div class="q" data-q="1">
+        <h3>1) Which best describes how you feel most days?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q1" value="A"> Tense, rushed, and physically tight</label>
+          <label class="opt" data-val="B"><input type="radio" name="q1" value="B"> Worried or mentally scattered</label>
+          <label class="opt" data-val="C"><input type="radio" name="q1" value="C"> Drained, low energy, but I keep going</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="2">
+        <h3>2) When stress builds, you usually:</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q2" value="A"> Reach for breath and movement</label>
+          <label class="opt" data-val="B"><input type="radio" name="q2" value="B"> Talk, journal, or seek clarity</label>
+          <label class="opt" data-val="C"><input type="radio" name="q2" value="C"> Switch tasks and keep going</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="3">
+        <h3>3) What helps you feel calmer normally?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q3" value="A"> Short breathing or stretch breaks</label>
+          <label class="opt" data-val="B"><input type="radio" name="q3" value="B"> Structured reflection and naming feelings</label>
+          <label class="opt" data-val="C"><input type="radio" name="q3" value="C"> A regular daily routine and rest</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="4">
+        <h3>4) How often do you take time just to recharge?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q4" value="A"> Rarely, only when urgent</label>
+          <label class="opt" data-val="B"><input type="radio" name="q4" value="B"> Sometimes, when I remember</label>
+          <label class="opt" data-val="C"><input type="radio" name="q4" value="C"> I try but often skip it</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="5">
+        <h3>5) What would help you most right now?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q5" value="A"> A quick breathing reset I can do anywhere</label>
+          <label class="opt" data-val="B"><input type="radio" name="q5" value="B"> Simple steps to understand my emotions</label>
+          <label class="opt" data-val="C"><input type="radio" name="q5" value="C"> A short routine plan to feel steady</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="6">
+        <h3>6) How committed are you to trying a short plan for 7 days?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q6" value="A"> Very — I’ll try a quick reset daily</label>
+          <label class="opt" data-val="B"><input type="radio" name="q6" value="B"> Maybe — small steps are easier</label>
+          <label class="opt" data-val="C"><input type="radio" name="q6" value="C"> I need something I can fit in now</label>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="calcBtn" type="button">See My Plan</button>
+        <button class="btn secondary" id="resetBtn" type="button">Reset</button>
+        <div class="meta">Takes ~6 minutes</div>
+      </div>
+
+      <div id="resultArea" class="result" aria-live="polite" style="display:none"></div>
+
+      <!-- Affiliate area (Ads label + 6 buttons - data-base set for easy swaps) -->
+      <div style="margin-top:14px">
+        <p style="font-size:13px;color:#666;margin:0 0 8px 0;">Ads.</p>
+        <div class="affiliate-grid" id="affiliateGrid">
+          <!-- Replace data-base hrefs with your affiliate destinations -->
+          <a class="affiliate aff-blue" id="aff1" data-base="https://amzn.to/4oy3Yyk" href="https://amzn.to/4oy3Yyk" target="_blank" rel="noopener noreferrer">Guided Resets</a>
+          <a class="affiliate aff-yellow" id="aff2" data-base="https://amzn.to/48G7O3u" href="https://amzn.to/48G7O3u" target="_blank" rel="noopener noreferrer">Emotional Practices</a>
+          <a class="affiliate aff-blue" id="aff3" data-base="https://amzn.to/49G6nmE" href="https://amzn.to/49G6nmE" target="_blank" rel="noopener noreferrer">Daily Rhythm</a>
+          <a class="affiliate aff-yellow" id="aff4" data-base="https://amzn.to/43ZwzoK" href="https://amzn.to/43ZwzoK" target="_blank" rel="noopener noreferrer">Micro-Meditations</a>
+          <a class="affiliate aff-blue" id="aff5" data-base="https://amzn.to/489Xd0I" href="https://amzn.to/489Xd0I" target="_blank" rel="noopener noreferrer">Practical Templates</a>
+          <a class="affiliate aff-yellow" id="aff6" data-base="https://amzn.to/3M38jvO" href="https://amzn.to/3M38jvO" target="_blank" rel="noopener noreferrer">Sleep & Recovery</a>
+        </div>
+
+        <div class="disclaimer">This tool offers general wellbeing suggestions and is not a substitute for professional care.</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <a id="downloadPdfBtn" class="download" href="#" role="button">Download My Plan (PDF)</a>
+      </div>
+
+      <div class="footer">Created with ♥ by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</div>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF CDN (for PDF generation) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+/* Helper — selection visuals: map option value to color (A => blue, B => yellow, C => blue) */
+document.querySelectorAll('.opts').forEach(function(opts){
+  opts.addEventListener('click', function(ev){
+    var label = ev.target.closest('label.opt');
+    if(!label) return;
+    // deselect siblings
+    label.parentElement.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected-blue','selected-yellow'); });
+    // set selected class based on data-val
+    var val = label.getAttribute('data-val');
+    if(val === 'B'){
+      label.classList.add('selected-yellow');
+    } else {
+      label.classList.add('selected-blue');
+    }
+    // check the radio inside
+    var radio = label.querySelector('input[type="radio"]');
+    if(radio) radio.checked = true;
+  });
+});
+
+// scoring
+function calcResult(){
+  var counts = {A:0,B:0,C:0};
+  for(var i=1;i<=6;i++){
+    var el = document.querySelector('input[name="q'+i+'"]:checked');
+    if(!el){ alert('Please answer question ' + i); return null; }
+    counts[el.value]++;
+  }
+  return counts;
+}
+function topValue(counts){
+  var order = ['A','B','C'];
+  var top = order[0];
+  for(var j=1;j<order.length;j++){
+    if(counts[order[j]] > counts[top]) top = order[j];
+  }
+  return top;
+}
+
+/* START: new plan + results */
+function buildPlanText(top){
+  // Return structured plan object with non-repetitive, clear language
+  if(top === 'A'){
+    return {
+      title: 'Quick Calm: Portable Reset Plan',
+      short: 'Your body reacts first — when you feel tight or charged, fast physical resets are most effective.',
+      steps: [
+        '3-breath grounding: inhale 4 — hold 2 — exhale 6, repeat three times. Notice shoulders and jaw relax.',
+        'Stand and do a 60-second full-body stretch (reach up, side-bend, roll shoulders).',
+        'Save two 1–3 minute guided audios to use when you step away from your desk.'
+      ],
+      why: 'Short physical practices send a clear signal to your nervous system that it is safe, helping immediate focus and calm.',
+      immediate: 'Try the 3-breath grounding now — three rounds.'
+    };
+  } else if(top === 'B'){
+    return {
+      title: 'Emotional Clarity: Name & Free the Thought',
+      short: 'Your mind fills with thoughts and small worries — giving them a structure reduces their power.',
+      steps: [
+        'Write one sentence: “I feel ___ because ___.” Keep it factual and short.',
+        'Set a 5-minute timer to list two possible next steps (even very small ones).',
+        'Use a short guided journaling template three times this week to practice this habit.'
+      ],
+      why: 'Naming feelings separates you from them, making decisions clearer and reducing rumination.',
+      immediate: 'Write the short sentence now — notice how the thought changes when you name it.'
+    };
+  } else {
+    return {
+      title: 'Daily Balance: Small Routines, Big Return',
+      short: 'You run low on energy because stress accumulates. Consistent micro-habits restore reserves over time.',
+      steps: [
+        'Pick one 10-minute habit (walk, stretch, brief journaling) and do it daily for 7 days.',
+        'Set a consistent bedtime window and one 10-minute wind-down ritual before sleep.',
+        'Schedule one 5-minute mid-day micro-rest — no screens, just breath or gentle movement.'
+      ],
+      why: 'Tiny consistent habits prevent stress building and help energy stay steady rather than spiking and crashing.',
+      immediate: 'Choose your 10-minute habit and commit to trying it today.'
+    };
+  }
+}
+
+document.getElementById('calcBtn').addEventListener('click', function(){
+  var counts = calcResult();
+  if(!counts) return;
+  var t = topValue(counts);
+  var plan = buildPlanText(t);
+  var html = '';
+
+  // Build the result block with clear non-repetitive copy
+  html += '<strong>' + plan.title + '</strong>';
+  html += '<p>' + plan.short + '</p>';
+  html += '<p><strong>Why this helps:</strong> ' + plan.why + '</p>';
+  html += '<ol style="margin-top:8px">';
+  plan.steps.forEach(function(s){ html += '<li>' + s + '</li>'; });
+  html += '</ol>';
+  html += '<p style="margin-top:10px;"><strong>Immediate step:</strong> ' + plan.immediate + '</p>';
+  html += '<p style="margin-top:10px;"><em>Reflection:</em> Which one step will you try right now?</p>';
+
+  // Update UTMs on affiliate links — keep base URL from data-base attribute
+  var campaign = 'wellbeing_' + (t === 'A' ? 'quickcalm' : t === 'B' ? 'clarity' : 'balance');
+  document.querySelectorAll('#affiliateGrid a').forEach(function(a){
+    var base = a.getAttribute('data-base') || a.href.split('?')[0];
+    // use conservative utm_medium and utm_source
+    a.href = base + '?utm_source=site&utm_medium=tool&utm_campaign=' + campaign;
+    // ensure links open new tab (redundant if HTML already has target)
+    a.setAttribute('target','_blank');
+    a.setAttribute('rel','noopener noreferrer');
+  });
+
+  var area = document.getElementById('resultArea');
+  area.innerHTML = html;
+  area.style.display = 'block';
+
+  // Optionally scroll to affiliate area so users see buttons (useful if long content)
+  var aff = document.getElementById('affiliateGrid');
+  if(aff){
+    aff.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+});
+/* END */
+
+ // reset
+document.getElementById('resetBtn').addEventListener('click', function(){
+  document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false; });
+  document.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected-blue','selected-yellow'); });
+  var area = document.getElementById('resultArea');
+  area.style.display = 'none';
+  area.innerHTML = '';
+});
+
+// PDF generation using jsPDF
+document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  // require jspdf
+  try {
+    const { jsPDF } = window.jspdf;
+    var counts = calcResult();
+    if(!counts) return;
+    var t = topValue(counts);
+    var plan = buildPlanText(t);
+
+    // gather answers text
+    var answers = [];
+    for(var i=1;i<=6;i++){
+      var sel = document.querySelector('input[name="q'+i+'"]:checked');
+      var qtext = document.querySelector('.q[data-q="'+i+'"] h3').innerText;
+      var aval = sel ? sel.parentElement.innerText.trim() : 'No answer';
+      answers.push({q: qtext, a: aval});
+    }
+
+    var doc = new jsPDF({unit:'pt', format:'a4'});
+    var left = 40;
+    var y = 60;
+    // header with site URL
+    doc.setFontSize(12);
+    doc.text('https://emotionalintelligencedeveloper.com/', left, 30);
+    doc.setFontSize(18);
+    doc.text('Wellbeing Journey — Your Personalized Plan', left, y); y += 26;
+    doc.setFontSize(12);
+    doc.text('Generated: ' + (new Date()).toLocaleString(), left, y); y += 20;
+
+    doc.setFontSize(14);
+    doc.text(plan.title, left, y); y += 18;
+    doc.setFontSize(11);
+    var splitShort = doc.splitTextToSize(plan.short, 500);
+    doc.text(splitShort, left, y); y += splitShort.length*14 + 8;
+    doc.setFontSize(12);
+    doc.text('Why this helps:', left, y); y += 16;
+    var splitWhy = doc.splitTextToSize(plan.why, 500); doc.text(splitWhy, left, y); y += splitWhy.length*14 + 8;
+
+    doc.text('Recommended Steps:', left, y); y += 16;
+    plan.steps.forEach(function(s, idx){
+      var lines = doc.splitTextToSize((idx+1) + '. ' + s, 500);
+      doc.text(lines, left, y); y += lines.length*14 + 6;
+    });
+
+    y += 6;
+    doc.text('Your Answers:', left, y); y += 16;
+    answers.forEach(function(it){
+      var linesQ = doc.splitTextToSize(it.q, 500);
+      doc.text(linesQ, left, y); y += linesQ.length*12;
+      var linesA = doc.splitTextToSize('Answer: ' + it.a, 500);
+      doc.text(linesA, left+8, y); y += linesA.length*12 + 6;
+    });
+
+    // footer with site url and small credit
+    doc.setFontSize(10);
+    doc.text('Created with ♥ by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/', left, 780);
+
+    // download
+    var filename = 'Wellbeing-Journey-Plan-' + (new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-') + '.pdf';
+    doc.save(filename);
+  } catch(err){
+    alert('PDF generation library not loaded. Please try again later.');
+    console.error(err);
+  }
+});
+
+// set affiliate a[data-base] attribute for safe UTM updates (store original base)
+document.querySelectorAll('#affiliateGrid a').forEach(function(a){
+  var base = a.getAttribute('data-base') || a.href.split('?')[0];
+  a.setAttribute('data-base', base);
+});
+</script>
+</body>
+</html>

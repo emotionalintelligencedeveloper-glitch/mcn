@@ -276,9 +276,9 @@ document.getElementById('resetBtn').addEventListener('click', function(){
 });
 
 // PDF generation using jsPDF
+// PDF generation using jsPDF (clean spacing, no emoji, one-page formatting)
 document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
   e.preventDefault();
-  // require jspdf
   try {
     const { jsPDF } = window.jspdf;
     var counts = calcResult();
@@ -286,13 +286,107 @@ document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
     var t = topValue(counts);
     var plan = buildPlanText(t);
 
-    // gather answers text
+    // Collect answers
     var answers = [];
-    for(var i=1;i<=6;i++){
-      var sel = document.querySelector('input[name="q'+i+'"]:checked');
-      var qtext = document.querySelector('.q[data-q="'+i+'"] h3').innerText;
+    for (var i = 1; i <= 6; i++) {
+      var sel = document.querySelector('input[name="q' + i + '"]:checked');
+      var qtext = document.querySelector('.q[data-q="' + i + '"] h3').innerText;
       var aval = sel ? sel.parentElement.innerText.trim() : 'No answer';
-      answers.push({q: qtext, a: aval});
+      answers.push({ q: qtext, a: aval });
+    }
+
+    // PDF settings
+    var doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    var left = 40;
+    var maxWidth = 515; // fit comfortably inside margins
+    var y = 60;
+
+    // Header (clean, no emoji)
+    doc.setFontSize(12);
+    doc.text('https://emotionalintelligencedeveloper.com/', left, 30);
+
+    // Title
+    doc.setFontSize(18);
+    doc.text('Your Wellbeing Journey — Personalized Plan', left, y);
+    y += 30;
+
+    // Summary
+    doc.setFontSize(12);
+    doc.text('Generated on: ' + new Date().toLocaleString(), left, y);
+    y += 25;
+
+    // Plan title
+    doc.setFontSize(14);
+    doc.text(plan.title, left, y);
+    y += 20;
+
+    // Short description
+    doc.setFontSize(11);
+    var shortSplit = doc.splitTextToSize(plan.short, maxWidth);
+    doc.text(shortSplit, left, y);
+    y += shortSplit.length * 15 + 10;
+
+    // Why this helps
+    doc.setFontSize(12);
+    doc.text('Why this helps:', left, y);
+    y += 18;
+
+    doc.setFontSize(11);
+    var whySplit = doc.splitTextToSize(plan.why, maxWidth);
+    doc.text(whySplit, left, y);
+    y += whySplit.length * 15 + 15;
+
+    // Steps
+    doc.setFontSize(12);
+    doc.text('Recommended Steps:', left, y);
+    y += 18;
+
+    doc.setFontSize(11);
+    plan.steps.forEach(function(step, index) {
+      var stepText = (index + 1) + '. ' + step;
+      var stepSplit = doc.splitTextToSize(stepText, maxWidth);
+      doc.text(stepSplit, left, y);
+      y += stepSplit.length * 15 + 10;
+    });
+
+    // Answers section
+    y += 10;
+    doc.setFontSize(12);
+    doc.text('Your Answers:', left, y);
+    y += 18;
+
+    doc.setFontSize(11);
+    answers.forEach(function(item) {
+      var qSplit = doc.splitTextToSize(item.q, maxWidth);
+      var aSplit = doc.splitTextToSize('Answer: ' + item.a, maxWidth);
+
+      doc.text(qSplit, left, y);
+      y += qSplit.length * 14;
+
+      doc.text(aSplit, left + 10, y);
+      y += aSplit.length * 14 + 8;
+    });
+
+    // Footer — clean, readable, no emoji
+    doc.setFontSize(10);
+    doc.text(
+      'Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/',
+      left,
+      810
+    );
+
+    // Save file
+    var filename =
+      'Wellbeing-Journey-Plan-' +
+      new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') +
+      '.pdf';
+    doc.save(filename);
+
+  } catch (err) {
+    alert('PDF generation failed. Please try again.');
+    console.error(err);
+  }
+});
     }
 
     var doc = new jsPDF({unit:'pt', format:'a4'});

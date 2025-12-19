@@ -1,195 +1,296 @@
-<script>
-document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
-  e.preventDefault();
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wellbeing Journey — Emotional Intelligence Developer</title>
 
-  try {
-    const { jsPDF } = window.jspdf;
-
-    // Validate quiz completion
-    function getAnswers(){
-      const answers = [];
-      for(let i = 1; i <= 6; i++){
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if(!selected){
-          alert("Please complete the quiz before downloading your PDF.");
-          return null;
-        }
-        const question = document.querySelector(`.q[data-q="${i}"] h3`).innerText;
-        const answer = selected.parentElement.innerText.trim();
-        answers.push({ question, answer });
-      }
-      return answers;
-    }
-
-    const answers = getAnswers();
-    if(!answers) return;
-
-    const counts = {A:0,B:0,C:0};
-    answers.forEach(a=>{
-      if(a.answer.includes('A)')) counts.A++;
-      if(a.answer.includes('B)')) counts.B++;
-      if(a.answer.includes('C)')) counts.C++;
-    });
-
-    const dominant =
-      counts.A >= counts.B && counts.A >= counts.C ? 'A' :
-      counts.B >= counts.A && counts.B >= counts.C ? 'B' : 'C';
-
-    // Build practical & reflective plan
-    const plans = {
-      A: {
-        title: "Quick Calm & Body Reset",
-        overview:
-          "Your answers suggest that stress shows up physically for you — tightness, shallow breathing, or feeling on edge. When the body is activated, calm thinking becomes harder.",
-        why:
-          "Short, physical calming techniques help regulate your nervous system quickly. Once your body settles, your mind follows.",
-        steps: [
-          "Practice a 3-breath reset: inhale for 4, hold for 2, exhale for 6.",
-          "Do a 60-second stretch or shoulder roll when stress spikes.",
-          "Pause once daily to notice where your body is holding tension."
-        ],
-        reflect:
-          "Where do I feel stress first in my body, and what helps it soften?"
-      },
-      B: {
-        title: "Emotional Clarity & Reflection",
-        overview:
-          "Your responses show that stress builds through thoughts, emotions, and mental overwhelm. You benefit from understanding what you’re feeling rather than pushing it away.",
-        why:
-          "Naming emotions reduces their intensity. When feelings are acknowledged, decision-making becomes clearer and calmer.",
-        steps: [
-          "Write one sentence daily: “I feel ___ because ___.”",
-          "Set a 5-minute reflection window instead of overthinking all day.",
-          "Use journaling to release emotions before they pile up."
-        ],
-        reflect:
-          "What emotion have I been avoiding, and what is it trying to tell me?"
-      },
-      C: {
-        title: "Daily Balance & Energy Reset",
-        overview:
-          "Your answers suggest you keep going even when tired or overloaded. Stress builds quietly until exhaustion sets in.",
-        why:
-          "Small daily routines prevent burnout and help your energy stay steady instead of crashing.",
-        steps: [
-          "Choose one 10-minute daily habit (walk, journaling, stretching).",
-          "Create a consistent bedtime window.",
-          "Schedule one short tech-free pause each day."
-        ],
-        reflect:
-          "What small habit would support me most if I did it consistently?"
-      }
-    };
-
-    const plan = plans[dominant];
-
-    // Create PDF
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const left = 40;
-    const width = 515;
-    let y = 60;
-
-    // Header
-    doc.setFontSize(11);
-    doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
-
-    // Title
-    doc.setFontSize(18);
-    doc.text("Your 6-Minute Wellbeing Journey", left, y);
-    y += 28;
-
-    doc.setFontSize(12);
-    doc.text(`Generated on: ${new Date().toLocaleString()}`, left, y);
-    y += 24;
-
-    // Plan section
-    doc.setFontSize(14);
-    doc.text(plan.title, left, y);
-    y += 20;
-
-    doc.setFontSize(11);
-    doc.text(doc.splitTextToSize(plan.overview, width), left, y);
-    y += 40;
-
-    doc.text("Why this matters:", left, y);
-    y += 14;
-    doc.text(doc.splitTextToSize(plan.why, width), left, y);
-    y += 40;
-
-    doc.setFontSize(12);
-    doc.text("Practical steps to try:", left, y);
-    y += 16;
-
-    doc.setFontSize(11);
-    plan.steps.forEach((step, i)=>{
-      const lines = doc.splitTextToSize(`${i+1}. ${step}`, width);
-      doc.text(lines, left, y);
-      y += lines.length * 14 + 6;
-    });
-
-    y += 10;
-    doc.setFontSize(12);
-    doc.text("Reflection prompt:", left, y);
-    y += 14;
-    doc.setFontSize(11);
-    doc.text(doc.splitTextToSize(plan.reflect, width), left, y);
-    y += 30;
-
-    // Answers section
-    doc.setFontSize(12);
-    doc.text("Your Answers:", left, y);
-    y += 16;
-
-    doc.setFontSize(11);
-    answers.forEach(a=>{
-      doc.text(doc.splitTextToSize(a.question, width), left, y);
-      y += 14;
-      doc.text(doc.splitTextToSize("Answer: " + a.answer, width), left + 10, y);
-      y += 22;
-    });
-
-    // Resources
-    if (y > 720) { doc.addPage(); y = 60; }
-
-    doc.setFontSize(12);
-    doc.text("Helpful Resources:", left, y);
-    y += 18;
-
-    doc.setFontSize(11);
-    doc.text("• Recommended Books:", left, y);
-    y += 14;
-    doc.text("https://emotionalintelligencedeveloper.com/recommended-books/", left + 10, y);
-    y += 18;
-
-    doc.text("• Help & Support Page:", left, y);
-    y += 14;
-    doc.text("https://emotionalintelligencedeveloper.com/help-page/", left + 10, y);
-    y += 22;
-
-    doc.setFontSize(10);
-    doc.text(
-      "Some recommended resources may include affiliate links. If you choose to buy, Emotional Intelligence Developer may earn a small commission at no extra cost to you.",
-      left,
-      y
-    );
-
-    // Footer
-    doc.setFontSize(10);
-    doc.text(
-      "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-      left,
-      800
-    );
-
-    doc.save(
-      "Wellbeing-Journey-" +
-      new Date().toISOString().slice(0,19).replace(/[:T]/g,"-") +
-      ".pdf"
-    );
-
-  } catch(err){
-    alert("PDF generation failed. Please try again.");
-    console.error(err);
+<style>
+  :root{
+    --bg:#f3f6fb;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --accent-blue:#1f6feb;
+    --accent-yellow:#f5b942;
+    --cta:#f59e0b;
+    --text:#0f172a;
+    --radius:12px;
   }
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .wrap{max-width:840px;margin:28px auto;padding:20px}
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:0 8px 30px rgba(16,24,40,0.06)
+  }
+  h1{margin:0 0 6px;font-size:22px}
+  .lead{color:var(--muted);margin-bottom:14px}
+  .q{
+    margin:14px 0;
+    padding:12px;
+    border-radius:10px;
+    background:#fff;
+    border:1px solid #eee
+  }
+  .q h3{margin:0 0 10px;font-size:15px}
+  .opts{display:flex;gap:10px;flex-wrap:wrap}
+  .opt{
+    flex:1;
+    min-width:160px;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid #e6e8eb;
+    background:#fff;
+    cursor:pointer;
+    transition:all .15s
+  }
+  .opt input{display:none}
+  .opt:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(16,24,40,0.04)
+  }
+  .selected-blue{
+    background:linear-gradient(180deg,var(--accent-blue),#195ed6);
+    color:#fff
+  }
+  .selected-yellow{
+    background:linear-gradient(180deg,var(--accent-yellow),#f0a62a);
+    color:#072034
+  }
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top:18px
+  }
+  .btn{
+    padding:10px 14px;
+    border-radius:10px;
+    border:0;
+    background:var(--accent-blue);
+    color:#fff;
+    cursor:pointer;
+    font-weight:600
+  }
+  .btn.secondary{
+    background:#eef2ff;
+    color:var(--text);
+    border:1px solid #e6e8eb
+  }
+  .meta{margin-left:auto;color:var(--muted);font-size:13px}
+  .result{
+    margin-top:18px;
+    padding:16px;
+    border-radius:10px;
+    background:#fbfdff;
+    border:1px solid #eee;
+    display:none
+  }
+  .download{
+    margin-top:14px;
+    display:inline-block;
+    padding:10px 14px;
+    border-radius:10px;
+    background:#10b981;
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    cursor:pointer
+  }
+  .ads-label{
+    font-size:13px;
+    color:#6b7280;
+    margin-top:24px;
+  }
+  .ads-box{
+    background:#fefce8;
+    border:1px solid #facc15;
+    border-radius:12px;
+    padding:14px;
+    font-size:0.95rem;
+  }
+  .cta-link{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    border-radius:8px;
+    background:var(--cta);
+    color:#111;
+    text-decoration:none;
+    font-weight:700;
+  }
+  .help-box{
+    margin-top:16px;
+    padding:14px;
+    border-radius:12px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+  }
+  .disclaimer,.footer{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:14px
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Wellbeing Journey — Quick Check & Reset</h1>
+    <p class="lead">Answer 6 questions (~6 minutes). Download a practical wellbeing plan with your answers.</p>
+
+    <div id="quiz">
+
+      <!-- QUESTIONS -->
+      <div class="q" data-q="1"><h3>1) Which best describes how you feel most days?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q1" value="Tense or rushed">Tense or rushed</label>
+          <label class="opt" data-val="B"><input type="radio" name="q1" value="Mentally scattered">Mentally scattered</label>
+          <label class="opt" data-val="C"><input type="radio" name="q1" value="Drained but pushing on">Drained but pushing on</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="2"><h3>2) When stress builds, you usually:</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q2" value="Hold tension in my body">Hold tension in my body</label>
+          <label class="opt" data-val="B"><input type="radio" name="q2" value="Overthink">Overthink</label>
+          <label class="opt" data-val="C"><input type="radio" name="q2" value="Keep going anyway">Keep going anyway</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="3"><h3>3) What helps you calm down most?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q3" value="Breathing or movement">Breathing or movement</label>
+          <label class="opt" data-val="B"><input type="radio" name="q3" value="Writing or reflection">Writing or reflection</label>
+          <label class="opt" data-val="C"><input type="radio" name="q3" value="Rest and routine">Rest and routine</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="4"><h3>4) How often do you recharge properly?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q4" value="Rarely">Rarely</label>
+          <label class="opt" data-val="B"><input type="radio" name="q4" value="Sometimes">Sometimes</label>
+          <label class="opt" data-val="C"><input type="radio" name="q4" value="Not enough">Not enough</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="5"><h3>5) What do you need most right now?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q5" value="A quick calm reset">A quick calm reset</label>
+          <label class="opt" data-val="B"><input type="radio" name="q5" value="Emotional clarity">Emotional clarity</label>
+          <label class="opt" data-val="C"><input type="radio" name="q5" value="Better balance">Better balance</label>
+        </div>
+      </div>
+
+      <div class="q" data-q="6"><h3>6) Can you try one small change this week?</h3>
+        <div class="opts">
+          <label class="opt" data-val="A"><input type="radio" name="q6" value="Yes">Yes</label>
+          <label class="opt" data-val="B"><input type="radio" name="q6" value="Maybe">Maybe</label>
+          <label class="opt" data-val="C"><input type="radio" name="q6" value="I’ll try">I’ll try</label>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" onclick="showResult()">See My Plan</button>
+        <button class="btn secondary" onclick="resetQuiz()">Reset</button>
+        <div class="meta">~6 minutes</div>
+      </div>
+
+      <div id="result" class="result"></div>
+      <a class="download" onclick="downloadPDF()">Download My Plan (PDF)</a>
+
+      <p class="ads-label">Ads.</p>
+      <div class="ads-box">
+        <p><strong>Recommended reading:</strong> books on emotional intelligence, stress, and resilience.</p>
+        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">View Recommended Books</a>
+      </div>
+
+      <div class="help-box">
+        <p><strong>Need extra support?</strong></p>
+        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">Visit the Help Page</a>
+      </div>
+
+      <div class="disclaimer">This tool offers general wellbeing guidance and is not a substitute for professional care.</div>
+      <div class="footer">Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+const { jsPDF } = window.jspdf;
+let answers = [];
+let summary = "";
+
+document.querySelectorAll('.opts').forEach(g=>{
+  g.addEventListener('click',e=>{
+    const o=e.target.closest('.opt');
+    if(!o) return;
+    g.querySelectorAll('.opt').forEach(x=>x.classList.remove('selected-blue','selected-yellow'));
+    o.classList.add(o.dataset.val==='B'?'selected-yellow':'selected-blue');
+    o.querySelector('input').checked=true;
+  });
 });
+
+function showResult(){
+  answers=[];
+  let score={A:0,B:0,C:0};
+  for(let i=1;i<=6;i++){
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel){alert("Answer all questions.");return;}
+    const q=document.querySelector(`.q[data-q="${i}"] h3`).innerText;
+    answers.push({q:q,a:sel.value});
+    score[sel.parentElement.dataset.val]++;
+  }
+  const top=Object.keys(score).reduce((a,b)=>score[a]>score[b]?a:b);
+  summary = top==="A" ? "You benefit most from quick physical calming resets."
+          : top==="B" ? "You benefit most from emotional clarity and reflection."
+          : "You benefit most from restoring balance and energy.";
+  document.getElementById("result").innerHTML="<strong>Your focus:</strong><br>"+summary;
+  document.getElementById("result").style.display="block";
+}
+
+function resetQuiz(){
+  document.querySelectorAll("input").forEach(i=>i.checked=false);
+  document.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected-blue","selected-yellow"));
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  if(!summary){alert("View your plan first.");return;}
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  let y=60;
+  doc.setFontSize(18);
+  doc.text("Your Wellbeing Journey",40,y); y+=30;
+  doc.setFontSize(11);
+  doc.text("emotionalintelligencedeveloper.com",40,y); y+=30;
+
+  doc.text("Your answers:",40,y); y+=20;
+  answers.forEach(o=>{
+    doc.text(o.q,40,y,{maxWidth:500}); y+=14;
+    doc.text("Answer: "+o.a,50,y,{maxWidth:480}); y+=20;
+  });
+
+  doc.setFontSize(12);
+  doc.text("Your wellbeing focus:",40,y); y+=16;
+  doc.text(summary,40,y,{maxWidth:500});
+
+  y+=40;
+  doc.setFontSize(10);
+  doc.text("Recommended Books: https://emotionalintelligencedeveloper.com/recommended-books/",40,y);
+  y+=14;
+  doc.text("Help Page: https://emotionalintelligencedeveloper.com/help-page/",40,y+14);
+
+  doc.save("wellbeing-journey.pdf");
+}
 </script>
+</body>
+</html>

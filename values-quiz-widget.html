@@ -4,309 +4,328 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Values Clarity Quiz — Emotional Intelligence Developer</title>
+
 <style>
-  :root{--bg:#ffffff;--card:#fbfbfd;--accent:#1f6feb;--accent-contrast:#0b2e60;--muted:#6b7280;--cta:#f59e0b}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; margin:0; background:#f3f4f6; color:#111}
+  :root{
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --accent:#1f6feb;
+    --muted:#6b7280;
+    --cta:#f59e0b;
+  }
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    margin:0;
+    background:var(--bg);
+    color:#111;
+  }
   .wrap{max-width:760px;margin:28px auto;padding:22px}
-  .card{background:var(--card);border-radius:12px;padding:22px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
+  .card{
+    background:var(--card);
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 6px 20px rgba(16,24,40,0.06)
+  }
   h1{margin:0 0 6px;font-size:20px}
   p.lead{margin:0 0 18px;color:var(--muted)}
-  .q{margin:14px 0;padding:12px;border-radius:8px;background:#fff;border:1px solid #eee;display:flex;flex-direction:column;gap:8px}
-  .q h3{margin:0;font-size:15px}
+  .q{
+    margin:14px 0;
+    padding:12px;
+    border-radius:8px;
+    background:#fff;
+    border:1px solid #eee;
+  }
+  .q h3{margin:0 0 8px;font-size:15px}
   .opts{display:flex;gap:8px;flex-wrap:wrap}
-  .opt{flex:1;min-width:150px;padding:10px;border-radius:8px;border:1px solid #e8e8e8;background:#fff;cursor:pointer;text-align:left;transition:all .12s}
+  .opt{
+    flex:1;
+    min-width:150px;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #e8e8e8;
+    background:#fff;
+    cursor:pointer;
+  }
   .opt input{display:none}
-  .opt:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(17,24,39,0.04)}
-  .opt.selected{border-color:var(--accent);box-shadow:0 10px 24px rgba(31,111,235,0.08);background:linear-gradient(180deg,var(--accent),#195ed6);color:#fff}
+  .opt.selected{
+    background:linear-gradient(180deg,var(--accent),#195ed6);
+    color:#fff;
+    border-color:var(--accent)
+  }
   .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
-  .btn{padding:10px 14px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+  .btn{
+    padding:10px 14px;
+    border-radius:8px;
+    border:0;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer
+  }
   .btn.secondary{background:#e5e7eb;color:#111}
-  .result{margin-top:18px;padding:14px;border-radius:8px;background:linear-gradient(180deg,#ffffff,#f8fafc);border:1px solid #eee}
-  .cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--cta);color:#111;text-decoration:none;font-weight:600}
-  .disclaimer{font-size:12px;color:var(--muted);margin-top:12px}
+  .result{
+    margin-top:18px;
+    padding:16px;
+    border-radius:10px;
+    background:#fbfdff;
+    border:1px solid #eee;
+    display:none
+  }
+  .download{
+    margin-top:14px;
+    display:inline-block;
+    padding:10px 14px;
+    border-radius:8px;
+    background:#10b981;
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    cursor:pointer
+  }
+
+  /* Conversion blocks */
+  .ads-label{font-size:13px;color:#6b7280;margin-top:22px}
+  .ads-box{
+    background:#fefce8;
+    border:1px solid #facc15;
+    border-radius:12px;
+    padding:14px;
+    margin-top:6px;
+  }
+  .ads-box a,
+  .help-box a{
+    display:inline-block;
+    margin-top:8px;
+    padding:10px 16px;
+    border-radius:8px;
+    background:var(--cta);
+    color:#111;
+    text-decoration:none;
+    font-weight:700;
+  }
+  .help-box{
+    margin-top:16px;
+    padding:14px;
+    border-radius:12px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+  }
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:14px}
   footer{font-size:12px;color:var(--muted);margin-top:16px}
-  .download{margin-top:12px;display:inline-block;padding:10px 14px;border-radius:8px;background:#10b981;color:#fff;text-decoration:none;font-weight:700}
-  @media(max-width:520px){.opts{flex-direction:column}.wrap{padding:12px}}
 </style>
 </head>
+
 <body>
 <div class="wrap">
-  <div class="card" role="region" aria-labelledby="quiz-title">
-    <h1 id="quiz-title">Values Clarity Quiz</h1>
-    <p class="lead">Find your top personal value — quick and gentle. Answer the 5 questions and click "See My Result".</p>
+<div class="card">
 
-    <div id="quiz">
-      <div class="q" data-q="1">
-        <h3>Question 1 — Which statement feels most true to you?</h3>
-        <div class="opts">
-          <label class="opt" data-val="A"><input type="radio" name="q1" value="A"> A) I want to grow and improve</label>
-          <label class="opt" data-val="B"><input type="radio" name="q1" value="B"> B) I want stability and emotional peace</label>
-          <label class="opt" data-val="C"><input type="radio" name="q1" value="C"> C) I want to make an impact</label>
-        </div>
-      </div>
+<h1>Values Clarity Quiz</h1>
+<p class="lead">
+Answer 5 quick questions to identify the value that matters most to you right now.
+</p>
 
-      <div class="q" data-q="2">
-        <h3>Question 2 — When facing a big decision, you rely on:</h3>
-        <div class="opts">
-          <label class="opt" data-val="A"><input type="radio" name="q2" value="A"> A) Logic and planning</label>
-          <label class="opt" data-val="B"><input type="radio" name="q2" value="B"> B) Intuition and emotions</label>
-          <label class="opt" data-val="C"><input type="radio" name="q2" value="C"> C) Purpose and meaning</label>
-        </div>
-      </div>
+<div id="quiz">
 
-      <div class="q" data-q="3">
-        <h3>Question 3 — What motivates you the most?</h3>
-        <div class="opts">
-          <label class="opt" data-val="A"><input type="radio" name="q3" value="A"> A) Becoming better</label>
-          <label class="opt" data-val="B"><input type="radio" name="q3" value="B"> B) Feeling balanced</label>
-          <label class="opt" data-val="C"><input type="radio" name="q3" value="C"> C) Helping others</label>
-        </div>
-      </div>
-
-      <div class="q" data-q="4">
-        <h3>Question 4 — Which environment helps you thrive?</h3>
-        <div class="opts">
-          <label class="opt" data-val="A"><input type="radio" name="q4" value="A"> A) Fast-paced and challenging</label>
-          <label class="opt" data-val="B"><input type="radio" name="q4" value="B"> B) Calm and predictable</label>
-          <label class="opt" data-val="C"><input type="radio" name="q4" value="C"> C) Collaborative and purposeful</label>
-        </div>
-      </div>
-
-      <div class="q" data-q="5">
-        <h3>Question 5 — When you imagine success, you see:</h3>
-        <div class="opts">
-          <label class="opt" data-val="A"><input type="radio" name="q5" value="A"> A) Achievement</label>
-          <label class="opt" data-val="B"><input type="radio" name="q5" value="B"> B) Peace</label>
-          <label class="opt" data-val="C"><input type="radio" name="q5" value="C"> C) Impact</label>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn" id="calcBtn" type="button">See My Result</button>
-        <button class="btn secondary" id="resetBtn" type="button">Reset</button>
-        <div style="margin-left:auto;color:var(--muted);font-size:13px">Takes 1 minute</div>
-      </div>
-
-      <div id="resultArea" class="result" aria-live="polite" style="display:none"></div>
-
-      <div style="margin-top:10px">
-        <p style="font-size:13px;color:#888;margin:0 0 6px 0;">Ads.</p>
-
-        <a id="affiliateBtn" class="cta"
-           href="https://amzn.to/49auwkt"
-           target="_blank" rel="noopener noreferrer">
-           Start Your Growth Course
-        </a>
-      </div>
-
-      <div class="disclaimer" style="font-size:12px;color:#6b7280;margin-top:12px;">
-        This tool offers general wellbeing suggestions and is not a substitute for professional care.
-      </div>
-
-      <div style="margin-top:12px">
-        <a id="downloadPdfBtn" class="download" href="#" role="button">Download My Result (PDF)</a>
-      </div>
-
-      <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
-    </div>
-  </div>
+<!-- QUESTIONS -->
+<div class="q" data-q="1">
+<h3>1) Which statement feels most true to you?</h3>
+<div class="opts">
+<label class="opt"><input type="radio" name="q1" value="A"> I want to grow and improve</label>
+<label class="opt"><input type="radio" name="q1" value="B"> I want emotional peace</label>
+<label class="opt"><input type="radio" name="q1" value="C"> I want to make an impact</label>
+</div>
 </div>
 
-<!-- jsPDF CDN -->
+<div class="q" data-q="2">
+<h3>2) When facing a big decision, you rely on:</h3>
+<div class="opts">
+<label class="opt"><input type="radio" name="q2" value="A"> Logic and planning</label>
+<label class="opt"><input type="radio" name="q2" value="B"> Intuition and feelings</label>
+<label class="opt"><input type="radio" name="q2" value="C"> Purpose and meaning</label>
+</div>
+</div>
+
+<div class="q" data-q="3">
+<h3>3) What motivates you the most?</h3>
+<div class="opts">
+<label class="opt"><input type="radio" name="q3" value="A"> Becoming better</label>
+<label class="opt"><input type="radio" name="q3" value="B"> Feeling balanced</label>
+<label class="opt"><input type="radio" name="q3" value="C"> Helping others</label>
+</div>
+</div>
+
+<div class="q" data-q="4">
+<h3>4) Which environment helps you thrive?</h3>
+<div class="opts">
+<label class="opt"><input type="radio" name="q4" value="A"> Challenging and fast-paced</label>
+<label class="opt"><input type="radio" name="q4" value="B"> Calm and predictable</label>
+<label class="opt"><input type="radio" name="q4" value="C"> Collaborative and meaningful</label>
+</div>
+</div>
+
+<div class="q" data-q="5">
+<h3>5) When you imagine success, you see:</h3>
+<div class="opts">
+<label class="opt"><input type="radio" name="q5" value="A"> Achievement</label>
+<label class="opt"><input type="radio" name="q5" value="B"> Peace</label>
+<label class="opt"><input type="radio" name="q5" value="C"> Impact</label>
+</div>
+</div>
+
+<div class="controls">
+<button class="btn" onclick="showResult()">See My Result</button>
+<button class="btn secondary" onclick="resetQuiz()">Reset</button>
+</div>
+
+<div id="resultArea" class="result"></div>
+
+<a class="download" onclick="downloadPDF()">Download My Result (PDF)</a>
+
+<!-- ADS -->
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+<p><strong>Want to explore your values more deeply?</strong></p>
+<p>
+We’ve curated a Recommended Books page with journals and books on values,
+purpose, emotional intelligence, and personal growth.
+Some links are affiliate links, which means we may earn a small commission
+at no extra cost to you.
+</p>
+<a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+View Recommended Books
+</a>
+</div>
+
+<div class="help-box">
+<p><strong>Feeling stuck or unsure how to apply this value?</strong></p>
+<p>
+Our help page offers grounding tools, reflections, and emotional support options.
+</p>
+<a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Visit the Help Page
+</a>
+</div>
+
+<div class="disclaimer">
+This tool provides general wellbeing guidance and is not a substitute for professional care.
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-  // selection visuals
-  document.querySelectorAll('.opts').forEach(function(opts){
-    opts.addEventListener('click', function(ev){
-      var label = ev.target.closest('label.opt');
-      if(!label) return;
-      label.parentElement.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected') });
-      label.classList.add('selected');
-      var radio = label.querySelector('input[type="radio"]');
-      if(radio){ radio.checked = true; }
-    });
-  });
+const { jsPDF } = window.jspdf;
 
-  // scoring
-  function calcResult(){
-    var counts = {A:0,B:0,C:0};
-    for(var i=1;i<=5;i++){
-      var val = document.querySelector('input[name="q'+i+'"]:checked');
-      if(!val){
-        alert('Please answer question ' + i);
-        return null;
-      }
-      counts[val.value]++;
-    }
-    return counts;
+document.querySelectorAll('.opts').forEach(group=>{
+  group.addEventListener('click',e=>{
+    const opt=e.target.closest('.opt');
+    if(!opt) return;
+    group.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+    opt.querySelector('input').checked=true;
+  });
+});
+
+function getTop(){
+  const count={A:0,B:0,C:0};
+  for(let i=1;i<=5;i++){
+    const v=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!v){alert("Please answer all questions.");return null;}
+    count[v.value]++;
+  }
+  return Object.keys(count).reduce((a,b)=>count[a]>count[b]?a:b);
+}
+
+function buildResult(t){
+  if(t==='A') return {
+    title:'Growth',
+    why:'You value learning and improvement.',
+    steps:[
+      'Practice one small skill daily.',
+      'Track progress weekly.',
+      'Seek feedback regularly.'
+    ]
+  };
+  if(t==='B') return {
+    title:'Inner Peace',
+    why:'You value calm and emotional balance.',
+    steps:[
+      'Protect daily routines.',
+      'Use short grounding practices.',
+      'Reflect on emotions gently.'
+    ]
+  };
+  return {
+    title:'Purpose & Impact',
+    why:'You value meaning and contribution.',
+    steps:[
+      'Define a small weekly contribution.',
+      'Break it into one task.',
+      'Share progress with someone.'
+    ]
+  };
+}
+
+function showResult(){
+  const t=getTop(); if(!t) return;
+  const r=buildResult(t);
+  const box=document.getElementById("resultArea");
+  box.innerHTML=
+    `<strong>Your top value: ${r.title}</strong>
+     <p>${r.why}</p>
+     <ol>${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>`;
+  box.style.display="block";
+}
+
+function resetQuiz(){
+  document.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false);
+  document.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+  document.getElementById("resultArea").style.display="none";
+}
+
+function downloadPDF(){
+  const t=getTop(); if(!t) return;
+  const r=buildResult(t);
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=70, left=40, max=515;
+
+  doc.setFontSize(10);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 40);
+
+  doc.setFontSize(18);
+  doc.text("Values Clarity — Your Result", left, y); y+=30;
+
+  for(let i=1;i<=5;i++){
+    const q=document.querySelector(`.q[data-q="${i}"] h3`).innerText;
+    const a=document.querySelector(`input[name="q${i}"]:checked`).parentElement.innerText;
+    doc.text(doc.splitTextToSize(`Question ${i}: ${q}`,max),left,y); y+=18;
+    doc.text(doc.splitTextToSize(`Your answer: ${a}`,max),left+10,y); y+=22;
   }
 
-  function topValue(counts){
-    var order = ['A','B','C'];
-    var top = order[0];
-    for(var j=1;j<order.length;j++){
-      if(counts[order[j]] > counts[top]) top = order[j];
-    }
-    return top;
-  }
+  doc.setFontSize(12);
+  doc.text("Your Core Value: "+r.title,left,y); y+=18;
+  doc.text(doc.splitTextToSize(r.why,max),left,y); y+=20;
 
-  // fuller results
-  function buildResult(top){
-    if(top === 'A'){
-      return {
-        title: 'Growth',
-        short: 'You value learning, progress and steady improvement.',
-        why: 'When growth is central, you need structured challenges and clear feedback so your effort converts into skill and confidence.',
-        steps: [
-          'Choose one small skill to practice for 10 minutes daily this week.',
-          'Set a measurable micro-goal (what progress looks like in 7 days).',
-          'Reflect weekly: what changed, what felt hard, what felt good.'
-        ],
-        immediate: 'Commit to 10 minutes today on one micro-skill.'
-      };
-    } else if(top === 'B'){
-      return {
-        title: 'Inner Peace',
-        short: 'You value calm, emotional clarity and predictable routines.',
-        why: 'When peace is central, protecting daily rhythms and creating micro-rests prevents stress from accumulating.',
-        steps: [
-          'Practice a short 3-breath grounding (inhale 4 — hold 2 — exhale 6) three times today.',
-          'Schedule one consistent 10-minute wind-down each evening.',
-          'Try a brief journaling prompt 3 times this week to track feelings.'
-        ],
-        immediate: 'Try the 3-breath grounding now and notice the change.'
-      };
-    } else {
-      return {
-        title: 'Purpose & Impact',
-        short: 'You find meaning in contributing to others and making a difference.',
-        why: 'When purpose matters most, structure projects so small wins build momentum and avoid burnout.',
-        steps: [
-          'Write one sentence: “This week I will do ___ that helps ___.”',
-          'Break that into one small task you can complete today.',
-          'Share your small win with someone for accountability.'
-        ],
-        immediate: 'Write the one-sentence commitment now.'
-      };
-    }
-  }
-
-  // handle result button
-  document.getElementById('calcBtn').addEventListener('click', function(){
-    var counts = calcResult();
-    if(!counts) return;
-    var t = topValue(counts);
-    var res = buildResult(t);
-    var area = document.getElementById('resultArea');
-    var html = '';
-    html += '<strong>Your top value: ' + res.title + '</strong>';
-    html += '<p>' + res.short + '</p>';
-    html += '<p><strong>Why this matters:</strong> ' + res.why + '</p>';
-    html += '<ol>';
-    res.steps.forEach(function(s){ html += '<li>' + s + '</li>'; });
-    html += '</ol>';
-    html += '<p style="margin-top:8px;"><strong>Immediate step:</strong> ' + res.immediate + '</p>';
-    html += '<p style="margin-top:8px;"><em>Reflection:</em> Which small step will you try now?</p>';
-    area.innerHTML = html;
-    area.style.display = 'block';
-
-    // update affiliate href with UTM
-    var base = 'https://amzn.to/3LWfiqm';
-    var utm = '?utm_source=site&utm_medium=quiz&utm_campaign=values_clarity';
-    document.getElementById('affiliateBtn').href = base + utm;
-    // update CTA text to match result
-    if(t==='A') document.getElementById('affiliateBtn').textContent = 'Start Growth Tools';
-    else if(t==='B') document.getElementById('affiliateBtn').textContent = 'Find Calm Resources';
-    else document.getElementById('affiliateBtn').textContent = 'Discover Impact Tools';
+  doc.text("Suggested Next Steps:",left,y); y+=16;
+  r.steps.forEach((s,i)=>{
+    doc.text(doc.splitTextToSize(`${i+1}. ${s}`,max),left,y);
+    y+=16;
   });
 
-  // reset
-  document.getElementById('resetBtn').addEventListener('click', function(){
-    document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false });
-    document.querySelectorAll('label.opt').forEach(function(lb){ lb.classList.remove('selected') });
-    var area = document.getElementById('resultArea');
-    area.style.display = 'none';
-    area.innerHTML = '';
-    // reset affiliate to original
-    document.getElementById('affiliateBtn').href = 'https://amzn.to/3LWfiqm';
-    document.getElementById('affiliateBtn').textContent = 'Start Your Growth Course';
-  });
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    800
+  );
 
-  // PDF generation (one-page, spaced, no emoji)
-  document.getElementById('downloadPdfBtn').addEventListener('click', function(e){
-    e.preventDefault();
-    try {
-      const { jsPDF } = window.jspdf;
-      var counts = calcResult();
-      if(!counts) return;
-      var t = topValue(counts);
-      var res = buildResult(t);
-
-      // collect answers
-      var answers = [];
-      for(var i=1;i<=5;i++){
-        var sel = document.querySelector('input[name="q'+i+'"]:checked');
-        var qtext = document.querySelector('.q[data-q="'+i+'"] h3').innerText;
-        var aval = sel ? sel.parentElement.innerText.trim() : 'No answer';
-        answers.push({q:qtext,a:aval});
-      }
-
-      var doc = new jsPDF({unit:'pt', format:'a4'});
-      var left = 40;
-      var maxWidth = 515;
-      var y = 60;
-
-      doc.setFontSize(12);
-      doc.text('https://emotionalintelligencedeveloper.com/', left, 30);
-
-      doc.setFontSize(18);
-      doc.text('Values Clarity — Your Result', left, y); y += 28;
-
-      doc.setFontSize(12);
-      doc.text('Generated: ' + new Date().toLocaleString(), left, y); y += 20;
-
-      doc.setFontSize(14);
-      doc.text('Top Value: ' + res.title, left, y); y += 18;
-
-      doc.setFontSize(11);
-      var shortS = doc.splitTextToSize(res.short, maxWidth);
-      doc.text(shortS, left, y); y += shortS.length*14 + 6;
-
-      doc.setFontSize(12);
-      doc.text('Why this matters:', left, y); y += 16;
-      var whyS = doc.splitTextToSize(res.why, maxWidth); doc.text(whyS, left, y); y += whyS.length*14 + 8;
-
-      doc.setFontSize(12);
-      doc.text('Recommended Steps:', left, y); y += 16;
-      doc.setFontSize(11);
-      res.steps.forEach(function(s, idx){
-        var lines = doc.splitTextToSize((idx+1)+'. '+s, maxWidth);
-        doc.text(lines, left, y); y += lines.length*14 + 6;
-      });
-
-      y += 6;
-      doc.setFontSize(12);
-      doc.text('Your Answers:', left, y); y += 16;
-      doc.setFontSize(11);
-      answers.forEach(function(it){
-        var qLines = doc.splitTextToSize(it.q, maxWidth);
-        doc.text(qLines, left, y); y += qLines.length*12;
-        var aLines = doc.splitTextToSize('Answer: '+it.a, maxWidth);
-        doc.text(aLines, left+8, y); y += aLines.length*12 + 8;
-      });
-
-      // footer -- no emoji
-      doc.setFontSize(10);
-      doc.text('Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/', left, 800);
-
-      var filename = 'Values-Clarity-Result-'+(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-')+'.pdf';
-      doc.save(filename);
-    } catch(err){
-      alert('PDF generation failed. Please try again.');
-      console.error(err);
-    }
-  });
+  doc.save("values-clarity-result.pdf");
+}
 </script>
 </body>
 </html>

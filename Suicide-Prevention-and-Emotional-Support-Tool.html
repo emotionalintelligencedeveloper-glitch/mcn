@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>You Matter — Emotional Support & Suicide Prevention Tool</title>
+<title>You Matter — Suicide Prevention & Emotional Support</title>
 
 <style>
   :root{
@@ -14,6 +14,7 @@
     --muted:#6b7280;
     --cta:#f59e0b;
     --safe:#10b981;
+    --danger:#dc2626;
   }
   body{
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -28,17 +29,17 @@
     padding:24px;
     box-shadow:0 10px 28px rgba(16,24,40,0.08)
   }
-  h1{margin:0 0 10px;font-size:22px}
+  h1{margin:0 0 10px;font-size:24px}
   .lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
 
-  .notice{
-    background:#fff7ed;
-    border:1px solid #fed7aa;
+  .urgent{
+    background:#fee2e2;
+    border:1px solid #fecaca;
     border-radius:12px;
-    padding:14px;
-    font-size:0.95rem;
+    padding:16px;
     margin-bottom:20px;
   }
+  .urgent strong{color:var(--danger)}
 
   .q{
     margin:16px 0;
@@ -61,9 +62,8 @@
   .controls{
     display:flex;
     gap:12px;
-    align-items:center;
-    margin-top:20px;
     flex-wrap:wrap;
+    margin-top:20px;
   }
   .btn{
     padding:10px 16px;
@@ -101,14 +101,12 @@
     cursor:pointer;
   }
 
-  /* Conversion */
-  .ads-label{font-size:13px;color:var(--muted);margin-top:26px}
+  .ads-label{font-size:13px;color:var(--muted);margin-top:28px}
   .ads-box{
     background:#fefce8;
     border:1px solid #facc15;
     border-radius:12px;
     padding:14px;
-    margin-top:6px;
     font-size:0.95rem;
   }
   .cta-link{
@@ -151,19 +149,16 @@
 <h1>You Matter — A Gentle Check-In</h1>
 
 <p class="lead">
-This space is here to help you pause, breathe, and reflect.
-If you are feeling overwhelmed, hopeless, or questioning your life’s value,
-you are not alone — and these feelings can change.
+This tool is a safe pause. If thoughts about ending your life have crossed your mind,
+you are not weak — you are overwhelmed. This moment matters.
 </p>
 
-<div class="notice">
-<strong>Important:</strong>  
-If you are in immediate danger or feel you might act on harmful thoughts,
-please contact your local emergency number or a trusted person right now.
-This tool is a supportive reflection — not a replacement for urgent help.
+<div class="urgent">
+<strong>If you are in immediate danger:</strong><br>
+Please contact your local emergency number or a suicide crisis line in your country right now,
+or reach out to someone you trust and let them know you need help.
 </div>
 
-<!-- QUESTIONS -->
 <div class="q">
 <h3>1) What has been weighing most heavily on your mind lately?</h3>
 <textarea id="q1"></textarea>
@@ -198,10 +193,9 @@ This tool is a supportive reflection — not a replacement for urgent help.
 
 <a class="download" onclick="downloadPDF()">Download My Reflection (PDF)</a>
 
-<!-- ADS -->
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-<p><strong>Looking for gentle guidance during hard seasons?</strong></p>
+<p><strong>Gentle support resources</strong></p>
 <p>
 Our Recommended Books page includes journals and books on emotional pain,
 hope, anxiety, self-worth, and healing.
@@ -216,8 +210,7 @@ View Recommended Books
 <div class="help-box">
 <p><strong>You do not have to face this alone.</strong></p>
 <p>
-If these thoughts feel persistent or frightening,
-our help page shares support options and grounding resources.
+Our help page lists grounding tools and support options if things feel heavy or unsafe.
 </p>
 <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
 Visit the Help Page
@@ -240,22 +233,20 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script>
 const { jsPDF } = window.jspdf;
 
+/* 🔴 ADD YOUR BASE64 LOGO BELOW */
+const EID_LOGO = ""; // paste base64 logo string here
+
 function showSupport(){
-  const msg = `
-<strong>You are not broken.</strong><br><br>
-What you are experiencing is pain — not a failure.
-Feelings can convince us that things will never change,
-but feelings are not permanent truths.<br><br>
-
-You have already shown strength by staying here and reflecting.
-Reaching out for support is not weakness — it is a step toward relief.
-If possible, consider sharing how you feel with one trusted person today.<br><br>
-
-Your life has value even on days when it does not feel that way.
-You deserve care, understanding, and time.
-`;
   const box=document.getElementById("result");
-  box.innerHTML=msg;
+  box.innerHTML = `
+    <strong>You are not broken.</strong><br><br>
+    What you are experiencing is pain — not failure.
+    Feelings can convince us that nothing will change,
+    but feelings are not permanent truths.<br><br>
+    If speaking feels hard, sharing this reflection with someone you trust is enough.
+    You do not have to explain everything in words.<br><br>
+    Your life has value — even on days it does not feel that way.
+  `;
   box.style.display="block";
 }
 
@@ -271,11 +262,16 @@ function downloadPDF(){
   doc.setFontSize(11);
   doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
 
+  if(EID_LOGO){
+    doc.addImage(EID_LOGO, "JPEG", 200, 40, 180, 90);
+    y = 150;
+  }
+
   doc.setFontSize(18);
   doc.text("You Matter — Personal Reflection", left, y); y+=30;
 
   const qs=[
-    "What has been weighing on you:",
+    "What has been weighing on you?",
     "Emotions you are feeling:",
     "What has helped before:",
     "What you would tell someone you love:",
@@ -288,14 +284,18 @@ function downloadPDF(){
   doc.setFontSize(12);
   for(let i=0;i<qs.length;i++){
     doc.text(doc.splitTextToSize(qs[i],max),left,y); y+=18;
-    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=24;
+    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=28;
   }
 
+  doc.setFontSize(12);
+  doc.text("How You Can Use This Document", left, y+=10);
   doc.setFontSize(11);
-  const closing=
-  "If you are struggling, please consider reaching out to a trusted person or local support service. " +
-  "You deserve help, compassion, and time to heal.";
-  doc.text(doc.splitTextToSize(closing,max),left,y+10);
+  doc.text(doc.splitTextToSize(
+    "You can keep this reflection, revisit it, or share it with someone you trust. "
+    + "If speaking feels difficult, this document can speak for you. "
+    + "You may also bring it to a therapist, doctor, or support appointment.",
+    max
+  ), left, y+=16);
 
   doc.setFontSize(10);
   doc.text(
@@ -304,7 +304,7 @@ function downloadPDF(){
     800
   );
 
-  doc.save("you-matter-reflection.pdf");
+  doc.save("You-Matter-Personal-Reflection.pdf");
 }
 </script>
 </body>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>You Matter — Emotional Support & Suicide Prevention Tool</title>
+
+<style>
+  :root{
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --accent:#1f6feb;
+    --soft:#eff6ff;
+    --muted:#6b7280;
+    --cta:#f59e0b;
+    --safe:#10b981;
+  }
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    margin:0;
+    background:var(--bg);
+    color:#111;
+  }
+  .wrap{max-width:820px;margin:28px auto;padding:20px}
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 10px 28px rgba(16,24,40,0.08)
+  }
+  h1{margin:0 0 10px;font-size:22px}
+  .lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+
+  .notice{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    border-radius:12px;
+    padding:14px;
+    font-size:0.95rem;
+    margin-bottom:20px;
+  }
+
+  .q{
+    margin:16px 0;
+    padding:14px;
+    border-radius:12px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+  }
+  .q h3{margin:0 0 10px;font-size:15px}
+  textarea{
+    width:100%;
+    min-height:90px;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    resize:vertical;
+    font-size:0.95rem;
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top:20px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    padding:10px 16px;
+    border-radius:10px;
+    border:0;
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn.secondary{
+    background:#e5e7eb;
+    color:#111;
+  }
+
+  .result{
+    display:none;
+    margin-top:22px;
+    padding:18px;
+    border-radius:14px;
+    background:var(--soft);
+    border:1px solid #bfdbfe;
+    line-height:1.6;
+  }
+
+  .download{
+    margin-top:16px;
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:10px;
+    background:var(--safe);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  /* Conversion */
+  .ads-label{font-size:13px;color:var(--muted);margin-top:26px}
+  .ads-box{
+    background:#fefce8;
+    border:1px solid #facc15;
+    border-radius:12px;
+    padding:14px;
+    margin-top:6px;
+    font-size:0.95rem;
+  }
+  .cta-link{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    border-radius:8px;
+    background:var(--cta);
+    color:#111;
+    text-decoration:none;
+    font-weight:700;
+  }
+  .help-box{
+    margin-top:16px;
+    padding:14px;
+    border-radius:12px;
+    background:#ecfeff;
+    border:1px solid #67e8f9;
+    font-size:0.95rem;
+  }
+
+  .disclaimer{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:16px;
+  }
+  footer{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:18px;
+    text-align:center;
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>You Matter — A Gentle Check-In</h1>
+
+<p class="lead">
+This space is here to help you pause, breathe, and reflect.
+If you are feeling overwhelmed, hopeless, or questioning your life’s value,
+you are not alone — and these feelings can change.
+</p>
+
+<div class="notice">
+<strong>Important:</strong>  
+If you are in immediate danger or feel you might act on harmful thoughts,
+please contact your local emergency number or a trusted person right now.
+This tool is a supportive reflection — not a replacement for urgent help.
+</div>
+
+<!-- QUESTIONS -->
+<div class="q">
+<h3>1) What has been weighing most heavily on your mind lately?</h3>
+<textarea id="q1"></textarea>
+</div>
+
+<div class="q">
+<h3>2) When these thoughts feel strongest, what emotions show up?</h3>
+<textarea id="q2"></textarea>
+</div>
+
+<div class="q">
+<h3>3) What has helped you survive difficult moments in the past — even a little?</h3>
+<textarea id="q3"></textarea>
+</div>
+
+<div class="q">
+<h3>4) If someone you cared about felt this way, what would you want them to know?</h3>
+<textarea id="q4"></textarea>
+</div>
+
+<div class="q">
+<h3>5) What is one small reason — even fragile — that could keep you here today?</h3>
+<textarea id="q5"></textarea>
+</div>
+
+<div class="controls">
+<button class="btn" onclick="showSupport()">Show My Support Message</button>
+<button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<a class="download" onclick="downloadPDF()">Download My Reflection (PDF)</a>
+
+<!-- ADS -->
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+<p><strong>Looking for gentle guidance during hard seasons?</strong></p>
+<p>
+Our Recommended Books page includes journals and books on emotional pain,
+hope, anxiety, self-worth, and healing.
+Some links are affiliate links, which means we may earn a small commission
+at no extra cost to you.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+View Recommended Books
+</a>
+</div>
+
+<div class="help-box">
+<p><strong>You do not have to face this alone.</strong></p>
+<p>
+If these thoughts feel persistent or frightening,
+our help page shares support options and grounding resources.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Visit the Help Page
+</a>
+</div>
+
+<div class="disclaimer">
+This tool offers emotional support and reflection.
+It does not replace professional mental health care or emergency services.
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+function showSupport(){
+  const msg = `
+<strong>You are not broken.</strong><br><br>
+What you are experiencing is pain — not a failure.
+Feelings can convince us that things will never change,
+but feelings are not permanent truths.<br><br>
+
+You have already shown strength by staying here and reflecting.
+Reaching out for support is not weakness — it is a step toward relief.
+If possible, consider sharing how you feel with one trusted person today.<br><br>
+
+Your life has value even on days when it does not feel that way.
+You deserve care, understanding, and time.
+`;
+  const box=document.getElementById("result");
+  box.innerHTML=msg;
+  box.style.display="block";
+}
+
+function resetTool(){
+  document.querySelectorAll("textarea").forEach(t=>t.value="");
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=60,left=40,max=515;
+
+  doc.setFontSize(11);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+
+  doc.setFontSize(18);
+  doc.text("You Matter — Personal Reflection", left, y); y+=30;
+
+  const qs=[
+    "What has been weighing on you:",
+    "Emotions you are feeling:",
+    "What has helped before:",
+    "What you would tell someone you love:",
+    "One reason to stay today:"
+  ];
+  const as=[
+    q1.value,q2.value,q3.value,q4.value,q5.value
+  ];
+
+  doc.setFontSize(12);
+  for(let i=0;i<qs.length;i++){
+    doc.text(doc.splitTextToSize(qs[i],max),left,y); y+=18;
+    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=24;
+  }
+
+  doc.setFontSize(11);
+  const closing=
+  "If you are struggling, please consider reaching out to a trusted person or local support service. " +
+  "You deserve help, compassion, and time to heal.";
+  doc.text(doc.splitTextToSize(closing,max),left,y+10);
+
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    800
+  );
+
+  doc.save("you-matter-reflection.pdf");
+}
+</script>
+</body>
+</html>

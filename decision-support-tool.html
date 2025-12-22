@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>I’m Stuck — Decision Support Tool | Emotional Intelligence Developer</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --accent:#1f6feb;
+  --soft:#eff6ff;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+  --safe:#10b981;
+}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  margin:0;
+  background:var(--bg);
+  color:#111;
+}
+.wrap{max-width:820px;margin:28px auto;padding:20px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08)
+}
+h1{margin:0 0 10px;font-size:22px}
+.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+
+.notice{
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:12px;
+  padding:14px;
+  font-size:0.95rem;
+  margin-bottom:20px;
+}
+
+.q{
+  margin:16px 0;
+  padding:14px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+}
+.q h3{margin:0 0 10px;font-size:15px}
+textarea{
+  width:100%;
+  min-height:90px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  resize:vertical;
+  font-size:0.95rem;
+}
+
+.controls{
+  display:flex;
+  gap:12px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn.secondary{background:#e5e7eb;color:#111}
+
+.result{
+  display:none;
+  margin-top:22px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+  line-height:1.6;
+}
+
+.download{
+  margin-top:16px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  background:var(--safe);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:14px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--cta);
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+
+footer{
+  margin-top:18px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>I’m Stuck — Decision Support Tool</h1>
+
+<p class="lead">
+This tool is for moments when your mind feels full, your emotions are loud,
+and making a decision feels overwhelming.
+You don’t need to decide everything — just the next gentle step.
+</p>
+
+<div class="notice">
+<strong>Reminder:</strong> Feeling stuck does not mean you are failing.
+It often means you care — and your nervous system needs clarity, not pressure.
+</div>
+
+<div class="q">
+  <h3>1) What decision or situation are you feeling stuck on right now?</h3>
+  <textarea id="q1"></textarea>
+</div>
+
+<div class="q">
+  <h3>2) What emotion feels loudest when you think about this?</h3>
+  <textarea id="q2"></textarea>
+</div>
+
+<div class="q">
+  <h3>3) What are you most afraid might happen if you choose “wrong”?</h3>
+  <textarea id="q3"></textarea>
+</div>
+
+<div class="q">
+  <h3>4) If you did nothing for another week, how would that affect you?</h3>
+  <textarea id="q4"></textarea>
+</div>
+
+<div class="q">
+  <h3>5) What option feels slightly safer or lighter — even if imperfect?</h3>
+  <textarea id="q5"></textarea>
+</div>
+
+<div class="controls">
+  <button class="btn" onclick="showGuidance()">Show My Direction</button>
+  <button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="download" onclick="downloadPDF()">Download My Decision Snapshot (PDF)</div>
+
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+  <strong>Support for clarity & overwhelm</strong>
+  <p>
+    Our Recommended Books include resources on decision fatigue,
+    anxiety, boundaries, burnout, and emotional clarity.
+    Some links are affiliate links at no extra cost to you.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    View Recommended Books
+  </a>
+</div>
+
+<div class="help-box">
+  <strong>If stuckness feels heavy or persistent</strong>
+  <p>
+    Support can help when indecision turns into anxiety or shutdown.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Visit the Help Page
+  </a>
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+function showGuidance(){
+  const box=document.getElementById("result");
+  box.innerHTML = `
+    <strong>Your gentle direction</strong><br><br>
+    You do not need certainty to move forward — only enough safety.
+    Based on what you wrote, a compassionate next step may be to:
+    <ul>
+      <li>Reduce pressure and avoid all-or-nothing thinking</li>
+      <li>Choose the option that protects your energy first</li>
+      <li>Take one reversible step instead of a final decision</li>
+    </ul>
+    You can revisit and adjust later. Progress does not require perfection.
+  `;
+  box.style.display="block";
+}
+
+function resetTool(){
+  document.querySelectorAll("textarea").forEach(t=>t.value="");
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=60,left=40,max=515;
+
+  doc.setFontSize(11);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+
+  doc.setFontSize(18);
+  doc.text("Decision Snapshot", left, y); y+=30;
+
+  const qs=[
+    "What I’m stuck on:",
+    "Emotion I’m feeling:",
+    "What I’m afraid of:",
+    "What happens if I delay:",
+    "Option that feels lighter:"
+  ];
+  const as=[
+    q1.value,q2.value,q3.value,q4.value,q5.value
+  ];
+
+  doc.setFontSize(11);
+  for(let i=0;i<qs.length;i++){
+    doc.text(qs[i],left,y); y+=16;
+    doc.text(as[i]||"(not written)",left+10,y,{maxWidth:max});
+    y+=30;
+  }
+
+  doc.setFontSize(12);
+  doc.text("Suggested Way Forward",left,y+=10);
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "Choose the option that reduces harm and pressure today. "
+    +"You can change direction later. This document can be kept for reflection "
+    +"or shared with someone you trust if explaining feels difficult.",max
+  ),left,y+=14);
+
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    800
+  );
+
+  doc.save("decision-snapshot.pdf");
+}
+</script>
+</body>
+</html>

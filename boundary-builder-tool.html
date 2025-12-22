@@ -1,16 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Boundary Builder — Emotional Intelligence Developer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boundary Builder Tool — Emotional Intelligence Developer</title>
 
 <style>
 :root{
   --bg:#f3f4f6;
   --card:#ffffff;
   --accent:#1f6feb;
-  --soft:#eef2ff;
   --muted:#6b7280;
   --cta:#f59e0b;
   --safe:#10b981;
@@ -26,7 +25,7 @@ body{
   background:var(--card);
   border-radius:14px;
   padding:24px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
+  box-shadow:0 10px 28px rgba(16,24,40,.08)
 }
 h1{margin:0 0 10px;font-size:22px}
 .lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
@@ -41,7 +40,7 @@ h1{margin:0 0 10px;font-size:22px}
 .q h3{margin:0 0 10px;font-size:15px}
 textarea{
   width:100%;
-  min-height:90px;
+  min-height:80px;
   padding:10px;
   border-radius:8px;
   border:1px solid #d1d5db;
@@ -70,8 +69,8 @@ textarea{
   margin-top:22px;
   padding:18px;
   border-radius:14px;
-  background:var(--soft);
-  border:1px solid #c7d2fe;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
   line-height:1.6;
 }
 
@@ -124,41 +123,41 @@ footer{
 <div class="wrap">
 <div class="card">
 
-<h1>Boundary Builder — Protect Your Energy</h1>
+<h1>Boundary Builder — A Gentle Self-Respect Tool</h1>
 
 <p class="lead">
-This tool helps you identify where your boundaries feel stretched,
-why that matters, and how to express a healthier boundary clearly and safely.
+This tool helps you notice where your boundaries feel stretched,
+unclear, or crossed — and guides you toward calmer, healthier limits
+without guilt or confrontation.
 </p>
 
-<!-- QUESTIONS -->
 <div class="q">
-<h3>1) Where do you most often feel drained, resentful, or taken for granted?</h3>
+<h3>1) Where do you most often feel drained, resentful, or uncomfortable?</h3>
 <textarea id="q1"></textarea>
 </div>
 
 <div class="q">
-<h3>2) What do you usually do instead of setting a boundary?</h3>
+<h3>2) What do people expect from you in this situation?</h3>
 <textarea id="q2"></textarea>
 </div>
 
 <div class="q">
-<h3>3) What are you afraid might happen if you say “no” or speak up?</h3>
+<h3>3) What do you actually need or want instead?</h3>
 <textarea id="q3"></textarea>
 </div>
 
 <div class="q">
-<h3>4) What would a respectful boundary look like in this situation?</h3>
+<h3>4) What makes it hard for you to say no or speak up?</h3>
 <textarea id="q4"></textarea>
 </div>
 
 <div class="q">
-<h3>5) How would protecting this boundary help your wellbeing?</h3>
+<h3>5) What would a respectful boundary sound like in simple words?</h3>
 <textarea id="q5"></textarea>
 </div>
 
 <div class="controls">
-<button class="btn" onclick="showBoundary()">Build My Boundary</button>
+<button class="btn" onclick="showPlan()">Show My Boundary Plan</button>
 <button class="btn secondary" onclick="resetTool()">Reset</button>
 </div>
 
@@ -166,14 +165,13 @@ why that matters, and how to express a healthier boundary clearly and safely.
 
 <div class="download" onclick="downloadPDF()">Download My Boundary Plan (PDF)</div>
 
-<!-- ADS -->
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-<strong>Learn to set boundaries without guilt</strong>
+<p><strong>Want support building boundaries without guilt?</strong></p>
 <p>
-Our Recommended Books page includes journals and books on boundaries,
-self-respect, emotional intelligence, and healthy communication.
-Some links may be affiliate links at no extra cost to you.
+Our Recommended Books page includes books and journals on boundaries,
+people-pleasing, self-respect, and emotional resilience.
+Some links are affiliate links at no extra cost to you.
 </p>
 <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
 View Recommended Books
@@ -181,10 +179,10 @@ View Recommended Books
 </div>
 
 <div class="help-box">
-<strong>Need extra support?</strong>
+<p><strong>Struggling with boundaries in real life?</strong></p>
 <p>
-If setting boundaries feels overwhelming or unsafe,
-our help page shares grounding tools and support options.
+If setting limits feels overwhelming or unsafe,
+our help page offers grounding guidance and support options.
 </p>
 <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
 Visit the Help Page
@@ -202,20 +200,19 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script>
 const { jsPDF } = window.jspdf;
 
-function showBoundary(){
-  const box=document.getElementById("result");
-  box.innerHTML = `
-  <strong>Your Boundary Insight</strong><br><br>
-  Boundaries are not punishments — they are instructions for how others treat you.
-  Feeling discomfort when setting a boundary does not mean it is wrong;
-  it often means you are breaking an old pattern.<br><br>
+function showPlan(){
+  const msg = `
+<strong>Your Boundary Reminder</strong><br><br>
+Boundaries are not punishments or walls.
+They are instructions that protect your energy,
+time, and emotional wellbeing.<br><br>
 
-  You are allowed to protect your time, energy, and emotional space.
-  A simple boundary can sound like:
-  <em>“I can’t do that right now.”</em>
-  or
-  <em>“I need time to think about this.”</em>
+You are allowed to say no without explaining yourself.
+You are allowed to change your mind.
+You are allowed to choose rest, space, and respect.
   `;
+  const box=document.getElementById("result");
+  box.innerHTML=msg;
   box.style.display="block";
 }
 
@@ -225,39 +222,44 @@ function resetTool(){
 }
 
 function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=60,left=40,max=515;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  let left=40, y=40, max=515;
 
   doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 25);
 
   doc.setFontSize(18);
-  doc.text("Boundary Builder — Personal Plan", left, y); y+=30;
+  doc.text("Boundary Builder — Personal Reflection", left, y); y+=30;
 
-  const qs=[
-    "Where boundaries feel strained:",
-    "What you usually do instead:",
-    "Fear around setting boundaries:",
-    "What a healthy boundary looks like:",
-    "How this boundary supports you:"
+  const questions=[
+    "Where you feel drained or uncomfortable:",
+    "What others expect from you:",
+    "What you actually need:",
+    "What makes boundaries hard:",
+    "A respectful boundary you could set:"
   ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+  const answers=[
+    q1.value,q2.value,q3.value,q4.value,q5.value
+  ];
 
   doc.setFontSize(12);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y); y+=16;
-    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=28;
+  for(let i=0;i<questions.length;i++){
+    doc.text(questions[i], left, y); y+=16;
+    doc.text(doc.splitTextToSize(answers[i]||"(not written)", max), left+10, y);
+    y+=28;
   }
 
   doc.setFontSize(12);
-  doc.text("How to Use This Document",left,y+=20);
+  doc.text("Gentle Guidance", left, y+=16);
   doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "This document helps you clarify your boundaries. "
-    +"You can keep it for reflection, revisit it before difficult conversations, "
-    +"or share it with someone you trust if explaining feels hard.",
-    max
-  ),left,y+=14);
+  doc.text(
+    doc.splitTextToSize(
+      "You can keep this document as a private reminder, return to it later, or share it with someone you trust if speaking feels difficult. Boundaries are an act of self-respect, not conflict.",
+      max
+    ),
+    left,
+    y+=14
+  );
 
   doc.setFontSize(10);
   doc.text(

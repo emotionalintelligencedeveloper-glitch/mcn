@@ -2,81 +2,117 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Emotional Trigger Mapping Tool</title>
+<title>Emotional Trigger Mapping Tool — Emotional Intelligence Developer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --bg:#f3f6fb;
+  --card:#ffffff;
+  --accent:#1f6feb;
+  --soft:#eff6ff;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+}
 body{
   margin:0;
-  padding:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:#f4f6f8;
-  color:#222;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:#0f172a;
 }
-.wrapper{max-width:820px;margin:auto;padding:24px}
+.wrapper{
+  max-width:820px;
+  margin:28px auto;
+  padding:20px;
+}
 .card{
-  background:#fff;
-  border-radius:12px;
-  padding:26px;
-  margin-bottom:26px;
-  box-shadow:0 8px 20px rgba(0,0,0,.05)
+  background:var(--card);
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08);
+  margin-bottom:24px;
 }
-h1{font-size:28px;margin-bottom:10px}
-h2{font-size:20px}
-label{display:block;font-weight:600;margin-top:18px}
-textarea,select{
+h1{margin:0 0 10px;font-size:24px}
+p{line-height:1.6}
+label{
+  display:block;
+  font-weight:600;
+  margin-top:18px;
+}
+textarea, select{
   width:100%;
   margin-top:8px;
   padding:12px;
   border-radius:8px;
-  border:1px solid #ccc;
+  border:1px solid #d1d5db;
   font-size:15px;
-  resize:vertical
+}
+.controls{
+  margin-top:22px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
 }
 button{
-  margin-top:22px;
-  padding:14px 22px;
-  font-size:16px;
-  border-radius:8px;
-  border:none;
-  cursor:pointer
-}
-.primary{background:#2a7de1;color:#fff}
-.secondary{background:#e6ecf2;color:#222;margin-left:10px}
-#feedbackBox{
-  display:none;
-  background:#eef3f7;
+  padding:12px 18px;
   border-radius:10px;
-  padding:22px;
-  margin-top:28px
+  border:0;
+  cursor:pointer;
+  font-weight:600;
 }
-.ads-label{font-size:13px;color:#666;margin-top:28px}
-.ads-box,.help-box{
+.primary{background:var(--accent);color:#fff}
+.secondary{background:#e5e7eb}
+.result{
+  display:none;
+  margin-top:22px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+}
+.download{
+  margin-top:16px;
+  display:inline-block;
+  padding:12px 18px;
+  border-radius:10px;
+  background:#10b981;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.ads-label{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:26px;
+}
+.ads-box{
   background:#fefce8;
   border:1px solid #facc15;
   border-radius:12px;
   padding:14px;
-  margin-top:10px
-}
-.help-box{
-  background:#ecfeff;
-  border-color:#67e8f9
 }
 .cta-link{
   display:inline-block;
   margin-top:10px;
   padding:10px 16px;
   border-radius:8px;
-  background:#f59e0b;
+  background:var(--cta);
   color:#111;
+  text-decoration:none;
   font-weight:700;
-  text-decoration:none
 }
-.footer{
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+footer{
+  margin-top:18px;
+  font-size:12px;
+  color:var(--muted);
   text-align:center;
-  font-size:13px;
-  color:#666;
-  margin-top:40px
 }
 </style>
 </head>
@@ -87,75 +123,70 @@ button{
 <div class="card">
 <h1>Emotional Trigger Mapping Tool</h1>
 <p>
-Slow down emotional reactions, understand what triggered them,
+Strong emotional reactions can feel confusing or overwhelming.
+This gentle tool helps you slow the moment down, understand what was triggered,
 and respond with awareness instead of self-criticism.
 </p>
 </div>
 
 <div class="card">
-<h2>Reflection</h2>
-
 <label>1) What happened just before the reaction?</label>
-<textarea id="situation"></textarea>
+<textarea id="situation" rows="4"></textarea>
 
 <label>2) What emotion felt strongest?</label>
 <select id="emotion">
-  <option value="">Select one</option>
-  <option>Anger</option>
-  <option>Fear</option>
-  <option>Sadness</option>
-  <option>Shame</option>
-  <option>Overwhelm</option>
-  <option>Numbness</option>
+<option value="">Select one</option>
+<option>Anger</option>
+<option>Fear</option>
+<option>Sadness</option>
+<option>Shame</option>
+<option>Overwhelm</option>
+<option>Numbness</option>
 </select>
 
 <label>3) Where did you feel this in your body?</label>
-<textarea id="body"></textarea>
+<textarea id="body" rows="3"></textarea>
 
 <label>4) What thought immediately appeared?</label>
-<textarea id="thought"></textarea>
+<textarea id="thought" rows="3"></textarea>
 
+<div class="controls">
 <button class="primary" onclick="generateFeedback()">Show My Insight</button>
 <button class="secondary" onclick="resetTool()">Reset</button>
 </div>
 
-<div id="feedbackBox" class="card">
-<h2>Your Supportive Insight</h2>
-<p id="feedbackText"></p>
-<button class="primary" onclick="downloadPDF()">Download My Reflection (PDF)</button>
+<div id="result" class="result"></div>
+
+<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
 </div>
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-<strong>Recommended Reading & Journals</strong>
+<p><strong>Want deeper emotional support?</strong></p>
 <p>
+Our Recommended Books page includes journals and books on emotional triggers,
+self-regulation, anxiety, boundaries, and healing.
 Some links are affiliate links at no extra cost to you.
-These resources support emotional awareness and healing.
 </p>
-<a class="cta-link"
-   href="https://emotionalintelligencedeveloper.com/recommended-books/"
-   target="_blank">
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
 View Recommended Books
 </a>
 </div>
 
 <div class="help-box">
-<strong>Need extra support?</strong>
+<p><strong>You don’t have to figure this out alone.</strong></p>
 <p>
-If emotions feel overwhelming or persistent,
-you don’t have to handle them alone.
+If emotional reactions feel intense or confusing,
+our help page offers grounding resources and support options.
 </p>
-<a class="cta-link"
-   href="https://emotionalintelligencedeveloper.com/help-page/"
-   target="_blank">
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
 Visit the Help Page
 </a>
 </div>
 
-<div class="footer">
-Created by Emotional Intelligence Developer —  
-https://emotionalintelligencedeveloper.com/
-</div>
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
 
 </div>
 
@@ -168,60 +199,59 @@ function generateFeedback(){
   if(!emotion){alert("Please select an emotion.");return;}
 
   const responses={
-    Anger:"Anger often signals a boundary crossing. Pause your breath before responding.",
-    Fear:"Fear alerts perceived danger. Ground yourself in the present moment.",
-    Sadness:"Sadness asks for gentleness, not fixing. This feeling is allowed.",
-    Shame:"Shame lies about your worth. One reaction does not define you.",
-    Overwhelm:"Overwhelm means your nervous system needs fewer inputs.",
-    Numbness:"Numbness can be protective. Reconnect gently through physical sensation."
+    Anger:"Anger often signals a boundary that feels crossed. Pause your body before responding — you still have choice.",
+    Fear:"Fear reflects perceived danger, not always real danger. Ground yourself and notice what is actually safe right now.",
+    Sadness:"Sadness asks for gentleness, not fixing. Let the feeling exist without judging it.",
+    Shame:"Shame isolates. This reaction does not define your worth or identity.",
+    Overwhelm:"Overwhelm means your nervous system needs fewer inputs. Focus on one small, controllable step.",
+    Numbness:"Numbness can be protective. Gentle movement or warmth can help you reconnect safely."
   };
 
-  document.getElementById("feedbackText").innerText=responses[emotion];
-  document.getElementById("feedbackBox").style.display="block";
+  document.getElementById("result").innerHTML=
+    "<strong>Your insight:</strong><br><br>"+responses[emotion];
+  document.getElementById("result").style.display="block";
 }
 
 function resetTool(){
   document.querySelectorAll("textarea").forEach(t=>t.value="");
   document.getElementById("emotion").value="";
-  document.getElementById("feedbackBox").style.display="none";
+  document.getElementById("result").style.display="none";
 }
 
 function downloadPDF(){
-  const doc=new jsPDF({unit:"pt",format:"a4"});
-  let y=50,left=40,max=500;
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=60,left=40,max=515;
 
   doc.setFontSize(18);
-  doc.text("Emotional Trigger Mapping Tool",left,y); y+=24;
+  doc.text("Emotional Trigger Mapping Tool",left,y); y+=28;
 
   doc.setFontSize(11);
-  doc.text("By Emotional Intelligence Developer",left,y); y+=14;
-  doc.text("https://emotionalintelligencedeveloper.com/",left,y); y+=28;
+  doc.text("emotionalintelligencedeveloper.com",left,y); y+=24;
 
-  doc.setFontSize(12);
   const sections=[
     ["Situation:",situation.value],
     ["Emotion:",emotion.value],
-    ["Body Sensation:",body.value],
-    ["Automatic Thought:",thought.value],
-    ["Support Insight:",feedbackText.innerText]
+    ["Body sensation:",body.value],
+    ["Thought:",thought.value],
+    ["Insight:",document.getElementById("result").innerText]
   ];
 
   sections.forEach(s=>{
-    doc.text(s[0],left,y); y+=14;
-    doc.text(doc.splitTextToSize(s[1]||"(not written)",max),left+10,y);
-    y+=32;
+    const q=doc.splitTextToSize(s[0],max);
+    doc.text(q,left,y); y+=14;
+    const a=doc.splitTextToSize(s[1]||"(not written)",max);
+    doc.text(a,left+10,y); y+=a.length*14+10;
   });
 
   doc.setFontSize(10);
   doc.text(
-    "Generated with Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
     left,
     800
   );
 
-  doc.save("emotional-trigger-mapping-reflection.pdf");
+  doc.save("emotional-trigger-mapping.pdf");
 }
 </script>
-
 </body>
 </html>

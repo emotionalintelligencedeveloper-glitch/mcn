@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Emotional Trigger Mapping Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7f8;
+  color: #222;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+}
+h1 {
+  font-size: 26px;
+}
+label {
+  font-weight: bold;
+  margin-top: 20px;
+  display: block;
+}
+textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  margin-top: 25px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2a7de1;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.result {
+  margin-top: 30px;
+  padding: 20px;
+  background: #eef3f7;
+  border-radius: 8px;
+}
+.footer {
+  margin-top: 40px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Emotional Trigger Mapping Tool</h1>
+  <p>This tool helps you understand what triggered your emotional reaction and how to respond with clarity instead of overwhelm.</p>
+
+  <label>1. What happened just before the emotional reaction?</label>
+  <textarea id="situation"></textarea>
+
+  <label>2. What did you feel most strongly?</label>
+  <select id="emotion">
+    <option>Anger</option>
+    <option>Fear</option>
+    <option>Sadness</option>
+    <option>Shame</option>
+    <option>Overwhelm</option>
+    <option>Numbness</option>
+  </select>
+
+  <label>3. Where did you feel it in your body?</label>
+  <textarea id="body"></textarea>
+
+  <label>4. What thought immediately showed up?</label>
+  <textarea id="thought"></textarea>
+
+  <button onclick="generate()">Generate Feedback</button>
+  <button onclick="downloadPDF()">Download PDF</button>
+
+  <div class="result" id="result"></div>
+
+  <div class="footer">
+    emotionalintelligencedeveloper.com
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+function generate() {
+  const emotion = document.getElementById("emotion").value;
+  let feedback = "";
+
+  switch (emotion) {
+    case "Anger":
+      feedback = "Anger often appears when a boundary feels crossed. Pause, breathe deeply, and remind yourself that reacting is optional.";
+      break;
+    case "Fear":
+      feedback = "Fear signals perceived danger. Ground yourself by naming five things you can see right now.";
+      break;
+    case "Sadness":
+      feedback = "Sadness often asks for gentleness. You are allowed to slow down and feel without fixing.";
+      break;
+    case "Shame":
+      feedback = "Shame grows in silence. Remind yourself: one moment does not define your worth.";
+      break;
+    case "Overwhelm":
+      feedback = "Overwhelm means your system needs space. Focus on one small, controllable step.";
+      break;
+    case "Numbness":
+      feedback = "Numbness can be protective. Start with physical grounding like stretching or warm water.";
+      break;
+  }
+
+  document.getElementById("result").innerHTML =
+    "<h3>Your Reflection</h3>" +
+    "<p><strong>Feedback:</strong> " + feedback + "</p>";
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(12);
+  doc.text("Emotional Trigger Mapping Tool", 10, 10);
+
+  doc.text("1. Situation:", 10, 20);
+  doc.text(document.getElementById("situation").value, 10, 28);
+
+  doc.text("2. Emotion:", 10, 45);
+  doc.text(document.getElementById("emotion").value, 10, 53);
+
+  doc.text("3. Body Sensation:", 10, 65);
+  doc.text(document.getElementById("body").value, 10, 73);
+
+  doc.text("4. Thought:", 10, 90);
+  doc.text(document.getElementById("thought").value, 10, 98);
+
+  doc.text("Feedback:", 10, 115);
+  doc.text(document.getElementById("result").innerText, 10, 123);
+
+  doc.text("emotionalintelligencedeveloper.com", 10, 285);
+
+  doc.save("emotional-trigger-mapping.pdf");
+}
+</script>
+
+</body>
+</html>

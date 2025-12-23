@@ -6,42 +6,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ---------- Base ---------- */
+/* ---------- Base Layout ---------- */
 body {
   margin: 0;
   padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f4f6f8;
-  color: #222;
+  color: #1f2933;
   line-height: 1.6;
 }
 
-.wrapper {
-  max-width: 820px;
+.container {
+  max-width: 860px;
   margin: auto;
   padding: 24px;
 }
 
 .card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 26px;
+  border-radius: 14px;
+  padding: 28px;
   margin-bottom: 28px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
 }
 
 h1 {
-  font-size: 30px;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin: 0 0 12px 0;
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 22px;
   margin-top: 0;
 }
 
 p {
-  margin-top: 8px;
+  margin: 10px 0;
 }
 
 /* ---------- Inputs ---------- */
@@ -53,71 +53,183 @@ label {
 
 textarea, select {
   width: 100%;
+  padding: 14px;
   margin-top: 8px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
   font-size: 15px;
   resize: vertical;
 }
 
 /* ---------- Buttons ---------- */
 button {
-  margin-top: 22px;
+  margin-top: 26px;
   padding: 14px 22px;
   font-size: 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
 }
 
 .primary {
-  background: #2a7de1;
-  color: #fff;
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .secondary {
-  background: #e6ecf2;
-  color: #222;
+  background: #e5e7eb;
+  color: #111827;
   margin-left: 10px;
 }
 
 /* ---------- Feedback ---------- */
-#feedbackBox {
+#feedbackSection {
   display: none;
-  background: #eef3f7;
-  border-radius: 10px;
-  padding: 22px;
-  margin-top: 28px;
+  background: #eef2f7;
+  border-radius: 14px;
+  padding: 26px;
 }
 
 /* ---------- Footer ---------- */
 .footer {
   text-align: center;
   font-size: 13px;
-  color: #666;
-  margin-top: 40px;
+  color: #6b7280;
+  margin-top: 50px;
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
+<div class="container">
 
+  <!-- Intro -->
   <div class="card">
     <h1>Emotional Trigger Mapping Tool</h1>
-    <p>This tool helps you slow down an emotional reaction, understand what triggered it, and respond with awareness instead of self-criticism.</p>
+    <p>
+      This tool helps you pause, understand what triggered your emotional reaction,
+      and respond with clarity instead of self-judgment.
+    </p>
   </div>
 
+  <!-- Questions -->
   <div class="card">
-    <h2>Step 1 — What happened?</h2>
-    <label>Describe the situation just before the reaction</label>
-    <textarea id="situation" rows="4"></textarea>
+    <h2>Step 1 — Reflect</h2>
 
-    <label>What emotion felt strongest?</label>
-    <select id="emotion">
-      <option value="">Select one</option>
+    <label>1. What happened just before you reacted?</label>
+    <textarea id="qSituation" rows="4" placeholder="Describe the moment or interaction"></textarea>
+
+    <label>2. Which emotion felt strongest?</label>
+    <select id="qEmotion">
+      <option value="">Select an emotion</option>
       <option>Anger</option>
       <option>Fear</option>
       <option>Sadness</option>
-      <option>Shame</op
+      <option>Shame</option>
+      <option>Overwhelm</option>
+      <option>Numbness</option>
+    </select>
+
+    <label>3. Where did you feel this in your body?</label>
+    <textarea id="qBody" rows="3" placeholder="Chest, stomach, jaw, shoulders, etc."></textarea>
+
+    <label>4. What thought showed up immediately?</label>
+    <textarea id="qThought" rows="3" placeholder="The first thought you noticed"></textarea>
+
+    <button class="primary" onclick="generateFeedback()">Generate Feedback</button>
+    <button class="secondary" onclick="resetTool()">Reset</button>
+  </div>
+
+  <!-- Feedback -->
+  <div id="feedbackSection" class="card">
+    <h2>Your Feedback</h2>
+    <p id="feedbackText"></p>
+    <button class="primary" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <div class="footer">
+    emotionalintelligencedeveloper.com
+  </div>
+
+</div>
+
+<!-- PDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function generateFeedback() {
+  const emotion = document.getElementById("qEmotion").value;
+  let feedback = "";
+
+  if (!emotion) {
+    alert("Please select an emotion before continuing.");
+    return;
+  }
+
+  switch (emotion) {
+    case "Anger":
+      feedback = "Anger often signals that a personal boundary felt crossed. Pause your body before responding. You are allowed to choose a calmer response.";
+      break;
+    case "Fear":
+      feedback = "Fear reflects perceived danger, not always real danger. Ground yourself by noticing your surroundings and reminding yourself you are safe right now.";
+      break;
+    case "Sadness":
+      feedback = "Sadness asks for gentleness, not solutions. Let the feeling exist without rushing it away.";
+      break;
+    case "Shame":
+      feedback = "Shame tells a harsh story about who you are. One reaction does not define your worth or character.";
+      break;
+    case "Overwhelm":
+      feedback = "Overwhelm means your system is overloaded. Focus on one small step you can control in this moment.";
+      break;
+    case "Numbness":
+      feedback = "Numbness can be protective. Reconnect gently through physical sensation, warmth, or movement.";
+      break;
+  }
+
+  document.getElementById("feedbackText").innerText = feedback;
+  document.getElementById("feedbackSection").style.display = "block";
+}
+
+function resetTool() {
+  document.getElementById("qSituation").value = "";
+  document.getElementById("qEmotion").value = "";
+  document.getElementById("qBody").value = "";
+  document.getElementById("qThought").value = "";
+  document.getElementById("feedbackSection").style.display = "none";
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 15;
+
+  doc.setFontSize(14);
+  doc.text("Emotional Trigger Mapping Tool", 10, y);
+  y += 10;
+
+  doc.setFontSize(11);
+  doc.text("1. What happened:", 10, y); y += 6;
+  doc.text(document.getElementById("qSituation").value || "-", 10, y); y += 12;
+
+  doc.text("2. Emotion:", 10, y); y += 6;
+  doc.text(document.getElementById("qEmotion").value || "-", 10, y); y += 12;
+
+  doc.text("3. Body sensation:", 10, y); y += 6;
+  doc.text(document.getElementById("qBody").value || "-", 10, y); y += 12;
+
+  doc.text("4. Thought:", 10, y); y += 6;
+  doc.text(document.getElementById("qThought").value || "-", 10, y); y += 12;
+
+  doc.text("Feedback:", 10, y); y += 6;
+  doc.text(document.getElementById("feedbackText").innerText, 10, y);
+
+  doc.setFontSize(10);
+  doc.text("emotionalintelligencedeveloper.com", 10, 290);
+
+  doc.save("emotional-trigger-mapping.pdf");
+}
+</script>
+
+</body>
+</html>

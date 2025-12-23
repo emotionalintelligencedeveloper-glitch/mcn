@@ -28,6 +28,7 @@ body{
 }
 h1{font-size:28px;margin:0 0 10px}
 h2{font-size:20px;margin:0 0 12px}
+p{margin-top:8px}
 label{
   display:block;
   font-weight:600;
@@ -52,6 +53,7 @@ button{
 }
 .primary{background:#2a7de1;color:#fff}
 .secondary{background:#e6ecf2;color:#222;margin-left:10px}
+
 #feedbackBox{
   display:none;
   background:#eef3f7;
@@ -59,12 +61,7 @@ button{
   padding:22px;
   margin-top:28px;
 }
-.footer{
-  text-align:center;
-  font-size:13px;
-  color:#666;
-  margin-top:40px;
-}
+
 .download{
   margin-top:18px;
   padding:14px 22px;
@@ -73,6 +70,41 @@ button{
   color:#fff;
   font-weight:700;
   cursor:pointer;
+}
+
+.ads-label{
+  font-size:13px;
+  color:#6b7280;
+  margin-top:26px;
+}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:14px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:#f59e0b;
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin-top:40px;
 }
 </style>
 </head>
@@ -121,6 +153,30 @@ button{
   <button class="download" onclick="downloadPDF()">Download Reflection (PDF)</button>
 </div>
 
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+  <p><strong>Want deeper support around emotional triggers?</strong></p>
+  <p>
+    Explore our Recommended Books page with journals and books on emotional awareness,
+    boundaries, self-regulation, and healing.
+    Some links are affiliate links, meaning we may earn a small commission at no extra cost to you.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    View Recommended Books
+  </a>
+</div>
+
+<div class="help-box">
+  <p><strong>You don’t have to process this alone.</strong></p>
+  <p>
+    If emotional reactions feel overwhelming or confusing, our help page offers grounding tools
+    and support options.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Visit the Help Page
+  </a>
+</div>
+
 <div class="footer">
   Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
 </div>
@@ -135,30 +191,30 @@ function generateFeedback(){
   const emotion = document.getElementById("emotion").value;
   if(!emotion){ alert("Please select an emotion."); return; }
 
-  let feedback = "";
+  let feedback="";
   switch(emotion){
     case "Anger":
-      feedback = "Anger often signals a crossed boundary. Pause your body before responding — slowing your breath helps you regain choice.";
+      feedback="Anger often signals a crossed boundary. Pause your body first — slowing your breath restores choice.";
       break;
     case "Fear":
-      feedback = "Fear reflects perceived danger, not always real danger. Ground yourself by noticing where you are and what is safe right now.";
+      feedback="Fear reflects perceived danger, not always real danger. Ground yourself by noticing what is safe right now.";
       break;
     case "Sadness":
-      feedback = "Sadness asks for gentleness, not fixing. Let the feeling exist without judging it.";
+      feedback="Sadness asks for gentleness, not fixing. Let the feeling exist without judging it.";
       break;
     case "Shame":
-      feedback = "Shame grows in silence. This reaction does not define your worth or identity.";
+      feedback="Shame grows in silence. One reaction does not define your worth or identity.";
       break;
     case "Overwhelm":
-      feedback = "Overwhelm means your system needs fewer demands. Focus on one small controllable step.";
+      feedback="Overwhelm means your system needs fewer demands. Focus on one small controllable step.";
       break;
     case "Numbness":
-      feedback = "Numbness can be protective. Gentle movement or physical sensation can help you reconnect safely.";
+      feedback="Numbness can be protective. Gentle movement or physical sensation can help reconnect safely.";
       break;
   }
 
-  document.getElementById("feedbackText").innerText = feedback;
-  document.getElementById("feedbackBox").style.display = "block";
+  document.getElementById("feedbackText").innerText=feedback;
+  document.getElementById("feedbackBox").style.display="block";
 }
 
 function resetTool(){
@@ -169,29 +225,30 @@ function resetTool(){
 }
 
 function downloadPDF(){
-  const doc = new jsPDF({unit:"pt",format:"a4"});
+  const doc=new jsPDF({unit:"pt",format:"a4"});
   let y=50,left=40,max=515;
 
+  function addBlock(title,text){
+    if(y>760){doc.addPage();y=50;}
+    doc.setFontSize(12);
+    doc.text(title,left,y); y+=16;
+    doc.setFontSize(11);
+    const lines=doc.splitTextToSize(text||"(not written)",max);
+    doc.text(lines,left+10,y);
+    y+=lines.length*14+10;
+  }
+
   doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+  doc.text("https://emotionalintelligencedeveloper.com/",left,30);
 
   doc.setFontSize(18);
-  doc.text("Emotional Trigger Mapping Reflection", left, y); y+=28;
+  doc.text("Emotional Trigger Mapping Reflection",left,y); y+=30;
 
-  const sections=[
-    ["What happened:", situation.value],
-    ["Emotion felt:", emotion.value],
-    ["Body sensation:", body.value],
-    ["Immediate thought:", thought.value],
-    ["Guidance:", feedbackText.innerText]
-  ];
-
-  doc.setFontSize(11);
-  sections.forEach(sec=>{
-    doc.text(sec[0], left, y); y+=16;
-    doc.text(doc.splitTextToSize(sec[1]||"(not written)",max), left+10, y);
-    y+=30;
-  });
+  addBlock("What happened:",situation.value);
+  addBlock("Emotion felt:",emotion.value);
+  addBlock("Body sensation:",body.value);
+  addBlock("Immediate thought:",thought.value);
+  addBlock("Guidance:",feedbackText.innerText);
 
   doc.setFontSize(10);
   doc.text(

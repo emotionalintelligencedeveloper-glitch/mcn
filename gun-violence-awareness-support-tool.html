@@ -138,15 +138,18 @@ footer{
 <h1>Gun Violence Awareness & Emotional Support</h1>
 
 <p class="lead">
-This tool is here to support reflection, awareness, and prevention.
-If something feels unsafe — for you or someone else — paying attention matters.
+If you’re worried about gun violence — whether for yourself, someone you know,
+or a situation that feels unsafe — this tool helps you slow down, reflect,
+and choose safer next steps.
 </p>
 
 <div class="notice">
 <strong>If there is immediate danger:</strong><br>
 Please contact local emergency services or a trusted authority right now.
+This tool supports prevention and awareness, not crisis response.
 </div>
 
+<!-- QUESTIONS -->
 <div class="q">
 <h3>1) What made you seek support today?</h3>
 <p>Understanding the trigger helps clarify next steps.</p>
@@ -161,7 +164,7 @@ Please contact local emergency services or a trusted authority right now.
 
 <div class="q">
 <h3>3) What warning signs or behaviors have you noticed?</h3>
-<p>Changes in mood, isolation, threats, fixation, anger, or fear.</p>
+<p>Changes in mood, talk of harm, isolation, anger, fear, or fixation.</p>
 <textarea id="q3"></textarea>
 </div>
 
@@ -173,7 +176,7 @@ Please contact local emergency services or a trusted authority right now.
 
 <div class="q">
 <h3>5) What support or safety step feels possible today?</h3>
-<p>A conversation, distance from risk, or professional help.</p>
+<p>A conversation, creating distance, seeking professional help.</p>
 <textarea id="q5"></textarea>
 </div>
 
@@ -218,8 +221,18 @@ function showGuidance(){
   const box=document.getElementById("result");
   box.innerHTML = `
   <strong>You did the right thing by paying attention.</strong><br><br>
-  Concern is not overreacting — it’s care.<br><br>
-  If you believe someone may harm themselves or others, reaching out early can save lives.
+
+  Awareness saves lives. Concern is not overreacting — it’s responsibility.<br><br>
+
+  <strong>Guidance based on your reflections:</strong>
+  <ul>
+    <li>Trust your instincts when something feels unsafe.</li>
+    <li>Distance from weapons, threats, or volatile situations when possible.</li>
+    <li>Reach out to trusted adults, professionals, or authorities if risk increases.</li>
+    <li>Connection and early action prevent harm.</li>
+  </ul>
+
+  Choosing safety is an act of care — for yourself and others.
   `;
   box.style.display="block";
 }
@@ -233,30 +246,12 @@ function downloadPDF(){
   const doc=new jsPDF({unit:'pt',format:'a4'});
   let y=40,left=40,max=515;
 
-  /* Header */
-  doc.setFontSize(11);
+  doc.setFontSize(12);
   doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
 
   doc.setFontSize(18);
-  doc.text("Gun Violence Awareness — Reflection & Support", left, 70);
-  y = 105;
-
-  /* Safety note */
-  doc.setFontSize(12);
-  doc.text("Important Safety Note", left, y);
-  y += 18;
-  doc.setFontSize(11);
-  doc.text(
-    doc.splitTextToSize(
-      "If you believe you or someone else may be in immediate danger, "
-      + "contact local emergency services or a trusted authority right away. "
-      + "Early action can prevent harm.",
-      max
-    ),
-    left,
-    y
-  );
-  y += 40;
+  doc.text("Gun Violence Awareness — Reflection & Support", left, y);
+  y+=30;
 
   const questions=[
     "What led you to seek support:",
@@ -265,24 +260,30 @@ function downloadPDF(){
     "Emotions you are feeling:",
     "Support or safety step you can take:"
   ];
-  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
-  const notes=[
+  const answers=[
+    q1.value,q2.value,q3.value,q4.value,q5.value
+  ];
+
+  const recommendations=[
     "Awareness helps interrupt harm early.",
-    "Concern for others is a sign of care.",
-    "Warning signs deserve attention.",
-    "Strong emotions signal need for support.",
+    "Concern for others is a sign of care, not judgment.",
+    "Warning signs deserve attention, not dismissal.",
+    "Strong emotions signal the need for support.",
     "Small safety steps matter."
   ];
 
+  doc.setFontSize(11);
   for(let i=0;i<questions.length;i++){
     doc.text(questions[i],left,y); y+=16;
     doc.text(answers[i]||"(not written)",left+10,y,{maxWidth:max}); y+=20;
-    doc.text("Support note: "+notes[i],left+10,y,{maxWidth:max});
+    doc.text("Support note: "+recommendations[i],left+10,y,{maxWidth:max});
     y+=26;
   }
 
+  doc.setFontSize(12);
   doc.text("Helpful Resources",left,y+=10);
-  doc.text("Recommended Books:",left,y+=16);
+  doc.setFontSize(11);
+  doc.text("Recommended Books:",left,y+=14);
   doc.text("https://emotionalintelligencedeveloper.com/recommended-books/",left+10,y+=14);
   doc.text("Help & Support Page:",left,y+=20);
   doc.text("https://emotionalintelligencedeveloper.com/help-page/",left+10,y+=14);

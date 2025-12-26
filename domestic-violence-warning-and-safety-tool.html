@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Domestic Violence Warning & Safety Tool</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --accent:#1f6feb;
+  --soft:#eff6ff;
+  --warn:#fff7ed;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+  --safe:#10b981;
+}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  margin:0;
+  background:var(--bg);
+  color:#111;
+}
+.wrap{max-width:820px;margin:28px auto;padding:20px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08)
+}
+h1{margin:0 0 10px;font-size:22px}
+.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+
+.notice{
+  background:var(--warn);
+  border:1px solid #fed7aa;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:20px;
+  font-size:0.95rem;
+}
+
+.q{
+  margin:16px 0;
+  padding:14px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+}
+.q h3{margin:0 0 10px;font-size:15px}
+textarea{
+  width:100%;
+  min-height:90px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  resize:vertical;
+}
+
+.controls{
+  display:flex;
+  gap:12px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn.secondary{background:#e5e7eb;color:#111}
+
+.result{
+  display:none;
+  margin-top:22px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+  line-height:1.6;
+}
+
+.download{
+  margin-top:16px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  background:var(--safe);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:14px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--cta);
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+footer{
+  margin-top:18px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>Domestic Violence Warning & Safety Tool</h1>
+
+<p class="lead">
+This tool is a quiet, private space to reflect.
+If something in your relationship feels confusing, frightening, or controlling,
+you deserve clarity and safety — without pressure or judgment.
+</p>
+
+<div class="notice">
+<strong>If you are in immediate danger:</strong><br>
+Please contact local emergency services or a trusted person right now.
+This tool is for reflection and support, not emergency response.
+</div>
+
+<div class="q"><h3>1) Do you ever feel afraid of how someone might react to you?</h3><textarea id="q1"></textarea></div>
+<div class="q"><h3>2) Have you felt controlled, monitored, or isolated?</h3><textarea id="q2"></textarea></div>
+<div class="q"><h3>3) Do arguments leave you feeling confused, ashamed, or blamed?</h3><textarea id="q3"></textarea></div>
+<div class="q"><h3>4) Have you changed your behaviour to avoid upsetting someone?</h3><textarea id="q4"></textarea></div>
+<div class="q"><h3>5) What worries you most about your current situation?</h3><textarea id="q5"></textarea></div>
+
+<div class="controls">
+<button class="btn" onclick="showSupport()">Show My Support Message</button>
+<button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+<strong>Gentle learning & support resources</strong>
+<p>
+Books and journals can help you understand patterns, boundaries, and healing.
+Some links are affiliate links at no extra cost to you.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+View Recommended Books
+</a>
+</div>
+
+<div class="help-box">
+<strong>You do not have to go through this alone.</strong>
+<p>
+If you feel unsafe or unsure what to do next,
+support options and resources are available.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Visit the Help Page
+</a>
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+function showSupport(){
+  document.getElementById("result").innerHTML = `
+  <strong>You are not imagining this.</strong><br><br>
+  Feeling afraid, controlled, or diminished in a relationship is not normal or deserved.
+  Abuse is about power and control — not love, not your worth, and not your failure.<br><br>
+  You deserve safety, respect, and freedom to be yourself.
+  Reaching out for support is a brave and protective step.
+  `;
+  document.getElementById("result").style.display="block";
+}
+
+function resetTool(){
+  document.querySelectorAll("textarea").forEach(t=>t.value="");
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=60,left=40,max=515;
+
+  doc.setFontSize(11);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+
+  doc.setFontSize(18);
+  doc.text("Domestic Violence Warning & Safety Reflection", left, y); y+=30;
+
+  const qs=[
+    "Fear of reactions:",
+    "Control or isolation:",
+    "Conflict confusion or blame:",
+    "Behaviour changes for safety:",
+    "Main concern right now:"
+  ];
+  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+
+  doc.setFontSize(11);
+  for(let i=0;i<qs.length;i++){
+    doc.text(qs[i],left,y); y+=16;
+    doc.text(as[i]||"(not written)",left+10,y,{maxWidth:max}); y+=28;
+  }
+
+  doc.setFontSize(12);
+  doc.text("Important Note",left,y+=20);
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "This document reflects your current feelings and concerns. "
+    +"You may keep it private, revisit it later, or share it with a trusted person "
+    +"if speaking feels difficult. If you feel unsafe, please seek immediate help.",
+    max
+  ),left,y+=14);
+
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    800
+  );
+
+  doc.save("domestic-violence-safety-reflection.pdf");
+}
+</script>
+</body>
+</html>

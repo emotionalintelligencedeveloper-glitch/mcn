@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hard Conversation Preparation Tool — Emotional Intelligence Developer</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --accent:#1f6feb;
+  --soft:#eff6ff;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+  --safe:#10b981;
+}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  margin:0;
+  background:var(--bg);
+  color:#111;
+}
+.wrap{max-width:860px;margin:28px auto;padding:20px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08)
+}
+h1{margin:0 0 10px;font-size:24px}
+.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+
+.notice{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:20px;
+}
+
+.q{
+  margin:18px 0;
+}
+.q h3{margin:0 0 8px;font-size:16px}
+textarea{
+  width:100%;
+  min-height:90px;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  resize:vertical;
+}
+
+.controls{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:22px;
+}
+.btn{
+  padding:12px 18px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn.secondary{
+  background:#e5e7eb;
+  color:#111;
+}
+
+.result{
+  display:none;
+  margin-top:26px;
+  padding:20px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+  line-height:1.7;
+}
+
+.download{
+  margin-top:18px;
+  display:inline-block;
+  padding:12px 18px;
+  border-radius:10px;
+  background:var(--safe);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.ads-label{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:30px;
+}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:16px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--cta);
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:16px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+
+footer{
+  margin-top:22px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>Hard Conversation Preparation Tool</h1>
+<p class="lead">
+This gentle tool helps you prepare for a difficult conversation —
+emotionally, practically, and safely.
+You don’t need perfect words. You just need a starting point.
+</p>
+
+<div class="notice">
+<strong>Important:</strong><br>
+If this conversation involves abuse, threats, or danger,
+your safety matters more than saying the “right” thing.
+You are allowed to delay, leave, or seek help first.
+</div>
+
+<div class="q">
+<h3>1) Who is this conversation with?</h3>
+<textarea id="q1"></textarea>
+</div>
+
+<div class="q">
+<h3>2) What do you want to say but feel unable to?</h3>
+<textarea id="q2"></textarea>
+</div>
+
+<div class="q">
+<h3>3) What are you most afraid might happen?</h3>
+<textarea id="q3"></textarea>
+</div>
+
+<div class="q">
+<h3>4) What truth or boundary matters most here?</h3>
+<textarea id="q4"></textarea>
+</div>
+
+<div class="q">
+<h3>5) What outcome would feel safe enough — not perfect?</h3>
+<textarea id="q5"></textarea>
+</div>
+
+<div class="q">
+<h3>6) If this conversation goes badly, who or what can support you?</h3>
+<textarea id="q6"></textarea>
+</div>
+
+<div class="controls">
+<button class="btn" onclick="showSupport()">Show My Preparation</button>
+<button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="download" onclick="downloadPDF()">Download My Conversation Plan (PDF)</div>
+
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+<strong>Support your emotional strength</strong>
+<p>
+Some links are affiliate links, which means we may earn a small commission
+at no extra cost to you.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+View Recommended Books
+</a>
+</div>
+
+<div class="help-box">
+<strong>You don’t have to do this alone.</strong>
+<p>
+If this conversation feels overwhelming or unsafe,
+support options are available.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Visit the Help Page
+</a>
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+function showSupport(){
+  document.getElementById("result").innerHTML = `
+  <strong>Your preparation reminder</strong><br><br>
+  You are allowed to speak slowly, pause, or stop the conversation entirely.<br><br>
+  A possible opening line:<br>
+  <em>“This is hard for me to say, but it matters.”</em><br><br>
+  If emotions rise, grounding yourself is not failure —
+  it’s self-respect.
+  `;
+  document.getElementById("result").style.display="block";
+}
+
+function resetTool(){
+  document.querySelectorAll("textarea").forEach(t=>t.value="");
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  const doc = new jsPDF({unit:"pt",format:"a4"});
+  let y=60,left=40,max=515;
+
+  doc.setFontSize(11);
+  doc.text("https://emotionalintelligencedeveloper.com/",left,30);
+
+  doc.setFontSize(18);
+  doc.text("Hard Conversation Preparation Plan",left,y); y+=30;
+
+  const qs=[
+    "Who this conversation is with:",
+    "What I want to say:",
+    "What I fear might happen:",
+    "Boundary or truth that matters:",
+    "Safe-enough outcome:",
+    "Support if things go badly:"
+  ];
+  const as=[q1.value,q2.value,q3.value,q4.value,q5.value,q6.value];
+
+  doc.setFontSize(12);
+  for(let i=0;i<qs.length;i++){
+    doc.text(qs[i],left,y); y+=16;
+    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y);
+    y+=26;
+  }
+
+  doc.setFontSize(12);
+  doc.text("Share This Safely",left,y+=20);
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "This document can be kept for reflection or shared with a therapist, trusted person, or support service if speaking feels hard. "
+    +"You can say: “This explains what I’m trying to communicate.”",max
+  ),left,y+=14);
+
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    800
+  );
+
+  doc.save("hard-conversation-preparation-plan.pdf");
+}
+</script>
+</body>
+</html>

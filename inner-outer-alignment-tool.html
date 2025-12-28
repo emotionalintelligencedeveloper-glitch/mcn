@@ -21,7 +21,7 @@ body{
   background:var(--bg);
   color:#111;
 }
-.wrap{max-width:860px;margin:28px auto;padding:20px}
+.wrap{max-width:880px;margin:28px auto;padding:20px}
 .card{
   background:var(--card);
   border-radius:14px;
@@ -65,11 +65,14 @@ textarea{
 .result{
   display:none;
   margin-top:26px;
-  padding:22px;
+  padding:24px;
   border-radius:14px;
   background:var(--soft);
   border:1px solid #bfdbfe;
-  line-height:1.7;
+  line-height:1.75;
+}
+.block{
+  margin-bottom:18px;
 }
 .download{
   margin-top:18px;
@@ -120,7 +123,7 @@ footer{
 
 <h1>Inner vs Outer Self — Reflection Tool</h1>
 <p class="lead">
-This tool helps you explore the difference between how you feel inside and how you show up in the world — gently, without judgment.
+This reflection helps you explore the space between who you are inside and how you show up to the world — with honesty and care.
 </p>
 
 <div class="q"><h3>1) How do you feel on the inside, when no one is watching?</h3><textarea id="q1"></textarea></div>
@@ -142,8 +145,7 @@ This tool helps you explore the difference between how you feel inside and how y
 <div class="ads-box">
   <strong>Explore deeper self-understanding</strong>
   <p>
-    Our Recommended Books page includes journals and books on identity,
-    emotional honesty, boundaries, and self-worth.
+    Books and journals on identity, boundaries, emotional honesty, and self-worth.
     Some links may be affiliate links at no extra cost to you.
   </p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
@@ -152,10 +154,9 @@ This tool helps you explore the difference between how you feel inside and how y
 </div>
 
 <div class="help-box">
-  <strong>Need extra support?</strong>
+  <strong>Need support processing this?</strong>
   <p>
-    If this reflection brings up strong emotions, you don’t have to sit with it alone.
-    Support options are available.
+    If this reflection brings up heavy emotions, support options are available.
   </p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
     Visit the Help Page
@@ -174,31 +175,43 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 const { jsPDF } = window.jspdf;
 
 function showReflection(){
-  const box=document.getElementById("result");
-  box.innerHTML = `
-  <strong>Your Reflection Summary</strong><br><br>
+  const answers=[
+    q1.value,q2.value,q3.value,q4.value,q5.value
+  ];
+  const reflections=[
+    "This inner experience matters. Even if it feels messy or unfinished, it deserves space without judgment.",
+    "The way you present yourself likely developed to protect or stabilize you. It’s adaptation, not pretense.",
+    "Gaps often appear where safety, expectations, or survival required adjustment. Awareness softens that tension.",
+    "What you hide is often what once needed protection. You’re allowed to revisit those choices gently.",
+    "Alignment rarely means changing everything — it usually begins with one honest place to start."
+  ];
 
-  <strong>Your inner experience:</strong><br>
-  What you wrote suggests there is more happening internally than gets expressed.
-  This inner world may feel complex, heavy, or unfinished — and that’s not a flaw.<br><br>
+  let html="<strong>Your Reflection Summary</strong><br><br>";
+  const questions=[
+    "How you feel inside",
+    "How you present to others",
+    "Where the gap appears",
+    "What you adjust or hide",
+    "What alignment could bring"
+  ];
 
-  <strong>Your outer presentation:</strong><br>
-  The way you show up to others appears more managed or contained.
-  This often comes from coping, not dishonesty — a way to stay functional or safe.<br><br>
+  for(let i=0;i<5;i++){
+    html+=`
+    <div class="block">
+      <strong>${questions[i]}:</strong><br>
+      <em>Your answer:</em> ${answers[i]||"(not written)"}<br>
+      <em>Reflection:</em> ${reflections[i]}
+    </div>`;
+  }
 
-  <strong>The tension between the two:</strong><br>
-  Holding an inner truth while presenting a different outer version can quietly drain energy.
-  Over time, this gap can create fatigue, self-doubt, or a sense of being unseen.<br><br>
-
-  <strong>What you protect:</strong><br>
-  The parts you soften or hide may be the parts that once needed protection.
-  Adaptation helped you before — it just may not serve you the same way now.<br><br>
-
-  <strong>What alignment could offer:</strong><br>
-  Alignment doesn’t require full exposure.
-  It often begins with one honest moment, one safe truth, or one place where inner and outer can meet.
-  Relief comes from permission, not perfection.
+  html+=`
+  <strong>Closing insight:</strong><br>
+  Awareness is the first step toward alignment.
+  Small honesty creates relief without requiring exposure.
   `;
+
+  const box=document.getElementById("result");
+  box.innerHTML=html;
   box.style.display="block";
 }
 
@@ -217,30 +230,30 @@ function downloadPDF(){
   doc.setFontSize(18);
   doc.text("Inner vs Outer Self — Reflection", left, y); y+=30;
 
-  const qs=[
+  const questions=[
     "How you feel inside:",
     "How you present to others:",
     "Where the gap appears:",
     "What you adjust or hide:",
     "What alignment could bring:"
   ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
+  const reflections=[
+    "This inner experience matters and deserves care.",
+    "Presentation is often a form of self-protection.",
+    "Awareness of the gap reduces inner strain.",
+    "What you hide once helped you survive.",
+    "Alignment begins with small honest steps."
+  ];
 
   doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y); y+=16;
-    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y);
-    y+=32;
+  for(let i=0;i<5;i++){
+    doc.text(questions[i],left,y); y+=14;
+    doc.text(doc.splitTextToSize("Your answer: "+(answers[i]||"(not written)"),max),left+10,y);
+    y+=26;
+    doc.text(doc.splitTextToSize("Reflection: "+reflections[i],max),left+10,y);
+    y+=34;
   }
-
-  doc.setFontSize(12);
-  doc.text("Reflection Insight:",left,y+=10);
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "Awareness of the gap between inner and outer self is the first step toward alignment. "
-    +"You are allowed to move at your own pace. Small honesty often brings the greatest relief.",
-    max
-  ),left,y+=14);
 
   doc.setFontSize(10);
   doc.text(

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inner-Outer Alignment Tool — Emotional Intelligence Developer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin:0; padding:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:#f3f4f6; color:#111;
+}
+.wrap{max-width:820px;margin:28px auto;padding:20px}
+.card{
+  background:#fff; border-radius:14px;
+  padding:24px; box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+h1{font-size:24px;margin-bottom:10px}
+p.lead{color:#6b7280;margin-bottom:18px;line-height:1.6}
+.q{margin:16px 0}
+label{display:block;margin-top:12px;font-weight:600}
+textarea{width:100%;min-height:80px;padding:10px;border:1px solid #d1d5db;border-radius:8px;resize:vertical;font-size:0.95rem}
+button{
+  margin-top:18px;padding:10px 16px;
+  border-radius:8px;border:none;cursor:pointer;font-weight:600
+}
+.primary{background:#1f6feb;color:white}
+.secondary{background:#e5e7eb;color:#111;margin-left:10px}
+
+.footer{font-size:12px;color:#6b7280;text-align:center;margin-top:26px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="card">
+    <h1>Inner-Outer Alignment Tool</h1>
+    <p class="lead">
+      This tool helps you reflect on your inner self and your outer actions — and notice where they match or differ.
+      Sometimes we present one version of ourselves to the world while feeling another inside. Awareness is the first step toward alignment.
+    </p>
+
+    <div class="q">
+      <label>1) What are your core values — the things that matter most to you inside?</label>
+      <textarea id="q1"></textarea>
+    </div>
+
+    <div class="q">
+      <label>2) How do you think others see you most often?</label>
+      <textarea id="q2"></textarea>
+    </div>
+
+    <div class="q">
+      <label>3) When you act differently than you feel, what usually causes that?</label>
+      <textarea id="q3"></textarea>
+    </div>
+
+    <div class="q">
+      <label>4) What would your closest friends say about your inner self?</label>
+      <textarea id="q4"></textarea>
+    </div>
+
+    <div class="q">
+      <label>5) How would life change if your outer self matched your inner self?</label>
+      <textarea id="q5"></textarea>
+    </div>
+
+    <button class="primary" onclick="showReflection()">See My Reflection</button>
+    <button class="secondary" onclick="resetTool()">Reset</button>
+
+    <div id="result" class="card" style="display:none;margin-top:22px;"></div>
+
+    <button class="primary" style="display:none;margin-top:12px;" id="downloadBtn" onclick="downloadPDF()">
+      Download Reflection (PDF)
+    </button>
+
+    <div class="footer">
+      Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function showReflection(){
+  const answers = [
+    document.getElementById('q1').value,
+    document.getElementById('q2').value,
+    document.getElementById('q3').value,
+    document.getElementById('q4').value,
+    document.getElementById('q5').value
+  ];
+
+  if(answers.some(a=>!a.trim())){
+    alert("Please answer all questions.");
+    return;
+  }
+
+  const reflectionHTML = `
+    <h2>Your Inner-Outer Reflection</h2>
+    <p>Notice how your inner values and outer actions interact. Awareness helps you live more authentically.</p>
+    ${answers.map((a,i)=>
+      `<strong>${i+1}.</strong> ${a}<br><br>`
+    ).join('')}
+  `;
+
+  document.getElementById('result').innerHTML = reflectionHTML;
+  document.getElementById('result').style.display='block';
+  document.getElementById('downloadBtn').style.display='block';
+}
+
+function resetTool(){
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  document.getElementById('result').style.display='none';
+  document.getElementById('downloadBtn').style.display='none';
+}
+
+function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt',format:'a4'});
+  let y=40,left=40,max=520;
+
+  doc.setFontSize(14);
+  doc.text("Inner-Outer Alignment Tool Reflection", left, y);
+  y+=28;
+
+  const qs = [
+    "1) Core values:",
+    "2) How others see you:",
+    "3) When inner ≠ outer:",
+    "4) What friends would say:",
+    "5) Life if inner=outer:"
+  ];
+  const as = [
+    document.getElementById('q1').value,
+    document.getElementById('q2').value,
+    document.getElementById('q3').value,
+    document.getElementById('q4').value,
+    document.getElementById('q5').value
+  ];
+
+  doc.setFontSize(11);
+  for(let i=0;i<qs.length;i++){
+    doc.text(qs[i], left, y); y+=18;
+    doc.text(doc.splitTextToSize(as[i], max), left+10, y); y+=24;
+  }
+
+  // recommended reflection
+  y+=12;
+  doc.setFontSize(12);
+  doc.text("Suggested Reflection & Next Steps:", left, y); y+=20;
+  const suggestions = [
+    "• Take time each day to journal about your inner self. Connect with values not just behaviors.",
+    "• Notice small mismatches between inner feeling and outer action. Ask: Why?",
+    "• Take one small step today to let your inner self guide one decision.",
+    "• Share your reflection with a trusted person if it feels safe to do so."
+  ];
+  suggestions.forEach(s=>{
+    doc.text(doc.splitTextToSize(s, max), left+10, y); y+=18;
+  });
+
+  // Recommended links
+  y+=20;
+  doc.setFontSize(11);
+  doc.text("Explore More Support:", left, y); y+=16;
+  doc.text("• Recommended Books: emotionalintelligencedeveloper.com/recommended-books/", left+10, y); y+=16;
+  doc.text("• Help Page: emotionalintelligencedeveloper.com/help-page/", left+10, y); y+=20;
+
+  doc.setFontSize(10);
+  doc.text("Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/", left, 800);
+
+  doc.save("inner-outer-alignment-reflection.pdf");
+}
+</script>
+</body>
+</html>

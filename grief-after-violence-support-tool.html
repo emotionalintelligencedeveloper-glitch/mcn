@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Grief After Violence — Emotional Intelligence Developer</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --accent:#7c3aed;
+  --soft:#f5f3ff;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+  --safe:#10b981;
+}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  margin:0;
+  background:var(--bg);
+  color:#111;
+}
+.wrap{max-width:840px;margin:28px auto;padding:20px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08)
+}
+h1{margin:0 0 10px;font-size:24px}
+.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
+.notice{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:22px;
+  font-size:0.95rem;
+}
+.q{
+  margin:18px 0;
+  padding:14px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+}
+.q h3{margin:0 0 10px;font-size:15px}
+textarea{
+  width:100%;
+  min-height:90px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  resize:vertical;
+}
+.controls{
+  display:flex;
+  gap:12px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn.secondary{background:#e5e7eb;color:#111}
+.result{
+  display:none;
+  margin-top:22px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #ddd6fe;
+  line-height:1.6;
+}
+.download{
+  margin-top:16px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  background:var(--safe);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.ads-label{font-size:13px;color:var(--muted);margin-top:28px}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:14px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--cta);
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+footer{
+  margin-top:18px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>Grief After Violence — A Gentle Support Tool</h1>
+
+<p class="lead">
+Grief after violence can feel confusing, heavy, and isolating.
+This space is here to help you slow down, reflect, and feel less alone.
+</p>
+
+<div class="notice">
+<strong>If you are in immediate danger or feel unsafe:</strong>
+please contact local emergency services or a trusted person right now.
+</div>
+
+<div class="q"><h3>1) What loss or experience has been affecting you most?</h3><textarea id="q1"></textarea></div>
+<div class="q"><h3>2) What emotions keep returning lately?</h3><textarea id="q2"></textarea></div>
+<div class="q"><h3>3) How has this experience changed you or your sense of safety?</h3><textarea id="q3"></textarea></div>
+<div class="q"><h3>4) What helps you feel even slightly grounded?</h3><textarea id="q4"></textarea></div>
+<div class="q"><h3>5) What kind of support do you wish you had right now?</h3><textarea id="q5"></textarea></div>
+
+<div class="controls">
+<button class="btn" onclick="showSupport()">Show Support Message</button>
+<button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+<strong>Gentle support resources</strong>
+<p>Some links may be affiliate links at no extra cost to you.</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+Recommended Books
+</a>
+</div>
+
+<div class="help-box">
+<strong>You don’t have to carry this alone.</strong>
+<p>Find support options and grounding resources if things feel overwhelming.</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Visit the Help Page
+</a>
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+function showSupport(){
+  document.getElementById("result").innerHTML = `
+  <strong>Your grief makes sense.</strong><br><br>
+  What you’re feeling is a human response to something deeply painful.
+  Healing does not mean forgetting — it means finding ways to live alongside the loss.<br><br>
+  You are allowed to take this one day, one breath at a time.
+  Support is not a weakness.`;
+  document.getElementById("result").style.display="block";
+}
+
+function resetTool(){
+  document.querySelectorAll("textarea").forEach(t=>t.value="");
+  document.getElementById("result").style.display="none";
+}
+
+function downloadPDF(){
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  let y=60,left=40,max=515;
+
+  doc.setFontSize(12);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+
+  doc.setFontSize(18);
+  doc.text("Grief After Violence — Personal Reflection", left, y); y+=28;
+
+  const qs=[
+    "What loss or experience has been affecting you:",
+    "Emotions that keep returning:",
+    "How this has changed your sense of safety:",
+    "What helps you feel grounded:",
+    "Support you wish you had:"
+  ];
+  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+
+  doc.setFontSize(11);
+  for(let i=0;i<qs.length;i++){
+    doc.text(doc.splitTextToSize(qs[i],max),left,y); y+=16;
+    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=26;
+  }
+
+  doc.setFontSize(12);
+  doc.text("Share this safely",left,y+=20);
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "This document can be kept for reflection or shared with someone you trust if speaking feels hard. "
+    +"You can say: “This shows how I’ve been feeling.”",max
+  ),left,y+=14);
+
+  doc.setFontSize(10);
+  doc.text("Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",left,800);
+
+  doc.save("grief-after-violence-reflection.pdf");
+}
+</script>
+</body>
+</html>

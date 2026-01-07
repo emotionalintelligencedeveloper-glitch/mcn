@@ -139,16 +139,15 @@ footer{
 
 <p class="lead">
 If words feel heavy right now, that’s okay.
-This tool uses gentle visual grounding to help your nervous system settle
-before asking you to reflect.
+This tool offers gentle visual grounding before reflection.
 </p>
 
-<!-- STEP 1: UPDATED SAFE VERSION -->
+<!-- SECTION 1: PUPPY GIF -->
 <div class="q">
   <h3>1) Let your eyes rest on something gentle</h3>
 
-  <img 
-    src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif"
+  <img
+    src="https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif"
     alt="Sleeping puppy resting peacefully"
   >
 
@@ -162,30 +161,39 @@ before asking you to reflect.
   </p>
 </div>
 
+<!-- SECTION 2 -->
 <div class="q">
-<h3>2) Let your eyes rest on something steady</h3>
-<img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Gentle ocean waves animation">
-<p class="lead">You don’t need to think. Just watch.</p>
+  <h3>2) Let your eyes rest on something steady</h3>
+
+  <img
+    src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+    alt="Gentle ocean waves"
+  >
+
+  <p class="lead">
+    You don’t need to think. Just watch.
+  </p>
+</div>
+
+<!-- REFLECTION -->
+<div class="q">
+  <h3>3) What are you noticing in your body right now?</h3>
+  <textarea id="q1" placeholder="Heaviness, warmth, tension, calm…"></textarea>
 </div>
 
 <div class="q">
-<h3>3) What are you noticing in your body right now?</h3>
-<textarea id="q1" placeholder="Tight chest, slower breathing, heaviness, calm, etc."></textarea>
+  <h3>4) What emotion feels most present?</h3>
+  <textarea id="q2"></textarea>
 </div>
 
 <div class="q">
-<h3>4) What emotion feels most present?</h3>
-<textarea id="q2"></textarea>
-</div>
-
-<div class="q">
-<h3>5) What would feel supportive in the next 10 minutes?</h3>
-<textarea id="q3"></textarea>
+  <h3>5) What would feel supportive in the next 10 minutes?</h3>
+  <textarea id="q3"></textarea>
 </div>
 
 <div class="controls">
-<button class="btn" onclick="showPlan()">Get My Grounding Plan</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
+  <button class="btn" onclick="showPlan()">Get My Grounding Plan</button>
+  <button class="btn secondary" onclick="resetTool()">Reset</button>
 </div>
 
 <div id="result" class="result"></div>
@@ -194,23 +202,23 @@ before asking you to reflect.
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-<p><strong>Want more grounding and emotional regulation tools?</strong></p>
-<p>
-Our Recommended Books page includes reading and audiobooks on anxiety,
-nervous system regulation, and emotional resilience.
-Some links are affiliate links and may earn a small commission at no extra cost to you.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-View Recommended Books
-</a>
+  <p><strong>Want more grounding and emotional regulation tools?</strong></p>
+  <p>
+    Our Recommended Books page includes reading and audiobooks on anxiety,
+    nervous system regulation, and emotional resilience.
+    Some links are affiliate links and may earn a small commission at no extra cost to you.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    View Recommended Books
+  </a>
 </div>
 
 <div class="help-box">
-<p><strong>If emotions feel overwhelming or unsafe:</strong></p>
-<p>You don’t have to handle that alone.</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
+  <p><strong>If emotions feel overwhelming or unsafe:</strong></p>
+  <p>You don’t have to handle that alone.</p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Visit the Help Page
+  </a>
 </div>
 
 <footer>
@@ -233,69 +241,69 @@ function showPlan(){
   }
 
   const suggestions = [
-    "Notice where your body feels more settled than before.",
-    "Name the emotion gently without judging it.",
-    "Choose one small, steady action that supports you."
+    "Notice any small shifts in your body.",
+    "Name the emotion gently without judgment.",
+    "Choose one small, supportive action."
   ];
 
   let html = "<strong>Your Visual Grounding Plan</strong><br><br>";
   const qs = document.querySelectorAll(".q h3");
-  let index = 0;
+  let i = 2, idx = 0;
 
-  for(let i=2;i<qs.length;i++){
+  for(; i < qs.length; i++){
     html += `<strong>${qs[i].innerText}</strong><br>`;
-    html += `<em>Your response:</em> ${answers[index]}<br>`;
-    html += `<em>What to try:</em> ${suggestions[index]}<br><br>`;
-    index++;
+    html += `<em>Your response:</em> ${answers[idx]}<br>`;
+    html += `<em>What to try:</em> ${suggestions[idx]}<br><br>`;
+    idx++;
   }
 
   html += "<strong>Reminder:</strong> Regulation comes before clarity.";
 
-  const box=document.getElementById("result");
-  box.innerHTML=html;
-  box.style.display="block";
+  const box = document.getElementById("result");
+  box.innerHTML = html;
+  box.style.display = "block";
 }
 
 function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
+  document.querySelectorAll("textarea").forEach(t => t.value = "");
+  document.getElementById("result").style.display = "none";
 }
 
 function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=50,left=40,max=515;
+  const doc = new jsPDF({unit:'pt',format:'a4'});
+  let y = 50, left = 40, max = 515;
 
   doc.setFontSize(11);
   doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
 
   doc.setFontSize(18);
-  doc.text("Visual Grounding & Emotional Reset Plan", left, y); y+=28;
+  doc.text("Visual Grounding & Emotional Reset Plan", left, y); y += 28;
 
   doc.setFontSize(12);
-  doc.text("Understanding Visual Grounding", left, y); y+=18;
+  doc.text("Understanding Visual Grounding", left, y); y += 18;
 
   doc.setFontSize(11);
   doc.text(doc.splitTextToSize(
     "Visual grounding can be as simple as noticing something gentle and non-demanding. "
-    +"When the nervous system feels safer, emotions become easier to notice and manage.",
+    + "When the nervous system feels safer, emotions become easier to notice and manage.",
     max
-  ), left, y); y+=50;
+  ), left, y); y += 50;
 
   const qs = document.querySelectorAll(".q h3");
-  const answers = [q1.value,q2.value,q3.value];
+  const answers = [q1.value, q2.value, q3.value];
   const suggestions = [
     "Notice bodily shifts.",
     "Name emotions softly.",
     "Take one supportive step."
   ];
 
-  let idx=0;
-  for(let i=2;i<qs.length;i++){
-    doc.text(qs[i].innerText, left, y); y+=14;
-    doc.text("Your response: "+answers[idx], left+10, y, {maxWidth:max}); y+=18;
-    doc.text("Suggested focus: "+suggestions[idx], left+10, y, {maxWidth:max}); y+=24;
+  let idx = 0;
+  for(let i = 2; i < qs.length; i++){
+    doc.text(qs[i].innerText, left, y); y += 14;
+    doc.text("Your response: " + answers[idx], left + 10, y, {maxWidth:max}); y += 18;
+    doc.text("Suggested focus: " + suggestions[idx], left + 10, y, {maxWidth:max}); y += 24;
     idx++;
-    if(y>760){ doc.addPage(); y=40; }
+    if(y > 760){ doc.addPage(); y = 40; }
   }
 
   doc.save("visual-grounding-emotional-reset-plan.pdf");

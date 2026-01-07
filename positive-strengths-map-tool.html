@@ -55,6 +55,7 @@ h1,h2,h3{margin-top:0}
   border-radius:12px;
   border:1px solid #e5e7eb;
 }
+.q h3{line-height:1.4}
 label{display:block;margin:6px 0;cursor:pointer}
 
 .controls{
@@ -94,13 +95,13 @@ canvas{max-width:100%;margin:16px auto}
 
 .download{
   margin-top:18px;
-  display:inline-block;
   padding:12px 18px;
   border-radius:12px;
   background:var(--safe);
   color:#fff;
   font-weight:800;
   cursor:pointer;
+  border:none;
 }
 
 .share{
@@ -154,16 +155,22 @@ footer{
 
 <p class="lead">
 This tool helps you visualise your personal strengths in a positive, non-judgmental way.
-By answering a small set of reflective questions, you’ll receive a strengths map that highlights
-how you naturally show up in the world. Many people enjoy saving or sharing their results
-for reflection, school projects, or personal development conversations.
+By answering a short set of reflective questions, you’ll receive a visual strengths map
+that shows how you naturally show up in the world. Many people choose to save or share
+their results for school projects, self-reflection, or meaningful conversations.
 </p>
 
 <h2>See what your results can look like</h2>
 
 <div class="example-wrap">
-  <div class="example"><canvas id="examplePie"></canvas><small>Example strengths snapshot</small></div>
-  <div class="example"><canvas id="exampleRadar"></canvas><small>Example overview</small></div>
+  <div class="example">
+    <canvas id="examplePie"></canvas>
+    <small>Example strengths snapshot</small>
+  </div>
+  <div class="example">
+    <canvas id="exampleRadar"></canvas>
+    <small>Example overview (PDF style)</small>
+  </div>
 </div>
 
 <div class="input">
@@ -174,8 +181,8 @@ for reflection, school projects, or personal development conversations.
 <form id="quiz"></form>
 
 <div class="controls">
-  <button class="btn" onclick="showResults()">See My Strengths Map</button>
-  <button class="btn secondary" onclick="resetTool()">Reset</button>
+  <button type="button" class="btn" onclick="showResults()">See My Strengths Map</button>
+  <button type="button" class="btn secondary" onclick="resetTool()">Reset</button>
 </div>
 
 <div id="result" class="result">
@@ -192,7 +199,9 @@ for reflection, school projects, or personal development conversations.
   </div>
 </div>
 
-<div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
+<button type="button" class="download" onclick="downloadPDF()">
+  Download My Strengths Map (PDF)
+</button>
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
@@ -235,11 +244,17 @@ const strengthInsights={
   "Awareness":"You notice what’s happening within and around you."
 };
 
-new Chart(examplePie,{type:"pie",data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]}});
-new Chart(exampleRadar,{type:"radar",data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]}});
-</script>
+new Chart(examplePie,{
+  type:"pie",
+  data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]}
+});
 
-<script>
+new Chart(exampleRadar,{
+  type:"radar",
+  data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},
+  options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
+});
+
 const questions=[
   "When starting something important, you usually…",
   "When challenges appear, you tend to…",
@@ -264,7 +279,9 @@ const options=[
   ["Growth","Awareness","Resilience","Self-Trust"]
 ];
 
-const scores={}; strengths.forEach(s=>scores[s]=0);
+const scores={};
+strengths.forEach(s=>scores[s]=0);
+
 const form=document.getElementById("quiz");
 
 questions.forEach((q,i)=>{
@@ -281,6 +298,7 @@ let pieChart=null;
 
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
+
   for(let i=0;i<questions.length;i++){
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     if(!sel){alert("Please answer all questions.");return;}
@@ -316,11 +334,14 @@ function resetTool(){
 }
 
 function downloadPDF(){
-  if(!pieChart){alert("Please generate your strengths map first.");return;}
+  if(!pieChart){
+    alert("Please generate your strengths map first.");
+    return;
+  }
 
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF("p","pt","a4");
-  const h=doc.internal.pageSize.height;
+  const pageHeight=doc.internal.pageSize.height;
 
   doc.setFontSize(10);
   doc.text("Emotional Intelligence Developer",40,25);
@@ -351,17 +372,30 @@ function downloadPDF(){
 
     const iLines=doc.splitTextToSize(insight,480);
     doc.text(iLines,48,y);
-    y+=iLines.length*12+8;
+    y+=iLines.length*12+10;
   });
 
-  y=h-70;
+  y=pageHeight-70;
   doc.setFontSize(10);
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/recommended-books/",40,y,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"});
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/recommended-books/",
+    40,y,
+    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
+  );
   y+=16;
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/help-page/",40,y,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/help-page/",
+    40,y,
+    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
+  );
 
   doc.setFontSize(9);
-  doc.text("Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",doc.internal.pageSize.width/2,h-25,{align:"center"});
+  doc.text(
+    "Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",
+    doc.internal.pageSize.width/2,
+    pageHeight-25,
+    {align:"center"}
+  );
 
   doc.save("positive-strengths-map.pdf");
 }

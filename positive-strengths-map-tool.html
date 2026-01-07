@@ -60,9 +60,7 @@ label{display:block;margin:6px 0;cursor:pointer}
 
 canvas{max-width:100%;margin:16px auto}
 
-.insights{
-  margin-top:20px;
-}
+.insights{margin-top:20px}
 .insight{
   margin-bottom:14px;
   padding-left:12px;
@@ -187,15 +185,15 @@ const strengths=[
 ];
 
 const strengthInsights={
-  "Focus":"You have a natural ability to direct your attention and stay engaged. Lean into this by protecting your time and reducing distractions when something matters.",
-  "Self-Trust":"You rely on your inner compass. Strengthen this by noticing moments when trusting yourself has paid off.",
-  "Motivation":"You’re driven by purpose and momentum. Keep this alive by setting small, meaningful goals you can see progress on.",
-  "Calm Presence":"You bring steadiness into situations. Others often feel safer around you when you stay grounded.",
-  "Resilience":"You recover and adapt well. Acknowledge how far you’ve already come when challenges arise.",
-  "Growth":"You value learning and development. Feed this by staying curious rather than self-critical.",
-  "Authenticity":"You show up as yourself. This builds trust — especially when you allow others to do the same.",
-  "Connection":"Relationships matter to you. Nurture this strength by staying open and present with others.",
-  "Awareness":"You notice what’s happening within and around you. This awareness helps you respond thoughtfully."
+  "Focus":"You naturally direct your attention and stay engaged. Protecting your time helps this strength shine.",
+  "Self-Trust":"You rely on your inner compass. Noticing when trusting yourself works builds confidence.",
+  "Motivation":"You’re driven by purpose. Small, meaningful goals keep your energy steady.",
+  "Calm Presence":"You bring steadiness into situations. Others often feel safer around you.",
+  "Resilience":"You recover and adapt well. Acknowledge how far you’ve already come.",
+  "Growth":"You value learning and development. Curiosity keeps this strength alive.",
+  "Authenticity":"You show up as yourself. This builds trust and invites others to do the same.",
+  "Connection":"Relationships matter to you. Staying present deepens this strength.",
+  "Awareness":"You notice what’s happening within and around you, helping you respond thoughtfully."
 };
 
 const questions=[
@@ -235,10 +233,11 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
-let pieChart;
+let pieChart = null;
 
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
+
   for(let i=0;i<questions.length;i++){
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     if(!sel){alert("Please answer all questions.");return;}
@@ -247,22 +246,33 @@ function showResults(){
 
   document.getElementById("result").style.display="block";
 
-  pieChart=new Chart(document.getElementById("pieChart"),{
+  if(pieChart){
+    pieChart.destroy();
+  }
+
+  pieChart = new Chart(document.getElementById("pieChart"),{
     type:"pie",
-    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
+    data:{
+      labels:strengths,
+      datasets:[{data:strengths.map(s=>scores[s])}]
+    },
     options:{plugins:{legend:{position:"bottom"}}}
   });
 
   const insightsDiv=document.getElementById("insights");
   insightsDiv.innerHTML="";
   strengths.filter(s=>scores[s]>0).forEach(s=>{
-    insightsDiv.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
+    insightsDiv.innerHTML+=`
+      <div class="insight">
+        <strong>${s}</strong><br>${strengthInsights[s]}
+      </div>`;
   });
 }
 
 function downloadPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF();
+
   doc.text("Your Positive Strengths Map",20,20);
   doc.text("A reflection of how you show up at your best.",20,30);
 
@@ -272,7 +282,7 @@ function downloadPDF(){
   let y=150;
   strengths.filter(s=>scores[s]>0).forEach(s=>{
     doc.text(`${s}: ${strengthInsights[s]}`,20,y,{maxWidth:170});
-    y+=16;
+    y+=14;
     if(y>260){doc.addPage();y=20;}
   });
 
@@ -280,5 +290,6 @@ function downloadPDF(){
   doc.save("positive-strengths-map.pdf");
 }
 </script>
+
 </body>
 </html>

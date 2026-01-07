@@ -200,27 +200,6 @@ Many people enjoy saving or sharing their results.
 
 <div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-  <p><strong>Want to keep developing these strengths?</strong></p>
-  <p>
-    Our Recommended Books page includes reading and audiobooks on confidence,
-    motivation, focus, and emotional intelligence.
-    Some links are affiliate links and may earn a small commission at no extra cost to you.
-  </p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    View Recommended Books
-  </a>
-</div>
-
-<div class="help-box">
-  <p><strong>Need extra support right now?</strong></p>
-  <p>If you’re feeling overwhelmed or stuck, support options are available.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
-</div>
-
 <footer>
 Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
 </footer>
@@ -332,7 +311,7 @@ function resetTool(){
   if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
-/* ✅ ONE-PAGE PDF EXPORT */
+/* ✅ ONE-PAGE PDF — SPACING FIXED */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
@@ -343,41 +322,65 @@ function downloadPDF(){
 
   doc.setFontSize(10);
   doc.text("Emotional Intelligence Developer",40,25);
-  doc.text("https://emotionalintelligencedeveloper.com/",40,38);
+  doc.text("https://emotionalintelligencedeveloper.com/",40,40);
 
   doc.setFontSize(16);
-  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",40,65);
+  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",40,70);
 
   const img=document.getElementById("pieChart").toDataURL("image/png");
-  doc.addImage(img,"PNG",40,80,220,150);
+  doc.addImage(img,"PNG",40,90,220,150);
 
-  let leftY=250,rightY=250;
-  const leftX=40,rightX=w/2+10;
+  let leftY=270;
+  let rightY=270;
+  const leftX=40;
+  const rightX=w/2+10;
+  const blockHeight=70;
 
   doc.setFontSize(9);
 
   questions.forEach((q,i)=>{
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     const answer=sel?sel.value:"";
-    const textY = leftY<=rightY ? leftY : rightY;
-    const x = leftY<=rightY ? leftX : rightX;
+
+    const useLeft = leftY <= rightY;
+    const x = useLeft ? leftX : rightX;
+    let y = useLeft ? leftY : rightY;
 
     doc.setFont(undefined,"bold");
-    doc.text(`${i+1}. ${q}`,x,textY,{maxWidth:220});
-    doc.setFont(undefined,"normal");
-    doc.text(`You chose: ${answer}`,x+8,textY+12);
-    doc.text(strengthInsights[answer],x+8,textY+24,{maxWidth:210});
+    doc.text(`${i+1}. ${q}`,x,y,{maxWidth:220});
+    y+=14;
 
-    if(leftY<=rightY){leftY+=54;}else{rightY+=54;}
+    doc.setFont(undefined,"normal");
+    doc.text(`You chose: ${answer}`,x+8,y);
+    y+=14;
+
+    doc.text(strengthInsights[answer],x+8,y,{maxWidth:210});
+
+    if(useLeft){leftY+=blockHeight;}else{rightY+=blockHeight;}
   });
 
-  const linksY=h-70;
+  const footerY=h-70;
   doc.setFontSize(10);
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/recommended-books/",40,linksY,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"});
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/help-page/",w/2+10,linksY,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/recommended-books/",
+    40,
+    footerY,
+    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
+  );
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/help-page/",
+    w/2+10,
+    footerY,
+    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
+  );
 
   doc.setFontSize(9);
-  doc.text("Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",w/2,h-25,{align:"center"});
+  doc.text(
+    "Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",
+    w/2,
+    h-25,
+    {align:"center"}
+  );
 
   doc.save("positive-strengths-map.pdf");
 }

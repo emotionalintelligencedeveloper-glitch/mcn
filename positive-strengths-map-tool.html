@@ -311,7 +311,7 @@ function resetTool(){
   if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
-/* ✅ ONE-PAGE PDF — SPACING FIXED */
+/* ✅ ONE-PAGE PDF — WRAP-SAFE & SPACING-SAFE */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
@@ -334,32 +334,36 @@ function downloadPDF(){
   let rightY=270;
   const leftX=40;
   const rightX=w/2+10;
-  const blockHeight=70;
+  const lineHeight=12;
 
   doc.setFontSize(9);
 
   questions.forEach((q,i)=>{
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     const answer=sel?sel.value:"";
+    const insight=strengthInsights[answer]||"";
 
     const useLeft = leftY <= rightY;
     const x = useLeft ? leftX : rightX;
     let y = useLeft ? leftY : rightY;
 
+    const qLines = doc.splitTextToSize(`${i+1}. ${q}`,220);
     doc.setFont(undefined,"bold");
-    doc.text(`${i+1}. ${q}`,x,y,{maxWidth:220});
-    y+=14;
+    doc.text(qLines,x,y);
+    y += qLines.length * lineHeight;
 
     doc.setFont(undefined,"normal");
     doc.text(`You chose: ${answer}`,x+8,y);
-    y+=14;
+    y += lineHeight;
 
-    doc.text(strengthInsights[answer],x+8,y,{maxWidth:210});
+    const iLines = doc.splitTextToSize(insight,210);
+    doc.text(iLines,x+8,y);
+    y += iLines.length * lineHeight + 10;
 
-    if(useLeft){leftY+=blockHeight;}else{rightY+=blockHeight;}
+    if(useLeft){leftY=y;}else{rightY=y;}
   });
 
-  const footerY=h-70;
+  let footerY=h-70;
   doc.setFontSize(10);
   doc.textWithLink(
     "https://emotionalintelligencedeveloper.com/recommended-books/",
@@ -367,9 +371,10 @@ function downloadPDF(){
     footerY,
     {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
   );
+  footerY += 16;
   doc.textWithLink(
     "https://emotionalintelligencedeveloper.com/help-page/",
-    w/2+10,
+    40,
     footerY,
     {url:"https://emotionalintelligencedeveloper.com/help-page/"}
   );

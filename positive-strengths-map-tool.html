@@ -38,12 +38,15 @@ h1,h2,h3{margin-top:0}
   justify-content:center;
   margin-bottom:28px;
 }
-.example{
-  max-width:260px;
-  text-align:center;
-}
-.example small{
-  color:var(--muted);
+.example{max-width:260px;text-align:center}
+.example small{color:var(--muted)}
+
+.input{margin:18px 0}
+.input input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
 }
 
 .q{
@@ -54,6 +57,12 @@ h1,h2,h3{margin-top:0}
 }
 label{display:block;margin:6px 0;cursor:pointer}
 
+.controls{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
 .btn{
   padding:10px 16px;
   border-radius:10px;
@@ -62,6 +71,10 @@ label{display:block;margin:6px 0;cursor:pointer}
   color:#fff;
   font-weight:600;
   cursor:pointer;
+}
+.btn.secondary{
+  background:#e5e7eb;
+  color:#111;
 }
 
 .result{
@@ -140,11 +153,10 @@ footer{
 <h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-Answer 9 positive questions and see a visual map of how you naturally show up.
+Answer 9 positive questions to see a visual map of how you naturally show up.
 There are no wrong answers — just insight.
 </p>
 
-<!-- 🔥 EXAMPLE GRAPHS (TOP – EXCITEMENT SECTION) -->
 <h2>See what your results can look like</h2>
 <p class="lead">
 After answering the questions, you’ll receive a strengths map like the examples below.
@@ -162,12 +174,20 @@ Many people enjoy saving or sharing their results.
   </div>
 </div>
 
+<div class="input">
+  <label><strong>Your name (optional)</strong></label>
+  <input id="userName" placeholder="e.g. Alex">
+</div>
+
 <form id="quiz"></form>
 
-<button class="btn" onclick="showResults()">See My Strengths Map</button>
+<div class="controls">
+  <button class="btn" onclick="showResults()">See My Strengths Map</button>
+  <button class="btn secondary" onclick="resetTool()">Reset</button>
+</div>
 
 <div id="result" class="result">
-  <h2>Your Positive Strengths Map</h2>
+  <h2 id="resultTitle">Your Positive Strengths Map</h2>
   <canvas id="pieChart"></canvas>
 
   <h3>What this says about you</h3>
@@ -212,47 +232,21 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-const strengths=[
-  "Focus","Self-Trust","Motivation","Calm Presence",
-  "Resilience","Growth","Authenticity","Connection","Awareness"
-];
+const strengths=["Focus","Self-Trust","Motivation","Calm Presence","Resilience","Growth","Authenticity","Connection","Awareness"];
 
-// 🔥 EXAMPLE CHARTS (RUN ON LOAD)
-new Chart(document.getElementById("examplePie"),{
-  type:"pie",
-  data:{
-    labels:strengths,
-    datasets:[{data:[2,2,2,2,2,2,2,2,2]}]
-  },
-  options:{plugins:{legend:{position:"bottom"}}}
-});
+new Chart(examplePie,{type:"pie",data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]},options:{plugins:{legend:{position:"bottom"}}}});
+new Chart(exampleRadar,{type:"radar",data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}});
 
-new Chart(document.getElementById("exampleRadar"),{
-  type:"radar",
-  data:{
-    labels:strengths,
-    datasets:[{
-      data:[3,4,3,4,3,4,3,4,3],
-      fill:true
-    }]
-  },
-  options:{
-    scales:{r:{beginAtZero:true,max:5}},
-    plugins:{legend:{display:false}}
-  }
-});
-
-// QUIZ LOGIC
 const strengthInsights={
-  "Focus":"You naturally direct your attention and stay engaged. Protecting your time helps this strength shine.",
-  "Self-Trust":"You rely on your inner compass. Noticing when trusting yourself works builds confidence.",
-  "Motivation":"You’re driven by purpose. Small, meaningful goals keep your energy steady.",
-  "Calm Presence":"You bring steadiness into situations. Others often feel safer around you.",
-  "Resilience":"You recover and adapt well. Acknowledge how far you’ve already come.",
-  "Growth":"You value learning and development. Curiosity keeps this strength alive.",
-  "Authenticity":"You show up as yourself. This builds trust and invites others to do the same.",
-  "Connection":"Relationships matter to you. Staying present deepens this strength.",
-  "Awareness":"You notice what’s happening within and around you, helping you respond thoughtfully."
+  "Focus":"You naturally direct your attention and stay engaged.",
+  "Self-Trust":"You rely on your inner compass and instincts.",
+  "Motivation":"You’re driven by purpose and momentum.",
+  "Calm Presence":"You bring steadiness into situations.",
+  "Resilience":"You adapt and recover well when things change.",
+  "Growth":"You value learning and personal development.",
+  "Authenticity":"You show up as yourself.",
+  "Connection":"Relationships matter deeply to you.",
+  "Awareness":"You notice what’s happening within and around you."
 };
 
 const questions=[
@@ -296,17 +290,19 @@ let pieChart=null;
 
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
-
   for(let i=0;i<questions.length;i++){
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     if(!sel){alert("Please answer all questions.");return;}
     scores[sel.value]++;
   }
 
+  const name=document.getElementById("userName").value.trim();
+  document.getElementById("resultTitle").innerText =
+    name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map";
+
   document.getElementById("result").style.display="block";
 
-  if(pieChart){ pieChart.destroy(); }
-
+  if(pieChart){pieChart.destroy();}
   pieChart=new Chart(document.getElementById("pieChart"),{
     type:"pie",
     data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
@@ -316,31 +312,52 @@ function showResults(){
   const insightsDiv=document.getElementById("insights");
   insightsDiv.innerHTML="";
   strengths.filter(s=>scores[s]>0).forEach(s=>{
-    insightsDiv.innerHTML+=`
-      <div class="insight">
-        <strong>${s}</strong><br>${strengthInsights[s]}
-      </div>`;
+    insightsDiv.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
   });
+}
+
+function resetTool(){
+  document.getElementById("userName").value="";
+  document.querySelectorAll("input[type=radio]").forEach(i=>i.checked=false);
+  document.getElementById("result").style.display="none";
+  document.getElementById("insights").innerHTML="";
+  if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
 function downloadPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF();
+  const name=document.getElementById("userName").value.trim();
 
-  doc.text("Your Positive Strengths Map",20,20);
-  doc.text("A reflection of how you show up at your best.",20,30);
+  // Header
+  doc.setFontSize(10);
+  doc.text("Emotional Intelligence Developer",20,15);
+  doc.text("https://emotionalintelligencedeveloper.com/",20,22);
+
+  doc.setFontSize(16);
+  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",20,40);
 
   const img=document.getElementById("pieChart").toDataURL("image/png");
-  doc.addImage(img,"PNG",20,40,160,100);
+  doc.addImage(img,"PNG",20,50,160,90);
 
   let y=150;
+  doc.setFontSize(11);
   strengths.filter(s=>scores[s]>0).forEach(s=>{
     doc.text(`${s}: ${strengthInsights[s]}`,20,y,{maxWidth:170});
     y+=14;
-    if(y>260){doc.addPage();y=20;}
+    if(y>260){doc.addPage();y=40;}
   });
 
-  doc.text("emotionalintelligencedeveloper.com",20,280);
+  y+=10;
+  doc.textWithLink("Recommended Books",20,y,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"});
+  y+=10;
+  doc.textWithLink("Help Page",20,y,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
+
+  // Footer
+  doc.setFontSize(10);
+  doc.text("Created with the Positive Strengths Map Tool",20,285);
+  doc.text("emotionalintelligencedeveloper.com",20,292);
+
   doc.save("positive-strengths-map.pdf");
 }
 </script>

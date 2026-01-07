@@ -96,23 +96,36 @@ canvas{max-width:100%;margin:16px auto}
 }
 
 .download{
-  margin-top:18px;
+  margin-top:22px;
   display:inline-block;
-  padding:12px 18px;
-  border-radius:10px;
+  padding:14px 20px;
+  border-radius:12px;
   background:var(--safe);
   color:#fff;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
 }
 
-.link-buttons{
-  margin-top:16px;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
+.cta-section{
+  margin-top:28px;
+  display:grid;
+  gap:18px;
 }
-.link-btn{
+
+.cta-box{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  border-radius:14px;
+  padding:18px;
+}
+.cta-box h3{
+  margin-bottom:6px;
+}
+.cta-box p{
+  margin:0 0 12px;
+  color:var(--muted);
+}
+.cta-box a{
   display:inline-block;
   padding:10px 16px;
   border-radius:10px;
@@ -129,7 +142,7 @@ canvas{max-width:100%;margin:16px auto}
 }
 
 footer{
-  margin-top:20px;
+  margin-top:24px;
   font-size:12px;
   color:var(--muted);
   text-align:center;
@@ -144,24 +157,23 @@ footer{
 <h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-Answer 9 positive questions to see a visual map of how you naturally show up.
-There are no wrong answers — just insight.
+Answer 9 positive questions to discover how your strengths naturally show up.
+There are no right or wrong answers — only insight.
 </p>
 
-<h2>See what your results can look like</h2>
+<h2>What your results can look like</h2>
 <p class="lead">
-After answering the questions, you’ll receive a strengths map like the examples below.
-Many people enjoy saving or sharing their results.
+Your strengths are turned into visuals that many people enjoy saving or sharing.
 </p>
 
 <div class="example-wrap">
   <div class="example">
     <canvas id="examplePie"></canvas>
-    <small>Example strengths snapshot</small>
+    <small>Strengths snapshot</small>
   </div>
   <div class="example">
     <canvas id="exampleRadar"></canvas>
-    <small>Example strengths overview (PDF style)</small>
+    <small>Strengths overview</small>
   </div>
 </div>
 
@@ -179,25 +191,44 @@ Many people enjoy saving or sharing their results.
 
 <div id="result" class="result">
   <h2 id="resultTitle">Your Positive Strengths Map</h2>
+  <canvas id="pieChart"></canvas>
+  <canvas id="radarChart"></canvas>
 
   <h3>What this says about you</h3>
   <div id="insights" class="insights"></div>
 
   <div class="share">
-    You can save or share this with friends, family, school, or work if you’d like.
+    Many people share this with friends, family, school, or work.
   </div>
 </div>
 
-<div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
+<div class="download" onclick="downloadPDF()">Download & Share My Strengths (PDF)</div>
 
-<!-- ✅ REQUIRED BUTTONS -->
-<div class="link-buttons">
-  <a class="link-btn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    Recommended Books 🎧
-  </a>
-  <a class="link-btn" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Help Page
-  </a>
+<!-- ✅ CLEAR CTA SECTION -->
+<div class="cta-section">
+
+  <div class="cta-box">
+    <h3>📚 Want to understand yourself even deeper?</h3>
+    <p>
+      These carefully chosen books help you explore emotions, confidence,
+      self-trust, and growth — at your own pace.
+    </p>
+    <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+      Explore Recommended Books 🎧
+    </a>
+  </div>
+
+  <div class="cta-box">
+    <h3>🧭 Need support or guidance right now?</h3>
+    <p>
+      If something here stirred emotions, support and gentle guidance are available.
+      You don’t have to figure things out alone.
+    </p>
+    <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+      Visit the Help Page
+    </a>
+  </div>
+
 </div>
 
 <footer>
@@ -276,6 +307,9 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
+let pieChart=null;
+let radarChart=null;
+
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
   for(let i=0;i<questions.length;i++){
@@ -285,6 +319,22 @@ function showResults(){
   }
 
   document.getElementById("result").style.display="block";
+
+  if(pieChart) pieChart.destroy();
+  if(radarChart) radarChart.destroy();
+
+  pieChart=new Chart(pieChart=document.getElementById("pieChart"),{
+    type:"pie",
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
+    options:{plugins:{legend:{position:"bottom"}}}
+  });
+
+  radarChart=new Chart(radarChart=document.getElementById("radarChart"),{
+    type:"radar",
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s]),fill:true}]},
+    options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
+  });
+
   const insights=document.getElementById("insights");
   insights.innerHTML="";
   strengths.filter(s=>scores[s]>0).forEach(s=>{
@@ -298,7 +348,7 @@ function resetTool(){
   document.getElementById("insights").innerHTML="";
 }
 
-/* ✅ ONE-PAGE PARAGRAPH PDF */
+/* ✅ SHARE-WORTHY ONE-PAGE PDF */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
@@ -311,22 +361,31 @@ function downloadPDF(){
   doc.text("Emotional Intelligence Developer",40,70);
   doc.text("https://emotionalintelligencedeveloper.com/",40,85);
 
-  let y=120;
+  doc.addImage(
+    document.getElementById("pieChart").toDataURL("image/png"),
+    "PNG",40,100,220,160
+  );
+  doc.addImage(
+    document.getElementById("radarChart").toDataURL("image/png"),
+    "PNG",300,110,250,180
+  );
+
+  let y=310;
   doc.setFontSize(11);
 
   strengths.forEach(s=>{
     if(scores[s]>0){
-      const p = `${s}: ${strengthInsights[s]}`;
+      const p=`${s}: ${strengthInsights[s]}`;
       doc.text(doc.splitTextToSize(p,w-80),40,y);
       y+=26;
     }
   });
 
   doc.setFontSize(10);
-  doc.textWithLink("Recommended Books",40,y+20,{
+  doc.textWithLink("Explore Recommended Books",40,y+20,{
     url:"https://emotionalintelligencedeveloper.com/recommended-books/"
   });
-  doc.textWithLink("Help Page",200,y+20,{
+  doc.textWithLink("Get Support & Help",260,y+20,{
     url:"https://emotionalintelligencedeveloper.com/help-page/"
   });
 

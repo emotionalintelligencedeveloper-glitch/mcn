@@ -61,7 +61,7 @@ label{display:block;margin:6px 0;cursor:pointer}
   border:1px solid #bfdbfe;
 }
 
-canvas{max-width:100%;margin:20px auto}
+canvas{max-width:100%;margin:14px auto}
 
 .download{
   margin-top:16px;
@@ -106,6 +106,19 @@ footer{
   color:var(--muted);
   text-align:center;
 }
+.example-wrap{
+  display:flex;
+  gap:24px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.example{
+  text-align:center;
+  max-width:260px;
+}
+.example small{
+  color:var(--muted);
+}
 </style>
 </head>
 
@@ -116,23 +129,25 @@ footer{
 <h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-This is a positive reflection tool designed to show how you naturally show up in life.
-There are no wrong answers — just different strengths.
+A positive reflection tool that turns your answers into a visual strengths map.
+No wrong answers — just insight.
 </p>
 
-<!-- PREVIEW SECTION -->
-<h2>See what your results look like</h2>
+<!-- 🔥 EXAMPLE RESULTS -->
+<h2>See what your results can look like</h2>
 <p class="lead">
-Answer 9 uplifting questions and receive a visual map of your strengths.
-Many people enjoy saving or sharing their results.
+After answering 9 uplifting questions, you’ll see a strengths map like this.
+Many people enjoy saving or sharing it.
 </p>
 
-<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
-  <div style="width:220px;height:220px;border-radius:12px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#6b7280">
-    Pie chart example
+<div class="example-wrap">
+  <div class="example">
+    <canvas id="examplePie"></canvas>
+    <small>Example strengths snapshot</small>
   </div>
-  <div style="width:220px;height:220px;border-radius:12px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#6b7280">
-    Radar chart example
+  <div class="example">
+    <canvas id="exampleRadar"></canvas>
+    <small>Example strengths overview (PDF)</small>
   </div>
 </div>
 
@@ -148,20 +163,16 @@ Many people enjoy saving or sharing their results.
     This snapshot reflects how you show up at your best right now.
   </p>
   <canvas id="pieChart"></canvas>
-  <p class="lead">
-    Everyone’s map looks different — that’s what makes it meaningful.
-  </p>
 </div>
 
 <div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
 
-<!-- RECOMMENDED BOOKS -->
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-  <p><strong>Want to explore personal growth and emotional intelligence?</strong></p>
+  <p><strong>Want to grow these strengths further?</strong></p>
   <p>
     Our Recommended Books page includes reading and audiobooks on motivation,
-    focus, confidence, and personal development.
+    confidence, focus, and emotional intelligence.
     Some links are affiliate links and may earn a small commission at no extra cost to you.
   </p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
@@ -169,11 +180,10 @@ Many people enjoy saving or sharing their results.
   </a>
 </div>
 
-<!-- HELP PAGE -->
 <div class="help-box">
   <p><strong>Need extra support right now?</strong></p>
   <p>
-    If you’re feeling overwhelmed or struggling, support options are available.
+    If you’re feeling overwhelmed or stuck, support options are available.
   </p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
     Visit the Help Page
@@ -196,28 +206,54 @@ const strengths=[
   "Resilience","Growth","Authenticity","Connection","Awareness"
 ];
 
+// 🔥 EXAMPLE CHARTS (STATIC, POSITIVE)
+new Chart(examplePie,{
+  type:"pie",
+  data:{
+    labels:strengths,
+    datasets:[{data:[2,2,2,2,2,2,2,2,2]}]
+  },
+  options:{plugins:{legend:{position:"bottom"}}}
+});
+
+new Chart(exampleRadar,{
+  type:"radar",
+  data:{
+    labels:strengths,
+    datasets:[{
+      data:[3,4,3,4,3,4,3,4,3],
+      fill:true
+    }]
+  },
+  options:{
+    scales:{r:{beginAtZero:true,max:5}},
+    plugins:{legend:{display:false}}
+  }
+});
+
+// QUIZ DATA
 const questions=[
-  "When starting something important, you usually…",
-  "When challenges appear, you tend to…",
-  "Your energy feels strongest when…",
-  "In conversations, people notice that you…",
-  "When plans change, you usually…",
-  "You feel confident when you…",
-  "Your motivation comes mainly from…",
-  "You feel connected when you…",
-  "Personal growth for you looks like…"
+"When starting something important, you usually…",
+"When challenges appear, you tend to…",
+"Your energy feels strongest when…",
+"In conversations, people notice that you…",
+"When plans change, you usually…",
+"You feel confident when you…",
+"Your motivation comes mainly from…",
+"You feel connected when you…",
+"Personal growth for you looks like…"
 ];
 
 const options=[
-  ["Focus","Motivation","Growth","Awareness"],
-  ["Resilience","Calm Presence","Growth","Self-Trust"],
-  ["Authenticity","Motivation","Connection","Focus"],
-  ["Connection","Awareness","Calm Presence","Authenticity"],
-  ["Resilience","Self-Trust","Calm Presence","Growth"],
-  ["Self-Trust","Authenticity","Focus","Motivation"],
-  ["Motivation","Growth","Connection","Focus"],
-  ["Connection","Authenticity","Awareness","Calm Presence"],
-  ["Growth","Awareness","Resilience","Self-Trust"]
+["Focus","Motivation","Growth","Awareness"],
+["Resilience","Calm Presence","Growth","Self-Trust"],
+["Authenticity","Motivation","Connection","Focus"],
+["Connection","Awareness","Calm Presence","Authenticity"],
+["Resilience","Self-Trust","Calm Presence","Growth"],
+["Self-Trust","Authenticity","Focus","Motivation"],
+["Motivation","Growth","Connection","Focus"],
+["Connection","Authenticity","Awareness","Calm Presence"],
+["Growth","Awareness","Resilience","Self-Trust"]
 ];
 
 const scores={}; strengths.forEach(s=>scores[s]=0);
@@ -245,12 +281,9 @@ function showResults(){
 
   document.getElementById("result").style.display="block";
 
-  pieChart=new Chart(document.getElementById("pieChart"),{
+  pieChart=new Chart(pieChart?.ctx || document.getElementById("pieChart"),{
     type:"pie",
-    data:{
-      labels:strengths,
-      datasets:[{data:strengths.map(s=>scores[s])}]
-    },
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
     options:{plugins:{legend:{position:"bottom"}}}
   });
 }

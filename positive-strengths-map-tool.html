@@ -234,8 +234,16 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script>
 const strengths=["Focus","Self-Trust","Motivation","Calm Presence","Resilience","Growth","Authenticity","Connection","Awareness"];
 
-new Chart(examplePie,{type:"pie",data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]},options:{plugins:{legend:{position:"bottom"}}}});
-new Chart(exampleRadar,{type:"radar",data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}});
+new Chart(examplePie,{
+  type:"pie",
+  data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]},
+  options:{plugins:{legend:{position:"bottom"}}}
+});
+new Chart(exampleRadar,{
+  type:"radar",
+  data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},
+  options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
+});
 
 const strengthInsights={
   "Focus":"You naturally direct your attention and stay engaged.",
@@ -325,9 +333,10 @@ function resetTool(){
 }
 
 function downloadPDF(){
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
-  const name=document.getElementById("userName").value.trim();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const pageHeight = doc.internal.pageSize.height;
+  const name = document.getElementById("userName").value.trim();
 
   doc.setFontSize(10);
   doc.text("Emotional Intelligence Developer",20,15);
@@ -343,7 +352,7 @@ function downloadPDF(){
   doc.setFontSize(11);
 
   questions.forEach((q,i)=>{
-    if(y>260){doc.addPage();y=40;}
+    if(y>pageHeight-50){doc.addPage();y=40;}
 
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     const answer=sel?sel.value:"";
@@ -360,27 +369,15 @@ function downloadPDF(){
     y+=18;
   });
 
-  y+=6;
-  doc.text("Recommended Books:",20,y);
-  y+=8;
-  doc.textWithLink(
-    "https://emotionalintelligencedeveloper.com/recommended-books/",
-    20,y,
-    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
-  );
+  if(y>pageHeight-60){doc.addPage();y=40;}
 
-  y+=14;
-  doc.text("Help Page:",20,y);
-  y+=8;
-  doc.textWithLink(
-    "https://emotionalintelligencedeveloper.com/help-page/",
-    20,y,
-    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
-  );
+  doc.textWithLink("https://emotionalintelligencedeveloper.com/recommended-books/",20,y,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"}); 
+  y+=12;
+  doc.textWithLink("https://emotionalintelligencedeveloper.com/help-page/",20,y,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
 
   doc.setFontSize(10);
-  doc.text("Created with the Positive Strengths Map Tool",20,285);
-  doc.text("emotionalintelligencedeveloper.com",20,292);
+  doc.text("Created with the Positive Strengths Map Tool",20,pageHeight-15);
+  doc.text("emotionalintelligencedeveloper.com",20,pageHeight-8);
 
   doc.save("positive-strengths-map.pdf");
 }

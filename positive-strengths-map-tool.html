@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Your Positive Strengths Map — Emotional Intelligence Developer</title>
 
 <style>
@@ -98,7 +98,7 @@ canvas{max-width:100%;margin:16px auto}
 .download{
   margin-top:18px;
   display:inline-block;
-  padding:10px 16px;
+  padding:12px 18px;
   border-radius:10px;
   background:var(--safe);
   color:#fff;
@@ -106,35 +106,26 @@ canvas{max-width:100%;margin:16px auto}
   cursor:pointer;
 }
 
-.share{
-  margin-top:12px;
-  font-size:13px;
-  color:var(--muted);
+.link-buttons{
+  margin-top:16px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
 }
-
-.ads-label{font-size:13px;color:var(--muted);margin-top:32px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
+.link-btn{
   display:inline-block;
-  margin-top:10px;
   padding:10px 16px;
-  border-radius:8px;
+  border-radius:10px;
   background:var(--cta);
   color:#111;
   font-weight:700;
   text-decoration:none;
 }
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
+
+.share{
+  margin-top:12px;
+  font-size:13px;
+  color:var(--muted);
 }
 
 footer{
@@ -188,7 +179,6 @@ Many people enjoy saving or sharing their results.
 
 <div id="result" class="result">
   <h2 id="resultTitle">Your Positive Strengths Map</h2>
-  <canvas id="pieChart"></canvas>
 
   <h3>What this says about you</h3>
   <div id="insights" class="insights"></div>
@@ -199,6 +189,16 @@ Many people enjoy saving or sharing their results.
 </div>
 
 <div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
+
+<!-- ✅ REQUIRED BUTTONS -->
+<div class="link-buttons">
+  <a class="link-btn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    Recommended Books 🎧
+  </a>
+  <a class="link-btn" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Help Page
+  </a>
+</div>
 
 <footer>
 Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
@@ -211,7 +211,10 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-const strengths=["Focus","Self-Trust","Motivation","Calm Presence","Resilience","Growth","Authenticity","Connection","Awareness"];
+const strengths=[
+  "Focus","Self-Trust","Motivation","Calm Presence","Resilience",
+  "Growth","Authenticity","Connection","Awareness"
+];
 
 new Chart(examplePie,{
   type:"pie",
@@ -225,12 +228,12 @@ new Chart(exampleRadar,{
 });
 
 const strengthInsights={
-  "Focus":"You naturally direct your attention and stay engaged.",
-  "Self-Trust":"You rely on your inner compass and instincts.",
-  "Motivation":"You’re driven by purpose and momentum.",
+  "Focus":"You naturally direct your attention and stay engaged with what matters.",
+  "Self-Trust":"You rely on your inner compass and trust your instincts.",
+  "Motivation":"You are driven by purpose and inner momentum.",
   "Calm Presence":"You bring steadiness into situations.",
   "Resilience":"You adapt and recover well when things change.",
-  "Growth":"You value learning and personal development.",
+  "Growth":"You value learning and development.",
   "Authenticity":"You show up as yourself.",
   "Connection":"Relationships matter deeply to you.",
   "Awareness":"You notice what’s happening within and around you."
@@ -273,8 +276,6 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
-let pieChart=null;
-
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
   for(let i=0;i<questions.length;i++){
@@ -283,104 +284,51 @@ function showResults(){
     scores[sel.value]++;
   }
 
-  const name=document.getElementById("userName").value.trim();
-  document.getElementById("resultTitle").innerText =
-    name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map";
-
   document.getElementById("result").style.display="block";
-
-  if(pieChart){pieChart.destroy();}
-  pieChart=new Chart(document.getElementById("pieChart"),{
-    type:"pie",
-    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
-    options:{plugins:{legend:{position:"bottom"}}}
-  });
-
-  const insightsDiv=document.getElementById("insights");
-  insightsDiv.innerHTML="";
+  const insights=document.getElementById("insights");
+  insights.innerHTML="";
   strengths.filter(s=>scores[s]>0).forEach(s=>{
-    insightsDiv.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
+    insights.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
   });
 }
 
 function resetTool(){
-  document.getElementById("userName").value="";
   document.querySelectorAll("input[type=radio]").forEach(i=>i.checked=false);
   document.getElementById("result").style.display="none";
   document.getElementById("insights").innerHTML="";
-  if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
-/* ✅ ONE-PAGE PDF — SPACING FIXED */
+/* ✅ ONE-PAGE PARAGRAPH PDF */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
   const w = doc.internal.pageSize.width;
-  const h = doc.internal.pageSize.height;
-
-  const name=document.getElementById("userName").value.trim();
-
-  doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer",40,25);
-  doc.text("https://emotionalintelligencedeveloper.com/",40,40);
 
   doc.setFontSize(16);
-  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",40,70);
+  doc.text("Your Positive Strengths Map",40,50);
 
-  const img=document.getElementById("pieChart").toDataURL("image/png");
-  doc.addImage(img,"PNG",40,90,220,150);
+  doc.setFontSize(10);
+  doc.text("Emotional Intelligence Developer",40,70);
+  doc.text("https://emotionalintelligencedeveloper.com/",40,85);
 
-  let leftY=270;
-  let rightY=270;
-  const leftX=40;
-  const rightX=w/2+10;
-  const blockHeight=70;
+  let y=120;
+  doc.setFontSize(11);
 
-  doc.setFontSize(9);
-
-  questions.forEach((q,i)=>{
-    const sel=document.querySelector(`input[name="q${i}"]:checked`);
-    const answer=sel?sel.value:"";
-
-    const useLeft = leftY <= rightY;
-    const x = useLeft ? leftX : rightX;
-    let y = useLeft ? leftY : rightY;
-
-    doc.setFont(undefined,"bold");
-    doc.text(`${i+1}. ${q}`,x,y,{maxWidth:220});
-    y+=14;
-
-    doc.setFont(undefined,"normal");
-    doc.text(`You chose: ${answer}`,x+8,y);
-    y+=14;
-
-    doc.text(strengthInsights[answer],x+8,y,{maxWidth:210});
-
-    if(useLeft){leftY+=blockHeight;}else{rightY+=blockHeight;}
+  strengths.forEach(s=>{
+    if(scores[s]>0){
+      const p = `${s}: ${strengthInsights[s]}`;
+      doc.text(doc.splitTextToSize(p,w-80),40,y);
+      y+=26;
+    }
   });
 
-  const footerY=h-70;
   doc.setFontSize(10);
-  doc.textWithLink(
-    "https://emotionalintelligencedeveloper.com/recommended-books/",
-    40,
-    footerY,
-    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
-  );
-  doc.textWithLink(
-    "https://emotionalintelligencedeveloper.com/help-page/",
-    w/2+10,
-    footerY,
-    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
-  );
-
-  doc.setFontSize(9);
-  doc.text(
-    "Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",
-    w/2,
-    h-25,
-    {align:"center"}
-  );
+  doc.textWithLink("Recommended Books",40,y+20,{
+    url:"https://emotionalintelligencedeveloper.com/recommended-books/"
+  });
+  doc.textWithLink("Help Page",200,y+20,{
+    url:"https://emotionalintelligencedeveloper.com/help-page/"
+  });
 
   doc.save("positive-strengths-map.pdf");
 }

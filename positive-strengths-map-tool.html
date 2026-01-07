@@ -118,13 +118,8 @@ canvas{max-width:100%;margin:16px auto}
   border-radius:14px;
   padding:18px;
 }
-.cta-box h3{
-  margin-bottom:6px;
-}
-.cta-box p{
-  margin:0 0 12px;
-  color:var(--muted);
-}
+.cta-box h3{margin-bottom:6px}
+.cta-box p{margin:0 0 12px;color:var(--muted)}
 .cta-box a{
   display:inline-block;
   padding:10px 16px;
@@ -203,32 +198,6 @@ Your strengths are turned into visuals that many people enjoy saving or sharing.
 </div>
 
 <div class="download" onclick="downloadPDF()">Download & Share My Strengths (PDF)</div>
-
-<div class="cta-section">
-
-  <div class="cta-box">
-    <h3>📚 Want to understand yourself even deeper?</h3>
-    <p>
-      These carefully chosen books help you explore emotions, confidence,
-      self-trust, and growth — at your own pace.
-    </p>
-    <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-      Explore Recommended Books 🎧
-    </a>
-  </div>
-
-  <div class="cta-box">
-    <h3>🧭 Need support or guidance right now?</h3>
-    <p>
-      If something here stirred emotions, support and gentle guidance are available.
-      You don’t have to figure things out alone.
-    </p>
-    <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-      Visit the Help Page
-    </a>
-  </div>
-
-</div>
 
 <footer>
 Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
@@ -347,7 +316,7 @@ function resetTool(){
   document.getElementById("insights").innerHTML="";
 }
 
-/* ✅ PDF SECTION — FIXED ONLY */
+/* ✅ PDF SECTION — SURGICAL NAME INSERTION ONLY */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
@@ -365,6 +334,15 @@ function downloadPDF(){
   doc.addImage(radarChart.toBase64Image(),"PNG",300,110,250,180);
 
   let y=300;
+
+  /* 👇 THIS IS THE ONLY NEW LOGIC */
+  const name = document.getElementById("userName").value.trim();
+  if(name){
+    doc.setFontSize(12);
+    doc.text(`Name: ${name}`,40,y);
+    y += 22;
+  }
+
   doc.setFontSize(11);
 
   questions.forEach((q,i)=>{

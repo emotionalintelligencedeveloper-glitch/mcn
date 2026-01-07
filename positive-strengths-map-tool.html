@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Positive Strengths Map — Emotional Intelligence Developer</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Your Positive Strengths Map — Emotional Intelligence Developer</title>
 
 <style>
 :root{
@@ -24,19 +24,19 @@ body{
 .wrap{max-width:900px;margin:28px auto;padding:20px}
 .card{
   background:var(--card);
-  border-radius:16px;
+  border-radius:14px;
   padding:26px;
-  box-shadow:0 10px 28px rgba(0,0,0,0.08);
+  box-shadow:0 10px 28px rgba(16,24,40,0.08);
 }
 h1,h2,h3{margin-top:0}
-.lead{color:var(--muted);line-height:1.7;margin-bottom:18px}
+.lead{color:var(--muted);line-height:1.6;margin-bottom:16px}
 
 .example-wrap{
   display:flex;
   gap:24px;
   flex-wrap:wrap;
   justify-content:center;
-  margin:24px 0 32px;
+  margin-bottom:28px;
 }
 .example{max-width:260px;text-align:center}
 .example small{color:var(--muted)}
@@ -55,7 +55,6 @@ h1,h2,h3{margin-top:0}
   border-radius:12px;
   border:1px solid #e5e7eb;
 }
-.q h3{line-height:1.4}
 label{display:block;margin:6px 0;cursor:pointer}
 
 .controls{
@@ -73,18 +72,23 @@ label{display:block;margin:6px 0;cursor:pointer}
   font-weight:600;
   cursor:pointer;
 }
-.btn.secondary{background:#e5e7eb;color:#111}
+.btn.secondary{
+  background:#e5e7eb;
+  color:#111;
+}
 
 .result{
   display:none;
   margin-top:28px;
-  padding:20px;
+  padding:18px;
   border-radius:14px;
   background:var(--soft);
   border:1px solid #bfdbfe;
 }
 
-.insights{margin-top:16px}
+canvas{max-width:100%;margin:16px auto}
+
+.insights{margin-top:20px}
 .insight{
   margin-bottom:14px;
   padding-left:12px;
@@ -93,22 +97,19 @@ label{display:block;margin:6px 0;cursor:pointer}
 
 .download{
   margin-top:18px;
-  padding:12px 18px;
-  border-radius:12px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
   background:var(--safe);
   color:#fff;
-  font-weight:800;
+  font-weight:700;
   cursor:pointer;
-  border:none;
 }
 
 .share{
-  margin-top:20px;
-  padding:16px;
-  background:#eef2ff;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:700;
+  margin-top:12px;
+  font-size:13px;
+  color:var(--muted);
 }
 
 .ads-label{font-size:13px;color:var(--muted);margin-top:32px}
@@ -137,7 +138,7 @@ label{display:block;margin:6px 0;cursor:pointer}
 }
 
 footer{
-  margin-top:24px;
+  margin-top:20px;
   font-size:12px;
   color:var(--muted);
   text-align:center;
@@ -149,20 +150,18 @@ footer{
 <div class="wrap">
 <div class="card">
 
-<h1>Positive Strengths Map</h1>
+<h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-This tool helps you understand your personal strengths in a positive, supportive way.
-It is often used by students, teachers, and families for school projects, self-reflection,
-and conversations about emotional intelligence.
+Answer 9 positive questions to see a visual map of how you naturally show up.
+There are no wrong answers — just insight.
 </p>
 
+<h2>See what your results can look like</h2>
 <p class="lead">
-There are no right or wrong answers — just patterns that show how you naturally think,
-connect, and respond to the world.
+After answering the questions, you’ll receive a strengths map like the examples below.
+Many people enjoy saving or sharing their results.
 </p>
-
-<h2>What the results look like</h2>
 
 <div class="example-wrap">
   <div class="example">
@@ -171,13 +170,8 @@ connect, and respond to the world.
   </div>
   <div class="example">
     <canvas id="exampleRadar"></canvas>
-    <small>Example printable overview</small>
+    <small>Example strengths overview (PDF style)</small>
   </div>
-</div>
-
-<div class="share">
-📘 Many students print their results, include them in projects,  
-or share them with teachers, parents, or friends.
 </div>
 
 <div class="input">
@@ -188,38 +182,26 @@ or share them with teachers, parents, or friends.
 <form id="quiz"></form>
 
 <div class="controls">
-  <button type="button" class="btn" onclick="showResults()">See My Strengths</button>
-  <button type="button" class="btn secondary" onclick="resetTool()">Reset</button>
+  <button class="btn" onclick="showResults()">See My Strengths Map</button>
+  <button class="btn secondary" onclick="resetTool()">Reset</button>
 </div>
 
 <div id="result" class="result">
-  <h2 id="resultTitle">Your Strengths Summary</h2>
+  <h2 id="resultTitle">Your Positive Strengths Map</h2>
+  <canvas id="pieChart"></canvas>
+
+  <h3>What this says about you</h3>
   <div id="insights" class="insights"></div>
+
+  <div class="share">
+    You can save or share this with friends, family, school, or work if you’d like.
+  </div>
 </div>
 
-<button type="button" class="download" onclick="downloadPDF()">
-Download My Strengths Map (PDF)
-</button>
-
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-  <p><strong>Want to grow these strengths?</strong></p>
-  <p>Some links may be affiliate links at no extra cost to you.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    View Recommended Books
-  </a>
-</div>
-
-<div class="help-box">
-  <p><strong>Need emotional support?</strong></p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
-</div>
+<div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
 
 <footer>
-Created by Emotional Intelligence Developer<br>
-https://emotionalintelligencedeveloper.com/
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
 </footer>
 
 </div>
@@ -231,29 +213,28 @@ https://emotionalintelligencedeveloper.com/
 <script>
 const strengths=["Focus","Self-Trust","Motivation","Calm Presence","Resilience","Growth","Authenticity","Connection","Awareness"];
 
-const insightsText={
-  "Focus":"You stay engaged and direct your attention with intention.",
-  "Self-Trust":"You listen to your inner voice and instincts.",
-  "Motivation":"You are driven by meaning and momentum.",
-  "Calm Presence":"You bring steadiness into situations.",
-  "Resilience":"You adapt and recover when things change.",
-  "Growth":"You value learning and improvement.",
-  "Authenticity":"You show up as yourself.",
-  "Connection":"Relationships matter deeply to you.",
-  "Awareness":"You notice what’s happening within and around you."
-};
-
 new Chart(examplePie,{
   type:"pie",
-  data:{labels:strengths,datasets:[{data:Array(9).fill(2)}]},
-  options:{plugins:{legend:{display:false}}}
+  data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]},
+  options:{plugins:{legend:{position:"bottom"}}}
 });
-
 new Chart(exampleRadar,{
   type:"radar",
   data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},
   options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
 });
+
+const strengthInsights={
+  "Focus":"You naturally direct your attention and stay engaged.",
+  "Self-Trust":"You rely on your inner compass and instincts.",
+  "Motivation":"You’re driven by purpose and momentum.",
+  "Calm Presence":"You bring steadiness into situations.",
+  "Resilience":"You adapt and recover well when things change.",
+  "Growth":"You value learning and personal development.",
+  "Authenticity":"You show up as yourself.",
+  "Connection":"Relationships matter deeply to you.",
+  "Awareness":"You notice what’s happening within and around you."
+};
 
 const questions=[
   "When starting something important, you usually…",
@@ -279,10 +260,9 @@ const options=[
   ["Growth","Awareness","Resilience","Self-Trust"]
 ];
 
-const scores={};
-strengths.forEach(s=>scores[s]=0);
-
+const scores={}; strengths.forEach(s=>scores[s]=0);
 const form=document.getElementById("quiz");
+
 questions.forEach((q,i)=>{
   const d=document.createElement("div");
   d.className="q";
@@ -293,6 +273,8 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
+let pieChart=null;
+
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
   for(let i=0;i<questions.length;i++){
@@ -300,16 +282,25 @@ function showResults(){
     if(!sel){alert("Please answer all questions.");return;}
     scores[sel.value]++;
   }
-  const name=document.getElementById("userName").value.trim();
-  document.getElementById("resultTitle").innerText=
-    name?`${name}’s Strengths Summary`:"Your Strengths Summary";
 
-  const box=document.getElementById("insights");
-  box.innerHTML="";
-  strengths.filter(s=>scores[s]>0).forEach(s=>{
-    box.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${insightsText[s]}</div>`;
-  });
+  const name=document.getElementById("userName").value.trim();
+  document.getElementById("resultTitle").innerText =
+    name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map";
+
   document.getElementById("result").style.display="block";
+
+  if(pieChart){pieChart.destroy();}
+  pieChart=new Chart(document.getElementById("pieChart"),{
+    type:"pie",
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
+    options:{plugins:{legend:{position:"bottom"}}}
+  });
+
+  const insightsDiv=document.getElementById("insights");
+  insightsDiv.innerHTML="";
+  strengths.filter(s=>scores[s]>0).forEach(s=>{
+    insightsDiv.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
+  });
 }
 
 function resetTool(){
@@ -317,38 +308,83 @@ function resetTool(){
   document.querySelectorAll("input[type=radio]").forEach(i=>i.checked=false);
   document.getElementById("result").style.display="none";
   document.getElementById("insights").innerHTML="";
+  if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
+/* ✅ ONE-PAGE PDF — SPACING FIXED */
 function downloadPDF(){
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF("p","pt","a4");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("p","pt","a4");
+  const w = doc.internal.pageSize.width;
+  const h = doc.internal.pageSize.height;
 
-  doc.setFontSize(12);
-  doc.text("Positive Strengths Map",40,40);
-  doc.text("https://emotionalintelligencedeveloper.com/",40,58);
+  const name=document.getElementById("userName").value.trim();
 
-  const data=strengths.map(s=>scores[s]||0);
-  const canvas=document.createElement("canvas");
-  new Chart(canvas,{type:"pie",data:{labels:strengths,datasets:[{data}]},options:{responsive:false}});
-  const img=canvas.toDataURL("image/png");
-  doc.addImage(img,"PNG",40,80,220,160);
-
-  let y=260;
   doc.setFontSize(10);
+  doc.text("Emotional Intelligence Developer",40,25);
+  doc.text("https://emotionalintelligencedeveloper.com/",40,40);
+
+  doc.setFontSize(16);
+  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",40,70);
+
+  const img=document.getElementById("pieChart").toDataURL("image/png");
+  doc.addImage(img,"PNG",40,90,220,150);
+
+  let leftY=270;
+  let rightY=270;
+  const leftX=40;
+  const rightX=w/2+10;
+  const blockHeight=70;
+
+  doc.setFontSize(9);
+
   questions.forEach((q,i)=>{
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
-    doc.text(`${i+1}. ${q}`,40,y); y+=14;
-    doc.text(`Answer: ${sel.value}`,48,y); y+=14;
-    doc.text(insightsText[sel.value],48,y); y+=20;
+    const answer=sel?sel.value:"";
+
+    const useLeft = leftY <= rightY;
+    const x = useLeft ? leftX : rightX;
+    let y = useLeft ? leftY : rightY;
+
+    doc.setFont(undefined,"bold");
+    doc.text(`${i+1}. ${q}`,x,y,{maxWidth:220});
+    y+=14;
+
+    doc.setFont(undefined,"normal");
+    doc.text(`You chose: ${answer}`,x+8,y);
+    y+=14;
+
+    doc.text(strengthInsights[answer],x+8,y,{maxWidth:210});
+
+    if(useLeft){leftY+=blockHeight;}else{rightY+=blockHeight;}
   });
 
-  doc.text("Recommended books:",40,760);
-  doc.text("https://emotionalintelligencedeveloper.com/recommended-books/",40,776);
-  doc.text("Help page:",40,792);
-  doc.text("https://emotionalintelligencedeveloper.com/help-page/",40,808);
+  const footerY=h-70;
+  doc.setFontSize(10);
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/recommended-books/",
+    40,
+    footerY,
+    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
+  );
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/help-page/",
+    w/2+10,
+    footerY,
+    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
+  );
+
+  doc.setFontSize(9);
+  doc.text(
+    "Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",
+    w/2,
+    h-25,
+    {align:"center"}
+  );
 
   doc.save("positive-strengths-map.pdf");
 }
 </script>
+
 </body>
 </html>

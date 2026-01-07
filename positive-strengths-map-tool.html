@@ -29,7 +29,7 @@ body{
   box-shadow:0 10px 28px rgba(0,0,0,0.08);
 }
 h1,h2,h3{margin-top:0}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:16px}
+.lead{color:var(--muted);line-height:1.7;margin-bottom:18px}
 
 .example-wrap{
   display:flex;
@@ -72,10 +72,7 @@ label{display:block;margin:6px 0;cursor:pointer}
   font-weight:600;
   cursor:pointer;
 }
-.btn.secondary{
-  background:#e5e7eb;
-  color:#111;
-}
+.btn.secondary{background:#e5e7eb;color:#111}
 
 .result{
   display:none;
@@ -108,11 +105,11 @@ canvas{max-width:100%;margin:16px auto}
 
 .share{
   margin-top:18px;
-  padding:14px;
+  padding:16px;
   background:#eef2ff;
-  border-radius:10px;
-  font-size:15px;
-  font-weight:600;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:700;
 }
 
 .ads-label{font-size:13px;color:var(--muted);margin-top:32px}
@@ -156,13 +153,16 @@ footer{
 <h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-Answer 9 positive questions to see a visual map of how you naturally show up.
-There are no wrong answers — just insight.
+This tool helps you visualise your personal strengths in a positive, non-judgmental way.
+By answering a small set of reflective questions, you’ll receive a strengths map that highlights
+how you naturally show up in the world. Many people enjoy saving or sharing their results
+for reflection, school projects, or personal development conversations.
 </p>
 
 <h2>See what your results can look like</h2>
+
 <div class="example-wrap">
-  <div class="example"><canvas id="examplePie"></canvas><small>Example snapshot</small></div>
+  <div class="example"><canvas id="examplePie"></canvas><small>Example strengths snapshot</small></div>
   <div class="example"><canvas id="exampleRadar"></canvas><small>Example overview</small></div>
 </div>
 
@@ -186,8 +186,9 @@ There are no wrong answers — just insight.
   <div id="insights" class="insights"></div>
 
   <div class="share">
-    ⭐ This result is designed to be shared.  
-    Save or share your PDF with friends, family, school projects, or work.
+    ⭐ This strengths map is designed to be shared.  
+    You can include it in school work, personal reflections,
+    or share it with friends, family, or colleagues.
   </div>
 </div>
 
@@ -195,8 +196,7 @@ There are no wrong answers — just insight.
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-  <p><strong>Want to grow these strengths?</strong></p>
-  <p>Explore books and audiobooks on confidence, focus, motivation, and emotional intelligence.</p>
+  <p><strong>Want to keep developing these strengths?</strong></p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
     View Recommended Books
   </a>
@@ -204,7 +204,6 @@ There are no wrong answers — just insight.
 
 <div class="help-box">
   <p><strong>Need extra support right now?</strong></p>
-  <p>You don’t have to handle everything alone.</p>
   <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
     Visit the Help Page
   </a>
@@ -317,6 +316,8 @@ function resetTool(){
 }
 
 function downloadPDF(){
+  if(!pieChart){alert("Please generate your strengths map first.");return;}
+
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF("p","pt","a4");
   const h=doc.internal.pageSize.height;

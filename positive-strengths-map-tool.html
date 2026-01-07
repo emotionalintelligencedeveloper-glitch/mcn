@@ -316,20 +316,20 @@ function resetTool(){
   document.getElementById("insights").innerHTML="";
 }
 
-/* ✅ PDF SECTION — SURGICAL NAME INSERTION ONLY */
+/* ✅ PDF SECTION — NAME INCLUDED IN TITLE */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
   const w = doc.internal.pageSize.width;
   const h = doc.internal.pageSize.height;
 
-const name = document.getElementById("userName").value.trim();
-const titleText = name
-  ? `${name}’s Positive Strengths Map`
-  : "Your Positive Strengths Map";
+  const name = document.getElementById("userName").value.trim();
+  const titleText = name
+    ? `${name}’s Positive Strengths Map`
+    : "Your Positive Strengths Map";
 
-doc.setFontSize(16);
-doc.text(titleText,40,50);
+  doc.setFontSize(16);
+  doc.text(titleText,40,50);
 
   doc.setFontSize(10);
   doc.text("Emotional Intelligence Developer",40,70);
@@ -339,15 +339,6 @@ doc.text(titleText,40,50);
   doc.addImage(radarChart.toBase64Image(),"PNG",300,110,250,180);
 
   let y=300;
-
-  /* 👇 THIS IS THE ONLY NEW LOGIC */
-  const name = document.getElementById("userName").value.trim();
-  if(name){
-    doc.setFontSize(12);
-    doc.text(`Name: ${name}`,40,y);
-    y += 22;
-  }
-
   doc.setFontSize(11);
 
   questions.forEach((q,i)=>{

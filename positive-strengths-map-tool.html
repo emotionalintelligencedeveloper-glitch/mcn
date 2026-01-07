@@ -332,52 +332,52 @@ function resetTool(){
   if(pieChart){pieChart.destroy();pieChart=null;}
 }
 
+/* ✅ ONE-PAGE PDF EXPORT */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const pageHeight = doc.internal.pageSize.height;
-  const name = document.getElementById("userName").value.trim();
+  const doc = new jsPDF("p","pt","a4");
+  const w = doc.internal.pageSize.width;
+  const h = doc.internal.pageSize.height;
+
+  const name=document.getElementById("userName").value.trim();
 
   doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer",20,15);
-  doc.text("https://emotionalintelligencedeveloper.com/",20,22);
+  doc.text("Emotional Intelligence Developer",40,25);
+  doc.text("https://emotionalintelligencedeveloper.com/",40,38);
 
   doc.setFontSize(16);
-  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",20,40);
+  doc.text(name ? `${name}’s Positive Strengths Map` : "Your Positive Strengths Map",40,65);
 
   const img=document.getElementById("pieChart").toDataURL("image/png");
-  doc.addImage(img,"PNG",20,50,160,90);
+  doc.addImage(img,"PNG",40,80,220,150);
 
-  let y=150;
-  doc.setFontSize(11);
+  let leftY=250,rightY=250;
+  const leftX=40,rightX=w/2+10;
+
+  doc.setFontSize(9);
 
   questions.forEach((q,i)=>{
-    if(y>pageHeight-50){doc.addPage();y=40;}
-
     const sel=document.querySelector(`input[name="q${i}"]:checked`);
     const answer=sel?sel.value:"";
+    const textY = leftY<=rightY ? leftY : rightY;
+    const x = leftY<=rightY ? leftX : rightX;
 
     doc.setFont(undefined,"bold");
-    doc.text(`${i+1}. ${q}`,20,y,{maxWidth:170});
-    y+=12;
-
+    doc.text(`${i+1}. ${q}`,x,textY,{maxWidth:220});
     doc.setFont(undefined,"normal");
-    doc.text(`You chose: ${answer}`,25,y);
-    y+=12;
+    doc.text(`You chose: ${answer}`,x+8,textY+12);
+    doc.text(strengthInsights[answer],x+8,textY+24,{maxWidth:210});
 
-    doc.text(`What this reflects: ${strengthInsights[answer]}`,25,y,{maxWidth:165});
-    y+=18;
+    if(leftY<=rightY){leftY+=54;}else{rightY+=54;}
   });
 
-  if(y>pageHeight-60){doc.addPage();y=40;}
-
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/recommended-books/",20,y,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"}); 
-  y+=12;
-  doc.textWithLink("https://emotionalintelligencedeveloper.com/help-page/",20,y,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
-
+  const linksY=h-70;
   doc.setFontSize(10);
-  doc.text("Created with the Positive Strengths Map Tool",20,pageHeight-15);
-  doc.text("emotionalintelligencedeveloper.com",20,pageHeight-8);
+  doc.textWithLink("https://emotionalintelligencedeveloper.com/recommended-books/",40,linksY,{url:"https://emotionalintelligencedeveloper.com/recommended-books/"});
+  doc.textWithLink("https://emotionalintelligencedeveloper.com/help-page/",w/2+10,linksY,{url:"https://emotionalintelligencedeveloper.com/help-page/"});
+
+  doc.setFontSize(9);
+  doc.text("Created with the Positive Strengths Map Tool — emotionalintelligencedeveloper.com",w/2,h-25,{align:"center"});
 
   doc.save("positive-strengths-map.pdf");
 }

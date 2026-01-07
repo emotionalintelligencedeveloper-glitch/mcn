@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Your Positive Strengths Map — Emotional Intelligence Developer</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --accent:#2563eb;
+  --soft:#eff6ff;
+  --muted:#6b7280;
+  --cta:#f59e0b;
+  --safe:#10b981;
+}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:#111;
+}
+.wrap{max-width:900px;margin:28px auto;padding:20px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 10px 28px rgba(16,24,40,0.08);
+}
+h1{margin-top:0;font-size:24px}
+h2{font-size:20px;margin-top:28px}
+.lead{color:var(--muted);line-height:1.6;margin-bottom:16px}
+
+.q{
+  margin:18px 0;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
+.q h3{margin:0 0 10px;font-size:15px}
+label{display:block;margin:6px 0;cursor:pointer}
+
+.controls{margin-top:20px}
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.result{
+  display:none;
+  margin-top:28px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+}
+
+canvas{max-width:100%;margin:20px auto}
+
+.download{
+  margin-top:16px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  background:var(--safe);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* Conversion */
+.ads-label{font-size:13px;color:var(--muted);margin-top:32px}
+.ads-box{
+  background:#fefce8;
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:14px;
+}
+.cta-link{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--cta);
+  color:#111;
+  font-weight:700;
+  text-decoration:none;
+}
+.help-box{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#ecfeff;
+  border:1px solid #67e8f9;
+}
+
+footer{
+  margin-top:20px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>Your Positive Strengths Map</h1>
+
+<p class="lead">
+This is a positive reflection tool designed to show how you naturally show up in life.
+There are no wrong answers — just different strengths.
+</p>
+
+<!-- PREVIEW SECTION -->
+<h2>See what your results look like</h2>
+<p class="lead">
+Answer 9 uplifting questions and receive a visual map of your strengths.
+Many people enjoy saving or sharing their results.
+</p>
+
+<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+  <div style="width:220px;height:220px;border-radius:12px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#6b7280">
+    Pie chart example
+  </div>
+  <div style="width:220px;height:220px;border-radius:12px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#6b7280">
+    Radar chart example
+  </div>
+</div>
+
+<form id="quiz"></form>
+
+<div class="controls">
+  <button class="btn" onclick="showResults()">See My Strengths Map</button>
+</div>
+
+<div id="result" class="result">
+  <h3>Your Positive Strengths Map</h3>
+  <p class="lead">
+    This snapshot reflects how you show up at your best right now.
+  </p>
+  <canvas id="pieChart"></canvas>
+  <p class="lead">
+    Everyone’s map looks different — that’s what makes it meaningful.
+  </p>
+</div>
+
+<div class="download" onclick="downloadPDF()">Download My Strengths Map (PDF)</div>
+
+<!-- RECOMMENDED BOOKS -->
+<p class="ads-label">Ads.</p>
+<div class="ads-box">
+  <p><strong>Want to explore personal growth and emotional intelligence?</strong></p>
+  <p>
+    Our Recommended Books page includes reading and audiobooks on motivation,
+    focus, confidence, and personal development.
+    Some links are affiliate links and may earn a small commission at no extra cost to you.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    View Recommended Books
+  </a>
+</div>
+
+<!-- HELP PAGE -->
+<div class="help-box">
+  <p><strong>Need extra support right now?</strong></p>
+  <p>
+    If you’re feeling overwhelmed or struggling, support options are available.
+  </p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Visit the Help Page
+  </a>
+</div>
+
+<footer>
+Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+const strengths=[
+  "Focus","Self-Trust","Motivation","Calm Presence",
+  "Resilience","Growth","Authenticity","Connection","Awareness"
+];
+
+const questions=[
+  "When starting something important, you usually…",
+  "When challenges appear, you tend to…",
+  "Your energy feels strongest when…",
+  "In conversations, people notice that you…",
+  "When plans change, you usually…",
+  "You feel confident when you…",
+  "Your motivation comes mainly from…",
+  "You feel connected when you…",
+  "Personal growth for you looks like…"
+];
+
+const options=[
+  ["Focus","Motivation","Growth","Awareness"],
+  ["Resilience","Calm Presence","Growth","Self-Trust"],
+  ["Authenticity","Motivation","Connection","Focus"],
+  ["Connection","Awareness","Calm Presence","Authenticity"],
+  ["Resilience","Self-Trust","Calm Presence","Growth"],
+  ["Self-Trust","Authenticity","Focus","Motivation"],
+  ["Motivation","Growth","Connection","Focus"],
+  ["Connection","Authenticity","Awareness","Calm Presence"],
+  ["Growth","Awareness","Resilience","Self-Trust"]
+];
+
+const scores={}; strengths.forEach(s=>scores[s]=0);
+const form=document.getElementById("quiz");
+
+questions.forEach((q,i)=>{
+  const d=document.createElement("div");
+  d.className="q";
+  d.innerHTML=`<h3>${i+1}) ${q}</h3>`;
+  options[i].forEach(o=>{
+    d.innerHTML+=`<label><input type="radio" name="q${i}" value="${o}"> ${o}</label>`;
+  });
+  form.appendChild(d);
+});
+
+let pieChart;
+
+function showResults(){
+  strengths.forEach(s=>scores[s]=0);
+  for(let i=0;i<questions.length;i++){
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel){alert("Please answer all questions.");return;}
+    scores[sel.value]++;
+  }
+
+  document.getElementById("result").style.display="block";
+
+  pieChart=new Chart(document.getElementById("pieChart"),{
+    type:"pie",
+    data:{
+      labels:strengths,
+      datasets:[{data:strengths.map(s=>scores[s])}]
+    },
+    options:{plugins:{legend:{position:"bottom"}}}
+  });
+}
+
+function downloadPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+
+  doc.text("Your Positive Strengths Map",20,20);
+  doc.text("A visual snapshot of how you show up at your best.",20,30);
+
+  const img=document.getElementById("pieChart").toDataURL("image/png");
+  doc.addImage(img,"PNG",20,40,160,120);
+
+  doc.text("emotionalintelligencedeveloper.com",20,180);
+  doc.save("positive-strengths-map.pdf");
+}
+</script>
+
+</body>
+</html>

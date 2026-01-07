@@ -329,7 +329,6 @@ function downloadPDF(){
   const doc=new jsPDF();
   const name=document.getElementById("userName").value.trim();
 
-  // Header
   doc.setFontSize(10);
   doc.text("Emotional Intelligence Developer",20,15);
   doc.text("https://emotionalintelligencedeveloper.com/",20,22);
@@ -342,13 +341,26 @@ function downloadPDF(){
 
   let y=150;
   doc.setFontSize(11);
-  strengths.filter(s=>scores[s]>0).forEach(s=>{
-    doc.text(`${s}: ${strengthInsights[s]}`,20,y,{maxWidth:170});
-    y+=14;
+
+  questions.forEach((q,i)=>{
     if(y>260){doc.addPage();y=40;}
+
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    const answer=sel?sel.value:"";
+
+    doc.setFont(undefined,"bold");
+    doc.text(`${i+1}. ${q}`,20,y,{maxWidth:170});
+    y+=12;
+
+    doc.setFont(undefined,"normal");
+    doc.text(`You chose: ${answer}`,25,y);
+    y+=12;
+
+    doc.text(`What this reflects: ${strengthInsights[answer]}`,25,y,{maxWidth:165});
+    y+=18;
   });
 
-  y+=10;
+  y+=6;
   doc.text("Recommended Books:",20,y);
   y+=8;
   doc.textWithLink(
@@ -366,7 +378,6 @@ function downloadPDF(){
     {url:"https://emotionalintelligencedeveloper.com/help-page/"}
   );
 
-  // Footer
   doc.setFontSize(10);
   doc.text("Created with the Positive Strengths Map Tool",20,285);
   doc.text("emotionalintelligencedeveloper.com",20,292);

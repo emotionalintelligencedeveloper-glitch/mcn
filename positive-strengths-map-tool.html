@@ -31,6 +31,21 @@ body{
 h1,h2,h3{margin-top:0}
 .lead{color:var(--muted);line-height:1.6;margin-bottom:16px}
 
+.example-wrap{
+  display:flex;
+  gap:24px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:28px;
+}
+.example{
+  max-width:260px;
+  text-align:center;
+}
+.example small{
+  color:var(--muted);
+}
+
 .q{
   margin:18px 0;
   padding:14px;
@@ -125,9 +140,27 @@ footer{
 <h1>Your Positive Strengths Map</h1>
 
 <p class="lead">
-Answer 9 positive questions to see a visual map of how you naturally show up.
+Answer 9 positive questions and see a visual map of how you naturally show up.
 There are no wrong answers — just insight.
 </p>
+
+<!-- 🔥 EXAMPLE GRAPHS (TOP – EXCITEMENT SECTION) -->
+<h2>See what your results can look like</h2>
+<p class="lead">
+After answering the questions, you’ll receive a strengths map like the examples below.
+Many people enjoy saving or sharing their results.
+</p>
+
+<div class="example-wrap">
+  <div class="example">
+    <canvas id="examplePie"></canvas>
+    <small>Example strengths snapshot</small>
+  </div>
+  <div class="example">
+    <canvas id="exampleRadar"></canvas>
+    <small>Example strengths overview (PDF style)</small>
+  </div>
+</div>
 
 <form id="quiz"></form>
 
@@ -184,6 +217,32 @@ const strengths=[
   "Resilience","Growth","Authenticity","Connection","Awareness"
 ];
 
+// 🔥 EXAMPLE CHARTS (RUN ON LOAD)
+new Chart(document.getElementById("examplePie"),{
+  type:"pie",
+  data:{
+    labels:strengths,
+    datasets:[{data:[2,2,2,2,2,2,2,2,2]}]
+  },
+  options:{plugins:{legend:{position:"bottom"}}}
+});
+
+new Chart(document.getElementById("exampleRadar"),{
+  type:"radar",
+  data:{
+    labels:strengths,
+    datasets:[{
+      data:[3,4,3,4,3,4,3,4,3],
+      fill:true
+    }]
+  },
+  options:{
+    scales:{r:{beginAtZero:true,max:5}},
+    plugins:{legend:{display:false}}
+  }
+});
+
+// QUIZ LOGIC
 const strengthInsights={
   "Focus":"You naturally direct your attention and stay engaged. Protecting your time helps this strength shine.",
   "Self-Trust":"You rely on your inner compass. Noticing when trusting yourself works builds confidence.",
@@ -233,7 +292,7 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
-let pieChart = null;
+let pieChart=null;
 
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
@@ -246,16 +305,11 @@ function showResults(){
 
   document.getElementById("result").style.display="block";
 
-  if(pieChart){
-    pieChart.destroy();
-  }
+  if(pieChart){ pieChart.destroy(); }
 
-  pieChart = new Chart(document.getElementById("pieChart"),{
+  pieChart=new Chart(document.getElementById("pieChart"),{
     type:"pie",
-    data:{
-      labels:strengths,
-      datasets:[{data:strengths.map(s=>scores[s])}]
-    },
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
     options:{plugins:{legend:{position:"bottom"}}}
   });
 

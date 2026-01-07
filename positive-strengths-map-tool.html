@@ -118,28 +118,7 @@ canvas{max-width:100%;margin:16px auto}
   border-radius:14px;
   padding:18px;
 }
-.cta-box h3{
-  margin-bottom:6px;
-}
-.cta-box p{
-  margin:0 0 12px;
-  color:var(--muted);
-}
-.cta-box a{
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-
-.share{
-  margin-top:12px;
-  font-size:13px;
-  color:var(--muted);
-}
+.cta-box p{color:var(--muted)}
 
 footer{
   margin-top:24px;
@@ -161,25 +140,14 @@ Answer 9 positive questions to discover how your strengths naturally show up.
 There are no right or wrong answers — only insight.
 </p>
 
-<h2>What your results can look like</h2>
-<p class="lead">
-Your strengths are turned into visuals that many people enjoy saving or sharing.
-</p>
-
 <div class="example-wrap">
-  <div class="example">
-    <canvas id="examplePie"></canvas>
-    <small>Strengths snapshot</small>
-  </div>
-  <div class="example">
-    <canvas id="exampleRadar"></canvas>
-    <small>Strengths overview</small>
-  </div>
+  <div class="example"><canvas id="examplePie"></canvas></div>
+  <div class="example"><canvas id="exampleRadar"></canvas></div>
 </div>
 
 <div class="input">
   <label><strong>Your name (optional)</strong></label>
-  <input id="userName" placeholder="e.g. Alex">
+  <input id="userName">
 </div>
 
 <form id="quiz"></form>
@@ -190,46 +158,12 @@ Your strengths are turned into visuals that many people enjoy saving or sharing.
 </div>
 
 <div id="result" class="result">
-  <h2 id="resultTitle">Your Positive Strengths Map</h2>
   <canvas id="pieChart"></canvas>
   <canvas id="radarChart"></canvas>
-
-  <h3>What this says about you</h3>
-  <div id="insights" class="insights"></div>
-
-  <div class="share">
-    Many people share this with friends, family, school, or work.
-  </div>
+  <div id="insights"></div>
 </div>
 
 <div class="download" onclick="downloadPDF()">Download & Share My Strengths (PDF)</div>
-
-<!-- ✅ CLEAR CTA SECTION -->
-<div class="cta-section">
-
-  <div class="cta-box">
-    <h3>📚 Want to understand yourself even deeper?</h3>
-    <p>
-      These carefully chosen books help you explore emotions, confidence,
-      self-trust, and growth — at your own pace.
-    </p>
-    <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-      Explore Recommended Books 🎧
-    </a>
-  </div>
-
-  <div class="cta-box">
-    <h3>🧭 Need support or guidance right now?</h3>
-    <p>
-      If something here stirred emotions, support and gentle guidance are available.
-      You don’t have to figure things out alone.
-    </p>
-    <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-      Visit the Help Page
-    </a>
-  </div>
-
-</div>
 
 <footer>
 Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
@@ -242,32 +176,18 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-const strengths=[
-  "Focus","Self-Trust","Motivation","Calm Presence","Resilience",
-  "Growth","Authenticity","Connection","Awareness"
-];
-
-new Chart(examplePie,{
-  type:"pie",
-  data:{labels:strengths,datasets:[{data:[2,2,2,2,2,2,2,2,2]}]},
-  options:{plugins:{legend:{position:"bottom"}}}
-});
-new Chart(exampleRadar,{
-  type:"radar",
-  data:{labels:strengths,datasets:[{data:[3,4,3,4,3,4,3,4,3],fill:true}]},
-  options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
-});
+const strengths=["Focus","Self-Trust","Motivation","Calm Presence","Resilience","Growth","Authenticity","Connection","Awareness"];
 
 const strengthInsights={
-  "Focus":"You naturally direct your attention and stay engaged with what matters.",
-  "Self-Trust":"You rely on your inner compass and trust your instincts.",
-  "Motivation":"You are driven by purpose and inner momentum.",
-  "Calm Presence":"You bring steadiness into situations.",
-  "Resilience":"You adapt and recover well when things change.",
-  "Growth":"You value learning and development.",
-  "Authenticity":"You show up as yourself.",
-  "Connection":"Relationships matter deeply to you.",
-  "Awareness":"You notice what’s happening within and around you."
+  "Focus":"This reflects your ability to direct attention and stay engaged.",
+  "Self-Trust":"This reflects confidence in your inner judgement.",
+  "Motivation":"This reflects purpose-driven energy.",
+  "Calm Presence":"This reflects steadiness under pressure.",
+  "Resilience":"This reflects adaptability and recovery.",
+  "Growth":"This reflects a desire to learn and improve.",
+  "Authenticity":"This reflects being genuine.",
+  "Connection":"This reflects valuing relationships.",
+  "Awareness":"This reflects noticing internal and external cues."
 };
 
 const questions=[
@@ -307,8 +227,7 @@ questions.forEach((q,i)=>{
   form.appendChild(d);
 });
 
-let pieChart=null;
-let radarChart=null;
+let pieChart,radarChart;
 
 function showResults(){
   strengths.forEach(s=>scores[s]=0);
@@ -325,69 +244,66 @@ function showResults(){
 
   pieChart=new Chart(pieChart=document.getElementById("pieChart"),{
     type:"pie",
-    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]},
-    options:{plugins:{legend:{position:"bottom"}}}
+    data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s])}]}
   });
 
   radarChart=new Chart(radarChart=document.getElementById("radarChart"),{
     type:"radar",
     data:{labels:strengths,datasets:[{data:strengths.map(s=>scores[s]),fill:true}]},
-    options:{scales:{r:{beginAtZero:true,max:5}},plugins:{legend:{display:false}}}
-  });
-
-  const insights=document.getElementById("insights");
-  insights.innerHTML="";
-  strengths.filter(s=>scores[s]>0).forEach(s=>{
-    insights.innerHTML+=`<div class="insight"><strong>${s}</strong><br>${strengthInsights[s]}</div>`;
+    options:{scales:{r:{beginAtZero:true,max:5}}}
   });
 }
 
 function resetTool(){
   document.querySelectorAll("input[type=radio]").forEach(i=>i.checked=false);
   document.getElementById("result").style.display="none";
-  document.getElementById("insights").innerHTML="";
 }
 
-/* ✅ SHARE-WORTHY ONE-PAGE PDF */
+/* ✅ PDF FIX — ONLY SECTION CHANGED */
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p","pt","a4");
-  const w = doc.internal.pageSize.width;
+  const w=doc.internal.pageSize.width;
 
   doc.setFontSize(16);
   doc.text("Your Positive Strengths Map",40,50);
 
-  doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer",40,70);
-  doc.text("https://emotionalintelligencedeveloper.com/",40,85);
+  doc.addImage(pieChart.toBase64Image(),"PNG",40,80,220,160);
+  doc.addImage(radarChart.toBase64Image(),"PNG",300,90,240,170);
 
-  doc.addImage(
-    document.getElementById("pieChart").toDataURL("image/png"),
-    "PNG",40,100,220,160
-  );
-  doc.addImage(
-    document.getElementById("radarChart").toDataURL("image/png"),
-    "PNG",300,110,250,180
-  );
-
-  let y=310;
+  let y=280;
   doc.setFontSize(11);
 
-  strengths.forEach(s=>{
-    if(scores[s]>0){
-      const p=`${s}: ${strengthInsights[s]}`;
-      doc.text(doc.splitTextToSize(p,w-80),40,y);
-      y+=26;
+  questions.forEach((q,i)=>{
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    if(sel){
+      const text=`${i+1}. ${q}\nChosen strength: ${sel.value}\nWhy this matters: ${strengthInsights[sel.value]}`;
+      doc.text(doc.splitTextToSize(text,w-80),40,y);
+      y+=42;
     }
   });
 
   doc.setFontSize(10);
-  doc.textWithLink("Explore Recommended Books",40,y+20,{
-    url:"https://emotionalintelligencedeveloper.com/recommended-books/"
-  });
-  doc.textWithLink("Get Support & Help",260,y+20,{
-    url:"https://emotionalintelligencedeveloper.com/help-page/"
-  });
+  doc.text("Recommended Books:",40,y+20);
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/recommended-books/",
+    40,y+34,
+    {url:"https://emotionalintelligencedeveloper.com/recommended-books/"}
+  );
+
+  doc.text("Help & Support:",40,y+56);
+  doc.textWithLink(
+    "https://emotionalintelligencedeveloper.com/help-page/",
+    40,y+70,
+    {url:"https://emotionalintelligencedeveloper.com/help-page/"}
+  );
+
+  doc.text(
+    "Website: https://emotionalintelligencedeveloper.com/",
+    w/2,
+    820,
+    {align:"center"}
+  );
 
   doc.save("positive-strengths-map.pdf");
 }

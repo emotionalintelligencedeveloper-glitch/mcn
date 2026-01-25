@@ -17,10 +17,8 @@ body {
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
 }
-.lesson { display: none; }
-.lesson.active { display: block; }
-
-h1, h2 { line-height: 1.3; }
+.section { display: none; }
+.section.active { display: block; }
 
 button {
   margin-top: 2rem;
@@ -33,22 +31,18 @@ button {
   color: #ffffff;
   cursor: pointer;
 }
-
 .notice {
   background: #e8f0fe;
   padding: 1.2rem;
   border-radius: 12px;
   margin-top: 2rem;
 }
-
 input {
   padding: 0.6rem;
   font-size: 1rem;
   width: 100%;
   max-width: 320px;
-  margin-top: 0.5rem;
 }
-
 .links a {
   display: block;
   margin-top: 0.8rem;
@@ -56,29 +50,14 @@ input {
   color: #1f2933;
   text-decoration: none;
 }
-.links a:hover { text-decoration: underline; }
 
-/* CERTIFICATE */
-#certificate {
-  display: none;
-  padding: 3rem;
-  text-align: center;
-}
-.cert-box {
-  border: 3px solid #1f2933;
-  padding: 2.5rem;
-}
+/* Certificate */
+#certificate { display:none; text-align:center; padding:3rem; }
+.cert-box { border:3px solid #1f2933; padding:2.5rem; }
 @media print {
-  body * { visibility: hidden; }
-  #certificate, #certificate * {
-    visibility: visible;
-  }
-  #certificate {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
+  body * { visibility:hidden; }
+  #certificate, #certificate * { visibility:visible; }
+  #certificate { position:absolute; top:0; left:0; width:100%; }
 }
 </style>
 </head>
@@ -86,145 +65,68 @@ input {
 <body>
 <div class="container">
 
-<h1>Emotional Intelligence Foundations</h1>
-<p>
-A free, self-paced course to help you understand your emotions,
-pause before reacting, and respond to everyday life with more clarity.
-</p>
+<!-- START -->
+<div id="start" class="section active">
+  <h1>Emotional Intelligence Foundations</h1>
+  <p>A free, self-paced course to help you understand your emotions and respond with clarity.</p>
 
-<div class="notice">
-<label><strong>Your name (used for certificates):</strong></label><br>
-<input id="username" placeholder="Enter your name">
+  <div class="notice">
+    <label><strong>Your name (for certificates):</strong></label><br>
+    <input id="username" placeholder="Enter your name">
+  </div>
+
+  <button onclick="startCourse()">Start the Free Course</button>
 </div>
 
-<!-- LESSON 1 -->
-<div id="lesson1" class="lesson active">
-<h2>Lesson 1: Noticing What You Feel</h2>
-<p>Emotional intelligence begins with awareness, not change.</p>
-<p><strong>Practice:</strong> Pause once today and silently name one emotion.</p>
-
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Emotional awareness</li>
-<li>Less automatic reaction</li>
-<li>Inner steadiness</li>
-</ul>
+<!-- LESSONS -->
+<div id="lesson1" class="section">
+  <h2>Lesson 1: Noticing What You Feel</h2>
+  <p>Emotional intelligence starts with awareness.</p>
+  <p><strong>Practice:</strong> Pause once today and name one emotion.</p>
+  <button onclick="next(1)">Next Lesson</button>
 </div>
 
-<button onclick="completeLesson(1)">Complete Lesson 1</button>
+<div id="lesson2" class="section">
+  <h2>Lesson 2: Naming Emotions Without Judgement</h2>
+  <p><strong>Practice:</strong> Say “I notice I feel…”</p>
+  <button onclick="next(2)">Next Lesson</button>
 </div>
 
-<!-- LESSON 2 -->
-<div id="lesson2" class="lesson">
-<h2>Lesson 2: Naming Emotions Without Judgement</h2>
-<p>Language creates clarity and reduces emotional intensity.</p>
-<p><strong>Practice:</strong> Say “I notice I feel…”</p>
-
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Better emotional vocabulary</li>
-<li>Reduced overwhelm</li>
-<li>Self-understanding</li>
-</ul>
+<div id="lesson3" class="section">
+  <h2>Lesson 3: Pausing Before You React</h2>
+  <p><strong>Practice:</strong> Take one slow breath before responding.</p>
+  <button onclick="next(3)">Next Lesson</button>
 </div>
 
-<button onclick="completeLesson(2)">Complete Lesson 2</button>
+<div id="lesson4" class="section">
+  <h2>Lesson 4: Understanding Emotional Triggers</h2>
+  <p><strong>Practice:</strong> Notice triggers without blame.</p>
+  <button onclick="next(4)">Next Lesson</button>
 </div>
 
-<!-- LESSON 3 -->
-<div id="lesson3" class="lesson">
-<h2>Lesson 3: Pausing Before You React</h2>
-<p>A pause creates choice.</p>
-<p><strong>Practice:</strong> Take one slow breath before responding.</p>
-
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Improved communication</li>
-<li>Fewer regretful reactions</li>
-<li>Greater control</li>
-</ul>
+<div id="lesson5" class="section">
+  <h2>Lesson 5: Building Emotional Confidence</h2>
+  <p><strong>Practice:</strong> Speak kindly to yourself.</p>
+  <button onclick="next(5)">Next Lesson</button>
 </div>
 
-<button onclick="completeLesson(3)">Complete Lesson 3</button>
+<div id="lesson6" class="section">
+  <h2>Lesson 6: Carrying This Into Everyday Life</h2>
+  <p><strong>Practice:</strong> Choose one practice to continue.</p>
+  <button onclick="finishCourse()">Finish Course</button>
 </div>
 
-<!-- LESSON 4 -->
-<div id="lesson4" class="lesson">
-<h2>Lesson 4: Understanding Emotional Triggers</h2>
-<p>Triggers are patterns, not flaws.</p>
-<p><strong>Practice:</strong> Notice one trigger without analysing it.</p>
+<!-- COMPLETE -->
+<div id="complete" class="section">
+  <h2>🎓 Course Complete</h2>
+  <p>You’ve completed Emotional Intelligence Foundations.</p>
 
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Reduced self-blame</li>
-<li>Emotional insight</li>
-<li>Greater resilience</li>
-</ul>
-</div>
+  <div class="notice links">
+    <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">📚 Recommended Books</a>
+    <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">🤝 Help & Support</a>
+  </div>
 
-<button onclick="completeLesson(4)">Complete Lesson 4</button>
-</div>
-
-<!-- LESSON 5 -->
-<div id="lesson5" class="lesson">
-<h2>Lesson 5: Building Emotional Confidence</h2>
-<p>Confidence comes from self-trust.</p>
-<p><strong>Practice:</strong> Speak to yourself kindly today.</p>
-
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Self-trust</li>
-<li>Reduced self-criticism</li>
-<li>Emotional balance</li>
-</ul>
-</div>
-
-<button onclick="completeLesson(5)">Complete Lesson 5</button>
-</div>
-
-<!-- LESSON 6 -->
-<div id="lesson6" class="lesson">
-<h2>Lesson 6: Carrying This Into Everyday Life</h2>
-<p>Emotional intelligence is ongoing.</p>
-<p><strong>Practice:</strong> Choose one practice to return to.</p>
-
-<div class="notice">
-<strong>What you gain:</strong>
-<ul>
-<li>Sustainable growth</li>
-<li>Long-term clarity</li>
-<li>Emotional steadiness</li>
-</ul>
-</div>
-
-<button onclick="completeLesson(6)">Complete Course</button>
-</div>
-
-<!-- COURSE COMPLETE -->
-<div id="complete" class="lesson">
-<h2>🎓 Course Complete</h2>
-<p>You’ve completed <strong>Emotional Intelligence Foundations</strong>.</p>
-
-<div class="notice">
-<strong>Continue your growth:</strong>
-<div class="links">
-<a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-📚 Recommended Books
-</a>
-<a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-🤝 Help & Support Page
-</a>
-</div>
-</div>
-
-<button onclick="generateCertificate('Course Completion')">
-Download Course Certificate
-</button>
+  <button onclick="generateCertificate()">Download Certificate</button>
 </div>
 
 </div>
@@ -236,37 +138,29 @@ Download Course Certificate
     <p>This certifies that</p>
     <h2 id="certName"></h2>
     <p>has completed</p>
-    <h3 id="certTitle"></h3>
-    <p>as part of the free course</p>
     <strong>Emotional Intelligence Foundations</strong>
-    <p style="margin-top:2rem;">
-      Issued by Emotional Intelligence Developer<br>
-      https://emotionalintelligencedeveloper.com
-    </p>
+    <p>Issued by Emotional Intelligence Developer</p>
   </div>
 </div>
 
 <script>
-let currentLesson = 1;
-
-function completeLesson(num) {
-  document.getElementById('lesson' + num).classList.remove('active');
-  generateCertificate('Lesson ' + num + ' Completion');
-  currentLesson++;
-  if (currentLesson <= 6) {
-    document.getElementById('lesson' + currentLesson).classList.add('active');
-  } else {
-    document.getElementById('complete').classList.add('active');
-  }
+function show(id){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-function generateCertificate(title) {
-  const name = document.getElementById('username').value || 'Participant';
-  document.getElementById('certName').innerText = name;
-  document.getElementById('certTitle').innerText = title;
-  document.getElementById('certificate').style.display = 'block';
+function startCourse(){ show('lesson1'); }
+
+function next(n){ show('lesson'+(n+1)); }
+
+function finishCourse(){ show('complete'); }
+
+function generateCertificate(){
+  document.getElementById('certName').innerText =
+    document.getElementById('username').value || 'Participant';
+  document.getElementById('certificate').style.display='block';
   window.print();
-  document.getElementById('certificate').style.display = 'none';
+  document.getElementById('certificate').style.display='none';
 }
 </script>
 

@@ -272,22 +272,106 @@ function resetTool(){
   document.getElementById("result").style.display = "none";
 }
 
+/* UPDATED DOWNLOAD PDF — ONLY CHANGE */
 function downloadPDF(){
-  const doc = new jsPDF({unit:"pt", format:"a4"});
-  let y = 60;
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", 40, 30);
-  doc.setFontSize(18);
-  doc.text("You Matter — Personal Reflection", 40, y); y += 28;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const left = 40;
+  const maxWidth = 515;
+  let y = 50;
 
-  const content = [
-    "This document reflects a moment in time.",
-    "If speaking feels hard, you can share this with someone you trust.",
-    "If you are in danger, please seek immediate help."
+  const feeling = document.getElementById("feelingNow").value || "(not selected)";
+  const thought = document.getElementById("thoughtLoop").value || "(not selected)";
+
+  const answers = [
+    { q: "How I am feeling right now:", a: feeling },
+    { q: "The thought looping in my mind:", a: thought },
+    { q: "What has been weighing most heavily on my mind:", a: q1.value },
+    { q: "What emotions feel strongest right now:", a: q2.value },
+    { q: "What has helped me survive hard moments before:", a: q3.value },
+    { q: "What I would tell someone I love if they felt this way:", a: q4.value },
+    { q: "One small reason I could stay today:", a: q5.value }
   ];
 
+  doc.setFontSize(11);
+  doc.text("https://emotionalintelligencedeveloper.com/", left, 25);
+
+  doc.setFontSize(20);
+  doc.text("You Matter — Personal Reflection", left, y);
+  y += 30;
+
   doc.setFontSize(12);
-  content.forEach(t => { doc.text(t, 40, y); y += 18; });
+  doc.text(
+    doc.splitTextToSize(
+      "This document captures how you were feeling at this moment. "
+      + "You are not expected to solve everything here. "
+      + "If speaking feels difficult, you can share this with someone you trust.",
+      maxWidth
+    ),
+    left,
+    y
+  );
+  y += 50;
+
+  answers.forEach(item => {
+    doc.setFontSize(13);
+    doc.setFont(undefined, "bold");
+    doc.text(item.q, left, y);
+    y += 18;
+
+    doc.setFontSize(12);
+    doc.setFont(undefined, "normal");
+    const text = item.a && item.a.trim() ? item.a : "(not written)";
+    const wrapped = doc.splitTextToSize(text, maxWidth);
+    doc.text(wrapped, left + 10, y);
+    y += wrapped.length * 14 + 20;
+
+    if (y > 760) {
+      doc.addPage();
+      y = 50;
+    }
+  });
+
+  if (y > 700) {
+    doc.addPage();
+    y = 50;
+  }
+
+  doc.setFontSize(14);
+  doc.setFont(undefined, "bold");
+  doc.text("A gentle reminder", left, y);
+  y += 22;
+
+  doc.setFontSize(12);
+  doc.setFont(undefined, "normal");
+  doc.text(
+    doc.splitTextToSize(
+      "Feeling overwhelmed does not mean you are weak or broken. "
+      + "Strong emotions can make the future feel impossible to imagine. "
+      + "Reaching out for help is a valid and courageous step.",
+      maxWidth
+    ),
+    left,
+    y
+  );
+  y += 60;
+
+  doc.setFontSize(11);
+  doc.text(
+    doc.splitTextToSize(
+      "If you are in immediate danger, please seek urgent help or contact someone you trust. "
+      + "You do not have to go through this alone.",
+      maxWidth
+    ),
+    left,
+    y
+  );
+
+  doc.setFontSize(10);
+  doc.text(
+    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
+    left,
+    820
+  );
 
   doc.save("you-matter-reflection.pdf");
 }

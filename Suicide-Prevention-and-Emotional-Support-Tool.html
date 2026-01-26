@@ -46,14 +46,13 @@ h1{margin:0 0 10px;font-size:22px}
   border:1px solid #e5e7eb;
 }
 .q h3{margin:0 0 10px;font-size:15px}
-textarea{
+textarea, select{
   width:100%;
-  min-height:90px;
   padding:10px;
   border-radius:8px;
   border:1px solid #d1d5db;
-  resize:vertical;
 }
+textarea{min-height:90px;resize:vertical}
 .controls{
   display:flex;
   gap:12px;
@@ -107,7 +106,7 @@ textarea{
   text-decoration:none;
 }
 .help-box{
-  margin-top:16px;
+  margin-top:18px;
   padding:14px;
   border-radius:12px;
   background:#ecfeff;
@@ -129,20 +128,65 @@ footer{
 <h1>You Matter — A Gentle Check-In</h1>
 
 <p class="lead">
-This space is here to help you pause and breathe.
-If life feels overwhelming or hopeless right now, you are not alone.
+If you’re here, something feels heavy.
+This space is meant to help you slow down, breathe, and remember:
+<strong>you are not alone in this moment.</strong>
 </p>
 
 <div class="notice">
 <strong>If you are in immediate danger:</strong><br>
-Please contact local emergency services or reach out to a trusted person right now.
+Please contact local emergency services or reach out to someone you trust right now.
+You deserve support.
 </div>
 
-<div class="q"><h3>1) What has been weighing most heavily on your mind?</h3><textarea id="q1"></textarea></div>
-<div class="q"><h3>2) What emotions feel strongest right now?</h3><textarea id="q2"></textarea></div>
-<div class="q"><h3>3) What has helped you survive difficult moments before?</h3><textarea id="q3"></textarea></div>
-<div class="q"><h3>4) What would you want someone you love to know if they felt this way?</h3><textarea id="q4"></textarea></div>
-<div class="q"><h3>5) What is one small reason you could stay today?</h3><textarea id="q5"></textarea></div>
+<div class="q">
+<h3>How are you feeling right now? 😊</h3>
+<select id="feelingNow">
+  <option value="">Select what fits best…</option>
+  <option>😔 Empty or numb</option>
+  <option>😢 Overwhelming sadness</option>
+  <option>😟 Anxious or panicked</option>
+  <option>😡 Angry at myself or others</option>
+  <option>😞 Hopeless or trapped</option>
+  <option>😣 Tired of fighting</option>
+  <option>🙂 I just need someone to listen</option>
+</select>
+</div>
+
+<div class="q">
+<h3>Which thought keeps looping right now?</h3>
+<select id="thoughtLoop">
+  <option value="">Choose one…</option>
+  <option>“This pain will never end”</option>
+  <option>“I’m a burden to others”</option>
+  <option>“No one would understand me”</option>
+  <option>“I’ve tried everything already”</option>
+  <option>“I don’t want to die, I want the pain to stop”</option>
+</select>
+</div>
+
+<div class="help-box">
+<strong>⏸️ Pause with me for 30 seconds</strong>
+<p>
+You don’t need to decide anything right now.
+Let’s slow this moment down:
+</p>
+<ul>
+  <li>🫁 Breathe in slowly through your nose</li>
+  <li>⏳ Hold for 3 seconds</li>
+  <li>🌬️ Breathe out gently through your mouth</li>
+</ul>
+<p>
+Strong urges rise and fall like waves.
+Waiting can save a life — including yours.
+</p>
+</div>
+
+<div class="q"><h3>What has been weighing most heavily on your mind?</h3><textarea id="q1"></textarea></div>
+<div class="q"><h3>What emotions feel strongest right now?</h3><textarea id="q2"></textarea></div>
+<div class="q"><h3>What has helped you survive hard moments before?</h3><textarea id="q3"></textarea></div>
+<div class="q"><h3>If someone you love felt this way, what would you tell them?</h3><textarea id="q4"></textarea></div>
+<div class="q"><h3>What is one small reason you could stay today?</h3><textarea id="q5"></textarea></div>
 
 <div class="controls">
   <button class="btn" onclick="showSupport()">Show My Support Message</button>
@@ -155,21 +199,28 @@ Please contact local emergency services or reach out to a trusted person right n
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-  <strong>Gentle support resources</strong>
-  <p>
-    Some links may be affiliate links, which help support this platform at no extra cost to you.
-  </p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    Recommended Books
-  </a>
+<strong>Gentle support resources</strong>
+<p>
+Some links may be affiliate links, which help support this platform at no extra cost to you.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+Recommended Books
+</a>
 </div>
 
 <div class="help-box">
-  <strong>You do not have to face this alone.</strong>
-  <p>If things feel overwhelming, additional support options are available.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
+<strong>🤍 You don’t have to face this alone</strong>
+<p>
+If you are thinking about harming yourself,
+reaching out now can help — even if you don’t know what to say.
+</p>
+<p>
+Asking for help during a vulnerable moment is not weakness.
+It’s self-care.
+</p>
+<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+Find Support Options
+</a>
 </div>
 
 <footer>
@@ -184,70 +235,59 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 const { jsPDF } = window.jspdf;
 
 function showSupport(){
+  const feeling = document.getElementById("feelingNow").value;
+  const thought = document.getElementById("thoughtLoop").value;
   const box = document.getElementById("result");
+
   box.innerHTML = `
-    <strong>You are not broken.</strong><br><br>
-    What you are feeling is pain — not failure.
-    Feelings can convince us that nothing will change, but feelings are not permanent truths.<br><br>
-    You have value simply because you exist.
-    Reaching out for support is a sign of strength, not weakness.
+    <strong>💛 You are not broken.</strong><br><br>
+
+    ${feeling ? `Right now you’re feeling: <strong>${feeling}</strong><br><br>` : ``}
+
+    ${thought ? `
+    You selected this thought:<br>
+    <em>${thought}</em><br><br>
+    Pain can make thoughts sound absolute.
+    Thoughts are signals of distress — not facts about your worth.
+    <br><br>` : ``}
+
+    <strong>🧠 A gentle truth:</strong><br>
+    Wanting the pain to stop does not mean you want life to end.
+    Many people who once felt exactly like this later say,
+    “I’m glad I waited.”<br><br>
+
+    <strong>🫂 Reaching out matters.</strong><br>
+    You don’t have to explain everything.
+    You can simply say:
+    <em>“I’m not okay and I need support.”</em><br><br>
+
+    If staying feels hard, focus on just one thing:
+    <strong>stay for today.</strong>
   `;
   box.style.display = "block";
 }
 
 function resetTool(){
-  document.querySelectorAll("textarea").forEach(t => t.value = "");
+  document.querySelectorAll("textarea, select").forEach(el => el.value = "");
   document.getElementById("result").style.display = "none";
 }
 
 function downloadPDF(){
   const doc = new jsPDF({unit:"pt", format:"a4"});
-  let left = 40, y = 60, max = 515;
-
+  let y = 60;
   doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
-
+  doc.text("https://emotionalintelligencedeveloper.com/", 40, 30);
   doc.setFontSize(18);
-  doc.text("You Matter — Personal Reflection", left, y); y += 28;
+  doc.text("You Matter — Personal Reflection", 40, y); y += 28;
 
-  const questions = [
-    "What has been weighing most heavily on your mind?",
-    "What emotions feel strongest right now?",
-    "What has helped you survive difficult moments before?",
-    "What would you want someone you love to know?",
-    "One small reason you could stay today:"
-  ];
-
-  const answers = [
-    q1.value, q2.value, q3.value, q4.value, q5.value
+  const content = [
+    "This document reflects a moment in time.",
+    "If speaking feels hard, you can share this with someone you trust.",
+    "If you are in danger, please seek immediate help."
   ];
 
   doc.setFontSize(12);
-  for(let i=0;i<questions.length;i++){
-    doc.text(questions[i], left, y); y += 16;
-    doc.text(answers[i] || "(not written)", left + 10, y, {maxWidth:max});
-    y += 26;
-  }
-
-  y += 10;
-  doc.setFontSize(13);
-  doc.text("Share This Safely", left, y); y += 18;
-
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "This document is a snapshot of how you are feeling right now. "
-    + "You may keep it for reflection, return to it later, or share it with someone you trust "
-    + "if speaking feels difficult. You can say: “This shows how I’ve been feeling.” "
-    + "If you are in danger, please seek immediate help.",
-    max
-  ), left, y);
-
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left,
-    800
-  );
+  content.forEach(t => { doc.text(t, 40, y); y += 18; });
 
   doc.save("you-matter-reflection.pdf");
 }

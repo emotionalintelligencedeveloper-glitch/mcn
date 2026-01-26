@@ -30,8 +30,9 @@ body{
 }
 h1{margin:0 0 10px;font-size:22px}
 .lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
-.q{margin:16px 0;padding:14px;border-radius:12px;border:1px solid #e5e7eb}
-.q h3{margin:0 0 8px;font-size:15px}
+.q{margin:18px 0;padding:16px;border-radius:12px;border:1px solid #e5e7eb}
+.q h3{margin:0 0 6px;font-size:15px}
+.q p{margin:0 0 8px;font-size:13px;color:var(--muted)}
 textarea{
   width:100%;
   min-height:80px;
@@ -108,20 +109,57 @@ footer{
 <div class="card">
 
 <h1>Courage in the Face of Fear</h1>
+
 <p class="lead">
-Fear is a natural human response — courage doesn’t mean fear disappears.
-This tool helps you understand your fear, reflect honestly, and choose a grounded next step.
+Fear is a natural human response — it appears when something matters.
+Courage does <strong>not</strong> mean fear disappears.
+It means learning how to move forward with awareness, self-respect, and care.
 </p>
 
-<div class="q"><h3>1) What fear has been showing up most strongly for you lately?</h3><textarea id="q1"></textarea></div>
-<div class="q"><h3>2) How does this fear affect your choices, behaviour, or confidence?</h3><textarea id="q2"></textarea></div>
-<div class="q"><h3>3) What do you believe this fear is trying to protect you from?</h3><textarea id="q3"></textarea></div>
-<div class="q"><h3>4) When have you acted with courage before, even while afraid?</h3><textarea id="q4"></textarea></div>
-<div class="q"><h3>5) What is one small, realistic act of courage you could take next?</h3><textarea id="q5"></textarea></div>
+<p class="lead">
+This short reflection will help you:
+<ul>
+  <li>Understand what your fear is really about</li>
+  <li>Notice how it influences your choices</li>
+  <li>Reconnect with moments where you were already brave</li>
+  <li>Choose one realistic next step</li>
+</ul>
+There are no right answers here — only honest ones.
+</p>
+
+<div class="q">
+  <h3>1) What fear has been showing up most strongly for you lately?</h3>
+  <p>Be specific. Name the fear without judging it.</p>
+  <textarea id="q1"></textarea>
+</div>
+
+<div class="q">
+  <h3>2) How does this fear affect your choices, behaviour, or confidence?</h3>
+  <p>Notice patterns: avoidance, overthinking, hesitation, or self-doubt.</p>
+  <textarea id="q2"></textarea>
+</div>
+
+<div class="q">
+  <h3>3) What do you believe this fear is trying to protect you from?</h3>
+  <p>Fear often aims to prevent pain, embarrassment, or loss — even when it overreacts.</p>
+  <textarea id="q3"></textarea>
+</div>
+
+<div class="q">
+  <h3>4) When have you acted with courage before, even while afraid?</h3>
+  <p>Courage can be quiet: speaking up once, asking for help, or not giving up.</p>
+  <textarea id="q4"></textarea>
+</div>
+
+<div class="q">
+  <h3>5) What is one small, realistic act of courage you could take next?</h3>
+  <p>If it feels overwhelming, make it smaller.</p>
+  <textarea id="q5"></textarea>
+</div>
 
 <div class="controls">
-<button class="btn" onclick="showReflection()">See My Reflection</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
+  <button class="btn" onclick="showReflection()">See My Reflection</button>
+  <button class="btn secondary" onclick="resetTool()">Reset</button>
 </div>
 
 <div id="result" class="result"></div>
@@ -130,19 +168,19 @@ This tool helps you understand your fear, reflect honestly, and choose a grounde
 
 <p class="ads-label">Ads.</p>
 <div class="ads-box">
-<strong>Support your courage journey</strong>
-<p>Some links may be affiliate links at no extra cost to you.</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-Recommended Books
-</a>
+  <strong>Support your courage journey</strong>
+  <p>Some links may be affiliate links at no extra cost to you.</p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
+    Recommended Books
+  </a>
 </div>
 
 <div class="help-box">
-<strong>Need extra support?</strong>
-<p>If fear feels overwhelming or unsafe, you don’t have to handle it alone.</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
+  <strong>Need extra support?</strong>
+  <p>If fear feels overwhelming or unsafe, you don’t have to handle it alone.</p>
+  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
+    Visit the Help Page
+  </a>
 </div>
 
 <footer>
@@ -157,23 +195,28 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 const { jsPDF } = window.jspdf;
 
 function showReflection(){
-  const answers = [q1.value,q2.value,q3.value,q4.value,q5.value];
-  if(answers.some(a => !a.trim())){
+  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
+  if(answers.some(a=>!a.trim())){
     alert("Please answer all questions.");
     return;
   }
 
-  document.getElementById("result").innerHTML = `
-  <strong>Your Reflection Summary</strong><br><br>
+  document.getElementById("result").innerHTML=`
+  <strong>Your Reflection</strong><br><br>
 
   <strong>Your fear:</strong><br>${q1.value}<br><br>
   <strong>How it affects you:</strong><br>${q2.value}<br><br>
-  <strong>What it tries to protect:</strong><br>${q3.value}<br><br>
+  <strong>What it tries to protect you from:</strong><br>${q3.value}<br><br>
   <strong>Your past courage:</strong><br>${q4.value}<br><br>
-  <strong>Your next courageous step:</strong><br>${q5.value}<br><br>
+  <strong>Your next step:</strong><br>${q5.value}<br><br>
 
-  <em>Courage does not remove fear — it moves with it.
-  Small honest steps create confidence over time.</em>
+  <em>
+  Courage is not about becoming fearless.
+  It is about choosing honesty over avoidance,
+  and progress over perfection.
+  <br><br>
+  One small step is enough for today.
+  </em>
   `;
   document.getElementById("result").style.display="block";
 }
@@ -184,44 +227,59 @@ function resetTool(){
 }
 
 function downloadPDF(){
-  const doc = new jsPDF({unit:'pt',format:'a4'});
-  let y=40,left=40,max=515;
-
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
-
-  doc.setFontSize(18);
-  doc.text("Courage in the Face of Fear — Reflection", left, y); y+=30;
-
-  const qs=[
-    "What fear has been present:",
-    "How it affects you:",
-    "What it tries to protect:",
-    "Past courage:",
-    "Next courageous step:"
-  ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
-
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y); y+=16;
-    doc.text(as[i],left+10,y,{maxWidth:max}); y+=28;
-  }
-
-  doc.setFontSize(11);
-  doc.text(
-    doc.splitTextToSize(
-      "This document can be kept for reflection or shared with someone you trust if explaining feels hard. "+
-      "If fear becomes overwhelming or unsafe, please seek immediate support.",
-      max
-    ),
-    left,y+=20
-  );
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const left=40,max=515;
+  let y=40;
 
   doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/", left, 800);
+  doc.text("Emotional Intelligence Developer",left,y);
+  doc.text("https://emotionalintelligencedeveloper.com/",left,y+12);
 
-  doc.save("courage-in-the-face-of-fear-reflection.pdf");
+  y+=40;
+  doc.setFontSize(18);
+  doc.text("Courage in the Face of Fear",left,y);
+
+  y+=22;
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "Courage is not the absence of fear. It is the ability to act with awareness, self-respect, and intention — even when fear is present. "+
+    "This one-page reflection is designed to help you slow down and choose a realistic next step.",
+    max
+  ),left,y);
+
+  y+=60;
+
+  const sections=[
+    ["The fear I am facing:",q1.value],
+    ["How this fear affects me:",q2.value],
+    ["What this fear is trying to protect me from:",q3.value],
+    ["A time I showed courage before:",q4.value],
+    ["My next small act of courage:",q5.value],
+  ];
+
+  doc.setFontSize(12);
+  sections.forEach(([t,v])=>{
+    doc.text(t,left,y); y+=16;
+    doc.setFontSize(11);
+    doc.text(doc.splitTextToSize(v,max),left+10,y);
+    y+=30;
+    doc.setFontSize(12);
+  });
+
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(
+    "Reminder: Small steps build trust with yourself. "+
+    "You do not need to force bravery — consistency and honesty are enough.",
+    max
+  ),left,y+10);
+
+  doc.setFontSize(9);
+  doc.text(
+    "This worksheet may be shared for learning or support. If fear feels overwhelming or unsafe, please seek professional or emergency help.",
+    left,800
+  );
+
+  doc.save("courage-in-the-face-of-fear.pdf");
 }
 </script>
 </body>

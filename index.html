@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Emotional Intelligence Foundations – Free Course</title>
+<title>Emotional Intelligence Foundations</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+const LOGO_URL = "https://emotionalintelligencedeveloper.com/images/logo.png";
+</script>
 
 <style>
 body {
@@ -14,48 +18,21 @@ body {
 }
 
 .container {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.header img {
-  max-width: 160px;
-  margin-bottom: 1rem;
 }
 
 .section { display: none; }
 .section.active { display: block; }
 
-button {
-  margin-top: 2rem;
-  padding: 0.85rem 1.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 999px;
-  border: none;
-  background: #1f2933;
-  color: #ffffff;
-  cursor: pointer;
-}
+h1, h2 { margin-top: 0; }
 
 .notice {
   background: #e8f0fe;
   padding: 1.2rem;
   border-radius: 12px;
   margin: 1.5rem 0;
-}
-
-.check {
-  background: #fef3c7;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-top: 1.5rem;
 }
 
 .exercise {
@@ -65,230 +42,248 @@ button {
   margin-top: 1.5rem;
 }
 
-textarea {
+.advice {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  background: #ffffff;
+  padding: 0.9rem;
+  border-left: 4px solid #1f2933;
+}
+
+textarea, select, input {
   width: 100%;
-  min-height: 110px;
-  padding: 0.8rem;
-  font-size: 1rem;
+  max-width: 480px;
+  padding: 0.7rem;
+  margin-top: 0.6rem;
   border-radius: 8px;
   border: 1px solid #cbd2d9;
-  margin-top: 0.8rem;
-}
-
-select, input {
-  padding: 0.6rem;
   font-size: 1rem;
-  width: 100%;
-  max-width: 340px;
 }
 
-.links a {
-  display: block;
-  margin-top: 0.8rem;
+button {
+  margin-top: 2rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  border: none;
+  background: #1f2933;
+  color: #ffffff;
   font-weight: 600;
-  color: #1f2933;
-  text-decoration: none;
+  cursor: pointer;
 }
 
-/* CERTIFICATE */
-#certificate {
-  display:none;
-  width: 100vw;
-  height: 100vh;
-  padding: 3rem;
-  box-sizing: border-box;
+button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-.cert-box {
-  height: 100%;
-  border: 4px solid #1f2933;
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: #ffffff;
-}
-
-.cert-box img {
-  max-width: 180px;
+/* Progress */
+#progressWrap {
   margin-bottom: 2rem;
 }
-
-.cert-box h1 {
-  font-size: 2.4rem;
-  margin-bottom: 1rem;
+#progressBarOuter {
+  background:#e5e7eb;
+  border-radius:999px;
+  height:12px;
+}
+#progressBar {
+  height:12px;
+  width:0%;
+  background:#1f2933;
+  border-radius:999px;
 }
 
-.cert-box h2 {
-  font-size: 2rem;
-  margin: 1rem 0;
+/* PDF */
+#certificate {
+  display:none;
+  padding: 3rem;
+}
+
+.cert-page {
+  border: 4px solid #1f2933;
+  padding: 3rem;
+  text-align: center;
+  page-break-after: always;
+}
+
+.transcript {
+  border: 2px solid #1f2933;
+  padding: 2.5rem;
 }
 
 @media print {
-  @page {
-    size: landscape;
-    margin: 0;
-  }
-  body * { visibility:hidden; }
-  #certificate, #certificate * { visibility:visible; }
+  @page { size: landscape; margin: 0; }
+  body * { visibility: hidden; }
+  #certificate, #certificate * { visibility: visible; }
   #certificate {
     position:absolute;
     top:0;
     left:0;
+    width:100%;
   }
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<div class="header">
-  <img src="/mnt/data/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer Logo">
+<!-- PROGRESS -->
+<div id="progressWrap">
+  <strong>Course Progress: <span id="progressText">0%</span></strong>
+  <div id="progressBarOuter">
+    <div id="progressBar"></div>
+  </div>
 </div>
 
 <!-- START -->
 <div id="start" class="section active">
   <h1>Emotional Intelligence Foundations</h1>
-  <p>
-    This course is about learning how to relate to your emotions
-    with clarity, steadiness, and self-trust — even when life feels messy.
-  </p>
+  <p>This course helps you build a calmer, clearer relationship with your emotions.</p>
 
-  <div class="notice">
-    <strong>You will learn how to:</strong>
-    <ul>
-      <li>Recognise emotions before they overwhelm you</li>
-      <li>Name what you feel without judgement</li>
-      <li>Pause instead of reacting on autopilot</li>
-      <li>Understand emotional triggers with compassion</li>
-      <li>Build emotional confidence over time</li>
-    </ul>
-  </div>
-
-  <label><strong>Your name (for certificate):</strong></label><br>
+  <label>Your name (for certificate):</label><br>
   <input id="username" placeholder="Enter your name">
 
-  <button onclick="show('lesson1')">Start Course</button>
+  <button onclick="show('l1')">Start Course</button>
 </div>
 
 <!-- LESSON 1 -->
-<div id="lesson1" class="section">
+<div id="l1" class="section">
   <h2>Lesson 1: Emotional Awareness</h2>
-  <p>
-    Awareness is the foundation of emotional intelligence.
-    If an emotion is ignored, it often grows louder.
-  </p>
 
-  <div class="exercise">
-    <strong>Practice:</strong><br>
-    Pause for 10 seconds. Scan your body.  
-    Where do you feel tension, heaviness, or ease?
+  <select id="q1">
+    <option>Ignoring emotions</option>
+    <option selected>Noticing emotions</option>
+    <option>Controlling emotions</option>
+  </select>
+
+  <div class="advice">
+    Awareness is not about fixing anything.
+    It simply brings honesty into the moment.
   </div>
 
-  <textarea placeholder="What did you notice?"></textarea>
-  <button onclick="show('lesson2')">Continue</button>
+  <textarea id="r1" placeholder="What did you notice in yourself?"></textarea>
+
+  <button onclick="completeLesson(1,'l2')">Continue</button>
 </div>
 
 <!-- LESSON 2 -->
-<div id="lesson2" class="section">
+<div id="l2" class="section">
   <h2>Lesson 2: Naming Emotions</h2>
-  <p>
-    Naming emotions creates clarity.
-    Clarity reduces emotional overload.
-  </p>
 
-  <div class="exercise">
-    <strong>Practice:</strong><br>
-    Instead of “I’m fine,” try:
-    “I feel ___ because ___.”
+  <select id="q2">
+    <option>Weakens emotions</option>
+    <option selected>Creates clarity</option>
+    <option>Suppresses feelings</option>
+  </select>
+
+  <div class="advice">
+    Giving emotions words reduces confusion
+    and allows your nervous system to settle.
   </div>
 
-  <textarea placeholder="Try naming your current emotion."></textarea>
-  <button onclick="show('lesson3')">Continue</button>
+  <textarea id="r2" placeholder="How do you usually label feelings?"></textarea>
+
+  <button onclick="completeLesson(2,'l3')">Continue</button>
 </div>
 
 <!-- LESSON 3 -->
-<div id="lesson3" class="section">
-  <h2>Lesson 3: The Power of the Pause</h2>
-  <p>
-    A pause interrupts emotional autopilot.
-    It gives your nervous system room to settle.
-  </p>
+<div id="l3" class="section">
+  <h2>Lesson 3: The Pause</h2>
 
-  <div class="exercise">
-    <strong>Practice:</strong><br>
-    Breathe in for 4, out for 6. Repeat twice.
+  <select id="q3">
+    <option>Avoid emotions</option>
+    <option selected>Choose a response</option>
+    <option>Shut down</option>
+  </select>
+
+  <div class="advice">
+    Even a short pause can prevent regret.
+    It gives choice back to you.
   </div>
 
-  <textarea placeholder="How did the pause change things?"></textarea>
-  <button onclick="show('lesson4')">Continue</button>
-</div>
+  <textarea id="r3" placeholder="Where do you wish you paused more?"></textarea>
 
-<!-- LESSON 4 -->
-<div id="lesson4" class="section">
-  <h2>Lesson 4: Emotional Triggers</h2>
-  <p>
-    Triggers are learned responses.
-    Understanding them replaces shame with insight.
-  </p>
-
-  <textarea placeholder="What situations tend to trigger you?"></textarea>
-  <button onclick="show('lesson5')">Continue</button>
-</div>
-
-<!-- LESSON 5 -->
-<div id="lesson5" class="section">
-  <h2>Lesson 5: Emotional Confidence</h2>
-  <p>
-    Emotional confidence is trusting yourself
-    to stay present — even when emotions are uncomfortable.
-  </p>
-
-  <textarea placeholder="What helps you feel grounded when emotions rise?"></textarea>
-  <button onclick="show('complete')">Finish Course</button>
+  <button onclick="completeLesson(3,'complete')">Finish</button>
 </div>
 
 <!-- COMPLETE -->
 <div id="complete" class="section">
-  <h2>🎓 Course Complete</h2>
-  <p>
-    Emotional intelligence grows through practice, not perfection.
-  </p>
+  <h2>Course Complete</h2>
+  <p>You’ve completed the foundations.</p>
 
-  <button onclick="generateCertificate()">Download Certificate</button>
+  <button id="downloadBtn" onclick="generateCertificate()" disabled>
+    Download Certificate & Transcript
+  </button>
 </div>
 
 </div>
 
-<!-- CERTIFICATE -->
+<!-- CERTIFICATE + TRANSCRIPT -->
 <div id="certificate">
-  <div class="cert-box">
-    <img src="/mnt/data/Lumii_20230622_095126214.jpg" alt="Logo">
+
+  <div class="cert-page">
+    <img id="logoCert" style="max-width:200px; margin-bottom:2rem;">
     <h1>Certificate of Completion</h1>
     <p>This certifies that</p>
     <h2 id="certName"></h2>
     <p>has completed</p>
     <strong>Emotional Intelligence Foundations</strong>
-    <p style="margin-top:2rem;">Issued by Emotional Intelligence Developer</p>
   </div>
+
+  <div class="transcript">
+    <h2>Learning Transcript</h2>
+    <div id="transcriptContent"></div>
+  </div>
+
 </div>
 
 <script>
+const TOTAL_LESSONS = 3;
+let completed = JSON.parse(localStorage.getItem("ei_progress")) || [];
+
+document.getElementById("logoCert").src = LOGO_URL;
+
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function generateCertificate(){
-  document.getElementById('certName').innerText =
-    document.getElementById('username').value || 'Participant';
-  document.getElementById('certificate').style.display='block';
-  window.print();
-  document.getElementById('certificate').style.display='none';
+function completeLesson(num, next){
+  if (!completed.includes(num)) {
+    completed.push(num);
+    localStorage.setItem("ei_progress", JSON.stringify(completed));
+  }
+  updateProgress();
+  show(next);
 }
+
+function updateProgress(){
+  const percent = Math.round((completed.length / TOTAL_LESSONS) * 100);
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("progressText").innerText = percent + "%";
+
+  if (percent === 100) {
+    document.getElementById("downloadBtn").disabled = false;
+  }
+}
+
+function generateCertificate(){
+  document.getElementById("certName").innerText =
+    document.getElementById("username").value || "Participant";
+
+  document.getElementById("transcriptContent").innerHTML = `
+    <p><strong>Lesson 1:</strong> ${q1.value}<br>${r1.value}</p>
+    <p><strong>Lesson 2:</strong> ${q2.value}<br>${r2.value}</p>
+    <p><strong>Lesson 3:</strong> ${q3.value}<br>${r3.value}</p>
+  `;
+
+  document.getElementById("certificate").style.display = "block";
+  window.print();
+  document.getElementById("certificate").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", updateProgress);
 </script>
 
 </body>

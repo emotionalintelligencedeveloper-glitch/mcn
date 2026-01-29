@@ -12,75 +12,89 @@ const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/
 <style>
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f7f9fb;
-  color: #1f2933;
-  margin: 0;
+  background:#f7f9fb;
+  color:#1f2933;
+  margin:0;
 }
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem;
+  max-width:900px;
+  margin:auto;
+  padding:2.5rem 1.5rem;
 }
 
-.section { display: none; }
-.section.active { display: block; }
+header {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:2rem;
+}
+header img {
+  width:42px;
+  border-radius:8px;
+}
 
-h1, h2 { margin-top: 0; }
+.section { display:none; }
+.section.active { display:block; }
+
+h1,h2 { margin-top:0; }
+
+.lesson-box {
+  background:#ffffff;
+  border-radius:14px;
+  padding:2rem;
+  box-shadow:0 10px 30px rgba(0,0,0,0.04);
+}
 
 .notice {
-  background: #e8f0fe;
-  padding: 1.2rem;
-  border-radius: 12px;
-  margin: 1.5rem 0;
+  background:#eef2f6;
+  padding:1.2rem;
+  border-radius:12px;
+  margin:1.5rem 0;
+  font-size:0.95rem;
 }
 
 .exercise {
-  background: #eef2f6;
-  padding: 1.2rem;
-  border-radius: 12px;
-  margin-top: 1.5rem;
+  margin-top:1.8rem;
 }
 
-.advice {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  background: #ffffff;
-  padding: 0.9rem;
-  border-left: 4px solid #1f2933;
+label {
+  font-weight:600;
+  display:block;
+  margin-top:1.2rem;
 }
 
-textarea, select, input {
-  width: 100%;
-  max-width: 480px;
-  padding: 0.7rem;
-  margin-top: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #cbd2d9;
-  font-size: 1rem;
+textarea,input {
+  width:100%;
+  max-width:520px;
+  padding:0.8rem;
+  margin-top:0.6rem;
+  border-radius:10px;
+  border:1px solid #cbd2d9;
+  font-size:1rem;
 }
 
 button {
-  margin-top: 2rem;
-  padding: 0.85rem 1.75rem;
-  border-radius: 999px;
-  border: none;
-  background: #1f2933;
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
+  margin-top:2rem;
+  padding:0.9rem 2rem;
+  border-radius:999px;
+  border:none;
+  background:#1f2933;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
 }
 
 button[disabled] {
-  opacity: 0.4;
-  cursor: not-allowed;
+  opacity:0.4;
+  cursor:not-allowed;
 }
 
 /* Progress */
 #progressWrap {
-  margin-bottom: 2rem;
+  margin-bottom:2rem;
 }
-#progressBarOuter {
+#progressOuter {
   background:#e5e7eb;
   border-radius:999px;
   height:12px;
@@ -92,32 +106,28 @@ button[disabled] {
   border-radius:999px;
 }
 
-/* PDF */
-#certificate {
-  display:none;
-  padding: 3rem;
-}
+/* Certificate */
+#certificate { display:none; padding:3rem; }
 
 .cert-page {
-  border: 4px solid #1f2933;
-  padding: 3rem;
-  text-align: center;
-  page-break-after: always;
+  border:4px solid #1f2933;
+  padding:3rem;
+  text-align:center;
+  page-break-after:always;
 }
 
 .transcript {
-  border: 2px solid #1f2933;
-  padding: 2.5rem;
+  border:2px solid #1f2933;
+  padding:2.5rem;
 }
 
 @media print {
-  @page { size: landscape; margin: 0; }
-  body * { visibility: hidden; }
-  #certificate, #certificate * { visibility: visible; }
+  @page { size: landscape; margin:0; }
+  body * { visibility:hidden; }
+  #certificate, #certificate * { visibility:visible; }
   #certificate {
     position:absolute;
-    top:0;
-    left:0;
+    top:0; left:0;
     width:100%;
   }
 }
@@ -128,98 +138,136 @@ button[disabled] {
 
 <div class="container">
 
+<header>
+  <img src="" id="logoHeader">
+  <strong>Emotional Intelligence Foundations</strong>
+</header>
+
 <!-- PROGRESS -->
 <div id="progressWrap">
-  <strong>Course Progress: <span id="progressText">0%</span></strong>
-  <div id="progressBarOuter">
-    <div id="progressBar"></div>
-  </div>
+  <strong>Progress: <span id="progressText">0%</span></strong>
+  <div id="progressOuter"><div id="progressBar"></div></div>
 </div>
 
 <!-- START -->
 <div id="start" class="section active">
-  <h1>Emotional Intelligence Foundations</h1>
-  <p>This course helps you build a calmer, clearer relationship with your emotions.</p>
+  <div class="lesson-box">
+    <h1>Welcome</h1>
+    <p>
+      This is not a test.  
+      This is a learning space.
+    </p>
 
-  <label>Your name (for certificate):</label><br>
-  <input id="username" placeholder="Enter your name">
+    <div class="notice">
+      You’ll be guided through understanding emotions, not fixing them.
+      Your reflections are private and used only to create your learning transcript.
+    </div>
 
-  <button onclick="show('l1')">Start Course</button>
+    <label>Your name (for certificate):</label>
+    <input id="username" placeholder="Enter your name">
+
+    <button onclick="show('l1')">Begin Course</button>
+  </div>
 </div>
 
 <!-- LESSON 1 -->
 <div id="l1" class="section">
-  <h2>Lesson 1: Emotional Awareness</h2>
+  <div class="lesson-box">
+    <h2>Lesson 1 — Emotional Awareness</h2>
 
-  <select id="q1">
-    <option>Ignoring emotions</option>
-    <option selected>Noticing emotions</option>
-    <option>Controlling emotions</option>
-  </select>
+    <p>
+      Emotional intelligence begins with noticing, not changing.
+      Most people were taught to ignore or override feelings.
+      Awareness is simply letting something be seen.
+    </p>
 
-  <div class="advice">
-    Awareness is not about fixing anything.
-    It simply brings honesty into the moment.
+    <div class="notice">
+      Pause for a moment.  
+      Notice what emotion feels most present right now — without judging it.
+    </div>
+
+    <div class="exercise">
+      <label>
+        What emotion do you notice most often during your day?
+      </label>
+      <textarea id="r1"></textarea>
+    </div>
+
+    <button onclick="completeLesson(1,'l2')">Continue</button>
   </div>
-
-  <textarea id="r1" placeholder="What did you notice in yourself?"></textarea>
-
-  <button onclick="completeLesson(1,'l2')">Continue</button>
 </div>
 
 <!-- LESSON 2 -->
 <div id="l2" class="section">
-  <h2>Lesson 2: Naming Emotions</h2>
+  <div class="lesson-box">
+    <h2>Lesson 2 — Naming Without Judging</h2>
 
-  <select id="q2">
-    <option>Weakens emotions</option>
-    <option selected>Creates clarity</option>
-    <option>Suppresses feelings</option>
-  </select>
+    <p>
+      Naming emotions helps the nervous system settle.
+      This isn’t about being “positive”.
+      It’s about being accurate.
+    </p>
 
-  <div class="advice">
-    Giving emotions words reduces confusion
-    and allows your nervous system to settle.
+    <div class="notice">
+      Try replacing vague labels like “bad” or “off”
+      with gentle, specific words.
+    </div>
+
+    <div class="exercise">
+      <label>
+        How do you usually talk to yourself about difficult feelings?
+      </label>
+      <textarea id="r2"></textarea>
+    </div>
+
+    <button onclick="completeLesson(2,'l3')">Continue</button>
   </div>
-
-  <textarea id="r2" placeholder="How do you usually label feelings?"></textarea>
-
-  <button onclick="completeLesson(2,'l3')">Continue</button>
 </div>
 
 <!-- LESSON 3 -->
 <div id="l3" class="section">
-  <h2>Lesson 3: The Pause</h2>
+  <div class="lesson-box">
+    <h2>Lesson 3 — The Pause</h2>
 
-  <select id="q3">
-    <option>Avoid emotions</option>
-    <option selected>Choose a response</option>
-    <option>Shut down</option>
-  </select>
+    <p>
+      Emotional intelligence creates space.
+      Even a brief pause can prevent regret and self-blame.
+    </p>
 
-  <div class="advice">
-    Even a short pause can prevent regret.
-    It gives choice back to you.
+    <div class="notice">
+      A pause doesn’t remove emotion.
+      It gives you choice.
+    </div>
+
+    <div class="exercise">
+      <label>
+        Where in your life would a small pause help you respond more kindly?
+      </label>
+      <textarea id="r3"></textarea>
+    </div>
+
+    <button onclick="completeLesson(3,'complete')">Finish Course</button>
   </div>
-
-  <textarea id="r3" placeholder="Where do you wish you paused more?"></textarea>
-
-  <button onclick="completeLesson(3,'complete')">Finish</button>
 </div>
 
 <!-- COMPLETE -->
 <div id="complete" class="section">
-  <h2>Course Complete</h2>
-  <p>You’ve completed the foundations.</p>
+  <div class="lesson-box">
+    <h2>Course Complete</h2>
+    <p>
+      You didn’t pass a test.
+      You practiced awareness.
+    </p>
 
-  <button id="downloadBtn" onclick="generateCertificate()" disabled>
-    Download Certificate & Transcript
-  </button>
+    <button id="downloadBtn" onclick="generateCertificate()" disabled>
+      Download Certificate & Learning Transcript
+    </button>
+  </div>
 </div>
 
 </div>
 
-<!-- CERTIFICATE + TRANSCRIPT -->
+<!-- CERTIFICATE -->
 <div id="certificate">
 
   <div class="cert-page">
@@ -229,6 +277,7 @@ button[disabled] {
     <h2 id="certName"></h2>
     <p>has completed</p>
     <strong>Emotional Intelligence Foundations</strong>
+    <p id="certDate"></p>
   </div>
 
   <div class="transcript">
@@ -239,51 +288,44 @@ button[disabled] {
 </div>
 
 <script>
-const TOTAL_LESSONS = 3;
-let completed = JSON.parse(localStorage.getItem("ei_progress")) || [];
-
+document.getElementById("logoHeader").src = LOGO_URL;
 document.getElementById("logoCert").src = LOGO_URL;
+
+const TOTAL = 3;
+let completed = [];
 
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function completeLesson(num, next){
-  if (!completed.includes(num)) {
-    completed.push(num);
-    localStorage.setItem("ei_progress", JSON.stringify(completed));
-  }
+function completeLesson(n,next){
+  if(!completed.includes(n)) completed.push(n);
   updateProgress();
   show(next);
 }
 
 function updateProgress(){
-  const percent = Math.round((completed.length / TOTAL_LESSONS) * 100);
-  document.getElementById("progressBar").style.width = percent + "%";
-  document.getElementById("progressText").innerText = percent + "%";
-
-  if (percent === 100) {
-    document.getElementById("downloadBtn").disabled = false;
-  }
+  const pct = Math.round((completed.length/TOTAL)*100);
+  progressBar.style.width = pct+"%";
+  progressText.innerText = pct+"%";
+  if(pct===100) downloadBtn.disabled=false;
 }
 
 function generateCertificate(){
-  document.getElementById("certName").innerText =
-    document.getElementById("username").value || "Participant";
+  certName.innerText = username.value || "Participant";
+  certDate.innerText = new Date().toDateString();
 
-  document.getElementById("transcriptContent").innerHTML = `
-    <p><strong>Lesson 1:</strong> ${q1.value}<br>${r1.value}</p>
-    <p><strong>Lesson 2:</strong> ${q2.value}<br>${r2.value}</p>
-    <p><strong>Lesson 3:</strong> ${q3.value}<br>${r3.value}</p>
+  transcriptContent.innerHTML = `
+    <p><strong>Lesson 1 – Emotional Awareness</strong><br>${r1.value}</p>
+    <p><strong>Lesson 2 – Naming Without Judging</strong><br>${r2.value}</p>
+    <p><strong>Lesson 3 – The Pause</strong><br>${r3.value}</p>
   `;
 
-  document.getElementById("certificate").style.display = "block";
+  certificate.style.display="block";
   window.print();
-  document.getElementById("certificate").style.display = "none";
+  certificate.style.display="none";
 }
-
-document.addEventListener("DOMContentLoaded", updateProgress);
 </script>
 
 </body>

@@ -74,6 +74,10 @@ textarea,input {
   font-size:1rem;
 }
 
+textarea {
+  min-height:120px;
+}
+
 button {
   margin-top:2rem;
   padding:0.9rem 2rem;
@@ -88,6 +92,14 @@ button {
 button[disabled] {
   opacity:0.4;
   cursor:not-allowed;
+}
+
+/* Affirmation */
+.affirmation {
+  margin-top:1.2rem;
+  font-size:0.95rem;
+  color:#4b5563;
+  font-style:italic;
 }
 
 /* Progress */
@@ -145,7 +157,10 @@ button[disabled] {
 
 <!-- PROGRESS -->
 <div id="progressWrap">
-  <strong>Progress: <span id="progressText">0%</span></strong>
+  <strong>
+    Progress: <span id="progressText">0%</span>
+    <span id="progressMsg"> — settling in</span>
+  </strong>
   <div id="progressOuter"><div id="progressBar"></div></div>
 </div>
 
@@ -153,10 +168,7 @@ button[disabled] {
 <div id="start" class="section active">
   <div class="lesson-box">
     <h1>Welcome</h1>
-    <p>
-      This is not a test.  
-      This is a learning space.
-    </p>
+    <p>This is not a test. This is a learning space.</p>
 
     <div class="notice">
       You’ll be guided through understanding emotions, not fixing them.
@@ -177,20 +189,19 @@ button[disabled] {
 
     <p>
       Emotional intelligence begins with noticing, not changing.
-      Most people were taught to ignore or override feelings.
       Awareness is simply letting something be seen.
     </p>
 
     <div class="notice">
-      Pause for a moment.  
-      Notice what emotion feels most present right now — without judging it.
+      Pause for a moment. Notice what emotion feels most present right now.
     </div>
 
     <div class="exercise">
-      <label>
-        What emotion do you notice most often during your day?
-      </label>
+      <label>What emotion do you notice most often during your day?</label>
       <textarea id="r1"></textarea>
+      <p class="affirmation">
+        There’s no right emotion to notice — only honesty.
+      </p>
     </div>
 
     <button onclick="completeLesson(1,'l2')">Continue</button>
@@ -204,20 +215,19 @@ button[disabled] {
 
     <p>
       Naming emotions helps the nervous system settle.
-      This isn’t about being “positive”.
-      It’s about being accurate.
+      Accuracy matters more than positivity.
     </p>
 
     <div class="notice">
-      Try replacing vague labels like “bad” or “off”
-      with gentle, specific words.
+      Try replacing “bad” or “off” with gentle, specific words.
     </div>
 
     <div class="exercise">
-      <label>
-        How do you usually talk to yourself about difficult feelings?
-      </label>
+      <label>How do you usually talk to yourself about difficult feelings?</label>
       <textarea id="r2"></textarea>
+      <p class="affirmation">
+        The way you speak inwardly shapes safety.
+      </p>
     </div>
 
     <button onclick="completeLesson(2,'l3')">Continue</button>
@@ -230,20 +240,20 @@ button[disabled] {
     <h2>Lesson 3 — The Pause</h2>
 
     <p>
-      Emotional intelligence creates space.
-      Even a brief pause can prevent regret and self-blame.
+      A pause doesn’t remove emotion.
+      It creates choice.
     </p>
 
     <div class="notice">
-      A pause doesn’t remove emotion.
-      It gives you choice.
+      Even a few seconds can change how you respond.
     </div>
 
     <div class="exercise">
-      <label>
-        Where in your life would a small pause help you respond more kindly?
-      </label>
+      <label>Where in your life would a small pause help you respond more kindly?</label>
       <textarea id="r3"></textarea>
+      <p class="affirmation">
+        Pausing is a form of respect — for yourself and others.
+      </p>
     </div>
 
     <button onclick="completeLesson(3,'complete')">Finish Course</button>
@@ -254,10 +264,17 @@ button[disabled] {
 <div id="complete" class="section">
   <div class="lesson-box">
     <h2>Course Complete</h2>
+
     <p>
-      You didn’t pass a test.
-      You practiced awareness.
+      You showed up.  
+      You paused.  
+      You reflected.
     </p>
+
+    <div class="notice">
+      This certificate reflects engagement, not perfection.
+      Your transcript is yours alone.
+    </div>
 
     <button id="downloadBtn" onclick="generateCertificate()" disabled>
       Download Certificate & Learning Transcript
@@ -300,6 +317,11 @@ function show(id){
 }
 
 function completeLesson(n,next){
+  const response = document.getElementById("r"+n);
+  if(response && response.value.trim().length < 3){
+    alert("Take a moment to write a few words. This reflection is for you.");
+    return;
+  }
   if(!completed.includes(n)) completed.push(n);
   updateProgress();
   show(next);
@@ -309,7 +331,19 @@ function updateProgress(){
   const pct = Math.round((completed.length/TOTAL)*100);
   progressBar.style.width = pct+"%";
   progressText.innerText = pct+"%";
+
+  if(pct < 40) progressMsg.innerText = " — settling in";
+  else if(pct < 70) progressMsg.innerText = " — building awareness";
+  else if(pct < 100) progressMsg.innerText = " — almost there";
+  else progressMsg.innerText = " — completed";
+
   if(pct===100) downloadBtn.disabled=false;
+}
+
+function escapeHTML(str){
+  return str.replace(/[&<>"']/g, m =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])
+  );
 }
 
 function generateCertificate(){
@@ -317,9 +351,9 @@ function generateCertificate(){
   certDate.innerText = new Date().toDateString();
 
   transcriptContent.innerHTML = `
-    <p><strong>Lesson 1 – Emotional Awareness</strong><br>${r1.value}</p>
-    <p><strong>Lesson 2 – Naming Without Judging</strong><br>${r2.value}</p>
-    <p><strong>Lesson 3 – The Pause</strong><br>${r3.value}</p>
+    <p><strong>Lesson 1 – Emotional Awareness</strong><br>${escapeHTML(r1.value)}</p>
+    <p><strong>Lesson 2 – Naming Without Judging</strong><br>${escapeHTML(r2.value)}</p>
+    <p><strong>Lesson 3 – The Pause</strong><br>${escapeHTML(r3.value)}</p>
   `;
 
   certificate.style.display="block";

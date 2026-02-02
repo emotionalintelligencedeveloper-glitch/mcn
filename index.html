@@ -1,9 +1,8 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
-index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01e58f9433 100644
+index 7c888461159bd0e4c312706c98f24d1c70e0650a..811b855d51b8815e76af875873abaafb26433fec 100644
 --- a/index.html
 +++ b/index.html
-@@ -24,343 +24,591 @@ body {
+@@ -24,343 +24,622 @@ body {
  }
  
  header {
@@ -66,74 +65,12 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
    min-height:120px;
  }
  
-+.helper-row {
-+  display:flex;
-+  gap:0.6rem;
-+  flex-wrap:wrap;
-+  margin-top:0.8rem;
-+}
-+
-+.chip {
-+  border:1px solid #cbd2d9;
-+  background:#ffffff;
-+  padding:0.5rem 0.9rem;
-+  border-radius:999px;
-+  cursor:pointer;
-+  font-size:0.9rem;
-+}
-+
-+.chip.active {
-+  background:#1f2933;
-+  color:#ffffff;
-+  border-color:#1f2933;
-+}
-+
-+.prompt-buttons {
-+  margin-top:0.6rem;
-+  display:flex;
-+  flex-wrap:wrap;
-+  gap:0.6rem;
-+}
-+
-+.prompt-buttons button {
-+  background:#ffffff;
-+  border:1px dashed #cbd2d9;
-+  color:#1f2933;
-+  padding:0.5rem 0.9rem;
-+  border-radius:12px;
-+  font-weight:500;
-+  margin-top:0;
-+}
-+
-+.gift-card {
-+  margin-top:1.5rem;
-+  background:#fff7ed;
-+  border:1px solid #fed7aa;
-+  padding:1rem 1.2rem;
-+  border-radius:12px;
-+  font-size:0.95rem;
-+}
-+
-+.activity-card {
-+  margin-top:1.4rem;
-+  background:#ecfdf3;
-+  border:1px solid #bbf7d0;
-+  padding:1.2rem;
-+  border-radius:12px;
-+}
-+
-+.activity-card button {
-+  margin-top:1rem;
-+  background:#14532d;
-+}
-+
-+.activity-timer {
-+  font-size:1.2rem;
-+  font-weight:600;
-+  margin-top:0.6rem;
-+}
-+
  button {
++  font-family:inherit;
++  font-size:1rem;
++}
++
++.primary {
    margin-top:2rem;
    padding:0.9rem 2rem;
    border-radius:999px;
@@ -144,11 +81,93 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
    cursor:pointer;
  }
  
- button[disabled] {
+-button[disabled] {
++.primary[disabled] {
    opacity:0.4;
    cursor:not-allowed;
  }
  
++.helper-row {
++  display:flex;
++  gap:0.6rem;
++  flex-wrap:wrap;
++  margin-top:0.6rem;
++}
++
++.helper-row label {
++  margin-top:0;
++  font-weight:500;
++}
++
++.chip {
++  border:1px solid #d8dee6;
++  background:#f8fafc;
++  padding:0.35rem 0.8rem;
++  border-radius:999px;
++  cursor:pointer;
++  font-size:0.85rem;
++  color:#334155;
++}
++
++.chip.active {
++  background:#1f2933;
++  color:#ffffff;
++  border-color:#1f2933;
++}
++
++.prompt-buttons {
++  margin-top:0.4rem;
++  display:flex;
++  flex-wrap:wrap;
++  gap:0.6rem;
++}
++
++.prompt-buttons button {
++  background:#f8fafc;
++  border:1px dashed #d8dee6;
++  color:#334155;
++  padding:0.35rem 0.8rem;
++  border-radius:999px;
++  font-weight:500;
++  margin-top:0;
++  font-size:0.85rem;
++  cursor:pointer;
++}
++
++.gift-card {
++  margin-top:1.2rem;
++  background:#fff7ed;
++  border:1px solid #fed7aa;
++  padding:1rem 1.2rem;
++  border-radius:12px;
++  font-size:0.95rem;
++}
++
++.activity-card {
++  margin-top:1.2rem;
++  background:#ecfdf3;
++  border:1px solid #bbf7d0;
++  padding:1.2rem;
++  border-radius:12px;
++}
++
++.activity-card button {
++  margin-top:1rem;
++  background:#f8fafc;
++  border:1px solid #bbf7d0;
++  color:#14532d;
++  padding:0.45rem 1rem;
++  border-radius:999px;
++  font-weight:600;
++  cursor:pointer;
++}
++
++.activity-timer {
++  font-size:1.2rem;
++  font-weight:600;
++  margin-top:0.6rem;
++}
++
 +.skip-link {
 +  display:inline-flex;
 +  margin-top:1rem;
@@ -223,6 +242,18 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
      width:100%;
    }
  }
++@media (max-width: 600px) {
++  .lesson-box {
++    padding:1.5rem;
++  }
++  .primary {
++    width:100%;
++  }
++  .prompt-buttons,
++  .helper-row {
++    gap:0.4rem;
++  }
++}
  </style>
  </head>
  
@@ -260,7 +291,8 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
      <label>Your name (for certificate):</label>
      <input id="username" placeholder="Enter your name">
  
-     <button onclick="show('l1')">Begin Course</button>
+-    <button onclick="show('l1')">Begin Course</button>
++    <button class="primary" onclick="show('l1')">Begin Course</button>
    </div>
  </div>
  
@@ -300,7 +332,8 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
 +      <p class="compassion-note" id="note1"></p>
      </div>
  
-     <button onclick="completeLesson(1,'l2')">Continue</button>
+-    <button onclick="completeLesson(1,'l2')">Continue</button>
++    <button class="primary" onclick="completeLesson(1,'l2')">Continue</button>
 +    <button class="skip-link" onclick="skipLesson(1,'l2')">I need a pause instead</button>
 +    <div class="gift-card" id="gift1" hidden>
 +      🎁 Gift: Take three slow breaths and name one kind thing you did today.
@@ -344,7 +377,8 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
 +      <p class="compassion-note" id="note2"></p>
      </div>
  
-     <button onclick="completeLesson(2,'l3')">Continue</button>
+-    <button onclick="completeLesson(2,'l3')">Continue</button>
++    <button class="primary" onclick="completeLesson(2,'l3')">Continue</button>
 +    <button class="skip-link" onclick="skipLesson(2,'l3')">I need a pause instead</button>
 +    <div class="gift-card" id="gift2" hidden>
 +      🎁 Gift: Choose a cozy action — stretch, sip water, or step outside for one minute.
@@ -395,7 +429,8 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
 +      <div class="activity-timer" id="breathTimer">01:00</div>
      </div>
  
-     <button onclick="completeLesson(3,'complete')">Finish Course</button>
+-    <button onclick="completeLesson(3,'complete')">Finish Course</button>
++    <button class="primary" onclick="completeLesson(3,'complete')">Finish Course</button>
 +    <button class="skip-link" onclick="skipLesson(3,'complete')">I need a pause instead</button>
 +    <div class="gift-card" id="gift3" hidden>
 +      🎁 Gift: Write a 1-line thank-you to yourself in the transcript.
@@ -419,6 +454,7 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
        Your transcript is yours alone.
      </div>
  
+-    <button id="downloadBtn" onclick="generateCertificate()" disabled>
 +    <div class="activity-card">
 +      <strong>Choose a tiny gift for today</strong>
 +      <div class="helper-row">
@@ -429,7 +465,7 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
 +      </div>
 +    </div>
 +
-     <button id="downloadBtn" onclick="generateCertificate()" disabled>
++    <button class="primary" id="downloadBtn" onclick="generateCertificate()" disabled>
        Download Certificate & Learning Transcript
      </button>
    </div>
@@ -595,6 +631,3 @@ index 7c888461159bd0e4c312706c98f24d1c70e0650a..565408ddcd3fcfb8082f552442dcac01
  
  </body>
  </html>
- 
-EOF
-)

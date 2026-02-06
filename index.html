@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Emotional Intelligence Foundations</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -24,15 +23,14 @@ header img{width:42px;border-radius:8px;}
 .section{display:none;}
 .section.active{display:block;}
 .lesson-box{background:#fff;border-radius:14px;padding:2rem;box-shadow:0 10px 30px rgba(0,0,0,0.04);}
-.notice{background:#eef2f6;padding:1.2rem;border-radius:12px;margin:1.5rem 0;}
 textarea,input{width:100%;max-width:520px;padding:0.8rem;margin-top:0.6rem;border-radius:10px;border:1px solid #cbd2d9;font-size:1rem;}
 textarea{min-height:120px;}
-button{margin-top:1.5rem;padding:0.8rem 2rem;border-radius:999px;border:none;background:#1f2933;color:white;font-weight:600;cursor:pointer;}
-button[disabled]{opacity:0.4;cursor:not-allowed;}
-.feedback-box{margin-top:1rem;background:#f1f5f9;padding:1rem;border-radius:12px;display:none;}
+button{margin-top:1.2rem;padding:0.8rem 2rem;border-radius:999px;border:none;background:#1f2933;color:white;font-weight:600;cursor:pointer;}
+button.secondary{background:#6b7280;}
 .option{padding:0.8rem;border:1px solid #cbd2d9;border-radius:10px;margin-top:0.6rem;cursor:pointer;}
 .option.correct{background:#d1fae5;border-color:#10b981;}
 .option.wrong{background:#fee2e2;border-color:#ef4444;}
+.feedback{margin-top:1rem;font-weight:600;}
 #progressOuter{background:#e5e7eb;border-radius:999px;height:12px;}
 #progressBar{height:12px;width:0%;background:#1f2933;border-radius:999px;}
 #certificate{display:none;padding:3rem;}
@@ -65,22 +63,47 @@ body *{visibility:hidden;}
 <div id="start" class="section active">
 <div class="lesson-box">
 <h1>Welcome</h1>
-<p>This upgraded version includes interactive learning and assessment.</p>
+<p>This course now includes multiple lessons, retry options, reset controls, and interactive assessment.</p>
 <label>Your name (for certificate):</label>
 <input id="username">
-<button onclick="show('reflection')">Begin</button>
+<button onclick="show('lesson1')">Begin Course</button>
+</div>
+</div>
+
+<!-- LESSON 1 -->
+<div id="lesson1" class="section">
+<div class="lesson-box">
+<h2>Lesson 1: Emotional Awareness</h2>
+<p>Recognising emotions is the foundation of emotional intelligence.</p>
+<button onclick="show('lesson2')">Next</button>
+</div>
+</div>
+
+<!-- LESSON 2 -->
+<div id="lesson2" class="section">
+<div class="lesson-box">
+<h2>Lesson 2: Emotional Regulation</h2>
+<p>Managing reactions allows intentional response rather than impulsive behaviour.</p>
+<button onclick="show('lesson3')">Next</button>
+</div>
+</div>
+
+<!-- LESSON 3 -->
+<div id="lesson3" class="section">
+<div class="lesson-box">
+<h2>Lesson 3: Empathy</h2>
+<p>Understanding others' emotions strengthens relationships and communication.</p>
+<button onclick="show('reflection')">Continue</button>
 </div>
 </div>
 
 <!-- REFLECTION -->
 <div id="reflection" class="section">
 <div class="lesson-box">
-<h2>Reflection</h2>
-<label>Describe a recent emotional reaction you experienced.</label>
+<h2>Reflection Exercise</h2>
+<label>Describe a recent emotional reaction:</label>
 <textarea id="reflectionInput"></textarea>
-<button onclick="analyzeReflection()">Analyze My Reflection</button>
-<div id="reflectionFeedback" class="feedback-box"></div>
-<button id="toQuizBtn" onclick="show('quiz')" disabled>Continue to Quiz</button>
+<button onclick="completeReflection()">Submit Reflection</button>
 </div>
 </div>
 
@@ -88,23 +111,25 @@ body *{visibility:hidden;}
 <div id="quiz" class="section">
 <div class="lesson-box">
 <h2>Knowledge Check</h2>
-
 <div id="questionBox"></div>
+<div class="feedback" id="quizFeedback"></div>
+<button class="secondary" onclick="resetQuiz()">Reset Quiz</button>
 
-<h3>Select the emotion shown in this emotional balance chart:</h3>
+<h3>Emotion Intensity Chart</h3>
 <canvas id="emotionChart" width="300" height="300"></canvas>
-<div id="chartResult"></div>
+<div id="chartFeedback" class="feedback"></div>
 
-<button id="finishQuizBtn" onclick="finishQuiz()" disabled>Finish Assessment</button>
+<button id="finishBtn" onclick="finishQuiz()" disabled>Finish Assessment</button>
 </div>
 </div>
 
 <!-- COMPLETE -->
 <div id="complete" class="section">
 <div class="lesson-box">
-<h2>Course Complete</h2>
+<h2>Assessment Complete</h2>
 <p>Your Score: <strong id="finalScore"></strong></p>
-<button onclick="generateCertificate()">Download Certificate</button>
+<button onclick="resetCourse()">Redo Course</button>
+<button onclick="generateCertificate()">Print Certificate</button>
 </div>
 </div>
 
@@ -133,94 +158,92 @@ body *{visibility:hidden;}
 document.getElementById("logoHeader").src = LOGO_URL;
 document.getElementById("logoCert").src = LOGO_URL;
 
+let quizScore = 0;
+let currentQ = 0;
+let chartAnswered = false;
+
+const questions = [
+{q:"Emotional intelligence involves:", options:["Ignoring feelings","Understanding emotions","Suppressing reactions","Avoiding conflict"], correct:1},
+{q:"Pausing before reacting creates:", options:["Weakness","Choice","Delay only","Confusion"], correct:1},
+{q:"Empathy means:", options:["Judging others","Understanding feelings","Winning arguments","Avoiding people"], correct:1},
+{q:"Self-awareness improves:", options:["Impulsiveness","Decision quality","Conflict","Denial"], correct:1},
+{q:"Regulation prevents:", options:["Intentional response","Growth","Escalation","Learning"], correct:2},
+{q:"Emotional intelligence supports:", options:["Stronger relationships","Isolation","Avoidance","Emotional shutdown"], correct:0}
+];
+
 function show(id){
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 updateProgress();
+if(id==="quiz"){loadQuestion();}
 }
 
 function updateProgress(){
-let pct = 0;
-if(document.getElementById("reflectionFeedback").style.display==="block") pct=40;
-if(quizScore>0) pct=80;
-if(coursePassed) pct=100;
-progressBar.style.width=pct+"%";
-progressText.innerText=pct+"%";
+let steps = 0;
+if(document.getElementById("lesson1").classList.contains("active")) steps=10;
+if(document.getElementById("lesson2").classList.contains("active")) steps=25;
+if(document.getElementById("lesson3").classList.contains("active")) steps=40;
+if(document.getElementById("reflection").classList.contains("active")) steps=55;
+if(document.getElementById("quiz").classList.contains("active")) steps=70;
+if(document.getElementById("complete").classList.contains("active")) steps=100;
+progressBar.style.width=steps+"%";
+progressText.innerText=steps+"%";
 }
 
-function analyzeReflection(){
-const text = reflectionInput.value.trim();
-if(text.length<10){alert("Please write more detail.");return;}
-
-const feedback = `
-<ul>
-<li>You identified a specific emotional moment.</li>
-<li>You demonstrated awareness of reaction patterns.</li>
-<li>You reflected on emotional triggers.</li>
-<li>You showed insight into behavioural impact.</li>
-<li>You practiced emotional labeling.</li>
-<li>You engaged in growth-oriented thinking.</li>
-</ul>
-`;
-
-reflectionFeedback.innerHTML = feedback;
-reflectionFeedback.style.display="block";
-toQuizBtn.disabled=false;
-updateProgress();
+function completeReflection(){
+if(reflectionInput.value.trim().length<10){
+alert("Please write more detail.");
+return;
 }
-
-/* QUIZ */
-
-const questions = [
-{
-q:"Emotional intelligence primarily involves:",
-options:["Suppressing emotions","Understanding and managing emotions","Ignoring feelings","Reacting quickly"],
-correct:1
-},
-{
-q:"Pausing before reacting helps because:",
-options:["It avoids emotions","It creates choice","It weakens response","It hides feelings"],
-correct:1
+show("quiz");
 }
-];
-
-let currentQ=0;
-let quizScore=0;
-let coursePassed=false;
 
 function loadQuestion(){
+if(currentQ >= questions.length) return;
+
 const q = questions[currentQ];
-let html="<h3>"+q.q+"</h3>";
+let html = "<h3>"+q.q+"</h3>";
 q.options.forEach((opt,i)=>{
-html+=`<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+html += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
 });
-questionBox.innerHTML=html;
+questionBox.innerHTML = html;
+quizFeedback.innerText="";
 }
-loadQuestion();
 
 function selectOption(index){
-const q=questions[currentQ];
-const options=document.querySelectorAll(".option");
+const q = questions[currentQ];
+const options = document.querySelectorAll(".option");
+
 options.forEach(o=>o.onclick=null);
 
 if(index===q.correct){
 options[index].classList.add("correct");
 quizScore++;
+quizFeedback.innerText="Correct! Moving forward...";
 }else{
 options[index].classList.add("wrong");
 options[q.correct].classList.add("correct");
+quizFeedback.innerText="Incorrect. Review the correct answer shown.";
 }
 
+setTimeout(()=>{
 currentQ++;
 if(currentQ<questions.length){
-setTimeout(loadQuestion,1000);
+loadQuestion();
 }else{
-finishQuizBtn.disabled=false;
+quizFeedback.innerText="Quiz complete. Please answer the chart.";
 }
-updateProgress();
+},1200);
 }
 
-/* PIE CHART INTERACTION */
+function resetQuiz(){
+quizScore=0;
+currentQ=0;
+chartAnswered=false;
+chartFeedback.innerText="";
+finishBtn.disabled=true;
+loadQuestion();
+}
 
 const ctx=document.getElementById('emotionChart');
 const emotionChart=new Chart(ctx,{
@@ -236,36 +259,45 @@ const points=emotionChart.getElementsAtEventForMode(evt,'nearest',{intersect:tru
 if(points.length){
 const index=points[0].index;
 if(index===1){
-chartResult.innerHTML="<p style='color:green;'>Correct — The dominant emotion displayed is Anger.</p>";
+chartFeedback.innerText="Correct — Anger is dominant.";
 quizScore++;
 }else{
-chartResult.innerHTML="<p style='color:red;'>Incorrect — Review emotional intensity patterns.</p>";
+chartFeedback.innerText="Incorrect — Anger has highest intensity.";
 }
-finishQuizBtn.disabled=false;
-updateProgress();
+chartAnswered=true;
+checkFinishReady();
 }
 };
 
+function checkFinishReady(){
+if(currentQ>=questions.length && chartAnswered){
+finishBtn.disabled=false;
+}
+}
+
 function finishQuiz(){
-const totalPossible=questions.length+1;
-const percent=Math.round((quizScore/totalPossible)*100);
+const total=questions.length+1;
+const percent=Math.round((quizScore/total)*100);
 finalScore.innerText=percent+"%";
 certScore.innerText=percent+"%";
-
-if(percent>=60){
-coursePassed=true;
 show("complete");
-}else{
-alert("Score below 60%. Please retake to pass.");
 }
-updateProgress();
+
+function resetCourse(){
+quizScore=0;
+currentQ=0;
+chartAnswered=false;
+reflectionInput.value="";
+chartFeedback.innerText="";
+finishBtn.disabled=true;
+show("start");
 }
 
 function generateCertificate(){
 certName.innerText=username.value||"Participant";
 certDate.innerText=new Date().toDateString();
 transcriptContent.innerHTML=`
-<p><strong>Reflection Submitted:</strong><br>${reflectionInput.value}</p>
+<p><strong>Reflection:</strong><br>${reflectionInput.value}</p>
 <p><strong>Final Score:</strong> ${certScore.innerText}</p>
 `;
 certificate.style.display="block";

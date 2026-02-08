@@ -213,6 +213,28 @@
       color: var(--muted);
       text-align: center;
     }
+
+    .footer-links {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #e5e7eb;
+      color: #111;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .footer-link.primary {
+      background: #f59e0b;
+    }
   </style>
 </head>
 <body>
@@ -332,6 +354,10 @@
       <button class="download" onclick="downloadPDF()">Download My Reflection (PDF)</button>
 
       <footer>
+        <div class="footer-links" aria-label="Support resources">
+          <a class="footer-link primary" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Find Support Options</a>
+          <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+        </div>
         Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
       </footer>
     </div>
@@ -411,6 +437,11 @@
     }
 
     function downloadPDF() {
+      const cleanPdfText = (value) => {
+        const noEmoji = value.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "");
+        return noEmoji.replace(/\s+/g, " ").trim();
+      };
+
       const doc = new jsPDF({ unit: "pt", format: "a4" });
       const left = 40;
       const maxWidth = 515;
@@ -437,6 +468,10 @@
       doc.text("You Matter — Personal Reflection", left, y);
       y += 28;
 
+      doc.setFontSize(11);
+      doc.text("https://emotionalintelligencedeveloper.com/", left, y);
+      y += 18;
+
       doc.setFontSize(12);
       doc.text(
         doc.splitTextToSize(
@@ -457,7 +492,7 @@
         doc.setFontSize(12);
         doc.setFont(undefined, "normal");
         const text = item.a && item.a.trim() ? item.a : "(not written)";
-        const wrapped = doc.splitTextToSize(text, maxWidth);
+        const wrapped = doc.splitTextToSize(cleanPdfText(text), maxWidth);
         doc.text(wrapped, left + 8, y);
         y += wrapped.length * 14 + 18;
 
@@ -476,6 +511,9 @@
         left,
         Math.min(y + 20, 800)
       );
+
+      doc.setFontSize(10);
+      doc.text("Website: https://emotionalintelligencedeveloper.com/", left, 820);
 
       doc.save("you-matter-reflection.pdf");
     }

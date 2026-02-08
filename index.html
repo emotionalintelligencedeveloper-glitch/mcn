@@ -63,6 +63,10 @@
     textarea{min-height:95px}
 
     .result{margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc}
+    .award{margin-top:12px;padding:14px;border:1px solid #bbf7d0;border-radius:12px;background:#f0fdf4}
+    .award h3{margin:.1rem 0 .4rem}
+    .award ul{margin:.4rem 0 .1rem 1.1rem;padding:0}
+    .goal{margin-top:10px;padding:10px;border:1px dashed #cbd5e1;border-radius:10px;background:#f8fafc;color:#334155}
     footer{font-size:.8rem;color:var(--muted)}
 
     @media (max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}}
@@ -75,7 +79,7 @@
     <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="logo" />
     <div>
       <h1>Emotional Intelligence Builder</h1>
-      <p class="sub">https://emotionalintelligencedeveloper.com/</p>
+      <p class="sub">Copy-ready single HTML with course, gadgets, games, points, and progress.</p>
     </div>
   </header>
 
@@ -100,6 +104,8 @@
       <button class="secondary" id="resumeBtn">Resume last tool</button>
       <button class="danger" id="resetBtn">Reset all progress</button>
     </div>
+    <div id="goalBox" class="goal"></div>
+    <div id="awardBox" class="award" style="display:none"></div>
   </section>
 
   <section id="course" class="panel module">
@@ -172,6 +178,7 @@ const defaultState = {
   streak:1,
   lastDay:today,
   lastTool:"hub",
+  unlockedAwards:[],
   plans:[],
   history:[]
 };
@@ -220,6 +227,61 @@ function renderDashboard(){
   txt("level", levelFromPoints(state.points));
   txt("pctText", pct + "%");
   document.getElementById("bar").style.width = pct + "%";
+  renderGoal(done);
+  renderAwards(done);
+}
+
+function renderGoal(doneCount){
+  const goalBox = document.getElementById("goalBox");
+  const totalTools = tools.length;
+  const remaining = Math.max(totalTools - doneCount, 0);
+  const totalPoints = tools.reduce((sum,t)=>sum+t.points,0);
+  if(remaining === 0){
+    goalBox.innerHTML = `<strong>Goal complete:</strong> You finished all ${totalTools} tools. Claim your final award below.`;
+    return;
+  }
+  goalBox.innerHTML = `<strong>End goal:</strong> Complete all ${totalTools} tools (${remaining} left). Base points available: ${totalPoints}. Final bonus on completion: +50.`;
+}
+
+function renderAwards(doneCount){
+  const awardBox = document.getElementById("awardBox");
+  const allDone = doneCount === tools.length;
+  if(!allDone){
+    awardBox.style.display = "none";
+    awardBox.innerHTML = "";
+    return;
+  }
+
+  awardBox.style.display = "block";
+  const finalPoints = tools.reduce((sum,t)=>sum+t.points,0);
+  const bonus = 50;
+  const hasFinalAward = state.unlockedAwards.includes("all-tools-complete");
+
+  awardBox.innerHTML = `
+    <h3>🏆 Congratulations — All Tools Completed!</h3>
+    <p>You finished the full builder path. Your end goal rewards are unlocked.</p>
+    <ul>
+      <li><strong>Mastery Badge:</strong> Emotional Intelligence Builder Graduate</li>
+      <li><strong>Completion Bonus:</strong> +${bonus} points</li>
+      <li><strong>Total Target Points:</strong> ${finalPoints + bonus}</li>
+      <li><strong>Next Goal:</strong> Maintain your streak for 7 days</li>
+    </ul>
+    <div class="actions">
+      <button class="good" onclick="claimFinalAward()" ${hasFinalAward ? "disabled" : ""}>${hasFinalAward ? "Award Claimed ✅" : "Claim Final Award"}</button>
+    </div>
+  `;
+}
+
+function claimFinalAward(){
+  if(state.unlockedAwards.includes("all-tools-complete")){
+    return;
+  }
+  state.unlockedAwards.push("all-tools-complete");
+  state.points += 50;
+  state.history.push({id:"award",note:"Claimed final completion award (+50)",date:new Date().toISOString()});
+  saveState();
+  renderDashboard();
+  renderHub();
 }
 
 function markComplete(id, points, note){
@@ -231,6 +293,7 @@ function markComplete(id, points, note){
   state.history.push({id,note,date:new Date().toISOString()});
   saveState();
   renderDashboard();
+  renderHub();
 }
 
 function renderHub(){
@@ -263,6 +326,7 @@ function openModule(id){
   if(id === "course") initCourse();
   if(id === "boundary") initBoundary();
   if(id === "daily") initDaily();
+  if(id === "hub") renderHub();
 }
 
 // -------- Course Sprint --------

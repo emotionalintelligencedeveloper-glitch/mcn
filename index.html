@@ -67,15 +67,34 @@
     .award h3{margin:.1rem 0 .4rem}
     .award ul{margin:.4rem 0 .1rem 1.1rem;padding:0}
     .goal{margin-top:10px;padding:10px;border:1px dashed #cbd5e1;border-radius:10px;background:#f8fafc;color:#334155}
+
+    .certificate{display:none}
+    .certificate.active{display:block}
+    .cert-sheet{border:6px solid #0f172a;border-radius:14px;padding:28px;min-height:430px;text-align:center;background:#fff}
+    .cert-logo{width:100px;height:100px;object-fit:cover;border-radius:10px;margin-bottom:10px}
+    .cert-title{font-size:2rem;margin:8px 0 2px}
+    .cert-name{font-size:2rem;font-weight:800;color:#1d4ed8;margin:16px 0}
+    .cert-line{font-size:1.05rem;margin:.35rem 0}
+    .cert-site{margin-top:18px;font-weight:700}
+
     .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
     .cta-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;background:#fff7ed}
     .cta-card h3{margin:.1rem 0 .35rem;font-size:1rem}
     .cta-card p{margin:.2rem 0 .7rem;color:#475569;font-size:.93rem}
     .cta-link{display:inline-block;padding:9px 12px;border-radius:9px;background:#f59e0b;color:#111;text-decoration:none;font-weight:700}
+
     footer{font-size:.8rem;color:var(--muted)}
 
-    @media (max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}}
-    @media (max-width:620px){.stats,.grid{grid-template-columns:1fr}}
+    @media (max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid,.cta-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:620px){.stats,.grid,.cta-grid{grid-template-columns:1fr}}
+
+    @media print{
+      @page{size:landscape;margin:0.45in}
+      body *{visibility:hidden}
+      #certificate,#certificate *{visibility:visible}
+      #certificate{display:block !important;position:absolute;left:0;top:0;width:100%;margin:0;padding:0}
+      .cert-sheet{box-shadow:none}
+    }
   </style>
 </head>
 <body>
@@ -84,7 +103,7 @@
     <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="logo" />
     <div>
       <h1>Emotional Intelligence Builder</h1>
-      <p class="sub">https://emotionalintelligencedeveloper.com/</p>
+      <p class="sub">Copy-ready single HTML with course, gadgets, games, points, progress, awards, and certificate.</p>
     </div>
   </header>
 
@@ -162,6 +181,28 @@
     <div id="dailyResult" class="result" style="display:none"></div>
   </section>
 
+  <section id="certificate" class="panel certificate" aria-label="certificate preview">
+    <div class="title-row">
+      <h2 style="margin:0">Certificate Preview</h2>
+      <span class="muted">Landscape print-ready recognition certificate</span>
+    </div>
+    <div class="cert-sheet">
+      <img class="cert-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Course Logo" />
+      <div class="cert-title">Certificate of Recognition</div>
+      <p class="cert-line">This proudly recognizes</p>
+      <div class="cert-name" id="certName">Participant</div>
+      <p class="cert-line">for successfully completing</p>
+      <p class="cert-line"><strong>Emotional Intelligence Builder Course</strong></p>
+      <p class="cert-line" id="certDate"></p>
+      <p class="cert-line">Your commitment to emotional intelligence growth is celebrated.</p>
+      <p class="cert-site">https://emotionalintelligencedeveloper.com/</p>
+    </div>
+    <div class="actions">
+      <button class="good" onclick="printCertificate()">Print Certificate</button>
+      <button class="secondary" onclick="closeCertificate()">Close Preview</button>
+    </div>
+  </section>
+
   <section class="panel" aria-label="recommended next steps">
     <div class="title-row">
       <h2 style="margin:0">Keep building your emotional intelligence</h2>
@@ -169,7 +210,7 @@
     </div>
     <div class="cta-grid">
       <article class="cta-card">
-        <h3>📚 Deepen your growth with recommended audio books</h3>
+        <h3>📚 Deepen your growth with recommended books</h3>
         <p>Turn your course insights into lasting habits with practical books on resilience, communication, and self-awareness.</p>
         <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Explore Recommended Books</a>
       </article>
@@ -203,6 +244,7 @@ const defaultState = {
   lastDay:today,
   lastTool:"hub",
   unlockedAwards:[],
+  certificateName:"",
   plans:[],
   history:[]
 };
@@ -261,7 +303,7 @@ function renderGoal(doneCount){
   const remaining = Math.max(totalTools - doneCount, 0);
   const totalPoints = tools.reduce((sum,t)=>sum+t.points,0);
   if(remaining === 0){
-    goalBox.innerHTML = `<strong>Goal complete:</strong> You finished all ${totalTools} tools. Claim your final award below.`;
+    goalBox.innerHTML = `<strong>Goal complete:</strong> You finished all ${totalTools} tools. Claim your final award and generate your certificate below.`;
     return;
   }
   goalBox.innerHTML = `<strong>End goal:</strong> Complete all ${totalTools} tools (${remaining} left). Base points available: ${totalPoints}. Final bonus on completion: +50.`;
@@ -283,29 +325,70 @@ function renderAwards(doneCount){
 
   awardBox.innerHTML = `
     <h3>🏆 Congratulations — All Tools Completed!</h3>
-    <p>You finished the full builder path. Your end goal rewards are unlocked.</p>
+    <p>You finished the full builder path. This is a proud recognition of your emotional intelligence work.</p>
     <ul>
       <li><strong>Mastery Badge:</strong> Emotional Intelligence Builder Graduate</li>
       <li><strong>Completion Bonus:</strong> +${bonus} points</li>
       <li><strong>Total Target Points:</strong> ${finalPoints + bonus}</li>
-      <li><strong>Next Goal:</strong> Maintain your streak for 7 days</li>
+      <li><strong>Recognition:</strong> Generate your landscape certificate below</li>
     </ul>
+    <label for="certInput"><strong>Name for certificate:</strong></label>
+    <input type="text" id="certInput" value="${escapeHtml(state.certificateName || "")}" placeholder="Enter your full name" oninput="saveCertificateName(this.value)" />
     <div class="actions">
       <button class="good" onclick="claimFinalAward()" ${hasFinalAward ? "disabled" : ""}>${hasFinalAward ? "Award Claimed ✅" : "Claim Final Award"}</button>
+      <button class="warn" onclick="previewCertificate()">Preview Certificate</button>
     </div>
   `;
 }
 
+function saveCertificateName(name){
+  state.certificateName = name.trim();
+  saveState();
+}
+
 function claimFinalAward(){
-  if(state.unlockedAwards.includes("all-tools-complete")){
-    return;
-  }
+  if(state.unlockedAwards.includes("all-tools-complete")) return;
   state.unlockedAwards.push("all-tools-complete");
   state.points += 50;
   state.history.push({id:"award",note:"Claimed final completion award (+50)",date:new Date().toISOString()});
   saveState();
   renderDashboard();
   renderHub();
+}
+
+function previewCertificate(){
+  const done = Object.keys(state.completed).length;
+  if(done !== tools.length){
+    alert("Complete all tools first to unlock your certificate.");
+    return;
+  }
+  const name = (state.certificateName || "").trim();
+  if(!name){
+    alert("Please add your name for the certificate.");
+    return;
+  }
+
+  document.getElementById("certName").textContent = name;
+  document.getElementById("certDate").textContent = `Date: ${new Date().toDateString()}`;
+  document.getElementById("certificate").classList.add("active");
+  document.getElementById("certificate").scrollIntoView({behavior:"smooth"});
+}
+
+function closeCertificate(){
+  document.getElementById("certificate").classList.remove("active");
+}
+
+function printCertificate(){
+  window.print();
+}
+
+function escapeHtml(str){
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function markComplete(id, points, note){
@@ -540,11 +623,12 @@ document.getElementById("resumeBtn").addEventListener("click",()=>{
 });
 
 document.getElementById("resetBtn").addEventListener("click",()=>{
-  if(!confirm("Reset all points, progress, and plans?")) return;
+  if(!confirm("Reset all points, progress, plans, and certificate name?")) return;
   state = {...defaultState};
   saveState();
   renderDashboard();
   renderHub();
+  closeCertificate();
   openModule("hub");
 });
 

@@ -14,6 +14,7 @@
   --muted:#6b7280;
   --cta:#f59e0b;
   --safe:#10b981;
+  --line:#e5e7eb;
 }
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -21,7 +22,7 @@ body{
   background:var(--bg);
   color:#111;
 }
-.wrap{max-width:880px;margin:28px auto;padding:20px}
+.wrap{max-width:920px;margin:28px auto;padding:20px}
 .card{
   background:var(--card);
   border-radius:14px;
@@ -30,14 +31,56 @@ body{
 }
 h1{margin:0 0 10px;font-size:24px}
 .lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+.progress-wrap{
+  margin:12px 0 20px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px;
+  background:#fff;
+}
+.progress-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#374151;
+  margin-bottom:8px;
+}
+.progress-bar{
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background:#e5e7eb;
+  overflow:hidden;
+}
+.progress-bar > span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  transition:width .2s ease;
+}
 .q{
   margin:18px 0;
   padding:16px;
   border-radius:12px;
   background:#fff;
-  border:1px solid #e5e7eb;
+  border:1px solid var(--line);
 }
 .q h3{margin:0 0 10px;font-size:16px}
+.q-help{
+  font-size:13px;
+  color:#4b5563;
+  margin-bottom:8px;
+}
+.slider-row{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  color:#374151;
+}
+.slider-row input[type="range"]{width:160px}
 textarea{
   width:100%;
   min-height:90px;
@@ -71,9 +114,7 @@ textarea{
   border:1px solid #bfdbfe;
   line-height:1.75;
 }
-.block{
-  margin-bottom:18px;
-}
+.block{margin-bottom:18px}
 .download{
   margin-top:18px;
   display:inline-block;
@@ -83,6 +124,37 @@ textarea{
   color:#fff;
   font-weight:700;
   cursor:pointer;
+}
+.benefits{
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:10px;
+  background:#f0fdf4;
+  border:1px solid #86efac;
+  font-size:14px;
+  color:#14532d;
+}
+.benefits ul{margin:8px 0 0 18px;padding:0}
+.benefits li{margin:6px 0}
+.suggestions{
+  margin-top:18px;
+  padding:16px;
+  border-radius:12px;
+  background:#f8fafc;
+  border:1px solid #cbd5e1;
+}
+.suggestions h3{margin:0 0 10px;font-size:16px}
+.suggestions ul{margin:0 0 0 18px;padding:0}
+.suggestions li{margin:8px 0;line-height:1.55}
+.starter-box{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px dashed #93c5fd;
+  background:#eff6ff;
+  font-size:13px;
+  color:#1f2937;
+  display:none;
 }
 .ads-label{font-size:13px;color:var(--muted);margin-top:30px}
 .ads-box{
@@ -140,11 +212,77 @@ Take your time — even one sentence is enough.
   </p>
 </div>
 
-<div class="q"><h3>1) How do you feel on the inside, when no one is watching?</h3><textarea id="q1"></textarea></div>
-<div class="q"><h3>2) How do you usually present yourself to others?</h3><textarea id="q2"></textarea></div>
-<div class="q"><h3>3) Where do you notice the biggest gap between inner and outer you?</h3><textarea id="q3"></textarea></div>
-<div class="q"><h3>4) What parts of yourself do you adjust, soften, or hide?</h3><textarea id="q4"></textarea></div>
-<div class="q"><h3>5) What do you think alignment might bring into your life?</h3><textarea id="q5"></textarea></div>
+<div class="progress-wrap" aria-live="polite">
+  <div class="progress-meta">
+    <span id="progressText">Progress: 0 / 5 answered</span>
+    <span id="focusText">Start anywhere</span>
+  </div>
+  <div class="progress-bar"><span id="progressFill"></span></div>
+</div>
+
+<div class="controls" style="margin-top:0;">
+  <button class="btn secondary" type="button" onclick="toggleStarters()">Toggle Gentle Starter Prompts</button>
+</div>
+
+<div class="q" data-index="1">
+  <h3>1) How do you feel on the inside, when no one is watching?</h3>
+  <p class="q-help">Name emotions, body sensations, or inner dialogue.</p>
+  <textarea id="q1"></textarea>
+  <div class="slider-row">
+    <label for="s1">Intensity (1–5)</label>
+    <input id="s1" type="range" min="1" max="5" value="3" />
+    <span id="s1v">3</span>
+  </div>
+  <div class="starter-box" id="p1">Starter idea: “Lately, underneath everything, I’ve felt…”</div>
+</div>
+
+<div class="q" data-index="2">
+  <h3>2) How do you usually present yourself to others?</h3>
+  <p class="q-help">Describe your social style, roles, or masks.</p>
+  <textarea id="q2"></textarea>
+  <div class="slider-row">
+    <label for="s2">Intensity (1–5)</label>
+    <input id="s2" type="range" min="1" max="5" value="3" />
+    <span id="s2v">3</span>
+  </div>
+  <div class="starter-box" id="p2">Starter idea: “Most people see me as someone who…”</div>
+</div>
+
+<div class="q" data-index="3">
+  <h3>3) Where do you notice the biggest gap between inner and outer you?</h3>
+  <p class="q-help">Think about work, relationships, family, or online spaces.</p>
+  <textarea id="q3"></textarea>
+  <div class="slider-row">
+    <label for="s3">Intensity (1–5)</label>
+    <input id="s3" type="range" min="1" max="5" value="3" />
+    <span id="s3v">3</span>
+  </div>
+  <div class="starter-box" id="p3">Starter idea: “The biggest mismatch shows up when…”</div>
+</div>
+
+<div class="q" data-index="4">
+  <h3>4) What parts of yourself do you adjust, soften, or hide?</h3>
+  <p class="q-help">List traits, needs, boundaries, or opinions.</p>
+  <textarea id="q4"></textarea>
+  <div class="slider-row">
+    <label for="s4">Intensity (1–5)</label>
+    <input id="s4" type="range" min="1" max="5" value="3" />
+    <span id="s4v">3</span>
+  </div>
+  <div class="starter-box" id="p4">Starter idea: “I tend to hide my ____ because…”</div>
+</div>
+
+<div class="q" data-index="5">
+  <h3>5) What do you think alignment might bring into your life?</h3>
+  <p class="q-help">Focus on what you would gain, not what you’d lose.</p>
+  <textarea id="q5"></textarea>
+  <div class="slider-row">
+    <label for="s5">Intensity (1–5)</label>
+    <input id="s5" type="range" min="1" max="5" value="3" />
+    <span id="s5v">3</span>
+  </div>
+  <div class="starter-box" id="p5">Starter idea: “If I were more aligned, I would feel…”</div>
+</div>
 
 <p style="font-size:14px;color:#4b5563;margin-top:10px;">
 When you’re ready, you can view a gentle summary of your reflection.
@@ -158,6 +296,27 @@ When you’re ready, you can view a gentle summary of your reflection.
 <div id="result" class="result"></div>
 
 <div class="download" onclick="downloadPDF()">Download My Reflection (Private PDF)</div>
+
+<div class="benefits">
+  <strong>Why the PDF helps you</strong>
+  <ul>
+    <li><strong>Track growth over time:</strong> Compare reflections weekly or monthly and notice emotional patterns.</li>
+    <li><strong>Prepare for therapy or coaching:</strong> Bring your reflection into sessions so support starts at the real issue faster.</li>
+    <li><strong>Support honest conversations:</strong> Clarify what you want to express before talking with someone important to you.</li>
+    <li><strong>Stay private and organized:</strong> Keep your reflections offline in one personal folder for future review.</li>
+  </ul>
+</div>
+
+<div class="suggestions">
+  <h3>Suggested upgrades to improve user experience</h3>
+  <ul>
+    <li>Add a quick <strong>“2-minute mode”</strong> with one short question for overwhelmed users.</li>
+    <li>Offer a <strong>theme switch (light/dark)</strong> for better accessibility in low-light environments.</li>
+    <li>Include <strong>optional voice input</strong> for users who process feelings better by speaking.</li>
+    <li>Add a <strong>weekly reminder flow</strong> (optional) to help users build consistent reflection habits.</li>
+    <li>Provide a <strong>resource suggestion card</strong> based on the highest intensity question after completion.</li>
+  </ul>
+</div>
 
 <div class="help-box">
   <strong>A gentle pause</strong>
@@ -199,84 +358,101 @@ Created by Emotional Intelligence Developer — https://emotionalintelligencedev
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const { jsPDF } = window.jspdf;
+const questions = [
+  "How you feel inside",
+  "How you present to others",
+  "Where the gap appears",
+  "What you adjust or hide",
+  "What alignment could bring"
+];
+const reflections = [
+  "This inner experience matters. Even if it feels messy or unfinished, it deserves space without judgment.",
+  "The way you present yourself likely developed to protect or stabilize you. It’s adaptation, not pretense.",
+  "Gaps often appear where safety, expectations, or survival required adjustment. Awareness softens that tension.",
+  "What you hide is often what once needed protection. You’re allowed to revisit those choices gently.",
+  "Alignment rarely means changing everything — it usually begins with one honest place to start."
+];
+
+function getAnswers(){
+  return [q1.value,q2.value,q3.value,q4.value,q5.value];
+}
+
+function getSliders(){
+  return [s1.value,s2.value,s3.value,s4.value,s5.value];
+}
+
+function updateProgress(){
+  const answers = getAnswers();
+  const count = answers.filter(a => a.trim().length > 0).length;
+  progressText.textContent = `Progress: ${count} / 5 answered`;
+  progressFill.style.width = `${(count/5)*100}%`;
+}
 
 function showReflection(){
-  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
-  const reflections=[
-    "This inner experience matters. Even if it feels messy or unfinished, it deserves space without judgment.",
-    "The way you present yourself likely developed to protect or stabilize you. It’s adaptation, not pretense.",
-    "Gaps often appear where safety, expectations, or survival required adjustment. Awareness softens that tension.",
-    "What you hide is often what once needed protection. You’re allowed to revisit those choices gently.",
-    "Alignment rarely means changing everything — it usually begins with one honest place to start."
-  ];
-  const questions=[
-    "How you feel inside",
-    "How you present to others",
-    "Where the gap appears",
-    "What you adjust or hide",
-    "What alignment could bring"
-  ];
+  const answers = getAnswers();
+  const sliders = getSliders();
 
-  let html="<strong>Your Reflection Summary</strong><br><span style='font-size:14px;color:#374151;'>Read this slowly. Nothing here needs to be fixed or shared.</span><br><br>";
+  let html = "<strong>Your Reflection Summary</strong><br><span style='font-size:14px;color:#374151;'>Read this slowly. Nothing here needs to be fixed or shared.</span><br><br>";
 
   for(let i=0;i<5;i++){
-    html+=`
+    html += `
     <div class="block">
       <strong>${questions[i]}:</strong><br>
-      <em>Your answer:</em> ${answers[i]||"(not written)"}<br>
+      <em>Your answer:</em> ${answers[i] || "(not written)"}<br>
+      <em>Intensity:</em> ${sliders[i]}/5<br>
       <em>Reflection:</em> ${reflections[i]}
     </div>`;
   }
 
-  html+=`
+  html += `
   <strong>Closing insight:</strong><br>
   Awareness is the first step toward alignment.
   Small honesty creates relief without requiring exposure.
   `;
 
-  const box=document.getElementById("result");
-  box.innerHTML=html;
-  box.style.display="block";
+  const box = document.getElementById("result");
+  box.innerHTML = html;
+  box.style.display = "block";
 }
 
 function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
+  document.querySelectorAll("textarea").forEach(t => t.value = "");
+  [s1,s2,s3,s4,s5].forEach((slider, idx) => {
+    slider.value = 3;
+    document.getElementById(`s${idx+1}v`).textContent = "3";
+  });
+  document.getElementById("result").style.display = "none";
+  focusText.textContent = "Start anywhere";
+  updateProgress();
 }
 
 function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=60,left=40,max=515;
+  const doc = new jsPDF({unit:'pt',format:'a4'});
+  let y = 60, left = 40, max = 515;
 
   doc.setFontSize(11);
   doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
 
   doc.setFontSize(18);
-  doc.text("Inner vs Outer Self — Reflection", left, y); y+=30;
+  doc.text("Inner vs Outer Self — Reflection", left, y); y += 30;
 
-  const questions=[
-    "How you feel inside:",
-    "How you present to others:",
-    "Where the gap appears:",
-    "What you adjust or hide:",
-    "What alignment could bring:"
-  ];
-  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
-  const reflections=[
-    "This inner experience matters and deserves care.",
-    "Presentation is often a form of self-protection.",
-    "Awareness of the gap reduces inner strain.",
-    "What you hide once helped you survive.",
-    "Alignment begins with small honest steps."
-  ];
+  const answers = getAnswers();
+  const sliders = getSliders();
 
   doc.setFontSize(11);
   for(let i=0;i<5;i++){
-    doc.text(questions[i],left,y); y+=14;
-    doc.text(doc.splitTextToSize("Your answer: "+(answers[i]||"(not written)"),max),left+10,y);
-    y+=26;
-    doc.text(doc.splitTextToSize("Reflection: "+reflections[i],max),left+10,y);
-    y+=34;
+    doc.text(`${questions[i]}:`,left,y); y += 14;
+    doc.text(doc.splitTextToSize("Your answer: " + (answers[i] || "(not written)"),max),left+10,y);
+    y += 26;
+    doc.text(`Intensity: ${sliders[i]}/5`, left+10, y);
+    y += 18;
+    doc.text(doc.splitTextToSize("Reflection: " + reflections[i],max),left+10,y);
+    y += 34;
+
+    if(y > 730 && i < 4){
+      doc.addPage();
+      y = 60;
+    }
   }
 
   doc.setFontSize(10);
@@ -287,6 +463,27 @@ function downloadPDF(){
 
   doc.save("inner-vs-outer-self-reflection.pdf");
 }
+
+function toggleStarters(){
+  document.querySelectorAll('.starter-box').forEach(el => {
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  });
+}
+
+[q1,q2,q3,q4,q5].forEach((area, idx) => {
+  area.addEventListener('input', updateProgress);
+  area.addEventListener('focus', () => {
+    focusText.textContent = `You are on question ${idx + 1} of 5`;
+  });
+});
+
+[s1,s2,s3,s4,s5].forEach((slider, idx) => {
+  slider.addEventListener('input', () => {
+    document.getElementById(`s${idx+1}v`).textContent = slider.value;
+  });
+});
+
+updateProgress();
 </script>
 </body>
 </html>

@@ -1,286 +1,572 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Courage in the Face of Fear — Emotional Intelligence Developer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Courage in the Face of Fear — Emotional Intelligence Developer</title>
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#2563eb;
-  --soft:#eef2ff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:820px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
-}
-h1{margin:0 0 10px;font-size:22px}
-.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
-.q{margin:18px 0;padding:16px;border-radius:12px;border:1px solid #e5e7eb}
-.q h3{margin:0 0 6px;font-size:15px}
-.q p{margin:0 0 8px;font-size:13px;color:var(--muted)}
-textarea{
-  width:100%;
-  min-height:80px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-}
-.controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
-.result{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #c7d2fe;
-  line-height:1.6;
-}
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
-.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
-footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+  <style>
+    :root {
+      --bg: #eef3ff;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5f6c80;
+      --border: #e2e8f0;
+      --accent: #3b5bdb;
+      --accent-soft: #dbe4ff;
+      --safe: #10b981;
+      --warning: #f59e0b;
+      --soft: #f8f9ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #f8faff, #eaf1ff 52%, #eef2ff);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 14px 32px rgba(33, 47, 87, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.55rem;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .intro-grid {
+      display: grid;
+      gap: 14px;
+      margin: 16px 0 18px;
+    }
+
+    .panel {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .panel p,
+    .panel ul {
+      margin: 0;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    .panel ul {
+      padding-left: 18px;
+    }
+
+    .pathway-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .pathway-btn {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #1e293b;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .pathway-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .progress {
+      margin: 8px 0 16px;
+      height: 10px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #60a5fa, #4f46e5);
+      transition: width 0.35s ease;
+    }
+
+    .q {
+      display: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      margin: 12px 0;
+    }
+
+    .q.active {
+      display: block;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0.2; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .q h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .q p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 96px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 0.95rem;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .supportive-note {
+      min-height: 1.2rem;
+      margin-top: 8px;
+      color: #1d4ed8;
+      font-size: 0.84rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.94rem;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost { background: #eef2ff; color: #1e3a8a; }
+    .btn-neutral { background: #e5e7eb; color: #111827; }
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      border-radius: 14px;
+      border: 1px solid #c7d2fe;
+      background: var(--soft);
+      padding: 18px;
+    }
+
+    .download {
+      display: none;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      background: var(--safe);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .feedback-box,
+    .ads-box,
+    .help-box {
+      margin-top: 18px;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .feedback-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+
+    .ads-label {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .ads-box {
+      background: #fefce8;
+      border: 1px solid #facc15;
+    }
+
+    .help-box {
+      background: #ecfeff;
+      border: 1px solid #67e8f9;
+    }
+
+    .cta-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--warning);
+      color: #111;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: var(--muted);
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <div class="wrap">
+    <div class="card">
+      <h1>Courage in the Face of Fear</h1>
+      <p class="lead">
+        Fear is a natural response when something meaningful is at stake.
+        This guided reflection helps you slow down, feel supported, and take one courageous next step.
+      </p>
 
-<h1>Courage in the Face of Fear</h1>
+      <div class="intro-grid">
+        <section class="panel" aria-labelledby="journey-title">
+          <h2 id="journey-title">How this journey works</h2>
+          <ul>
+            <li>Move through 5 short prompts at your own pace.</li>
+            <li>Each step includes gentle guidance.</li>
+            <li>You’ll finish with a personalized courage reflection.</li>
+          </ul>
+        </section>
 
-<p class="lead">
-Fear is a natural human response — it appears when something matters.
-Courage does <strong>not</strong> mean fear disappears.
-It means learning how to move forward with awareness, self-respect, and care.
-</p>
+        <section class="panel" aria-labelledby="pathway-title">
+          <h2 id="pathway-title">Choose your focus (optional)</h2>
+          <p>Pick the area where fear is showing up most, so the guidance feels more relevant.</p>
+          <div class="pathway-buttons" id="pathways" role="group" aria-label="Focus pathway options"></div>
+        </section>
+      </div>
 
-<p class="lead">
-This short reflection will help you:
-<ul>
-  <li>Understand what your fear is really about</li>
-  <li>Notice how it influences your choices</li>
-  <li>Reconnect with moments where you were already brave</li>
-  <li>Choose one realistic next step</li>
-</ul>
-There are no right answers here — only honest ones.
-</p>
+      <div class="progress-row" aria-live="polite">
+        <span id="progressText">Step 1 of 5</span>
+        <span id="progressPercent">20% complete</span>
+      </div>
+      <div class="progress" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
 
-<div class="q">
-  <h3>1) What fear has been showing up most strongly for you lately?</h3>
-  <p>Be specific. Name the fear without judging it.</p>
-  <textarea id="q1"></textarea>
-</div>
+      <section class="q active" data-step="0">
+        <h3>1) What fear has been showing up most strongly for you lately?</h3>
+        <p id="hint1">Be specific. Name the fear without judging it.</p>
+        <textarea id="q1" aria-label="Question 1" placeholder="Example: I’m afraid of failing and being seen as not good enough."></textarea>
+        <div class="supportive-note" id="note1" aria-live="polite"></div>
+      </section>
 
-<div class="q">
-  <h3>2) How does this fear affect your choices, behaviour, or confidence?</h3>
-  <p>Notice patterns: avoidance, overthinking, hesitation, or self-doubt.</p>
-  <textarea id="q2"></textarea>
-</div>
+      <section class="q" data-step="1">
+        <h3>2) How does this fear affect your choices, behaviour, or confidence?</h3>
+        <p>Notice patterns: avoidance, overthinking, hesitation, or self-doubt.</p>
+        <textarea id="q2" aria-label="Question 2" placeholder="Describe what changes in your decisions when fear takes over."></textarea>
+        <div class="supportive-note" id="note2" aria-live="polite"></div>
+      </section>
 
-<div class="q">
-  <h3>3) What do you believe this fear is trying to protect you from?</h3>
-  <p>Fear often aims to prevent pain, embarrassment, or loss — even when it overreacts.</p>
-  <textarea id="q3"></textarea>
-</div>
+      <section class="q" data-step="2">
+        <h3>3) What do you believe this fear is trying to protect you from?</h3>
+        <p>Fear often tries to prevent pain, rejection, embarrassment, or loss.</p>
+        <textarea id="q3" aria-label="Question 3" placeholder="What outcome feels most threatening to you?"></textarea>
+        <div class="supportive-note" id="note3" aria-live="polite"></div>
+      </section>
 
-<div class="q">
-  <h3>4) When have you acted with courage before, even while afraid?</h3>
-  <p>Courage can be quiet: speaking up once, asking for help, or not giving up.</p>
-  <textarea id="q4"></textarea>
-</div>
+      <section class="q" data-step="3">
+        <h3>4) When have you acted with courage before, even while afraid?</h3>
+        <p>Courage can be quiet: asking for help, speaking up once, or not giving up.</p>
+        <textarea id="q4" aria-label="Question 4" placeholder="Recall one real moment of courage, even a small one."></textarea>
+        <div class="supportive-note" id="note4" aria-live="polite"></div>
+      </section>
 
-<div class="q">
-  <h3>5) What is one small, realistic act of courage you could take next?</h3>
-  <p>If it feels overwhelming, make it smaller.</p>
-  <textarea id="q5"></textarea>
-</div>
+      <section class="q" data-step="4">
+        <h3>5) What is one small, realistic act of courage you could take next?</h3>
+        <p>If it feels overwhelming, make it smaller. Small steps still count.</p>
+        <textarea id="q5" aria-label="Question 5" placeholder="Name one action you can take in the next 24–72 hours."></textarea>
+        <div class="supportive-note" id="note5" aria-live="polite"></div>
+      </section>
 
-<div class="controls">
-  <button class="btn" onclick="showReflection()">See My Reflection</button>
-  <button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+      <div class="controls">
+        <button class="btn btn-ghost" type="button" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" type="button" id="nextBtn" onclick="nextStep()">Next Step</button>
+        <button class="btn btn-neutral" type="button" onclick="resetTool()">Reset</button>
+      </div>
 
-<div id="result" class="result"></div>
+      <div id="result" class="result" aria-live="polite"></div>
+      <button class="download" id="downloadBtn" type="button" onclick="downloadPDF()">Download My Reflection (PDF)</button>
 
-<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+      <div class="feedback-box">
+        <strong>Help others feel less alone</strong>
+        <p>If this tool helped you, share a short testimonial through our Contact page. With permission, we may feature stories to motivate others on similar journeys.</p>
+        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/contact/" target="_blank" rel="noopener noreferrer">Share Feedback or Testimonial</a>
+      </div>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-  <strong>Support your courage journey</strong>
-  <p>Some links may be affiliate links at no extra cost to you.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    Recommended Books
-  </a>
-</div>
+      <p class="ads-label">Ads.</p>
+      <div class="ads-box">
+        <strong>Support your courage journey</strong>
+        <p>Some links may be affiliate links at no extra cost to you.</p>
+        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+      </div>
 
-<div class="help-box">
-  <strong>Need extra support?</strong>
-  <p>If fear feels overwhelming or unsafe, you don’t have to handle it alone.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
-</div>
+      <div class="help-box">
+        <strong>Need extra support?</strong>
+        <p>If fear feels overwhelming or unsafe, you don’t have to handle it alone.</p>
+        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Visit the Help Page</a>
+      </div>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+      <footer>
+        Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
+      </footer>
+    </div>
+  </div>
 
-</div>
-</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const { jsPDF } = window.jspdf;
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+    const steps = [...document.querySelectorAll('.q')];
+    let currentStep = 0;
+    let selectedPath = 'General courage';
 
-function showReflection(){
-  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
-  if(answers.some(a=>!a.trim())){
-    alert("Please answer all questions.");
-    return;
-  }
+    const pathways = [
+      { name: 'Work and performance fear', hint: 'You are building confidence through practice, not perfection.' },
+      { name: 'Relationship fear', hint: 'Connection grows when honesty and care are practiced together.' },
+      { name: 'Fear of judgment', hint: 'Being seen imperfectly is still better than staying hidden.' },
+      { name: 'Change and uncertainty fear', hint: 'You can move slowly and still move courageously.' },
+      { name: 'General courage', hint: 'Courage starts with one honest moment at a time.' }
+    ];
 
-  document.getElementById("result").innerHTML=`
-  <strong>Your Reflection</strong><br><br>
+    const supportiveMessages = [
+      'Thank you for naming your fear. Naming it is already courageous.',
+      'This awareness can help you interrupt fear-based patterns.',
+      'This insight helps transform fear into useful information.',
+      'Your past courage is evidence that you can trust yourself.',
+      'A small action, repeated, builds real confidence.'
+    ];
 
-  <strong>Your fear:</strong><br>${q1.value}<br><br>
-  <strong>How it affects you:</strong><br>${q2.value}<br><br>
-  <strong>What it tries to protect you from:</strong><br>${q3.value}<br><br>
-  <strong>Your past courage:</strong><br>${q4.value}<br><br>
-  <strong>Your next step:</strong><br>${q5.value}<br><br>
+    function renderPathways() {
+      const container = document.getElementById('pathways');
+      container.innerHTML = '';
 
-  <em>
-  Courage is not about becoming fearless.
-  It is about choosing honesty over avoidance,
-  and progress over perfection.
-  <br><br>
-  One small step is enough for today.
-  </em>
-  `;
-  document.getElementById("result").style.display="block";
-}
+      pathways.forEach((pathway) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'pathway-btn' + (pathway.name === selectedPath ? ' active' : '');
+        button.textContent = pathway.name;
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
-}
+        button.addEventListener('click', () => {
+          selectedPath = pathway.name;
+          container.querySelectorAll('.pathway-btn').forEach((btn) => btn.classList.remove('active'));
+          button.classList.add('active');
+          updateHint();
+        });
 
-function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  const left=40,max=515;
-  let y=40;
+        container.appendChild(button);
+      });
+    }
 
-  doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer",left,y);
-  doc.text("https://emotionalintelligencedeveloper.com/",left,y+12);
+    function updateHint() {
+      const pathwayHint = pathways.find((p) => p.name === selectedPath)?.hint || '';
+      document.getElementById('hint1').textContent = 'Be specific. Name the fear without judging it. ' + pathwayHint;
+    }
 
-  y+=40;
-  doc.setFontSize(18);
-  doc.text("Courage in the Face of Fear",left,y);
+    function updateProgress() {
+      const stepNumber = currentStep + 1;
+      const percent = Math.round((stepNumber / steps.length) * 100);
+      document.getElementById('progressText').textContent = `Step ${stepNumber} of ${steps.length}`;
+      document.getElementById('progressPercent').textContent = `${percent}% complete`;
+      document.getElementById('progressFill').style.width = percent + '%';
+      document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'See My Reflection' : 'Next Step';
+    }
 
-  y+=22;
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "Courage is not the absence of fear. It is the ability to act with awareness, self-respect, and intention — even when fear is present. "+
-    "This one-page reflection is designed to help you slow down and choose a realistic next step.",
-    max
-  ),left,y);
+    function showStep(index) {
+      steps.forEach((stepEl, i) => stepEl.classList.toggle('active', i === index));
+      currentStep = index;
+      updateProgress();
+    }
 
-  y+=60;
+    function validateCurrentStep() {
+      const activeAnswer = steps[currentStep].querySelector('textarea').value.trim();
+      if (!activeAnswer) {
+        alert('Please write a short response before continuing.');
+        return false;
+      }
+      return true;
+    }
 
-  const sections=[
-    ["The fear I am facing:",q1.value],
-    ["How this fear affects me:",q2.value],
-    ["What this fear is trying to protect me from:",q3.value],
-    ["A time I showed courage before:",q4.value],
-    ["My next small act of courage:",q5.value],
-  ];
+    function nextStep() {
+      if (!validateCurrentStep()) return;
+      if (currentStep < steps.length - 1) {
+        showStep(currentStep + 1);
+      } else {
+        showReflection();
+      }
+    }
 
-  doc.setFontSize(12);
-  sections.forEach(([t,v])=>{
-    doc.text(t,left,y); y+=16;
-    doc.setFontSize(11);
-    doc.text(doc.splitTextToSize(v,max),left+10,y);
-    y+=30;
-    doc.setFontSize(12);
-  });
+    function previousStep() {
+      if (currentStep > 0) showStep(currentStep - 1);
+    }
 
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "Reminder: Small steps build trust with yourself. "+
-    "You do not need to force bravery — consistency and honesty are enough.",
-    max
-  ),left,y+10);
+    function showReflection() {
+      const answers = [q1.value, q2.value, q3.value, q4.value, q5.value];
+      if (answers.some((a) => !a.trim())) {
+        alert('Please answer all questions.');
+        return;
+      }
 
-  doc.setFontSize(9);
-  doc.text(
-    "This worksheet may be shared for learning or support. If fear feels overwhelming or unsafe, please seek professional or emergency help.",
-    left,800
-  );
+      const result = document.getElementById('result');
+      result.innerHTML = `
+        <strong>Your Courage Reflection</strong><br>
+        <p><strong>Personalized focus:</strong> ${selectedPath}</p>
 
-  doc.save("courage-in-the-face-of-fear.pdf");
-}
-</script>
+        <strong>Your fear:</strong><br>${q1.value}<br><br>
+        <strong>How it affects you:</strong><br>${q2.value}<br><br>
+        <strong>What it tries to protect you from:</strong><br>${q3.value}<br><br>
+        <strong>Your past courage:</strong><br>${q4.value}<br><br>
+        <strong>Your next step:</strong><br>${q5.value}<br><br>
+
+        <em>
+          Courage is not about removing fear.<br>
+          It is about moving with care, clarity, and self-respect.<br><br>
+          One small step is enough for today.
+        </em>
+      `;
+
+      result.style.display = 'block';
+      document.getElementById('downloadBtn').style.display = 'inline-block';
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetTool() {
+      document.querySelectorAll('textarea').forEach((input) => input.value = '');
+      document.querySelectorAll('.supportive-note').forEach((note) => note.textContent = '');
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('downloadBtn').style.display = 'none';
+      selectedPath = 'General courage';
+      renderPathways();
+      updateHint();
+      showStep(0);
+    }
+
+    function downloadPDF() {
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const left = 40;
+      const max = 515;
+      let y = 40;
+
+      doc.setFontSize(10);
+      doc.text('Emotional Intelligence Developer', left, y);
+      doc.text('https://emotionalintelligencedeveloper.com/', left, y + 12);
+
+      y += 40;
+      doc.setFontSize(18);
+      doc.text('Courage in the Face of Fear', left, y);
+
+      y += 24;
+      doc.setFontSize(11);
+      doc.text(`Personalized focus: ${selectedPath}`, left, y);
+
+      y += 22;
+      doc.text(
+        doc.splitTextToSize(
+          'Courage is not the absence of fear. It is the ability to act with awareness, self-respect, and intention — even when fear is present.',
+          max
+        ),
+        left,
+        y
+      );
+
+      y += 52;
+
+      const sections = [
+        ['The fear I am facing:', q1.value],
+        ['How this fear affects me:', q2.value],
+        ['What this fear is trying to protect me from:', q3.value],
+        ['A time I showed courage before:', q4.value],
+        ['My next small act of courage:', q5.value]
+      ];
+
+      doc.setFontSize(12);
+      sections.forEach(([title, value]) => {
+        doc.text(title, left, y);
+        y += 16;
+        doc.setFontSize(11);
+        doc.text(doc.splitTextToSize(value || '-', max), left + 10, y);
+        y += 30;
+        doc.setFontSize(12);
+      });
+
+      doc.setFontSize(11);
+      doc.text(
+        doc.splitTextToSize(
+          'Small steps build trust with yourself. If this tool helped you, consider sharing a testimonial via our Contact page to support others.',
+          max
+        ),
+        left,
+        y + 10
+      );
+
+      doc.save('courage-in-the-face-of-fear.pdf');
+    }
+
+    steps.forEach((step, index) => {
+      const textArea = step.querySelector('textarea');
+      const note = document.getElementById(`note${index + 1}`);
+      textArea.addEventListener('input', () => {
+        note.textContent = textArea.value.trim() ? supportiveMessages[index] : '';
+      });
+    });
+
+    renderPathways();
+    updateHint();
+    showStep(0);
+  </script>
 </body>
 </html>

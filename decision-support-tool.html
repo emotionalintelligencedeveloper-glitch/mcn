@@ -1,287 +1,633 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>I’m Stuck — Decision Support Tool | Emotional Intelligence Developer</title>
-
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#1f6feb;
-  --soft:#eff6ff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:820px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
-}
-h1{margin:0 0 10px;font-size:22px}
-.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
-
-.notice{
-  background:#eff6ff;
-  border:1px solid #bfdbfe;
-  border-radius:12px;
-  padding:14px;
-  font-size:0.95rem;
-  margin-bottom:20px;
-}
-
-.q{
-  margin:16px 0;
-  padding:14px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-textarea{
-  width:100%;
-  min-height:90px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-  font-size:0.95rem;
-}
-
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
-
-.result{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #bfdbfe;
-  line-height:1.6;
-}
-
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
-
-footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>I’m Stuck — Decision Support Tool | Emotional Intelligence Developer</title>
+  <style>
+    :root{
+      --bg:#f3f5f9;
+      --card:#ffffff;
+      --text:#101828;
+      --muted:#475467;
+      --line:#d0d5dd;
+      --brand:#1f6feb;
+      --brand-soft:#e9f1ff;
+      --safe:#0f8a5f;
+      --warm:#fff7e8;
+      --help:#ecfeff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    .wrap{max-width:980px;margin:18px auto;padding:14px}
+    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 10px 24px rgba(16,24,40,.08);padding:18px}
+    h1{margin:0 0 8px;font-size:1.5rem}
+    h2{margin:0 0 10px;font-size:1.1rem}
+    p{margin:.4rem 0}
+    .lead{color:var(--muted)}
+    .notice{background:#eff8ff;border:1px solid #b2ddff;border-radius:12px;padding:12px;margin:12px 0 14px}
+    .resume{display:none;position:sticky;top:8px;z-index:10;background:#111827;color:#fff;border-radius:10px;padding:10px 12px;margin-bottom:10px;align-items:center;justify-content:space-between;gap:8px}
+    .resume .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .resume button{background:#fff;color:#111;border:0;border-radius:8px;padding:7px 10px;font-weight:700;cursor:pointer}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+    @media (max-width:780px){.row{grid-template-columns:1fr}}
+    .progress-wrap{margin:8px 0 10px}
+    .progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+    .progress span{display:block;height:100%;width:14%;background:linear-gradient(90deg,#6ea8fe,var(--brand));transition:width .2s ease}
+    .small{font-size:.93rem;color:var(--muted)}
+    .feedback{min-height:24px;color:#12489b;font-size:.95rem;margin:8px 0}
+    .step{display:none;background:#fcfcfd;border:1px solid var(--line);border-radius:12px;padding:14px;animation:fade .2s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
+    label{display:block;font-weight:600;margin:9px 0 6px}
+    input[type=text],textarea,select{width:100%;padding:10px;border:1px solid #cfd4dc;border-radius:8px;font:inherit;color:#111;background:#fff}
+    textarea{min-height:82px;resize:vertical}
+    .chips,.moods{display:flex;flex-wrap:wrap;gap:8px}
+    .chip,.mood{border:1px solid #c6cedd;background:#fff;border-radius:999px;padding:8px 10px;cursor:pointer}
+    .mood{border-radius:10px}
+    .chip[aria-pressed="true"],.mood[aria-pressed="true"]{background:var(--brand-soft);border-color:var(--brand);color:#0b4a95}
+    .checks{display:grid;gap:8px}
+    .checks label{margin:0;font-weight:500}
+    .panel{margin-top:12px;padding:12px;border-radius:12px;border:1px solid #d5e3ff;background:#f5f8ff}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.secondary{background:#e5e7eb;color:#111}
+    .btn.success{background:var(--safe);color:#fff}
+    .btn.ghost{background:#fff;color:#111;border:1px solid #cfd4dc}
+    .templates textarea{min-height:70px}
+    details{border:1px solid #f4d37a;background:var(--warm);padding:10px;border-radius:12px}
+    summary{cursor:pointer;font-weight:700}
+    .result{display:none;border:1px solid #b2ccff;background:#edf3ff;padding:12px;border-radius:12px;margin-top:12px}
+    .clues{display:grid;gap:8px}
+    .clue-item{background:#fff;border:1px solid #d0d5dd;border-radius:10px;padding:10px}
+    .help{background:var(--help);border-color:#67e8f9}
+    .ads{background:#fefce8;border-color:#facc15}
+    footer{margin-top:14px;text-align:center;color:#667085;font-size:.84rem}
+    a{color:#0b4a95}
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <div class="wrap">
+    <div id="resumeBar" class="resume" role="status" aria-live="polite">
+      <div>You have a saved check-in in progress.</div>
+      <div class="actions">
+        <button type="button" onclick="resumeSession()">Resume</button>
+        <button type="button" onclick="dismissResume()">Dismiss</button>
+      </div>
+    </div>
 
-<h1>I’m Stuck — Decision Support Tool</h1>
+    <div class="card">
+      <h1>I’m Stuck — Decision Support Tool</h1>
+      <p class="lead">A calm coaching flow for moments when you feel stuck, ashamed, overfull, or unable to speak yet.</p>
 
-<p class="lead">
-This tool is for moments when your mind feels full, your emotions are loud,
-and making a decision feels overwhelming.
-You don’t need to decide everything — just the next gentle step.
-</p>
+      <div class="notice"><strong>Reminder:</strong> Feeling stuck does not mean you are failing. It often means you care — and your nervous system needs clarity, not pressure.</div>
 
-<div class="notice">
-<strong>Reminder:</strong> Feeling stuck does not mean you are failing.
-It often means you care — and your nervous system needs clarity, not pressure.
-</div>
+      <div class="row">
+        <label><input id="quickMode" type="checkbox" /> Quick Mode (3-step check-in)</label>
+        <div class="small">Progress: <span id="stepLabel">Step 1 of 7</span></div>
+      </div>
+      <div class="progress-wrap"><div class="progress" aria-hidden="true"><span id="progressFill"></span></div></div>
+      <div id="microFeedback" class="feedback">You can take this one step at a time.</div>
 
-<div class="q">
-  <h3>1) What decision or situation are you feeling stuck on right now?</h3>
-  <textarea id="q1"></textarea>
-</div>
+      <section id="step1" class="step active" aria-labelledby="s1">
+        <h2 id="s1">Step 1: Name the stuck moment</h2>
+        <div id="topicChips" class="chips"></div>
+        <label for="whatHappened">What happened?</label>
+        <textarea id="whatHappened"></textarea>
+        <label for="fear">What are you afraid might happen?</label>
+        <textarea id="fear"></textarea>
+      </section>
 
-<div class="q">
-  <h3>2) What emotion feels loudest when you think about this?</h3>
-  <textarea id="q2"></textarea>
-</div>
+      <section id="step2" class="step" aria-labelledby="s2">
+        <h2 id="s2">Step 2: What’s the pressure?</h2>
+        <div id="pressureChecks" class="checks"></div>
+      </section>
 
-<div class="q">
-  <h3>3) What are you most afraid might happen if you choose “wrong”?</h3>
-  <textarea id="q3"></textarea>
-</div>
+      <section id="step3" class="step" aria-labelledby="s3">
+        <h2 id="s3">Step 3: Your body + emotions (quick scan)</h2>
+        <div id="moodButtons" class="moods"></div>
+        <div id="bodyChecks" class="checks" style="margin-top:8px"></div>
+      </section>
 
-<div class="q">
-  <h3>4) If you did nothing for another week, how would that affect you?</h3>
-  <textarea id="q4"></textarea>
-</div>
+      <section id="step4" class="step" aria-labelledby="s4">
+        <h2 id="s4">Step 4: What matters here?</h2>
+        <div id="valueChips" class="chips"></div>
+      </section>
 
-<div class="q">
-  <h3>5) What option feels slightly safer or lighter — even if imperfect?</h3>
-  <textarea id="q5"></textarea>
-</div>
+      <section id="step5" class="step" aria-labelledby="s5">
+        <h2 id="s5">Step 5: Small next step builder</h2>
+        <div id="pathOptions" class="checks"></div>
+        <div id="pathGuidance" class="panel"></div>
 
-<div class="controls">
-  <button class="btn" onclick="showGuidance()">Show My Direction</button>
-  <button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+        <div class="templates">
+          <label for="templateShort">Text someone (short)</label>
+          <textarea id="templateShort"></textarea>
+          <label for="templateLong">Longer message</label>
+          <textarea id="templateLong"></textarea>
+          <label for="templateNoTalk">If you can’t talk, start with this</label>
+          <textarea id="templateNoTalk"></textarea>
+          <label for="templateSupport">Ask for support without explaining everything</label>
+          <textarea id="templateSupport"></textarea>
+          <div class="controls">
+            <button class="btn ghost" type="button" onclick="copyField('templateShort')">Copy short</button>
+            <button class="btn ghost" type="button" onclick="copyField('templateLong')">Copy longer</button>
+            <button class="btn ghost" type="button" onclick="copyField('templateNoTalk')">Copy can't talk</button>
+            <button class="btn ghost" type="button" onclick="copyField('templateSupport')">Copy support ask</button>
+          </div>
+        </div>
+      </section>
 
-<div id="result" class="result"></div>
+      <section id="step6" class="step" aria-labelledby="s6">
+        <h2 id="s6">Step 6: Plan + Commitment</h2>
+        <label for="timeline">I will do this in the next:</label>
+        <select id="timeline">
+          <option>24h</option>
+          <option>3 days</option>
+          <option>7 days</option>
+        </select>
+        <label for="nextStep">My next small step</label>
+        <input id="nextStep" type="text" />
 
-<div class="download" onclick="downloadPDF()">Download My Decision Snapshot (PDF)</div>
+        <label for="ifThenTime">If it’s (time),</label>
+        <input id="ifThenTime" type="text" placeholder="e.g., 7:30 PM" />
+        <label for="ifThenAction">then I will (step)</label>
+        <input id="ifThenAction" type="text" placeholder="e.g., send one short message" />
+        <label for="ifThenPlace">at (place).</label>
+        <input id="ifThenPlace" type="text" placeholder="e.g., in my kitchen" />
+      </section>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-  <strong>Support for clarity & overwhelm</strong>
-  <p>
-    Our Recommended Books include resources on decision fatigue,
-    anxiety, boundaries, burnout, and emotional clarity.
-    Some links are affiliate links at no extra cost to you.
-  </p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    View Recommended Books
-  </a>
-</div>
+      <section id="step7" class="step" aria-labelledby="s7">
+        <h2 id="s7">Step 7: Gentle wrap + return prompt</h2>
+        <p>You can save this as a clue and return as your situation changes.</p>
+        <div class="controls">
+          <button class="btn success" type="button" onclick="completeSession()">Save as Clue + Generate PDF</button>
+          <button class="btn secondary" type="button" onclick="startTodayCheckin()">Start Today’s Check-in</button>
+        </div>
 
-<div class="help-box">
-  <strong>If stuckness feels heavy or persistent</strong>
-  <p>
-    Support can help when indecision turns into anxiety or shutdown.
-  </p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
-</div>
+        <div class="panel">
+          <strong>Meet the Authors</strong>
+          <p>Behind every post on Emotional Intelligence Developer is a real person — reflecting, questioning, learning, and sharing from lived experience.</p>
+          <p>If you feel stuck, browsing author reflections can help you find language for what you’re going through.</p>
+          <a class="btn primary" style="display:inline-block;text-decoration:none" href="https://emotionalintelligencedeveloper.com/authors/" target="_blank" rel="noopener">Meet the Authors</a>
+        </div>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+        <div style="margin-top:12px">
+          <details>
+            <summary>Recommended Support</summary>
+            <p class="small">Ads.</p>
+            <div class="panel ads">
+              <strong>Support for clarity &amp; overwhelm</strong>
+              <p>Our Recommended Books include resources on decision fatigue, anxiety, boundaries, burnout, and emotional clarity. Some links are affiliate links at no extra cost to you.</p>
+              <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">View Recommended Books</a>
+            </div>
+            <div class="panel help">
+              <strong>If stuckness feels heavy or persistent</strong>
+              <p>Support can help when indecision turns into anxiety or shutdown.</p>
+              <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Visit the Help Page</a>
+            </div>
+          </details>
+        </div>
+      </section>
 
-</div>
-</div>
+      <div class="controls">
+        <button class="btn secondary" type="button" onclick="backStep()">Back</button>
+        <button class="btn primary" type="button" onclick="nextStep()">Next</button>
+        <button class="btn ghost" type="button" onclick="skipStep()">Skip</button>
+        <button class="btn secondary" type="button" onclick="resetTool()">Reset tool</button>
+        <button class="btn ghost" type="button" onclick="downloadPDF(state)">Download PDF</button>
+      </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+      <div id="result" class="result" aria-live="polite"></div>
 
-function showGuidance(){
-  const box=document.getElementById("result");
-  box.innerHTML = `
-    <strong>Your gentle direction</strong><br><br>
-    You do not need certainty to move forward — only enough safety.
-    Based on what you wrote, a compassionate next step may be to:
-    <ul>
-      <li>Reduce pressure and avoid all-or-nothing thinking</li>
-      <li>Choose the option that protects your energy first</li>
-      <li>Take one reversible step instead of a final decision</li>
-    </ul>
-    You can revisit and adjust later. Progress does not require perfection.
-  `;
-  box.style.display="block";
-}
+      <div class="panel" style="margin-top:16px">
+        <h2>My Clues (last 7)</h2>
+        <div id="clues" class="clues"></div>
+        <div class="controls">
+          <button class="btn ghost" type="button" onclick="startTodayCheckin()">Start Today’s Check-in</button>
+          <button class="btn secondary" type="button" onclick="clearHistory()">Clear history</button>
+        </div>
+      </div>
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
-}
+      <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
+    </div>
+  </div>
 
-function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=60,left=40,max=515;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const { jsPDF } = window.jspdf;
+    const STORAGE_KEY = "decisionCoachStateV3";
+    const HISTORY_KEY = "decisionCoachHistoryV3";
 
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+    const TOPICS = ["shame","fear","overthinking","conflict","grief","burnout","relationship","work","identity","other"];
+    const PRESSURES = ["I don’t want to disappoint","I’m scared of judgement","I feel behind","I don’t know what to say","I feel alone"];
+    const MOODS = ["😟 anxious","😔 sad","😠 angry","😶 numb","😵 overwhelmed","🙂 hopeful"];
+    const BODY = ["Tight chest","Racing thoughts","Heavy body","Tense jaw","Headache","Shallow breathing","Stomach knots"];
+    const VALUES = ["respect","safety","honesty","stability","connection","growth","peace","dignity","self-respect","care"];
 
-  doc.setFontSize(18);
-  doc.text("Decision Snapshot", left, y); y+=30;
+    const PATHS = {
+      "Speak to someone": "Use one clear ask and one feeling sentence. Keep it short and honest.",
+      "Private clarity first": "Do a 10-minute private clarity reset: facts, feelings, one next step.",
+      "Practical action": "Choose one tiny practical action you can finish in under 15 minutes."
+    };
 
-  const qs=[
-    "What I’m stuck on:",
-    "Emotion I’m feeling:",
-    "What I’m afraid of:",
-    "What happens if I delay:",
-    "Option that feels lighter:"
-  ];
-  const as=[
-    q1.value,q2.value,q3.value,q4.value,q5.value
-  ];
+    const stateDefault = () => ({
+      topic:"", whatHappened:"", fear:"", pressures:[], mood:"", body:[], values:[],
+      path:"Speak to someone", timeline:"24h", nextStep:"", ifThenTime:"", ifThenAction:"", ifThenPlace:"",
+      templates:{ short:"", long:"", notalk:"", support:"" }, quick:false, lastUpdated:null
+    });
 
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y); y+=16;
-    doc.text(as[i]||"(not written)",left+10,y,{maxWidth:max});
-    y+=30;
-  }
+    let state = stateDefault();
+    let stepIndex = 1;
 
-  doc.setFontSize(12);
-  doc.text("Suggested Way Forward",left,y+=10);
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "Choose the option that reduces harm and pressure today. "
-    +"You can change direction later. This document can be kept for reflection "
-    +"or shared with someone you trust if explaining feels difficult.",max
-  ),left,y+=14);
+    function $(id){ return document.getElementById(id); }
 
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left,
-    800
-  );
+    function init(){
+      renderChoices();
+      loadState();
+      bindInputs();
+      renderClues();
+      updateStepUI();
+      maybeShowResume();
+    }
 
-  doc.save("decision-snapshot.pdf");
-}
-</script>
+    function renderChoices(){
+      $("topicChips").innerHTML = TOPICS.map(t => `<button type="button" class="chip" aria-pressed="false" onclick="selectTopic('${escapeAttr(t)}')">${escapeHtml(t)}</button>`).join("");
+      $("pressureChecks").innerHTML = PRESSURES.map(p => `<label><input type="checkbox" value="${escapeAttr(p)}" onchange="toggleChecklist('pressures',this)"> ${escapeHtml(p)}</label>`).join("");
+      $("moodButtons").innerHTML = MOODS.map(m => `<button type="button" class="mood" aria-pressed="false" onclick="setMood('${escapeAttr(m)}')">${escapeHtml(m)}</button>`).join("");
+      $("bodyChecks").innerHTML = BODY.map(b => `<label><input type="checkbox" value="${escapeAttr(b)}" onchange="toggleChecklist('body',this)"> ${escapeHtml(b)}</label>`).join("");
+      $("valueChips").innerHTML = VALUES.map(v => `<button type="button" class="chip" aria-pressed="false" onclick="toggleValue('${escapeAttr(v)}')">${escapeHtml(v)}</button>`).join("");
+      $("pathOptions").innerHTML = Object.keys(PATHS).map(p => `<label><input type="radio" name="path" value="${escapeAttr(p)}" onchange="choosePath('${escapeAttr(p)}')"> ${escapeHtml(p)}</label>`).join("");
+    }
+
+    function bindInputs(){
+      ["whatHappened","fear","timeline","nextStep","ifThenTime","ifThenAction","ifThenPlace","quickMode","templateShort","templateLong","templateNoTalk","templateSupport"].forEach(id => {
+        const el = $(id);
+        el.addEventListener("input", syncState);
+        el.addEventListener("change", syncState);
+      });
+    }
+
+    function applyStateToUI(){
+      $("quickMode").checked = !!state.quick;
+      $("whatHappened").value = state.whatHappened;
+      $("fear").value = state.fear;
+      $("timeline").value = state.timeline;
+      $("nextStep").value = state.nextStep;
+      $("ifThenTime").value = state.ifThenTime;
+      $("ifThenAction").value = state.ifThenAction;
+      $("ifThenPlace").value = state.ifThenPlace;
+      $("templateShort").value = state.templates.short || "";
+      $("templateLong").value = state.templates.long || "";
+      $("templateNoTalk").value = state.templates.notalk || "";
+      $("templateSupport").value = state.templates.support || "";
+
+      [...$("topicChips").children].forEach(btn => btn.setAttribute("aria-pressed", btn.textContent === state.topic ? "true" : "false"));
+      [...$("moodButtons").children].forEach(btn => btn.setAttribute("aria-pressed", btn.textContent === state.mood ? "true" : "false"));
+      [...$("valueChips").children].forEach(btn => btn.setAttribute("aria-pressed", state.values.includes(btn.textContent) ? "true" : "false"));
+      [...$("pressureChecks").querySelectorAll("input")].forEach(c => c.checked = state.pressures.includes(c.value));
+      [...$("bodyChecks").querySelectorAll("input")].forEach(c => c.checked = state.body.includes(c.value));
+      [...$("pathOptions").querySelectorAll("input")].forEach(r => r.checked = r.value === state.path);
+
+      $("pathGuidance").textContent = PATHS[state.path];
+      if (!state.templates.short && !state.templates.long && !state.templates.notalk && !state.templates.support) {
+        seedTemplates();
+      }
+      adaptCoachPrompt();
+    }
+
+    function syncState(){
+      state.quick = $("quickMode").checked;
+      state.whatHappened = $("whatHappened").value.trim();
+      state.fear = $("fear").value.trim();
+      state.timeline = $("timeline").value;
+      state.nextStep = $("nextStep").value.trim();
+      state.ifThenTime = $("ifThenTime").value.trim();
+      state.ifThenAction = $("ifThenAction").value.trim();
+      state.ifThenPlace = $("ifThenPlace").value.trim();
+      state.templates = {
+        short: $("templateShort").value,
+        long: $("templateLong").value,
+        notalk: $("templateNoTalk").value,
+        support: $("templateSupport").value
+      };
+      state.lastUpdated = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, stepIndex }));
+      maybeShowResume();
+    }
+
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.state) {
+            state = { ...stateDefault(), ...parsed.state };
+            stepIndex = Math.max(1, Number(parsed.stepIndex || 1));
+          }
+        } catch(err) {}
+      }
+      applyStateToUI();
+    }
+
+    function maybeShowResume(){
+      if (state.lastUpdated) $("resumeBar").style.display = "flex";
+    }
+
+    function dismissResume(){ $("resumeBar").style.display = "none"; }
+    function resumeSession(){ loadState(); updateStepUI(); feedback("Resumed where you left off."); }
+
+    function selectTopic(topic){ state.topic = topic; applyStateToUI(); adaptCoachPrompt(); feedback("Got it."); syncState(); }
+    function setMood(mood){ state.mood = mood; applyStateToUI(); feedback("Thanks for naming that."); syncState(); }
+    function toggleValue(v){ state.values = state.values.includes(v) ? state.values.filter(x => x !== v) : [...state.values, v]; applyStateToUI(); feedback("That makes sense."); syncState(); }
+    function toggleChecklist(key, el){
+      const next = new Set(state[key]);
+      if (el.checked) next.add(el.value); else next.delete(el.value);
+      state[key] = [...next];
+      feedback("Noted.");
+      syncState();
+    }
+
+    function choosePath(path){
+      state.path = path;
+      $("pathGuidance").textContent = PATHS[path];
+      seedTemplates();
+      adaptCoachPrompt();
+      feedback("Good choice. Small steps count.");
+      syncState();
+    }
+
+    function seedTemplates(){
+      const conflictTone = state.topic === "conflict" ? "I want to be respectful and clear." : "I am trying to take one healthy step.";
+      const byPath = {
+        "Speak to someone": {
+          short: `Hey — I’m feeling stuck and could use 10 minutes to talk. ${conflictTone}`,
+          long: `Hi, I’m having a hard moment and I’d value your support. I don’t need solutions right away, just a calm space to think out loud. ${conflictTone}`,
+          notalk: "I don’t have words yet, but I’d really appreciate a check-in message from you today.",
+          support: "Could you support me with one small thing this week? I’m not ready to explain everything, but your support would help."
+        },
+        "Private clarity first": {
+          short: "I’m taking 10 minutes to sort my thoughts. I’ll check in after.",
+          long: "I’m overloaded right now, so I’m doing a short private reset first. After I write for 10 minutes, I’ll share what I need.",
+          notalk: "I can’t talk yet. I’m doing a quick clarity break and will message after.",
+          support: "Could you help by giving me quiet space first? I’ll share what I can when I’m clearer."
+        },
+        "Practical action": {
+          short: "I’m starting with one tiny task right now so I can unfreeze.",
+          long: "I’m stuck, so I’m choosing one practical step under 15 minutes to get momentum. Then I’ll reassess.",
+          notalk: "No words yet — I’m doing one tiny action first to settle my nerves.",
+          support: "Could you help me stay accountable for one small action today?"
+        }
+      };
+
+      const templates = byPath[state.path] || byPath["Speak to someone"];
+      state.templates = {
+        short: state.templates.short || templates.short,
+        long: state.templates.long || templates.long,
+        notalk: state.templates.notalk || templates.notalk,
+        support: state.templates.support || templates.support
+      };
+
+      $("templateShort").value = state.templates.short;
+      $("templateLong").value = state.templates.long;
+      $("templateNoTalk").value = state.templates.notalk;
+      $("templateSupport").value = state.templates.support;
+    }
+
+    function adaptCoachPrompt(){
+      const prompts = {
+        shame: "You’re not bad, you’re human. Shame gets loud when care is high.",
+        overthinking: "Try the 1 decision / 1 action rule: one direction, one tiny move.",
+        conflict: "Boundary option: “I can talk calmly, not while being blamed.”",
+        grief: "Grief can slow decisions. Gentle structure is still progress.",
+        burnout: "Protect energy first. A smaller step is still a real step."
+      };
+      feedback(prompts[state.topic] || "You can revise your plan later. For now, one step is enough.");
+    }
+
+    function feedback(text){ $("microFeedback").textContent = text; }
+
+    function totalSteps(){ return $("quickMode").checked ? 3 : 7; }
+    function mappedStep(i){ return $("quickMode").checked ? [1,4,6][i-1] : i; }
+
+    function updateStepUI(){
+      const total = totalSteps();
+      if (stepIndex > total) stepIndex = total;
+      const show = mappedStep(stepIndex);
+      document.querySelectorAll(".step").forEach(el => el.classList.remove("active"));
+      $("step" + show).classList.add("active");
+      $("stepLabel").textContent = `Step ${stepIndex} of ${total}`;
+      $("progressFill").style.width = `${Math.round((stepIndex/total)*100)}%`;
+      syncState();
+    }
+
+    function nextStep(){ if (stepIndex < totalSteps()) { stepIndex++; updateStepUI(); } }
+    function backStep(){ if (stepIndex > 1) { stepIndex--; updateStepUI(); } }
+    function skipStep(){ nextStep(); feedback("Skipped for now. You can come back anytime."); }
+
+    function startTodayCheckin(){
+      state = stateDefault();
+      stepIndex = 1;
+      localStorage.removeItem(STORAGE_KEY);
+      applyStateToUI();
+      updateStepUI();
+      $("result").style.display = "none";
+      feedback("Fresh start for today.");
+    }
+
+    function resetTool(){
+      state = stateDefault();
+      stepIndex = 1;
+      localStorage.removeItem(STORAGE_KEY);
+      applyStateToUI();
+      updateStepUI();
+      $("result").style.display = "none";
+      $("resumeBar").style.display = "none";
+      feedback("Tool reset.");
+    }
+
+    function completeSession(){
+      syncState();
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      const entry = {
+        id: Date.now(),
+        clue: `Clue #${history.length + 1}`,
+        date: new Date().toLocaleString(),
+        topic: state.topic || "unspecified",
+        path: state.path,
+        nextStep: state.nextStep || state.ifThenAction || "small step not set",
+        snapshot: JSON.parse(JSON.stringify(state))
+      };
+      const updated = [entry, ...history].slice(0,7);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+      renderClues();
+
+      const box = $("result");
+      box.style.display = "block";
+      box.innerHTML = `<strong>${escapeHtml(entry.clue)} saved.</strong><br>Topic: ${escapeHtml(entry.topic)} · Path: ${escapeHtml(entry.path)}<br>Next step: ${escapeHtml(entry.nextStep)}<br><em>Return anytime to collect more clues.</em>`;
+
+      downloadPDF(entry.snapshot, entry);
+    }
+
+    function renderClues(){
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      if (!history.length){
+        $("clues").innerHTML = `<div class="small">No clues yet. Start Today’s Check-in.</div>`;
+        return;
+      }
+      $("clues").innerHTML = history.map(item => `
+        <article class="clue-item">
+          <strong>${escapeHtml(item.clue)}</strong> — ${escapeHtml(item.date)}<br>
+          Topic: ${escapeHtml(item.topic)} | Path: ${escapeHtml(item.path)}<br>
+          Next: ${escapeHtml(item.nextStep)}
+          <div class="controls">
+            <button class="btn ghost" type="button" onclick="openClue(${item.id})">Open</button>
+            <button class="btn ghost" type="button" onclick="downloadPast(${item.id})">Re-download PDF</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openClue(id){
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      const found = history.find(x => x.id === id);
+      if (!found) return;
+      state = { ...stateDefault(), ...found.snapshot };
+      stepIndex = 1;
+      applyStateToUI();
+      updateStepUI();
+      feedback(`${found.clue} loaded.`);
+    }
+
+    function downloadPast(id){
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      const found = history.find(x => x.id === id);
+      if (found) downloadPDF(found.snapshot, found);
+    }
+
+    function clearHistory(){
+      localStorage.removeItem(HISTORY_KEY);
+      renderClues();
+      feedback("History cleared.");
+    }
+
+    function sanitize(str=""){
+      return String(str)
+        .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function writeBlock(doc, title, text, y){
+      const left = 40, width = 515;
+      doc.setFontSize(12); doc.text(title, left, y); y += 14;
+      doc.setFontSize(10);
+      const lines = doc.splitTextToSize(text || "(not provided)", width);
+      doc.text(lines, left, y);
+      y += lines.length * 12 + 8;
+      if (y > 760){ doc.addPage(); y = 56; }
+      return y;
+    }
+
+    function addFooterEveryPage(doc){
+      const total = doc.getNumberOfPages();
+      for (let p = 1; p <= total; p++){
+        doc.setPage(p);
+        doc.setFontSize(9);
+        doc.text("https://emotionalintelligencedeveloper.com/", 40, 822);
+      }
+    }
+
+    function downloadPDF(snapshot = state, meta = {}){
+      const s = { ...stateDefault(), ...snapshot };
+      const doc = new jsPDF({ unit:"pt", format:"a4" });
+      let y = 56;
+
+      const openingByTopic = {
+        shame: "You are carrying something heavy, and you are still trying. That matters.",
+        fear: "Fear is trying to keep you safe. You can still move with one small step.",
+        overthinking: "Your mind is scanning every risk. One clear action is enough for today.",
+        conflict: "Wanting both peace and boundaries is valid.",
+        grief: "Grief can blur choices. Gentle structure can help.",
+        burnout: "You are not lazy — you may be depleted. Small actions protect recovery."
+      };
+
+      const clues = [
+        `Pressure pattern: ${sanitize(s.pressures[0] || "noticing fear of pressure")}`,
+        `Value anchor: ${sanitize(s.values[0] || "self-respect and steadiness")}`,
+        `Next-move signal: ${sanitize(s.nextStep || s.ifThenAction || "start with one tiny action")}`
+      ];
+
+      doc.setFontSize(18); doc.text("Decision Support — Your Next Step", 40, y); y += 20;
+      doc.setFontSize(10); doc.text(`Date/time: ${new Date().toLocaleString()}`, 40, y); y += 18;
+
+      y = writeBlock(doc, "A compassionate opening", openingByTopic[s.topic] || "Thank you for checking in with yourself. You are allowed to move at a humane pace.", y);
+
+      y = writeBlock(doc, "Summary of your check-in",
+        `Topic: ${sanitize(s.topic)}\n` +
+        `What happened: ${sanitize(s.whatHappened)}\n` +
+        `Fear: ${sanitize(s.fear)}\n` +
+        `Pressures: ${sanitize(s.pressures.join(", "))}\n` +
+        `Mood: ${sanitize(s.mood)}\n` +
+        `Body sensations: ${sanitize(s.body.join(", "))}\n` +
+        `Values: ${sanitize(s.values.join(", "))}`,
+      y);
+
+      y = writeBlock(doc, "Clues I Noticed Today", `• ${clues[0]}\n• ${clues[1]}\n• ${clues[2]}`, y);
+
+      y = writeBlock(doc, "Chosen path details",
+        `Path: ${sanitize(s.path)}\n` +
+        `Helpful scripts/templates:\n` +
+        `- ${sanitize(s.templates.short || "")}\n` +
+        `- ${sanitize(s.templates.long || "")}\n` +
+        `- ${sanitize(s.templates.notalk || "")}\n` +
+        `- ${sanitize(s.templates.support || "")}\n` +
+        `If-Then plan: If it’s ${sanitize(s.ifThenTime)}, then I will ${sanitize(s.ifThenAction)} at ${sanitize(s.ifThenPlace)}.\n` +
+        `What to do if you freeze: 1) Put one hand on chest and exhale slowly 3 times. 2) Send the shortest template. 3) Set a 10-minute timer and do one tiny action.`,
+      y);
+
+      y = writeBlock(doc, "Gentle Options if Shame Shows Up",
+        `Name it: “Shame is here.”\n` +
+        `Normalize it: “This is a human response.”\n` +
+        `Reduce task size: do the smallest visible step in under 2 minutes.`,
+      y);
+
+      y = writeBlock(doc, "Support Resources",
+        `Support for clarity & overwhelm\n` +
+        `Our Recommended Books include resources on decision fatigue, anxiety, boundaries, burnout, and emotional clarity. Some links are affiliate links at no extra cost to you.\n` +
+        `View Recommended Books: https://emotionalintelligencedeveloper.com/recommended-books/\n\n` +
+        `If stuckness feels heavy or persistent\n` +
+        `Support can help when indecision turns into anxiety or shutdown.\n` +
+        `Visit the Help Page: https://emotionalintelligencedeveloper.com/help-page/`,
+      y);
+
+      y = writeBlock(doc, "Meet the Authors",
+        `Behind every post on Emotional Intelligence Developer is a real person — reflecting, questioning, learning, and sharing from lived experience.\n` +
+        `If you feel stuck, browsing author reflections can help you find language for what you’re going through.\n` +
+        `https://emotionalintelligencedeveloper.com/authors/`,
+      y);
+
+      addFooterEveryPage(doc);
+      doc.save(`decision-support-next-step-${sanitize(meta.clue || "session")}.pdf`);
+    }
+
+    async function copyField(id){
+      try {
+        await navigator.clipboard.writeText($(id).value || "");
+        feedback("Copied.");
+      } catch (e) {
+        feedback("Copy blocked by browser. You can manually select and copy.");
+      }
+    }
+
+    function escapeHtml(str=""){
+      return String(str).replace(/[&<>"']/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));
+    }
+    function escapeAttr(str=""){
+      return String(str).replace(/['"\\]/g, "");
+    }
+
+    init();
+  </script>
 </body>
 </html>

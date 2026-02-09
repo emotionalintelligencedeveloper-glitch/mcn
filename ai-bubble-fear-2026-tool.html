@@ -4,306 +4,532 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AI Bubble Fear (2026) — Emotional Intelligence Developer</title>
-
 <style>
 :root{
-  --bg:#f3f4f6;
+  --bg:#eef2f7;
   --card:#ffffff;
-  --accent:#4f46e5;
-  --soft:#eef2ff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
+  --text:#0f172a;
+  --muted:#475569;
+  --border:#dbe3ef;
+  --primary:#2f57d8;
+  --primary-dark:#1f43bd;
+  --soft:#e9f0ff;
+  --ok:#1e8e5a;
 }
+*{box-sizing:border-box}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   margin:0;
-  background:var(--bg);
-  color:#111;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,#f7f9fd 0%,#eef2f7 100%);
+  color:var(--text);
 }
-.wrap{max-width:860px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:16px;
-  padding:26px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08)
-}
-h1{margin:0 0 10px;font-size:24px}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
-
-.notice{
-  background:#fff7ed;
-  border:1px solid #fed7aa;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:20px;
-  font-size:0.95rem;
-}
-
-.q{
-  margin:18px 0;
-  padding:16px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-select, textarea{
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  font-size:0.95rem;
-}
-textarea{min-height:90px;resize:vertical}
-
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:22px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:12px 18px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
-
-.result{
-  display:none;
-  margin-top:26px;
-  padding:22px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #c7d2fe;
-  line-height:1.7;
-}
-
-.download{
-  margin-top:18px;
-  display:inline-block;
-  padding:12px 18px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.ads-label{font-size:13px;color:var(--muted);margin-top:30px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:16px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:18px;
-  padding:16px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
-footer{
-  margin-top:22px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
+.wrap{max-width:920px;margin:0 auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 28px rgba(15,23,42,.08);padding:20px}
+h1{margin:0 0 10px;font-size:1.45rem;line-height:1.25}
+.lead,.muted{color:var(--muted);line-height:1.6}
+.notice{background:#fff7eb;border:1px solid #f5d9ae;border-radius:12px;padding:12px;margin:14px 0 20px}
+.progress-wrap{margin:14px 0 16px}
+.progress-head{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;color:var(--muted)}
+.progress{margin-top:8px;width:100%;height:10px;border-radius:999px;background:#e8edf7;overflow:hidden}
+.progress>div{height:100%;background:var(--primary);width:0;transition:width .25s ease}
+.step{display:none;padding:14px;border:1px solid var(--border);border-radius:14px;background:#fcfdff}
+.step.active{display:block}
+h2{font-size:1.04rem;margin:0 0 10px}
+label{display:block;font-weight:600;margin:.5rem 0 .35rem}
+input[type="text"],textarea,select{width:100%;border:1px solid #c7d2e5;border-radius:10px;padding:10px;font-size:.98rem;background:#fff}
+textarea{min-height:84px;resize:vertical}
+input[type="range"]{width:100%}
+button,.download{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer;transition:transform .05s ease,background .2s ease}
+button:active,.download:active{transform:translateY(1px)}
+button:focus-visible,.download:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #91c1ff;outline-offset:2px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:#e7ecf6;color:#0f172a}
+.btn-subtle{background:#edf2ff;color:#18358e}
+.nav-row,.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media (max-width:640px){.chips{grid-template-columns:1fr}}
+.chip{display:flex;gap:8px;align-items:flex-start;padding:10px;border-radius:10px;border:1px solid #d6dfef;background:#fff}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:760px){.columns{grid-template-columns:1fr}}
+.bucket{border:1px dashed #b8c6e3;border-radius:12px;min-height:220px;padding:10px;background:#f8fbff}
+.bucket h3{margin:0 0 8px;font-size:.95rem}
+.item{border:1px solid #c3d0ea;border-radius:10px;padding:9px;margin-bottom:8px;background:#fff;cursor:grab}
+.item:last-child{margin-bottom:0}
+.timer{font-size:2rem;font-weight:800;color:#18358e;margin:.3rem 0}
+.reframe-output{margin-top:10px;background:var(--soft);border:1px solid #c0cff7;border-radius:10px;padding:10px}
+.result{display:none;margin-top:16px;border:1px solid #bfd2f9;background:#f1f6ff;border-radius:14px;padding:16px}
+ul{padding-left:18px}
+.download{display:inline-block;background:var(--ok);color:#fff;margin-top:12px}
+.download:hover{background:#15754a}
+#postPdf{display:none;margin-top:18px;border:2px solid #8cb0ff;border-radius:14px;padding:16px;background:#f3f7ff}
+.forums-main{display:inline-block;margin-top:10px;background:#0f43d8;color:#fff;text-decoration:none;font-size:1.1rem;padding:16px 24px;border-radius:12px;font-weight:800}
+.forums-main:hover{background:#0b34aa}
+.ads-label{font-size:.82rem;color:var(--muted);margin-top:24px}
+.ads-box,.help-box{margin-top:10px;padding:14px;border-radius:12px;border:1px solid #ead28a;background:#fffdf5}
+.help-box{border-color:#92d7e5;background:#effcff}
+.cta-link{display:inline-block;margin-top:8px;padding:10px 14px;border-radius:8px;background:#f4b331;color:#1f2937;text-decoration:none;font-weight:700}
+footer{margin-top:22px;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-<div class="card">
+  <div class="card">
+    <h1>AI Bubble Fear (2026) — AI Anxiety Relief + Preparedness</h1>
+    <p class="lead">Fear can get loud when headlines move fast. This guided tool helps you separate fear from facts, calm your nervous system, and choose practical next steps that return agency.</p>
+    <div class="notice"><strong>Important:</strong> This reflection tool supports emotional grounding and practical planning. It is not financial advice, prediction, or crisis care.</div>
 
-<h1>AI Bubble Fear (2026) — A Grounded Check-In</h1>
+    <section class="progress-wrap" aria-live="polite">
+      <div class="progress-head"><span id="stepLabel">Step 1 of 6</span><span id="stepTitle">Name your fear</span></div>
+      <div class="progress" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Flow progress"><div id="progressFill"></div></div>
+    </section>
 
-<p class="lead">
-News about AI, automation, layoffs, and “bubbles” can quietly activate fear.
-This tool helps you slow down, separate fear from facts,
-and reconnect with what you can realistically control.
-</p>
+    <section class="step active" data-step="1">
+      <h2>1) Name your fear</h2>
+      <label for="fearTheme">Which fear feels closest right now?</label>
+      <select id="fearTheme">
+        <option value="">Choose one</option>
+        <option>Job loss or role changes</option>
+        <option>Falling behind on skills</option>
+        <option>Not knowing what to prepare for</option>
+        <option>Information overload / doom scrolling</option>
+        <option>General uncertainty about the future</option>
+      </select>
+      <label for="fearText">Optional: describe your fear in your own words</label>
+      <textarea id="fearText" placeholder="Example: I worry I will become irrelevant if I cannot keep up."></textarea>
+    </section>
 
-<div class="notice">
-<strong>Important:</strong>  
-If anxiety feels overwhelming or begins to affect your safety,
-please reach out to a trusted person or professional.
-This tool supports reflection — not prediction or financial advice.
-</div>
+    <section class="step" data-step="2">
+      <h2>2) Intensity + triggers</h2>
+      <label for="intensity">How intense is this feeling right now? (0-10)</label>
+      <input id="intensity" type="range" min="0" max="10" step="1" value="4" aria-describedby="intensityValue" />
+      <p id="intensityValue" class="muted">Current intensity: 4 / 10</p>
+      <fieldset>
+        <legend><strong>What tends to trigger it?</strong></legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" value="Headlines and social feeds" class="trigger" /> Headlines and social feeds</label>
+          <label class="chip"><input type="checkbox" value="Layoff stories" class="trigger" /> Layoff stories</label>
+          <label class="chip"><input type="checkbox" value="Comparing myself to others" class="trigger" /> Comparing myself to others</label>
+          <label class="chip"><input type="checkbox" value="Skill uncertainty" class="trigger" /> Skill uncertainty</label>
+          <label class="chip"><input type="checkbox" value="Money pressure" class="trigger" /> Money pressure</label>
+          <label class="chip"><input type="checkbox" value="Lack of clear routine" class="trigger" /> Lack of clear routine</label>
+        </div>
+      </fieldset>
+    </section>
 
-<div class="q">
-<h3>1) What worries you most when you hear about AI and the future?</h3>
-<select id="q1">
-  <option value="">Choose one</option>
-  <option>Losing my job or income</option>
-  <option>Falling behind skills-wise</option>
-  <option>Not being adaptable enough</option>
-  <option>Society becoming unstable</option>
-  <option>A general sense of unease</option>
-</select>
-</div>
+    <section class="step" data-step="3">
+      <h2>3) Control Circle</h2>
+      <p class="muted">Drag items into the column where they belong. If drag/drop is hard on your device, use the fallback select under each item.</p>
+      <div class="columns">
+        <div class="bucket" data-bucket="can" aria-label="I can control" tabindex="0"><h3>I can control</h3></div>
+        <div class="bucket" data-bucket="cant" aria-label="I cannot control" tabindex="0"><h3>I can't control</h3></div>
+      </div>
+    </section>
 
-<div class="q">
-<h3>2) How intense does this fear feel right now?</h3>
-<select id="q2">
-  <option value="">Choose one</option>
-  <option>Mild background worry</option>
-  <option>Regular anxiety</option>
-  <option>Strong and distracting</option>
-</select>
-</div>
+    <section class="step" data-step="4">
+      <h2>4) Grounding in 60 seconds</h2>
+      <p class="muted">Slow your body first, then think. Press start and follow: inhale 4, hold 2, exhale 6.</p>
+      <div class="timer" id="timerDisplay" aria-live="polite">60</div>
+      <p id="timerGuide">Ready</p>
+      <div class="nav-row">
+        <button type="button" id="startTimer" class="btn-primary">Start 60-second reset</button>
+        <button type="button" id="resetTimer" class="btn-secondary">Reset timer</button>
+      </div>
+    </section>
 
-<div class="q">
-<h3>3) Which area of life feels most affected?</h3>
-<select id="q3">
-  <option value="">Choose one</option>
-  <option>Career or work identity</option>
-  <option>Financial security</option>
-  <option>Sense of purpose</option>
-  <option>Mental wellbeing</option>
-</select>
-</div>
+    <section class="step" data-step="5">
+      <h2>5) Reality check</h2>
+      <p class="muted">Select statements that spike your anxiety. We'll respond with balanced reframes.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" class="reality" value="AI will replace everyone soon" /> AI will replace everyone soon</label>
+        <label class="chip"><input type="checkbox" class="reality" value="If I am not always learning, I am doomed" /> If I am not always learning, I am doomed</label>
+        <label class="chip"><input type="checkbox" class="reality" value="Everyone else is adapting faster than me" /> Everyone else is adapting faster than me</label>
+        <label class="chip"><input type="checkbox" class="reality" value="I have no control over what happens next" /> I have no control over what happens next</label>
+      </div>
+      <button type="button" id="runReframe" class="btn-subtle" style="margin-top:10px">Show grounded reframes</button>
+      <div id="reframeOutput" class="reframe-output" aria-live="polite"></div>
+    </section>
 
-<div class="q">
-<h3>4) How much control do you feel you have right now?</h3>
-<select id="q4">
-  <option value="">Choose one</option>
-  <option>Very little</option>
-  <option>Some, but unclear</option>
-  <option>More than I thought</option>
-</select>
-</div>
+    <section class="step" data-step="6">
+      <h2>6) Tiny action plan (choose 1-3)</h2>
+      <p class="muted">Pick realistic actions for this week. Small consistency beats panic intensity.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" class="action" value="Schedule two 25-minute skill sessions" /> Schedule two 25-minute skill sessions</label>
+        <label class="chip"><input type="checkbox" class="action" value="Set a daily AI/news limit" /> Set a daily AI/news limit</label>
+        <label class="chip"><input type="checkbox" class="action" value="Talk with one trusted person" /> Talk with one trusted person</label>
+        <label class="chip"><input type="checkbox" class="action" value="Update resume/portfolio for 20 minutes" /> Update resume/portfolio for 20 minutes</label>
+        <label class="chip"><input type="checkbox" class="action" value="Choose one practical AI skill to explore" /> Choose one practical AI skill to explore</label>
+        <label class="chip"><input type="checkbox" class="action" value="Keep one non-tech calming routine" /> Keep one non-tech calming routine</label>
+      </div>
+      <label for="boundary">One boundary for news/social consumption</label>
+      <input id="boundary" type="text" placeholder="Example: No AI scrolling after 8:30 PM." />
+      <label for="kindness">One self-kindness reminder</label>
+      <input id="kindness" type="text" placeholder="Example: I can learn at a human pace and still make progress." />
+    </section>
 
-<div class="q">
-<h3>5) What would feeling “prepared” actually look like for you?</h3>
-<textarea id="q5"></textarea>
-</div>
+    <div class="nav-row" aria-label="Step navigation">
+      <button type="button" id="backBtn" class="btn-secondary">Back</button>
+      <button type="button" id="nextBtn" class="btn-primary">Next</button>
+      <button type="button" id="resetBtn" class="btn-secondary">Reset</button>
+    </div>
 
-<div class="controls">
-<button class="btn" onclick="showReflection()">See My Reflection</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+    <div class="controls">
+      <button class="btn-primary" id="reflectBtn">See My Reflection</button>
+      <button class="btn-secondary" id="resetBtnSecondary">Reset</button>
+    </div>
 
-<div id="result" class="result"></div>
+    <article id="result" class="result" aria-live="polite"></article>
+    <button class="download" id="downloadBtn">Download My Reflection (PDF)</button>
 
-<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+    <section id="postPdf" aria-live="polite">
+      <h2>You don’t have to hold this alone.</h2>
+      <p>If helpful, share what you are fearing and the small step you chose. Community can reduce pressure and help you stay steady.</p>
+      <a class="forums-main" href="https://emotionalintelligencedeveloper.com/forums/" target="_blank" rel="noopener">Continue the conversation in the Forums</a>
+    </section>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-<strong>Support during uncertainty</strong>
-<p>
-Our Recommended Books page includes journals and guides on resilience,
-career identity, emotional intelligence, and adapting to change.
-Some links may be affiliate links at no extra cost to you.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-View Recommended Books
-</a>
-</div>
+    <p class="ads-label">Ads.</p>
+    <div class="ads-box">
+      <strong>Support during uncertainty</strong>
+      <p>Our Recommended Books page includes journals and guides on resilience, career identity, emotional intelligence, and adapting to change. Some links may be affiliate links at no extra cost to you.</p>
+      <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">View Recommended Books</a>
+    </div>
 
-<div class="help-box">
-<strong>Need more emotional support?</strong>
-<p>
-If fear about the future feels persistent or overwhelming,
-our help page offers grounding resources and support options.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
-</div>
+    <div class="help-box">
+      <strong>Need more emotional support?</strong>
+      <p>If fear about the future feels persistent or overwhelming, our help page offers grounding resources and support options.</p>
+      <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Visit the Help Page</a>
+    </div>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
-
-</div>
+    <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const { jsPDF } = window.jspdf;
+const STORAGE_KEY = 'aiFear2026ToolState';
+const stepTitles = ['Name your fear','Intensity + triggers','Control Circle','Grounding in 60 seconds','Reality check','Tiny action plan'];
+const controlItems = ['My learning pace','My daily routine','How often I check news','Global tech trends','Other people’s opinions','How I ask for support'];
+let currentStep = 1;
+let timerInterval = null;
+
+function qs(id){ return document.getElementById(id); }
+function all(sel){ return Array.from(document.querySelectorAll(sel)); }
+
+function buildControlItems(saved = {}){
+  const canBucket = document.querySelector('[data-bucket="can"]');
+  const cantBucket = document.querySelector('[data-bucket="cant"]');
+  canBucket.querySelectorAll('.item').forEach(el => el.remove());
+  cantBucket.querySelectorAll('.item').forEach(el => el.remove());
+
+  controlItems.forEach((label, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.draggable = true;
+    div.id = 'controlItem' + idx;
+    div.dataset.label = label;
+    div.innerHTML = `<strong>${label}</strong><div style="margin-top:6px"><label class="muted">Fallback: <select aria-label="Place ${label}"><option value="can">I can control</option><option value="cant">I can't control</option></select></label></div>`;
+
+    const select = div.querySelector('select');
+    const defaultTarget = (label === 'Global tech trends' || label === 'Other people’s opinions') ? 'cant' : 'can';
+    const target = saved[label] || defaultTarget;
+    select.value = target;
+
+    select.addEventListener('change', () => {
+      (select.value === 'can' ? canBucket : cantBucket).appendChild(div);
+      saveState();
+    });
+
+    div.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', div.id));
+    (target === 'can' ? canBucket : cantBucket).appendChild(div);
+  });
+
+  all('.bucket').forEach(bucket => {
+    bucket.addEventListener('dragover', e => e.preventDefault());
+    bucket.addEventListener('drop', e => {
+      e.preventDefault();
+      const itemId = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(itemId);
+      if (!item) return;
+      bucket.appendChild(item);
+      item.querySelector('select').value = bucket.dataset.bucket;
+      saveState();
+    });
+  });
+}
+
+function getState(){
+  const controlMap = {};
+  all('.item').forEach(item => {
+    const bucket = item.closest('.bucket');
+    controlMap[item.dataset.label] = bucket ? bucket.dataset.bucket : 'can';
+  });
+
+  return {
+    currentStep,
+    fearTheme: qs('fearTheme').value,
+    fearText: qs('fearText').value,
+    intensity: qs('intensity').value,
+    triggers: all('.trigger:checked').map(x => x.value),
+    controlMap,
+    reality: all('.reality:checked').map(x => x.value),
+    actions: all('.action:checked').map(x => x.value),
+    boundary: qs('boundary').value,
+    kindness: qs('kindness').value,
+    reframeOutput: qs('reframeOutput').innerHTML,
+    reflection: qs('result').innerHTML,
+    reflectionVisible: qs('result').style.display === 'block',
+    postPdfVisible: qs('postPdf').style.display === 'block'
+  };
+}
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(getState()));
+}
+
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw){ buildControlItems(); showStep(1); return; }
+
+  try{
+    const state = JSON.parse(raw);
+    currentStep = state.currentStep || 1;
+    qs('fearTheme').value = state.fearTheme || '';
+    qs('fearText').value = state.fearText || '';
+    qs('intensity').value = state.intensity || 4;
+    qs('intensityValue').textContent = `Current intensity: ${qs('intensity').value} / 10`;
+
+    buildControlItems(state.controlMap || {});
+    all('.trigger').forEach(x => x.checked = (state.triggers || []).includes(x.value));
+    all('.reality').forEach(x => x.checked = (state.reality || []).includes(x.value));
+    all('.action').forEach(x => x.checked = (state.actions || []).includes(x.value));
+
+    qs('boundary').value = state.boundary || '';
+    qs('kindness').value = state.kindness || '';
+    qs('reframeOutput').innerHTML = state.reframeOutput || '';
+
+    if (state.reflectionVisible && state.reflection){
+      qs('result').style.display = 'block';
+      qs('result').innerHTML = state.reflection;
+    }
+
+    if (state.postPdfVisible){ qs('postPdf').style.display = 'block'; }
+  } catch (_e){
+    buildControlItems();
+  }
+
+  showStep(currentStep);
+}
+
+function updateProgress(){
+  qs('stepLabel').textContent = `Step ${currentStep} of 6`;
+  qs('stepTitle').textContent = stepTitles[currentStep - 1];
+  qs('progressFill').style.width = `${(currentStep / 6) * 100}%`;
+  document.querySelector('.progress').setAttribute('aria-valuenow', String(currentStep));
+}
+
+function showStep(step){
+  currentStep = Math.max(1, Math.min(6, step));
+  all('.step').forEach((s, i) => s.classList.toggle('active', i === currentStep - 1));
+  qs('backBtn').disabled = currentStep === 1;
+  qs('nextBtn').textContent = currentStep === 6 ? 'Finish steps' : 'Next';
+  updateProgress();
+  saveState();
+}
+
+function runReframes(){
+  const map = {
+    'AI will replace everyone soon': 'Some tasks shift quickly, but people and roles adapt at different speeds. Focus on your next practical adjustment rather than global predictions.',
+    'If I am not always learning, I am doomed': 'Constant urgency can burn you out. A steady weekly learning rhythm works better than panic learning.',
+    'Everyone else is adapting faster than me': 'You are seeing highlights, not full journeys. Progress at a human pace is still progress.',
+    'I have no control over what happens next': 'You may not control the entire future, but you can control boundaries, skill focus, support, and daily routine.'
+  };
+
+  const picks = all('.reality:checked').map(x => x.value);
+  if (!picks.length){
+    qs('reframeOutput').textContent = 'Select one or more statements to generate grounded reframes.';
+    saveState();
+    return;
+  }
+
+  qs('reframeOutput').innerHTML = picks.map(p => `<p><strong>${p}</strong><br>${map[p]}</p>`).join('');
+  saveState();
+}
+
+function validateActionCount(){
+  const count = all('.action:checked').length;
+  if (count < 1 || count > 3){
+    alert('Please choose 1 to 3 tiny actions in Step 6.');
+    return false;
+  }
+  return true;
+}
+
+function reflectionData(){
+  const triggers = all('.trigger:checked').map(x => x.value);
+  const control = all('[data-bucket="can"] .item').map(x => x.dataset.label).slice(0,3);
+  const actions = all('.action:checked').map(x => x.value);
+
+  return {
+    fearTheme: qs('fearTheme').value || 'Not selected',
+    fearText: qs('fearText').value.trim(),
+    intensity: qs('intensity').value,
+    triggers: triggers.length ? triggers : ['None selected'],
+    controlActions: control.length ? control : ['No control items sorted yet'],
+    boundary: qs('boundary').value.trim() || 'Set one daily limit for AI/news scrolling.',
+    kindness: qs('kindness').value.trim() || 'I am allowed to take this one step at a time.',
+    plan: actions.length ? actions : ['Choose 1-3 tiny actions in Step 6.']
+  };
+}
 
 function showReflection(){
-  const a1=q1.value,a2=q2.value,a3=q3.value,a4=q4.value,a5=q5.value;
-  if(!a1||!a2||!a3||!a4){alert("Please answer all questions.");return;}
+  if (!qs('fearTheme').value){ alert('Please complete Step 1 first.'); showStep(1); return; }
+  if (!validateActionCount()){ showStep(6); return; }
 
-  const text = `
-<strong>Your Reflection Summary</strong><br><br>
-
-<strong>What concerns you most:</strong><br>${a1}<br><br>
-<strong>Intensity of fear:</strong><br>${a2}<br><br>
-<strong>Area affected:</strong><br>${a3}<br><br>
-<strong>Sense of control:</strong><br>${a4}<br><br>
-<strong>Your idea of preparedness:</strong><br>${a5||"(not written)"}<br><br>
-
-<strong>Grounded perspective:</strong><br>
-Uncertainty does not mean collapse.
-Most change is uneven, gradual, and human skills remain valuable.
-Preparation is not panic — it is clarity, flexibility, and emotional steadiness.<br><br>
-
-<strong>One stabilizing step:</strong><br>
-Choose one small action that strengthens your sense of agency this week
-— learning, resting, connecting, or setting boundaries around news consumption.
-`;
-  result.innerHTML=text;
-  result.style.display="block";
+  const data = reflectionData();
+  qs('result').innerHTML = `
+    <h2>Your Reflection Summary</h2>
+    <p><strong>Fear theme + intensity:</strong> ${data.fearTheme} (${data.intensity}/10)</p>
+    <p><strong>Key trigger(s):</strong> ${data.triggers.slice(0,3).join('; ')}</p>
+    <p><strong>Top 3 controllable actions:</strong></p>
+    <ul>${data.controlActions.map(x => `<li>${x}</li>`).join('')}</ul>
+    <p><strong>One boundary for news/social:</strong> ${data.boundary}</p>
+    <p><strong>One self-kindness reminder:</strong> ${data.kindness}</p>
+    <p><strong>Your tiny action plan:</strong></p>
+    <ul>${data.plan.map(x => `<li>${x}</li>`).join('')}</ul>
+  `;
+  qs('result').style.display = 'block';
+  saveState();
 }
 
 function resetTool(){
-  document.querySelectorAll("select,textarea").forEach(el=>el.value="");
-  result.style.display="none";
+  localStorage.removeItem(STORAGE_KEY);
+  qs('fearTheme').value = '';
+  qs('fearText').value = '';
+  qs('intensity').value = 4;
+  qs('intensityValue').textContent = 'Current intensity: 4 / 10';
+  all('input[type="checkbox"]').forEach(x => x.checked = false);
+  qs('boundary').value = '';
+  qs('kindness').value = '';
+  qs('reframeOutput').innerHTML = '';
+  qs('result').innerHTML = '';
+  qs('result').style.display = 'none';
+  qs('postPdf').style.display = 'none';
+  clearInterval(timerInterval);
+  timerInterval = null;
+  qs('timerDisplay').textContent = '60';
+  qs('timerGuide').textContent = 'Ready';
+  buildControlItems();
+  showStep(1);
+}
+
+function addPdfHeaderFooter(doc){
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++){
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.text('https://emotionalintelligencedeveloper.com/', 40, 24);
+    doc.text(`Page ${i} of ${pages}`, 520, 24, { align: 'right' });
+    doc.setFontSize(9);
+    doc.text('Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/', 40, 820);
+  }
 }
 
 function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=50,left=40,max=515;
-
-  doc.setFontSize(12);
-  doc.text("https://emotionalintelligencedeveloper.com/",left,30);
-
-  doc.setFontSize(18);
-  doc.text("AI Bubble Fear (2026) — Personal Reflection",left,y);y+=28;
-
-  const qs=[
-    "What concerns you most:",
-    "Intensity of fear:",
-    "Area affected:",
-    "Sense of control:",
-    "What preparedness looks like:"
-  ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value||"(not written)"];
-
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y);y+=16;
-    doc.text(doc.splitTextToSize(as[i],max),left+10,y);y+=26;
+  if (qs('result').style.display !== 'block'){
+    showReflection();
+    if (qs('result').style.display !== 'block') return;
   }
 
-  doc.text(doc.splitTextToSize(
-    "This document can be revisited when fear resurfaces or shared with someone you trust if speaking feels difficult. Awareness creates steadiness.",max
-  ),left,y+10);
+  const data = reflectionData();
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const lines = [
+    'AI Bubble Fear (2026) - Personal Reflection',
+    '',
+    `Fear theme + intensity: ${data.fearTheme} (${data.intensity}/10)`,
+    `Fear details: ${data.fearText || 'Not provided'}`,
+    `Key trigger(s): ${data.triggers.join('; ')}`,
+    'Top 3 controllable actions:',
+    ...data.controlActions.map(x => `- ${x}`),
+    `Boundary for news/social: ${data.boundary}`,
+    `Self-kindness reminder: ${data.kindness}`,
+    'Tiny action plan:',
+    ...data.plan.map(x => `- ${x}`),
+    '',
+    'Note: Fear is information, not a final verdict. Small consistent steps help restore steadiness.'
+  ];
 
-  doc.setFontSize(10);
-  doc.text("Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",left,800);
+  let y = 52;
+  const left = 40;
+  const max = 515;
+  const lineHeight = 16;
 
-  doc.save("ai-bubble-fear-2026-reflection.pdf");
+  doc.setFontSize(16);
+  doc.text(lines[0], left, y);
+  y += 26;
+
+  doc.setFontSize(11);
+  for (const line of lines.slice(1)){
+    const wrapped = doc.splitTextToSize(line, max);
+    if (y + wrapped.length * lineHeight > 790){
+      doc.addPage();
+      y = 52;
+    }
+    doc.text(wrapped, left, y);
+    y += wrapped.length * lineHeight + 3;
+  }
+
+  addPdfHeaderFooter(doc);
+  doc.save('ai-bubble-fear-2026-reflection.pdf');
+
+  qs('postPdf').style.display = 'block';
+  qs('postPdf').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  saveState();
 }
+
+qs('intensity').addEventListener('input', () => {
+  qs('intensityValue').textContent = `Current intensity: ${qs('intensity').value} / 10`;
+  saveState();
+});
+all('input, textarea, select').forEach(el => el.addEventListener('change', saveState));
+all('textarea, input[type="text"]').forEach(el => el.addEventListener('input', saveState));
+qs('runReframe').addEventListener('click', runReframes);
+qs('backBtn').addEventListener('click', () => showStep(currentStep - 1));
+qs('nextBtn').addEventListener('click', () => showStep(currentStep + 1));
+qs('resetBtn').addEventListener('click', resetTool);
+qs('resetBtnSecondary').addEventListener('click', resetTool);
+qs('reflectBtn').addEventListener('click', showReflection);
+qs('downloadBtn').addEventListener('click', downloadPDF);
+
+qs('startTimer').addEventListener('click', () => {
+  clearInterval(timerInterval);
+  let remaining = 60;
+  qs('timerDisplay').textContent = '60';
+  qs('timerGuide').textContent = 'Inhale (4)';
+
+  timerInterval = setInterval(() => {
+    remaining--;
+    qs('timerDisplay').textContent = String(remaining);
+
+    const phase = (60 - remaining) % 12;
+    qs('timerGuide').textContent = phase < 4 ? 'Inhale (4)' : phase < 6 ? 'Hold (2)' : 'Exhale (6)';
+
+    if (remaining <= 0){
+      clearInterval(timerInterval);
+      timerInterval = null;
+      qs('timerGuide').textContent = 'Done. Notice one thing that feels steadier now.';
+    }
+  }, 1000);
+});
+
+qs('resetTimer').addEventListener('click', () => {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  qs('timerDisplay').textContent = '60';
+  qs('timerGuide').textContent = 'Ready';
+});
+
+loadState();
 </script>
 </body>
 </html>

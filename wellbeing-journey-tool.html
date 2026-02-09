@@ -253,6 +253,7 @@
 const { jsPDF } = window.jspdf;
 let answers = [];
 let summary = "";
+let selectedPlan = [];
 const ACTION_STEPS = {
   A:["Try a 2-minute breathing reset after your next stressful moment.","Do a short body check-in (jaw, shoulders, chest) twice daily.","Take one 10-minute walk today without your phone."],
   B:["Journal for 5 minutes: \"What am I feeling and what do I need?\".","Name one recurring thought and write a kinder replacement.","Set a 15-minute no-notification reflection block."],
@@ -326,7 +327,8 @@ function showResult(){
           : "You benefit most from restoring balance and energy.";
   document.getElementById("result").innerHTML="<strong>Your focus:</strong><br>"+summary;
   document.getElementById("result").style.display="block";
-  const listItems = ACTION_STEPS[top].map(step=>`<li>${step}</li>`).join("");
+  selectedPlan = ACTION_STEPS[top];
+  const listItems = selectedPlan.map(step=>`<li>${step}</li>`).join("");
   document.getElementById("insights").innerHTML = `
     <strong>Your 7-day micro-plan</strong>
     <ul>${listItems}</ul>
@@ -340,6 +342,8 @@ function resetQuiz(){
   document.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected-blue","selected-yellow"));
   document.getElementById("result").style.display="none";
   document.getElementById("insights").style.display="none";
+  selectedPlan = [];
+  summary = "";
   localStorage.removeItem(STORAGE_KEY);
   updateProgress();
 }
@@ -347,27 +351,58 @@ function resetQuiz(){
 function downloadPDF(){
   if(!summary){alert("View your plan first.");return;}
   const doc=new jsPDF({unit:"pt",format:"a4"});
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxY = pageHeight - 48;
   let y=60;
+
+  const ensureSpace = (needed=18)=>{
+    if(y + needed > maxY){
+      doc.addPage();
+      y = 60;
+    }
+  };
+
+  const writeWrapped = (text,x,size=11,maxWidth=500,lineHeight=14)=>{
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(text,maxWidth);
+    ensureSpace(lines.length * lineHeight + 4);
+    doc.text(lines,x,y);
+    y += lines.length * lineHeight;
+  };
+
   doc.setFontSize(18);
   doc.text("Your Wellbeing Journey",40,y); y+=30;
   doc.setFontSize(11);
   doc.text("emotionalintelligencedeveloper.com",40,y); y+=30;
 
+  ensureSpace(24);
+  doc.setFontSize(12);
   doc.text("Your answers:",40,y); y+=20;
   answers.forEach(o=>{
-    doc.text(o.q,40,y,{maxWidth:500}); y+=14;
-    doc.text("Answer: "+o.a,50,y,{maxWidth:480}); y+=20;
+    writeWrapped(o.q,40,11,500,14);
+    writeWrapped("Answer: "+o.a,50,11,480,14);
+    y += 6;
   });
 
+  ensureSpace(40);
   doc.setFontSize(12);
   doc.text("Your wellbeing focus:",40,y); y+=16;
-  doc.text(summary,40,y,{maxWidth:500});
+  writeWrapped(summary,40,11,500,14);
 
-  y+=40;
+  ensureSpace(40);
+  y += 8;
+  doc.setFontSize(12);
+  doc.text("Your 7-day micro-plan:",40,y); y+=18;
+  selectedPlan.forEach((step,i)=>{
+    writeWrapped(`${i+1}. ${step}`,50,11,480,14);
+    y += 4;
+  });
+
+  ensureSpace(40);
+  y += 12;
   doc.setFontSize(10);
-  doc.text("Recommended Books: https://emotionalintelligencedeveloper.com/recommended-books/",40,y);
-  y+=14;
-  doc.text("Help Page: https://emotionalintelligencedeveloper.com/help-page/",40,y+14);
+  writeWrapped("Recommended Books: https://emotionalintelligencedeveloper.com/recommended-books/",40,10,500,12);
+  writeWrapped("Help Page: https://emotionalintelligencedeveloper.com/help-page/",40,10,500,12);
 
   doc.save("wellbeing-journey.pdf");
 }

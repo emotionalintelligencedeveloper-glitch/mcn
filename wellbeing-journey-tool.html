@@ -31,6 +31,10 @@
   }
   h1{margin:0 0 6px;font-size:22px}
   .lead{color:var(--muted);margin-bottom:14px}
+  .progress-wrap{margin:14px 0 18px}
+  .progress-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .progress-track{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+  .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-blue),#10b981);transition:width .25s ease}
   .q{
     margin:14px 0;
     padding:12px;
@@ -92,6 +96,16 @@
     border:1px solid #eee;
     display:none
   }
+  .insights{
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+  }
+  .insights ul{margin:8px 0 0 18px;padding:0}
+  .insights li{margin-bottom:5px}
+  .mini-note{margin-top:8px;color:var(--muted);font-size:12px}
   .download{
     margin-top:14px;
     display:inline-block;
@@ -145,6 +159,15 @@
   <div class="card">
     <h1>Wellbeing Journey — Quick Check & Reset</h1>
     <p class="lead">Answer 6 questions (~6 minutes). Download a practical wellbeing plan with your answers.</p>
+    <div class="progress-wrap" aria-live="polite">
+      <div class="progress-head">
+        <span>Progress</span>
+        <span id="progressText">0/6 complete</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Question progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
 
     <div id="quiz">
 
@@ -204,6 +227,7 @@
       </div>
 
       <div id="result" class="result"></div>
+      <div id="insights" class="insights" style="display:none"></div>
       <a class="download" onclick="downloadPDF()">Download My Plan (PDF)</a>
 
       <p class="ads-label">Ads.</p>
@@ -229,6 +253,13 @@
 const { jsPDF } = window.jspdf;
 let answers = [];
 let summary = "";
+const ACTION_STEPS = {
+  A:["Try a 2-minute breathing reset after your next stressful moment.","Do a short body check-in (jaw, shoulders, chest) twice daily.","Take one 10-minute walk today without your phone."],
+  B:["Journal for 5 minutes: \"What am I feeling and what do I need?\".","Name one recurring thought and write a kinder replacement.","Set a 15-minute no-notification reflection block."],
+  C:["Pick one non-negotiable recharge block this week.","Choose a consistent bedtime for the next 3 nights.","Say no to one low-priority commitment today."]
+};
+
+const STORAGE_KEY = "wellbeing-journey-v1";
 
 document.querySelectorAll('.opts').forEach(g=>{
   g.addEventListener('click',e=>{
@@ -237,8 +268,47 @@ document.querySelectorAll('.opts').forEach(g=>{
     g.querySelectorAll('.opt').forEach(x=>x.classList.remove('selected-blue','selected-yellow'));
     o.classList.add(o.dataset.val==='B'?'selected-yellow':'selected-blue');
     o.querySelector('input').checked=true;
+    persistState();
+    updateProgress();
   });
 });
+
+function updateProgress(){
+  let done = 0;
+  for(let i=1;i<=6;i++) if(document.querySelector(`input[name="q${i}"]:checked`)) done++;
+  document.getElementById("progressText").innerText = `${done}/6 complete`;
+  document.getElementById("progressBar").style.width = `${(done/6)*100}%`;
+  document.querySelector('.progress-track').setAttribute('aria-valuenow', String(done));
+}
+
+function persistState(){
+  const current = {};
+  for(let i=1;i<=6;i++){
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    if(sel) current[`q${i}`] = sel.value;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+}
+
+function restoreState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return;
+  try{
+    const saved = JSON.parse(raw);
+    for(let i=1;i<=6;i++){
+      const val = saved[`q${i}`];
+      if(!val) continue;
+      const input = document.querySelector(`input[name="q${i}"][value="${CSS.escape(val)}"]`);
+      if(!input) continue;
+      input.checked = true;
+      const opt = input.closest('.opt');
+      opt.classList.add(opt.dataset.val==='B'?'selected-yellow':'selected-blue');
+    }
+    updateProgress();
+  } catch(e){
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
 
 function showResult(){
   answers=[];
@@ -256,12 +326,22 @@ function showResult(){
           : "You benefit most from restoring balance and energy.";
   document.getElementById("result").innerHTML="<strong>Your focus:</strong><br>"+summary;
   document.getElementById("result").style.display="block";
+  const listItems = ACTION_STEPS[top].map(step=>`<li>${step}</li>`).join("");
+  document.getElementById("insights").innerHTML = `
+    <strong>Your 7-day micro-plan</strong>
+    <ul>${listItems}</ul>
+    <div class="mini-note">Tip: Keep this tab open so your answers stay saved while you revisit your plan.</div>
+  `;
+  document.getElementById("insights").style.display = "block";
 }
 
 function resetQuiz(){
   document.querySelectorAll("input").forEach(i=>i.checked=false);
   document.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected-blue","selected-yellow"));
   document.getElementById("result").style.display="none";
+  document.getElementById("insights").style.display="none";
+  localStorage.removeItem(STORAGE_KEY);
+  updateProgress();
 }
 
 function downloadPDF(){
@@ -291,6 +371,9 @@ function downloadPDF(){
 
   doc.save("wellbeing-journey.pdf");
 }
+
+restoreState();
+updateProgress();
 </script>
 </body>
 </html>

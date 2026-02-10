@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotional Support Self-Check (Addiction Check-In)</title>
+  <style>
+    :root {
+      --bg: #f3f7f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --soft: #eef4ff;
+      --border: #d7e1ea;
+      --success-bg: #e8f8ef;
+      --success-text: #065f46;
+      --warn-bg: #fff4dc;
+      --warn-text: #92400e;
+      --risk-bg: #ffe9ec;
+      --risk-text: #9f1239;
+      --radius: 14px;
+      --shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #edf5f8 0%, var(--bg) 40%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .container {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin: 14px 0;
+    }
+
+    h1 {
+      font-size: clamp(1.35rem, 2.3vw, 1.95rem);
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.06rem;
+    }
+
+    .lead,
+    .small,
+    .disclaimer,
+    .privacy,
+    .status {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .lead { text-align: center; }
+
+    .focus-grid,
+    .signals,
+    .btn-grid,
+    .resource-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .focus-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fbfdff;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .focus-item.active {
+      border-color: var(--primary);
+      background: var(--soft);
+    }
+
+    .signals { gap: 12px; }
+
+    .signal label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .moods {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .moods label {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fcfdff;
+      text-transform: capitalize;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      min-height: 92px;
+      resize: vertical;
+      font: inherit;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .btn-grid,
+    .resource-grid {
+      margin-top: 12px;
+    }
+
+    button,
+    .btn-link {
+      border: none;
+      border-radius: 12px;
+      min-height: 48px;
+      width: 100%;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: #fff; border: 1px solid #c7d5e7; color: #1f2937; }
+    .btn-soft { background: #e7f6ef; color: #065f46; }
+    .btn-warm { background: #fff6e8; border: 1px solid #fdd8a3; color: #9a3412; }
+
+    #results { display: none; }
+
+    .pill {
+      display: inline-block;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .low { background: var(--success-bg); color: var(--success-text); }
+    .moderate { background: var(--warn-bg); color: var(--warn-text); }
+    .high { background: var(--risk-bg); color: var(--risk-text); }
+
+    .suggestions { margin: 0; padding-left: 20px; }
+    .suggestions li { margin-bottom: 8px; }
+
+    .safety {
+      display: none;
+      margin-top: 12px;
+      border: 1px solid #fecdd3;
+      background: #fff1f2;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+
+    .history {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+
+    .tiny {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .status {
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 720px) {
+      .card { padding: 24px; }
+      .focus-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .signals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .moods { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .btn-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <h1>Emotional Support Self-Check (Addiction Check-In)</h1>
+      <p class="lead">A quick check-in to understand what’s pulling at you lately.</p>
+      <p class="privacy"><strong>Privacy:</strong> Your answers stay on your device.</p>
+      <p class="disclaimer"><strong>Disclaimer:</strong> This tool is not medical advice, not a diagnosis, and not a replacement for professional care. If you’re in danger or at risk of harming yourself/others, seek emergency help in your area right now.</p>
+    </section>
+
+    <section class="card">
+      <h2>Step 1: Choose your check-in focus</h2>
+      <div class="focus-grid" id="focusGrid">
+        <label class="focus-item"><input aria-label="Select Social or phone" type="radio" name="focus" value="Social / phone">Social / phone</label>
+        <label class="focus-item"><input aria-label="Select Drugs and alcohol" type="radio" name="focus" value="Drugs &amp; alcohol">Drugs &amp; alcohol</label>
+        <label class="focus-item"><input aria-label="Select Sex" type="radio" name="focus" value="Sex">Sex</label>
+        <label class="focus-item"><input aria-label="Select Porn" type="radio" name="focus" value="Porn">Porn</label>
+        <label class="focus-item"><input aria-label="Select Other or not sure" type="radio" name="focus" value="Other / not sure">Other / not sure</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 2: Quick signals</h2>
+      <div class="signals">
+        <div class="signal">
+          <label for="intensity">Intensity today (0–10) <span id="intensityVal">5</span></label>
+          <input aria-label="Intensity today" id="intensity" type="range" min="0" max="10" value="5">
+        </div>
+        <div class="signal">
+          <label for="urge">Urge/craving level (0–10) <span id="urgeVal">5</span></label>
+          <input aria-label="Urge or craving level" id="urge" type="range" min="0" max="10" value="5">
+        </div>
+        <div class="signal">
+          <label for="impact">Time lost / impact (0–10) <span id="impactVal">5</span></label>
+          <input aria-label="Time lost or impact" id="impact" type="range" min="0" max="10" value="5">
+        </div>
+        <div class="signal">
+          <label for="control">Control feels (0–10, higher = more in control) <span id="controlVal">5</span></label>
+          <input aria-label="Control feels" id="control" type="range" min="0" max="10" value="5">
+        </div>
+      </div>
+
+      <h2 style="font-size:0.98rem;margin-top:12px;">Mood check</h2>
+      <div class="moods">
+        <label><input aria-label="Mood anxious" type="radio" name="mood" value="anxious"> anxious</label>
+        <label><input aria-label="Mood stressed" type="radio" name="mood" value="stressed"> stressed</label>
+        <label><input aria-label="Mood numb" type="radio" name="mood" value="numb"> numb</label>
+        <label><input aria-label="Mood sad" type="radio" name="mood" value="sad"> sad</label>
+        <label><input aria-label="Mood lonely" type="radio" name="mood" value="lonely"> lonely</label>
+        <label><input aria-label="Mood angry" type="radio" name="mood" value="angry"> angry</label>
+        <label><input aria-label="Mood okay" type="radio" name="mood" value="okay"> okay</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 3: Gentle reflection prompts (optional but encouraged)</h2>
+      <div style="display:grid;gap:12px;">
+        <label>What usually triggers it?
+          <textarea id="trigger" aria-label="What usually triggers it" maxlength="500" placeholder="Example: bedtime scrolling, arguments, loneliness, stress after work"></textarea>
+        </label>
+        <label>What need is it trying to meet (escape, comfort, excitement, connection, relief)?
+          <textarea id="need" aria-label="What need is it trying to meet" maxlength="500" placeholder="Example: escape from stress, comfort, feeling connected"></textarea>
+        </label>
+        <label>What’s one small thing you can do in the next 10 minutes instead?
+          <textarea id="alternative" aria-label="One small thing in next 10 minutes instead" maxlength="500" placeholder="Example: drink water, step outside, text a safe person, shower"></textarea>
+        </label>
+      </div>
+
+      <div class="btn-grid">
+        <button aria-label="Show my results" class="btn-primary" id="showBtn" type="button">Show My Results</button>
+        <button aria-label="Save this check-in on this device" class="btn-outline" id="saveBtn" type="button">Save on this device</button>
+        <button aria-label="Download this check-in as text file" class="btn-outline" id="fileBtn" type="button">Save to desktop (.txt)</button>
+        <button aria-label="Reset check-in" class="btn-outline" id="resetBtn" type="button">Reset check-in</button>
+      </div>
+      <p class="status" id="statusMsg" aria-live="polite"></p>
+    </section>
+
+    <section class="card" id="results" aria-live="polite">
+      <h2>Step 4: Results + feedback panel</h2>
+      <div id="riskPill" class="pill"></div>
+      <p id="scoreLine" class="small"></p>
+      <p id="summaryLine" class="small"></p>
+      <ul id="suggestions" class="suggestions"></ul>
+      <div id="safetyBox" class="safety"><strong>Safety:</strong> If you feel unsafe, out of control, or at risk of harming yourself/others, please seek urgent support in your area.</div>
+
+      <div class="resource-grid">
+        <button aria-label="Download your 1-page PDF" id="pdfBtn" type="button" class="btn-soft">Download your 1-page PDF</button>
+        <a aria-label="Recommended Books" class="btn-link btn-warm" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+        <a aria-label="Help Page" class="btn-link btn-outline" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Help Page</a>
+        <a aria-label="Forums" class="btn-link btn-outline" href="https://emotionalintelligencedeveloper.com/forums/" target="_blank" rel="noopener noreferrer">Forums</a>
+        <a aria-label="Quizzes hub" class="btn-link btn-outline" href="https://emotionalintelligencedeveloper.com/emotional-intelligence-developer-quizzes/" target="_blank" rel="noopener noreferrer">Quizzes hub</a>
+        <a aria-label="Support this website" class="btn-link btn-warm" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener noreferrer">Support this website (helps keep this space free)</a>
+      </div>
+
+      <p class="tiny">After downloading your PDF, choose one next-step button above to go deeper.</p>
+    </section>
+
+    <section class="card">
+      <h2>Last 7 check-ins (on this device)</h2>
+      <ul id="history" class="history"></ul>
+      <p class="tiny">No accounts, no logins, no sending data anywhere.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script>
+    (function () {
+      const STORAGE_KEY = "eid_addiction_checkins_v3";
+      const sliders = ["intensity", "urge", "impact", "control"];
+      let latest = null;
+
+      function setStatus(message, isError) {
+        const status = document.getElementById("statusMsg");
+        status.textContent = message;
+        status.style.color = isError ? "#b91c1c" : "#065f46";
+      }
+
+      function storageAvailable() {
+        try {
+          const k = "__storage_test__";
+          localStorage.setItem(k, "1");
+          localStorage.removeItem(k);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function valueOf(name) {
+        const checked = document.querySelector('input[name="' + name + '"]:checked');
+        return checked ? checked.value : "";
+      }
+
+      function trimTo(text, max) {
+        const clean = (text || "").trim();
+        return clean.length <= max ? clean : clean.slice(0, max - 1).trimEnd() + "…";
+      }
+
+      function levelFromScore(score) {
+        if (score <= 14) return "Low";
+        if (score <= 26) return "Moderate";
+        return "High";
+      }
+
+      function suggestionSet(focus, level, mood) {
+        const core = [
+          "Reduce access now: move triggers away, change room, or sign out of high-risk apps.",
+          "Delay the urge with a 10-minute rule, then reassess instead of acting immediately.",
+          "Surf the urge: breathe slowly and watch the craving wave rise, peak, and pass.",
+          "Replace with one micro-action: short walk, water, shower, or message a safe person.",
+          "Write a simple 3-step craving plan (trigger, first action, support contact)."
+        ];
+
+        const byType = {
+          "Social / phone": [
+            "Turn off non-essential notifications for today.",
+            "Keep your phone out of reach during one high-risk window."
+          ],
+          "Drugs & alcohol": [
+            "If substances are involved, consider safe support and professional help.",
+            "Avoid high-risk places/people today and prepare an exit plan."
+          ],
+          "Sex": [
+            "Set a clear boundary for times/places that raise impulsive choices.",
+            "Use connection alternatives that are safe and grounding."
+          ],
+          "Porn": [
+            "Add blockers/filters and avoid private device use in vulnerable moments.",
+            "Pre-write a redirect list for cravings (move body, breathe, cold water, short task)."
+          ],
+          "Other / not sure": [
+            "Track the pattern for 24 hours without judgment: what happened right before it?",
+            "Pick one small boundary for today and review tonight."
+          ]
+        };
+
+        const byMood = {
+          anxious: "For anxiety: try 4 seconds inhale, 6 seconds exhale for 2 minutes.",
+          stressed: "For stress: unclench jaw, drop shoulders, and slow your pace for one minute.",
+          numb: "For numbness: use grounding (cold water, 5 things you see, 4 things you feel).",
+          sad: "For sadness: one gentle act of care is enough for now.",
+          lonely: "For loneliness: send one short check-in message to a safe person.",
+          angry: "For anger: step away and delay major decisions until your body calms.",
+          okay: "Since you feel okay, protect your momentum with one boundary today."
+        };
+
+        const list = core.concat(byType[focus] || byType["Other / not sure"]);
+        if (byMood[mood]) list.push(byMood[mood]);
+        if (level === "High") list.push("High strain day: simplify demands and seek direct support now.");
+        return list.slice(0, 8);
+      }
+
+      function readEntries() {
+        if (!storageAvailable()) return [];
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function writeEntries(entries) {
+        if (!storageAvailable()) return false;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function renderHistory() {
+        const el = document.getElementById("history");
+        const entries = readEntries();
+        el.innerHTML = "";
+        if (!entries.length) {
+          const li = document.createElement("li");
+          li.textContent = "No saved check-ins yet.";
+          el.appendChild(li);
+          return;
+        }
+        entries.forEach(function (item) {
+          const li = document.createElement("li");
+          li.textContent = item.date + " — " + item.focus + " — " + item.level;
+          el.appendChild(li);
+        });
+      }
+
+      function updateSliderValue(id) {
+        document.getElementById(id + "Val").textContent = document.getElementById(id).value;
+      }
+
+      function buildResult() {
+        const focus = valueOf("focus");
+        if (!focus) {
+          setStatus("Please choose your check-in focus first.", true);
+          return null;
+        }
+
+        const mood = valueOf("mood") || "okay";
+        const intensity = Number(document.getElementById("intensity").value);
+        const urge = Number(document.getElementById("urge").value);
+        const impact = Number(document.getElementById("impact").value);
+        const control = Number(document.getElementById("control").value);
+        const score = intensity + urge + impact + (10 - control);
+        const level = levelFromScore(score);
+        const suggestions = suggestionSet(focus, level, mood);
+
+        return {
+          date: new Date().toLocaleString(),
+          focus,
+          mood,
+          intensity,
+          urge,
+          impact,
+          control,
+          score,
+          level,
+          trigger: trimTo(document.getElementById("trigger").value, 180),
+          need: trimTo(document.getElementById("need").value, 180),
+          alternative: trimTo(document.getElementById("alternative").value, 180),
+          suggestions
+        };
+      }
+
+      function showResults() {
+        const result = buildResult();
+        if (!result) return false;
+
+        latest = result;
+        const list = document.getElementById("suggestions");
+        list.innerHTML = "";
+        result.suggestions.forEach(function (tip) {
+          const li = document.createElement("li");
+          li.textContent = tip;
+          list.appendChild(li);
+        });
+
+        const pill = document.getElementById("riskPill");
+        pill.className = "pill " + (result.level === "Low" ? "low" : result.level === "Moderate" ? "moderate" : "high");
+        pill.textContent = "Today’s Risk/Strain Level: " + result.level;
+
+        document.getElementById("scoreLine").textContent = "Score: " + result.score + " / 40 (higher means more strain today).";
+        document.getElementById("summaryLine").textContent = "Focus: " + result.focus + " | Mood: " + result.mood + " | Control felt: " + result.control + "/10";
+        document.getElementById("safetyBox").style.display = result.level === "High" ? "block" : "none";
+
+        const results = document.getElementById("results");
+        results.style.display = "block";
+        results.scrollIntoView({ behavior: "smooth", block: "start" });
+        setStatus("Results generated.", false);
+        return true;
+      }
+
+      function downloadTextFile() {
+        if (!latest && !showResults()) return;
+        const lines = [
+          "Emotional Support Self-Check (Addiction Check-In)",
+          "Generated: " + latest.date,
+          "",
+          "Level: " + latest.level + " | Score: " + latest.score + "/40",
+          "Focus: " + latest.focus + " | Mood: " + latest.mood,
+          "Intensity: " + latest.intensity + "/10 | Urge: " + latest.urge + "/10 | Impact: " + latest.impact + "/10 | Control: " + latest.control + "/10",
+          "",
+          "Triggers: " + (latest.trigger || "Not provided."),
+          "Need behind urge: " + (latest.need || "Not provided."),
+          "10-minute alternative: " + (latest.alternative || "Not provided."),
+          "",
+          "Suggestions:",
+          ...latest.suggestions.map((s, i) => (i + 1) + ". " + s)
+        ];
+
+        const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "emotional-support-check-in.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setStatus("Text file downloaded. Check your Downloads folder.", false);
+      }
+
+      function init() {
+        sliders.forEach(function (id) {
+          updateSliderValue(id);
+          document.getElementById(id).addEventListener("input", function () { updateSliderValue(id); });
+        });
+
+        document.getElementById("focusGrid").addEventListener("change", function () {
+          document.querySelectorAll(".focus-item").forEach(function (label) {
+            label.classList.toggle("active", label.querySelector("input").checked);
+          });
+        });
+
+        document.getElementById("showBtn").addEventListener("click", showResults);
+
+        document.getElementById("saveBtn").addEventListener("click", function () {
+          if (!latest && !showResults()) return;
+          const entries = readEntries();
+          entries.unshift({ date: latest.date, focus: latest.focus, level: latest.level });
+          const ok = writeEntries(entries.slice(0, 7));
+          if (!ok) {
+            setStatus("Could not save on this device (browser privacy mode may block local storage).", true);
+            return;
+          }
+          renderHistory();
+          setStatus("Saved on this device.", false);
+        });
+
+        document.getElementById("fileBtn").addEventListener("click", downloadTextFile);
+
+        document.getElementById("resetBtn").addEventListener("click", function () {
+          document.querySelectorAll('input[name="focus"], input[name="mood"]').forEach(function (el) { el.checked = false; });
+          document.querySelectorAll(".focus-item").forEach(function (el) { el.classList.remove("active"); });
+          sliders.forEach(function (id) {
+            document.getElementById(id).value = 5;
+            updateSliderValue(id);
+          });
+          document.getElementById("trigger").value = "";
+          document.getElementById("need").value = "";
+          document.getElementById("alternative").value = "";
+          document.getElementById("results").style.display = "none";
+          document.getElementById("suggestions").innerHTML = "";
+          latest = null;
+          setStatus("Check-in reset.", false);
+        });
+
+        document.getElementById("pdfBtn").addEventListener("click", function () {
+          if (!latest && !showResults()) return;
+
+          if (!(window.jspdf && window.jspdf.jsPDF)) {
+            setStatus("PDF generator is not available. Refresh and try again.", true);
+            return;
+          }
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+          const left = 36;
+          const maxWidth = doc.internal.pageSize.getWidth() - 72;
+          const pageBottom = doc.internal.pageSize.getHeight() - 34;
+          const lineHeight = 14;
+          let y = 28;
+
+          function addLine(text, size, bold) {
+            if (y > pageBottom) return;
+            doc.setFont("helvetica", bold ? "bold" : "normal");
+            doc.setFontSize(size);
+            const lines = doc.splitTextToSize(text, maxWidth);
+            for (let i = 0; i < lines.length; i += 1) {
+              if (y > pageBottom) return;
+              doc.text(lines[i], left, y);
+              y += lineHeight;
+            }
+          }
+
+          addLine("https://emotionalintelligencedeveloper.com/", 10, false);
+          y += 3;
+          addLine("Emotional Support Self-Check (Addiction Check-In)", 14, true);
+          addLine("Generated: " + latest.date, 10, false);
+          y += 4;
+
+          addLine("Summary", 12, true);
+          addLine("Focus: " + latest.focus + " | Mood: " + latest.mood, 10, false);
+          addLine("Intensity " + latest.intensity + "/10 | Urge " + latest.urge + "/10 | Impact " + latest.impact + "/10 | Control " + latest.control + "/10", 10, false);
+          addLine("Today’s Risk/Strain Level: " + latest.level + " (Score " + latest.score + "/40)", 10, false);
+          y += 4;
+
+          addLine("Reflections", 12, true);
+          addLine("Triggers: " + (latest.trigger || "Not provided."), 10, false);
+          addLine("Need behind urge: " + (latest.need || "Not provided."), 10, false);
+          addLine("10-minute alternative: " + (latest.alternative || "Not provided."), 10, false);
+          y += 4;
+
+          addLine("Top suggested next steps", 12, true);
+          latest.suggestions.slice(0, 6).forEach(function (tip, i) {
+            addLine((i + 1) + ". " + trimTo(tip, 108), 10, false);
+          });
+
+          y += 4;
+          addLine("Note: This check-in is not medical advice and not a diagnosis.", 9, false);
+          addLine("If you feel unsafe or at risk, seek urgent emergency support in your area.", 9, false);
+
+          doc.save("emotional-support-self-check-1-page.pdf");
+          setStatus("PDF downloaded. Check your Downloads folder.", false);
+        });
+
+        renderHistory();
+        if (!storageAvailable()) {
+          setStatus("Your browser is blocking local save. Use 'Save to desktop (.txt)' instead.", true);
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>

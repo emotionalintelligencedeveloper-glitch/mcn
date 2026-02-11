@@ -1,271 +1,879 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>People-Pleaser Recovery Tool — Emotional Intelligence Developer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>People-Pleaser Recovery Tool — Emotional Intelligence Developer</title>
+  <meta name="description" content="A gentle, practical reflection tool to reduce people-pleasing, build boundaries, and ease anxiety." />
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#1f6feb;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:820px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 10px 28px rgba(16,24,40,.08)
-}
-h1{margin:0 0 10px;font-size:22px}
-.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+  <!-- Social preview (optional, works if your repo supports it) -->
+  <meta property="og:title" content="People-Pleaser Recovery Tool" />
+  <meta property="og:description" content="Notice your patterns, create a small boundary plan, and download a one-page reflection." />
+  <meta property="og:type" content="website" />
 
-.q{
-  margin:16px 0;
-  padding:14px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-textarea{
-  width:100%;
-  min-height:80px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-}
+  <!-- jsPDF for PDF download -->
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --accent:#2563eb;
+      --accent2:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow:0 10px 30px rgba(17,24,39,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(37,99,235,.08), transparent 60%),
+                  radial-gradient(900px 500px at 100% 30%, rgba(16,185,129,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:22px 16px 44px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:10px 2px 18px;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background:linear-gradient(135deg, rgba(37,99,235,.12), rgba(16,185,129,.12));
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      box-shadow:0 8px 18px rgba(0,0,0,.06);
+      flex:0 0 auto;
+      overflow:hidden;
+    }
+    .logo span{
+      font-weight:800;
+      letter-spacing:-.02em;
+      color:var(--accent);
+      font-size:14px;
+    }
+    .titleblock{min-width:0}
+    .kicker{
+      font-size:.85rem;
+      color:var(--muted);
+      margin:0 0 2px;
+      letter-spacing:.02em;
+    }
+    h1{
+      margin:0;
+      font-size:1.25rem;
+      line-height:1.2;
+      letter-spacing:-.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .toplinks{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.7);
+      backdrop-filter: blur(8px);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:.85rem;
+      text-decoration:none;
+      box-shadow:0 6px 18px rgba(0,0,0,.04);
+    }
 
-.result{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:14px;
-  background:#eff6ff;
-  border:1px solid #bfdbfe;
-  line-height:1.6;
-}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      header{align-items:flex-start}
+      .toplinks{justify-content:flex-start}
+      h1{white-space:normal}
+    }
 
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
+    .card{
+      background:rgba(255,255,255,.82);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:1.06rem;
+      letter-spacing:-.01em;
+    }
+    .sub{
+      margin:0 0 12px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.98rem;
+    }
+    .note{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.5;
+    }
+    .divider{
+      height:1px;background:var(--line);
+      margin:14px 0;
+      border-radius:999px;
+    }
 
-.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
+    label{
+      display:block;
+      font-weight:650;
+      margin:12px 0 6px;
+      font-size:.95rem;
+    }
+    textarea, input[type="text"]{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:1rem;
+      outline:none;
+    }
+    textarea:focus, input[type="text"]:focus{
+      border-color: rgba(37,99,235,.55);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    }
+    textarea{min-height:96px; resize:vertical}
 
-footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding:11px 14px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:.95rem;
+      box-shadow:0 10px 20px rgba(0,0,0,.07);
+      transition:transform .06s ease, filter .15s ease;
+      user-select:none;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--accent); color:white}
+    .btn.good{background:var(--accent2); color:white}
+    .btn.ghost{
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--line);
+      color:var(--text);
+      box-shadow:none;
+    }
+    .btn.warn{background:var(--warn); color:#111827}
+    .btn.danger{background:var(--danger); color:white}
+
+    .pillbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:.92rem;
+      cursor:pointer;
+      transition: box-shadow .15s ease, transform .06s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .pill:hover{box-shadow:0 10px 18px rgba(0,0,0,.06)}
+    .pill:active{transform:translateY(1px)}
+    .pill[aria-pressed="true"]{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    }
+
+    .meter{
+      margin-top:10px;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    .meterhead{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .meterhead b{font-size:.95rem}
+    .meterhead span{color:var(--muted); font-size:.9rem}
+    input[type="range"]{width:100%}
+
+    .result{
+      display:none;
+      margin-top:12px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(37,99,235,.25);
+      background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(16,185,129,.06));
+    }
+    .result.show{display:block}
+    .result h3{margin:0 0 8px; font-size:1.05rem}
+    .result p{margin:0 0 10px; line-height:1.6}
+    .result ul{margin:0; padding-left:18px}
+    .result li{margin:6px 0; line-height:1.5}
+    .small{
+      font-size:.9rem;
+      color:var(--muted);
+      line-height:1.5;
+      margin:6px 0 0;
+    }
+
+    .share{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .share a, .share button{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:700;
+      font-size:.92rem;
+      cursor:pointer;
+      color:var(--text);
+    }
+    .share a:hover, .share button:hover{box-shadow:0 10px 18px rgba(0,0,0,.06)}
+    .share a:active, .share button:active{transform:translateY(1px)}
+
+    footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:.9rem;
+      text-align:center;
+    }
+    .linkbtn{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:12px;
+    }
+    .linkbtn a{
+      text-decoration:none;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:12px 14px;
+      border-radius:16px;
+      font-weight:800;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      box-shadow:0 10px 18px rgba(0,0,0,.05);
+    }
+    .linkbtn a span{
+      color:var(--muted);
+      font-weight:650;
+      font-size:.92rem;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:.9rem;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      margin-top:6px;
+      color:var(--muted);
+    }
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); border:0;
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
-<div class="card">
+  <div class="wrap">
+    <header>
+      <div class="brand" aria-label="Emotional Intelligence Developer">
+        <div class="logo" aria-hidden="true"><span>EID</span></div>
+        <div class="titleblock">
+          <p class="kicker">Emotional Intelligence Developer</p>
+          <h1>People-Pleaser Recovery — A Gentle Reset</h1>
+        </div>
+      </div>
 
-<h1>People-Pleaser Recovery — A Gentle Reset</h1>
+      <nav class="toplinks" aria-label="Quick links">
+        <a class="chip" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit site</a>
+        <a class="chip" href="#share">Share</a>
+        <a class="chip" href="#download">Download PDF</a>
+      </nav>
+    </header>
 
-<p class="lead">
-This tool helps you notice where you say yes too quickly,
-hide your needs, or feel responsible for others’ emotions —
-and guides you toward safer, healthier self-respect.
-</p>
+    <div class="grid">
+      <!-- Main tool -->
+      <main class="card" aria-label="People-pleaser recovery tool">
+        <h2>Why people-pleasing can create anxiety</h2>
+        <p class="sub">
+          When you keep saying yes to stay safe, avoid conflict, or keep people happy, your nervous system learns:
+          <b>“If I don’t manage others, something bad will happen.”</b> Over time, that can fuel anxiety, resentment,
+          and even avoiding going out — because you expect people will take advantage.
+        </p>
+        <p class="note">
+          This is a reflection tool — not a diagnosis. Use what helps, skip what doesn’t.
+        </p>
 
-<div class="q">
-<h3>1) Where do you often say yes even when you want to say no?</h3>
-<textarea id="q1"></textarea>
-</div>
+        <div class="divider" role="presentation"></div>
 
-<div class="q">
-<h3>2) What are you afraid might happen if you disappoint someone?</h3>
-<textarea id="q2"></textarea>
-</div>
+        <h2>Quick check-in</h2>
 
-<div class="q">
-<h3>3) How does people-pleasing affect your energy or mood?</h3>
-<textarea id="q3"></textarea>
-</div>
+        <div class="meter" aria-label="Intensity slider">
+          <div class="meterhead">
+            <b>Right now, how intense is the “I must please” pressure?</b>
+            <span id="intensityLabel">5/10</span>
+          </div>
+          <input id="intensity" type="range" min="0" max="10" value="5" />
+          <div class="tag" id="intensityTag" aria-live="polite">Balanced but tense</div>
+        </div>
 
-<div class="q">
-<h3>4) What do you usually put aside to keep others comfortable?</h3>
-<textarea id="q4"></textarea>
-</div>
+        <label for="q1">1) Where do you often say “yes” even when you want to say “no”?</label>
+        <textarea id="q1" placeholder="Examples: family requests, work overtime, friends needing favors, lending money..."></textarea>
 
-<div class="q">
-<h3>5) What is one small boundary you could practice this week?</h3>
-<textarea id="q5"></textarea>
-</div>
+        <label>2) What are you afraid might happen if you disappoint someone?</label>
+        <div class="pillbar" role="group" aria-label="Fear choices">
+          <button class="pill" type="button" data-pick="fear" data-value="They’ll reject me" aria-pressed="false">They’ll reject me</button>
+          <button class="pill" type="button" data-pick="fear" data-value="They’ll get angry" aria-pressed="false">They’ll get angry</button>
+          <button class="pill" type="button" data-pick="fear" data-value="I’ll feel guilty" aria-pressed="false">I’ll feel guilty</button>
+          <button class="pill" type="button" data-pick="fear" data-value="I’ll be seen as selfish" aria-pressed="false">I’ll be seen as selfish</button>
+          <button class="pill" type="button" data-pick="fear" data-value="I don’t know how to handle conflict" aria-pressed="false">Conflict feels unsafe</button>
+        </div>
+        <textarea id="q2" placeholder="Optional: add more detail in your own words..."></textarea>
 
-<div class="controls">
-<button class="btn" onclick="showPlan()">Show My Recovery Message</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+        <label for="q3">3) How does people-pleasing affect your energy or mood?</label>
+        <textarea id="q3" placeholder="Examples: exhausted, resentful, anxious, numb, overthinking, avoid social plans..."></textarea>
 
-<div id="result" class="result"></div>
+        <label for="q4">4) What do you usually put aside to keep others comfortable?</label>
+        <textarea id="q4" placeholder="Examples: rest, hobbies, money, your voice, your needs, alone time..."></textarea>
 
-<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+        <label>5) Choose one small boundary to practice this week</label>
+        <div class="pillbar" role="group" aria-label="Boundary choices">
+          <button class="pill" type="button" data-pick="boundary" data-value="Let me get back to you" aria-pressed="false">“Let me get back to you”</button>
+          <button class="pill" type="button" data-pick="boundary" data-value="I can’t today" aria-pressed="false">“I can’t today”</button>
+          <button class="pill" type="button" data-pick="boundary" data-value="No, but thank you" aria-pressed="false">“No, but thank you”</button>
+          <button class="pill" type="button" data-pick="boundary" data-value="That doesn’t work for me" aria-pressed="false">“That doesn’t work for me”</button>
+          <button class="pill" type="button" data-pick="boundary" data-value="I need time to think" aria-pressed="false">“I need time to think”</button>
+        </div>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-<p><strong>Want help breaking people-pleasing patterns?</strong></p>
-<p>
-Our Recommended Books include journals and guides on boundaries,
-self-worth, saying no, and emotional resilience.
-Some links may be affiliate links at no extra cost to you.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-View Recommended Books
-</a>
-</div>
+        <label for="q5">Your boundary (edit it so it sounds like you)</label>
+        <input id="q5" type="text" placeholder="Example: “I can’t make it tonight. I’m resting.”" />
 
-<div class="help-box">
-<p><strong>Feeling stuck or overwhelmed?</strong></p>
-<p>
-If people-pleasing is tied to anxiety, fear, or past experiences,
-support is available.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
-</div>
+        <div class="divider" role="presentation"></div>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+        <div class="row">
+          <button class="btn primary" id="buildBtn" type="button">Show My Recovery Message</button>
+          <button class="btn ghost" id="resetBtn" type="button" title="Clear inputs and start again">Reset</button>
+          <button class="btn good" id="downloadBtn" type="button">Download My Reflection (PDF)</button>
+        </div>
 
-</div>
-</div>
+        <section class="result" id="result" aria-live="polite" aria-label="Your recovery message">
+          <h3>Your gentle recovery message</h3>
+          <p id="recoveryText"></p>
+          <div class="divider" role="presentation"></div>
+          <h3>Your 3-step plan (small + real)</h3>
+          <ul id="planList"></ul>
+          <p class="small" id="smallPrint"></p>
+        </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+        <div class="divider" role="presentation"></div>
 
-function showPlan(){
-  const msg = `
-<strong>Your Reminder</strong><br><br>
-People-pleasing is not kindness — it is often self-abandonment learned for safety.<br><br>
-You are allowed to pause before responding.
-You are allowed to have needs.
-Discomfort does not mean you are doing something wrong.<br><br>
-Small boundaries build trust with yourself.
-  `;
-  const box=document.getElementById("result");
-  box.innerHTML=msg;
-  box.style.display="block";
-}
+        <h2 id="share">Share this tool (so others don’t carry it alone)</h2>
+        <p class="sub">
+          People-pleasing can make someone feel trapped, anxious, and unsafe in social spaces.
+          Sharing this tool can be a soft way to say: “You’re not alone.”
+        </p>
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
-}
+        <div class="share" aria-label="Share buttons">
+          <button type="button" id="nativeShareBtn" aria-label="Share using your device">Share</button>
+          <a id="shareWhatsApp" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+          <a id="shareX" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+          <a id="shareFacebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+          <a id="shareLinkedIn" href="#" target="_blank" rel="noopener" aria-label="Share on LinkedIn">LinkedIn</a>
+          <button type="button" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
+        </div>
+        <p class="small" id="copyStatus" aria-live="polite"></p>
+      </main>
 
-function downloadPDF(){
-  const doc=new jsPDF({unit:"pt",format:"a4"});
-  let left=40,y=40,max=515;
+      <!-- Sidebar -->
+      <aside class="card" aria-label="Helpful extras">
+        <h2>When anxiety makes you avoid going out</h2>
+        <p class="sub">
+          If you’ve learned that being “nice” means being used, your brain may try to protect you by avoiding people.
+          The goal isn’t to become cold — it’s to become <b>clear</b>.
+        </p>
 
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 25);
+        <div class="divider" role="presentation"></div>
 
-  doc.setFontSize(18);
-  doc.text("People-Pleaser Recovery — Personal Reflection", left, y); y+=30;
+        <h2>Try this 10-second pause</h2>
+        <p class="sub">
+          Before you answer a request, say (in your mind):
+          <b>“Pause. My needs count too.”</b>
+          Then choose one of these:
+        </p>
+        <div class="pillbar" role="group" aria-label="Pause options">
+          <button class="pill" type="button" data-quick="Let me think about it." aria-pressed="false">Let me think.</button>
+          <button class="pill" type="button" data-quick="I’ll reply later today." aria-pressed="false">Reply later.</button>
+          <button class="pill" type="button" data-quick="I can’t commit to that." aria-pressed="false">Can’t commit.</button>
+          <button class="pill" type="button" data-quick="No — I’m resting." aria-pressed="false">No, resting.</button>
+        </div>
+        <p class="small" id="quickLine" aria-live="polite"></p>
 
-  const questions=[
-    "Where you say yes too often:",
-    "What you fear might happen:",
-    "How this affects your energy:",
-    "What you put aside for others:",
-    "A small boundary to try:"
-  ];
-  const answers=[q1.value,q2.value,q3.value,q4.value,q5.value];
+        <div class="divider" role="presentation"></div>
 
-  doc.setFontSize(12);
-  for(let i=0;i<questions.length;i++){
-    doc.text(questions[i], left, y); y+=16;
-    doc.text(doc.splitTextToSize(answers[i]||"(not written)", max), left+10, y);
-    y+=28;
-  }
+        <h2 id="download">One-page PDF download</h2>
+        <p class="sub">
+          Your PDF includes your answers, your recovery message, and a small boundary plan.
+          It’s designed to be simple and printable.
+        </p>
 
-  doc.setFontSize(12);
-  doc.text("How to Use This", left, y+=16);
-  doc.setFontSize(11);
-  doc.text(
-    doc.splitTextToSize(
-      "You can keep this document for reflection, return to it later, or share it with someone you trust if speaking feels difficult. Healing people-pleasing is about practicing self-respect gently, not forcing change.",
-      max
-    ),
-    left,
-    y+=14
-  );
+        <div class="divider" role="presentation"></div>
 
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left,
-    800
-  );
+        <h2>Recommended + Support</h2>
+        <p class="sub">
+          Keep the tool free by exploring our resources below.
+        </p>
 
-  doc.save("people-pleaser-recovery.pdf");
-}
-</script>
+        <div class="linkbtn" aria-label="Resource buttons">
+          <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">
+            View Recommended Books <span>journals + boundaries</span>
+          </a>
+          <a href="https://emotionalintelligencedeveloper.com/help/" target="_blank" rel="noopener">
+            Visit the Help Page <span>support options</span>
+          </a>
+          <a href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+            Support This Website <span>help us grow</span>
+          </a>
+        </div>
+
+        <p class="note">
+          If you feel unsafe, overwhelmed, or at risk of harm, please seek urgent support in your area.
+        </p>
+      </aside>
+    </div>
+
+    <footer>
+      Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      const toolUrl = window.location.href;
+      const siteUrl = "https://emotionalintelligencedeveloper.com/";
+      const title = "People-Pleaser Recovery Tool";
+      const shareText = "A gentle tool to reduce people-pleasing, build boundaries, and ease anxiety. Try it here:";
+
+      const intensity = document.getElementById("intensity");
+      const intensityLabel = document.getElementById("intensityLabel");
+      const intensityTag = document.getElementById("intensityTag");
+
+      const q1 = document.getElementById("q1");
+      const q2 = document.getElementById("q2");
+      const q3 = document.getElementById("q3");
+      const q4 = document.getElementById("q4");
+      const q5 = document.getElementById("q5");
+
+      const buildBtn = document.getElementById("buildBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const downloadBtn = document.getElementById("downloadBtn");
+
+      const result = document.getElementById("result");
+      const recoveryText = document.getElementById("recoveryText");
+      const planList = document.getElementById("planList");
+      const smallPrint = document.getElementById("smallPrint");
+
+      const copyStatus = document.getElementById("copyStatus");
+      const copyLinkBtn = document.getElementById("copyLinkBtn");
+      const nativeShareBtn = document.getElementById("nativeShareBtn");
+
+      const quickLine = document.getElementById("quickLine");
+
+      const state = {
+        fearPick: "",
+        boundaryPick: "",
+        quickPick: ""
+      };
+
+      function clampText(s){
+        return (s || "").toString().trim();
+      }
+
+      function vibeFromIntensity(n){
+        if(n <= 2) return { label: n + "/10", tag: "Calm right now (still worth practicing)" };
+        if(n <= 5) return { label: n + "/10", tag: "Balanced but tense" };
+        if(n <= 7) return { label: n + "/10", tag: "High pressure (pause before you answer)" };
+        return { label: n + "/10", tag: "Overwhelming (go extra gentle today)" };
+      }
+
+      function updateIntensity(){
+        const n = Number(intensity.value);
+        const v = vibeFromIntensity(n);
+        intensityLabel.textContent = v.label;
+        intensityTag.textContent = v.tag;
+      }
+      intensity.addEventListener("input", updateIntensity);
+      updateIntensity();
+
+      // Pills (fear + boundary)
+      document.querySelectorAll(".pill[data-pick]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const group = btn.getAttribute("data-pick");
+          const value = btn.getAttribute("data-value");
+
+          // toggle behavior inside group (single select)
+          document.querySelectorAll(`.pill[data-pick="${group}"]`).forEach(b => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+
+          if(group === "fear") state.fearPick = value;
+          if(group === "boundary") {
+            state.boundaryPick = value;
+            // populate q5 if empty or if user hasn't typed much
+            const current = clampText(q5.value);
+            if(!current || current.length < 6){
+              q5.value = value;
+            }
+          }
+        });
+      });
+
+      // Quick phrase buttons
+      document.querySelectorAll(".pill[data-quick]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".pill[data-quick]").forEach(b => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+          state.quickPick = btn.getAttribute("data-quick") || "";
+          quickLine.textContent = "Try saying: “" + state.quickPick + "”";
+        });
+      });
+
+      function buildRecovery(){
+        const n = Number(intensity.value);
+        const yesZones = clampText(q1.value);
+        const fearDetail = clampText(q2.value);
+        const moodImpact = clampText(q3.value);
+        const sacrifices = clampText(q4.value);
+        const boundary = clampText(q5.value) || state.boundaryPick || "Let me get back to you.";
+
+        const fear = state.fearPick ? state.fearPick : "I might upset someone / be judged";
+        const intensityPhrase =
+          n >= 8 ? "Your body is carrying a lot right now." :
+          n >= 6 ? "You’re under pressure to keep things smooth." :
+          n >= 3 ? "Part of you is trying to stay safe by being agreeable." :
+                   "You have space today to practice boundaries gently.";
+
+        const messageParts = [];
+        messageParts.push(intensityPhrase);
+        messageParts.push("People-pleasing often comes from a protective instinct: “If I keep others happy, I stay safe.”");
+        messageParts.push("But your needs matter too. Boundaries aren’t aggression — they’re clarity.");
+
+        if(yesZones){
+          messageParts.push("Where you often over-give: " + yesZones);
+        }
+        messageParts.push("What you fear could happen if you disappoint someone: " + fear + (fearDetail ? " — " + fearDetail : ""));
+
+        if(moodImpact){
+          messageParts.push("How it impacts you: " + moodImpact);
+        }
+        if(sacrifices){
+          messageParts.push("What you’ve been putting aside: " + sacrifices);
+        }
+
+        messageParts.push("Your practice boundary for this week: “" + boundary + "”");
+        messageParts.push("You’re allowed to be kind and still say no.");
+
+        const recovery = messageParts.join(" ");
+
+        // Plan
+        const plan = [];
+        plan.push("Use the pause: don’t answer immediately. Buy time with “Let me get back to you.”");
+        plan.push("Practice the boundary once this week (low-stakes first). Example: a small request, not a big confrontation.");
+        plan.push("After you hold the boundary, do one self-respect action: rest, a short walk, journaling, or telling yourself “I did the hard thing.”");
+
+        // Tailor plan a bit
+        if(n >= 8){
+          plan[0] = "Go extra gentle: delay your answer. Your nervous system needs safety first.";
+          plan.push("If guilt hits, breathe out longer than you breathe in (4 seconds in, 6 seconds out) for 60 seconds.");
+        } else if(n <= 2){
+          plan.push("Since it feels calmer today: write 1 boundary you want to keep for the next month.");
+        }
+
+        // Show
+        recoveryText.textContent = recovery;
+        planList.innerHTML = "";
+        plan.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          planList.appendChild(li);
+        });
+
+        smallPrint.textContent =
+          "Reminder: people-pleasing patterns can be shaped by anxiety, past experiences, or fear of conflict. You don’t have to solve it all today — just practice one small boundary.";
+
+        result.classList.add("show");
+        result.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        return { recovery, plan, boundary, fear, n, yesZones, fearDetail, moodImpact, sacrifices };
+      }
+
+      buildBtn.addEventListener("click", buildRecovery);
+
+      resetBtn.addEventListener("click", () => {
+        q1.value = "";
+        q2.value = "";
+        q3.value = "";
+        q4.value = "";
+        q5.value = "";
+        state.fearPick = "";
+        state.boundaryPick = "";
+        state.quickPick = "";
+
+        document.querySelectorAll(".pill[aria-pressed]").forEach(b => b.setAttribute("aria-pressed", "false"));
+        quickLine.textContent = "";
+        intensity.value = 5;
+        updateIntensity();
+
+        result.classList.remove("show");
+        copyStatus.textContent = "";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      // Share links
+      function setShareLinks(){
+        const url = encodeURIComponent(toolUrl);
+        const text = encodeURIComponent(shareText + " " + toolUrl);
+
+        document.getElementById("shareWhatsApp").href = "https://wa.me/?text=" + text;
+        document.getElementById("shareX").href = "https://twitter.com/intent/tweet?text=" + text;
+        document.getElementById("shareFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+        document.getElementById("shareLinkedIn").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + url;
+      }
+      setShareLinks();
+
+      nativeShareBtn.addEventListener("click", async () => {
+        try{
+          if(navigator.share){
+            await navigator.share({ title, text: shareText, url: toolUrl });
+            copyStatus.textContent = "Shared.";
+          }else{
+            copyStatus.textContent = "Sharing not supported on this device — use the buttons or copy the link.";
+          }
+        }catch(e){
+          // user cancelled share: do nothing
+        }
+      });
+
+      copyLinkBtn.addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText(toolUrl);
+          copyStatus.textContent = "Link copied.";
+          setTimeout(()=> copyStatus.textContent = "", 1800);
+        }catch(e){
+          // fallback
+          const ta = document.createElement("textarea");
+          ta.value = toolUrl;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          copyStatus.textContent = "Link copied.";
+          setTimeout(()=> copyStatus.textContent = "", 1800);
+        }
+      });
+
+      // PDF generator (one-pager)
+      async function generatePDF(){
+        const data = buildRecovery(); // ensures content exists
+        const { jsPDF } = window.jspdf || {};
+        if(!jsPDF){
+          alert("PDF library didn't load. Please refresh and try again.");
+          return;
+        }
+
+        const doc = new jsPDF({ unit: "pt", format: "a4" });
+        const left = 44;
+        const top = 52;
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const maxW = pageW - left * 2;
+
+        function wrap(text, size){
+          doc.setFontSize(size);
+          return doc.splitTextToSize(text, maxW);
+        }
+
+        // Header
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(siteUrl, left, 28);
+
+        doc.setFontSize(18);
+        doc.text("People-Pleaser Recovery — One-Page Reflection", left, top);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(80);
+
+        let y = top + 20;
+        doc.text("Date: " + new Date().toLocaleDateString(), left, y);
+        y += 18;
+        doc.text("Tool: " + toolUrl, left, y);
+        y += 18;
+
+        // Divider line
+        doc.setDrawColor(220);
+        doc.line(left, y, pageW - left, y);
+        y += 18;
+
+        // Summary
+        doc.setTextColor(17);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Your snapshot", left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        const snap = [
+          "Intensity: " + data.n + "/10",
+          "Main fear: " + data.fear,
+          "Practice boundary: “" + (data.boundary || "") + "”"
+        ].join("  •  ");
+        wrap(snap, 11).forEach(line => { doc.text(line, left, y); y += 14; });
+
+        y += 6;
+        doc.setDrawColor(235);
+        doc.line(left, y, pageW - left, y);
+        y += 16;
+
+        // Answers (tight, one page)
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Your answers (short form)", left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+
+        const qa = [
+          ["1) Where I say yes too quickly:", data.yesZones || "—"],
+          ["2) What I fear if I disappoint:", (data.fearDetail ? (data.fear + " — " + data.fearDetail) : data.fear) || "—"],
+          ["3) How it affects my mood:", data.moodImpact || "—"],
+          ["4) What I put aside:", data.sacrifices || "—"]
+        ];
+
+        qa.forEach(([q,a]) => {
+          doc.setFont("helvetica","bold"); doc.text(q, left, y); y += 12;
+          doc.setFont("helvetica","normal");
+          wrap(a, 10).forEach(line => { doc.text(line, left, y); y += 12; });
+          y += 6;
+        });
+
+        // Recovery message (shortened)
+        doc.setDrawColor(220);
+        doc.line(left, y, pageW - left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Your recovery message", left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        const trimmed = data.recovery.length > 520 ? (data.recovery.slice(0, 520) + "…") : data.recovery;
+        wrap(trimmed, 10).forEach(line => { doc.text(line, left, y); y += 12; });
+
+        y += 8;
+
+        // Plan
+        doc.setDrawColor(220);
+        doc.line(left, y, pageW - left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Your 3-step plan", left, y);
+        y += 14;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        data.plan.slice(0, 4).forEach((p, i) => {
+          const lines = wrap((i+1) + ". " + p, 10);
+          lines.forEach(line => { doc.text(line, left, y); y += 12; });
+          y += 2;
+        });
+
+        // Footer
+        doc.setFontSize(9);
+        doc.setTextColor(110);
+        doc.text("Created by Emotional Intelligence Developer — " + siteUrl, left, pageH - 22);
+
+        doc.save("people-pleaser-recovery-one-page.pdf");
+      }
+
+      downloadBtn.addEventListener("click", generatePDF);
+
+      // Improve keyboard flow: Enter on q5 triggers build
+      q5.addEventListener("keydown", (e) => {
+        if(e.key === "Enter"){
+          e.preventDefault();
+          buildBtn.click();
+        }
+      });
+
+      // If PDF library is slow, make sure it can load before first click
+      window.addEventListener("load", () => {
+        // no-op, just ensures deferred script is ready
+      });
+    })();
+  </script>
 </body>
 </html>

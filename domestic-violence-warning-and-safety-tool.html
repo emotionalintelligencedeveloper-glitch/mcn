@@ -1,261 +1,650 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Domestic Violence Warning & Safety Tool</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Domestic Violence: Safety & Gentle Support Check-In</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #142033;
+      --muted: #4f5f78;
+      --line: #d8e0ee;
+      --soft: #eef4ff;
+      --accent: #3f6ee8;
+      --accent-dark: #2f57bf;
+      --ok: #0f9c7b;
+      --warn: #fff6e8;
+      --warn-line: #f8d39a;
+      --danger: #b42318;
+      --chip: #eaf0ff;
+      --shadow: 0 10px 28px rgba(18, 39, 84, 0.1);
+      --radius: 14px;
+    }
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#1f6feb;
-  --soft:#eff6ff;
-  --warn:#fff7ed;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:820px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
-}
-h1{margin:0 0 10px;font-size:22px}
-.lead{color:var(--muted);margin-bottom:18px;line-height:1.6}
+    * { box-sizing: border-box; }
 
-.notice{
-  background:var(--warn);
-  border:1px solid #fed7aa;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:20px;
-  font-size:0.95rem;
-}
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f7f9fe, #eef2fb 55%, #edf3f8);
+      color: var(--ink);
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.q{
-  margin:16px 0;
-  padding:14px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-textarea{
-  width:100%;
-  min-height:90px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-}
+    .container {
+      width: min(980px, 100% - 24px);
+      margin: 20px auto 100px;
+      display: grid;
+      gap: 14px;
+    }
 
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
 
-.result{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #bfdbfe;
-  line-height:1.6;
-}
+    h1, h2, h3 {
+      margin: 0 0 10px;
+      line-height: 1.25;
+      color: #0f1b2e;
+    }
 
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
+    h1 { font-size: clamp(1.35rem, 2.4vw, 1.9rem); }
+    h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+    h3 { font-size: 1rem; }
 
-.ads-label{font-size:13px;color:var(--muted);margin-top:26px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
-footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+    p { margin: 0 0 10px; color: var(--muted); }
+
+    .small { font-size: 0.9rem; color: var(--muted); }
+
+    .notice {
+      background: var(--warn);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+      color: #5b3a0f;
+      font-size: 0.95rem;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button, .btn-link {
+      border: 0;
+      border-radius: 10px;
+      min-height: 44px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    button:focus-visible, .btn-link:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(63, 110, 232, 0.25);
+      outline-offset: 1px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-soft {
+      background: var(--soft);
+      color: #203762;
+      border: 1px solid #cad8fa;
+    }
+
+    .btn-ghost {
+      background: #f6f8fc;
+      border: 1px solid var(--line);
+      color: #22304a;
+    }
+
+    .btn-danger {
+      background: #fef0ef;
+      border: 1px solid #f7c3bf;
+      color: var(--danger);
+    }
+
+    .grid-2 { display: grid; gap: 10px; grid-template-columns: 1fr; }
+
+    @media (min-width: 760px) {
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card { padding: 22px; }
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: var(--chip);
+      border: 1px solid #c7d7fb;
+      color: #1f3768;
+    }
+
+    .chip.active {
+      background: #d8e5ff;
+      border-color: #9ab7ff;
+      color: #102a57;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid #cfd7e5;
+      border-radius: 10px;
+      padding: 11px 12px;
+      color: #1b2740;
+      background: #fff;
+      font: inherit;
+    }
+
+    textarea { min-height: 95px; resize: vertical; }
+
+    .checklist {
+      margin: 8px 0 0;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: #fbfdff;
+      color: #21324f;
+    }
+
+    .toggle-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #fbfdff;
+    }
+
+    .toggle-item .toggle-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toggle-content {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #d7deeb;
+      display: none;
+      color: #2d4166;
+      font-size: 0.95rem;
+    }
+
+    .toggle-item.active .toggle-content { display: block; }
+
+    .draft-box {
+      background: #f7f9ff;
+      border: 1px solid #d5e0fa;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .output {
+      white-space: pre-wrap;
+      min-height: 85px;
+      border: 1px dashed #bcccf0;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      margin-top: 8px;
+      color: #1b2b4c;
+    }
+
+    .sticky-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(245, 248, 255, 0.96);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid #d0daee;
+      z-index: 30;
+    }
+
+    .sticky-inner {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    @media (min-width: 640px) {
+      .sticky-inner { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .privacy-note {
+      background: #f8fafc;
+      border-left: 3px solid #8ba3d8;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <main class="container" id="toolRoot">
+    <section class="card">
+      <h1>Domestic Violence: Safety &amp; Gentle Support Check-In</h1>
+      <p>You&rsquo;re not alone. You deserve safety. If you&rsquo;re hurting, scared to talk, or unsure how to explain what&rsquo;s happening, this is a calm place to take one small step. You don&rsquo;t have to explain everything today.</p>
+      <div class="notice"><strong>If you&rsquo;re in immediate danger, call your local emergency number.</strong></div>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn-danger" id="quickExitBtn" type="button" aria-label="Quick Exit">🚪 Quick Exit</button>
+        <button class="btn-ghost" id="hideResetBtn" type="button">🧹 Hide / Reset</button>
+        <label class="btn-soft" style="gap:8px; cursor:pointer;">
+          <input type="checkbox" id="saveToggle" style="width:18px;height:18px;" />
+          Save on this device
+        </label>
+      </div>
+      <p class="small" style="margin-top:8px;">Save option uses local storage in this browser only. Not recommended on shared devices.</p>
+    </section>
 
-<h1>Domestic Violence Warning & Safety Tool</h1>
+    <section class="card">
+      <h2>1) I&rsquo;m not sure if it&rsquo;s abuse</h2>
+      <p>If any of these feel familiar, your feelings matter. You are not overreacting for wanting safety and respect.</p>
+      <div class="grid-2">
+        <ul class="checklist">
+          <li><label><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour (who you see, where you go)</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="isolation" /> Isolation from friends, family, or support</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="threats" /> Threats, intimidation, or fear tactics</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="financial control" /> Financial control (money, work, access)</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="sexual coercion" /> Sexual pressure or coercion</label></li>
+        </ul>
+        <ul class="checklist">
+          <li><label><input type="checkbox" class="abuse-check" value="verbal degradation" /> Verbal degradation, insults, humiliation</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="stalking" /> Stalking or repeated unwanted contact</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="digital monitoring" /> Digital monitoring (phone, social, location)</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="physical harm" /> Physical harm or threats of harm</label></li>
+          <li><label><input type="checkbox" class="abuse-check" value="walking on eggshells" /> Constantly walking on eggshells</label></li>
+        </ul>
+      </div>
+    </section>
 
-<p class="lead">
-This tool is a quiet, private space to reflect.
-If something in your relationship feels confusing, frightening, or controlling,
-you deserve clarity and safety — without pressure or judgment.
-</p>
+    <section class="card">
+      <h2>2) Guided reflection flow</h2>
 
-<div class="notice">
-<strong>If you are in immediate danger:</strong><br>
-Please contact local emergency services or a trusted person right now.
-This tool is for reflection and support, not emergency response.
-</div>
+      <h3>Step 1: How are you feeling right now?</h3>
+      <div class="chips" id="feelingChips">
+        <button class="chip" type="button" data-value="scared">Scared</button>
+        <button class="chip" type="button" data-value="numb">Numb</button>
+        <button class="chip" type="button" data-value="confused">Confused</button>
+        <button class="chip" type="button" data-value="ashamed">Ashamed</button>
+        <button class="chip" type="button" data-value="anxious">Anxious</button>
+        <button class="chip" type="button" data-value="angry">Angry</button>
+        <button class="chip" type="button" data-value="hopeful">Hopeful</button>
+        <button class="chip" type="button" data-value="exhausted">Exhausted</button>
+      </div>
+      <input type="text" id="feelingOther" placeholder="Other feeling (optional)" style="margin-top:8px;" />
 
-<div class="q"><h3>1) Do you ever feel afraid of how someone might react to you?</h3><textarea id="q1"></textarea></div>
-<div class="q"><h3>2) Have you felt controlled, monitored, or isolated?</h3><textarea id="q2"></textarea></div>
-<div class="q"><h3>3) Do arguments leave you feeling confused, ashamed, or blamed?</h3><textarea id="q3"></textarea></div>
-<div class="q"><h3>4) Have you changed your behaviour to avoid upsetting someone?</h3><textarea id="q4"></textarea></div>
-<div class="q"><h3>5) What worries you most about your current situation?</h3><textarea id="q5"></textarea></div>
+      <h3 style="margin-top:14px;">Step 2: What&rsquo;s been happening?</h3>
+      <label class="small" for="recentEvent">What happened most recently that made you come here?</label>
+      <textarea id="recentEvent" placeholder="Write as little or as much as feels safe."></textarea>
+      <label class="small" for="wishUnderstood" style="margin-top:8px; display:block;">What do you wish someone understood?</label>
+      <textarea id="wishUnderstood" placeholder="You can keep this short."></textarea>
 
-<div class="controls">
-<button class="btn" onclick="showSupport()">Show My Support Message</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+      <h3 style="margin-top:14px;">Step 3: What feels hardest about reaching out?</h3>
+      <div class="chips" id="barrierChips">
+        <button class="chip" type="button" data-value="fear of not being believed">Fear of not being believed</button>
+        <button class="chip" type="button" data-value="fear of consequences">Fear of consequences</button>
+        <button class="chip" type="button" data-value="embarrassment">Embarrassment</button>
+        <button class="chip" type="button" data-value="children">Children</button>
+        <button class="chip" type="button" data-value="money">Money</button>
+        <button class="chip" type="button" data-value="nowhere to go">Nowhere to go</button>
+        <button class="chip" type="button" data-value="still love them">Still love them</button>
+        <button class="chip" type="button" data-value="not sure it is bad enough">Unsure it&rsquo;s &ldquo;bad enough&rdquo;</button>
+      </div>
 
-<div id="result" class="result"></div>
+      <h3 style="margin-top:14px;">Step 4: One small safe step (today)</h3>
+      <div class="chips" id="smallStepChips">
+        <button class="chip" type="button" data-value="save a helpline">Save a helpline</button>
+        <button class="chip" type="button" data-value="talk to one trusted person">Talk to one trusted person</button>
+        <button class="chip" type="button" data-value="make a quiet plan">Make a quiet plan</button>
+        <button class="chip" type="button" data-value="learn warning signs">Learn warning signs</button>
+        <button class="chip" type="button" data-value="write a message draft">Write a message draft</button>
+        <button class="chip" type="button" data-value="just breathe and ground">Just breathe and ground</button>
+      </div>
+    </section>
 
-<div class="download" onclick="downloadPDF()">Download My Reflection (PDF)</div>
+    <section class="card draft-box">
+      <h2>3) Create a Reach-Out Draft</h2>
+      <p>You can choose a template, edit it, and copy it. No pressure.</p>
+      <div class="row">
+        <button class="btn-soft draft-template" type="button" data-template="Hey, can I talk? Something at home doesn’t feel safe.">Template 1</button>
+        <button class="btn-soft draft-template" type="button" data-template="I’m scared to explain it all, but I need support.">Template 2</button>
+        <button class="btn-soft draft-template" type="button" data-template="Can I stay with you / can you help me find resources?">Template 3</button>
+        <button class="btn-soft draft-template" type="button" data-template="Please don’t confront them. I’m just asking for help.">Template 4</button>
+      </div>
+      <textarea id="reachOutDraft" placeholder="Your message draft appears here."></textarea>
+      <div class="row" style="margin-top:8px;">
+        <button id="copyDraftBtn" class="btn-primary" type="button">📋 Copy Draft</button>
+        <span class="small" id="copyStatus" role="status" aria-live="polite"></span>
+      </div>
+    </section>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-<strong>Gentle learning & support resources</strong>
-<p>
-Books and journals can help you understand patterns, boundaries, and healing.
-Some links are affiliate links at no extra cost to you.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-View Recommended Books
-</a>
-</div>
+    <section class="card">
+      <h2>4) Quiet Safety Planning (only what feels safe)</h2>
+      <p>Only do what is safe in your situation.</p>
 
-<div class="help-box">
-<strong>You do not have to go through this alone.</strong>
-<p>
-If you feel unsafe or unsure what to do next,
-support options and resources are available.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
-</div>
+      <div class="toggle-item" data-toggle>
+        <div class="toggle-head">
+          <strong>Identify a safe contact</strong>
+          <button type="button" class="btn-ghost toggle-btn">Show</button>
+        </div>
+        <div class="toggle-content">
+          One person who is calm and trustworthy. You can keep contact details in a place only you can access.
+        </div>
+      </div>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+      <div class="toggle-item" data-toggle>
+        <div class="toggle-head">
+          <strong>Pack essentials list (only if safe)</strong>
+          <button type="button" class="btn-ghost toggle-btn">Show</button>
+        </div>
+        <div class="toggle-content">
+          If safe, think about: ID, keys, medications, essential documents, and emergency contacts.
+        </div>
+      </div>
 
-</div>
-</div>
+      <div class="toggle-item" data-toggle>
+        <div class="toggle-head">
+          <strong>Choose a code word with a trusted person</strong>
+          <button type="button" class="btn-ghost toggle-btn">Show</button>
+        </div>
+        <div class="toggle-content">
+          A neutral word or phrase can signal "I need help now" without details.
+        </div>
+      </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+      <div class="toggle-item" data-toggle>
+        <div class="toggle-head">
+          <strong>Consider device safety</strong>
+          <button type="button" class="btn-ghost toggle-btn">Show</button>
+        </div>
+        <div class="toggle-content">
+          If needed, clear browser history, use private mode, and sign out of shared devices.
+        </div>
+      </div>
+    </section>
 
-function showSupport(){
-  document.getElementById("result").innerHTML = `
-  <strong>You are not imagining this.</strong><br><br>
-  Feeling afraid, controlled, or diminished in a relationship is not normal or deserved.
-  Abuse is about power and control — not love, not your worth, and not your failure.<br><br>
-  You deserve safety, respect, and freedom to be yourself.
-  Reaching out for support is a brave and protective step.
-  `;
-  document.getElementById("result").style.display="block";
-}
+    <section class="card">
+      <h2>5) Help</h2>
+      <p>You can search by country and type of support.</p>
+      <a class="btn-link btn-primary" target="_blank" rel="noopener noreferrer" href="https://findahelpline.com/">🌍 Find a helpline in your country (findahelpline.com)</a>
+    </section>
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
-}
+    <section class="card">
+      <h2>6) Build Emotional Strength &amp; Boundaries (Free course + certificate)</h2>
+      <p>Completing the course earns a certificate and supports emotional intelligence skills like boundaries, self-trust, safer decision-making, and communication.</p>
+      <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html">🎓 Start the free course</a>
+    </section>
 
-function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=60,left=40,max=515;
+    <section class="card">
+      <h2>7) Share</h2>
+      <p>If this helped, you can share the tool with someone who may need a private starting point.</p>
+      <div class="row">
+        <button id="copyLinkBtn" class="btn-ghost" type="button">🔗 Copy Link</button>
+        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="waShare" href="#">WhatsApp</a>
+        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="fbShare" href="#">Facebook</a>
+        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="xShare" href="#">X</a>
+        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="liShare" href="#">LinkedIn</a>
+        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="emailShare" href="#">Email</a>
+      </div>
+      <div class="output" id="summaryOutput">Your gentle summary can appear here.</div>
+      <div class="row" style="margin-top:8px;">
+        <button class="btn-primary" id="buildSummaryBtn" type="button">Create My Gentle Summary</button>
+      </div>
+    </section>
 
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+    <section class="card">
+      <h2>8) Privacy</h2>
+      <div class="privacy-note">
+        This tool can store your reflections only in this browser if you turn on save. On shared devices, it is safer to keep save off and use Quick Exit + Hide/Reset.
+      </div>
+    </section>
 
-  doc.setFontSize(18);
-  doc.text("Domestic Violence Warning & Safety Reflection", left, y); y+=30;
+    <section class="card">
+      <h3 style="margin-bottom:8px;">You can take one small step.</h3>
+      <p>You deserve safety and support. Reaching out in your own time is valid.</p>
+      <div class="footer-links">
+        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Help Page</a>
+        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener noreferrer">Support Us</a>
+      </div>
+    </section>
+  </main>
 
-  const qs=[
-    "Fear of reactions:",
-    "Control or isolation:",
-    "Conflict confusion or blame:",
-    "Behaviour changes for safety:",
-    "Main concern right now:"
-  ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+  <div class="sticky-bar" aria-label="Quick actions">
+    <div class="sticky-inner">
+      <button class="btn-danger" id="quickExitBtn2" type="button">Quick Exit</button>
+      <button class="btn-ghost" id="hideResetBtn2" type="button">Hide / Reset</button>
+      <a class="btn-link btn-soft" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Find Helpline</a>
+      <button class="btn-primary" id="copyDraftBtn2" type="button">Copy Draft</button>
+    </div>
+  </div>
 
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i],left,y); y+=16;
-    doc.text(as[i]||"(not written)",left+10,y,{maxWidth:max}); y+=28;
-  }
+  <script>
+    (function () {
+      const STORAGE_KEY = "dvSafetyToolDataV2";
 
-  doc.setFontSize(12);
-  doc.text("Important Note",left,y+=20);
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "This document reflects your current feelings and concerns. "
-    +"You may keep it private, revisit it later, or share it with a trusted person "
-    +"if speaking feels difficult. If you feel unsafe, please seek immediate help.",
-    max
-  ),left,y+=14);
+      const saveToggle = document.getElementById("saveToggle");
+      const copyStatus = document.getElementById("copyStatus");
+      const summaryOutput = document.getElementById("summaryOutput");
 
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left,
-    800
-  );
+      const textFields = [
+        "feelingOther",
+        "recentEvent",
+        "wishUnderstood",
+        "reachOutDraft"
+      ];
 
-  doc.save("domestic-violence-safety-reflection.pdf");
-}
-</script>
+      const chipGroups = ["feelingChips", "barrierChips", "smallStepChips"];
+
+      function getPageUrl() {
+        return window.location.href;
+      }
+
+      function buildShareLinks() {
+        const url = encodeURIComponent(getPageUrl());
+        const text = encodeURIComponent("A gentle private starting point for safety and support.");
+        document.getElementById("waShare").href = `https://wa.me/?text=${text}%20${url}`;
+        document.getElementById("fbShare").href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        document.getElementById("xShare").href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        document.getElementById("liShare").href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        document.getElementById("emailShare").href = `mailto:?subject=${encodeURIComponent("Gentle safety support tool")}&body=${text}%0A%0A${url}`;
+      }
+
+      function selectedValuesFrom(groupId) {
+        return [...document.querySelectorAll(`#${groupId} .chip.active`)].map((b) => b.dataset.value);
+      }
+
+      function gatherState() {
+        const state = {
+          saveEnabled: !!saveToggle.checked,
+          text: {},
+          checks: [...document.querySelectorAll(".abuse-check")].filter((c) => c.checked).map((c) => c.value),
+          feelings: selectedValuesFrom("feelingChips"),
+          barriers: selectedValuesFrom("barrierChips"),
+          steps: selectedValuesFrom("smallStepChips")
+        };
+        textFields.forEach((id) => {
+          state.text[id] = document.getElementById(id).value;
+        });
+        return state;
+      }
+
+      function applyState(state) {
+        if (!state) return;
+
+        if (state.text) {
+          textFields.forEach((id) => {
+            if (typeof state.text[id] === "string") {
+              document.getElementById(id).value = state.text[id];
+            }
+          });
+        }
+
+        document.querySelectorAll(".abuse-check").forEach((c) => {
+          c.checked = !!state.checks?.includes(c.value);
+        });
+
+        chipGroups.forEach((groupId) => {
+          const targetList = groupId === "feelingChips" ? state.feelings : groupId === "barrierChips" ? state.barriers : state.steps;
+          document.querySelectorAll(`#${groupId} .chip`).forEach((chip) => {
+            chip.classList.toggle("active", !!targetList?.includes(chip.dataset.value));
+          });
+        });
+
+        saveToggle.checked = !!state.saveEnabled;
+      }
+
+      function persistIfEnabled() {
+        const state = gatherState();
+        if (!state.saveEnabled) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function clearState() {
+        localStorage.removeItem(STORAGE_KEY);
+        saveToggle.checked = false;
+        document.querySelectorAll("textarea, input[type='text']").forEach((el) => {
+          el.value = "";
+        });
+        document.querySelectorAll(".abuse-check").forEach((c) => c.checked = false);
+        document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        summaryOutput.textContent = "Your gentle summary can appear here.";
+        copyStatus.textContent = "";
+      }
+
+      function quickExit() {
+        clearState();
+        window.location.replace("https://www.google.com");
+      }
+
+      function toggleChip(btn) {
+        btn.classList.toggle("active");
+        persistIfEnabled();
+      }
+
+      function buildSummary() {
+        const state = gatherState();
+        const lines = [];
+        lines.push("You’re not alone. You deserve safety.");
+        if (state.feelings.length || state.text.feelingOther) {
+          lines.push(`Right now I feel: ${[...state.feelings, state.text.feelingOther].filter(Boolean).join(", ")}.`);
+        }
+        if (state.text.recentEvent) lines.push(`Recent situation: ${state.text.recentEvent}`);
+        if (state.text.wishUnderstood) lines.push(`What I wish people understood: ${state.text.wishUnderstood}`);
+        if (state.barriers.length) lines.push(`Hardest part of reaching out: ${state.barriers.join(", ")}.`);
+        if (state.steps.length) lines.push(`One small step today: ${state.steps.join(", ")}.`);
+        if (state.checks.length) lines.push(`Possible warning signs I noticed: ${state.checks.join(", ")}.`);
+        lines.push("I can take one small step. I don’t have to explain everything today.");
+        summaryOutput.textContent = lines.join("\n\n");
+        persistIfEnabled();
+      }
+
+      function copyText(text, successMessage) {
+        navigator.clipboard.writeText(text).then(() => {
+          copyStatus.textContent = successMessage;
+        }).catch(() => {
+          copyStatus.textContent = "Could not copy automatically. You can select and copy manually.";
+        });
+      }
+
+      document.querySelectorAll(".chip").forEach((btn) => {
+        btn.addEventListener("click", () => toggleChip(btn));
+      });
+
+      document.querySelectorAll(".draft-template").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById("reachOutDraft").value = btn.dataset.template;
+          persistIfEnabled();
+        });
+      });
+
+      document.querySelectorAll("[data-toggle]").forEach((item) => {
+        const button = item.querySelector(".toggle-btn");
+        button.addEventListener("click", () => {
+          item.classList.toggle("active");
+          button.textContent = item.classList.contains("active") ? "Hide" : "Show";
+        });
+      });
+
+      [...document.querySelectorAll("textarea, input[type='text'], .abuse-check")].forEach((el) => {
+        el.addEventListener("input", persistIfEnabled);
+        el.addEventListener("change", persistIfEnabled);
+      });
+
+      saveToggle.addEventListener("change", persistIfEnabled);
+
+      document.getElementById("buildSummaryBtn").addEventListener("click", buildSummary);
+      document.getElementById("copyDraftBtn").addEventListener("click", () => copyText(document.getElementById("reachOutDraft").value || "", "Draft copied."));
+      document.getElementById("copyDraftBtn2").addEventListener("click", () => copyText(document.getElementById("reachOutDraft").value || "", "Draft copied."));
+
+      document.getElementById("copyLinkBtn").addEventListener("click", () => copyText(getPageUrl(), "Link copied."));
+
+      ["quickExitBtn", "quickExitBtn2"].forEach((id) => {
+        document.getElementById(id).addEventListener("click", quickExit);
+      });
+      ["hideResetBtn", "hideResetBtn2"].forEach((id) => {
+        document.getElementById(id).addEventListener("click", clearState);
+      });
+
+      buildShareLinks();
+
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) applyState(JSON.parse(raw));
+      } catch (_) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    })();
+  </script>
 </body>
 </html>

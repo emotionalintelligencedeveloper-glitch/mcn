@@ -1,307 +1,885 @@
-* { box-sizing: border-box; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Boundary Builder Tool</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #1f2a37;
+      --muted: #5b6675;
+      --line: #dbe4ee;
+      --accent: #4469d6;
+      --accent-2: #7b5cff;
+      --good: #1f8f4a;
+      --warn: #b76a00;
+      --danger: #b42318;
+      --shadow: 0 10px 25px rgba(31, 42, 55, 0.08);
+      --radius: 16px;
+    }
 
-body {
-  margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  line-height: 1.5;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.wrap {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 14px;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.45;
+      overflow-x: hidden;
+      width: 100%;
+    }
 
-.panel {
-  background: var(--card);
-  border: 1px solid #e8eef9;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(14px, 2.6vw, 22px);
-  margin-top: 12px;
-}
+    body {
+      font-size: clamp(15px, 2.8vw, 18px);
+    }
 
-.top {
-  text-align: center;
-}
+    .wrap {
+      width: min(960px, 100% - 1rem);
+      margin: 0 auto;
+      padding: max(0.75rem, env(safe-area-inset-top)) 0 8rem;
+    }
 
-.logo {
-  width: 86px;
-  height: 86px;
-  border-radius: 999px;
-  object-fit: cover;
-  border: 3px solid #edf2ff;
-  display: inline-block;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(0.9rem, 2.8vw, 1.3rem);
+      margin: 0.7rem 0;
+    }
 
-h1 {
-  margin: 10px 0 6px;
-  font-size: clamp(1.35rem, 3.8vw, 2rem);
-  color: var(--brand);
-}
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+      text-align: center;
+    }
 
-.lead {
-  margin: 0 auto;
-  max-width: 710px;
-  color: var(--muted);
-  font-size: 0.98rem;
-}
+    .hero img {
+      width: min(100%, 420px);
+      max-height: 150px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
 
-.progress-shell {
-  margin-top: 12px;
-  background: #e9effa;
-  border-radius: 999px;
-  overflow: hidden;
-  height: 12px;
-}
+    h1, h2, h3 {
+      margin: 0.2rem 0 0.6rem;
+      line-height: 1.2;
+    }
 
-.progress {
-  height: 100%;
-  width: 16.67%;
-  background: linear-gradient(90deg, #82a8f8, #5e8eea);
-  transition: width .3s ease;
-}
+    h1 {
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
 
-.step-meta {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 0.92rem;
-  font-weight: 600;
-}
+    h2 {
+      font-size: clamp(1.1rem, 3.2vw, 1.4rem);
+    }
 
-.step {
-  display: none;
-}
+    p { margin: 0.4rem 0; }
 
-.step.active {
-  display: block;
-}
+    .muted { color: var(--muted); }
 
-legend {
-  font-weight: 800;
-  color: var(--brand);
-  font-size: 1.08rem;
-  padding: 0;
-}
+    .progress {
+      margin-top: 0.8rem;
+    }
 
-fieldset {
-  margin: 0;
-  border: 0;
-  padding: 0;
-}
+    .progress-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #e6ecf4;
+      overflow: hidden;
+    }
 
-.hint {
-  color: var(--muted);
-  margin: 8px 0 12px;
-  font-size: 0.95rem;
-}
+    .progress-fill {
+      height: 100%;
+      width: 16.66%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.25s ease;
+    }
 
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 700;
-  color: #334155;
-}
+    .step { display: none; }
+    .step.active { display: block; }
 
-input[type="text"], textarea, select {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 11px 12px;
-  font: inherit;
-  color: var(--text);
-  background: #fff;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
 
-textarea { min-height: 92px; resize: vertical; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
-  outline: 3px solid rgba(29, 78, 216, 0.3);
-  outline-offset: 2px;
-  border-color: var(--focus);
-}
+    button, .btn, a.btn {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.55rem 0.8rem;
+      color: var(--ink);
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.2s ease;
+      width: 100%;
+      text-align: center;
+    }
 
-.slider-row { margin-bottom: 12px; }
-.slider-head { display: flex; justify-content: space-between; gap: 8px; }
-.slider-value { color: #1e40af; font-weight: 700; }
+    button:hover, .btn:hover { background: #f7f9fc; }
+    button:active, .btn:active { transform: translateY(1px); }
 
-.radio-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
-}
+    .btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+    .btn.secondary { background: #eef3ff; border-color: #d6e0ff; }
+    .btn.warn { background: #fff7ea; border-color: #f5d9a8; }
+    .btn.danger { background: #fff1f1; border-color: #ffd3d3; color: var(--danger); }
 
-.chip {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px;
-  background: #fbfdff;
-  display: flex;
-  gap: 8px;
-  align-items: start;
-  cursor: pointer;
-  font-weight: 600;
-}
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
 
-.scenario {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 10px;
-  background: #fbfdff;
-}
+    input[type="text"],
+    textarea,
+    select,
+    input[type="range"] {
+      width: 100%;
+      border: 1px solid #cfd9e6;
+      border-radius: 10px;
+      padding: 0.62rem;
+      font-size: 1rem;
+      background: #fff;
+    }
 
-.scenario h3 {
-  margin: 0 0 8px;
-  font-size: 1rem;
-  color: #1e3a8a;
-}
+    textarea { min-height: 96px; resize: vertical; }
 
-.opt-list { display: grid; gap: 8px; }
+    .range-wrap {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.6rem;
+      background: #fbfcff;
+    }
 
-.opt-btn {
-  text-align: left;
-  font: inherit;
-  border: 1px solid #cbd8ef;
-  border-radius: 10px;
-  background: #fff;
-  padding: 9px 10px;
-  cursor: pointer;
-  color: #1f2f47;
-}
+    .pill-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
-.opt-btn[aria-pressed="true"] {
-  background: #edf3ff;
-  border-color: #4e77d8;
-}
+    .pill {
+      flex: 1 1 140px;
+      border: 1px solid #ccd8ea;
+      border-radius: 999px;
+      padding: 0.55rem 0.7rem;
+      text-align: center;
+      background: #fff;
+    }
 
-.feedback {
-  margin-top: 8px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  font-size: 0.93rem;
-  display: none;
-}
+    .pill.selected,
+    .choice.selected,
+    .tone.selected,
+    .situation.selected {
+      border-color: var(--accent);
+      background: #eaf0ff;
+      color: #18356f;
+      font-weight: 700;
+    }
 
-.feedback.good { display: block; background: var(--ok-bg); color: var(--ok-t); }
-.feedback.bad { display: block; background: var(--warn-bg); color: var(--warn-t); }
+    .scenario {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.7rem;
+      margin: 0.7rem 0;
+      background: #fdfefe;
+    }
 
-.mini-btn {
-  margin-top: 8px;
-  border: 0;
-  border-radius: 8px;
-  padding: 8px 10px;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  background: #e5ecfb;
-  color: #1e3a8a;
-}
+    .choice-list { display: grid; gap: 0.45rem; margin-top: 0.45rem; }
 
-.score {
-  margin-top: 8px;
-  border-radius: 10px;
-  padding: 10px;
-  background: #eef6ff;
-  color: #0b3b67;
-  font-weight: 800;
-}
+    .feedback {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      min-height: 1.2rem;
+    }
 
-.scripts { display: grid; gap: 10px; margin-top: 10px; }
-.script {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fbfdff;
-  padding: 10px;
-}
+    .feedback.good { color: var(--good); }
+    .feedback.warn { color: var(--warn); }
 
-.script p { margin: 0 0 8px; }
+    .script {
+      border: 1px dashed #bfd0ea;
+      background: #f8fbff;
+      border-radius: 12px;
+      padding: 0.7rem;
+      margin-top: 0.6rem;
+      display: grid;
+      gap: 0.5rem;
+    }
 
-.summary {
-  border: 1px solid #c6d8f8;
-  border-radius: 12px;
-  background: #f3f8ff;
-  padding: 12px;
-}
+    .summary {
+      background: #f8fbff;
+      border: 1px solid #d5e4ff;
+      border-radius: 12px;
+      padding: 0.7rem;
+    }
 
-.summary ul { margin: 8px 0 0 18px; }
+    .sticky-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid var(--line);
+      padding: 0.55rem calc(0.55rem + env(safe-area-inset-right)) calc(0.55rem + env(safe-area-inset-bottom)) calc(0.55rem + env(safe-area-inset-left));
+      backdrop-filter: blur(8px);
+    }
 
-.nav, .action-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
+    .sticky-inner {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.45rem;
+    }
 
-.btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  background: var(--brand-2);
-  color: #fff;
-}
+    .error-panel {
+      display: none;
+      position: sticky;
+      top: 0.5rem;
+      z-index: 120;
+      border: 1px solid #ffd1d1;
+      background: #fff6f6;
+      color: #8c2020;
+      border-radius: 12px;
+      padding: 0.6rem;
+      margin-bottom: 0.7rem;
+    }
 
-.btn:hover { background: #3f70d6; }
-.btn.alt { background: #e4ebfb; color: #1e3a8a; }
-.btn.warn { background: #fee2e2; color: #991b1b; }
+    .small { font-size: 0.9em; }
 
-.status {
-  margin-top: 8px;
-  min-height: 20px;
-  color: #065f46;
-  font-size: 0.92rem;
-}
+    @media (max-width: 760px) {
+      .grid, .grid.two { grid-template-columns: 1fr; }
+    }
 
-.links, .share {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-}
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="errorPanel" class="error-panel" role="alert" aria-live="polite"></div>
 
-.links a, .share a, .share button {
-  text-decoration: none;
-  border: 1px solid #cbd8ef;
-  border-radius: 10px;
-  padding: 10px;
-  background: #fff;
-  color: #1e3a8a;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  text-align: center;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
+    <section class="card hero">
+      <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
+      <h1>Boundary Builder Tool</h1>
+      <p class="muted">It’s okay to say no. Boundaries are self-respect, not selfishness.</p>
+      <div class="progress" aria-label="Progress">
+        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+        <p id="progressText" class="small muted">Step 1 of 6</p>
+      </div>
+    </section>
 
-.share-title {
-  margin: 14px 0 8px;
-  font-weight: 800;
-  color: #334155;
-}
+    <main id="stepsContainer">
+      <section class="card step active" data-step="1">
+        <h2>Step 1 — Boundary Check-In</h2>
+        <p class="muted">You cannot grow while neglecting yourself. Check in honestly.</p>
+        <div class="range-wrap">
+          <label for="energy">Energy: <span id="energyVal">5</span>/10</label>
+          <input id="energy" type="range" min="1" max="10" value="5" />
+          <label for="stress">Stress: <span id="stressVal">5</span>/10</label>
+          <input id="stress" type="range" min="1" max="10" value="5" />
+          <label for="pressure">Pressure to say yes: <span id="pressureVal">5</span>/10</label>
+          <input id="pressure" type="range" min="1" max="10" value="5" />
+        </div>
+        <label for="pushedYes">Where do I feel pushed to say yes?</label>
+        <textarea id="pushedYes" placeholder="Example: at work when people ask for last-minute help..."></textarea>
+      </section>
 
-footer {
-  margin: 14px 0 22px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.86rem;
-}
+      <section class="card step" data-step="2">
+        <h2>Step 2 — Pick a Boundary Type</h2>
+        <p class="muted">Choose the area where you need stronger boundaries right now.</p>
+        <div id="boundaryTypeGroup" class="pill-group" role="group" aria-label="Boundary types">
+          <button type="button" class="pill" data-value="Time">Time</button>
+          <button type="button" class="pill" data-value="Emotional">Emotional</button>
+          <button type="button" class="pill" data-value="Physical-space">Physical-space</button>
+          <button type="button" class="pill" data-value="Digital">Digital</button>
+          <button type="button" class="pill" data-value="Money-resource">Money-resource</button>
+        </div>
+      </section>
 
-@media (max-width: 640px) {
-  .wrap { padding: 10px; }
-  .panel { padding: 12px; }
-  .btn { flex: 1 1 140px; }
-}
+      <section class="card step" data-step="3">
+        <h2>Step 3 — NO Practice Lab</h2>
+        <p class="muted">Choose the healthiest response in each scenario. Score: <strong id="scoreText">0 / 6</strong> — <strong id="scoreLabel">Beginner</strong></p>
+        <div id="scenariosWrap"></div>
+      </section>
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
+      <section class="card step" data-step="4">
+        <h2>Step 4 — Build My Boundary Scripts</h2>
+        <p class="muted">Pick a tone and situation. Generate 3 scripts you can copy and use today.</p>
+
+        <label>Tone</label>
+        <div id="toneGroup" class="grid two" role="group" aria-label="Tone">
+          <button type="button" class="tone" data-value="Soft">Soft</button>
+          <button type="button" class="tone" data-value="Firm">Firm</button>
+          <button type="button" class="tone" data-value="Very Firm">Very Firm</button>
+        </div>
+
+        <label>Situation</label>
+        <div id="situationGroup" class="grid two" role="group" aria-label="Situation">
+          <button type="button" class="situation" data-value="work">work</button>
+          <button type="button" class="situation" data-value="family">family</button>
+          <button type="button" class="situation" data-value="friend">friend</button>
+          <button type="button" class="situation" data-value="relationship">relationship</button>
+          <button type="button" class="situation" data-value="online">online</button>
+          <button type="button" class="situation" data-value="other">other</button>
+        </div>
+
+        <div class="grid two" style="margin-top: 0.7rem;">
+          <button id="generateScripts" class="btn primary" type="button">Generate 3 Scripts</button>
+          <button id="copyAllScripts" class="btn secondary" type="button">Copy All</button>
+        </div>
+
+        <div id="scriptsWrap"></div>
+      </section>
+
+      <section class="card step" data-step="5">
+        <h2>Step 5 — Self-Respect Plan</h2>
+        <p class="muted">A tiny plan this week can protect your energy and growth.</p>
+        <label for="weeklyBoundary">1 boundary I’ll set this week</label>
+        <input id="weeklyBoundary" type="text" maxlength="180" placeholder="I will stop accepting work messages after 8pm." />
+        <label for="stopDoing">1 thing I’ll stop doing</label>
+        <input id="stopDoing" type="text" maxlength="180" placeholder="Over-explaining when I say no." />
+        <label for="doForMyself">1 thing I’ll do for myself</label>
+        <input id="doForMyself" type="text" maxlength="180" placeholder="Take a 20-minute walk each evening." />
+        <label for="reminderSentence">Reminder sentence</label>
+        <textarea id="reminderSentence" placeholder="My boundaries protect my peace and growth."></textarea>
+      </section>
+
+      <section class="card step" data-step="6">
+        <h2>Step 6 — Results + PDF</h2>
+        <div id="resultSummary" class="summary"></div>
+        <div class="grid two" style="margin-top: 0.7rem;">
+          <button id="downloadPdf" class="btn primary" type="button">Download 1-Page Boundary Plan (PDF)</button>
+          <button id="downloadPdfFallback" class="btn warn" type="button">iPhone/Safari PDF Fallback</button>
+        </div>
+      </section>
+    </main>
+
+    <section class="card">
+      <h3>Share this tool with a friend who needs stronger boundaries</h3>
+      <div class="grid two">
+        <button id="copyLink" type="button" class="btn secondary">Copy Link</button>
+        <a id="shareWhatsapp" class="btn" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a id="shareFacebook" class="btn" href="#" target="_blank" rel="noopener">Facebook Share</a>
+        <a id="shareX" class="btn" href="#" target="_blank" rel="noopener">X Share</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="grid two">
+        <a class="btn" href="https://emotionalintelligencedeveloper.com/forums/" target="_blank" rel="noopener">Forums</a>
+        <a class="btn" href="https://emotionalintelligencedeveloper.com/emotional-intelligence-developer-quizzes/" target="_blank" rel="noopener">Quizzes</a>
+        <a class="btn" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support this website</a>
+        <button id="clearData" type="button" class="btn danger">Clear My Data</button>
+      </div>
+    </section>
+  </div>
+
+  <nav class="sticky-nav" aria-label="Step navigation">
+    <div class="sticky-inner">
+      <button id="backBtn" type="button" class="btn">Back</button>
+      <button id="resetBtn" type="button" class="btn danger">Reset</button>
+      <button id="nextBtn" type="button" class="btn primary">Next</button>
+    </div>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const STORAGE_KEY = "boundaryBuilderToolStateV2";
+      const totalSteps = 6;
+      const defaults = {
+        currentStep: 1,
+        checkIn: { energy: 5, stress: 5, pressure: 5, pushedYes: "" },
+        boundaryType: "",
+        scenariosAnswers: {},
+        scenariosCorrect: {},
+        score: 0,
+        scoreLabel: "Beginner",
+        tone: "Firm",
+        situation: "work",
+        scripts: [],
+        plan: { weeklyBoundary: "", stopDoing: "", doForMyself: "", reminderSentence: "" }
+      };
+
+      const scenarios = [
+        { id: 1, prompt: "A coworker asks you to stay late again, but you’re exhausted.", options: ["Sure, I guess I can.", "No, I can’t tonight. I need rest.", "I’ll do it and complain later."], correct: 1 },
+        { id: 2, prompt: "A family member demands immediate help during your personal time.", options: ["I’m not available right now, but I can check tomorrow.", "Fine, I’ll drop everything.", "Ignore them without saying anything."], correct: 0 },
+        { id: 3, prompt: "A friend keeps venting for hours every night.", options: ["I care about you, and I need to end calls by 9pm.", "Keep listening even when drained.", "You are too much. Stop calling."], correct: 0 },
+        { id: 4, prompt: "Someone keeps messaging you online late at night.", options: ["Mute notifications and reply during set hours.", "Respond instantly every time.", "Throw your phone away."], correct: 0 },
+        { id: 5, prompt: "A partner pressures you to decide before you’re ready.", options: ["I need time for myself to think clearly.", "Okay, whatever you want.", "I won’t explain anything ever."], correct: 0 },
+        { id: 6, prompt: "A colleague asks for money/resource support you cannot give.", options: ["I’m not available for that.", "Yes, even though it harms my budget.", "Maybe later, maybe never, no clear answer."], correct: 0 }
+      ];
+
+      const errorPanel = document.getElementById("errorPanel");
+      function showFriendlyError(msg) {
+        errorPanel.style.display = "block";
+        errorPanel.textContent = "Something went wrong. Please refresh this page. Details: " + String(msg || "Unknown issue");
+      }
+
+      window.addEventListener("error", (e) => showFriendlyError(e.message));
+      window.addEventListener("unhandledrejection", (e) => showFriendlyError(String(e.reason)));
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return JSON.parse(JSON.stringify(defaults));
+          const parsed = JSON.parse(raw);
+          return {
+            ...JSON.parse(JSON.stringify(defaults)),
+            ...parsed,
+            checkIn: { ...defaults.checkIn, ...(parsed.checkIn || {}) },
+            plan: { ...defaults.plan, ...(parsed.plan || {}) }
+          };
+        } catch (_) {
+          return JSON.parse(JSON.stringify(defaults));
+        }
+      }
+
+      let state = loadState();
+
+      function saveState() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+      }
+
+      const steps = Array.from(document.querySelectorAll(".step"));
+      const progressFill = document.getElementById("progressFill");
+      const progressText = document.getElementById("progressText");
+      const backBtn = document.getElementById("backBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      const energy = document.getElementById("energy");
+      const stress = document.getElementById("stress");
+      const pressure = document.getElementById("pressure");
+      const pushedYes = document.getElementById("pushedYes");
+      const energyVal = document.getElementById("energyVal");
+      const stressVal = document.getElementById("stressVal");
+      const pressureVal = document.getElementById("pressureVal");
+
+      const boundaryTypeGroup = document.getElementById("boundaryTypeGroup");
+      const scenariosWrap = document.getElementById("scenariosWrap");
+      const scoreText = document.getElementById("scoreText");
+      const scoreLabel = document.getElementById("scoreLabel");
+
+      const toneGroup = document.getElementById("toneGroup");
+      const situationGroup = document.getElementById("situationGroup");
+      const generateScriptsBtn = document.getElementById("generateScripts");
+      const copyAllScriptsBtn = document.getElementById("copyAllScripts");
+      const scriptsWrap = document.getElementById("scriptsWrap");
+
+      const weeklyBoundary = document.getElementById("weeklyBoundary");
+      const stopDoing = document.getElementById("stopDoing");
+      const doForMyself = document.getElementById("doForMyself");
+      const reminderSentence = document.getElementById("reminderSentence");
+
+      const resultSummary = document.getElementById("resultSummary");
+      const downloadPdfBtn = document.getElementById("downloadPdf");
+      const downloadPdfFallbackBtn = document.getElementById("downloadPdfFallback");
+
+      const copyLinkBtn = document.getElementById("copyLink");
+      const shareWhatsapp = document.getElementById("shareWhatsapp");
+      const shareFacebook = document.getElementById("shareFacebook");
+      const shareX = document.getElementById("shareX");
+      const clearDataBtn = document.getElementById("clearData");
+
+      function updateProgress() {
+        steps.forEach((step, idx) => step.classList.toggle("active", idx + 1 === state.currentStep));
+        progressFill.style.width = ((state.currentStep / totalSteps) * 100).toFixed(2) + "%";
+        progressText.textContent = "Step " + state.currentStep + " of " + totalSteps;
+        backBtn.disabled = state.currentStep === 1;
+        nextBtn.textContent = state.currentStep === totalSteps ? "Finish" : "Next";
+        renderResultSummary();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function scoreLabelFromScore(score) {
+        if (score <= 2) return "Beginner";
+        if (score <= 4) return "Growing";
+        return "Strong";
+      }
+
+      function renderScenarios() {
+        scenariosWrap.innerHTML = "";
+        scenarios.forEach((s) => {
+          const selected = state.scenariosAnswers[s.id];
+          const correct = state.scenariosCorrect[s.id];
+          const div = document.createElement("div");
+          div.className = "scenario";
+          const choices = s.options.map((opt, i) => {
+            const cls = selected === i ? "choice selected" : "choice";
+            return '<button type="button" class="' + cls + '" data-scenario="' + s.id + '" data-choice="' + i + '">' + String.fromCharCode(65 + i) + ". " + opt + "</button>";
+          }).join("");
+          let feedbackClass = "";
+          let feedbackText = "";
+          if (selected !== undefined) {
+            if (correct) {
+              feedbackClass = "good";
+              feedbackText = "Great boundary choice.";
+            } else {
+              feedbackClass = "warn";
+              feedbackText = "Try again. Choose the response that protects your energy with respect.";
+            }
+          }
+          div.innerHTML = '<p><strong>' + s.id + '.</strong> ' + s.prompt + '</p><div class="choice-list">' + choices + '</div><div class="feedback ' + feedbackClass + '">' + feedbackText + '</div>';
+          scenariosWrap.appendChild(div);
+        });
+      }
+
+      function updateScore() {
+        const correctCount = Object.values(state.scenariosCorrect).filter(Boolean).length;
+        state.score = correctCount;
+        state.scoreLabel = scoreLabelFromScore(correctCount);
+        scoreText.textContent = correctCount + " / 6";
+        scoreLabel.textContent = state.scoreLabel;
+        saveState();
+      }
+
+      function setSelectedButtons(container, selector, value) {
+        container.querySelectorAll(selector).forEach((btn) => {
+          btn.classList.toggle("selected", btn.getAttribute("data-value") === value);
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str || "").replace(/[&<>'"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
+      }
+
+      function buildScripts() {
+        const tone = state.tone || "Firm";
+        const situation = state.situation || "work";
+
+        const openingByTone = {
+          "Soft": "I appreciate you asking",
+          "Firm": "Thanks for understanding",
+          "Very Firm": "To be clear"
+        };
+
+        const situational = {
+          work: "for work requests outside my priorities",
+          family: "for family requests that exceed my capacity",
+          friend: "for social requests when I need rest",
+          relationship: "for relationship pressure when I need space",
+          online: "for online messages outside healthy hours",
+          other: "in this situation"
+        };
+
+        const scripts = [
+          openingByTone[tone] + ", no, I can’t " + situational[situation] + ".",
+          "I’m not available for that right now. I need time for myself.",
+          "I don’t need to explain more than necessary. My boundary is no."
+        ];
+
+        state.scripts = scripts;
+        saveState();
+        renderScripts();
+      }
+
+      function renderScripts() {
+        scriptsWrap.innerHTML = "";
+        if (!state.scripts || !state.scripts.length) return;
+        state.scripts.forEach((line, idx) => {
+          const div = document.createElement("div");
+          div.className = "script";
+          div.innerHTML = '<div><strong>Script ' + (idx + 1) + ':</strong> ' + escapeHtml(line) + '</div>' +
+            '<button type="button" class="btn secondary copy-script" data-index="' + idx + '">Copy</button>';
+          scriptsWrap.appendChild(div);
+        });
+      }
+
+      async function copyTextMobileSafe(text) {
+        const safeText = String(text || "");
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(safeText);
+            return true;
+          }
+        } catch (_) {}
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = safeText;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          ta.style.top = "0";
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ta.setSelectionRange(0, ta.value.length);
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return !!ok;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function renderResultSummary() {
+        const bestScripts = (state.scripts || []).slice(0, 3).map((s) => "• " + s).join("<br>");
+        resultSummary.innerHTML =
+          "<p><strong>Boundary Type:</strong> " + escapeHtml(state.boundaryType || "Not selected yet") + "</p>" +
+          "<p><strong>Practice Score:</strong> " + state.score + "/6 (" + escapeHtml(state.scoreLabel) + ")</p>" +
+          "<p><strong>This week boundary:</strong> " + escapeHtml(state.plan.weeklyBoundary || "—") + "</p>" +
+          "<p><strong>Stop doing:</strong> " + escapeHtml(state.plan.stopDoing || "—") + "</p>" +
+          "<p><strong>Do for myself:</strong> " + escapeHtml(state.plan.doForMyself || "—") + "</p>" +
+          "<p><strong>Reminder:</strong> " + escapeHtml(state.plan.reminderSentence || "—") + "</p>" +
+          "<p><strong>Best scripts:</strong><br>" + (bestScripts || "—") + "</p>";
+      }
+
+      function buildPdfDoc() {
+        if (!window.jspdf || !window.jspdf.jsPDF) throw new Error("PDF library unavailable");
+        const jsPDF = window.jspdf.jsPDF;
+        const doc = new jsPDF({ unit: "pt", format: "a4" });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const margin = 40;
+        const site = "https://emotionalintelligencedeveloper.com/";
+        const today = new Date().toLocaleDateString();
+
+        function headerFooter() {
+          doc.setFontSize(10);
+          doc.setTextColor(90);
+          doc.text(site, margin, 24);
+          doc.text(site, margin, pageH - 16);
+          doc.setTextColor(20);
+        }
+
+        headerFooter();
+        doc.setFontSize(20);
+        doc.text("Boundary Plan", margin, 60);
+        doc.setFontSize(11);
+        doc.text("Date: " + today, margin, 80);
+
+        let y = 110;
+        const lines = [
+          "Boundary type: " + (state.boundaryType || "Not selected"),
+          "Score label: " + state.scoreLabel + " (" + state.score + "/6)",
+          "Boundary this week: " + (state.plan.weeklyBoundary || "—"),
+          "I will stop: " + (state.plan.stopDoing || "—"),
+          "I will do for myself: " + (state.plan.doForMyself || "—"),
+          "Reminder: " + (state.plan.reminderSentence || "—"),
+          "Top scripts:",
+          ...(state.scripts.length ? state.scripts.map((s) => "- " + s) : ["- No scripts generated yet."]),
+          "",
+          "You can’t grow while neglecting yourself."
+        ];
+
+        doc.setFontSize(12);
+        lines.forEach((line) => {
+          const wrapped = doc.splitTextToSize(line, pageW - margin * 2);
+          doc.text(wrapped, margin, y);
+          y += wrapped.length * 16;
+          if (y > pageH - 48) {
+            doc.addPage();
+            headerFooter();
+            y = 52;
+          }
+        });
+        return doc;
+      }
+
+      async function downloadPdfFallbackBlob() {
+        const doc = buildPdfDoc();
+        const blob = doc.output("blob");
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "boundary-plan.pdf";
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1200);
+      }
+
+      function bindInputs() {
+        [[energy, energyVal, "energy"], [stress, stressVal, "stress"], [pressure, pressureVal, "pressure"]].forEach(([el, out, key]) => {
+          el.value = String(state.checkIn[key]);
+          out.textContent = String(state.checkIn[key]);
+          el.addEventListener("input", () => {
+            out.textContent = el.value;
+            state.checkIn[key] = Number(el.value);
+            saveState();
+          });
+        });
+
+        pushedYes.value = state.checkIn.pushedYes || "";
+        pushedYes.addEventListener("input", () => {
+          state.checkIn.pushedYes = pushedYes.value;
+          saveState();
+        });
+
+        boundaryTypeGroup.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-value]");
+          if (!btn) return;
+          state.boundaryType = btn.getAttribute("data-value") || "";
+          setSelectedButtons(boundaryTypeGroup, "button[data-value]", state.boundaryType);
+          saveState();
+        });
+
+        scenariosWrap.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-scenario]");
+          if (!btn) return;
+          const sid = Number(btn.getAttribute("data-scenario"));
+          const choice = Number(btn.getAttribute("data-choice"));
+          const scene = scenarios.find((s) => s.id === sid);
+          if (!scene) return;
+
+          state.scenariosAnswers[sid] = choice;
+          state.scenariosCorrect[sid] = choice === scene.correct;
+          saveState();
+          renderScenarios();
+          updateScore();
+        });
+
+        toneGroup.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-value]");
+          if (!btn) return;
+          state.tone = btn.getAttribute("data-value") || "Firm";
+          setSelectedButtons(toneGroup, "button[data-value]", state.tone);
+          saveState();
+        });
+
+        situationGroup.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-value]");
+          if (!btn) return;
+          state.situation = btn.getAttribute("data-value") || "work";
+          setSelectedButtons(situationGroup, "button[data-value]", state.situation);
+          saveState();
+        });
+
+        generateScriptsBtn.addEventListener("click", () => buildScripts());
+
+        scriptsWrap.addEventListener("click", async (e) => {
+          const btn = e.target.closest(".copy-script");
+          if (!btn) return;
+          const idx = Number(btn.getAttribute("data-index"));
+          const text = (state.scripts || [])[idx] || "";
+          const ok = await copyTextMobileSafe(text);
+          btn.textContent = ok ? "Copied" : "Copy failed";
+          setTimeout(() => { btn.textContent = "Copy"; }, 1200);
+        });
+
+        copyAllScriptsBtn.addEventListener("click", async () => {
+          const text = (state.scripts || []).join("\n");
+          const ok = await copyTextMobileSafe(text);
+          copyAllScriptsBtn.textContent = ok ? "Copied" : "Copy failed";
+          setTimeout(() => { copyAllScriptsBtn.textContent = "Copy All"; }, 1200);
+        });
+
+        [[weeklyBoundary, "weeklyBoundary"], [stopDoing, "stopDoing"], [doForMyself, "doForMyself"], [reminderSentence, "reminderSentence"]].forEach(([el, key]) => {
+          el.value = state.plan[key] || "";
+          el.addEventListener("input", () => {
+            state.plan[key] = el.value;
+            saveState();
+            renderResultSummary();
+          });
+        });
+
+        downloadPdfBtn.addEventListener("click", () => {
+          try {
+            const doc = buildPdfDoc();
+            doc.save("boundary-plan.pdf");
+          } catch (e) {
+            showFriendlyError(e.message || "PDF save failed");
+          }
+        });
+
+        downloadPdfFallbackBtn.addEventListener("click", async () => {
+          try {
+            await downloadPdfFallbackBlob();
+          } catch (e) {
+            showFriendlyError(e.message || "Fallback download failed");
+          }
+        });
+
+        copyLinkBtn.addEventListener("click", async () => {
+          const ok = await copyTextMobileSafe(window.location.href);
+          copyLinkBtn.textContent = ok ? "Link Copied" : "Copy failed";
+          setTimeout(() => { copyLinkBtn.textContent = "Copy Link"; }, 1200);
+        });
+
+        const shareMsg = encodeURIComponent("Boundary Builder Tool: learn to say no and protect your growth.");
+        const shareUrl = encodeURIComponent(window.location.href);
+        shareWhatsapp.href = "https://wa.me/?text=" + shareMsg + "%20" + shareUrl;
+        shareFacebook.href = "https://www.facebook.com/sharer/sharer.php?u=" + shareUrl;
+        shareX.href = "https://x.com/intent/tweet?text=" + shareMsg + "&url=" + shareUrl;
+
+        clearDataBtn.addEventListener("click", () => {
+          localStorage.removeItem(STORAGE_KEY);
+          state = JSON.parse(JSON.stringify(defaults));
+          initializeView();
+        });
+
+        backBtn.addEventListener("click", () => {
+          if (state.currentStep > 1) {
+            state.currentStep -= 1;
+            saveState();
+            updateProgress();
+          }
+        });
+
+        nextBtn.addEventListener("click", () => {
+          if (state.currentStep < totalSteps) {
+            state.currentStep += 1;
+            saveState();
+            updateProgress();
+          }
+        });
+
+        resetBtn.addEventListener("click", () => {
+          state = JSON.parse(JSON.stringify(defaults));
+          saveState();
+          initializeView();
+        });
+      }
+
+      function initializeView() {
+        if (state.currentStep < 1 || state.currentStep > totalSteps) state.currentStep = 1;
+
+        energy.value = String(state.checkIn.energy);
+        stress.value = String(state.checkIn.stress);
+        pressure.value = String(state.checkIn.pressure);
+        energyVal.textContent = String(state.checkIn.energy);
+        stressVal.textContent = String(state.checkIn.stress);
+        pressureVal.textContent = String(state.checkIn.pressure);
+        pushedYes.value = state.checkIn.pushedYes || "";
+
+        setSelectedButtons(boundaryTypeGroup, "button[data-value]", state.boundaryType);
+        renderScenarios();
+        updateScore();
+
+        setSelectedButtons(toneGroup, "button[data-value]", state.tone);
+        setSelectedButtons(situationGroup, "button[data-value]", state.situation);
+        renderScripts();
+
+        weeklyBoundary.value = state.plan.weeklyBoundary || "";
+        stopDoing.value = state.plan.stopDoing || "";
+        doForMyself.value = state.plan.doForMyself || "";
+        reminderSentence.value = state.plan.reminderSentence || "";
+
+        updateProgress();
+      }
+
+      bindInputs();
+      initializeView();
+    });
+  </script>
+</body>
+</html>

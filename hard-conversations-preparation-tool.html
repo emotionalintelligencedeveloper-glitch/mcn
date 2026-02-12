@@ -1,292 +1,770 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hard Conversations Preparation Tool — Emotional Intelligence Developer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hard Conversations Preparation Tool — Emotional Intelligence Developer</title>
+  <style>
+    :root {
+      --bg: #f6f8ff;
+      --panel: #ffffff;
+      --ink: #10243c;
+      --muted: #4b5d73;
+      --brand: #5a3ff1;
+      --brand-2: #7d68ff;
+      --calm: #0d9488;
+      --warn: #ea580c;
+      --pink: #d946ef;
+      --sun: #facc15;
+      --border: #d3ddf0;
+      --shadow: 0 14px 34px rgba(16, 36, 60, 0.12);
+      --radius: 18px;
+    }
 
-<style>
-:root{
-  --bg:#f4f6f8;
-  --card:#ffffff;
-  --accent:#6d28d9;
-  --soft:#f5f3ff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:860px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:26px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
-}
-h1{margin:0 0 8px;font-size:24px}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
+    * { box-sizing: border-box; }
 
-.notice{
-  background:#fff7ed;
-  border:1px solid #fed7aa;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:22px;
-  font-size:0.95rem;
-}
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top left, #eff2ff 0%, #f7fbff 45%, #f8f5ff 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
 
-.q{
-  margin:18px 0;
-  padding:14px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-textarea{
-  width:100%;
-  min-height:90px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-  font-size:15px;
-}
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 18px 14px 110px;
+    }
 
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:22px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{
-  background:#e5e7eb;
-  color:#111;
-}
+    .hero {
+      background: linear-gradient(130deg, #ffffff, #eef1ff);
+      border: 2px solid var(--ink);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
 
-.result{
-  display:none;
-  margin-top:24px;
-  padding:20px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #ddd6fe;
-  line-height:1.6;
-}
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -35px;
+      top: -35px;
+      width: 150px;
+      height: 150px;
+      background: #fee2e2;
+      border: 3px solid var(--ink);
+      border-radius: 100%;
+      transform: rotate(-18deg);
+      opacity: .72;
+    }
 
-.download{
-  margin-top:18px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      position: relative;
+      z-index: 1;
+    }
 
-.ads-label{font-size:13px;color:var(--muted);margin-top:28px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
+    .intro {
+      margin-top: 10px;
+      font-size: 1rem;
+      max-width: 68ch;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
 
-footer{
-  margin-top:22px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+    .support-note {
+      margin-top: 14px;
+      background: #fefce8;
+      border: 2px dashed #854d0e;
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-wrap {
+      margin-top: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .progress {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      border: 2px solid var(--ink);
+      background: #edf2ff;
+      overflow: hidden;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--brand), var(--pink));
+      transition: width .25s ease;
+    }
+
+    .section {
+      margin-top: 16px;
+      background: var(--panel);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .small { color: var(--muted); font-size: .95rem; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .tap-card {
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      text-align: left;
+      font-weight: 700;
+      min-height: 62px;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .tap-card:focus,
+    .tap-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 rgba(16,36,60,.15);
+      outline: none;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    label { font-weight: 700; display: block; margin-bottom: 6px; }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      border: 2px solid #9db0cf;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 1rem;
+      min-height: 48px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    textarea { min-height: 96px; resize: vertical; }
+
+    .choice-row,
+    .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .chip,
+    .tone-btn {
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 14px;
+      min-height: 44px;
+      background: #f9fafc;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .chip.active,
+    .tone-btn.active { background: #ede9fe; }
+
+    .checkbox-grid { display: grid; gap: 8px; margin-top: 8px; }
+
+    .checkbox-grid label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-weight: 600;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 0;
+      background: #fff;
+    }
+
+    .checkbox-grid input { margin-top: 4px; }
+
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+    .btn {
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      min-height: 48px;
+      padding: 10px 16px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn.alt { background: #fff; color: var(--ink); }
+    .btn.green { background: #059669; }
+    .btn.orange { background: #ea580c; }
+    .btn.pink { background: #db2777; }
+    .btn.blue { background: #2563eb; }
+
+    .output {
+      margin-top: 12px;
+      background: #f8fafc;
+      border: 2px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 12px;
+      white-space: pre-wrap;
+    }
+
+    .comic-bar {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .comic-btn {
+      border: 3px solid var(--ink);
+      border-radius: 18px;
+      min-height: 64px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 7px 0 rgba(16,36,60,.25);
+      transform: rotate(-1deg);
+    }
+
+    .comic-btn svg { width: 34px; height: 34px; flex: 0 0 auto; }
+
+    .help { background: linear-gradient(145deg, #0ea5e9, #1d4ed8); }
+    .books { background: linear-gradient(145deg, #f59e0b, #ea580c); }
+    .support { background: linear-gradient(145deg, #10b981, #047857); }
+    .tools { background: linear-gradient(145deg, #f43f5e, #be185d); }
+
+    .share-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .share-btn {
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      min-height: 44px;
+      padding: 10px 12px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wa { background: #22c55e; }
+    .fb { background: #1877f2; }
+    .x { background: #111827; }
+    .li { background: #0a66c2; }
+    .copy { background: #7c3aed; }
+
+    .sticky-actions {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.95);
+      border-top: 2px solid var(--ink);
+      padding: 10px;
+      display: none;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .sticky-actions .btn { flex: 1 1 120px; max-width: 200px; }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @media (max-width: 760px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .page { padding-bottom: 130px; }
+      .sticky-actions { display: flex; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <main class="page">
+    <header class="hero" aria-labelledby="main-title">
+      <h1 id="main-title">Hard Conversations — Preparation Tool</h1>
+      <p class="intro">You’re not alone. Hard conversations can be scary. Let’s prepare one small step at a time with calm, practical support. This tool is here to help you feel clearer and steadier before you speak.</p>
+      <p class="support-note">This tool is supportive and non-diagnostic. If you need urgent help, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener">https://findahelpline.com/</a>.</p>
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-meta"><span>Progress</span><span id="progressText">0 / 8 steps</span></div>
+        <div class="progress"><span id="progressBar"></span></div>
+      </div>
+    </header>
 
-<h1>Hard Conversations — Preparation Tool</h1>
-<p class="lead">
-This tool helps you slow down, organise your thoughts, and prepare for a difficult conversation
-with clarity, calm, and respect — whether it’s with a partner, family member, colleague, or friend.
-</p>
+    <section class="section">
+      <h2>Quick Start</h2>
+      <p class="small">Tap the one that feels closest to how you feel right now.</p>
+      <div class="card-grid" role="group" aria-label="Quick Start choices">
+        <button class="tap-card" type="button" data-quick="nervous">I’m nervous but I need to talk</button>
+        <button class="tap-card" type="button" data-quick="conflict">I’m scared of conflict</button>
+        <button class="tap-card" type="button" data-quick="words">I don’t know what to say</button>
+        <button class="tap-card" type="button" data-quick="boundary">I want to set a boundary</button>
+        <button class="tap-card" type="button" data-quick="apology">I want to apologize</button>
+      </div>
+    </section>
 
-<div class="notice">
-<strong>This is a preparation space.</strong><br>
-You don’t need perfect words. You just need honesty, grounding, and intention.
-</div>
+    <section class="section" id="step1">
+      <h2>1) Goal of the conversation</h2>
+      <div class="choice-row" id="goalChoices" aria-label="Goal choices">
+        <button class="chip" type="button" data-goal="clarity">Get clarity</button>
+        <button class="chip" type="button" data-goal="repair">Repair trust</button>
+        <button class="chip" type="button" data-goal="boundary">Set a boundary</button>
+        <button class="chip" type="button" data-goal="apology">Offer an apology</button>
+        <button class="chip" type="button" data-goal="request">Make a request</button>
+      </div>
+      <label for="goalText">Optional: describe your goal in your own words</label>
+      <input id="goalText" type="text" placeholder="Example: I want us to understand each other better." />
+    </section>
 
-<div class="q">
-<h3>1) What conversation are you preparing for?</h3>
-<textarea id="q1"></textarea>
-</div>
+    <section class="section" id="step2">
+      <h2>2) What I want to say</h2>
+      <div class="grid-2">
+        <div>
+          <label for="factsText">What happened (facts only)</label>
+          <textarea id="factsText" placeholder="Keep it short and specific."></textarea>
+        </div>
+        <div>
+          <label for="impactText">How it affected me</label>
+          <textarea id="impactText" placeholder="Use 'I' language if possible."></textarea>
+        </div>
+      </div>
+      <label for="hopeText">What I hope for next</label>
+      <textarea id="hopeText" placeholder="Example: I'd like us to agree on a healthier way forward."></textarea>
+    </section>
 
-<div class="q">
-<h3>2) What emotions are coming up for you right now?</h3>
-<textarea id="q2"></textarea>
-</div>
+    <section class="section" id="step3">
+      <h2>3) What I fear might happen</h2>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" class="fear-check" value="They might get angry." /> They might get angry.</label>
+        <label><input type="checkbox" class="fear-check" value="They might dismiss my feelings." /> They might dismiss my feelings.</label>
+        <label><input type="checkbox" class="fear-check" value="I might freeze or panic." /> I might freeze or panic.</label>
+        <label><input type="checkbox" class="fear-check" value="The relationship could feel strained." /> The relationship could feel strained.</label>
+      </div>
+      <label for="fearText">Other fears (optional)</label>
+      <textarea id="fearText" placeholder="Write anything else that feels true for you."></textarea>
+    </section>
 
-<div class="q">
-<h3>3) What is the core message or boundary you want to express?</h3>
-<textarea id="q3"></textarea>
-</div>
+    <section class="section" id="step4">
+      <h2>4) My boundary / request</h2>
+      <div class="grid-2">
+        <div>
+          <label for="boundaryNeed">When this happens...</label>
+          <input id="boundaryNeed" type="text" placeholder="Example: when plans change last-minute" />
+        </div>
+        <div>
+          <label for="boundaryAsk">I need / request...</label>
+          <input id="boundaryAsk" type="text" placeholder="Example: a quick message as soon as possible" />
+        </div>
+      </div>
+      <button class="btn alt" type="button" id="buildBoundary">Build boundary sentence</button>
+      <div id="boundaryOutput" class="output" aria-live="polite">Your boundary sentence will appear here.</div>
+    </section>
 
-<div class="q">
-<h3>4) What outcome would feel healthy — even if it’s not perfect?</h3>
-<textarea id="q4"></textarea>
-</div>
+    <section class="section" id="step5">
+      <h2>5) Their possible response</h2>
+      <label for="scenarioSelect">Pick the scenario that feels most likely</label>
+      <select id="scenarioSelect">
+        <option value="">Choose one...</option>
+        <option value="open">They listen and stay open</option>
+        <option value="defensive">They become defensive</option>
+        <option value="avoid">They avoid the topic</option>
+        <option value="angry">They get upset or raise their voice</option>
+        <option value="mixed">They are partly open, partly resistant</option>
+      </select>
+    </section>
 
-<div class="q">
-<h3>5) What might the other person feel or react with?</h3>
-<textarea id="q5"></textarea>
-</div>
+    <section class="section" id="step6">
+      <h2>6) My calm reply</h2>
+      <p class="small">Tone selector changes your suggested scripts:</p>
+      <div class="chip-row" role="group" aria-label="Tone Selector">
+        <button class="tone-btn active" type="button" data-tone="Calm">Calm</button>
+        <button class="tone-btn" type="button" data-tone="Firm">Firm</button>
+        <button class="tone-btn" type="button" data-tone="Gentle">Gentle</button>
+        <button class="tone-btn" type="button" data-tone="Direct">Direct</button>
+      </div>
+      <button class="btn" type="button" id="genReplies">Generate 3 calm replies</button>
+      <div id="repliesOutput" class="output" aria-live="polite">Your reply options will appear here.</div>
+    </section>
 
-<div class="q">
-<h3>6) How can you stay grounded if the conversation feels tense?</h3>
-<textarea id="q6"></textarea>
-</div>
+    <section class="section" id="step7">
+      <h2>7) A 30-second opening line</h2>
+      <button class="btn blue" type="button" id="genOpening">Generate opening lines</button>
+      <div id="openingOutput" class="output" aria-live="polite">Opening line options will appear here.</div>
+    </section>
 
-<div class="controls">
-<button class="btn" onclick="showGuidance()">Show My Preparation Guidance</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+    <section class="section" id="step8">
+      <h2>8) Pause plan if emotions spike</h2>
+      <div class="grid-2">
+        <div>
+          <label for="breathingPlan">30-second breathing plan</label>
+          <textarea id="breathingPlan" placeholder="Example: Inhale 4, hold 4, exhale 6 for 3 rounds."></textarea>
+        </div>
+        <div>
+          <label for="breakSentence">Break sentence I can use</label>
+          <textarea id="breakSentence" placeholder="Example: I care about this conversation. I need a short pause and will return in 10 minutes."></textarea>
+        </div>
+      </div>
+    </section>
 
-<div id="result" class="result"></div>
+    <section class="section">
+      <h2>Role-play practice</h2>
+      <label for="rolePlay">What might the other person say?</label>
+      <select id="rolePlay">
+        <option value="">Choose an option...</option>
+        <option value="overreacting">"You're overreacting."</option>
+        <option value="busy">"I don't have time for this."</option>
+        <option value="blame">"This is your fault."</option>
+        <option value="fine">"Everything is fine. Why bring this up?"</option>
+        <option value="later">"Let's talk later."</option>
+      </select>
+      <button class="btn pink" type="button" id="genRoleplay">Practice response</button>
+      <div id="roleplayOutput" class="output" aria-live="polite">A grounded response and follow-up question will appear here.</div>
+    </section>
 
-<div class="download" onclick="downloadPDF()">Download My Conversation Plan (PDF)</div>
+    <section class="section">
+      <h2>Share this tool</h2>
+      <p class="small">Share this page with someone who may need support preparing a hard conversation.</p>
+      <div class="share-row">
+        <a id="shareWhatsApp" class="share-btn wa" target="_blank" rel="noopener" href="#">WhatsApp</a>
+        <a id="shareFacebook" class="share-btn fb" target="_blank" rel="noopener" href="#">Facebook</a>
+        <a id="shareX" class="share-btn x" target="_blank" rel="noopener" href="#">X (Twitter)</a>
+        <a id="shareLinkedIn" class="share-btn li" target="_blank" rel="noopener" href="#">LinkedIn</a>
+        <button id="copyLink" class="share-btn copy" type="button">Copy Link</button>
+      </div>
+      <p id="copyLinkStatus" class="small" role="status" aria-live="polite"></p>
+    </section>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-<strong>Build confidence in communication</strong>
-<p>
-Our Recommended Books include journals and guides on boundaries, communication,
-emotional intelligence, and self-respect. Some links are affiliate links at no extra cost to you.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-View Recommended Books
-</a>
-</div>
+    <section class="section">
+      <h2>Save / Export</h2>
+      <div class="btn-row">
+        <button class="btn green" id="copyPlan" type="button">Copy my plan</button>
+        <button class="btn orange" id="downloadPdf" type="button">Download as PDF</button>
+        <button class="btn alt" id="printView" type="button">Print-friendly view</button>
+        <button class="btn alt" id="resetAll" type="button">Reset</button>
+      </div>
+      <p id="copyPlanStatus" class="small" role="status" aria-live="polite"></p>
+    </section>
 
-<div class="help-box">
-<strong>Need extra support?</strong>
-<p>
-If conversations feel overwhelming, our help page shares grounding tools
-and support resources.
-</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
-</div>
+    <section class="section">
+      <h2>Helpful links</h2>
+      <div class="comic-bar">
+        <a class="comic-btn help" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help Page">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 12h44v28H30l-12 12V40H10z" fill="#fff" stroke="#10243c" stroke-width="3"/><circle cx="24" cy="26" r="4" fill="#0ea5e9"/><circle cx="33" cy="26" r="4" fill="#0ea5e9"/><circle cx="42" cy="26" r="4" fill="#0ea5e9"/></svg>
+          HELP PAGE
+        </a>
+        <a class="comic-btn books" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 14h18a8 8 0 0 1 8 8v28H20a8 8 0 0 0-8 8z" fill="#fff" stroke="#10243c" stroke-width="3"/><path d="M52 14H34a8 8 0 0 0-8 8v28h18a8 8 0 0 1 8 8z" fill="#fff" stroke="#10243c" stroke-width="3"/></svg>
+          Recommended Audio Books
+        </a>
+        <a class="comic-btn support" href="https://emotionalintelligencedeveloper.com/support-us/" target="_blank" rel="noopener" aria-label="Support Us">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 54 12 34a12 12 0 0 1 17-17l3 3 3-3a12 12 0 0 1 17 17z" fill="#fff" stroke="#10243c" stroke-width="3"/></svg>
+          SUPPORT US
+        </a>
+        <a class="comic-btn tools" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="More Free Wellbeing Tools">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 38 22 56 22 41 33 47 50 32 39 17 50 23 33 8 22 26 22z" fill="#fff" stroke="#10243c" stroke-width="3"/></svg>
+          More Free Wellbeing Tools
+        </a>
+      </div>
+      <p class="small" style="margin-top:10px;">If you need urgent help, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener">https://findahelpline.com/</a>.</p>
+    </section>
+  </main>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+  <div class="sticky-actions" aria-label="Quick actions">
+    <button class="btn" type="button" id="stickyGenerate">Generate scripts</button>
+    <button class="btn green" type="button" id="stickyCopy">Copy plan</button>
+    <button class="btn orange" type="button" id="stickyPdf">PDF</button>
+    <button class="btn alt" type="button" id="stickyReset">Reset</button>
+  </div>
 
-</div>
-</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const state = { tone: "Calm", goal: "" };
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+    const quickStartPresets = {
+      nervous: {
+        goal: "clarity",
+        goalText: "I want to speak honestly without escalating.",
+        fearText: "I am worried my voice may shake and I might forget my words.",
+        breathing: "Inhale for 4, exhale for 6 for 5 rounds. Relax shoulders on every exhale."
+      },
+      conflict: {
+        goal: "repair",
+        goalText: "I want a respectful conversation without arguing.",
+        fearText: "I fear conflict and tense reactions.",
+        breathing: "Place one hand on chest and one on belly. Slow inhale 4, exhale 6."
+      },
+      words: {
+        goal: "request",
+        goalText: "I want help finding simple, clear words.",
+        facts: "When this happened, I felt overwhelmed.",
+        hope: "I hope we can talk in a calmer way going forward."
+      },
+      boundary: {
+        goal: "boundary",
+        goalText: "I want to set a clear and kind boundary.",
+        boundaryNeed: "when I receive repeated messages late at night",
+        boundaryAsk: "messages during daytime unless urgent"
+      },
+      apology: {
+        goal: "apology",
+        goalText: "I want to take accountability and rebuild trust.",
+        facts: "I interrupted you and dismissed what you were saying.",
+        impact: "I can see that it may have hurt and frustrated you."
+      }
+    };
 
-function showGuidance(){
-  const box = document.getElementById("result");
-  box.innerHTML = `
-  <strong>Your preparation reminder:</strong><br><br>
-  • You can speak calmly without over-explaining.<br>
-  • You are allowed to pause, breathe, or stop the conversation if needed.<br>
-  • This is about clarity and respect — not winning.<br><br>
-  <em>A helpful opening line:</em><br>
-  “This is hard for me to say, but I want to be honest and respectful.”
-  `;
-  box.style.display="block";
-}
+    function byId(id) { return document.getElementById(id); }
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("result").style.display="none";
-}
+    function applyQuickStart(key) {
+      const p = quickStartPresets[key] || {};
+      if (p.goal) selectGoal(p.goal);
+      ["goalText","facts","impact","hope","fearText","boundaryNeed","boundaryAsk","breathing"].forEach(field => {
+        const map = { facts:"factsText", impact:"impactText", hope:"hopeText", breathing:"breathingPlan" };
+        const target = map[field] || field;
+        if (p[field] && byId(target)) byId(target).value = p[field];
+      });
+      updateProgress();
+    }
 
-function downloadPDF(){
-  const doc = new jsPDF({unit:"pt",format:"a4"});
-  let y = 50, left = 40, max = 515;
+    function selectGoal(goal) {
+      state.goal = goal;
+      document.querySelectorAll("#goalChoices .chip").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.goal === goal);
+      });
+      updateProgress();
+    }
 
-  doc.setFontSize(12);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+    function updateProgress() {
+      const checks = [
+        !!state.goal || !!byId("goalText").value.trim(),
+        !!(byId("factsText").value.trim() || byId("impactText").value.trim() || byId("hopeText").value.trim()),
+        !!(document.querySelectorAll(".fear-check:checked").length || byId("fearText").value.trim()),
+        !!(byId("boundaryNeed").value.trim() && byId("boundaryAsk").value.trim()),
+        !!byId("scenarioSelect").value,
+        byId("repliesOutput").textContent.includes("1."),
+        byId("openingOutput").textContent.includes("1."),
+        !!(byId("breathingPlan").value.trim() && byId("breakSentence").value.trim())
+      ];
+      const done = checks.filter(Boolean).length;
+      byId("progressText").textContent = `${done} / 8 steps`;
+      byId("progressBar").style.width = `${(done / 8) * 100}%`;
+    }
 
-  doc.setFontSize(18);
-  doc.text("Hard Conversations — Preparation Plan", left, y);
-  y += 30;
+    function scenarioText() {
+      return {
+        open: "If they stay open",
+        defensive: "If they become defensive",
+        avoid: "If they avoid the topic",
+        angry: "If emotions rise",
+        mixed: "If their response is mixed"
+      }[byId("scenarioSelect").value] || "If the response is uncertain";
+    }
 
-  const qs = [
-    "Conversation you are preparing for:",
-    "Emotions you are feeling:",
-    "Core message or boundary:",
-    "Healthy outcome you hope for:",
-    "Possible reaction from the other person:",
-    "How you will stay grounded:"
-  ];
-  const as = [
-    q1.value, q2.value, q3.value, q4.value, q5.value, q6.value
-  ];
+    function generateReplies() {
+      const tone = state.tone;
+      const request = byId("boundaryAsk").value.trim() || "a respectful next step";
+      const introMap = {
+        Calm: "I want us to slow this down so we can understand each other.",
+        Firm: "I need this conversation to stay respectful so we can continue.",
+        Gentle: "I care about us, and I want to share this kindly.",
+        Direct: "I want to be clear and practical about what I need."
+      };
+      const lines = [
+        `${scenarioText()}: ${introMap[tone]}`,
+        `I hear you. My request is ${request}, and that would help me feel safer and clearer.`,
+        `If now is not the best moment, can we choose a specific time to continue this conversation?`
+      ];
+      byId("repliesOutput").textContent = `1. ${lines[0]}\n2. ${lines[1]}\n3. ${lines[2]}`;
+      updateProgress();
+    }
 
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(qs[i], left, y); y+=14;
-    doc.text(doc.splitTextToSize(as[i] || "(not written)", max), left+10, y);
-    y+=30;
-  }
+    function generateOpenings() {
+      const tone = state.tone;
+      const goal = byId("goalText").value.trim() || "have a respectful conversation";
+      const base = {
+        Calm: "This is hard for me to bring up, and I want to speak calmly.",
+        Firm: "I want to talk about something important and keep this respectful.",
+        Gentle: "I value this relationship, so I want to share something carefully.",
+        Direct: "I want to discuss something important and be clear about it."
+      }[tone];
+      const options = [
+        `${base} My goal is to ${goal}.`,
+        `Could we take 10 minutes to talk? I want us both to feel heard while we discuss this.`,
+        `I am not trying to argue. I want clarity and a healthy next step for both of us.`
+      ];
+      byId("openingOutput").textContent = `1. ${options[0]}\n2. ${options[1]}\n3. ${options[2]}`;
+      updateProgress();
+    }
 
-  doc.setFontSize(12);
-  doc.text("Gentle Guidance", left, y+=10);
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "You may use this document as a reminder before your conversation, "
-    + "or share it with a trusted person if explaining feels difficult. "
-    + "You are allowed to communicate at your own pace.",
-    max
-  ), left, y+=14);
+    function buildBoundary() {
+      const when = byId("boundaryNeed").value.trim() || "this situation happens";
+      const ask = byId("boundaryAsk").value.trim() || "a clear respectful change";
+      byId("boundaryOutput").textContent = `When ${when}, I feel unsettled. I am asking for ${ask}. Thank you for hearing me.`;
+      updateProgress();
+    }
 
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left, 800
-  );
+    function roleplayResponse() {
+      const v = byId("rolePlay").value;
+      const tone = state.tone;
+      const responses = {
+        overreacting: ["I hear that you see it differently. I still want to share what this feels like for me.", "Can we focus on the specific moment I mentioned?"],
+        busy: ["I get that now may be busy. This matters to me and I want a focused moment.", "What time today or tomorrow can we talk for 10 minutes?"],
+        blame: ["I’m open to hearing your view too. Right now I want to share my part clearly without attacking.", "Can we each share one concern and one request?"],
+        fine: ["I’m glad some things are okay, and I still need to address this part.", "Would you be willing to hear me for two minutes first?"],
+        later: ["Thank you. I can do later as long as we choose a time.", "What exact time works for you so we both follow through?"]
+      };
+      if (!v) {
+        byId("roleplayOutput").textContent = "Choose a role-play option first.";
+        return;
+      }
+      const prefix = tone === "Direct" ? "Grounded response:" : "Gentle grounded response:";
+      byId("roleplayOutput").textContent = `${prefix} ${responses[v][0]}\nFollow-up question: ${responses[v][1]}`;
+    }
 
-  doc.save("hard-conversations-preparation.pdf");
-}
-</script>
+    function buildPlanText() {
+      const fears = [...document.querySelectorAll('.fear-check:checked')].map(el => `- ${el.value}`).join("\n") || "- None selected";
+      return `Hard Conversation Plan\n\nTone: ${state.tone}\nGoal: ${state.goal || "(not selected)"}\nGoal detail: ${byId("goalText").value.trim() || "(blank)"}\n\nWhat happened:\n${byId("factsText").value.trim() || "(blank)"}\n\nImpact on me:\n${byId("impactText").value.trim() || "(blank)"}\n\nWhat I hope for:\n${byId("hopeText").value.trim() || "(blank)"}\n\nFears:\n${fears}\nOther fears: ${byId("fearText").value.trim() || "(blank)"}\n\nBoundary sentence:\n${byId("boundaryOutput").textContent.trim()}\n\nLikely scenario: ${byId("scenarioSelect").options[byId("scenarioSelect").selectedIndex]?.text || "(not selected)"}\n\nCalm replies:\n${byId("repliesOutput").textContent.trim()}\n\nOpening lines:\n${byId("openingOutput").textContent.trim()}\n\nPause plan:\nBreathing: ${byId("breathingPlan").value.trim() || "(blank)"}\nBreak sentence: ${byId("breakSentence").value.trim() || "(blank)"}\n\nRole-play:\n${byId("roleplayOutput").textContent.trim()}\n\nIf you need urgent help: https://findahelpline.com/`;
+    }
+
+    async function copyText(text, statusEl, okMsg) {
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = okMsg;
+      } catch (e) {
+        statusEl.textContent = "Clipboard unavailable on this device/browser.";
+      }
+    }
+
+    function setShareLinks() {
+      const pageUrl = encodeURIComponent(window.location.href);
+      const message = encodeURIComponent("This supportive tool helps prepare for hard conversations, one small step at a time.");
+      byId("shareWhatsApp").href = `https://wa.me/?text=${message}%20${pageUrl}`;
+      byId("shareFacebook").href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+      byId("shareX").href = `https://twitter.com/intent/tweet?text=${message}&url=${pageUrl}`;
+      byId("shareLinkedIn").href = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
+    }
+
+    function resetAll() {
+      document.querySelectorAll("input[type='text'], textarea, select").forEach(el => el.value = "");
+      document.querySelectorAll(".fear-check").forEach(el => el.checked = false);
+      byId("boundaryOutput").textContent = "Your boundary sentence will appear here.";
+      byId("repliesOutput").textContent = "Your reply options will appear here.";
+      byId("openingOutput").textContent = "Opening line options will appear here.";
+      byId("roleplayOutput").textContent = "A grounded response and follow-up question will appear here.";
+      byId("copyPlanStatus").textContent = "";
+      byId("copyLinkStatus").textContent = "";
+      state.goal = "";
+      selectGoal("");
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function downloadPdf() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const lines = doc.splitTextToSize(buildPlanText(), 520);
+      let y = 40;
+      doc.setFontSize(16);
+      doc.text("Hard Conversations Preparation Plan", 40, y);
+      y += 22;
+      doc.setFontSize(11);
+      lines.forEach(line => {
+        if (y > 790) { doc.addPage(); y = 40; }
+        doc.text(line, 40, y);
+        y += 14;
+      });
+      doc.save("hard-conversations-plan.pdf");
+    }
+
+    document.querySelectorAll(".tap-card").forEach(btn => btn.addEventListener("click", () => applyQuickStart(btn.dataset.quick)));
+    document.querySelectorAll("#goalChoices .chip").forEach(btn => btn.addEventListener("click", () => selectGoal(btn.dataset.goal)));
+    document.querySelectorAll(".tone-btn").forEach(btn => btn.addEventListener("click", () => {
+      document.querySelectorAll(".tone-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      state.tone = btn.dataset.tone;
+      updateProgress();
+    }));
+
+    ["goalText","factsText","impactText","hopeText","fearText","boundaryNeed","boundaryAsk","scenarioSelect","breathingPlan","breakSentence"].forEach(id => {
+      byId(id).addEventListener("input", updateProgress);
+      byId(id).addEventListener("change", updateProgress);
+    });
+    document.querySelectorAll(".fear-check").forEach(c => c.addEventListener("change", updateProgress));
+
+    byId("buildBoundary").addEventListener("click", buildBoundary);
+    byId("genReplies").addEventListener("click", generateReplies);
+    byId("genOpening").addEventListener("click", generateOpenings);
+    byId("genRoleplay").addEventListener("click", roleplayResponse);
+
+    byId("copyPlan").addEventListener("click", () => copyText(buildPlanText(), byId("copyPlanStatus"), "Plan copied to clipboard."));
+    byId("downloadPdf").addEventListener("click", downloadPdf);
+    byId("printView").addEventListener("click", () => window.print());
+    byId("resetAll").addEventListener("click", resetAll);
+    byId("copyLink").addEventListener("click", () => copyText(window.location.href, byId("copyLinkStatus"), "Link copied."));
+
+    byId("stickyGenerate").addEventListener("click", () => { generateReplies(); generateOpenings(); });
+    byId("stickyCopy").addEventListener("click", () => copyText(buildPlanText(), byId("copyPlanStatus"), "Plan copied to clipboard."));
+    byId("stickyPdf").addEventListener("click", downloadPdf);
+    byId("stickyReset").addEventListener("click", resetAll);
+
+    setShareLinks();
+    updateProgress();
+  </script>
 </body>
 </html>

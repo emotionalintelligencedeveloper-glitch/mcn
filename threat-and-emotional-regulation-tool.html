@@ -1,281 +1,786 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Threat & Emotional Regulation Tool — Emotional Intelligence Developer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threat & Emotional Regulation Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6fbff;
+      --card: #ffffff;
+      --ink: #193243;
+      --muted: #4e6b7c;
+      --accent: #6e8dff;
+      --accent-2: #ff9dcf;
+      --ok: #3fae7a;
+      --warn: #f2a24a;
+      --danger: #dc6b73;
+      --shadow: 0 10px 30px rgba(38, 77, 110, 0.12);
+      --radius: 18px;
+    }
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#0f766e;
-  --soft:#ecfeff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:860px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:26px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08)
-}
-h1{margin:0 0 10px;font-size:24px}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
+    * { box-sizing: border-box; }
 
-.notice{
-  background:#fff7ed;
-  border:1px solid #fed7aa;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:22px;
-  font-size:0.95rem;
-}
+    body {
+      margin: 0;
+      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% -10%, #d6ebff 0, transparent 45%),
+        radial-gradient(circle at 100% 0, #ffe1f1 0, transparent 35%),
+        var(--bg);
+      line-height: 1.45;
+    }
 
-.q{
-  margin:18px 0;
-  padding:14px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.q h3{margin:0 0 10px;font-size:15px}
-textarea, select{
-  width:100%;
-  min-height:70px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-}
+    .container {
+      width: min(1040px, 92vw);
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
 
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: rgba(246, 251, 255, 0.92);
+      border-bottom: 1px solid #d7e8f5;
+    }
 
-.result{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #67e8f9;
-  line-height:1.6;
-}
+    .head-wrap {
+      width: min(1040px, 92vw);
+      margin: 0 auto;
+      padding: .8rem 0;
+      display: grid;
+      gap: .6rem;
+    }
 
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
+    h1, h2, h3 {
+      font-family: "Baloo 2", "Nunito", sans-serif;
+      margin: 0;
+      line-height: 1.15;
+    }
 
-.ads-label{font-size:13px;color:var(--muted);margin-top:28px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
+    h1 { font-size: clamp(1.4rem, 2.8vw, 2rem); }
 
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: .98rem;
+    }
 
-footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+    .share-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid #e2eef7;
+      animation: pop .45s ease both;
+    }
+
+    @keyframes pop {
+      from { transform: translateY(8px) scale(.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .banner {
+      background: linear-gradient(135deg, #dae9ff, #ffe6f4);
+      border: 2px dashed #9eb6ff;
+      text-align: center;
+      padding: 1.15rem;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.35), transparent 80%);
+      animation: shimmer 4s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      from { transform: translateX(-120%); }
+      to { transform: translateX(120%); }
+    }
+
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-weight: 700;
+      color: #35557a;
+      margin-bottom: .6rem;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: .75rem;
+      margin-top: .8rem;
+    }
+
+    .mini-card {
+      border: 1px solid #dce9f4;
+      border-radius: 14px;
+      padding: .85rem;
+      background: #fbfeff;
+    }
+
+    .btn, .chip, .sticker-btn {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+    }
+
+    .btn {
+      background: #edf4ff;
+      color: #18486d;
+      padding: .6rem .9rem;
+      border-radius: 12px;
+      border: 1px solid #cfe3f3;
+      transition: .2s transform, .2s box-shadow, .2s background;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 14px rgba(58, 90, 143, .14); }
+    .btn:active { transform: translateY(1px) scale(.98); }
+
+    .btn:focus-visible,
+    .chip:focus-visible,
+    .sticker-btn:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #ffbc67;
+      outline-offset: 2px;
+    }
+
+    .breath-wrap { text-align: center; }
+
+    .breath-circle {
+      width: 140px;
+      height: 140px;
+      margin: .6rem auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f5feff, #9dc4ff);
+      box-shadow: inset 0 0 0 8px rgba(255,255,255,.45), 0 8px 20px rgba(73, 117, 188, 0.25);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #173b62;
+      animation: breathe 10s ease-in-out infinite paused;
+    }
+
+    .breathing .breath-circle { animation-play-state: running; }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(.9); }
+      30% { transform: scale(1.08); }
+      45% { transform: scale(1.08); }
+      80% { transform: scale(.92); }
+    }
+
+    .check-grid {
+      display: grid;
+      gap: .4rem;
+      margin-top: .5rem;
+    }
+
+    .check-grid label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: #f4f8ff;
+      border: 1px solid #d6e5f2;
+      border-radius: 10px;
+      padding: .45rem .6rem;
+    }
+
+    .body-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: .4rem;
+    }
+
+    .chip {
+      padding: .45rem .7rem;
+      border-radius: 999px;
+      border: 1px solid #caddea;
+      background: #f8fcff;
+      color: #18486d;
+      transition: .15s;
+    }
+
+    .chip.active { background: #1f6fb6; color: #fff; border-color: #1f6fb6; }
+
+    .field { margin-top: .65rem; }
+    .field label { display: block; font-weight: 700; margin-bottom: .3rem; }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      border: 1px solid #cddfec;
+      border-radius: 10px;
+      padding: .65rem;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea { min-height: 84px; resize: vertical; }
+
+    .plan {
+      background: linear-gradient(170deg, #ffffff 0%, #f6faff 100%);
+      border: 2px solid #d8e8f7;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: .7rem;
+      margin-top: .8rem;
+    }
+
+    .list-box {
+      border: 1px solid #d8e6f2;
+      border-radius: 12px;
+      padding: .7rem .75rem;
+      background: #fcfeff;
+    }
+
+    ul { margin: .35rem 0 0 1.1rem; padding: 0; }
+
+    .soft-note {
+      margin-top: .6rem;
+      background: #fff8ea;
+      border: 1px solid #f3dbaf;
+      padding: .7rem;
+      border-radius: 12px;
+      color: #684d25;
+    }
+
+    .urgent {
+      background: #fff5f6;
+      border: 1px solid #f2ccd0;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+      margin-top: .8rem;
+    }
+
+    .history-item {
+      border: 1px solid #d7e8f5;
+      border-radius: 10px;
+      padding: .5rem .65rem;
+      margin-top: .45rem;
+      background: #fbfdff;
+      font-size: .95rem;
+    }
+
+    .sticker-grid {
+      margin-top: 1.1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: .7rem;
+    }
+
+    .sticker-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      text-align: center;
+      text-decoration: none;
+      color: #102a43;
+      border-radius: 16px;
+      border: 2px solid #20344d;
+      padding: .75rem .55rem;
+      box-shadow: 0 7px 0 #20344d, 0 11px 18px rgba(32, 52, 77, .16);
+      transition: .15s transform, .15s box-shadow;
+      font-weight: 800;
+      background: #fff;
+    }
+
+    .sticker-btn:hover { transform: translateY(-2px) rotate(-.5deg); }
+    .sticker-btn:active { transform: translateY(4px); box-shadow: 0 3px 0 #20344d; }
+
+    .sticker-icon {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+    }
+
+    .help { background: #ffd56d; }
+    .audio { background: #9de7ff; }
+    .tools { background: #b7ffb8; }
+    .support { background: #ffb0dc; }
+
+    .print-only { display: none; }
+
+    .privacy {
+      font-size: .9rem;
+      color: #4c6a7e;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 680px) {
+      .head-wrap { padding: .7rem 0; }
+      .card { padding: .85rem; }
+      .sticker-btn { font-size: .95rem; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .sticky-header, .sticker-grid, .no-print, .share-group, #checkInHistory { display: none !important; }
+      .container { width: 100%; margin: 0; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #bbb; margin-top: .45rem; page-break-inside: avoid; }
+      .print-only { display: block; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <header class="sticky-header">
+    <div class="head-wrap">
+      <div>
+        <h1>Threat &amp; Emotional Regulation</h1>
+        <p class="subtitle">A gentle space to pause, feel safer, and choose your next small step.</p>
+      </div>
+      <div class="share-group no-print" aria-label="Share this tool at top">
+        <button class="btn" id="shareNativeTop" aria-label="Share this tool">Share</button>
+        <button class="btn" id="copyTop" aria-label="Copy tool link">Copy Link</button>
+        <a class="btn" id="waTop" target="_blank" rel="noopener" aria-label="Share to WhatsApp">WhatsApp</a>
+        <a class="btn" id="xTop" target="_blank" rel="noopener" aria-label="Share to X">X</a>
+        <a class="btn" id="fbTop" target="_blank" rel="noopener" aria-label="Share to Facebook">Facebook</a>
+      </div>
+    </div>
+  </header>
 
-<h1>Threat & Emotional Regulation Tool</h1>
+  <main class="container">
+    <section class="card banner" aria-live="polite">
+      <h2>You’re not alone. Let’s slow this down together.</h2>
+      <p>We can go one step at a time. You get to choose what feels safest for you right now.</p>
+    </section>
 
-<p class="lead">
-If you feel close to snapping, overwhelmed by anger, fear, or adrenaline,
-this tool helps you slow the reaction before it controls you.
-</p>
+    <section class="card">
+      <div class="step-label">🌿 Step 1 · Quick Safety Reset</div>
+      <div class="action-grid">
+        <article class="mini-card breath-wrap" aria-label="Breathe with me">
+          <h3>Breathe with me (30 seconds)</h3>
+          <div class="breath-circle" id="breathCircle" aria-hidden="true">Ready</div>
+          <p id="breathText">Press start and follow inhale · hold · exhale.</p>
+          <button class="btn" id="startBreath" aria-label="Start 30 second breathing exercise">Start</button>
+        </article>
 
-<div class="notice">
-<strong>If you feel at risk of harming yourself or someone else:</strong>
-please step away from others and contact emergency services or a trusted person immediately.
-</div>
+        <article class="mini-card" aria-label="5-4-3-2-1 grounding">
+          <h3>Name 5-4-3-2-1</h3>
+          <p>Check each as you notice:</p>
+          <div class="check-grid">
+            <label><input type="checkbox" data-ground="5"> 5 things I can see</label>
+            <label><input type="checkbox" data-ground="4"> 4 things I can feel</label>
+            <label><input type="checkbox" data-ground="3"> 3 things I can hear</label>
+            <label><input type="checkbox" data-ground="2"> 2 things I can smell</label>
+            <label><input type="checkbox" data-ground="1"> 1 thing I can taste</label>
+          </div>
+        </article>
 
-<div class="q">
-<h3>1) What situation or thought is making you feel on edge right now?</h3>
-<textarea id="q1"></textarea>
-</div>
+        <article class="mini-card" aria-label="Body scan">
+          <h3>Body scan</h3>
+          <p>Where do you notice tension right now?</p>
+          <div class="body-buttons" id="bodyScanButtons">
+            <button class="chip" data-body="Jaw">Jaw</button>
+            <button class="chip" data-body="Shoulders">Shoulders</button>
+            <button class="chip" data-body="Chest">Chest</button>
+            <button class="chip" data-body="Stomach">Stomach</button>
+            <button class="chip" data-body="Hands">Hands</button>
+          </div>
+          <p id="bodyResult" class="subtitle" style="margin-top:.55rem;">No selection yet.</p>
+        </article>
+      </div>
+    </section>
 
-<div class="q">
-<h3>2) What emotion feels strongest?</h3>
-<select id="q2">
-<option value="">Select one</option>
-<option>Anger</option>
-<option>Fear</option>
-<option>Panic</option>
-<option>Rage</option>
-<option>Overwhelm</option>
-<option>Numbness</option>
-</select>
-</div>
+    <section class="card">
+      <div class="step-label">🧭 Step 2 · What feels threatening right now?</div>
+      <p>Choose one or more:</p>
+      <div class="body-buttons" id="threatButtons">
+        <button class="chip" data-threat="Conflict / argument">Conflict / argument</button>
+        <button class="chip" data-threat="Feeling judged / embarrassed">Feeling judged / embarrassed</button>
+        <button class="chip" data-threat="Unsafe environment">Unsafe environment</button>
+        <button class="chip" data-threat="Past memory triggered">Past memory triggered</button>
+        <button class="chip" data-threat="Online harassment">Online harassment</button>
+        <button class="chip" data-threat="Workplace pressure">Workplace pressure</button>
+        <button class="chip" data-threat="Relationship tension">Relationship tension</button>
+      </div>
+      <div class="field">
+        <label for="otherThreat">Other (optional)</label>
+        <input id="otherThreat" type="text" placeholder="Write another threat type" />
+      </div>
 
-<div class="q">
-<h3>3) How does your body feel right now?</h3>
-<textarea id="q3"></textarea>
-</div>
+      <div class="field">
+        <label for="happened">What happened (in a few words)?</label>
+        <textarea id="happened"></textarea>
+      </div>
+      <div class="field">
+        <label for="story">What story is my mind telling me?</label>
+        <textarea id="story"></textarea>
+      </div>
+      <div class="field">
+        <label for="need">What do I need most right now?</label>
+        <select id="need">
+          <option value="">Choose one...</option>
+          <option>Safety</option>
+          <option>Respect</option>
+          <option>Space</option>
+          <option>Reassurance</option>
+          <option>Clarity</option>
+          <option>Support</option>
+        </select>
+      </div>
+      <div class="actions-row no-print">
+        <button class="btn" id="generatePlan">Generate my calm plan</button>
+        <a class="btn" href="https://findahelpline.com/" target="_blank" rel="noopener">Help Page</a>
+      </div>
+    </section>
 
-<div class="q">
-<h3>4) What could happen if this reaction takes over?</h3>
-<textarea id="q4"></textarea>
-</div>
+    <section class="card plan" id="planCard" aria-live="polite">
+      <div class="step-label">✨ Step 3 · Regulate &amp; Respond</div>
+      <p id="planIntro">Your personalized calm plan will appear here.</p>
+      <div class="columns">
+        <div class="list-box">
+          <h3>3 regulation steps</h3>
+          <ul id="regulationList">
+            <li>Take 6 slow breaths, longer on the exhale.</li>
+            <li>Unclench jaw and lower shoulders for 20 seconds.</li>
+            <li>Drink water and feel your feet on the floor.</li>
+          </ul>
+        </div>
+        <div class="list-box">
+          <h3>Communication options</h3>
+          <ul>
+            <li>“I’m feeling overwhelmed. Can we pause?”</li>
+            <li>“I want to talk, but I need a calmer moment.”</li>
+            <li>“I’m not okay right now. I need support.”</li>
+          </ul>
+        </div>
+        <div class="list-box">
+          <h3>Boundary options</h3>
+          <ul>
+            <li>“I’m stepping away for 10 minutes.”</li>
+            <li>“Please don’t raise your voice at me.”</li>
+            <li>“I’m available to talk when we can be respectful.”</li>
+          </ul>
+        </div>
+      </div>
 
-<div class="q">
-<h3>5) What would help you feel even 10% calmer?</h3>
-<textarea id="q5"></textarea>
-</div>
+      <div class="soft-note">
+        <h3>I’m scared to talk mode</h3>
+        <ul>
+          <li>Text a trusted person one line: “Could you check in with me today?”</li>
+          <li>Ask for company without explaining everything: “Can you stay with me for a bit?”</li>
+          <li>Write your thoughts first, then share only what feels safe.</li>
+        </ul>
+      </div>
 
-<div class="controls">
-<button class="btn" onclick="showSupport()">Show Regulation Guidance</button>
-<button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+      <div class="actions-row no-print">
+        <button class="btn" id="printBtn">Save / Download PDF</button>
+        <button class="btn" id="saveLocalBtn">Save my calm plan on this device</button>
+        <button class="btn" id="newReflectionBtn">New reflection</button>
+        <button class="btn" id="resetBtn">Reset all</button>
+      </div>
+      <p class="privacy">Privacy note: saved plans and check-ins stay only on this device using local storage.</p>
 
-<div id="result" class="result"></div>
+      <div class="share-group no-print" aria-label="Share this tool at bottom" style="margin-top:.75rem;">
+        <button class="btn" id="shareNativeBottom" aria-label="Share this tool">Share</button>
+        <button class="btn" id="copyBottom" aria-label="Copy tool link">Copy Link</button>
+        <a class="btn" id="waBottom" target="_blank" rel="noopener" aria-label="Share to WhatsApp">WhatsApp</a>
+        <a class="btn" id="xBottom" target="_blank" rel="noopener" aria-label="Share to X">X</a>
+        <a class="btn" id="fbBottom" target="_blank" rel="noopener" aria-label="Share to Facebook">Facebook</a>
+      </div>
+    </section>
 
-<div class="download" onclick="downloadPDF()">Download My Regulation Plan (PDF)</div>
+    <section class="card" id="checkInHistory">
+      <h2>My past check-ins</h2>
+      <p class="subtitle">Simple private list on this device.</p>
+      <div id="historyList"></div>
+    </section>
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-<strong>Build long-term emotional control</strong>
-<p>Some links may be affiliate links at no extra cost to you.</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-Recommended Books
-</a>
-</div>
+    <section class="card urgent">
+      <h2>When it might be urgent</h2>
+      <p>If you may be in immediate danger, please contact your local emergency services right away.</p>
+      <p>You also deserve support. If helpful, you can find helplines in many countries here: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</p>
+    </section>
 
-<div class="help-box">
-<strong>You don’t have to manage this alone.</strong>
-<p>If strong reactions feel frequent or scary, support options are available.</p>
-<a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-Visit the Help Page
-</a>
-</div>
+    <section class="sticker-grid no-print" aria-label="Helpful links">
+      <a class="sticker-btn help" href="https://findahelpline.com/" target="_blank" rel="noopener">
+        <svg class="sticker-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2 8l10 6 10-6-10-6Zm-8 9.5V16l8 4 8-4v-4.5l-8 4.8-8-4.8Z" fill="#14354d"/></svg>
+        Help Page
+      </a>
+      <a class="sticker-btn audio" href="https://emotionalintelligencedeveloper.com/recommended-audiobooks/" target="_blank" rel="noopener">
+        <svg class="sticker-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a7 7 0 0 0-7 7v3a3 3 0 1 0 2 0v-3a5 5 0 1 1 10 0v3a3 3 0 1 0 2 0v-3a7 7 0 0 0-7-7Z" fill="#173b62"/></svg>
+        Recommended Audio Books
+      </a>
+      <a class="sticker-btn tools" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">
+        <svg class="sticker-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2h8v8h-2V6.4l-4.3 4.3-1.4-1.4L18.6 5H14V2ZM2 14h8v3H5v5H2v-8Zm20 0v8h-8v-3h5v-5h3ZM2 2h8v3H5v5H2V2Z" fill="#183b45"/></svg>
+        More Free Tools
+      </a>
+      <a class="sticker-btn support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+        <svg class="sticker-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.3-9.2-8C.3 9.4 2.2 5 6.2 5c2.2 0 3.4 1.2 4.3 2.5C11.4 6.2 12.6 5 14.8 5c4 0 5.9 4.4 3.4 8-2.2 3.7-9.2 8-9.2 8Z" fill="#5a143f"/></svg>
+        Support Us
+      </a>
+    </section>
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+    <p class="subtitle" style="margin-top:1rem; text-align:center;">If you’re in danger right now, contact local emergency services.</p>
 
-</div>
-</div>
+    <section class="print-only">
+      <h2>Threat &amp; Emotional Regulation – Personal Calm Plan</h2>
+      <p id="printSummary"></p>
+      <p>https://emotionalintelligencedeveloper.com/</p>
+    </section>
+  </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+  <script>
+    (function() {
+      const state = {
+        threats: new Set(),
+        body: new Set(),
+        checkIns: JSON.parse(localStorage.getItem('mcnCheckIns') || '[]')
+      };
 
-function showSupport(){
-  document.getElementById("result").innerHTML = `
-  <strong>This reaction is your nervous system — not your character.</strong><br><br>
-  When threat chemicals rise, thinking narrows.
-  Slowing your body first helps your mind regain control.<br><br>
-  Try this now:
-  <ul>
-    <li>Exhale slowly for 6 seconds</li>
-    <li>Press your feet into the ground</li>
-    <li>Delay action for 10 minutes</li>
-  </ul>
-  Choosing to pause is strength.
-  `;
-  document.getElementById("result").style.display="block";
-}
+      const shareText = "This gentle reflection tool can help you slow down and create a personal calm plan.";
+      const shareUrl = window.location.href;
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t=>t.value="");
-  document.getElementById("q2").value="";
-  document.getElementById("result").style.display="none";
-}
+      function setupShare(prefix) {
+        const nativeBtn = document.getElementById(`shareNative${prefix}`);
+        const copyBtn = document.getElementById(`copy${prefix}`);
+        const wa = document.getElementById(`wa${prefix}`);
+        const x = document.getElementById(`x${prefix}`);
+        const fb = document.getElementById(`fb${prefix}`);
 
-function downloadPDF(){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=60,left=40,max=515;
+        wa.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        x.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+        fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
 
-  doc.setFontSize(12);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+        nativeBtn.addEventListener('click', async () => {
+          if (navigator.share) {
+            try { await navigator.share({ title: document.title, text: shareText, url: shareUrl }); }
+            catch (_) {}
+          } else {
+            copyLink();
+          }
+        });
 
-  doc.setFontSize(18);
-  doc.text("Threat & Emotional Regulation — Personal Plan", left, y); y+=28;
+        copyBtn.addEventListener('click', copyLink);
+      }
 
-  const qs=[
-    "Situation or trigger:",
-    "Strongest emotion:",
-    "Body sensations:",
-    "What could happen if it escalates:",
-    "What could help calm you:"
-  ];
-  const as=[q1.value,q2.value,q3.value,q4.value,q5.value];
+      async function copyLink() {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          alert('Link copied. You can share the tool safely.');
+        } catch (_) {
+          prompt('Copy this link:', shareUrl);
+        }
+      }
 
-  doc.setFontSize(11);
-  for(let i=0;i<qs.length;i++){
-    doc.text(doc.splitTextToSize(qs[i],max),left,y); y+=16;
-    doc.text(doc.splitTextToSize(as[i]||"(not written)",max),left+10,y); y+=26;
-  }
+      setupShare('Top');
+      setupShare('Bottom');
 
-  doc.setFontSize(12);
-  doc.text("Use this safely",left,y+=20);
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "This plan can help you pause before reacting. "
-    +"Keep it for reflection or share it with a trusted person if you need support.",max
-  ),left,y+=14);
+      function toggleChip(button, storeSet, value) {
+        if (storeSet.has(value)) {
+          storeSet.delete(value);
+          button.classList.remove('active');
+        } else {
+          storeSet.add(value);
+          button.classList.add('active');
+        }
+      }
 
-  doc.setFontSize(10);
-  doc.text("Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",left,800);
+      document.querySelectorAll('#threatButtons .chip').forEach(btn => {
+        btn.addEventListener('click', () => toggleChip(btn, state.threats, btn.dataset.threat));
+      });
 
-  doc.save("threat-emotional-regulation-plan.pdf");
-}
-</script>
+      const bodyResult = document.getElementById('bodyResult');
+      document.querySelectorAll('#bodyScanButtons .chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          toggleChip(btn, state.body, btn.dataset.body);
+          bodyResult.textContent = state.body.size ? `Noticed: ${[...state.body].join(', ')}.` : 'No selection yet.';
+        });
+      });
+
+      const breathCircle = document.getElementById('breathCircle');
+      const breathText = document.getElementById('breathText');
+      const startBreath = document.getElementById('startBreath');
+
+      startBreath.addEventListener('click', () => {
+        document.body.classList.add('breathing');
+        startBreath.disabled = true;
+        let sec = 30;
+        const cues = ['Inhale', 'Hold', 'Exhale'];
+        let cueIndex = 0;
+        breathCircle.textContent = cues[0];
+        breathText.textContent = 'Inhale slowly...';
+
+        const timer = setInterval(() => {
+          sec--;
+          cueIndex = (cueIndex + 1) % cues.length;
+          breathCircle.textContent = cues[cueIndex];
+          breathText.textContent = `${cues[cueIndex]} • ${sec}s`;
+          if (sec <= 0) {
+            clearInterval(timer);
+            breathText.textContent = 'Great job. You just gave your body a pause.';
+            breathCircle.textContent = 'Done';
+            document.body.classList.remove('breathing');
+            startBreath.disabled = false;
+          }
+        }, 1000);
+      });
+
+      function createPlan() {
+        const otherThreat = document.getElementById('otherThreat').value.trim();
+        const happened = document.getElementById('happened').value.trim();
+        const story = document.getElementById('story').value.trim();
+        const need = document.getElementById('need').value;
+        const threats = [...state.threats];
+        if (otherThreat) threats.push(otherThreat);
+
+        const intro = [];
+        if (threats.length) intro.push(`You named: ${threats.join(', ')}.`);
+        if (need) intro.push(`Right now, your need is ${need.toLowerCase()}.`);
+        intro.push('Your plan is about safety, steadiness, and one next step.');
+        document.getElementById('planIntro').textContent = intro.join(' ');
+
+        const steps = [];
+        if (state.body.size) steps.push(`Soften ${[...state.body].join(' and ').toLowerCase()} for 20 seconds while breathing out slowly.`);
+        steps.push('Take 6 steady breaths: in for 4, out for 6.');
+        if (need === 'Space' || threats.includes('Conflict / argument')) {
+          steps.push('Take a 10-minute movement break (walk, stretch, shake out arms).');
+        } else if (need === 'Safety' || threats.includes('Unsafe environment')) {
+          steps.push('Move to a safer place and text someone you trust that you need support.');
+        } else {
+          steps.push('Sip water, place both feet on the floor, and name 3 things you can see.');
+        }
+
+        const ul = document.getElementById('regulationList');
+        ul.innerHTML = '';
+        steps.slice(0, 3).forEach(step => {
+          const li = document.createElement('li');
+          li.textContent = step;
+          ul.appendChild(li);
+        });
+
+        const summary = [
+          `Threats: ${threats.join(', ') || 'Not specified'}`,
+          `What happened: ${happened || 'Not entered'}`,
+          `Mind story: ${story || 'Not entered'}`,
+          `Need: ${need || 'Not selected'}`,
+          `Regulation steps: ${steps.join(' | ')}`
+        ].join('\n');
+        document.getElementById('printSummary').textContent = summary;
+
+        return {
+          timestamp: new Date().toLocaleString(),
+          label: (happened || threats[0] || 'Reflection').slice(0, 70),
+          summary
+        };
+      }
+
+      document.getElementById('generatePlan').addEventListener('click', () => {
+        const entry = createPlan();
+        state.currentEntry = entry;
+      });
+
+      document.getElementById('printBtn').addEventListener('click', () => {
+        if (!state.currentEntry) state.currentEntry = createPlan();
+        window.print();
+      });
+
+      function renderHistory() {
+        const host = document.getElementById('historyList');
+        host.innerHTML = '';
+        if (!state.checkIns.length) {
+          host.innerHTML = '<p class="subtitle">No check-ins yet.</p>';
+          return;
+        }
+        state.checkIns.slice().reverse().forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'history-item';
+          div.innerHTML = `<strong>${item.timestamp}</strong><br>${item.label}`;
+          host.appendChild(div);
+        });
+      }
+
+      renderHistory();
+
+      document.getElementById('saveLocalBtn').addEventListener('click', () => {
+        if (!state.currentEntry) state.currentEntry = createPlan();
+        localStorage.setItem('mcnCalmPlan', JSON.stringify(state.currentEntry));
+        alert('Saved on this device.');
+      });
+
+      document.getElementById('newReflectionBtn').addEventListener('click', () => {
+        if (!state.currentEntry) state.currentEntry = createPlan();
+        state.checkIns.push({ timestamp: state.currentEntry.timestamp, label: state.currentEntry.label });
+        localStorage.setItem('mcnCheckIns', JSON.stringify(state.checkIns));
+        renderHistory();
+        clearInputs(false);
+      });
+
+      function clearInputs(clearHistory) {
+        state.threats.clear();
+        state.body.clear();
+        state.currentEntry = null;
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        ['otherThreat','happened','story'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('need').value = '';
+        bodyResult.textContent = 'No selection yet.';
+        document.getElementById('planIntro').textContent = 'Your personalized calm plan will appear here.';
+        document.getElementById('printSummary').textContent = '';
+        if (clearHistory) {
+          state.checkIns = [];
+          localStorage.removeItem('mcnCheckIns');
+          localStorage.removeItem('mcnCalmPlan');
+          renderHistory();
+        }
+      }
+
+      document.getElementById('resetBtn').addEventListener('click', () => clearInputs(true));
+
+      const savedPlan = localStorage.getItem('mcnCalmPlan');
+      if (savedPlan) {
+        try {
+          state.currentEntry = JSON.parse(savedPlan);
+          document.getElementById('printSummary').textContent = state.currentEntry.summary || '';
+        } catch (_) {}
+      }
+    })();
+  </script>
 </body>
 </html>

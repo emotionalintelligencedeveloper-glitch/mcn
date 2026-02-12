@@ -1,299 +1,792 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Inner Peace & Stress Reset — Emotional Intelligence Developer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inner Peace Quiz — Interactive Reset Tool</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #eef2ff;
+      --bg-dark: #101827;
+      --surface: #ffffff;
+      --surface-dark: #1f2937;
+      --text: #111827;
+      --text-soft: #374151;
+      --text-dark: #f3f4f6;
+      --muted-dark: #d1d5db;
+      --border: #d1d5db;
+      --brand: #2563eb;
+      --brand-2: #7c3aed;
+      --success: #0f766e;
+      --warning: #b45309;
+      --shadow: 0 14px 30px rgba(17, 24, 39, 0.12);
+    }
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#0b63d6;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  margin:0;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:760px;margin:28px auto;padding:22px}
-.card{
-  background:var(--card);
-  border-radius:12px;
-  padding:22px;
-  box-shadow:0 10px 30px rgba(16,24,40,0.06)
-}
-h1{margin:0 0 6px;font-size:20px}
-p.lead{margin:0 0 18px;color:var(--muted)}
-.q{
-  margin:14px 0;
-  padding:12px;
-  border-radius:8px;
-  background:#fff;
-  border:1px solid #eee
-}
-.q h3{margin:0 0 8px;font-size:15px}
-.opts{display:flex;gap:8px;flex-wrap:wrap}
-.opt{
-  flex:1;
-  min-width:150px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #e8e8e8;
-  background:#fff;
-  cursor:pointer;
-}
-.opt input{display:none}
-.opt.selected{
-  background:linear-gradient(180deg,var(--accent),#195ed6);
-  color:#fff;
-  border-color:var(--accent)
-}
-.controls{display:flex;gap:12px;align-items:center;margin-top:18px}
-.btn{
-  padding:10px 14px;
-  border-radius:8px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  cursor:pointer
-}
-.btn.secondary{background:#e5e7eb;color:#111}
-.meta{margin-left:auto;color:var(--muted);font-size:13px}
-.result{
-  margin-top:18px;
-  padding:16px;
-  border-radius:10px;
-  background:#fbfdff;
-  border:1px solid #eee;
-  display:none
-}
-.download{
-  margin-top:14px;
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:8px;
-  background:#10b981;
-  color:#fff;
-  text-decoration:none;
-  font-weight:700;
-  cursor:pointer
-}
-.ads{
-  margin-top:20px;
-  padding:14px;
-  border-radius:10px;
-  background:#fefce8;
-  border:1px solid #facc15;
-}
-.ads a{
-  display:inline-block;
-  margin-top:8px;
-  padding:10px 14px;
-  background:var(--cta);
-  color:#111;
-  text-decoration:none;
-  border-radius:8px;
-  font-weight:700
-}
-.help{
-  margin-top:16px;
-  padding:14px;
-  border-radius:10px;
-  background:#eff6ff;
-  border:1px solid #bfdbfe
-}
-.disclaimer{font-size:12px;color:var(--muted);margin-top:14px}
-footer{font-size:12px;color:var(--muted);margin-top:16px}
-</style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.5;
+      background: linear-gradient(180deg, var(--bg) 0%, #f8fafc 40%, #e0f2fe 100%);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .container {
+      background: var(--surface);
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 1.1rem;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      margin: 0 0 0.4rem;
+      color: #1e3a8a;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 1.02rem;
+    }
+
+    .notice {
+      margin-top: 0.9rem;
+      padding: 0.85rem;
+      border-radius: 12px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      font-size: 0.95rem;
+    }
+
+    .urgent {
+      margin-top: 0.55rem;
+      font-size: 0.92rem;
+      color: #7c2d12;
+    }
+
+    .urgent a { color: #b91c1c; font-weight: 700; }
+
+    .progress-wrap {
+      margin-top: 1rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.8rem;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      color: #1e3a8a;
+      font-size: 0.95rem;
+    }
+
+    .progress-bar {
+      margin-top: 0.55rem;
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #dbeafe;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      transition: width 260ms ease;
+    }
+
+    .question-card {
+      margin-top: 1rem;
+      border: 1px solid #c7d2fe;
+      border-radius: 18px;
+      padding: 1rem;
+      background: linear-gradient(160deg, #ffffff, #f8fafc);
+    }
+
+    .question-title {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+    }
+
+    .options {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .option-btn {
+      text-align: left;
+      width: 100%;
+      border: 2px solid #dbeafe;
+      background: #fff;
+      color: #1f2937;
+      padding: 0.95rem;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      min-height: 58px;
+      transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .option-btn:hover,
+    .option-btn:focus-visible {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .option-btn.selected {
+      background: linear-gradient(120deg, #2563eb, #7c3aed);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .nav {
+      margin-top: 0.9rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 48px;
+      font-size: 0.98rem;
+    }
+
+    .btn:focus-visible { outline: 3px solid #60a5fa; outline-offset: 2px; }
+
+    .btn-primary { background: linear-gradient(120deg, #2563eb, #4f46e5); color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-success { background: linear-gradient(120deg, #059669, #0f766e); color: #fff; }
+    .btn-share { background: linear-gradient(120deg, #f97316, #ef4444); color: #fff; }
+
+    .result {
+      margin-top: 1rem;
+      border: 2px solid #bbf7d0;
+      background: linear-gradient(180deg, #f0fdf4, #ecfeff);
+      border-radius: 16px;
+      padding: 1rem;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+      animation: popIn 480ms ease;
+    }
+
+    .result h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      color: #065f46;
+    }
+
+    .panel {
+      margin-top: 0.8rem;
+      border-radius: 12px;
+      border: 1px dashed #86efac;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 0.75rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+      color: #065f46;
+    }
+
+    ul, ol { padding-left: 1.25rem; margin: 0.25rem 0 0; }
+
+    .result-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .link-cluster,
+    .share {
+      margin-top: 1.1rem;
+      border-radius: 14px;
+      border: 1px solid #fbcfe8;
+      background: linear-gradient(180deg, #fff7ed, #fdf2f8);
+      padding: 0.8rem;
+    }
+
+    .share h3,
+    .link-cluster h3 { margin: 0 0 0.55rem; }
+
+    .share-buttons,
+    .link-buttons {
+      display: grid;
+      gap: 0.55rem;
+      grid-template-columns: 1fr;
+    }
+
+    .comic-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 0.72rem;
+      color: #111827;
+      font-weight: 800;
+      border: 3px solid #111827;
+      box-shadow: 3px 3px 0 #111827;
+      background: #fde68a;
+      min-height: 54px;
+    }
+
+    .comic-link svg { width: 28px; height: 28px; flex-shrink: 0; }
+
+    .comic-link.help { background: #fecaca; }
+    .comic-link.books { background: #bfdbfe; }
+    .comic-link.support { background: #c4b5fd; }
+    .comic-link.explore { background: #86efac; }
+
+    .share-btn {
+      border: 2px solid #111827;
+      border-radius: 12px;
+      min-height: 46px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 2px 2px 0 #111827;
+      padding: 0.6rem;
+    }
+
+    .share-btn.native { background: #f59e0b; }
+    .share-btn.copy { background: #93c5fd; }
+    .share-btn.wa { background: #86efac; }
+    .share-btn.x { background: #d1d5db; }
+    .share-btn.fb { background: #a5b4fc; }
+
+    .sticky-helpful {
+      position: sticky;
+      bottom: 0.35rem;
+      margin-top: 1rem;
+      z-index: 5;
+      backdrop-filter: blur(6px);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 0.7rem;
+    }
+
+    .foot-note {
+      margin-top: 0.7rem;
+      font-size: 0.88rem;
+      color: #374151;
+    }
+
+    .book-note {
+      margin-top: 0.45rem;
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(6px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (min-width: 700px) {
+      .container { padding: 1.4rem; }
+      .share-buttons,
+      .link-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sticky-helpful .link-buttons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: linear-gradient(180deg, #0f172a, #111827 50%, #1e293b); color: var(--text-dark); }
+      .container,
+      .question-card,
+      .progress-wrap,
+      .panel,
+      .sticky-helpful,
+      .notice,
+      .result,
+      .share,
+      .link-cluster { background: var(--surface-dark); color: var(--text-dark); border-color: #475569; }
+      .lead,
+      .foot-note,
+      .book-note { color: var(--muted-dark); }
+      .option-btn { background: #111827; color: #f9fafb; border-color: #374151; }
+      .option-btn.selected { color: #fff; }
+      .btn-secondary { background: #374151; color: #f3f4f6; }
+      .comic-link,
+      .share-btn { color: #111827; }
+      .urgent { color: #fdba74; }
+      h1, .progress-head { color: #bfdbfe; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <main class="page">
+    <section class="container" aria-labelledby="quizTitle">
+      <h1 id="quizTitle">Inner Peace Quiz</h1>
+      <p class="lead">A gentle 5-question wellbeing reflection to help you choose a practical reset for today.</p>
 
-<h1>Inner Peace & Stress Reset Quiz</h1>
-<p class="lead">Answer 5 quick questions to receive a calm, practical reset plan you can download.</p>
+      <div class="notice" role="note">
+        This tool offers general wellbeing suggestions and is not a substitute for professional care.
+        <div class="urgent">If you feel unsafe or at risk, get immediate help: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</div>
+      </div>
 
-<div id="quiz">
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-head">
+          <span id="progressText">Question 1 of 5</span>
+          <span id="completionText">20%</span>
+        </div>
+        <div class="progress-bar" aria-hidden="true">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
 
-<div class="q" data-q="1">
-<h3>1) When stress shows up, your first reaction is:</h3>
-<div class="opts">
-<label class="opt"><input type="radio" name="q1" value="A"> My breath shortens; I feel tense</label>
-<label class="opt"><input type="radio" name="q1" value="B"> I get distracted and worry</label>
-<label class="opt"><input type="radio" name="q1" value="C"> I push through and feel drained</label>
-</div>
-</div>
+      <section class="question-card" aria-labelledby="questionTitle">
+        <h2 id="questionTitle" class="question-title"></h2>
+        <div id="options" class="options" role="radiogroup" aria-label="Answer options"></div>
+        <div class="nav">
+          <button id="backBtn" class="btn btn-secondary" type="button" aria-label="Go to previous question">Back</button>
+          <button id="nextBtn" class="btn btn-primary" type="button" aria-label="Go to next question">Next</button>
+        </div>
+      </section>
 
-<div class="q" data-q="2">
-<h3>2) What helps you calm down fastest?</h3>
-<div class="opts">
-<label class="opt"><input type="radio" name="q2" value="A"> Breathing or stretching</label>
-<label class="opt"><input type="radio" name="q2" value="B"> Writing or talking</label>
-<label class="opt"><input type="radio" name="q2" value="C"> Stepping away or resting</label>
-</div>
-</div>
+      <section id="result" class="result" aria-live="polite" aria-label="Quiz result"></section>
 
-<div class="q" data-q="3">
-<h3>3) Your day usually feels:</h3>
-<div class="opts">
-<label class="opt"><input type="radio" name="q3" value="A"> Busy and tense</label>
-<label class="opt"><input type="radio" name="q3" value="B"> Emotionally up and down</label>
-<label class="opt"><input type="radio" name="q3" value="C"> Quiet but overloaded</label>
-</div>
-</div>
+      <section class="share" aria-label="Share this tool">
+        <h3>Share this tool</h3>
+        <div class="share-buttons">
+          <button class="share-btn native" id="nativeShareBtn" type="button">📲 Share on your device</button>
+          <button class="share-btn copy" id="copyLinkBtn" type="button">🔗 Copy link</button>
+          <a class="share-btn wa" id="waShare" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 WhatsApp</a>
+          <a class="share-btn x" id="xShare" href="#" target="_blank" rel="noopener" aria-label="Share on X">𝕏 Share on X</a>
+          <a class="share-btn fb" id="fbShare" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
+        </div>
+      </section>
 
-<div class="q" data-q="4">
-<h3>4) What feels most missing lately?</h3>
-<div class="opts">
-<label class="opt"><input type="radio" name="q4" value="A"> A quick calm tool</label>
-<label class="opt"><input type="radio" name="q4" value="B"> Emotional clarity</label>
-<label class="opt"><input type="radio" name="q4" value="C"> Better rest and balance</label>
-</div>
-</div>
+      <section class="link-cluster" aria-label="Helpful links">
+        <h3>Helpful links</h3>
+        <div class="link-buttons">
+          <a class="comic-link help" href="https://findahelpline.com/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 12h48v34H26l-12 10v-10H8z" fill="#fff" stroke="#111" stroke-width="4"/><circle cx="22" cy="29" r="4" fill="#111"/><circle cx="32" cy="29" r="4" fill="#111"/><circle cx="42" cy="29" r="4" fill="#111"/></svg>
+            <span>Get Help (Find a Helpline)</span>
+          </a>
+          <a class="comic-link books" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="10" width="20" height="44" rx="4" fill="#fff" stroke="#111" stroke-width="4"/><rect x="30" y="10" width="26" height="44" rx="4" fill="#fef3c7" stroke="#111" stroke-width="4"/><circle cx="43" cy="32" r="8" fill="#111"/></svg>
+            <span>Recommended Audio Books</span>
+          </a>
+          <a class="comic-link support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 56 12 36a14 14 0 0 1 20-20 14 14 0 0 1 20 20z" fill="#fff" stroke="#111" stroke-width="4"/></svg>
+            <span>Support Us</span>
+          </a>
+          <a class="comic-link explore" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 38 22l18 2-14 11 4 18-16-9-16 9 4-18L8 24l18-2z" fill="#fff" stroke="#111" stroke-width="4"/></svg>
+            <span>Explore More Free Wellbeing Tools</span>
+          </a>
+        </div>
+        <p class="book-note">If audiobook links change over time, this section can be updated — links may be added.</p>
+      </section>
 
-<div class="q" data-q="5">
-<h3>5) After a stressful day you want:</h3>
-<div class="opts">
-<label class="opt"><input type="radio" name="q5" value="A"> A fast reset</label>
-<label class="opt"><input type="radio" name="q5" value="B"> To process feelings</label>
-<label class="opt"><input type="radio" name="q5" value="C"> A steadier routine</label>
-</div>
-</div>
+      <div class="sticky-helpful" aria-label="Quick helpful links">
+        <div class="link-buttons">
+          <a class="comic-link help" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Get Help Find a Helpline">🆘 Help</a>
+          <a class="comic-link books" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Audio Books</a>
+          <a class="comic-link support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us">💜 Support Us</a>
+          <a class="comic-link explore" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Wellbeing Tools">🧰 More Tools</a>
+        </div>
+      </div>
 
-<div class="controls">
-<button class="btn" onclick="showResult()">See My Reset</button>
-<button class="btn secondary" onclick="resetQuiz()">Reset</button>
-<div class="meta">~1 minute</div>
-</div>
+      <p class="foot-note">Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</p>
+    </section>
+  </main>
 
-<div id="resultArea" class="result"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const questions = [
+      {
+        text: "When stress shows up, your first reaction is:",
+        options: [
+          { key: "A", label: "My breath shortens; my body feels tense." },
+          { key: "B", label: "My mind races and emotions feel tangled." },
+          { key: "C", label: "I keep pushing, then feel drained later." }
+        ]
+      },
+      {
+        text: "What helps you settle the fastest right now?",
+        options: [
+          { key: "A", label: "Breathing, grounding, or gentle movement." },
+          { key: "B", label: "Journaling, talking, or naming feelings." },
+          { key: "C", label: "A break, a boundary, and true rest." }
+        ]
+      },
+      {
+        text: "How does your day usually feel lately?",
+        options: [
+          { key: "A", label: "Busy and physically keyed up." },
+          { key: "B", label: "Emotionally heavy or up and down." },
+          { key: "C", label: "Quietly overloaded and under-rested." }
+        ]
+      },
+      {
+        text: "What feels most missing at the moment?",
+        options: [
+          { key: "A", label: "A quick calm tool I can use anywhere." },
+          { key: "B", label: "A way to process what I really feel." },
+          { key: "C", label: "A steadier plan for boundaries and sleep." }
+        ]
+      },
+      {
+        text: "After a stressful day, what do you most need?",
+        options: [
+          { key: "A", label: "A fast reset for my nervous system." },
+          { key: "B", label: "Space to release and make sense of emotions." },
+          { key: "C", label: "A simple routine to recover and recharge." }
+        ]
+      }
+    ];
 
-<a class="download" onclick="downloadPDF()">Download My Reset (PDF)</a>
+    const resetData = {
+      A: {
+        title: "Quick Calm Reset (breath/body)",
+        explanation: "Your system may respond best to short body-based regulation. Quick calming cues can lower stress fast and help you feel present again.",
+        today: [
+          "1 minute: slow inhale for 4, exhale for 6, repeated 6 times.",
+          "2 minutes: unclench jaw/shoulders and do gentle neck + shoulder rolls.",
+          "2 minutes: name 5 things you see, 4 feel, 3 hear, then sip water slowly."
+        ],
+        week: [
+          "Morning: 90-second breathing reset before checking your phone.",
+          "Midday: 2-minute stretch or walk break.",
+          "Evening: short body scan before sleep.",
+          "Reduce one avoidable stress trigger this week.",
+          "Set one tiny boundary that protects your energy.",
+          "Keep a simple note: What helped me calm today?",
+          "Celebrate one sign of progress, even if small."
+        ],
+        prompts: [
+          "Where in my body do I notice stress first?",
+          "Which 2-minute reset feels easiest to repeat?",
+          "What helped me feel 10% safer or steadier today?"
+        ]
+      },
+      B: {
+        title: "Emotion Release Reset (journaling/talking/processing)",
+        explanation: "You may need emotional processing more than pressure to " +
+          "perform. Naming feelings can reduce mental load and create clarity.",
+        today: [
+          "2 minutes: write 'Right now I feel…' without editing.",
+          "2 minutes: choose one feeling and ask, 'What is this feeling asking for?'",
+          "1 minute: send a short message to a trusted person or self-note with one next step."
+        ],
+        week: [
+          "Do one 5-minute emotional check-in daily.",
+          "Use the phrase: 'A part of me feels…' to reduce self-judgment.",
+          "Pick one conversation that could bring relief.",
+          "Replace doom-scrolling with 5 lines of journaling once a day.",
+          "Create a 'release list' (what to let go of this week).",
+          "Take one gentle action aligned with your values.",
+          "End each day by naming one emotion and one need."
+        ],
+        prompts: [
+          "What feeling have I been postponing?",
+          "What truth feels kind and honest for me today?",
+          "Who can listen without trying to fix me immediately?"
+        ]
+      },
+      C: {
+        title: "Routine & Rest Reset (boundaries/rest/plan)",
+        explanation: "Your responses suggest recovery may come from structure, rest, and clearer boundaries. Small routines can protect your energy quickly.",
+        today: [
+          "2 minutes: choose one non-essential task to postpone.",
+          "2 minutes: set tonight's wind-down start time.",
+          "1 minute: write tomorrow's top 1 priority + one rest action."
+        ],
+        week: [
+          "Keep wake and sleep windows as consistent as possible.",
+          "Set one boundary phrase (e.g., 'I can do this tomorrow').",
+          "Schedule two short recovery breaks daily.",
+          "Protect one no-phone block before bedtime.",
+          "Eat and hydrate on a steadier rhythm.",
+          "Review workload once midweek; remove one low-value task.",
+          "Do a weekly reset: plan, pause, and prepare for calmer days."
+        ],
+        prompts: [
+          "What drains me most that I can reduce by 10%?",
+          "What bedtime habit helps me feel safer and calmer?",
+          "What boundary would make tomorrow easier?"
+        ]
+      }
+    };
 
-<div class="ads">
-<p><strong>Recommended reading for deeper support</strong></p>
-<a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">View Recommended Books</a>
-</div>
+    const questionTitle = document.getElementById("questionTitle");
+    const optionsWrap = document.getElementById("options");
+    const progressText = document.getElementById("progressText");
+    const completionText = document.getElementById("completionText");
+    const progressFill = document.getElementById("progressFill");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const resultBox = document.getElementById("result");
 
-<div class="help">
-<p><strong>Need extra emotional support?</strong></p>
-<a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">Visit the Help Page</a>
-</div>
+    const shareUrl = "https://emotionalintelligencedeveloper-glitch.github.io/mcn/inner-peace-quiz.html";
+    const shareTitle = "Inner Peace Quiz — Interactive Reset Tool";
+    const shareText = "Try this 5-question wellbeing reflection quiz and get a practical reset plan.";
 
-<div class="disclaimer">
-This tool offers general wellbeing guidance and is not a substitute for professional care.
-</div>
+    document.getElementById("waShare").href = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+    document.getElementById("xShare").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    document.getElementById("fbShare").href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+    const nativeShareBtn = document.getElementById("nativeShareBtn");
+    nativeShareBtn.style.display = (navigator.share ? "block" : "none");
 
-</div>
-</div>
+    nativeShareBtn.addEventListener("click", async () => {
+      try {
+        await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+      } catch (_) {
+        // no-op
+      }
+    });
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    document.getElementById("copyLinkBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link copied! You can now paste and share it.");
+      } catch (_) {
+        prompt("Copy this link:", shareUrl);
+      }
+    });
 
-<script>
-const { jsPDF } = window.jspdf;
+    let currentQuestion = 0;
+    const answers = Array(questions.length).fill(null);
+    let latestResultKey = null;
 
-document.querySelectorAll('.opts').forEach(group=>{
-  group.addEventListener('click',e=>{
-    const opt=e.target.closest('.opt');
-    if(!opt) return;
-    group.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
-    opt.classList.add('selected');
-    opt.querySelector('input').checked=true;
-  });
-});
+    function updateProgress() {
+      const humanIndex = currentQuestion + 1;
+      const pct = Math.round((humanIndex / questions.length) * 100);
+      progressText.textContent = `Question ${humanIndex} of ${questions.length}`;
+      completionText.textContent = `${pct}%`;
+      progressFill.style.width = `${pct}%`;
+    }
 
-function getTop(){
-  const count={A:0,B:0,C:0};
-  for(let i=1;i<=5;i++){
-    const v=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!v){alert("Please answer all questions.");return null;}
-    count[v.value]++;
-  }
-  return Object.keys(count).reduce((a,b)=>count[a]>count[b]?a:b);
-}
+    function renderQuestion() {
+      const q = questions[currentQuestion];
+      questionTitle.textContent = q.text;
+      optionsWrap.innerHTML = "";
 
-function showResult(){
-  const t=getTop();
-  if(!t) return;
+      q.options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn" + (answers[currentQuestion] === opt.key ? " selected" : "");
+        btn.textContent = opt.label;
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", answers[currentQuestion] === opt.key ? "true" : "false");
+        btn.setAttribute("aria-label", opt.label);
+        btn.addEventListener("click", () => {
+          answers[currentQuestion] = opt.key;
+          renderQuestion();
+        });
+        optionsWrap.appendChild(btn);
+      });
 
-  const plans={
-    A:"Quick Calm — body-based resets help you regulate stress quickly.",
-    B:"Emotional Clarity — naming and writing feelings calms your system.",
-    C:"Daily Balance — gentle routines restore energy over time."
-  };
+      backBtn.disabled = currentQuestion === 0;
+      nextBtn.textContent = currentQuestion === questions.length - 1 ? "See My Reset" : "Next";
+      updateProgress();
+    }
 
-  const box=document.getElementById("resultArea");
-  box.innerHTML="<strong>Your Reset Focus:</strong><br>"+plans[t];
-  box.style.display="block";
-}
+    function buildList(title, items, type = "ul") {
+      const listTag = type === "ol" ? "ol" : "ul";
+      return `
+        <div class="panel">
+          <h3>${title}</h3>
+          <${listTag}>${items.map(item => `<li>${item}</li>`).join("")}</${listTag}>
+        </div>
+      `;
+    }
 
-function resetQuiz(){
-  document.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false);
-  document.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
-  document.getElementById("resultArea").style.display="none";
-}
+    function calculateResultKey() {
+      const counts = { A: 0, B: 0, C: 0 };
+      answers.forEach(a => { counts[a] += 1; });
+      const max = Math.max(counts.A, counts.B, counts.C);
+      const tied = Object.keys(counts).filter(k => counts[k] === max);
+      return tied[0];
+    }
 
-function downloadPDF(){
-  const t=getTop();
-  if(!t) return;
+    function showResult() {
+      if (answers.includes(null)) {
+        alert("Please answer all 5 questions before seeing your reset.");
+        return;
+      }
+      latestResultKey = calculateResultKey();
+      const data = resetData[latestResultKey];
 
-  const doc=new jsPDF({unit:"pt",format:"a4"});
-  let y=70;
-  const left=40, max=515;
+      resultBox.innerHTML = `
+        <h2>${data.title}</h2>
+        <p><strong>Your reflection result:</strong> ${data.explanation}</p>
+        ${buildList("Your 3-step action plan for today (5 minutes)", data.today, "ol")}
+        ${buildList("7-day mini plan", data.week, "ul")}
+        ${buildList("Reflection prompts", data.prompts, "ul")}
+        <div class="notice" style="margin-top:0.8rem;">
+          This tool offers general wellbeing suggestions and is not a substitute for professional care.
+          <div class="urgent">If you feel unsafe or at risk, get immediate help: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</div>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-secondary" id="retakeBtn" type="button">Retake quiz</button>
+          <button class="btn btn-success" id="pdfBtn" type="button">Download PDF</button>
+          <button class="btn btn-share" id="resultShareBtn" type="button">Share</button>
+        </div>
+        <section class="link-cluster" aria-label="Result helpful links">
+          <h3>Helpful links</h3>
+          <div class="link-buttons">
+            <a class="comic-link help" href="https://findahelpline.com/" target="_blank" rel="noopener">🆘 Get Help (Find a Helpline)</a>
+            <a class="comic-link books" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
+            <a class="comic-link support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">💜 Support Us</a>
+            <a class="comic-link explore" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧰 Explore More Free Wellbeing Tools</a>
+          </div>
+        </section>
+      `;
+      resultBox.classList.add("show");
+      resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // HEADER
-  doc.setFontSize(10);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 40);
+      document.getElementById("retakeBtn").addEventListener("click", retakeQuiz);
+      document.getElementById("pdfBtn").addEventListener("click", downloadPdf);
+      document.getElementById("resultShareBtn").addEventListener("click", async () => {
+        if (navigator.share) {
+          try { await navigator.share({ title: shareTitle, text: shareText, url: shareUrl }); } catch (_) {}
+        } else {
+          alert("Use the share buttons in the Share this tool section.");
+        }
+      });
+    }
 
-  // TITLE
-  doc.setFontSize(18);
-  doc.text("Inner Peace — Your Reset Plan", left, y);
-  y+=30;
+    function retakeQuiz() {
+      currentQuestion = 0;
+      answers.fill(null);
+      latestResultKey = null;
+      resultBox.classList.remove("show");
+      resultBox.innerHTML = "";
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-  doc.setFontSize(12);
-  doc.text("Your Answers", left, y);
-  y+=20;
+    function addPdfHeaderFooter(doc, pageNumber) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      doc.setFontSize(10);
+      doc.text("https://emotionalintelligencedeveloper.com/", 40, 24);
+      doc.text(`Page ${pageNumber}`, 520, pageHeight - 20);
+      doc.text("https://emotionalintelligencedeveloper.com/", 40, pageHeight - 20);
+    }
 
-  for(let i=1;i<=5;i++){
-    const q=document.querySelector(`.q[data-q="${i}"] h3`).innerText;
-    const a=document.querySelector(`input[name="q${i}"]:checked`).parentElement.innerText;
-    doc.text(doc.splitTextToSize("Question "+i+": "+q, max), left, y);
-    y+=18;
-    doc.text(doc.splitTextToSize("Your answer: "+a, max), left+10, y);
-    y+=22;
-  }
+    function ensureSpace(doc, state, neededHeight) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      if (state.y + neededHeight > pageHeight - 45) {
+        doc.addPage();
+        state.page += 1;
+        addPdfHeaderFooter(doc, state.page);
+        state.y = 48;
+      }
+    }
 
-  doc.setFontSize(12);
-  doc.text("Suggested Way Forward", left, y);
-  y+=18;
+    function writeWrapped(doc, state, text, indent = 40, maxWidth = 520, lineHeight = 14) {
+      const lines = doc.splitTextToSize(text, maxWidth);
+      lines.forEach((line) => {
+        ensureSpace(doc, state, lineHeight + 6);
+        doc.text(line, indent, state.y);
+        state.y += lineHeight;
+      });
+      state.y += 4;
+    }
 
-  const summaries={
-    A:"Focus on short breathing and movement resets throughout your day.",
-    B:"Use journaling and emotional naming to calm mental overload.",
-    C:"Create gentle routines for rest, sleep, and balance."
-  };
+    function downloadPdf() {
+      if (!latestResultKey) {
+        alert("Please complete the quiz result before downloading your PDF.");
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const data = resetData[latestResultKey];
+      const state = { y: 48, page: 1 };
 
-  doc.text(doc.splitTextToSize(summaries[t], max), left, y);
+      addPdfHeaderFooter(doc, state.page);
+      doc.setFontSize(18);
+      doc.setFont(undefined, "bold");
+      writeWrapped(doc, state, "Inner Peace Quiz — Personal Reset Summary");
 
-  // FOOTER
-  doc.setFontSize(10);
-  doc.text(
-    "Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/",
-    left,
-    800
-  );
+      doc.setFontSize(14);
+      writeWrapped(doc, state, `Result: ${data.title}`);
 
-  doc.save("inner-peace-reset.pdf");
-}
-</script>
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(12);
+      writeWrapped(doc, state, data.explanation);
+
+      doc.setFont(undefined, "bold");
+      writeWrapped(doc, state, "Today's 3-step action plan (5 minutes)");
+      doc.setFont(undefined, "normal");
+      data.today.forEach((item, i) => writeWrapped(doc, state, `${i + 1}. ${item}`, 50));
+
+      doc.setFont(undefined, "bold");
+      writeWrapped(doc, state, "7-day mini plan");
+      doc.setFont(undefined, "normal");
+      data.week.forEach(item => writeWrapped(doc, state, `• ${item}`, 50));
+
+      doc.setFont(undefined, "bold");
+      writeWrapped(doc, state, "Reflection prompts");
+      doc.setFont(undefined, "normal");
+      data.prompts.forEach(item => writeWrapped(doc, state, `• ${item}`, 50));
+
+      doc.setFont(undefined, "bold");
+      writeWrapped(doc, state, "Disclaimer");
+      doc.setFont(undefined, "normal");
+      writeWrapped(doc, state, "This tool offers general wellbeing suggestions and is not a substitute for professional care. If you feel unsafe or at risk, get immediate help via https://emotionalintelligencedeveloper.com/help-page/ or https://findahelpline.com/.");
+
+      doc.save("inner-peace-reset-plan.pdf");
+    }
+
+    backBtn.addEventListener("click", () => {
+      if (currentQuestion > 0) {
+        currentQuestion -= 1;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (!answers[currentQuestion]) {
+        alert("Please choose an answer to continue.");
+        return;
+      }
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    renderQuestion();
+  </script>
 </body>
 </html>

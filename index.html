@@ -292,18 +292,42 @@
     }
 
     @media print {
-      @page { size: A4 landscape; margin: 10mm; }
-      body * { visibility: hidden; }
-      #certificate, #certificate * { visibility: visible; }
-      #certificate { display: block !important; position: fixed; inset: 0; background: #fff; padding: 0; margin: 0; border: 0; }
-      #certificate .actions, #certificate .muted { display: none !important; }
+      @page { size: A4 landscape; margin: 0; }
+      html, body {
+        width: 297mm;
+        height: 210mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+      body * { visibility: hidden !important; }
+      #certificate, #certificate * { visibility: visible !important; }
+      #certificate {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+      }
+      #certificate > :not(.cert-sheet) { display: none !important; }
       #certificate .cert-sheet {
-        min-height: auto;
-        height: 100%;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+        border-radius: 0 !important;
+        border-width: 6px;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        border-width: 6px;
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
     }
   </style>
@@ -386,7 +410,7 @@
             <text x="9" y="16" font-size="10">IN</text>
             <text x="52" y="16" font-size="10">OUT</text>
           </svg>
-          <p id="phaseMsg" class="muted" style="margin-top:6px;">Breathing phase: ready</p>
+          <p id="phaseMsg" class="muted" style="margin-top:6px;">Breathe in and out with the timer</p>
         </div>
       </div>
       <p id="timerMsg" class="muted" style="margin-top:8px;">Press start when ready.</p>
@@ -684,25 +708,25 @@
     }
 
     function startCalm() {
-      const phases = ['Inhale… 4', 'Hold… 4', 'Exhale… 6'];
       const timer = document.getElementById('timerMsg');
       const phase = document.getElementById('phaseMsg');
       const pie = document.getElementById('pieFg');
       const total = 60;
       let sec = 0;
-      timer.textContent = `0 / ${total} seconds`;
-      phase.textContent = `Breathing phase: ${phases[0]}`;
+      pie.style.strokeDashoffset = '283';
+      timer.textContent = `${total} seconds remaining`;
+      phase.textContent = 'Breathe in and out';
 
       const iv = setInterval(() => {
         sec++;
-        const idx = Math.floor(sec / 20) % phases.length;
-        phase.textContent = `Breathing phase: ${phases[idx]}`;
-        timer.textContent = `${sec} / ${total} seconds`;
+        const remaining = total - sec;
+        timer.textContent = `${remaining} seconds remaining`;
+        phase.textContent = sec % 2 === 0 ? 'Breathe out' : 'Breathe in';
         pie.style.strokeDashoffset = String(283 - (283 * (sec / total)));
         if (sec >= total) {
           clearInterval(iv);
           timer.textContent = 'Great reset complete.';
-          phase.textContent = 'Breathing phase: complete ✅';
+          phase.textContent = 'Breathe in and out complete ✅';
           const box = document.getElementById('calmResult');
           box.style.display = 'block';
           box.textContent = 'Nice work. You completed Calm Reset Gadget.';

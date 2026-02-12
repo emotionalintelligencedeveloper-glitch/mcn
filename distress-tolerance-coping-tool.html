@@ -591,8 +591,12 @@
       const doc = new jsPDF({ unit: "pt", format: "a4" });
       const dt = new Date().toLocaleString();
       const situations = getSelectedSituations();
-      const selectedNames = selectedSkillIds().map(id => skills.find(s => s.id === id)?.name).filter(Boolean);
+      const selectedIds = selectedSkillIds();
+      const selectedSkillObjects = selectedIds.map(id => skills.find(s => s.id === id)).filter(Boolean);
+      const selectedNames = selectedSkillObjects.map(s => s.name);
       const nextStep = (document.getElementById("nextStep").value || "Not entered").trim();
+      const helpRating = document.getElementById("helpRating").value || "Not rated yet";
+      const selectedTime = document.querySelector('input[name="time"]:checked').value;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
@@ -605,8 +609,10 @@
       const lines = [
         `Date/time: ${dt}`,
         `Distress level: ${distressSlider.value}/10`,
+        `Time available: ${selectedTime}`,
         `Selected situation: ${situations.length ? situations.join(', ') : 'None selected'}`,
         `Chosen skills: ${selectedNames.length ? selectedNames.join(', ') : 'None selected'}`,
+        `What helped (mini rating): ${helpRating}`,
         `One kind next step: ${nextStep}`
       ];
 
@@ -615,6 +621,35 @@
         doc.text(wrapped, 40, y);
         y += (wrapped.length * 15) + 4;
       });
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text("Quick coping guidance:", 40, y + 8);
+      y += 26;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10.5);
+
+      const defaultGuidance = [
+        "Ground feet on floor and slowly look around the room.",
+        "Lengthen your exhale: in for 4, out for 6.",
+        "Remind yourself: this feeling is intense, but it will pass."
+      ];
+
+      const guidanceLines = selectedSkillObjects.length
+        ? selectedSkillObjects.map(skill => `${skill.name}: ${skill.instructions}`)
+        : defaultGuidance;
+
+      guidanceLines.forEach((tip, index) => {
+        const wrappedTip = doc.splitTextToSize(`${index + 1}. ${tip}`, 510);
+        doc.text(wrappedTip, 40, y);
+        y += (wrappedTip.length * 13) + 4;
+      });
+
+      const safetyLine = "If you feel unsafe: findahelpline.com. In immediate danger, contact local emergency services.";
+      const wrappedSafety = doc.splitTextToSize(safetyLine, 510);
+      doc.setFont("helvetica", "bold");
+      doc.text(wrappedSafety, 40, Math.min(y + 10, 770));
 
       doc.setFontSize(10);
       doc.text("https://emotionalintelligencedeveloper.com/", 40, 800);

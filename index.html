@@ -183,6 +183,72 @@
       display: none;
     }
 
+    .calm-visual {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .pie {
+      width: 96px;
+      height: 96px;
+      transform: rotate(-90deg);
+    }
+
+    .pie-bg { fill: none; stroke: #cbd5e1; stroke-width: 8; }
+    .pie-fg {
+      fill: none;
+      stroke: #22c55e;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset .4s linear;
+    }
+
+    .comic-breathe {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      border: 1px solid #bae6fd;
+      background: #fff;
+    }
+
+    .celebrate {
+      display: none;
+      margin-top: 10px;
+      border: 1px solid #86efac;
+      background: #f0fdf4;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 70;
+    }
+
+    .confetti {
+      position: absolute;
+      font-size: 18px;
+      animation: drop 1400ms ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes drop {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
     .certificate { display: none; }
     .certificate.active { display: block; }
 
@@ -281,6 +347,14 @@
         <button class="teal" id="resumeBtn">▶️ Resume last tool</button>
         <button class="danger" id="resetBtn">♻️ Reset progress</button>
       </div>
+      <div class="celebrate" id="courseCelebrate">
+        <strong>🎉 Congratulations on completing the course!</strong>
+        <p class="muted" style="margin-top:4px;">You can now download your summary and print your certificate.</p>
+        <div class="actions">
+          <button class="brand" onclick="openCertificate()">🎓 Certificate Preview</button>
+          <button class="good" id="downloadPdfTop">📄 Download PDF Summary</button>
+        </div>
+      </div>
     </section>
 
     <section id="hub" class="panel module active" aria-label="Choose a tool">
@@ -299,6 +373,22 @@
     <section id="calm" class="panel module">
       <h2>🫁 Calm Reset Gadget</h2>
       <p>Follow the rhythm: inhale 4, hold 4, exhale 6.</p>
+      <div class="calm-visual" aria-label="60 second breathing timer">
+        <svg class="pie" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="pie-bg" cx="50" cy="50" r="45"></circle>
+          <circle class="pie-fg" id="pieFg" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div>
+          <svg class="comic-breathe" viewBox="0 0 80 80" role="img" aria-label="Comix breathing guide">
+            <rect x="1" y="1" width="78" height="78" rx="12" fill="#fff7ed" stroke="#fb923c"></rect>
+            <circle cx="40" cy="34" r="14" fill="#93c5fd"></circle>
+            <path d="M28 56 Q40 66 52 56" stroke="#1e3a8a" stroke-width="3" fill="none"></path>
+            <text x="9" y="16" font-size="10">IN</text>
+            <text x="52" y="16" font-size="10">OUT</text>
+          </svg>
+          <p id="phaseMsg" class="muted" style="margin-top:6px;">Breathing phase: ready</p>
+        </div>
+      </div>
       <p id="timerMsg" class="muted" style="margin-top:8px;">Press start when ready.</p>
       <div class="actions">
         <button class="good" onclick="startCalm()">Start</button>
@@ -344,6 +434,7 @@
       <h2>🏆 Certificate Preview</h2>
       <p class="muted">Print-ready certificate (A4 landscape).</p>
       <div class="cert-sheet">
+        <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" style="width:88px;height:88px;object-fit:cover;border-radius:10px;border:2px solid #bfdbfe;margin:0 auto 6px;display:block;" />
         <h3 class="cert-title">Certificate of Recognition</h3>
         <p>This proudly recognizes</p>
         <div id="certName" class="cert-name">Participant</div>
@@ -384,6 +475,8 @@
       <a class="action-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧭 Explore More Free Tools</a>
     </div>
   </div>
+
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
 
   <script>
     const KEY = 'ei_course_hub_v4';
@@ -503,6 +596,26 @@
       }
       state.completionHistory.push(todayISO());
       renderStats();
+      renderTools();
+      if (Object.keys(state.completedTools).length === tools.length) {
+        showCourseComplete();
+      } else {
+        autoAdvance(id);
+      }
+    }
+
+    function autoAdvance(currentId) {
+      const pending = tools.find(t => !state.completedTools[t.id]);
+      if (!pending) return;
+      if (currentId !== 'hub') {
+        setTimeout(() => openModule(pending.id), 900);
+      }
+    }
+
+    function showCourseComplete() {
+      document.getElementById('courseCelebrate').style.display = 'block';
+      openModule('hub');
+      launchConfetti();
     }
 
     function openModule(id) {
@@ -573,19 +686,27 @@
     function startCalm() {
       const phases = ['Inhale… 4', 'Hold… 4', 'Exhale… 6'];
       const timer = document.getElementById('timerMsg');
-      let idx = 0;
-      let loops = 0;
-      timer.textContent = phases[idx];
+      const phase = document.getElementById('phaseMsg');
+      const pie = document.getElementById('pieFg');
+      const total = 60;
+      let sec = 0;
+      timer.textContent = `0 / ${total} seconds`;
+      phase.textContent = `Breathing phase: ${phases[0]}`;
+
       const iv = setInterval(() => {
-        idx = (idx + 1) % phases.length;
-        if (idx === 0) loops++;
-        timer.textContent = phases[idx];
-        if (loops >= 3) {
+        sec++;
+        const idx = Math.floor(sec / 20) % phases.length;
+        phase.textContent = `Breathing phase: ${phases[idx]}`;
+        timer.textContent = `${sec} / ${total} seconds`;
+        pie.style.strokeDashoffset = String(283 - (283 * (sec / total)));
+        if (sec >= total) {
           clearInterval(iv);
           timer.textContent = 'Great reset complete.';
+          phase.textContent = 'Breathing phase: complete ✅';
           const box = document.getElementById('calmResult');
           box.style.display = 'block';
           box.textContent = 'Nice work. You completed Calm Reset Gadget.';
+          launchConfetti();
           completeTool('calm');
         }
       }, 1000);
@@ -610,7 +731,7 @@
       let score = 0;
       const draw = () => {
         if (i >= courseQuestions.length) {
-          wrap.innerHTML = `<div class="result" style="display:block;">Score: ${score}/${courseQuestions.length}. Course Sprint complete!</div>`;
+          wrap.innerHTML = `<div class="result" style="display:block;">✅ Score: ${score}/${courseQuestions.length}. Course Sprint complete!</div>`;
           completeTool('course');
           return;
         }
@@ -689,6 +810,20 @@
 
     function closeCertificate() { document.getElementById('certificate').classList.remove('active'); }
     function printCertificate() { window.print(); }
+
+    function launchConfetti() {
+      const layer = document.getElementById('confettiLayer');
+      const bits = ['🎉','✨','🎊','💚','⭐'];
+      for (let i = 0; i < 28; i++) {
+        const el = document.createElement('span');
+        el.className = 'confetti';
+        el.textContent = bits[Math.floor(Math.random() * bits.length)];
+        el.style.left = `${Math.random() * 100}vw`;
+        el.style.animationDelay = `${Math.random() * 260}ms`;
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+      }
+    }
 
     async function downloadSummaryPDF() {
       const { jsPDF } = window.jspdf || {};
@@ -782,12 +917,14 @@
           const el = document.getElementById(id); el.style.display = 'none';
         });
         closeCertificate();
+        document.getElementById('courseCelebrate').style.display = 'none';
         renderTools();
         renderStats();
         openModule('hub');
       });
 
       document.getElementById('downloadPdf').addEventListener('click', downloadSummaryPDF);
+      document.getElementById('downloadPdfTop').addEventListener('click', downloadSummaryPDF);
     }
 
     function init() {
@@ -798,6 +935,7 @@
       loadDailyPrompt();
       setupShareButtons();
       attachActions();
+      document.getElementById('courseCelebrate').style.display = Object.keys(state.completedTools).length === tools.length ? 'block' : 'none';
       document.getElementById('certName').textContent = state.participantName || 'Participant';
       document.getElementById('certDate').textContent = new Date().toLocaleDateString();
     }

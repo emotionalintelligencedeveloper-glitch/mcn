@@ -1,313 +1,720 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Visual Grounding & Emotional Reset Tool — Emotional Intelligence Developer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visual Grounding + Emotional Reset Tool</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --panel: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --primary1: #7c3aed;
+      --primary2: #2563eb;
+      --accent1: #f97316;
+      --accent2: #ec4899;
+      --good: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 12px 30px rgba(37, 99, 235, 0.14);
+      --radius: 18px;
+    }
 
-<style>
-:root{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --accent:#2563eb;
-  --soft:#eff6ff;
-  --muted:#6b7280;
-  --cta:#f59e0b;
-  --safe:#10b981;
-}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:var(--bg);
-  color:#111;
-}
-.wrap{max-width:860px;margin:28px auto;padding:20px}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:26px;
-  box-shadow:0 10px 28px rgba(16,24,40,0.08);
-}
-h1{margin-top:0;font-size:24px}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
+    * { box-sizing: border-box; }
 
-.q{
-  margin:20px 0;
-  padding:16px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-  text-align:center;
-}
-.q h3{margin:0 0 12px;font-size:15px;text-align:left}
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, #dbeafe 0 20%, transparent 40%),
+        radial-gradient(circle at 90% 20%, #fce7f3 0 18%, transparent 35%),
+        linear-gradient(180deg, #eff6ff, #f8fafc 45%, #f1f5f9);
+      min-height: 100vh;
+      line-height: 1.4;
+    }
 
-.q img{
-  max-width:260px;
-  border-radius:12px;
-  display:block;
-  margin:12px auto;
-}
+    .wrap {
+      width: min(980px, 100% - 1.25rem);
+      margin: 0 auto;
+      padding: 1rem 0 5.5rem;
+    }
 
-textarea{
-  width:100%;
-  min-height:70px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:vertical;
-  margin-top:10px;
-}
+    .hero, .panel {
+      background: linear-gradient(180deg, #ffffff, #f9fbff);
+      border: 3px solid #0f172a;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      margin: 0.75rem 0;
+    }
 
-.controls{
-  display:flex;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:0;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-.btn.secondary{background:#e5e7eb;color:#111}
+    .hero h1 { margin: 0.2rem 0 0.4rem; font-size: clamp(1.35rem, 3vw, 2rem); }
+    .hero p { margin: 0.4rem 0; color: var(--muted); }
+    .disclaimer { font-size: 0.9rem; background: #fffbeb; border: 2px dashed #f59e0b; border-radius: 12px; padding: .65rem; }
 
-.result{
-  display:none;
-  margin-top:24px;
-  padding:18px;
-  border-radius:14px;
-  background:var(--soft);
-  border:1px solid #bfdbfe;
-  line-height:1.6;
-}
+    .comic-row { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .75rem; }
 
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
+    .btn {
+      appearance: none;
+      border: 3px solid #0f172a;
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: .1px;
+      padding: .7rem .9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      text-decoration: none;
+      box-shadow: 0 6px 0 rgba(15, 23, 42, 0.45);
+      transform: translateY(0);
+      transition: transform .12s ease, box-shadow .12s ease, filter .2s ease;
+      min-height: 48px;
+    }
+    .btn:hover { filter: saturate(1.1); }
+    .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(15, 23, 42, 0.45); }
+    .btn:focus-visible { outline: 4px solid #fde047; outline-offset: 2px; }
 
-/* Conversion */
-.ads-label{font-size:13px;color:var(--muted);margin-top:28px}
-.ads-box{
-  background:#fefce8;
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:14px;
-}
-.cta-link{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--cta);
-  color:#111;
-  font-weight:700;
-  text-decoration:none;
-}
-.help-box{
-  margin-top:16px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfeff;
-  border:1px solid #67e8f9;
-}
+    .btn-primary { background: linear-gradient(135deg, var(--primary1), var(--primary2)); }
+    .btn-orange { background: linear-gradient(135deg, #f59e0b, #f97316); }
+    .btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
+    .btn-sky { background: linear-gradient(135deg, #06b6d4, #0ea5e9); }
+    .btn-slate { background: linear-gradient(135deg, #64748b, #334155); }
+    .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-footer{
-  margin-top:20px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
-</style>
+    .sticker {
+      width: 22px;
+      height: 22px;
+      background: rgba(255,255,255,.95);
+      border: 2px solid #0f172a;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .progress-wrap { margin-top: .9rem; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: .95rem; font-weight: 700; }
+    .progress {
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      border: 2px solid #0f172a;
+      overflow: hidden;
+      margin-top: .3rem;
+    }
+    .fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+      transition: width .35s ease;
+    }
+
+    .step-card {
+      display: none;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: .85rem;
+      margin-top: .8rem;
+    }
+    .step-card.active { display: block; }
+
+    .suggestions, .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .5rem; }
+    .chip {
+      background: #eef2ff;
+      color: #1e293b;
+      border: 2px solid #6366f1;
+      border-radius: 999px;
+      padding: .38rem .7rem;
+      font-size: .92rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip[aria-pressed="true"] { background: #ddd6fe; border-color: #4f46e5; }
+
+    .input-row { display: flex; gap: .5rem; margin-top: .55rem; }
+    .input-row input, .panel textarea, .panel select {
+      width: 100%;
+      border: 2px solid #94a3b8;
+      border-radius: 10px;
+      padding: .6rem .65rem;
+      font-size: .95rem;
+      color: #0f172a;
+      background: #fff;
+    }
+    .panel textarea { min-height: 84px; resize: vertical; }
+
+    .anchors { display: grid; gap: .55rem; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .anchor {
+      border: 2px solid #334155;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ecfeff, #dbeafe);
+      padding: .75rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 88px;
+    }
+    .anchor.active { background: linear-gradient(145deg, #d1fae5, #a7f3d0); }
+
+    canvas {
+      width: 100%;
+      height: 180px;
+      border: 2px dashed #334155;
+      border-radius: 12px;
+      background: repeating-linear-gradient(45deg, #fff 0 10px, #f1f5f9 10px 20px);
+      touch-action: none;
+      display: none;
+      margin-top: .5rem;
+    }
+
+    .ring-wrap { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
+    .ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 8px solid #cbd5e1;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: conic-gradient(#8b5cf6 0deg, #cbd5e1 0deg);
+      transition: background .25s linear;
+    }
+
+    .summary {
+      background: #f0fdf4;
+      border: 2px solid #34d399;
+      border-radius: 14px;
+      padding: .8rem;
+      white-space: pre-wrap;
+      color: #134e4a;
+      min-height: 98px;
+    }
+
+    .help {
+      background: #f0f9ff;
+      border: 2px solid #38bdf8;
+      border-radius: 12px;
+      padding: .65rem;
+    }
+
+    .notice { font-size: .88rem; color: #334155; }
+
+    .sticky {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, .95);
+      backdrop-filter: blur(6px);
+      padding: .45rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .35rem;
+      z-index: 99;
+    }
+
+    .sticky .btn {
+      font-size: .78rem;
+      border-width: 2px;
+      border-radius: 10px;
+      justify-content: center;
+      padding: .52rem .3rem;
+      min-height: 44px;
+      box-shadow: 0 3px 0 rgba(15, 23, 42, 0.5);
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden; clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    @media (min-width: 760px) {
+      .sticky { display: none; }
+      .wrap { padding-bottom: 1rem; }
+    }
+
+    .pulse { animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .wrap > *:not(#printSheet) { display: none !important; }
+      #printSheet { display: block !important; border: none; box-shadow: none; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
-<div class="card">
+  <main class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <h1 id="title">Visual Grounding + Emotional Reset</h1>
+      <p>Small, calm steps. No pressure. You can pause any time.</p>
+      <p class="disclaimer">This tool supports reflection. It doesn’t diagnose or replace professional help.</p>
+      <div class="comic-row">
+        <button id="startBtn" class="btn btn-primary pulse" type="button">
+          <span class="sticker" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#7c3aed" d="M12 1l2.8 6.4L22 8l-5 4.7 1.3 7.2L12 16.4 5.7 20l1.3-7.2L2 8l7.2-.6z"/></svg></span>
+          I need a reset
+        </button>
+      </div>
+      <div class="progress-wrap" aria-label="Grounding progress">
+        <div class="progress-meta"><span id="stepLabel">Ready</span><span id="progressText">0%</span></div>
+        <div class="progress"><div class="fill" id="progressFill"></div></div>
+      </div>
+      <p id="liveRegion" class="sr-only" aria-live="polite"></p>
+    </section>
 
-<h1>Visual Grounding & Emotional Reset Tool</h1>
+    <section id="grounding" class="panel" aria-labelledby="groundingLabel">
+      <h2 id="groundingLabel">B) 5-4-3-2-1 visual grounding</h2>
+      <p class="notice">Tap suggestion chips or add your own words. Each step is a mini-level.</p>
+      <div id="steps"></div>
+      <div class="comic-row">
+        <button id="prevBtn" class="btn btn-slate" type="button"><span class="sticker" aria-hidden="true">◀</span>Previous</button>
+        <button id="nextBtn" class="btn btn-green" type="button"><span class="sticker" aria-hidden="true">▶</span>Next step</button>
+      </div>
+    </section>
 
-<p class="lead">
-If words feel heavy right now, that’s okay.
-This tool offers gentle visual grounding before reflection.
-</p>
+    <section class="panel" aria-labelledby="anchorLabel">
+      <h2 id="anchorLabel">C) Fast visual anchors</h2>
+      <div class="anchors">
+        <button class="anchor" data-anchor="circles" type="button">🔵 Find 3 circles around you</button>
+        <button class="anchor" data-anchor="blue" type="button">💙 Find something blue</button>
+        <button class="anchor" data-anchor="trace" type="button">✍️ Trace a shape with your finger</button>
+      </div>
+      <canvas id="tracePad" width="800" height="360" aria-label="Trace pad for grounding"></canvas>
+      <div class="comic-row"><button id="clearTrace" class="btn btn-orange" type="button"><span class="sticker">🧽</span>Clear trace</button></div>
+    </section>
 
-<!-- SECTION 1: PUPPY GIF -->
-<div class="q">
-  <h3>1) Let your eyes rest on something gentle</h3>
+    <section class="panel" aria-labelledby="breathingLabel">
+      <h2 id="breathingLabel">D) Breathing micro-reset (30–60s)</h2>
+      <div class="ring-wrap">
+        <div class="ring" id="ring">45s</div>
+        <div>
+          <label for="breathLength">Timer length</label>
+          <select id="breathLength">
+            <option value="30">30 seconds</option>
+            <option value="45" selected>45 seconds</option>
+            <option value="60">60 seconds</option>
+          </select>
+          <p id="breathPrompt" class="notice">Inhale softly · exhale slowly</p>
+          <div class="comic-row">
+            <button id="startBreath" class="btn btn-sky" type="button"><span class="sticker">🌬️</span>Start breathing</button>
+            <button id="stopBreath" class="btn btn-slate" type="button"><span class="sticker">⏹</span>Stop</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <img
-    src="https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif"
-    alt="Sleeping puppy resting peacefully"
-  >
+    <section class="panel" aria-labelledby="reflectLabel">
+      <h2 id="reflectLabel">E) Reality check</h2>
+      <label for="smallStep">What’s the smallest safe next step?</label>
+      <textarea id="smallStep" placeholder="Example: drink water, sit by a window, text one trusted person."></textarea>
 
-  <p class="lead">
-    You don’t need to do anything here.
-    Just notice the calm in the image.
-  </p>
+      <label for="needNow">What do I need right now: space, support, water, food, rest, fresh air?</label>
+      <input id="needNow" type="text" placeholder="You can list one or two." />
 
-  <p class="lead" style="font-size:13px;color:#6b7280">
-    If this doesn’t feel helpful, you can scroll past this step.
-  </p>
-</div>
+      <label for="feelingMsg">If this feeling had a message, what would it be asking for?</label>
+      <textarea id="feelingMsg" placeholder="A kind sentence to yourself is enough."></textarea>
+    </section>
 
-<!-- SECTION 2 -->
-<div class="q">
-  <h3>2) Let your eyes rest on something steady</h3>
+    <section class="panel" aria-labelledby="summaryLabel">
+      <h2 id="summaryLabel">F) Your plan</h2>
+      <div id="summaryBox" class="summary">Your summary will appear here as you go.</div>
+      <div class="comic-row">
+        <button id="downloadBtn" class="btn btn-orange" type="button"><span class="sticker" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#f97316" d="M12 3v10m0 0l-4-4m4 4l4-4M4 15v4h16v-4" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Download PDF</button>
+        <button id="shareBtn" class="btn btn-pink" type="button"><span class="sticker">💬</span>Share</button>
+        <button id="copyLinkBtn" class="btn btn-sky" type="button"><span class="sticker">🔗</span>Copy Link</button>
+        <button id="copySummaryBtn" class="btn btn-green" type="button"><span class="sticker">📝</span>Copy My Summary</button>
+      </div>
+    </section>
 
-  <img
-    src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
-    alt="Gentle ocean waves"
-  >
+    <section class="panel" aria-labelledby="linksLabel">
+      <h2 id="linksLabel">Helpful links</h2>
+      <div class="comic-row">
+        <a class="btn btn-sky" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener"><span class="sticker">🛟</span>Help page</a>
+        <a class="btn btn-primary" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener"><span class="sticker">📘</span>Recommended Audio Books</a>
+        <a class="btn btn-green" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener"><span class="sticker">🛡️</span>Support us</a>
+        <a class="btn btn-orange" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener"><span class="sticker">🧭</span>Explore more free tools</a>
+      </div>
+      <div class="help" style="margin-top:.75rem;">
+        <p><strong>If you’re in danger or feel unsafe, contact local emergency services.</strong></p>
+        <p>Additional help option: <a href="https://findahelpline.com/" target="_blank" rel="noopener">https://findahelpline.com/</a></p>
+      </div>
+      <div class="comic-row" style="margin-top:.8rem;">
+        <button id="resetAll" class="btn btn-red" type="button"><span class="sticker">♻️</span>Reset tool</button>
+        <button id="clearSaved" class="btn btn-slate" type="button"><span class="sticker">🗑️</span>Clear saved data</button>
+      </div>
+      <p class="notice">Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a></p>
+    </section>
 
-  <p class="lead">
-    You don’t need to think. Just watch.
-  </p>
-</div>
+    <section id="printSheet" class="panel" style="display:none;"></section>
+  </main>
 
-<!-- REFLECTION -->
-<div class="q">
-  <h3>3) What are you noticing in your body right now?</h3>
-  <textarea id="q1" placeholder="Heaviness, warmth, tension, calm…"></textarea>
-</div>
+  <nav class="sticky" aria-label="Quick actions">
+    <button class="btn btn-primary" id="stickStart" type="button">Start</button>
+    <button class="btn btn-green" id="stickNext" type="button">Next</button>
+    <button class="btn btn-orange" id="stickDownload" type="button">Download</button>
+    <button class="btn btn-pink" id="stickShare" type="button">Share</button>
+  </nav>
 
-<div class="q">
-  <h3>4) What emotion feels most present?</h3>
-  <textarea id="q2"></textarea>
-</div>
+  <script>
+    (function () {
+      const STORAGE_KEY = 'vg_reset_tool_v2';
+      const stepsData = [
+        { key: 'see', count: 5, title: 'Name 5 things you can see', suggestions: ['window', 'lamp', 'plant', 'book', 'your hands', 'ceiling', 'cup', 'floor pattern'] },
+        { key: 'feel', count: 4, title: 'Name 4 things you can feel', suggestions: ['feet on ground', 'shirt texture', 'air on skin', 'chair support', 'warmth', 'coolness'] },
+        { key: 'hear', count: 3, title: 'Name 3 things you can hear', suggestions: ['fan', 'birds', 'distant traffic', 'your breath', 'room tone'] },
+        { key: 'smell', count: 2, title: 'Name 2 things you can smell', suggestions: ['tea', 'soap', 'fresh air', 'clean laundry'] },
+        { key: 'taste', count: 1, title: 'Name 1 thing you can taste', suggestions: ['water', 'mint', 'coffee', 'gum', 'neutral taste'] }
+      ];
 
-<div class="q">
-  <h3>5) What would feel supportive in the next 10 minutes?</h3>
-  <textarea id="q3"></textarea>
-</div>
+      const state = {
+        currentStep: 0,
+        chips: { see: [], feel: [], hear: [], smell: [], taste: [] },
+        anchors: { circles: false, blue: false, trace: false },
+        reflections: { smallStep: '', needNow: '', feelingMsg: '' },
+        breathing: { running: false, seconds: 45, left: 45, timer: null }
+      };
 
-<div class="controls">
-  <button class="btn" onclick="showPlan()">Get My Grounding Plan</button>
-  <button class="btn secondary" onclick="resetTool()">Reset</button>
-</div>
+      const $ = (id) => document.getElementById(id);
+      const stepWrap = $('steps');
+      const live = $('liveRegion');
 
-<div id="result" class="result"></div>
+      function icon(name) {
+        const map = {
+          add: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#1d4ed8" d="M11 4h2v16h-2zM4 11h16v2H4z"/></svg>',
+          heart: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#db2777" d="M12 21s-7.2-4.4-9.4-8C.5 10.1 2 6.5 5.5 5.5c2.1-.6 4 .3 5.1 1.8 1.1-1.5 3-2.4 5.1-1.8 3.5 1 5 4.6 2.9 7.5C19.2 16.6 12 21 12 21z"/></svg>',
+          shield: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#0f766e" d="M12 2l8 3v6c0 5.5-3.5 9.8-8 11-4.5-1.2-8-5.5-8-11V5l8-3z"/></svg>'
+        };
+        return map[name] || map.add;
+      }
 
-<div class="download" onclick="downloadPDF()">Download My Grounding Plan (PDF)</div>
+      function renderSteps() {
+        stepWrap.innerHTML = '';
+        stepsData.forEach((s, idx) => {
+          const card = document.createElement('article');
+          card.className = 'step-card' + (idx === state.currentStep ? ' active' : '');
+          card.dataset.step = String(idx);
+          card.innerHTML = `
+            <h3>${idx + 1}. ${s.title}</h3>
+            <p class="notice">Pick up to ${s.count}. You can add your own.</p>
+            <div class="suggestions" role="group" aria-label="Suggestions for ${s.title}">
+              ${s.suggestions.map(text => `<button type="button" class="chip" data-chip="${text}" aria-pressed="${state.chips[s.key].includes(text)}">${text}</button>`).join('')}
+            </div>
+            <div class="input-row">
+              <input id="input-${s.key}" type="text" placeholder="Type and tap Add" maxlength="48" />
+              <button class="btn btn-sky" type="button" data-add="${s.key}"><span class="sticker">${icon('add')}</span>Add</button>
+            </div>
+            <div class="chips" id="chips-${s.key}" aria-live="polite"></div>
+          `;
+          stepWrap.appendChild(card);
+          drawChosen(s.key);
+        });
+        bindStepButtons();
+        updateProgress();
+      }
 
-<p class="ads-label">Ads.</p>
-<div class="ads-box">
-  <p><strong>Want more grounding and emotional regulation tools?</strong></p>
-  <p>
-    Our Recommended Books page includes reading and audiobooks on anxiety,
-    nervous system regulation, and emotional resilience.
-    Some links are affiliate links and may earn a small commission at no extra cost to you.
-  </p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank">
-    View Recommended Books
-  </a>
-</div>
+      function drawChosen(key) {
+        const target = $('chips-' + key);
+        if (!target) return;
+        target.innerHTML = '';
+        state.chips[key].forEach((v, i) => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.setAttribute('aria-label', `Remove ${v}`);
+          chip.innerHTML = `${v} ✕`;
+          chip.addEventListener('click', () => {
+            state.chips[key].splice(i, 1);
+            save();
+            renderSteps();
+          });
+          target.appendChild(chip);
+        });
+      }
 
-<div class="help-box">
-  <p><strong>If emotions feel overwhelming or unsafe:</strong></p>
-  <p>You don’t have to handle that alone.</p>
-  <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank">
-    Visit the Help Page
-  </a>
-</div>
+      function bindStepButtons() {
+        stepWrap.querySelectorAll('[data-chip]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const text = btn.dataset.chip;
+            const step = stepsData[state.currentStep];
+            const list = state.chips[step.key];
+            if (list.includes(text)) {
+              state.chips[step.key] = list.filter(v => v !== text);
+            } else if (list.length < step.count) {
+              list.push(text);
+            }
+            save();
+            renderSteps();
+            updateSummary();
+          });
+        });
 
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
+        stepWrap.querySelectorAll('[data-add]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.add;
+            const input = $('input-' + key);
+            const value = (input.value || '').trim();
+            if (!value) return;
+            const cfg = stepsData.find(x => x.key === key);
+            if (!state.chips[key].includes(value) && state.chips[key].length < cfg.count) {
+              state.chips[key].push(value);
+              input.value = '';
+              save();
+              renderSteps();
+              updateSummary();
+            }
+          });
+        });
+      }
 
-</div>
-</div>
+      function updateProgress() {
+        const totals = stepsData.reduce((acc, s) => acc + s.count, 0);
+        const done = stepsData.reduce((acc, s) => acc + Math.min(state.chips[s.key].length, s.count), 0);
+        const percent = Math.round((done / totals) * 100);
+        $('progressFill').style.width = percent + '%';
+        $('progressText').textContent = percent + '%';
+        $('stepLabel').textContent = `Step ${state.currentStep + 1} of ${stepsData.length}`;
+        live.textContent = `Progress ${percent} percent. ${stepsData[state.currentStep].title}.`;
+      }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
+      function moveStep(dir) {
+        state.currentStep = Math.max(0, Math.min(stepsData.length - 1, state.currentStep + dir));
+        save();
+        renderSteps();
+      }
 
-function showPlan(){
-  const answers = [q1.value, q2.value, q3.value];
+      function updateSummary() {
+        state.reflections.smallStep = $('smallStep').value.trim();
+        state.reflections.needNow = $('needNow').value.trim();
+        state.reflections.feelingMsg = $('feelingMsg').value.trim();
 
-  if(answers.some(a => !a.trim())){
-    alert("Please complete the reflection sections.");
-    return;
-  }
+        const top = stepsData.map(s => `${s.title}: ${state.chips[s.key].join(', ') || '—'}`).join('\n');
+        const anchors = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'none yet';
+        const text = `What helped most:\n${top}\n\nVisual anchors used: ${anchors}\n\nNext small step: ${state.reflections.smallStep || '—'}\nNeed right now: ${state.reflections.needNow || '—'}\nFeeling message: ${state.reflections.feelingMsg || '—'}`;
+        $('summaryBox').textContent = text;
+        save();
+        updateProgress();
+      }
 
-  const suggestions = [
-    "Notice any small shifts in your body.",
-    "Name the emotion gently without judgment.",
-    "Choose one small, supportive action."
-  ];
+      function save() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
 
-  let html = "<strong>Your Visual Grounding Plan</strong><br><br>";
-  const qs = document.querySelectorAll(".q h3");
-  let i = 2, idx = 0;
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          Object.assign(state, parsed);
+          state.breathing.timer = null;
+          $('smallStep').value = state.reflections.smallStep || '';
+          $('needNow').value = state.reflections.needNow || '';
+          $('feelingMsg').value = state.reflections.feelingMsg || '';
+        } catch (_) {}
+      }
 
-  for(; i < qs.length; i++){
-    html += `<strong>${qs[i].innerText}</strong><br>`;
-    html += `<em>Your response:</em> ${answers[idx]}<br>`;
-    html += `<em>What to try:</em> ${suggestions[idx]}<br><br>`;
-    idx++;
-  }
+      function attachReflectionListeners() {
+        ['smallStep','needNow','feelingMsg'].forEach(id => $(id).addEventListener('input', updateSummary));
+      }
 
-  html += "<strong>Reminder:</strong> Regulation comes before clarity.";
+      function setupAnchors() {
+        document.querySelectorAll('.anchor').forEach(btn => {
+          const key = btn.dataset.anchor;
+          if (state.anchors[key]) btn.classList.add('active');
+          btn.addEventListener('click', () => {
+            state.anchors[key] = !state.anchors[key];
+            btn.classList.toggle('active', state.anchors[key]);
+            if (key === 'trace') {
+              $('tracePad').style.display = state.anchors.trace ? 'block' : 'none';
+            }
+            updateSummary();
+          });
+        });
+        $('tracePad').style.display = state.anchors.trace ? 'block' : 'none';
+      }
 
-  const box = document.getElementById("result");
-  box.innerHTML = html;
-  box.style.display = "block";
-}
+      function setupTracePad() {
+        const canvas = $('tracePad');
+        const ctx = canvas.getContext('2d');
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#2563eb';
+        let drawing = false;
 
-function resetTool(){
-  document.querySelectorAll("textarea").forEach(t => t.value = "");
-  document.getElementById("result").style.display = "none";
-}
+        function pos(ev) {
+          const rect = canvas.getBoundingClientRect();
+          const p = ev.touches ? ev.touches[0] : ev;
+          return { x: (p.clientX - rect.left) * (canvas.width / rect.width), y: (p.clientY - rect.top) * (canvas.height / rect.height) };
+        }
 
-function downloadPDF(){
-  const doc = new jsPDF({unit:'pt',format:'a4'});
-  let y = 50, left = 40, max = 515;
+        function start(ev) { drawing = true; const p = pos(ev); ctx.beginPath(); ctx.moveTo(p.x, p.y); ev.preventDefault(); }
+        function draw(ev) { if (!drawing) return; const p = pos(ev); ctx.lineTo(p.x, p.y); ctx.stroke(); ev.preventDefault(); }
+        function end() { drawing = false; }
 
-  doc.setFontSize(11);
-  doc.text("https://emotionalintelligencedeveloper.com/", left, 30);
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', end);
+        canvas.addEventListener('touchstart', start, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', end);
 
-  doc.setFontSize(18);
-  doc.text("Visual Grounding & Emotional Reset Plan", left, y); y += 28;
+        $('clearTrace').addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+      }
 
-  doc.setFontSize(12);
-  doc.text("Understanding Visual Grounding", left, y); y += 18;
+      function setupBreathing() {
+        const ring = $('ring');
+        const prompt = $('breathPrompt');
 
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(
-    "Visual grounding can be as simple as noticing something gentle and non-demanding. "
-    + "When the nervous system feels safer, emotions become easier to notice and manage.",
-    max
-  ), left, y); y += 50;
+        function renderRing() {
+          const total = Number($('breathLength').value);
+          const left = state.breathing.left;
+          const deg = Math.round(((total - left) / total) * 360);
+          ring.style.background = `conic-gradient(#8b5cf6 ${deg}deg, #cbd5e1 ${deg}deg)`;
+          ring.textContent = `${left}s`;
+          prompt.textContent = left % 8 < 4 ? 'Inhale softly' : 'Exhale slowly';
+        }
 
-  const qs = document.querySelectorAll(".q h3");
-  const answers = [q1.value, q2.value, q3.value];
-  const suggestions = [
-    "Notice bodily shifts.",
-    "Name emotions softly.",
-    "Take one supportive step."
-  ];
+        $('startBreath').addEventListener('click', () => {
+          clearInterval(state.breathing.timer);
+          state.breathing.seconds = Number($('breathLength').value);
+          state.breathing.left = state.breathing.seconds;
+          renderRing();
+          state.breathing.timer = setInterval(() => {
+            state.breathing.left -= 1;
+            renderRing();
+            if (state.breathing.left <= 0) {
+              clearInterval(state.breathing.timer);
+              prompt.textContent = 'Nice work. Notice one small shift in your body.';
+              ring.textContent = '✓';
+            }
+          }, 1000);
+        });
 
-  let idx = 0;
-  for(let i = 2; i < qs.length; i++){
-    doc.text(qs[i].innerText, left, y); y += 14;
-    doc.text("Your response: " + answers[idx], left + 10, y, {maxWidth:max}); y += 18;
-    doc.text("Suggested focus: " + suggestions[idx], left + 10, y, {maxWidth:max}); y += 24;
-    idx++;
-    if(y > 760){ doc.addPage(); y = 40; }
-  }
+        $('stopBreath').addEventListener('click', () => {
+          clearInterval(state.breathing.timer);
+          prompt.textContent = 'Paused. You can restart any time.';
+        });
 
-  doc.save("visual-grounding-emotional-reset-plan.pdf");
-}
-</script>
+        $('breathLength').addEventListener('change', () => {
+          state.breathing.left = Number($('breathLength').value);
+          renderRing();
+        });
+        renderRing();
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('Copied.');
+        } catch (_) {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          alert('Copied.');
+        }
+      }
+
+      function buildPrintableHTML() {
+        const now = new Date().toLocaleString();
+        const item = (label, val) => `<p><strong>${label}</strong> ${val || '—'}</p>`;
+        return `<!doctype html><html><head><meta charset="utf-8"><title>Visual Grounding Plan</title><style>
+          body{font-family:Arial,sans-serif;color:#0f172a;margin:24px;}
+          h1{font-size:20px;margin:0 0 8px;} h2{font-size:16px;margin:14px 0 6px;}
+          p{margin:4px 0;font-size:12px;line-height:1.4;} .box{border:1px solid #94a3b8;border-radius:8px;padding:10px;}
+          .footer{position:fixed;bottom:14px;left:24px;right:24px;border-top:1px solid #94a3b8;padding-top:6px;font-size:11px;}
+          @page{size:A4;margin:18mm;}
+        </style></head><body>
+          <h1>Visual Grounding + Emotional Reset</h1>
+          <p><strong>Date/time:</strong> ${now}</p>
+          <div class="box">
+            <h2>Your entries</h2>
+            ${stepsData.map(s => item(s.title + ':', state.chips[s.key].join(', '))).join('')}
+            ${item('Smallest safe next step:', state.reflections.smallStep)}
+            ${item('Need right now:', state.reflections.needNow)}
+            ${item('Feeling message:', state.reflections.feelingMsg)}
+            ${item('What helped most:', stepsData.map(s=>state.chips[s.key][0]).filter(Boolean).join(', '))}
+            ${item('Next small step:', state.reflections.smallStep)}
+          </div>
+          <p class="footer">https://emotionalintelligencedeveloper.com/</p>
+        </body></html>`;
+      }
+
+      function printOnePagePDF() {
+        const html = buildPrintableHTML();
+        const w = window.open('', '_blank', 'width=900,height=700');
+        if (!w) {
+          alert('Pop-up blocked. Please allow pop-ups to print/download your PDF.');
+          return;
+        }
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+        w.focus();
+        setTimeout(() => w.print(), 300);
+      }
+
+      async function doShare() {
+        const text = `Visual Grounding + Emotional Reset\n${$('summaryBox').textContent.slice(0, 260)}\nhttps://emotionalintelligencedeveloper.com/`;
+        const url = window.location.href;
+        if (navigator.share) {
+          try { await navigator.share({ title: 'Visual Grounding + Emotional Reset', text, url }); return; } catch (_) {}
+        }
+        copyText(url);
+      }
+
+      function resetAll(confirmMsg) {
+        if (!confirm(confirmMsg)) return;
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+
+      // Bind global controls
+      $('startBtn').addEventListener('click', () => {
+        document.getElementById('grounding').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        live.textContent = 'Grounding started.';
+      });
+      $('prevBtn').addEventListener('click', () => moveStep(-1));
+      $('nextBtn').addEventListener('click', () => moveStep(1));
+      $('downloadBtn').addEventListener('click', printOnePagePDF);
+      $('shareBtn').addEventListener('click', doShare);
+      $('copyLinkBtn').addEventListener('click', () => copyText(window.location.href));
+      $('copySummaryBtn').addEventListener('click', () => copyText($('summaryBox').textContent));
+      $('resetAll').addEventListener('click', () => resetAll('Reset this tool and remove all entries?'));
+      $('clearSaved').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        alert('Saved data cleared.');
+      });
+
+      $('stickStart').addEventListener('click', () => $('startBtn').click());
+      $('stickNext').addEventListener('click', () => $('nextBtn').click());
+      $('stickDownload').addEventListener('click', () => $('downloadBtn').click());
+      $('stickShare').addEventListener('click', () => $('shareBtn').click());
+
+      // Init
+      load();
+      renderSteps();
+      attachReflectionListeners();
+      setupAnchors();
+      setupTracePad();
+      setupBreathing();
+      updateSummary();
+    })();
+  </script>
 </body>
 </html>

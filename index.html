@@ -2,665 +2,807 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Emotional Intelligence Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emotional Intelligence Course Hub</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <style>
-    :root{
-      --bg:#f4f7fb;
-      --card:#fff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e2e8f0;
-      --primary:#1f6feb;
-      --ok:#10b981;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-      --radius:14px;
-      --shadow:0 8px 28px rgba(15,23,42,.08);
+    :root {
+      --bg: #f6f9ff;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #dbe4f0;
+      --brand: #2563eb;
+      --accent: #0ea5e9;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --pink: #ec4899;
+      --purple: #8b5cf6;
+      --radius: 16px;
+      --shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-    .logo{width:44px;height:44px;border-radius:10px;object-fit:cover}
-    h1{margin:0;font-size:1.4rem}
-    .sub{margin:0;color:var(--muted)}
 
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
-    .stats{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}
-    .stat{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
-    .stat small{display:block;color:var(--muted)}
-    .stat strong{font-size:1.15rem}
-    .progress-wrap{margin-top:10px;background:#e2e8f0;border-radius:999px;height:11px;overflow:hidden}
-    .progress{height:11px;width:0%;background:linear-gradient(90deg,var(--primary),#4f8dfd)}
+    * { box-sizing: border-box; }
 
-    .module{display:none}
-    .module.active{display:block}
-    .title-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-    .muted{color:var(--muted)}
-    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:.77rem;font-weight:700}
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, #e7f1ff, #f7fbff 45%, #eef6ff);
+      line-height: 1.45;
+    }
 
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px}
-    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
-    .card h3{margin:.2rem 0}
-    .meta{font-size:.86rem;color:var(--muted)}
+    .app { max-width: 1050px; margin: 0 auto; padding: 14px 14px 110px; }
 
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    button{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:650;background:var(--primary);color:#fff}
-    button.secondary{background:#e2e8f0;color:#111}
-    button.good{background:var(--ok)}
-    button.warn{background:var(--warn);color:#111}
-    button.danger{background:var(--danger)}
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
 
-    .q{padding:12px;border:1px solid var(--line);border-radius:10px;margin-top:10px}
-    .opts{display:grid;gap:8px;margin-top:8px}
-    .opt{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
-    .opt:hover{border-color:#93c5fd}
-    .opt.correct{background:#dcfce7;border-color:#16a34a}
-    .opt.wrong{background:#fee2e2;border-color:#dc2626}
+    .top { display: grid; gap: 12px; }
+    .title-wrap { display: flex; gap: 10px; align-items: center; }
 
-    textarea,input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-    textarea{min-height:95px}
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid #bfdbfe;
+    }
 
-    .result{margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc}
-    .award{margin-top:12px;padding:14px;border:1px solid #bbf7d0;border-radius:12px;background:#f0fdf4}
-    .award h3{margin:.1rem 0 .4rem}
-    .award ul{margin:.4rem 0 .1rem 1.1rem;padding:0}
-    .goal{margin-top:10px;padding:10px;border:1px dashed #cbd5e1;border-radius:10px;background:#f8fafc;color:#334155}
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 1.2rem; }
 
-    .certificate{display:none}
-    .certificate.active{display:block}
-    .cert-sheet{border:6px solid #0f172a;border-radius:14px;padding:28px;min-height:430px;text-align:center;background:#fff}
-    .cert-logo{width:100px;height:100px;object-fit:cover;border-radius:10px;margin-bottom:10px}
-    .cert-title{font-size:2rem;margin:8px 0 2px}
-    .cert-name{font-size:2rem;font-weight:800;color:#1d4ed8;margin:16px 0}
-    .cert-line{font-size:1.05rem;margin:.35rem 0}
-    .cert-site{margin-top:18px;font-weight:700}
+    .muted { color: var(--muted); font-size: 0.95rem; }
 
-    .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-    .cta-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;background:#fff7ed}
-    .cta-card h3{margin:.1rem 0 .35rem;font-size:1rem}
-    .cta-card p{margin:.2rem 0 .7rem;color:#475569;font-size:.93rem}
-    .cta-link{display:inline-block;padding:9px 12px;border-radius:9px;background:#f59e0b;color:#111;text-decoration:none;font-weight:700}
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
 
-    footer{font-size:.8rem;color:var(--muted)}
+    .stat {
+      background: #f8fbff;
+      border: 1px solid #cfe0ff;
+      border-radius: 12px;
+      padding: 10px;
+    }
 
-    @media (max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid,.cta-grid{grid-template-columns:1fr 1fr}}
-    @media (max-width:620px){.stats,.grid,.cta-grid{grid-template-columns:1fr}}
+    .stat small { color: var(--muted); display: block; }
+    .stat strong { font-size: 1.1rem; }
 
-    @media print{
-      @page{size:landscape;margin:0.35in}
-      body *{visibility:hidden}
-      #certificate,#certificate *{visibility:visible}
-      #certificate{
-        display:block !important;
-        position:fixed;
-        inset:0;
-        margin:0 !important;
-        padding:0 !important;
-        border:none !important;
-        box-shadow:none !important;
-        background:#fff;
+    .progress-wrap {
+      margin-top: 10px;
+      background: #dbeafe;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 12px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .progress { width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #06b6d4); transition: width .4s ease; }
+
+    .focus {
+      background: linear-gradient(120deg, #eff6ff, #f0fdfa);
+      border: 1px dashed #93c5fd;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .share-row,
+    .btn-row,
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    button, .action-link {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 13px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 46px;
+      color: #06233f;
+      background: #bfdbfe;
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      box-shadow: 0 4px 10px rgba(2, 6, 23, .08);
+    }
+
+    button:hover, .action-link:hover { transform: translateY(-1px); filter: brightness(1.02); }
+    button:active, .action-link:active { transform: translateY(1px) scale(.99); }
+    button:focus-visible, .action-link:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+
+    .brand { background: #60a5fa; color: #082f49; }
+    .good { background: #86efac; }
+    .warn { background: #fde68a; }
+    .pink { background: #f9a8d4; }
+    .purple { background: #c4b5fd; }
+    .danger { background: #fca5a5; }
+    .teal { background: #99f6e4; }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tool-card {
+      border: 1px solid #cfe0ff;
+      border-radius: 14px;
+      padding: 12px;
+      background: #ffffff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .tool-head { display: flex; justify-content: space-between; gap: 8px; }
+
+    .badge-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .badge {
+      background: #e2e8ff;
+      color: #1e3a8a;
+      border: 1px solid #c7d2fe;
+      font-size: .76rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .module { display: none; }
+    .module.active { display: block; }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px;
+      font: inherit;
+      background: #fff;
+      margin-top: 6px;
+    }
+
+    textarea { min-height: 92px; }
+
+    .result {
+      margin-top: 10px;
+      border: 1px solid #bae6fd;
+      background: #f0f9ff;
+      border-radius: 12px;
+      padding: 10px;
+      display: none;
+    }
+
+    .certificate { display: none; }
+    .certificate.active { display: block; }
+
+    .cert-sheet {
+      border: 5px solid #1e3a8a;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      background: #ffffff;
+      min-height: 420px;
+    }
+
+    .cert-title { font-size: 1.8rem; color: #1e3a8a; margin-top: 10px; }
+    .cert-name { font-size: 1.9rem; margin: 14px 0; color: #1d4ed8; font-weight: 800; }
+    .cert-site { margin-top: 16px; font-weight: 800; }
+
+    .sticky-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffffee;
+      border-top: 1px solid #cbd5e1;
+      backdrop-filter: blur(6px);
+      padding: 8px;
+      z-index: 50;
+      display: grid;
+      gap: 8px;
+    }
+
+    .sticky-buttons, .sticky-share { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .sticky-share button { font-size: .85rem; padding: 10px; min-height: 42px; }
+
+    .footer-note { font-size: .9rem; color: #334155; }
+
+    @media (min-width: 760px) {
+      .app { padding-bottom: 24px; }
+      .stats { grid-template-columns: repeat(5, minmax(0,1fr)); }
+      .tool-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .sticky-bar { display: none; }
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 10mm; }
+      body * { visibility: hidden; }
+      #certificate, #certificate * { visibility: visible; }
+      #certificate { display: block !important; position: fixed; inset: 0; background: #fff; padding: 0; margin: 0; border: 0; }
+      #certificate .actions, #certificate .muted { display: none !important; }
+      #certificate .cert-sheet {
+        min-height: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-width: 6px;
       }
-      #certificate .title-row,
-      #certificate .actions{display:none !important;}
-      #certificate .cert-sheet{
-        min-height:0;
-        height:100%;
-        box-shadow:none;
-        page-break-inside:avoid;
-        break-inside:avoid;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        gap:6px;
-      }
-      #certificate .cert-title{font-size:1.85rem;}
-      #certificate .cert-name{font-size:1.9rem;margin:10px 0;}
-      #certificate .cert-line{margin:.2rem 0;}
-      #certificate .cert-site{margin-top:12px;}
     }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="logo" />
-    <div>
-      <h1>Emotional Intelligence Builder</h1>
-      <p class="sub">https://emotionalintelligencedeveloper.com/ course, and certificate.</p>
-    </div>
-  </header>
-
-  <section class="panel" aria-label="dashboard">
-    <div class="stats">
-      <div class="stat"><small>Points</small><strong id="points">0</strong></div>
-      <div class="stat"><small>Completed</small><strong id="done">0</strong></div>
-      <div class="stat"><small>Streak</small><strong id="streak">1</strong></div>
-      <div class="stat"><small>Level</small><strong id="level">Beginner</strong></div>
-    </div>
-    <small>Overall progress: <span id="pctText">0%</span></small>
-    <div class="progress-wrap"><div class="progress" id="bar"></div></div>
-  </section>
-
-  <section id="hub" class="panel module active">
-    <div class="title-row">
-      <h2 style="margin:0">Choose a tool</h2>
-      <span class="muted">Each completed activity adds points + one real-life action step.</span>
-    </div>
-    <div class="grid" id="toolGrid"></div>
-    <div class="actions">
-      <button class="secondary" id="resumeBtn">Resume last tool</button>
-      <button class="danger" id="resetBtn">Reset all progress</button>
-    </div>
-    <div id="goalBox" class="goal"></div>
-    <div id="awardBox" class="award" style="display:none"></div>
-  </section>
-
-  <section id="course" class="panel module">
-    <div class="title-row"><h2 style="margin:0">Course Sprint</h2><span class="pill">Game mode</span></div>
-    <div id="courseBody"></div>
-    <div class="actions"><button class="secondary" onclick="openModule('hub')">Back to hub</button></div>
-  </section>
-
-  <section id="calm" class="panel module">
-    <div class="title-row"><h2 style="margin:0">Calm Reset Gadget</h2><span class="pill">1-minute tool</span></div>
-    <p>Follow the breathing rhythm: inhale 4s, hold 4s, exhale 6s.</p>
-    <p id="timer" class="muted"><strong>Press start</strong></p>
-    <div class="actions">
-      <button onclick="startCalm()">Start</button>
-      <button class="secondary" onclick="openModule('hub')">Back to hub</button>
-    </div>
-    <div id="calmResult" class="result" style="display:none"></div>
-  </section>
-
-  <section id="boundary" class="panel module">
-    <div class="title-row"><h2 style="margin:0">Boundary Builder</h2><span class="pill">Scenario game</span></div>
-    <div id="boundaryBody"></div>
-    <div id="boundaryResult" class="result" style="display:none"></div>
-    <div class="actions"><button class="secondary" onclick="openModule('hub')">Back to hub</button></div>
-  </section>
-
-  <section id="trigger" class="panel module">
-    <div class="title-row"><h2 style="margin:0">Trigger Map</h2><span class="pill">Reflection gadget</span></div>
-    <label>1) What happened?</label>
-    <textarea id="tg1" placeholder="Describe the trigger event..."></textarea>
-    <label>2) What did you feel in body and thoughts?</label>
-    <textarea id="tg2" placeholder="Name sensations and emotions..."></textarea>
-    <label>3) What is your 24-hour action?</label>
-    <input id="tg3" type="text" placeholder="Example: take a walk + send one honest message" />
-    <div class="actions">
-      <button onclick="saveTrigger()">Save plan</button>
-      <button class="secondary" onclick="openModule('hub')">Back to hub</button>
-    </div>
-    <div id="triggerResult" class="result" style="display:none"></div>
-  </section>
-
-  <section id="daily" class="panel module">
-    <div class="title-row"><h2 style="margin:0">Daily Challenge</h2><span class="pill">1-minute mission</span></div>
-    <p id="dailyPrompt"></p>
-    <div class="actions">
-      <button class="good" onclick="completeDaily()">I did it</button>
-      <button class="secondary" onclick="openModule('hub')">Back to hub</button>
-    </div>
-    <div id="dailyResult" class="result" style="display:none"></div>
-  </section>
-
-  <section id="certificate" class="panel certificate" aria-label="certificate preview">
-    <div class="title-row">
-      <h2 style="margin:0">Certificate Preview</h2>
-      <span class="muted">Landscape print-ready recognition certificate</span>
-    </div>
-    <div class="cert-sheet">
-      <img class="cert-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Course Logo" />
-      <div class="cert-title">Certificate of Recognition</div>
-      <p class="cert-line">This proudly recognizes</p>
-      <div class="cert-name" id="certName">Participant</div>
-      <p class="cert-line">for successfully completing</p>
-      <p class="cert-line"><strong>Emotional Intelligence Builder Course</strong></p>
-      <p class="cert-line" id="certDate"></p>
-      <p class="cert-line">Your commitment to emotional intelligence growth is celebrated.</p>
-      <p class="cert-site">https://emotionalintelligencedeveloper.com/</p>
-    </div>
-    <div class="actions">
-      <button class="good" onclick="printCertificate()">Print Certificate</button>
-      <button class="secondary" onclick="closeCertificate()">Close Preview</button>
-    </div>
-  </section>
-
-  <section class="panel" aria-label="recommended next steps">
-    <div class="title-row">
-      <h2 style="margin:0">Keep building your emotional intelligence</h2>
-      <span class="muted">These next steps support your growth after completing tools.</span>
-    </div>
-    <div class="cta-grid">
-      <article class="cta-card">
-        <h3>📚 Deepen your growth with recommended audio books</h3>
-        <p>Turn your course insights into lasting habits with practical books on resilience, communication, and self-awareness.</p>
-        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Explore Recommended Audio Books</a>
-      </article>
-      <article class="cta-card">
-        <h3>🧭 Need support now? Visit the Help Page</h3>
-        <p>If this course brought up strong emotions, get guided support resources and next actions you can use right away.</p>
-        <a class="cta-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Open Help & Support</a>
-      </article>
-    </div>
-  </section>
-
-  <footer class="panel">This tool provides learning support and is not a replacement for professional care.</footer>
-</div>
-
-<script>
-const KEY = "ei_builder_state_v3";
-const today = new Date().toDateString();
-
-const tools = [
-  {id:"course",name:"Course Sprint",type:"Game",time:"~6 min",points:40,desc:"Awareness, regulation, empathy + quiz"},
-  {id:"calm",name:"Calm Reset",type:"Gadget",time:"~1 min",points:20,desc:"Timed breathing for regulation"},
-  {id:"boundary",name:"Boundary Builder",type:"Game",time:"~4 min",points:30,desc:"Practice healthy responses"},
-  {id:"trigger",name:"Trigger Map",type:"Gadget",time:"~5 min",points:25,desc:"Trigger to 24h action plan"},
-  {id:"daily",name:"Daily Challenge",type:"Game",time:"~1 min/day",points:15,desc:"Tiny repeatable growth action"}
-];
-
-const defaultState = {
-  points:0,
-  completed:{},
-  streak:1,
-  lastDay:today,
-  lastTool:"hub",
-  unlockedAwards:[],
-  certificateName:"",
-  plans:[],
-  history:[]
-};
-
-let state = loadState();
-let calmRunning = false;
-let bIndex = 0;
-let bScore = 0;
-let cStep = 0;
-let cScore = 0;
-
-function loadState(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    if(!parsed || typeof parsed !== "object") return {...defaultState};
-    return {...defaultState, ...parsed};
-  }catch{
-    return {...defaultState};
-  }
-}
-function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-function txt(id, value){ document.getElementById(id).textContent = String(value); }
-
-function syncStreak(){
-  const prev = new Date(state.lastDay);
-  const now = new Date(today);
-  const days = Math.round((now - prev)/(1000*60*60*24));
-  if(days === 1) state.streak += 1;
-  else if(days > 1) state.streak = 1;
-  state.lastDay = today;
-}
-
-function levelFromPoints(p){
-  if(p >= 220) return "Mentor";
-  if(p >= 120) return "Builder";
-  return "Beginner";
-}
-
-function renderDashboard(){
-  const done = Object.keys(state.completed).length;
-  const pct = Math.round((done / tools.length) * 100);
-  txt("points", state.points);
-  txt("done", done);
-  txt("streak", state.streak);
-  txt("level", levelFromPoints(state.points));
-  txt("pctText", pct + "%");
-  document.getElementById("bar").style.width = pct + "%";
-  renderGoal(done);
-  renderAwards(done);
-}
-
-function renderGoal(doneCount){
-  const goalBox = document.getElementById("goalBox");
-  const totalTools = tools.length;
-  const remaining = Math.max(totalTools - doneCount, 0);
-  const totalPoints = tools.reduce((sum,t)=>sum+t.points,0);
-  if(remaining === 0){
-    goalBox.innerHTML = `<strong>Goal complete:</strong> You finished all ${totalTools} tools. Claim your final award and generate your certificate below.`;
-    return;
-  }
-  goalBox.innerHTML = `<strong>End goal:</strong> Complete all ${totalTools} tools (${remaining} left). Base points available: ${totalPoints}. Final bonus on completion: +50.`;
-}
-
-function renderAwards(doneCount){
-  const awardBox = document.getElementById("awardBox");
-  const allDone = doneCount === tools.length;
-  if(!allDone){
-    awardBox.style.display = "none";
-    awardBox.innerHTML = "";
-    return;
-  }
-
-  awardBox.style.display = "block";
-  const finalPoints = tools.reduce((sum,t)=>sum+t.points,0);
-  const bonus = 50;
-  const hasFinalAward = state.unlockedAwards.includes("all-tools-complete");
-
-  awardBox.innerHTML = `
-    <h3>🏆 Congratulations — All Tools Completed!</h3>
-    <p>You finished the full builder path. This is a proud recognition of your emotional intelligence work.</p>
-    <ul>
-      <li><strong>Mastery Badge:</strong> Emotional Intelligence Builder Graduate</li>
-      <li><strong>Completion Bonus:</strong> +${bonus} points</li>
-      <li><strong>Total Target Points:</strong> ${finalPoints + bonus}</li>
-      <li><strong>Recognition:</strong> Generate your landscape certificate below</li>
-    </ul>
-    <label for="certInput"><strong>Name for certificate:</strong></label>
-    <input type="text" id="certInput" value="${escapeHtml(state.certificateName || "")}" placeholder="Enter your full name" oninput="saveCertificateName(this.value)" />
-    <div class="actions">
-      <button class="good" onclick="claimFinalAward()" ${hasFinalAward ? "disabled" : ""}>${hasFinalAward ? "Award Claimed ✅" : "Claim Final Award"}</button>
-      <button class="warn" onclick="previewCertificate()">Preview Certificate</button>
-    </div>
-  `;
-}
-
-function saveCertificateName(name){
-  state.certificateName = name.trim();
-  saveState();
-}
-
-function claimFinalAward(){
-  if(state.unlockedAwards.includes("all-tools-complete")) return;
-  state.unlockedAwards.push("all-tools-complete");
-  state.points += 50;
-  state.history.push({id:"award",note:"Claimed final completion award (+50)",date:new Date().toISOString()});
-  saveState();
-  renderDashboard();
-  renderHub();
-}
-
-function previewCertificate(){
-  const done = Object.keys(state.completed).length;
-  if(done !== tools.length){
-    alert("Complete all tools first to unlock your certificate.");
-    return;
-  }
-  const name = (state.certificateName || "").trim();
-  if(!name){
-    alert("Please add your name for the certificate.");
-    return;
-  }
-
-  document.getElementById("certName").textContent = name;
-  document.getElementById("certDate").textContent = `Date: ${new Date().toDateString()}`;
-  document.getElementById("certificate").classList.add("active");
-  document.getElementById("certificate").scrollIntoView({behavior:"smooth"});
-}
-
-function closeCertificate(){
-  document.getElementById("certificate").classList.remove("active");
-}
-
-function printCertificate(){
-  window.print();
-}
-
-function escapeHtml(str){
-  return str
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function markComplete(id, points, note){
-  if(!state.completed[id]){
-    state.points += points;
-    state.completed[id] = true;
-  }
-  state.lastTool = id;
-  state.history.push({id,note,date:new Date().toISOString()});
-  saveState();
-  renderDashboard();
-  renderHub();
-}
-
-function renderHub(){
-  const host = document.getElementById("toolGrid");
-  host.innerHTML = "";
-  tools.forEach(t => {
-    const done = !!state.completed[t.id];
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <span class="pill">${t.type}</span>
-      <h3>${t.name}</h3>
-      <div class="meta">${t.time} • +${t.points} pts</div>
-      <p>${t.desc}</p>
-      <div class="actions">
-        <button onclick="openModule('${t.id}')">${done ? "Replay" : "Start"}</button>
-        <span class="meta">${done ? "✅ done" : "not done"}</span>
+  <main class="app">
+    <section class="panel top">
+      <div class="title-wrap">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Course logo" />
+        <div>
+          <h1>🌟 Emotional Intelligence Course Hub</h1>
+          <p class="muted">Playful mini-app format: track progress, finish tools, and level up.</p>
+        </div>
       </div>
-    `;
-    host.appendChild(card);
-  });
-}
 
-function openModule(id){
-  document.querySelectorAll(".module").forEach(m=>m.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  state.lastTool = id;
-  saveState();
+      <section aria-label="Share this course">
+        <h2 style="font-size:1rem;">Share this course</h2>
+        <div class="share-row">
+          <button class="brand" id="shareNative">📲 Share</button>
+          <button class="teal" id="copyLink">🔗 Copy link</button>
+          <button class="good" id="shareWhatsApp">🟢 WhatsApp</button>
+          <button class="brand" id="shareFacebook">📘 Facebook</button>
+          <button class="warn" id="shareX">🐦 X/Twitter</button>
+          <button class="purple" id="shareLinkedIn">💼 LinkedIn</button>
+        </div>
+      </section>
+    </section>
 
-  if(id === "course") initCourse();
-  if(id === "boundary") initBoundary();
-  if(id === "daily") initDaily();
-  if(id === "hub") renderHub();
-}
+    <section class="panel">
+      <h2 style="font-size:1.05rem;">Your Progress</h2>
+      <div class="stats">
+        <div class="stat"><small>Points</small><strong id="points">0</strong></div>
+        <div class="stat"><small>Completed</small><strong id="completed">0</strong></div>
+        <div class="stat"><small>Streak</small><strong id="streak">0 days</strong></div>
+        <div class="stat"><small>Level</small><strong id="level">Beginner</strong></div>
+        <div class="stat"><small>Overall Progress</small><strong id="percent">0%</strong></div>
+      </div>
+      <div class="progress-wrap" aria-label="Overall progress"><div class="progress" id="progressBar"></div></div>
+      <div class="focus" id="todayFocus">🎯 Today’s focus: Start with one short tool to build momentum.</div>
+      <div class="actions">
+        <button class="teal" id="resumeBtn">▶️ Resume last tool</button>
+        <button class="danger" id="resetBtn">♻️ Reset progress</button>
+      </div>
+    </section>
 
-// -------- Course Sprint --------
-const slides = [
-  {type:"lesson",title:"Lesson 1: Emotional Awareness",body:"Name what you feel before reacting. Naming creates space."},
-  {type:"lesson",title:"Lesson 2: Regulation",body:"Pause, breathe once, and choose your goal before speaking."},
-  {type:"lesson",title:"Lesson 3: Empathy",body:"Ask: what might this feel like from their side?"},
-  {type:"reflect",title:"Reflection",body:"Write one recent reaction you want to improve."},
-  {type:"quiz",title:"Knowledge Check",questions:[
-    {q:"EI begins with:",opts:["Avoiding emotion","Awareness","Winning conflict"],a:1},
-    {q:"A pause gives:",opts:["Choice","Weakness","Confusion"],a:0},
-    {q:"Empathy means:",opts:["Understanding feelings","Judging","Withdrawing"],a:0}
-  ]}
-];
+    <section id="hub" class="panel module active" aria-label="Choose a tool">
+      <h2 style="font-size:1.05rem;">Choose a tool</h2>
+      <p class="muted">Complete each card to earn points and grow your streak.</p>
+      <div id="toolGrid" class="tool-grid"></div>
+    </section>
 
-function initCourse(){ cStep = 0; cScore = 0; renderCourse(); }
+    <section id="course" class="panel module">
+      <h2>🎮 Course Sprint</h2>
+      <p class="muted">Quick quiz challenge.</p>
+      <div id="courseBody"></div>
+      <div class="actions"><button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button></div>
+    </section>
 
-function renderCourse(){
-  const box = document.getElementById("courseBody");
-  const s = slides[cStep];
-  if(!s) return;
+    <section id="calm" class="panel module">
+      <h2>🫁 Calm Reset Gadget</h2>
+      <p>Follow the rhythm: inhale 4, hold 4, exhale 6.</p>
+      <p id="timerMsg" class="muted" style="margin-top:8px;">Press start when ready.</p>
+      <div class="actions">
+        <button class="good" onclick="startCalm()">Start</button>
+        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
+      </div>
+      <div id="calmResult" class="result"></div>
+    </section>
 
-  if(s.type === "lesson"){
-    box.innerHTML = `<h3>${s.title}</h3><p>${s.body}</p><div class="actions"><button onclick="nextCourse()">Next</button></div>`;
-    return;
-  }
+    <section id="boundary" class="panel module">
+      <h2>🧱 Boundary Builder</h2>
+      <p>Pick the strongest healthy response.</p>
+      <div id="boundaryBody"></div>
+      <div id="boundaryResult" class="result"></div>
+      <div class="actions"><button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button></div>
+    </section>
 
-  if(s.type === "reflect"){
-    box.innerHTML = `<h3>${s.title}</h3><p>${s.body}</p><textarea id="reflectionInput" placeholder="Type at least 10 characters"></textarea><div class="actions"><button onclick="submitReflection()">Continue</button></div>`;
-    return;
-  }
+    <section id="trigger" class="panel module">
+      <h2>🗺️ Trigger Map</h2>
+      <label>1) What happened?</label>
+      <textarea id="tg1" placeholder="Describe the event..."></textarea>
+      <label>2) What did you feel in body and thoughts?</label>
+      <textarea id="tg2" placeholder="Name sensations and emotions..."></textarea>
+      <label>3) What is your 24-hour action?</label>
+      <input id="tg3" type="text" placeholder="Example: pause + one honest message" />
+      <div class="actions">
+        <button class="good" onclick="saveTrigger()">Save plan</button>
+        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
+      </div>
+      <div id="triggerResult" class="result"></div>
+    </section>
 
-  box.innerHTML = `<h3>${s.title}</h3><div id="quizArea"></div>`;
-  renderQuizQ(0);
-}
+    <section id="daily" class="panel module">
+      <h2>⚡ Daily Challenge</h2>
+      <p id="dailyPrompt"></p>
+      <div class="actions">
+        <button class="good" onclick="completeDaily()">✅ I did it</button>
+        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
+      </div>
+      <div id="dailyResult" class="result"></div>
+    </section>
 
-function nextCourse(){ cStep++; renderCourse(); }
+    <section id="certificate" class="panel certificate" aria-label="Certificate Preview">
+      <h2>🏆 Certificate Preview</h2>
+      <p class="muted">Print-ready certificate (A4 landscape).</p>
+      <div class="cert-sheet">
+        <h3 class="cert-title">Certificate of Recognition</h3>
+        <p>This proudly recognizes</p>
+        <div id="certName" class="cert-name">Participant</div>
+        <p>for completing the Emotional Intelligence Course Hub tools.</p>
+        <p id="certDate" style="margin-top:8px;"></p>
+        <p class="cert-site">https://emotionalintelligencedeveloper.com/</p>
+      </div>
+      <div class="actions">
+        <button class="good" onclick="printCertificate()">🖨️ Print Certificate</button>
+        <button class="brand" id="downloadPdf">📄 Download PDF Summary</button>
+        <button class="teal" onclick="closeCertificate()">Close</button>
+      </div>
+    </section>
 
-function submitReflection(){
-  const v = document.getElementById("reflectionInput").value.trim();
-  if(v.length < 10){ alert("Please write a bit more detail."); return; }
-  state.history.push({id:"course",note:"Reflection: " + v,date:new Date().toISOString()});
-  saveState();
-  nextCourse();
-}
+    <section class="panel">
+      <h2 style="font-size:1.05rem;">Helpful Links</h2>
+      <div class="btn-row">
+        <a class="action-link good" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">🆘 Help / Support</a>
+        <a class="action-link warn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
+        <a class="action-link pink" href="https://emotionalintelligencedeveloper.com/support-us/" target="_blank" rel="noopener">💖 Support Us</a>
+        <a class="action-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧭 Explore More Free Tools</a>
+        <button class="brand" onclick="openCertificate()">🎓 View Certificate Preview</button>
+      </div>
+    </section>
 
-function renderQuizQ(i){
-  const qset = slides.find(s=>s.type === "quiz").questions;
-  const q = qset[i];
-  const host = document.getElementById("quizArea");
-  if(!q){
-    const pct = Math.round((cScore / qset.length) * 100);
-    host.innerHTML = `<div class="result"><strong>Score: ${pct}%</strong><br>24-hour action: pause 10 seconds before your next hard reply.</div><div class="actions"><button class="good" onclick="finishCourse(${pct})">Finish course</button></div>`;
-    return;
-  }
-  host.innerHTML = `<div class="q"><strong>Q${i+1}. ${q.q}</strong><div class="opts">${q.opts.map((o,idx)=>`<div class="opt" onclick="answerCourse(${i},${idx})">${o}</div>`).join("")}</div></div>`;
-}
+    <footer class="panel footer-note">This tool supports learning and reflection and is not a replacement for professional care.</footer>
+  </main>
 
-function answerCourse(i,idx){
-  const qset = slides.find(s=>s.type === "quiz").questions;
-  const q = qset[i];
-  const opts = document.querySelectorAll("#quizArea .opt");
-  opts.forEach(o=>o.onclick=null);
-  if(idx === q.a){ opts[idx].classList.add("correct"); cScore++; }
-  else { opts[idx].classList.add("wrong"); opts[q.a].classList.add("correct"); }
-  setTimeout(()=>renderQuizQ(i+1),700);
-}
+  <div class="sticky-bar" aria-label="Mobile quick actions">
+    <div class="sticky-share">
+      <button class="brand" id="shareNativeBottom">📲 Share</button>
+      <button class="teal" id="copyBottom">🔗 Copy</button>
+    </div>
+    <div class="sticky-buttons">
+      <a class="action-link good" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">🆘 Help / Support</a>
+      <a class="action-link warn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
+      <a class="action-link pink" href="https://emotionalintelligencedeveloper.com/support-us/" target="_blank" rel="noopener">💖 Support Us</a>
+      <a class="action-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧭 Explore More Free Tools</a>
+    </div>
+  </div>
 
-function finishCourse(pct){
-  markComplete("course",40,`Course score ${pct}%`);
-  alert("Course complete. Points added.");
-  openModule("hub");
-}
+  <script>
+    const KEY = 'ei_course_hub_v4';
+    const levels = [
+      { name: 'Beginner', min: 0 },
+      { name: 'Growing', min: 40 },
+      { name: 'Skilled', min: 90 },
+      { name: 'Builder', min: 150 },
+      { name: 'Mentor', min: 230 }
+    ];
 
-// -------- Calm Reset --------
-function startCalm(){
-  if(calmRunning) return;
-  calmRunning = true;
-  const timer = document.getElementById("timer");
-  const out = document.getElementById("calmResult");
-  out.style.display = "none";
+    const tools = [
+      { id: 'course', name: 'Course Sprint', points: 40, desc: 'Quiz yourself on core EI skills.', badges: ['Scenario', 'Quick Win'] },
+      { id: 'calm', name: 'Calm Reset Gadget', points: 20, desc: 'Reset your nervous system in one minute.', badges: ['1-minute', 'Breath'] },
+      { id: 'boundary', name: 'Boundary Builder', points: 30, desc: 'Practice respectful no-thank-you scripts.', badges: ['Scenario', 'Communication'] },
+      { id: 'trigger', name: 'Trigger Map', points: 30, desc: 'Map reaction patterns + choose one action.', badges: ['Reflection', 'Journaling'] },
+      { id: 'daily', name: 'Daily Challenge', points: 20, desc: 'One tiny daily mission for growth.', badges: ['1-minute', 'Habit'] }
+    ];
 
-  const phases = [{n:"Inhale",s:4},{n:"Hold",s:4},{n:"Exhale",s:6}];
-  let round = 1, phase = 0, sec = phases[0].s;
-  timer.innerHTML = `<strong>Round ${round}/5 • ${phases[phase].n} ${sec}s</strong>`;
+    let state = loadState();
 
-  const iv = setInterval(()=>{
-    sec--;
-    if(sec <= 0){
-      phase++;
-      if(phase >= phases.length){ phase = 0; round++; }
-      if(round > 5){
-        clearInterval(iv);
-        calmRunning = false;
-        timer.innerHTML = "<strong>Completed 5 rounds ✅</strong>";
-        out.style.display = "block";
-        out.textContent = "Great reset. 24-hour action: use one breath cycle before your next stressful response.";
-        markComplete("calm",20,"Calm reset completed");
+    function baseState() {
+      return {
+        points: 0,
+        completedTools: {},
+        completedCount: 0,
+        streak: 0,
+        level: 'Beginner',
+        lastTool: null,
+        completionHistory: [],
+        participantName: ''
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return baseState();
+        return { ...baseState(), ...JSON.parse(raw) };
+      } catch (_) {
+        return baseState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }
+
+    function todayISO() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function computeStreak(history) {
+      if (!history.length) return 0;
+      const unique = [...new Set(history)].sort();
+      let streak = 0;
+      let cursor = new Date(todayISO());
+      for (let i = unique.length - 1; i >= 0; i--) {
+        const d = new Date(unique[i]);
+        const key = d.toISOString().slice(0,10);
+        const cur = cursor.toISOString().slice(0,10);
+        if (key === cur) {
+          streak++;
+          cursor.setDate(cursor.getDate() - 1);
+        } else if (key < cur) {
+          break;
+        }
+      }
+      return streak;
+    }
+
+    function getLevel(points) {
+      let current = levels[0].name;
+      levels.forEach(l => { if (points >= l.min) current = l.name; });
+      return current;
+    }
+
+    function progressPercent() {
+      return Math.round((Object.keys(state.completedTools).length / tools.length) * 100);
+    }
+
+    function updateFocus() {
+      const focus = document.getElementById('todayFocus');
+      const pending = tools.find(t => !state.completedTools[t.id]);
+      if (pending) {
+        focus.textContent = `🎯 Today’s focus: Try ${pending.name} (${pending.points} pts) to keep your momentum.`;
+      } else {
+        focus.textContent = '🎯 Today’s focus: Amazing streak! Revisit your favorite tool and share the course with someone.';
+      }
+    }
+
+    function renderStats() {
+      state.completedCount = Object.keys(state.completedTools).length;
+      state.streak = computeStreak(state.completionHistory);
+      state.level = getLevel(state.points);
+
+      document.getElementById('points').textContent = state.points;
+      document.getElementById('completed').textContent = state.completedCount;
+      document.getElementById('streak').textContent = `${state.streak} days`;
+      document.getElementById('level').textContent = state.level;
+      const pct = progressPercent();
+      document.getElementById('percent').textContent = `${pct}%`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      updateFocus();
+      saveState();
+    }
+
+    function completeTool(id) {
+      const tool = tools.find(t => t.id === id);
+      if (!tool) return;
+      state.lastTool = id;
+      const already = !!state.completedTools[id];
+      if (!already) {
+        state.points += tool.points;
+        state.completedTools[id] = true;
+      }
+      state.completionHistory.push(todayISO());
+      renderStats();
+    }
+
+    function openModule(id) {
+      document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      state.lastTool = id === 'hub' ? state.lastTool : id;
+      saveState();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderTools() {
+      const grid = document.getElementById('toolGrid');
+      grid.innerHTML = '';
+      tools.forEach(tool => {
+        const done = !!state.completedTools[tool.id];
+        const card = document.createElement('article');
+        card.className = 'tool-card';
+        card.innerHTML = `
+          <div class="tool-head">
+            <h3>${done ? '✅' : '🎯'} ${tool.name}</h3>
+            <strong>${tool.points} pts</strong>
+          </div>
+          <p class="muted">${tool.desc}</p>
+          <div class="badge-row">${tool.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
+          <button class="brand" data-open="${tool.id}">${done ? 'Open Again' : 'Start Tool'}</button>
+        `;
+        grid.appendChild(card);
+      });
+      grid.querySelectorAll('button[data-open]').forEach(btn => {
+        btn.addEventListener('click', () => openModule(btn.dataset.open));
+      });
+    }
+
+    function setupShareButtons() {
+      const shareUrl = () => window.location.href;
+      const text = 'Try this Emotional Intelligence Course Hub:';
+      const tryNative = async () => {
+        if (navigator.share) {
+          try { await navigator.share({ title: document.title, text, url: shareUrl() }); }
+          catch (_) {}
+        } else {
+          copyLink();
+          alert('Web Share is not supported on this device. Link copied.');
+        }
+      };
+      const copyLink = async () => {
+        const url = shareUrl();
+        try {
+          await navigator.clipboard.writeText(url);
+          alert('Link copied!');
+        } catch (_) {
+          prompt('Copy this link:', url);
+        }
+      };
+      const openShare = (base) => window.open(base + encodeURIComponent(shareUrl()), '_blank', 'noopener');
+
+      document.getElementById('shareNative').addEventListener('click', tryNative);
+      document.getElementById('shareNativeBottom').addEventListener('click', tryNative);
+      document.getElementById('copyLink').addEventListener('click', copyLink);
+      document.getElementById('copyBottom').addEventListener('click', copyLink);
+      document.getElementById('shareWhatsApp').addEventListener('click', () => window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + shareUrl())}`, '_blank', 'noopener'));
+      document.getElementById('shareFacebook').addEventListener('click', () => openShare('https://www.facebook.com/sharer/sharer.php?u='));
+      document.getElementById('shareX').addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(text)}`, '_blank', 'noopener'));
+      document.getElementById('shareLinkedIn').addEventListener('click', () => openShare('https://www.linkedin.com/sharing/share-offsite/?url='));
+    }
+
+    function startCalm() {
+      const phases = ['Inhale… 4', 'Hold… 4', 'Exhale… 6'];
+      const timer = document.getElementById('timerMsg');
+      let idx = 0;
+      let loops = 0;
+      timer.textContent = phases[idx];
+      const iv = setInterval(() => {
+        idx = (idx + 1) % phases.length;
+        if (idx === 0) loops++;
+        timer.textContent = phases[idx];
+        if (loops >= 3) {
+          clearInterval(iv);
+          timer.textContent = 'Great reset complete.';
+          const box = document.getElementById('calmResult');
+          box.style.display = 'block';
+          box.textContent = 'Nice work. You completed Calm Reset Gadget.';
+          completeTool('calm');
+        }
+      }, 1000);
+    }
+
+    const courseQuestions = [
+      {
+        q: 'When emotions run high, your best first step is:',
+        opts: ['Blame someone fast', 'Pause and name your feeling', 'Ignore your body signals'],
+        a: 1
+      },
+      {
+        q: 'Healthy empathy means:',
+        opts: ['Feeling everything for others', 'Listening and understanding without losing boundaries', 'Never disagreeing'],
+        a: 1
+      }
+    ];
+
+    function renderCourse() {
+      const wrap = document.getElementById('courseBody');
+      let i = 0;
+      let score = 0;
+      const draw = () => {
+        if (i >= courseQuestions.length) {
+          wrap.innerHTML = `<div class="result" style="display:block;">Score: ${score}/${courseQuestions.length}. Course Sprint complete!</div>`;
+          completeTool('course');
+          return;
+        }
+        const q = courseQuestions[i];
+        wrap.innerHTML = `<div class="panel" style="margin-top:10px;"><h3>${q.q}</h3>${q.opts.map((o,idx)=>`<button class="${idx===q.a?'good':'brand'}" data-i="${idx}" style="margin-top:8px;display:block;width:100%;text-align:left;">${o}</button>`).join('')}</div>`;
+        wrap.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => {
+          if (Number(b.dataset.i) === q.a) score++;
+          i++;
+          draw();
+        }));
+      };
+      draw();
+    }
+
+    function renderBoundary() {
+      const body = document.getElementById('boundaryBody');
+      body.innerHTML = `
+        <p style="margin-top:8px;">A friend pushes you to share personal details you are not ready to share.</p>
+        <button class="brand" data-choice="0" style="margin-top:8px;">Fine, I will say everything.</button>
+        <button class="good" data-choice="1" style="margin-top:8px;">I care about our friendship, and I’m not ready to share that yet.</button>
+        <button class="warn" data-choice="2" style="margin-top:8px;">You are always too much.</button>
+      `;
+      body.querySelectorAll('button[data-choice]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const ok = btn.dataset.choice === '1';
+          const r = document.getElementById('boundaryResult');
+          r.style.display = 'block';
+          r.textContent = ok ? 'Great boundary response. Clear + respectful.' : 'Try again with a calm, clear boundary statement.';
+          if (ok) completeTool('boundary');
+        });
+      });
+    }
+
+    function saveTrigger() {
+      const a = document.getElementById('tg1').value.trim();
+      const b = document.getElementById('tg2').value.trim();
+      const c = document.getElementById('tg3').value.trim();
+      if (!a || !b || !c) {
+        alert('Please complete all Trigger Map fields.');
         return;
       }
-      sec = phases[phase].s;
+      const r = document.getElementById('triggerResult');
+      r.style.display = 'block';
+      r.textContent = 'Trigger Map saved. Great reflection work.';
+      completeTool('trigger');
     }
-    timer.innerHTML = `<strong>Round ${round}/5 • ${phases[phase].n} ${sec}s</strong>`;
-  },1000);
-}
 
-// -------- Boundary Builder --------
-const boundaryQs = [
-  {q:"A friend repeatedly calls late at night. Best response?",opts:["Ignore forever","Set a boundary + offer another time","Start a fight"],a:1,why:"Clear and respectful boundaries protect your energy."},
-  {q:"Coworker repeatedly drops urgent tasks on you last minute.",opts:["Say yes always","Name your workload and request earlier planning","Complain to others only"],a:1,why:"Direct, calm communication reduces repeated overload."},
-  {q:"Family member dismisses your emotions.",opts:["Use an I-statement + request tone","Shout louder","Cut contact instantly"],a:0,why:"Assertive language protects dignity without escalation."}
-];
+    const dailyPrompts = [
+      'Send one calm and honest text today.',
+      'Take 60 seconds to notice your breathing before your next task.',
+      'Replace one self-critical thought with a kinder phrase.',
+      'Ask one open question in your next conversation.'
+    ];
 
-function initBoundary(){ bIndex = 0; bScore = 0; document.getElementById("boundaryResult").style.display="none"; renderBoundary(); }
+    function loadDailyPrompt() {
+      const idx = new Date().getDate() % dailyPrompts.length;
+      document.getElementById('dailyPrompt').textContent = dailyPrompts[idx];
+    }
 
-function renderBoundary(){
-  const host = document.getElementById("boundaryBody");
-  const q = boundaryQs[bIndex];
-  if(!q){
-    const pct = Math.round((bScore / boundaryQs.length) * 100);
-    host.innerHTML = `<div class="result"><strong>Score: ${pct}%</strong><br>Action: write one boundary sentence you will use this week.</div><div class="actions"><button class="good" onclick="finishBoundary(${pct})">Finish game</button></div>`;
-    return;
-  }
-  host.innerHTML = `<div class="q"><strong>${bIndex+1}) ${q.q}</strong><div class="opts">${q.opts.map((o,i)=>`<div class="opt" onclick="answerBoundary(${i})">${o}</div>`).join("")}</div></div>`;
-}
+    function completeDaily() {
+      const r = document.getElementById('dailyResult');
+      r.style.display = 'block';
+      r.textContent = 'Daily challenge completed — tiny steps, big results.';
+      completeTool('daily');
+    }
 
-function answerBoundary(i){
-  const q = boundaryQs[bIndex];
-  const opts = document.querySelectorAll("#boundaryBody .opt");
-  const info = document.getElementById("boundaryResult");
-  opts.forEach(o=>o.onclick=null);
-  if(i===q.a){ opts[i].classList.add("correct"); bScore++; }
-  else { opts[i].classList.add("wrong"); opts[q.a].classList.add("correct"); }
-  info.style.display = "block";
-  info.textContent = q.why;
-  setTimeout(()=>{ bIndex++; info.style.display = "none"; renderBoundary(); },900);
-}
+    function openCertificate() {
+      const name = prompt('Participant name (optional):', state.participantName || '') ?? '';
+      state.participantName = name.trim();
+      document.getElementById('certName').textContent = state.participantName || 'Participant';
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString();
+      saveState();
+      document.getElementById('certificate').classList.add('active');
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
 
-function finishBoundary(pct){
-  markComplete("boundary",30,`Boundary score ${pct}%`);
-  alert("Boundary game complete. Points added.");
-  openModule("hub");
-}
+    function closeCertificate() { document.getElementById('certificate').classList.remove('active'); }
+    function printCertificate() { window.print(); }
 
-// -------- Trigger Map --------
-function saveTrigger(){
-  const a = document.getElementById("tg1").value.trim();
-  const b = document.getElementById("tg2").value.trim();
-  const c = document.getElementById("tg3").value.trim();
-  if(a.length<6 || b.length<6 || c.length<4){ alert("Please complete all fields with meaningful detail."); return; }
-  state.plans.push({trigger:a,feeling:b,action:c,date:new Date().toISOString()});
-  saveState();
-  const out = document.getElementById("triggerResult");
-  out.style.display = "block";
-  out.textContent = `Saved. Your 24-hour action: ${c}`;
-  markComplete("trigger",25,"Trigger plan saved");
-}
+    async function downloadSummaryPDF() {
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF) {
+        alert('PDF library failed to load. Please try again.');
+        return;
+      }
+      const name = prompt('Participant name (optional):', state.participantName || '') ?? '';
+      state.participantName = name.trim();
+      saveState();
 
-// -------- Daily --------
-const prompts = [
-  "Send one respectful, honest message you have been avoiding.",
-  "Take a 5-minute walk before your next stressful task.",
-  "Name your emotion once today: 'I feel ____.'.",
-  "Use one boundary sentence today: 'I can do X by Y time.'",
-  "Write 3 lines: what happened, what I felt, what I need next."
-];
+      const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+      const w = doc.internal.pageSize.getWidth();
+      const h = doc.internal.pageSize.getHeight();
+      const footer = 'https://emotionalintelligencedeveloper.com/';
+      const foot = () => {
+        const pages = doc.getNumberOfPages();
+        for (let p = 1; p <= pages; p++) {
+          doc.setPage(p);
+          doc.setFontSize(9);
+          doc.setTextColor(70, 70, 70);
+          doc.text(footer, w / 2, h - 18, { align: 'center' });
+        }
+      };
 
-function hash(s){ let h=0; for(let i=0;i<s.length;i++) h=(h<<5)-h+s.charCodeAt(i)|0; return h; }
+      let y = 46;
+      doc.setFontSize(20);
+      doc.setTextColor(20, 40, 90);
+      doc.text('Emotional Intelligence Course Summary', 40, y);
+      y += 26;
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      doc.text(`Participant: ${state.participantName || 'Not provided'}`, 40, y); y += 16;
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 40, y); y += 22;
+      doc.text(`Points: ${state.points}`, 40, y); y += 15;
+      doc.text(`Level: ${state.level}`, 40, y); y += 15;
+      doc.text(`Completed: ${state.completedCount}/${tools.length}`, 40, y); y += 15;
+      doc.text(`Streak: ${state.streak} day(s)`, 40, y); y += 24;
 
-function initDaily(){
-  const idx = Math.abs(hash(today)) % prompts.length;
-  document.getElementById("dailyPrompt").textContent = prompts[idx];
-  document.getElementById("dailyResult").style.display = "none";
-}
+      doc.setFontSize(13);
+      doc.setTextColor(20, 40, 90);
+      doc.text('Completed Tools', 40, y); y += 16;
+      doc.setFontSize(11);
+      doc.setTextColor(20, 20, 20);
+      tools.forEach(t => {
+        const mark = state.completedTools[t.id] ? '[x]' : '[ ]';
+        doc.text(`${mark} ${t.name}`, 50, y);
+        y += 15;
+      });
 
-function completeDaily(){
-  const out = document.getElementById("dailyResult");
-  out.style.display = "block";
-  out.textContent = "Great work. Tiny daily actions are how people build lasting emotional strength.";
-  markComplete("daily",15,"Daily completed");
-}
+      y += 14;
+      doc.setFontSize(13);
+      doc.setTextColor(20, 40, 90);
+      doc.text('Next steps', 40, y); y += 16;
+      doc.setFontSize(11);
+      doc.setTextColor(20, 20, 20);
+      const next = [
+        '1) Continue with one tool daily to keep your streak going.',
+        '2) Share this course with a friend for accountability.',
+        '3) Explore more free tools:',
+        'https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
+      ];
+      next.forEach(line => {
+        const lines = doc.splitTextToSize(line, w - 80);
+        doc.text(lines, 40, y);
+        y += lines.length * 14;
+        if (y > h - 70) {
+          doc.addPage();
+          y = 48;
+        }
+      });
 
-// -------- Buttons + startup --------
-document.getElementById("resumeBtn").addEventListener("click",()=>{
-  if(state.lastTool && document.getElementById(state.lastTool)) openModule(state.lastTool);
-  else openModule("hub");
-});
+      foot();
+      doc.save('course-summary.pdf');
+    }
 
-document.getElementById("resetBtn").addEventListener("click",()=>{
-  if(!confirm("Reset all points, progress, plans, and certificate name?")) return;
-  state = {...defaultState};
-  saveState();
-  renderDashboard();
-  renderHub();
-  closeCertificate();
-  openModule("hub");
-});
+    function attachActions() {
+      document.getElementById('resumeBtn').addEventListener('click', () => {
+        if (state.lastTool && document.getElementById(state.lastTool)) openModule(state.lastTool);
+        else alert('No last tool yet. Pick one from the hub.');
+      });
 
-syncStreak();
-saveState();
-renderDashboard();
-renderHub();
-</script>
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        if (!confirm('Reset all course progress?')) return;
+        localStorage.removeItem(KEY);
+        state = baseState();
+        document.getElementById('tg1').value = '';
+        document.getElementById('tg2').value = '';
+        document.getElementById('tg3').value = '';
+        ['calmResult','boundaryResult','triggerResult','dailyResult'].forEach(id => {
+          const el = document.getElementById(id); el.style.display = 'none';
+        });
+        closeCertificate();
+        renderTools();
+        renderStats();
+        openModule('hub');
+      });
+
+      document.getElementById('downloadPdf').addEventListener('click', downloadSummaryPDF);
+    }
+
+    function init() {
+      renderTools();
+      renderStats();
+      renderCourse();
+      renderBoundary();
+      loadDailyPrompt();
+      setupShareButtons();
+      attachActions();
+      document.getElementById('certName').textContent = state.participantName || 'Participant';
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString();
+    }
+
+    init();
+  </script>
 </body>
 </html>

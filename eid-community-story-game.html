@@ -68,6 +68,9 @@
     .btn[disabled] { opacity: .45; cursor: not-allowed; }
     .item { border: 1px solid rgba(92,101,175,.2); border-radius: 14px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,.84); }
     .meta { font-size: .8rem; color: var(--muted); }
+    .vote-box { margin-top: 8px; padding: 12px 12px; border-radius: 12px; border: 3px dashed rgba(92,101,175,.45); background: rgba(255,255,255,.98); }
+    .vote-main { font-size: 1.35rem; line-height: 1.2; font-weight: 900; color: #1d2152; }
+    .vote-sub { font-size: 1rem; font-weight: 700; color: #2f376e; }
     .big { font-size: 1.1rem; font-weight: 900; color: var(--brand); }
     .counter { font-size: .82rem; color: var(--muted); text-align: right; }
     .progress { width: 100%; background: rgba(92,101,175,.18); border-radius: 999px; height: 14px; overflow: hidden; }
@@ -144,7 +147,7 @@
       <div id="storyProgressWrap" class="hidden">
         <div class="sub"><strong>Word Goal:</strong> <span id="wordCountLabel">0 / 396 words</span></div>
         <div class="progress" aria-label="Word progress"><div class="bar" id="wordBar"></div></div>
-        <button id="publishBtn" class="btn btn-main" disabled style="margin-top:10px;">Publish Story (Generate PDF + Archive)</button>
+        <button id="publishBtn" class="btn btn-main" disabled style="margin-top:10px;">PDF auto-downloads only after conclusion winner is voted in</button>
       </div>
 
       <div id="snippetComposer" class="hidden" style="margin-top:12px;">
@@ -170,6 +173,28 @@
       <h4 style="margin-top:14px;">Candidate Additions</h4>
       <div id="snippetList"></div>
       <div id="nextRoundMsg" class="sub hidden">Next: Add the next piece!</div>
+
+      <div id="conclusionWrap" class="hidden" style="margin-top:14px;">
+        <h4>Conclusion Round (Vote to lock ending)</h4>
+        <p class="sub">Word goal reached. Submit a conclusion line. First to target votes wins and the story is exported to PDF.</p>
+        <form id="conclusionForm" class="row" aria-label="Submit conclusion">
+          <div class="row row-3">
+            <label>Name (max 24)
+              <input id="conclusionName" maxlength="24" required aria-label="Conclusion name" />
+            </label>
+            <label>Social handle (display only)
+              <input id="conclusionHandle" required aria-label="Conclusion handle" />
+            </label>
+            <label>Conclusion text (max 210)
+              <textarea id="conclusionText" maxlength="210" required aria-label="Conclusion text"></textarea>
+              <div class="counter"><span id="conclusionCount">0</span> / 210</div>
+            </label>
+          </div>
+          <button class="btn btn-main" type="submit">Submit Conclusion Candidate</button>
+        </form>
+        <div id="conclusionSubmitShare" class="item hidden" aria-live="polite"></div>
+        <div id="conclusionList"></div>
+      </div>
     </section>
 
     <section class="card" id="archiveSection">
@@ -209,8 +234,8 @@
         <li><strong>Headline Round:</strong> submit headline ideas and vote. First headline to 10 votes becomes the chosen headline.</li>
         <li><strong>Story Build Round:</strong> submit candidate snippets (max 210 chars). First snippet to 10 votes wins the round and is appended.</li>
         <li><strong>One winner each round:</strong> all other candidates in that round are marked “Not selected this round.”</li>
-        <li><strong>Publish gate:</strong> story publishes only at <strong>396+ words</strong>.</li>
-        <li><strong>Share to get votes:</strong> each headline/snippet has a share button for vote links.</li>
+        <li><strong>Conclusion gate:</strong> once 396+ words are reached, submit conclusion candidates and vote to lock the ending.</li>
+        <li><strong>Share to get votes:</strong> every headline, snippet, and conclusion candidate has a share button.</li>
       </ol>
     </div>
   </div>
@@ -235,7 +260,7 @@
     const RECOMMENDED_AUDIO_BOOKS_LINK = "https://emotionalintelligencedeveloper.com/";
     // ================================================================
 
-    const TEST_MODE = true; // Set false for live 10-vote gameplay
+    const TEST_MODE = false; // Set true only for internal testing
     const VOTE_TARGET = TEST_MODE ? 2 : 10;
     const WORD_TARGET = 396;
     const RATE_LIMIT_COUNT = 3;
@@ -287,7 +312,15 @@
       shareFacebook: document.getElementById("shareFacebook"),
       shareWhatsApp: document.getElementById("shareWhatsApp"),
       headlineSubmitShare: document.getElementById("headlineSubmitShare"),
-      snippetSubmitShare: document.getElementById("snippetSubmitShare")
+      snippetSubmitShare: document.getElementById("snippetSubmitShare"),
+      conclusionWrap: document.getElementById("conclusionWrap"),
+      conclusionForm: document.getElementById("conclusionForm"),
+      conclusionName: document.getElementById("conclusionName"),
+      conclusionHandle: document.getElementById("conclusionHandle"),
+      conclusionText: document.getElementById("conclusionText"),
+      conclusionCount: document.getElementById("conclusionCount"),
+      conclusionSubmitShare: document.getElementById("conclusionSubmitShare"),
+      conclusionList: document.getElementById("conclusionList")
     };
 
     el.booksLink.href = RECOMMENDED_AUDIO_BOOKS_LINK;
@@ -411,16 +444,20 @@
             if (item.status === "open" && round === story.round) {
               item.status = "accepted";
               item.acceptedAt = now();
-              story.pieces.push({
-                id: item.id, text: item.text, name: item.name, handle: item.handle, acceptedAt: item.acceptedAt
-              });
               Object.values(db.snippets).forEach(s => {
-                if (s.storyId === story.id && s.round === round && s.id !== item.id && s.status === "open") {
+                if (s.storyId === story.id && s.round === round && s.id !== item.id && s.status === "open" && (item.kind ? s.kind === item.kind : true)) {
                   s.status = "not_selected";
                   s.closedAt = now();
                 }
               });
-              story.round += 1;
+              if (item.kind === "conclusion") {
+                story.conclusion = { id: item.id, text: item.text, name: item.name, handle: item.handle, acceptedAt: item.acceptedAt };
+              } else {
+                story.pieces.push({
+                  id: item.id, text: item.text, name: item.name, handle: item.handle, acceptedAt: item.acceptedAt
+                });
+                story.round += 1;
+              }
             }
           }
 
@@ -531,11 +568,16 @@
                 tx.update(itemRef, { status:"accepted", acceptedAt: now() });
                 const q = await root.collection("snippets").where("storyId","==", story.id).where("round","==", story.round).get();
                 q.docs.forEach(d => {
-                  if (d.id !== itemId && d.data().status === "open") tx.update(d.ref, { status:"not_selected", closedAt: now() });
+                  const dData = d.data();
+                  if (d.id !== itemId && dData.status === "open" && (item.kind ? dData.kind === item.kind : true)) tx.update(d.ref, { status:"not_selected", closedAt: now() });
                 });
                 const pieces = Array.isArray(story.pieces) ? story.pieces.slice() : [];
-                pieces.push({ id:itemId, text:item.text, name:item.name, handle:item.handle, acceptedAt: now() });
-                tx.set(gameRef, { activeStory: { ...story, pieces, round: story.round + 1 } }, { merge: true });
+                if (item.kind === "conclusion") {
+                  tx.set(gameRef, { activeStory: { ...story, conclusion: { id:itemId, text:item.text, name:item.name, handle:item.handle, acceptedAt: now() } } }, { merge: true });
+                } else {
+                  pieces.push({ id:itemId, text:item.text, name:item.name, handle:item.handle, acceptedAt: now() });
+                  tx.set(gameRef, { activeStory: { ...story, pieces, round: story.round + 1 } }, { merge: true });
+                }
               }
             }
             return { ok:true };
@@ -583,7 +625,29 @@
         state.archives = data.archives || [];
         render();
         maybeJumpToSharedTarget();
+        autoPublishIfConclusionWon();
       });
+    }
+
+    let publishingNow = false;
+    async function autoPublishIfConclusionWon() {
+      if (publishingNow) return;
+      const story = state.game?.activeStory;
+      if (!story || !story.conclusion || story.published) return;
+      publishingNow = true;
+      try {
+        const storyObj = {
+          headlineText: story.headlineText,
+          pieces: (story.pieces || []).concat([story.conclusion]),
+          wordCount: wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text), story.conclusion.text).join(" ")),
+          publishDate: fmtDate(now())
+        };
+        await generatePdf(storyObj);
+        await store.publishStory(storyObj);
+        toast("Conclusion locked! Story exported to PDF and archived.");
+      } finally {
+        publishingNow = false;
+      }
     }
 
     function enforceKindness(...parts) {
@@ -630,8 +694,7 @@
       const links = [
         ["WhatsApp",`https://wa.me/?text=${msg}`],
         ["Facebook",`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`],
-        ["X",`https://twitter.com/intent/tweet?text=${msg}`],
-        ["LinkedIn",`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`]
+        ["X",`https://twitter.com/intent/tweet?text=${msg}`]
       ];
       links.forEach(([n,l])=>{ const a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener";a.textContent=n; a.style.marginRight="10px"; holder.appendChild(a); });
       const cpy = makeButton("Copy link", "btn-share", async()=>{ await navigator.clipboard.writeText(url); toast("Link copied!"); holder.remove();});
@@ -639,6 +702,12 @@
       document.body.appendChild(holder);
       holder.style.position = "fixed"; holder.style.bottom = "180px"; holder.style.left = "50%"; holder.style.transform = "translateX(-50%)"; holder.style.zIndex = "99";
       setTimeout(()=>holder.remove(), 9000);
+    }
+
+    function voteStatusText(votes) {
+      const cast = votes || 0;
+      const short = Math.max(0, VOTE_TARGET - cast);
+      return { cast, short };
     }
 
     function showSubmissionShare(container, personName, mode, id, pieceTitle) {
@@ -708,8 +777,15 @@
 
         const m = document.createElement("div");
         m.className = "meta";
-        m.textContent = `By ${h.name} (${h.handle}) • Votes: ${h.votes || 0}/${VOTE_TARGET}`;
+        const vs = voteStatusText(h.votes || 0);
+        m.textContent = `By ${h.name} (${h.handle})`;
         div.appendChild(m);
+        const vb = document.createElement("div");
+        vb.className = "vote-box";
+        const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+        const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to win this round`;
+        vb.append(vm, vsb);
+        div.appendChild(vb);
 
         const badge = document.createElement("span");
         badge.className = "pill " + (h.status === "locked" ? "p-win" : "p-open");
@@ -733,7 +809,7 @@
 
     function getCurrentRoundSnippets(story) {
       if (!story) return [];
-      return state.snippets.filter(s => s.storyId === story.id && (s.round === story.round || s.round === story.round - 1));
+      return state.snippets.filter(s => s.storyId === story.id && s.kind !== "conclusion" && (s.round === story.round || s.round === story.round - 1));
     }
 
     function renderStory() {
@@ -741,6 +817,8 @@
       el.storyPieces.textContent = "";
       el.snippetList.textContent = "";
       el.nextRoundMsg.classList.add("hidden");
+      el.conclusionList.textContent = "";
+      el.conclusionWrap.classList.add("hidden");
 
       if (!story) {
         el.storyBadge.className = "pill p-lock";
@@ -778,13 +856,11 @@
       el.wordCountLabel.textContent = `${wc} / ${WORD_TARGET} words`;
       el.wordBar.style.width = `${Math.min(100, Math.round((wc / WORD_TARGET) * 100))}%`;
 
-      const canPublish = wc >= WORD_TARGET;
-      el.publishBtn.disabled = !canPublish;
-      if (canPublish) {
-        el.publishBtn.classList.add("celebrate");
-        toast("🎉 Word goal reached! Publish Story is now active.");
-      } else {
-        el.publishBtn.classList.remove("celebrate");
+      const goalReached = wc >= WORD_TARGET;
+      el.publishBtn.disabled = true;
+      el.publishBtn.classList.remove("celebrate");
+      if (goalReached) {
+        el.conclusionWrap.classList.remove("hidden");
       }
 
       const roundSnips = getCurrentRoundSnippets(story);
@@ -800,8 +876,15 @@
           const d = document.createElement("div"); d.className = "item"; d.dataset.shareId = `snippet_${s.id}`;
           const tx = document.createElement("div"); tx.textContent = s.text;
           const mt = document.createElement("div"); mt.className = "meta";
-          mt.textContent = `By ${s.name} (${s.handle}) • Votes: ${s.votes || 0}/${VOTE_TARGET} • Round ${s.round}`;
+          const vs = voteStatusText(s.votes || 0);
+          mt.textContent = `By ${s.name} (${s.handle}) • Round ${s.round}`;
           d.append(tx, mt);
+          const vb = document.createElement("div");
+          vb.className = "vote-box";
+          const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+          const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to win this round`;
+          vb.append(vm, vsb);
+          d.appendChild(vb);
           const badge = document.createElement("span");
           if (s.status === "accepted") { badge.className = "pill p-win"; badge.textContent = "Winner"; }
           else if (s.status === "not_selected") { badge.className = "pill p-lock"; badge.textContent = "Not selected this round"; }
@@ -822,6 +905,44 @@
           d.appendChild(actions);
           el.snippetList.appendChild(d);
         });
+
+      if (goalReached) {
+        const conclusionCandidates = state.snippets
+          .filter(c => c.storyId === story.id && c.kind === "conclusion")
+          .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+        if (!conclusionCandidates.length) {
+          const p = document.createElement("p"); p.className = "sub"; p.textContent = "No conclusion candidates yet. Submit one above.";
+          el.conclusionList.appendChild(p);
+        }
+        conclusionCandidates.forEach(c => {
+          const d = document.createElement("div"); d.className = "item"; d.dataset.shareId = `snippet_${c.id}`;
+          const tx = document.createElement("div"); tx.textContent = c.text;
+          const mt = document.createElement("div"); mt.className = "meta";
+          const vs = voteStatusText(c.votes || 0);
+          mt.textContent = `By ${c.name} (${c.handle}) • Conclusion Candidate`;
+          d.append(tx, mt);
+          const vb = document.createElement("div"); vb.className = "vote-box";
+          const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+          const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to lock conclusion`;
+          vb.append(vm, vsb);
+          d.appendChild(vb);
+          const badge = document.createElement("span");
+          if (c.status === "accepted") { badge.className = "pill p-win"; badge.textContent = "Winner"; }
+          else if (c.status === "not_selected") { badge.className = "pill p-lock"; badge.textContent = "Not selected"; }
+          else { badge.className = "pill p-open"; badge.textContent = "Round Open"; }
+          d.appendChild(badge);
+          const actions = document.createElement("div"); actions.style.marginTop = "8px";
+          const voteBtn = makeButton("Vote", "btn-vote", async()=>{
+            const res = await store.vote("snippet", c.id, state.uid);
+            toast(res?.message || "Vote added!");
+          }, "Vote conclusion");
+          if (c.status !== "open") voteBtn.disabled = true;
+          const shareBtn = makeButton("Share to get votes", "btn-share", ()=>shareItem("snippet", c.id, c.text), "Share conclusion");
+          actions.append(voteBtn, document.createTextNode(" "), shareBtn);
+          d.appendChild(actions);
+          el.conclusionList.appendChild(d);
+        });
+      }
     }
 
     function renderArchives() {
@@ -922,6 +1043,8 @@
       e.preventDefault();
       const story = state.game?.activeStory;
       if (!story) return toast("No active story right now.");
+      const existingWordCount = wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" "));
+      if (existingWordCount >= WORD_TARGET) return toast("Story body is complete. Submit a conclusion instead.");
       const text = safeText(el.snippetText.value).slice(0,210);
       const name = safeText(el.snippetName.value).slice(0,24);
       const handle = safeText(el.snippetHandle.value);
@@ -929,7 +1052,7 @@
       if (wordCount(text) < 2) return toast("Please add a meaningful continuation.");
       if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
       if (!(await checkRateLimit())) return;
-      const newId = await store.addSnippet({ storyId: story.id, round: story.round, text, name, handle, createdBy: state.uid });
+      const newId = await store.addSnippet({ storyId: story.id, round: story.round, text, name, handle, kind: "snippet", createdBy: state.uid });
       await store.markSubmission(state.uid);
       el.snippetForm.reset();
       el.snippetCount.textContent = "0";
@@ -937,22 +1060,32 @@
       toast("Candidate addition submitted! Share this piece to get votes.");
     });
 
-    el.publishBtn.addEventListener("click", async () => {
-      const story = state.game?.activeStory;
-      if (!story) return;
-      const totalText = [story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" ");
-      const wc = wordCount(totalText);
-      if (wc < WORD_TARGET) return toast("Publishing unlocks at 396 words.");
-      const storyObj = {
-        headlineText: story.headlineText,
-        pieces: story.pieces || [],
-        wordCount: wc,
-        publishDate: fmtDate(now())
-      };
-      await generatePdf(storyObj);
-      await store.publishStory(storyObj);
-      toast("Story published, archived, and active story reset!");
+
+    el.conclusionText.addEventListener("input", () => {
+      el.conclusionCount.textContent = String(el.conclusionText.value.length);
     });
+
+    el.conclusionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const story = state.game?.activeStory;
+      if (!story) return toast("No active story right now.");
+      const currentWords = wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" "));
+      if (currentWords < WORD_TARGET) return toast("Conclusion round unlocks at 396 words.");
+      const text = safeText(el.conclusionText.value).slice(0,210);
+      const name = safeText(el.conclusionName.value).slice(0,24);
+      const handle = safeText(el.conclusionHandle.value);
+      if (!text || !name || !handle) return toast("Please fill all conclusion fields.");
+      if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
+      if (!(await checkRateLimit())) return;
+      const newId = await store.addSnippet({ storyId: story.id, round: story.round, text, name, handle, kind: "conclusion", createdBy: state.uid });
+      await store.markSubmission(state.uid);
+      el.conclusionForm.reset();
+      el.conclusionCount.textContent = "0";
+      showSubmissionShare(el.conclusionSubmitShare, name, "snippet", newId, text);
+      toast("Conclusion candidate submitted! Share this piece to get votes.");
+    });
+
+    // Publish is intentionally locked: PDF export only happens automatically after the winning conclusion is voted in.
 
     el.howBtn.addEventListener("click", ()=>{
       el.howModalBg.style.display = "flex";

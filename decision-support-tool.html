@@ -111,6 +111,14 @@
 
     .helper { color: var(--muted); font-size: 0.95rem; }
 
+    .prompt-box {
+      border: 2px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
     .result {
       border: 2px dashed #93c5fd;
       background: #f0f9ff;
@@ -250,6 +258,25 @@
         </div>
       </div>
 
+      <section class="prompt-box" id="dynamicPromptSection" aria-label="Guided prompts based on selected area">
+        <h3>🧭 Guided prompts for your selected area</h3>
+        <p class="helper" id="promptIntro">Choose “What feels most stuck right now?” to load tailored questions.</p>
+        <div class="grid">
+          <div class="field">
+            <label class="block" id="promptLabel1" for="topicQ1">Prompt 1</label>
+            <textarea aria-label="Tailored prompt one" id="topicQ1" placeholder="Your response..."></textarea>
+          </div>
+          <div class="field">
+            <label class="block" id="promptLabel2" for="topicQ2">Prompt 2</label>
+            <textarea aria-label="Tailored prompt two" id="topicQ2" placeholder="Your response..."></textarea>
+          </div>
+          <div class="field">
+            <label class="block" id="promptLabel3" for="topicQ3">Prompt 3</label>
+            <textarea aria-label="Tailored prompt three" id="topicQ3" placeholder="Your response..."></textarea>
+          </div>
+        </div>
+      </section>
+
       <div class="grid grid-2">
         <div class="field">
           <label class="block" for="situation">What is happening?</label>
@@ -327,6 +354,54 @@
       const BOOKS = "https://emotionalintelligencedeveloper.com/recommended-books/";
       const TOOLS = "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/";
 
+      const DECISION_GUIDES = {
+        "Work or study decision": {
+          intro: "Work/study choices are easier when you weigh impact, effort, and support.",
+          prompts: [
+            "Which option best matches your current energy, time, and priorities?",
+            "What short-term pressure is loud right now, and what long-term goal matters more?",
+            "Who can offer practical feedback before your next step?"
+          ],
+          advice: "General guidance: shortlist 2–3 options, compare benefits/risks, then commit to one small trial action this week."
+        },
+        "Relationship or family choice": {
+          intro: "For relationship decisions, clarity about boundaries and needs usually helps more than perfect wording.",
+          prompts: [
+            "What boundary or need do you want to protect most here?",
+            "What conversation outcome is realistic (not perfect) for this week?",
+            "What wording can stay respectful and clear in one or two sentences?"
+          ],
+          advice: "General guidance: use calm timing, 'I' statements, and one clear ask. Focus on progress in communication, not winning."
+        },
+        "Personal wellbeing routine": {
+          intro: "Wellbeing choices often improve when the routine is tiny, repeatable, and easy to start.",
+          prompts: [
+            "What 5–10 minute habit would help you feel more steady each day?",
+            "Which obstacle usually disrupts your routine, and what backup plan can you use?",
+            "What sign will tell you this routine is helping after one week?"
+          ],
+          advice: "General guidance: begin with one small daily anchor (sleep, movement, breathing, or journaling) and track consistency over intensity."
+        },
+        "Money or practical planning": {
+          intro: "Practical and money decisions become clearer when broken into immediate, short-term, and later steps.",
+          prompts: [
+            "What is the single most urgent practical task in the next 24–72 hours?",
+            "What minimum safe plan can reduce pressure this month?",
+            "What information or support would make this decision less stressful?"
+          ],
+          advice: "General guidance: separate essentials from optional spending/tasks, then prioritize one stabilizing action before bigger changes."
+        },
+        "Something else": {
+          intro: "When the situation is complex, start by reducing overwhelm and naming one controllable step.",
+          prompts: [
+            "What part of this situation can you influence right now?",
+            "What would 'good enough for today' look like?",
+            "What support, tool, or person would make your next step easier?"
+          ],
+          advice: "General guidance: make a simple pros/concerns list, choose one step, and review how it feels before making a larger decision."
+        }
+      };
+
       const elements = {
         userName: document.getElementById("userName"),
         decisionType: document.getElementById("decisionType"),
@@ -334,6 +409,13 @@
         worry: document.getElementById("worry"),
         bestOutcome: document.getElementById("bestOutcome"),
         nextStep: document.getElementById("nextStep"),
+        topicQ1: document.getElementById("topicQ1"),
+        topicQ2: document.getElementById("topicQ2"),
+        topicQ3: document.getElementById("topicQ3"),
+        promptLabel1: document.getElementById("promptLabel1"),
+        promptLabel2: document.getElementById("promptLabel2"),
+        promptLabel3: document.getElementById("promptLabel3"),
+        promptIntro: document.getElementById("promptIntro"),
         saveToggle: document.getElementById("saveToggle"),
         result: document.getElementById("result"),
         createBtn: document.getElementById("createBtn"),
@@ -355,14 +437,42 @@
       }
 
       function getData() {
+        const selected = elements.decisionType.value.trim();
+        const guide = DECISION_GUIDES[selected] || null;
         return {
           userName: elements.userName.value.trim(),
-          decisionType: elements.decisionType.value.trim(),
+          decisionType: selected,
           situation: elements.situation.value.trim(),
           worry: elements.worry.value.trim(),
           bestOutcome: elements.bestOutcome.value.trim(),
-          nextStep: elements.nextStep.value.trim()
+          nextStep: elements.nextStep.value.trim(),
+          topicQ1: elements.topicQ1.value.trim(),
+          topicQ2: elements.topicQ2.value.trim(),
+          topicQ3: elements.topicQ3.value.trim(),
+          tailoredAdvice: guide ? guide.advice : "General guidance: pick one small step you can complete today, then review how you feel afterward."
         };
+      }
+
+      function updatePromptSet() {
+        const selected = elements.decisionType.value.trim();
+        const guide = DECISION_GUIDES[selected];
+        if (!guide) {
+          elements.promptIntro.textContent = "Choose “What feels most stuck right now?” to load tailored questions.";
+          elements.promptLabel1.textContent = "Prompt 1";
+          elements.promptLabel2.textContent = "Prompt 2";
+          elements.promptLabel3.textContent = "Prompt 3";
+          elements.topicQ1.placeholder = "Your response...";
+          elements.topicQ2.placeholder = "Your response...";
+          elements.topicQ3.placeholder = "Your response...";
+          return;
+        }
+        elements.promptIntro.textContent = guide.intro;
+        elements.promptLabel1.textContent = "1) " + guide.prompts[0];
+        elements.promptLabel2.textContent = "2) " + guide.prompts[1];
+        elements.promptLabel3.textContent = "3) " + guide.prompts[2];
+        elements.topicQ1.placeholder = guide.prompts[0];
+        elements.topicQ2.placeholder = guide.prompts[1];
+        elements.topicQ3.placeholder = guide.prompts[2];
       }
 
       function updateShareLinks() {
@@ -390,6 +500,14 @@ ${data.situation}
 Main worry:
 ${data.worry}
 
+Guided answers for this area:
+• ${elements.promptLabel1.textContent.replace(/^1\)\s*/, "")} 
+  ${data.topicQ1 || "No response yet."}
+• ${elements.promptLabel2.textContent.replace(/^2\)\s*/, "")} 
+  ${data.topicQ2 || "No response yet."}
+• ${elements.promptLabel3.textContent.replace(/^3\)\s*/, "")} 
+  ${data.topicQ3 || "No response yet."}
+
 Best realistic outcome:
 ${data.bestOutcome || "Not provided yet."}
 
@@ -397,7 +515,10 @@ One tiny next step:
 ${data.nextStep}
 
 Supportive reminder:
-A small step done calmly is still meaningful progress.`;
+A small step done calmly is still meaningful progress.
+
+Broader suggested feedback:
+${data.tailoredAdvice}`;
 
         latestSummary = summary;
         elements.result.textContent = summary;
@@ -424,7 +545,11 @@ A small step done calmly is still meaningful progress.`;
           elements.worry.value = data.worry || "";
           elements.bestOutcome.value = data.bestOutcome || "";
           elements.nextStep.value = data.nextStep || "";
+          elements.topicQ1.value = data.topicQ1 || "";
+          elements.topicQ2.value = data.topicQ2 || "";
+          elements.topicQ3.value = data.topicQ3 || "";
           elements.saveToggle.checked = !!data.saveEnabled;
+          updatePromptSet();
           if (data.latestSummary) {
             latestSummary = data.latestSummary;
             elements.result.textContent = data.latestSummary;
@@ -441,8 +566,12 @@ A small step done calmly is still meaningful progress.`;
         elements.worry.value = "";
         elements.bestOutcome.value = "";
         elements.nextStep.value = "";
+        elements.topicQ1.value = "";
+        elements.topicQ2.value = "";
+        elements.topicQ3.value = "";
         elements.saveToggle.checked = false;
         latestSummary = "";
+        updatePromptSet();
         elements.result.textContent = "Your summary will appear here after you click “Create Reflection”.";
         localStorage.removeItem(STORAGE_KEY);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -561,11 +690,16 @@ A small step done calmly is still meaningful progress.`;
         }
       });
 
-      const autoSaveFields = ["userName", "decisionType", "situation", "worry", "bestOutcome", "nextStep"];
+      const autoSaveFields = ["userName", "decisionType", "situation", "worry", "bestOutcome", "nextStep", "topicQ1", "topicQ2", "topicQ3"];
       autoSaveFields.forEach((id) => {
         elements[id].addEventListener("input", () => {
           if (elements.saveToggle.checked) saveIfEnabled();
         });
+      });
+
+      elements.decisionType.addEventListener("change", () => {
+        updatePromptSet();
+        if (elements.saveToggle.checked) saveIfEnabled();
       });
 
       elements.saveToggle.addEventListener("change", () => {
@@ -579,6 +713,7 @@ A small step done calmly is still meaningful progress.`;
       });
 
       updateShareLinks();
+      updatePromptSet();
       restoreSaved();
     })();
   </script>

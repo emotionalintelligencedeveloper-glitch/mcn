@@ -7,11 +7,11 @@
   <title>10-to-Write: The Community Story Game</title>
   <style>
     :root {
-      --bg: #0f1021;
-      --card: #1a1c3b;
-      --card2: #252854;
-      --text: #fefeff;
-      --muted: #c9cbff;
+      --bg: #ffffff;
+      --card: #ffffff;
+      --card2: #f5f7ff;
+      --text: #21243d;
+      --muted: #4f5585;
       --brand: #ffd166;
       --brand2: #7ae582;
       --accent: #ff70a6;
@@ -20,23 +20,24 @@
       --ok: #7ae582;
       --warn: #ffd166;
       --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.28);
+      --shadow: 0 10px 30px rgba(31, 45, 112, .12);
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; font-family: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; background: radial-gradient(circle at top, #1a1c49, #0f1021 45%); color: var(--text); }
+    html, body { margin: 0; font-family: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; background: linear-gradient(180deg, #ffffff 0%, #f6fbff 55%, #f9f3ff 100%); color: var(--text); }
     a { color: var(--accent2); }
     .wrap { max-width: 860px; margin: 0 auto; padding: 14px; }
-    .banner { position: sticky; top: 0; z-index: 30; background: rgba(15,16,33,.92); backdrop-filter: blur(6px); border-bottom: 2px solid rgba(255,255,255,.1); }
+    .banner { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-bottom: 2px solid rgba(92,101,175,.2); }
     .brand {
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
       padding: 10px 14px;
     }
     .brand h1 { margin: 0; font-size: 1.1rem; color: var(--brand); }
+    .logo { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(92,101,175,.22); }
     .tagline { font-size: .85rem; color: var(--muted); }
     .how-btn { border: 0; background: linear-gradient(45deg, var(--accent), #ff9770); color: #111; font-weight: 700; padding: 10px 12px; border-radius: 999px; cursor: pointer; }
     .card {
       background: linear-gradient(180deg, var(--card), var(--card2));
-      border: 2px solid rgba(255,255,255,.12); border-radius: var(--radius); padding: 14px; margin-top: 14px; box-shadow: var(--shadow);
+      border: 2px solid rgba(92,101,175,.16); border-radius: var(--radius); padding: 14px; margin-top: 14px; box-shadow: var(--shadow);
     }
     .title { margin: 0 0 8px; font-size: 1.1rem; }
     .sub { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
@@ -49,7 +50,7 @@
     @media (min-width: 720px) { .row-3 { grid-template-columns: repeat(3,1fr);} }
     label { font-size: .84rem; color: var(--muted); }
     input, textarea {
-      width: 100%; border-radius: 12px; border: 2px solid rgba(255,255,255,.2); background: rgba(0,0,0,.18);
+      width: 100%; border-radius: 12px; border: 2px solid rgba(92,101,175,.24); background: #fff;
       color: var(--text); padding: 10px; font: inherit;
     }
     textarea { min-height: 86px; resize: vertical; }
@@ -65,19 +66,19 @@
     .btn-muted { background: #3a3d70; color: #fff; }
     .btn-danger { background: #78333b; color: #ffd8dc; }
     .btn[disabled] { opacity: .45; cursor: not-allowed; }
-    .item { border: 1px solid rgba(255,255,255,.13); border-radius: 14px; padding: 10px; margin-top: 10px; background: rgba(0,0,0,.14); }
+    .item { border: 1px solid rgba(92,101,175,.2); border-radius: 14px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,.84); }
     .meta { font-size: .8rem; color: var(--muted); }
     .big { font-size: 1.1rem; font-weight: 900; color: var(--brand); }
     .counter { font-size: .82rem; color: var(--muted); text-align: right; }
-    .progress { width: 100%; background: rgba(255,255,255,.1); border-radius: 999px; height: 14px; overflow: hidden; }
+    .progress { width: 100%; background: rgba(92,101,175,.18); border-radius: 999px; height: 14px; overflow: hidden; }
     .bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--brand), var(--brand2)); transition: width .4s ease; }
-    .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px; background: #1f234f; color: #fff; border: 2px solid var(--brand); border-radius: 12px; padding: 10px 14px; opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 80; }
+    .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px; background: #ffffff; color: #1f234f; border: 2px solid var(--brand); border-radius: 12px; padding: 10px 14px; opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 80; box-shadow: var(--shadow); }
     .toast.show { opacity: 1; }
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 90; }
-    .modal { width: min(94vw, 760px); max-height: 90vh; overflow: auto; background: #15183a; border: 2px solid rgba(255,255,255,.2); border-radius: 16px; padding: 14px; }
+    .modal { width: min(94vw, 760px); max-height: 90vh; overflow: auto; background: #ffffff; border: 2px solid rgba(92,101,175,.2); border-radius: 16px; padding: 14px; color: #1d2346; }
     .close { float:right; }
     .bottom-bar {
-      position: sticky; bottom: 0; z-index: 40; background: rgba(15,16,33,.96); border-top: 2px solid rgba(255,255,255,.12); padding: 8px;
+      position: sticky; bottom: 0; z-index: 40; background: rgba(255,255,255,.98); border-top: 2px solid rgba(92,101,175,.2); padding: 8px;
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
     }
     @media (min-width: 680px) { .bottom-bar { grid-template-columns: repeat(4,minmax(0,1fr)); }}
@@ -95,9 +96,12 @@
 <body>
   <div class="banner">
     <div class="brand wrap">
-      <div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
+        <div>
         <h1>Emotional Intelligence Developer</h1>
         <div class="tagline">Build a story together, one kind line at a time. • <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">emotionalintelligencedeveloper.com</a></div>
+        </div>
       </div>
       <button class="how-btn" id="howBtn" aria-label="How it works">How it works</button>
     </div>
@@ -121,8 +125,8 @@
           <label>Name (max 24)
             <input id="headlineName" maxlength="24" required aria-label="Headline name" />
           </label>
-          <label>Social handle (max 24, display only)
-            <input id="headlineHandle" maxlength="24" required aria-label="Headline handle" />
+          <label>Social handle (display only)
+            <input id="headlineHandle" required aria-label="Headline handle" />
           </label>
           <div style="display:flex;align-items:flex-end">
             <button class="btn btn-main" type="submit">Submit Headline</button>
@@ -148,8 +152,8 @@
             <label>Name (max 24)
               <input id="snippetName" maxlength="24" required aria-label="Snippet name" />
             </label>
-            <label>Social handle (max 24, display only)
-              <input id="snippetHandle" maxlength="24" required aria-label="Snippet handle" />
+            <label>Social handle (display only)
+              <input id="snippetHandle" required aria-label="Snippet handle" />
             </label>
             <label>Contribution (max 210)
               <textarea id="snippetText" maxlength="210" required aria-label="Snippet text"></textarea>
@@ -196,16 +200,6 @@
         <li><strong>Publish gate:</strong> story publishes only at <strong>396+ words</strong>.</li>
         <li><strong>Share to get votes:</strong> each headline/snippet has a share button for vote links.</li>
       </ol>
-      <h4>Deploy steps (GitHub Pages)</h4>
-      <ol>
-        <li>Create a new repo named <strong>eid-community-story-game</strong> in your GitHub account.</li>
-        <li>Add this file as <code>index.html</code> at the repository root.</li>
-        <li>Commit and push.</li>
-        <li>In GitHub repo settings → Pages, set source to <strong>Deploy from branch</strong>, branch <strong>main</strong> / root.</li>
-        <li>Your site URL format: <code>https://YOUR-USERNAME.github.io/eid-community-story-game/</code></li>
-      </ol>
-      <h4>Real-time setup</h4>
-      <p>Paste your Firebase web config in the CONFIG SECTION near the top of the script. If blank, app runs in Demo Mode (localStorage only).</p>
     </div>
   </div>
 
@@ -848,7 +842,7 @@
       e.preventDefault();
       const text = safeText(el.headlineText.value).slice(0,90);
       const name = safeText(el.headlineName.value).slice(0,24);
-      const handle = safeText(el.headlineHandle.value).slice(0,24);
+      const handle = safeText(el.headlineHandle.value);
       if (!text || !name || !handle) return toast("Please fill all headline fields.");
       if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
       if (state.game?.activeStory) return toast("Headline round is locked while story is active.");
@@ -869,7 +863,7 @@
       if (!story) return toast("No active story right now.");
       const text = safeText(el.snippetText.value).slice(0,210);
       const name = safeText(el.snippetName.value).slice(0,24);
-      const handle = safeText(el.snippetHandle.value).slice(0,24);
+      const handle = safeText(el.snippetHandle.value);
       if (!text || !name || !handle) return toast("Please fill all snippet fields.");
       if (wordCount(text) < 2) return toast("Please add a meaningful continuation.");
       if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");

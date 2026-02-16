@@ -5,94 +5,231 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inner vs Outer Alignment Tool</title>
   <style>
-    :root{
-      --bg:#fff9e8;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#4b5563;
-      --line:#f5c45b;
-      --accent:#4f46e5;
-      --accent2:#ef4444;
-      --accent3:#10b981;
-      --accent4:#f59e0b;
-      --focus:#0ea5e9;
-      --shadow:0 10px 24px rgba(0,0,0,.09);
-      --radius:16px;
+    :root {
+      --bg1: #fffaf0;
+      --bg2: #e9f7ff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #ffd166;
+      --focus: #0ea5e9;
+      --shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
+      --radius: 18px;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:"Comic Sans MS","Trebuchet MS",system-ui,-apple-system,Segoe UI,Arial,sans-serif;
-      background:linear-gradient(180deg,#fff8e1 0%,#e0f7ff 100%);
-      color:var(--text);
-      line-height:1.5;
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: "Comic Sans MS", "Trebuchet MS", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+      line-height: 1.5;
     }
-    .container{max-width:980px;margin:0 auto;padding:14px}
-    .card{
-      background:var(--card);
-      border:3px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-      margin:12px 0;
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px;
     }
-    h1,h2{margin:.2rem 0 .6rem}
-    h1{font-size:clamp(1.4rem,2.8vw,2rem)}
-    h2{font-size:clamp(1.1rem,2.2vw,1.5rem)}
-    p{margin:.4rem 0}
-    .intro{color:var(--muted)}
-    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .comic-doodles{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-top:8px}
-    .doodle{background:#fff;border:2px dashed #9ca3af;border-radius:14px;padding:8px;text-align:center}
-    .question{border:2px solid #bfdbfe;background:#f8fbff;border-radius:14px;padding:12px;margin:10px 0}
-    .question label{display:block;font-weight:700;margin-bottom:6px}
-    .help{font-size:.93rem;color:#374151;margin-bottom:6px}
-    textarea,input[type="text"]{
-      width:100%;border:2px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit;background:#fff;
+
+    .card {
+      background: var(--card);
+      border: 3px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin: 12px 0;
     }
-    textarea{min-height:90px;resize:vertical}
-    input[type="range"]{width:100%}
-    .range-read{font-weight:700;color:var(--accent)}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    button,a.btn{
-      border:none;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;
-      color:#111827;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 0 rgba(0,0,0,.12);
-      background:#fde68a;
+
+    h1, h2, h3 { margin: .2rem 0 .6rem; }
+    h1 { font-size: clamp(1.45rem, 3vw, 2.1rem); }
+    h2 { font-size: clamp(1.1rem, 2.2vw, 1.55rem); }
+    p { margin: .4rem 0; }
+
+    .intro { color: var(--muted); }
+
+    .header-wrap {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 12px;
+      align-items: center;
     }
-    button:hover,a.btn:hover{transform:translateY(-1px)}
-    button:focus-visible,a.btn:focus-visible,textarea:focus-visible,input:focus-visible{
-      outline:3px solid var(--focus);outline-offset:2px;
+
+    .logo {
+      width: 100%;
+      max-width: 108px;
+      height: 108px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 3px solid #93c5fd;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
     }
-    .primary{background:#93c5fd}
-    .success{background:#86efac}
-    .danger{background:#fca5a5}
-    .violet{background:#c4b5fd}
-    .orange{background:#fdba74}
-    .pink{background:#f9a8d4}
-    .result{display:none;background:#eefcf2;border:2px solid #86efac;border-radius:14px;padding:12px}
-    .small{font-size:.92rem;color:var(--muted)}
-    .meter{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}
-    .meter>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#60a5fa,#34d399);transition:width .25s}
-    .toast{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:#111827;color:#fff;padding:9px 12px;border-radius:10px;display:none;z-index:20}
-    .safety{background:#fff7ed;border:2px solid #fdba74}
-    @media (max-width:520px){
-      .container{padding:8px}
-      .card{padding:12px}
-      button,a.btn{width:100%;justify-content:center}
-      .btns{gap:8px}
+
+    .comic-doodles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .doodle {
+      background: #fff;
+      border: 2px dashed #9ca3af;
+      border-radius: 14px;
+      padding: 8px;
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .question {
+      border: 2px solid #bfdbfe;
+      background: #f8fbff;
+      border-radius: 14px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+
+    .question label { display: block; font-weight: 700; margin-bottom: 6px; }
+    .help { font-size: .93rem; color: #374151; margin-bottom: 6px; }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px;
+      font: inherit;
+      background: #fff;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+    input[type="range"] { width: 100%; }
+
+    .range-read {
+      font-weight: 700;
+      color: #4338ca;
+    }
+
+    .small {
+      font-size: .92rem;
+      color: var(--muted);
+    }
+
+    .meter {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      transition: width .2s ease;
+    }
+
+    .result {
+      display: none;
+      background: #eefcf2;
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button, a.btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, .12);
+      background: #fde68a;
+      min-height: 44px;
+    }
+
+    button:hover, a.btn:hover { transform: translateY(-1px); }
+
+    button:focus-visible, a.btn:focus-visible, textarea:focus-visible, input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .primary { background: #93c5fd; }
+    .success { background: #86efac; }
+    .danger { background: #fca5a5; }
+    .violet { background: #c4b5fd; }
+    .orange { background: #fdba74; }
+    .pink { background: #f9a8d4; }
+
+    .safety {
+      background: #fff7ed;
+      border: 2px solid #fdba74;
+    }
+
+    footer .btns { margin-top: 6px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: 10px;
+      display: none;
+      z-index: 30;
+      font-size: .94rem;
+    }
+
+    @media (max-width: 680px) {
+      .header-wrap { grid-template-columns: 1fr; text-align: center; }
+      .logo { margin: 0 auto; }
+    }
+
+    @media (max-width: 520px) {
+      .container { padding: 8px; }
+      .card { padding: 12px; }
+      button, a.btn { width: 100%; }
+      .btns { gap: 8px; }
     }
   </style>
 </head>
 <body>
   <main class="container" aria-label="Inner outer alignment reflection tool">
     <header class="card">
-      <h1>🧠💬 Inner vs Outer Alignment Tool</h1>
-      <p class="intro">A friendly reflection space to compare how you feel inside with how you show up outside. Reflection support only — no diagnosis or medical claims.</p>
+      <div class="header-wrap">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+        <div>
+          <h1>🧠💬 Inner vs Outer Alignment Tool</h1>
+          <p class="intro">A friendly reflection space to compare how you feel inside with how you show up outside. Reflection support only — no diagnosis or medical claims.</p>
+        </div>
+      </div>
       <div class="comic-doodles" aria-hidden="true">
         <div class="doodle"><svg viewBox="0 0 80 50" width="70" height="44"><ellipse cx="40" cy="24" rx="30" ry="17" fill="#fff" stroke="#111" stroke-width="2"/><circle cx="30" cy="22" r="2"/><circle cx="50" cy="22" r="2"/><path d="M28 30 Q40 38 52 30" fill="none" stroke="#111" stroke-width="2"/></svg><div>Calm Face</div></div>
         <div class="doodle"><svg viewBox="0 0 80 50" width="70" height="44"><path d="M18 18c0-6 8-10 12-3 4-7 12-3 12 3 0 9-12 16-12 16S18 27 18 18z" fill="#fb7185"/><path d="M42 18c0-6 8-10 12-3 4-7 12-3 12 3 0 9-12 16-12 16s-12-7-12-16z" fill="#f43f5e"/></svg><div>Kindness</div></div>
         <div class="doodle"><svg viewBox="0 0 80 50" width="70" height="44"><circle cx="40" cy="20" r="10" fill="#fde047"/><g stroke="#f59e0b" stroke-width="2"><line x1="40" y1="2" x2="40" y2="10"/><line x1="40" y1="30" x2="40" y2="38"/><line x1="22" y1="20" x2="30" y2="20"/><line x1="50" y1="20" x2="58" y2="20"/></g><rect x="20" y="34" width="40" height="8" rx="4" fill="#93c5fd"/></svg><div>Sunshine</div></div>
         <div class="doodle"><svg viewBox="0 0 80 50" width="70" height="44"><path d="M8 12h56a8 8 0 0 1 8 8v8a8 8 0 0 1-8 8H32l-10 8v-8H8a8 8 0 0 1-8-8v-8a8 8 0 0 1 8-8z" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/></svg><div>Speak Gently</div></div>
+        <div class="doodle"><svg viewBox="0 0 80 50" width="70" height="44"><circle cx="22" cy="18" r="9" fill="#bbf7d0"/><circle cx="42" cy="16" r="12" fill="#dcfce7"/><circle cx="58" cy="22" r="9" fill="#bbf7d0"/><rect x="16" y="25" width="46" height="11" rx="6" fill="#dcfce7"/></svg><div>Soft Clouds</div></div>
       </div>
     </header>
 
@@ -100,56 +237,60 @@
       <h2 id="reflect-title">1) Your Reflection</h2>
       <p class="small">Progress: <span id="progressText">0/5</span></p>
       <div class="meter" aria-hidden="true"><span id="progressFill"></span></div>
-      <div class="row" style="margin-top:8px;">
-        <label><input id="saveToggle" type="checkbox" aria-label="Save my reflection to this device"/> Save my reflection on this device</label>
+
+      <div class="row" style="margin-top: 8px;">
+        <label><input id="saveToggle" type="checkbox" aria-label="Save my reflection to this device" /> Save my reflection on this device</label>
       </div>
 
       <div class="question">
         <label for="q1">How do you feel on the inside, when no one is watching?</label>
         <p class="help">Emotions, body sensations, or inner dialogue.</p>
-        <textarea id="q1" aria-label="Inner feelings"></textarea>
-        <label for="s1">Intensity: <span class="range-read" id="s1v">3</span>/5</label>
-        <input id="s1" type="range" min="1" max="5" value="3" aria-label="Intensity for question 1"/>
+        <textarea id="q1" maxlength="550" aria-label="How you feel on the inside"></textarea>
+        <label for="s1" class="small">Intensity right now: <span id="s1v" class="range-read">3</span>/5</label>
+        <input id="s1" type="range" min="1" max="5" value="3" aria-label="Intensity for first question" />
       </div>
+
       <div class="question">
         <label for="q2">How do you usually present yourself to others?</label>
-        <p class="help">Your style, roles, or social mask.</p>
-        <textarea id="q2" aria-label="Outer presentation"></textarea>
-        <label for="s2">Intensity: <span class="range-read" id="s2v">3</span>/5</label>
-        <input id="s2" type="range" min="1" max="5" value="3" aria-label="Intensity for question 2"/>
+        <p class="help">Words, tone, or behaviour people often see.</p>
+        <textarea id="q2" maxlength="550" aria-label="How you present yourself to others"></textarea>
+        <label for="s2" class="small">Intensity right now: <span id="s2v" class="range-read">3</span>/5</label>
+        <input id="s2" type="range" min="1" max="5" value="3" aria-label="Intensity for second question" />
       </div>
-      <div class="question">
-        <label for="q3">Where is the biggest inner/outer gap?</label>
-        <p class="help">Work, family, relationships, online, etc.</p>
-        <textarea id="q3" aria-label="Biggest gap"></textarea>
-        <label for="s3">Intensity: <span class="range-read" id="s3v">3</span>/5</label>
-        <input id="s3" type="range" min="1" max="5" value="3" aria-label="Intensity for question 3"/>
-      </div>
-      <div class="question">
-        <label for="q4">What parts of yourself do you adjust, soften, or hide?</label>
-        <p class="help">Traits, needs, boundaries, opinions.</p>
-        <textarea id="q4" aria-label="Adjusted or hidden parts"></textarea>
-        <label for="s4">Intensity: <span class="range-read" id="s4v">3</span>/5</label>
-        <input id="s4" type="range" min="1" max="5" value="3" aria-label="Intensity for question 4"/>
-      </div>
-      <div class="question">
-        <label for="q5">What could alignment bring into your life?</label>
-        <p class="help">Focus on gains and support.</p>
-        <textarea id="q5" aria-label="Alignment benefits"></textarea>
-        <label for="s5">Intensity: <span class="range-read" id="s5v">3</span>/5</label>
-        <input id="s5" type="range" min="1" max="5" value="3" aria-label="Intensity for question 5"/>
-      </div>
-    </section>
 
-    <section class="card" aria-labelledby="results-title">
-      <h2 id="results-title">2) Results & Reflection Output</h2>
-      <div class="question" style="margin-bottom:10px;">
+      <div class="question">
+        <label for="q3">Where is the biggest gap between your inner and outer self?</label>
+        <p class="help">Example: confidence, sadness, boundaries, energy, or honesty.</p>
+        <textarea id="q3" maxlength="550" aria-label="Biggest gap between inner and outer self"></textarea>
+        <label for="s3" class="small">Intensity right now: <span id="s3v" class="range-read">3</span>/5</label>
+        <input id="s3" type="range" min="1" max="5" value="3" aria-label="Intensity for third question" />
+      </div>
+
+      <div class="question">
+        <label for="q4">What part of yourself do you hide or edit most often?</label>
+        <p class="help">What do you wish felt safer to express?</p>
+        <textarea id="q4" maxlength="550" aria-label="What part you hide"></textarea>
+        <label for="s4" class="small">Intensity right now: <span id="s4v" class="range-read">3</span>/5</label>
+        <input id="s4" type="range" min="1" max="5" value="3" aria-label="Intensity for fourth question" />
+      </div>
+
+      <div class="question">
+        <label for="q5">What is one small step toward alignment this week?</label>
+        <p class="help">Keep it practical and kind.</p>
+        <textarea id="q5" maxlength="550" aria-label="One small alignment step"></textarea>
+        <label for="s5" class="small">Intensity right now: <span id="s5v" class="range-read">3</span>/5</label>
+        <input id="s5" type="range" min="1" max="5" value="3" aria-label="Intensity for fifth question" />
+      </div>
+
+      <div class="question">
         <label for="pdfName">Name for PDF (optional)</label>
         <p class="help">Add your name here if you want it shown on your PDF.</p>
         <input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" aria-label="Name to include in PDF" />
       </div>
-      <div id="result" class="result" aria-live="polite"></div>
 
+      <section id="result" class="result" aria-live="polite"></section>
+
+      <h3>2) Actions</h3>
       <div class="btns" aria-label="Action buttons">
         <button type="button" id="reflectBtn" class="primary" aria-label="Show my reflection">✨ See My Reflection</button>
         <button type="button" id="pdfBtn" class="success" aria-label="Download PDF summary">📄 Download PDF</button>
@@ -157,11 +298,11 @@
       </div>
 
       <h3>Share</h3>
-      <div class="btns">
+      <div class="btns" aria-label="Share buttons">
         <button type="button" id="copyLink" class="violet" aria-label="Copy page link">🔗 Copy Link</button>
         <a class="btn success" id="whatsappShare" aria-label="Share on WhatsApp" target="_blank" rel="noopener">🟢 WhatsApp</a>
-        <a class="btn" style="background:#93c5fd" id="facebookShare" aria-label="Share on Facebook" target="_blank" rel="noopener">📘 Facebook</a>
-        <a class="btn" style="background:#bfdbfe" id="xShare" aria-label="Share on X" target="_blank" rel="noopener">🐦‍⬛ X</a>
+        <a class="btn" style="background: #93c5fd;" id="facebookShare" aria-label="Share on Facebook" target="_blank" rel="noopener">📘 Facebook</a>
+        <a class="btn" style="background: #bfdbfe;" id="xShare" aria-label="Share on X" target="_blank" rel="noopener">🐦‍⬛ X</a>
       </div>
     </section>
 
@@ -174,15 +315,21 @@
     </section>
 
     <section class="card" aria-label="Helpful links">
-      <h2>4) Support & More</h2>
+      <h2>4) Support &amp; More</h2>
       <div class="btns">
-        <a class="btn" style="background:#a7f3d0" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help">🆘 Help</a>
+        <a class="btn" style="background: #a7f3d0;" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help">🆘 Help</a>
         <a class="btn pink" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
         <a class="btn orange" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💖 Support us</a>
-        <a class="btn" style="background:#fde68a" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
+        <a class="btn" style="background: #fde68a;" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
       </div>
-      <p class="small">Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/">https://emotionalintelligencedeveloper.com/</a></p>
     </section>
+
+    <footer class="card" aria-label="Footer help links">
+      <p class="small">Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/">https://emotionalintelligencedeveloper.com/</a></p>
+      <div class="btns">
+        <a class="btn" style="background:#fbcfe8" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">🆘 Find a Helpline</a>
+      </div>
+    </footer>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -190,43 +337,44 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const { jsPDF } = window.jspdf;
-    const ids = ["q1","q2","q3","q4","q5"];
-    const sids = ["s1","s2","s3","s4","s5"];
+    const ids = ["q1", "q2", "q3", "q4", "q5"];
+    const sids = ["s1", "s2", "s3", "s4", "s5"];
     const result = document.getElementById("result");
     const saveToggle = document.getElementById("saveToggle");
     const pdfNameInput = document.getElementById("pdfName");
-    const storageKey = "innerOuterAlignmentDataV2";
+    const storageKey = "innerOuterAlignmentDataV3";
+    const logoUrl = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
 
     const notes = [
       "Your inner feelings are valid and worth listening to.",
       "Your outer style may be a strength you built to cope and connect.",
       "Noticing the gap is a brave first step toward alignment.",
-      "What you hide often points to what needs care and boundaries.",
-      "Alignment can start with one honest action this week."
+      "What you hide can point to where support and boundaries are needed.",
+      "Alignment can begin with one honest action this week."
     ];
 
-    function toast(msg){
+    function toast(msg) {
       const el = document.getElementById("toast");
       el.textContent = msg;
       el.style.display = "block";
-      setTimeout(()=> el.style.display = "none", 1800);
+      setTimeout(() => { el.style.display = "none"; }, 1900);
     }
 
-    function getData(){
+    function getData() {
       return {
-        answers: ids.map(id => document.getElementById(id).value.trim()),
-        scores: sids.map(id => document.getElementById(id).value)
+        answers: ids.map((id) => document.getElementById(id).value.trim()),
+        scores: sids.map((id) => document.getElementById(id).value)
       };
     }
 
-    function updateProgress(){
+    function updateProgress() {
       const answered = getData().answers.filter(Boolean).length;
       document.getElementById("progressText").textContent = `${answered}/5`;
-      document.getElementById("progressFill").style.width = `${(answered/5)*100}%`;
+      document.getElementById("progressFill").style.width = `${(answered / 5) * 100}%`;
       if (saveToggle.checked) saveLocal();
     }
 
-    function setShareLinks(){
+    function setShareLinks() {
       const url = encodeURIComponent(window.location.href);
       const msg = encodeURIComponent("Try this Inner vs Outer Alignment reflection tool:");
       document.getElementById("whatsappShare").href = `https://wa.me/?text=${msg}%20${url}`;
@@ -234,140 +382,218 @@
       document.getElementById("xShare").href = `https://x.com/intent/post?text=${msg}%20${url}`;
     }
 
-    function reflectionText(){
-      const {answers, scores} = getData();
+    function reflectionText() {
+      const { answers, scores } = getData();
       if (!answers.some(Boolean)) return "";
       const labels = [
-        "Inside feelings", "Outside presentation", "Biggest gap", "Adjusted/hidden parts", "Alignment benefits"
+        "Inside feelings",
+        "Outside presentation",
+        "Biggest gap",
+        "Adjusted/hidden parts",
+        "Alignment step"
       ];
       let html = "<h3>🌱 Your Reflection Summary</h3>";
       html += "<p class='small'>Read gently. You can revise anytime.</p>";
-      labels.forEach((label,i)=>{
-        html += `<p><strong>${i+1}. ${label}:</strong> ${answers[i] || "(left blank)"}<br><em>Intensity:</em> ${scores[i]}/5<br><em>Support note:</em> ${notes[i]}</p>`;
+      labels.forEach((label, i) => {
+        html += `<p><strong>${i + 1}. ${label}:</strong> ${answers[i] || "(left blank)"}<br><em>Intensity:</em> ${scores[i]}/5<br><em>Support note:</em> ${notes[i]}</p>`;
       });
-      html += "<p><strong>Closing thought:</strong> Small honest steps can reduce pressure and increase peace.</p>";
+      html += "<p><strong>Closing thought:</strong> Small, honest steps can reduce pressure and increase peace.</p>";
       return html;
     }
 
-    function showReflection(){
+    function showReflection() {
       const html = reflectionText();
-      if (!html){
-        result.style.display = "block";
+      result.style.display = "block";
+      if (!html) {
         result.innerHTML = "<strong>Please write at least one response first.</strong>";
         return;
       }
       result.innerHTML = html;
-      result.style.display = "block";
       if (saveToggle.checked) saveLocal();
     }
 
-    function saveLocal(){
-      const payload = {...getData(), save: saveToggle.checked, pdfName: pdfNameInput.value.trim(), result: result.innerHTML, resultVisible: result.style.display === "block"};
+    function saveLocal() {
+      const payload = {
+        ...getData(),
+        save: saveToggle.checked,
+        pdfName: pdfNameInput.value.trim(),
+        result: result.innerHTML,
+        resultVisible: result.style.display === "block"
+      };
       localStorage.setItem(storageKey, JSON.stringify(payload));
     }
 
-    function loadLocal(){
+    function loadLocal() {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
-      try{
+      try {
         const d = JSON.parse(raw);
         if (!d || !Array.isArray(d.answers) || !Array.isArray(d.scores)) return;
-        ids.forEach((id,i)=> document.getElementById(id).value = d.answers[i] || "");
-        sids.forEach((id,i)=>{
+        ids.forEach((id, i) => { document.getElementById(id).value = d.answers[i] || ""; });
+        sids.forEach((id, i) => {
           const val = d.scores[i] || "3";
           document.getElementById(id).value = val;
-          document.getElementById(id+"v").textContent = val;
+          document.getElementById(id + "v").textContent = val;
         });
-        saveToggle.checked = !!d.save;
+        saveToggle.checked = Boolean(d.save);
         pdfNameInput.value = typeof d.pdfName === "string" ? d.pdfName : "";
-        if (d.resultVisible && d.result){
+        if (d.resultVisible && d.result) {
           result.innerHTML = d.result;
           result.style.display = "block";
         }
-      }catch(e){console.warn("Storage load skipped", e);}
+      } catch (_) {
+        localStorage.removeItem(storageKey);
+      }
     }
 
-    function resetTool(){
-      ids.forEach(id => document.getElementById(id).value = "");
-      sids.forEach(id => {
+    function resetTool() {
+      ids.forEach((id) => { document.getElementById(id).value = ""; });
+      sids.forEach((id) => {
         document.getElementById(id).value = "3";
-        document.getElementById(id+"v").textContent = "3";
+        document.getElementById(id + "v").textContent = "3";
       });
       result.innerHTML = "";
       result.style.display = "none";
       pdfNameInput.value = "";
+      saveToggle.checked = false;
       localStorage.removeItem(storageKey);
       updateProgress();
-      window.scrollTo({top:0, behavior:"smooth"});
+      window.scrollTo({ top: 0, behavior: "smooth" });
       toast("Tool reset complete.");
     }
 
-    function downloadPDF(){
-      const html = reflectionText();
-      if (!html){
+    async function imageToDataUrl(url) {
+      const response = await fetch(url, { mode: "cors" });
+      if (!response.ok) throw new Error("Logo request failed");
+      const blob = await response.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Logo read failed"));
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function downloadPDF() {
+      const { answers, scores } = getData();
+      if (!answers.some(Boolean)) {
         toast("Please add at least one response before PDF download.");
         return;
       }
-      const {answers, scores} = getData();
-      const labels = ["Inside feelings","Outside presentation","Biggest gap","Adjusted/hidden parts","Alignment benefits"];
-      const doc = new jsPDF({unit:"pt", format:"a4"});
-      const left = 34, right = 561, width = right-left;
-      let y = 42;
+
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const left = 28;
+      const top = 26;
+      const gutter = 18;
+      const colW = (pageW - (left * 2) - gutter) / 2;
+      const leftColX = left;
+      const rightColX = left + colW + gutter;
+      let y = top;
+
+      try {
+        const logoData = await imageToDataUrl(logoUrl);
+        doc.addImage(logoData, "JPEG", leftColX, y, 56, 56);
+      } catch (_) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("Emotional Intelligence Developer", leftColX, y + 20);
+      }
+
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(15);
-      doc.text("Inner vs Outer Alignment - Reflection Summary", left, y);
-      y += 20;
+      doc.setFontSize(14);
+      doc.text("Inner vs Outer Alignment", leftColX + 64, y + 20);
+      doc.setFontSize(11);
+      doc.text("Reflection Summary", leftColX + 64, y + 37);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.text("Reflection support tool (single-page summary)", left, y);
-      y += 16;
-      const enteredName = pdfNameInput.value.trim();
-      if (enteredName){
-        doc.text(`Name: ${enteredName}`, left, y);
-        y += 16;
-      }
-
-      for(let i=0;i<5;i++){
-        const answer = answers[i] || "(left blank)";
-        const block = `${i+1}. ${labels[i]}\nAnswer: ${answer}\nIntensity: ${scores[i]}/5\nNote: ${notes[i]}`;
-        const lines = doc.splitTextToSize(block, width);
-        if (y > 710) break;
-        const spaceLeft = 710 - y;
-        const maxLines = Math.max(2, Math.floor(spaceLeft / 12));
-        const clipped = lines.slice(0, maxLines);
-        doc.text(clipped, left, y);
-        y += (clipped.length * 12) + 6;
-      }
-
       doc.setFontSize(9);
-      doc.text("https://emotionalintelligencedeveloper.com/", left, 820);
+      doc.text("Supportive reflection only", leftColX + 64, y + 51);
+
+      y += 70;
+      const enteredName = pdfNameInput.value.trim();
+      if (enteredName) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text(`Name: ${enteredName}`, leftColX, y);
+        y += 14;
+      }
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.2);
+      const labels = ["Inside feelings", "Outside presentation", "Biggest gap", "Hidden/edited part", "Alignment step"];
+      let leftY = y;
+      for (let i = 0; i < 5; i += 1) {
+        const block = `${i + 1}) ${labels[i]}\nAnswer: ${answers[i] || "(left blank)"}\nIntensity: ${scores[i]}/5\nNote: ${notes[i]}`;
+        const lines = doc.splitTextToSize(block, colW - 2);
+        doc.text(lines, leftColX, leftY);
+        leftY += (lines.length * 10.2) + 8;
+        if (leftY > pageH - 130) break;
+      }
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text("More wellbeing resources", rightColX, y);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.1);
+      const resources = [
+        "Main site:",
+        "https://emotionalintelligencedeveloper.com/",
+        "Recommended Audio Books:",
+        "https://emotionalintelligencedeveloper.com/recommended-books/",
+        "Explore More Free Tools:",
+        "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
+        "Support this project:",
+        "https://emotionalintelligencedeveloper.com/support-this-website/"
+      ];
+      let rightY = y + 14;
+      resources.forEach((line) => {
+        const lines = doc.splitTextToSize(line, colW - 2);
+        doc.text(lines, rightColX, rightY);
+        rightY += lines.length * 10.2 + 6;
+      });
+
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(8.8);
+      doc.text("This tool supports reflection and self-awareness.", rightColX, Math.min(rightY + 4, pageH - 90));
+      doc.text("If you feel unsafe or at risk, seek urgent help.", rightColX, Math.min(rightY + 16, pageH - 78));
+
+      doc.setDrawColor(180);
+      doc.line(left, pageH - 42, pageW - left, pageH - 42);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text("https://emotionalintelligencedeveloper.com/", left, pageH - 26);
+
       doc.save("inner-outer-alignment-summary.pdf");
     }
 
-    ids.forEach(id => document.getElementById(id).addEventListener("input", updateProgress));
-    sids.forEach(id => {
+    ids.forEach((id) => document.getElementById(id).addEventListener("input", updateProgress));
+    sids.forEach((id) => {
       const el = document.getElementById(id);
       el.addEventListener("input", () => {
-        document.getElementById(id+"v").textContent = el.value;
+        document.getElementById(id + "v").textContent = el.value;
         if (saveToggle.checked) saveLocal();
       });
     });
 
     document.getElementById("reflectBtn").addEventListener("click", showReflection);
-    document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
+    document.getElementById("pdfBtn").addEventListener("click", () => { downloadPDF(); });
     document.getElementById("resetBtn").addEventListener("click", resetTool);
+
     document.getElementById("copyLink").addEventListener("click", async () => {
-      try{
+      try {
         await navigator.clipboard.writeText(window.location.href);
         toast("Link copied!");
-      }catch(e){
+      } catch (_) {
         toast("Copy failed. You can copy from the address bar.");
       }
     });
+
     saveToggle.addEventListener("change", () => {
       if (saveToggle.checked) saveLocal();
       else localStorage.removeItem(storageKey);
     });
+
     pdfNameInput.addEventListener("input", () => {
       if (saveToggle.checked) saveLocal();
     });

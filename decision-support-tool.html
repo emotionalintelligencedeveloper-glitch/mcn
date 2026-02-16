@@ -608,7 +608,26 @@ ${data.tailoredAdvice}`;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 34;
+        const footerTop = pageHeight - 44;
+        const footerTextY = pageHeight - 28;
         let y = margin;
+
+        const lineHeight = 12;
+
+        function drawWrappedText(text, x, yPos, maxWidth, maxY, opts = {}) {
+          const lines = doc.splitTextToSize(text, maxWidth);
+          const maxLines = Math.max(1, Math.floor((maxY - yPos) / lineHeight));
+          const clipped = lines.slice(0, maxLines);
+          const wasClipped = lines.length > maxLines;
+          if (wasClipped && clipped.length > 0) {
+            clipped[clipped.length - 1] = String(clipped[clipped.length - 1]).replace(/\s+$/,'') + ' …';
+          }
+          doc.text(clipped, x, yPos, { maxWidth, ...opts });
+          return {
+            height: clipped.length * lineHeight,
+            clipped: wasClipped
+          };
+        }
 
         doc.setFillColor(240, 249, 255);
         doc.roundedRect(margin - 8, margin - 8, pageWidth - (margin * 2) + 16, pageHeight - 100, 12, 12, "F");
@@ -641,9 +660,10 @@ ${data.tailoredAdvice}`;
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        const wrapped = doc.splitTextToSize(summary, pageWidth - (margin * 2));
-        doc.text(wrapped, margin, y, { maxWidth: pageWidth - (margin * 2) });
-        y += Math.min((wrapped.length * 12) + 8, 230);
+
+        const summaryMaxY = footerTop - 118;
+        const summaryBox = drawWrappedText(summary, margin, y, pageWidth - (margin * 2), summaryMaxY);
+        y += summaryBox.height + 12;
 
         doc.setFont("helvetica", "bold");
         doc.text("Find more resources", margin, y);
@@ -656,17 +676,26 @@ ${data.tailoredAdvice}`;
           "• Recommended books: " + BOOKS,
           "• Wellbeing & self-help tools: " + TOOLS
         ];
-        resources.forEach((line) => {
-          doc.text(line, margin + 6, y);
-          y += 13;
-        });
+
+        for (const line of resources) {
+          const resourceMaxY = footerTop - 10;
+          const resourcePart = drawWrappedText(line, margin + 6, y, pageWidth - (margin * 2) - 6, resourceMaxY);
+          y += resourcePart.height + 2;
+        }
+
+        if (summaryBox.clipped) {
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(9);
+          const noteY = Math.max(margin + 90, footerTop - 58);
+          doc.text("Note: Reflection text shortened to keep this PDF readable on one page.", margin, noteY);
+        }
 
         const footerText = "https://emotionalintelligencedeveloper.com/";
         doc.setDrawColor(203, 213, 225);
-        doc.line(margin, pageHeight - 44, pageWidth - margin, pageHeight - 44);
+        doc.line(margin, footerTop, pageWidth - margin, footerTop);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
-        doc.text(footerText, pageWidth / 2, pageHeight - 28, { align: "center" });
+        doc.text(footerText, pageWidth / 2, footerTextY, { align: "center" });
 
         const cleanName = (elements.userName.value || "reflection").trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "reflection";
         doc.save(`decision-support-${cleanName}.pdf`);

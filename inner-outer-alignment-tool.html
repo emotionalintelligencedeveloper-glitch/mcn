@@ -143,6 +143,11 @@
 
     <section class="card" aria-labelledby="results-title">
       <h2 id="results-title">2) Results & Reflection Output</h2>
+      <div class="question" style="margin-bottom:10px;">
+        <label for="pdfName">Name for PDF (optional)</label>
+        <p class="help">Add your name here if you want it shown on your PDF.</p>
+        <input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" aria-label="Name to include in PDF" />
+      </div>
       <div id="result" class="result" aria-live="polite"></div>
 
       <div class="btns" aria-label="Action buttons">
@@ -156,8 +161,7 @@
         <button type="button" id="copyLink" class="violet" aria-label="Copy page link">🔗 Copy Link</button>
         <a class="btn success" id="whatsappShare" aria-label="Share on WhatsApp" target="_blank" rel="noopener">🟢 WhatsApp</a>
         <a class="btn" style="background:#93c5fd" id="facebookShare" aria-label="Share on Facebook" target="_blank" rel="noopener">📘 Facebook</a>
-        <a class="btn" style="background:#bfdbfe" id="xShare" aria-label="Share on X" target="_blank" rel="noopener">❌ X</a>
-        <a class="btn orange" id="emailShare" aria-label="Share via email">✉️ Email</a>
+        <a class="btn" style="background:#bfdbfe" id="xShare" aria-label="Share on X" target="_blank" rel="noopener">🐦‍⬛ X</a>
       </div>
     </section>
 
@@ -190,6 +194,7 @@
     const sids = ["s1","s2","s3","s4","s5"];
     const result = document.getElementById("result");
     const saveToggle = document.getElementById("saveToggle");
+    const pdfNameInput = document.getElementById("pdfName");
     const storageKey = "innerOuterAlignmentDataV2";
 
     const notes = [
@@ -226,8 +231,7 @@
       const msg = encodeURIComponent("Try this Inner vs Outer Alignment reflection tool:");
       document.getElementById("whatsappShare").href = `https://wa.me/?text=${msg}%20${url}`;
       document.getElementById("facebookShare").href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-      document.getElementById("xShare").href = `https://twitter.com/intent/tweet?text=${msg}&url=${url}`;
-      document.getElementById("emailShare").href = `mailto:?subject=${encodeURIComponent("Inner vs Outer Alignment Tool")}&body=${msg}%20${url}`;
+      document.getElementById("xShare").href = `https://x.com/intent/post?text=${msg}%20${url}`;
     }
 
     function reflectionText(){
@@ -258,7 +262,7 @@
     }
 
     function saveLocal(){
-      const payload = {...getData(), save: saveToggle.checked, result: result.innerHTML, resultVisible: result.style.display === "block"};
+      const payload = {...getData(), save: saveToggle.checked, pdfName: pdfNameInput.value.trim(), result: result.innerHTML, resultVisible: result.style.display === "block"};
       localStorage.setItem(storageKey, JSON.stringify(payload));
     }
 
@@ -275,6 +279,7 @@
           document.getElementById(id+"v").textContent = val;
         });
         saveToggle.checked = !!d.save;
+        pdfNameInput.value = typeof d.pdfName === "string" ? d.pdfName : "";
         if (d.resultVisible && d.result){
           result.innerHTML = d.result;
           result.style.display = "block";
@@ -290,6 +295,7 @@
       });
       result.innerHTML = "";
       result.style.display = "none";
+      pdfNameInput.value = "";
       localStorage.removeItem(storageKey);
       updateProgress();
       window.scrollTo({top:0, behavior:"smooth"});
@@ -315,6 +321,11 @@
       doc.setFontSize(10);
       doc.text("Reflection support tool (single-page summary)", left, y);
       y += 16;
+      const enteredName = pdfNameInput.value.trim();
+      if (enteredName){
+        doc.text(`Name: ${enteredName}`, left, y);
+        y += 16;
+      }
 
       for(let i=0;i<5;i++){
         const answer = answers[i] || "(left blank)";
@@ -356,6 +367,9 @@
     saveToggle.addEventListener("change", () => {
       if (saveToggle.checked) saveLocal();
       else localStorage.removeItem(storageKey);
+    });
+    pdfNameInput.addEventListener("input", () => {
+      if (saveToggle.checked) saveLocal();
     });
 
     setShareLinks();

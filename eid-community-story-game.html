@@ -81,7 +81,7 @@
       position: sticky; bottom: 0; z-index: 40; background: rgba(255,255,255,.98); border-top: 2px solid rgba(92,101,175,.2); padding: 8px;
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
     }
-    @media (min-width: 680px) { .bottom-bar { grid-template-columns: repeat(4,minmax(0,1fr)); }}
+    @media (min-width: 680px) { .bottom-bar { grid-template-columns: repeat(3,minmax(0,1fr)); }}
     .bottom-bar a { text-align: center; text-decoration: none; padding: 10px 8px; border-radius: 10px; font-weight: 800; color: #111; }
     .b1{background:#ffd166}.b2{background:#7ae582}.b3{background:#70d6ff}.b4{background:#ff70a6}
     .highlight { outline: 3px solid var(--brand); animation: pulse 1.1s ease 3; }
@@ -175,15 +175,24 @@
       <div id="archiveList" class="sub">No published stories yet.</div>
     </section>
 
-    <div class="footer-note">GitHub Pages URL format: https://YOUR-USERNAME.github.io/eid-community-story-game/</div>
-  </main>
+
+    <section class="card" id="globalShareSection">
+      <h3 class="title">Share & Get Votes</h3>
+      <p class="sub">Share this game and ask friends to vote for your contribution.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a id="shareX" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on X">Share on X</a>
+        <a id="shareFacebook" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Share on Facebook</a>
+        <a id="shareWhatsApp" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">Share on WhatsApp</a>
+      </div>
+    </section>
+
+      </main>
 
   <button id="backToTop" class="btn btn-muted" aria-label="Back to top">Back to top ⬆</button>
 
   <div class="bottom-bar">
     <a id="booksLink" class="b1" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Recommended Audio Books</a>
     <a class="b2" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">Self Help Tools</a>
-    <a class="b3" href="https://findahelpline.com/" target="_blank" rel="noopener">Help</a>
     <a class="b4" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support Us</a>
   </div>
 
@@ -268,10 +277,19 @@
       howModalBg: document.getElementById("howModalBg"),
       closeHow: document.getElementById("closeHow"),
       backToTop: document.getElementById("backToTop"),
-      booksLink: document.getElementById("booksLink")
+      booksLink: document.getElementById("booksLink"),
+      shareX: document.getElementById("shareX"),
+      shareFacebook: document.getElementById("shareFacebook"),
+      shareWhatsApp: document.getElementById("shareWhatsApp")
     };
 
     el.booksLink.href = RECOMMENDED_AUDIO_BOOKS_LINK;
+    const globalShareMessage = "Vote for my contribution in 10-to-Write: The Community Story Game!";
+    const globalShareUrl = new URL(location.href);
+    const shareText = encodeURIComponent(`${globalShareMessage} ${globalShareUrl.toString()}`);
+    el.shareX.href = `https://twitter.com/intent/tweet?text=${shareText}`;
+    el.shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(globalShareUrl.toString())}&quote=${encodeURIComponent(globalShareMessage)}`;
+    el.shareWhatsApp.href = `https://wa.me/?text=${shareText}`;
 
     function safeText(v) { return String(v || "").trim(); }
     function now() { return Date.now(); }
@@ -592,7 +610,7 @@
 
     async function shareItem(mode, id, title) {
       const url = buildShareUrl(mode, id);
-      const text = `Vote for my entry in 10-to-Write! ${title}`;
+      const text = `Vote for my contribution in 10-to-Write! ${title}`;
       if (navigator.share) {
         try { await navigator.share({ title: "10-to-Write", text, url }); return; }
         catch {}

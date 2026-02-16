@@ -6,333 +6,286 @@
   <title>Courage in the Face of Fear Tool | Emotional Intelligence Developer</title>
   <style>
     :root {
-      --bg: #f5fbff;
+      --bg1: #eaf8ff;
+      --bg2: #f8f2ff;
       --card: #ffffff;
-      --ink: #1d2940;
-      --muted: #52607a;
-      --primary: #4c6fff;
-      --secondary: #ff6b6b;
-      --accent: #00c2a8;
-      --sun: #ffd93d;
+      --text: #1d2940;
+      --muted: #4c5e80;
+      --line: #c8d8ff;
       --focus: #0b57d0;
-      --border: #c9dafc;
-      --shadow: 0 8px 20px rgba(76, 111, 255, 0.18);
+      --shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
     }
-
     * { box-sizing: border-box; }
-
     html, body {
       margin: 0;
-      padding: 0;
       font-family: "Trebuchet MS", "Comic Sans MS", system-ui, -apple-system, Segoe UI, sans-serif;
-      color: var(--ink);
-      background: linear-gradient(180deg, #eaf8ff 0%, #f8f5ff 50%, #fff9ed 100%);
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #fff9ec 100%);
     }
-
-    a, button, textarea, input { font: inherit; }
-
-    .container {
-      width: min(980px, 95vw);
-      margin: 0 auto;
-      padding: 1rem 0.75rem 2rem;
-    }
-
+    a, button, input, textarea { font: inherit; }
+    .container { width: min(980px, 96vw); margin: 0 auto; padding: 0.85rem 0.35rem 2rem; }
     .card {
       background: var(--card);
-      border: 3px solid var(--border);
+      border: 3px solid var(--line);
       border-radius: 22px;
       box-shadow: var(--shadow);
+      margin-top: 0.9rem;
       padding: 1rem;
-      margin-top: 1rem;
     }
+    h1, h2, h3 { margin: 0.25rem 0 0.65rem; line-height: 1.25; }
+    h1 { font-size: clamp(1.35rem, 3.4vw, 2rem); }
+    h2 { font-size: clamp(1.08rem, 2.8vw, 1.35rem); }
+    p { margin: 0.3rem 0 0.75rem; }
 
-    header.card {
+    .header-wrap {
+      background: linear-gradient(155deg, #ffffff 0%, #eef5ff 62%, #fff5e7 100%);
       position: relative;
       overflow: hidden;
-      border-color: #b8d4ff;
-      background: linear-gradient(145deg, #ffffff 0%, #eef5ff 62%, #fff9ef 100%);
     }
-
-    h1, h2, h3 { line-height: 1.25; margin: 0.2rem 0 0.6rem; }
-    h1 { font-size: clamp(1.4rem, 3.3vw, 2rem); }
-    h2 { font-size: clamp(1.12rem, 2.4vw, 1.35rem); }
-    p { margin: 0.4rem 0 0.8rem; }
-
-    .intro {
-      color: var(--muted);
-      max-width: 70ch;
-      font-size: clamp(0.98rem, 2.5vw, 1.08rem);
-    }
-
-    .doodles {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      margin-top: 0.8rem;
-    }
-
-    .doodle {
-      width: 64px;
-      height: 64px;
-      border: 2px dashed #9db8ff;
-      border-radius: 14px;
+    .logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 3px solid #96b6ff;
+      object-fit: cover;
       background: #fff;
+      box-shadow: 0 5px 15px rgba(24, 60, 137, 0.2);
+    }
+    .header-top {
       display: grid;
-      place-items: center;
-      flex: 0 0 auto;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.75rem;
     }
+    .intro { color: var(--muted); max-width: 72ch; font-size: clamp(0.96rem, 2.45vw, 1.07rem); }
 
+    .doodles { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.55rem; }
+    .doodle {
+      width: 58px; height: 58px; border: 2px dashed #8eb0ff; border-radius: 14px;
+      display: grid; place-items: center; background: #fff;
+    }
     .comic-note {
-      background: #fff6d8;
-      border: 2px solid #ffcc4d;
-      border-radius: 16px;
-      padding: 0.75rem;
-      font-weight: 600;
-      margin-top: 0.75rem;
-      width: fit-content;
-    }
-
-    .field {
-      margin-bottom: 1rem;
-    }
-
-    label {
-      display: block;
+      margin-top: 0.7rem;
+      display: inline-block;
+      padding: 0.65rem 0.85rem;
+      border-radius: 14px;
+      border: 2px solid #ffd163;
+      background: #fff7de;
       font-weight: 700;
-      margin-bottom: 0.35rem;
     }
 
+    .row { display: grid; gap: 0.8rem; grid-template-columns: 1fr; }
+    .field { margin-bottom: 0.9rem; }
+    label { display: block; font-weight: 800; margin-bottom: 0.35rem; }
     textarea, input[type="text"] {
       width: 100%;
-      border: 2px solid #b7c8ef;
+      border: 2px solid #bacbf3;
       border-radius: 14px;
       background: #fff;
       padding: 0.72rem;
-      color: var(--ink);
-      min-height: 82px;
+      color: var(--text);
+      min-height: 88px;
       resize: vertical;
     }
-
     input[type="text"] { min-height: auto; }
 
-    .row {
-      display: grid;
-      gap: 0.8rem;
-      grid-template-columns: 1fr;
+    .toggle-wrap {
+      display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;
+      background: #f3f8ff; border: 2px solid #d4e2ff; border-radius: 12px; padding: 0.55rem;
     }
 
-    .result-box {
-      min-height: 80px;
-      background: #f2fff8;
-      border: 2px solid #9ce8cf;
-      border-radius: 14px;
-      padding: 0.85rem;
-      white-space: pre-wrap;
-    }
-
-    .controls,
+    .btn-grid,
     .share-grid,
-    .bottom-links {
+    .bottom-grid {
       display: grid;
       gap: 0.55rem;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      margin-top: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-top: 0.78rem;
     }
-
     .btn {
-      border: 2px solid transparent;
       border-radius: 999px;
-      padding: 0.62rem 0.8rem;
-      font-weight: 800;
-      cursor: pointer;
-      text-align: center;
+      border: 2px solid transparent;
       text-decoration: none;
-      color: #1e2432;
-      background: #efefef;
-      box-shadow: 0 3px 0 rgba(0,0,0,0.12);
+      font-weight: 800;
+      text-align: center;
+      padding: 0.62rem 0.85rem;
+      color: #20283a;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+      background: #e9e9e9;
+      transition: transform .14s ease;
     }
-
     .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); box-shadow: 0 1px 0 rgba(0,0,0,0.16); }
-    .btn:focus-visible,
-    textarea:focus-visible,
-    input:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
-    }
+    .btn:active { transform: translateY(0); box-shadow: 0 2px 0 rgba(0,0,0,0.14); }
 
-    .primary { background: linear-gradient(90deg, #77a6ff, #8a7cff); color: #fff; }
-    .mint { background: linear-gradient(90deg, #5be6ca, #66d6ff); }
-    .sun { background: linear-gradient(90deg, #ffe373, #ffc85c); }
-    .pink { background: linear-gradient(90deg, #ff9bb2, #ffb48e); }
-    .blue { background: linear-gradient(90deg, #9fcbff, #90b2ff); }
-    .lavender { background: linear-gradient(90deg, #d5c6ff, #b7d1ff); }
+    .b-primary { color: #fff; background: linear-gradient(90deg, #6f9eff, #806ffe); }
+    .b-mint { background: linear-gradient(90deg, #62ead3, #6fd4ff); }
+    .b-sun { background: linear-gradient(90deg, #ffe479, #ffc25d); }
+    .b-pink { background: linear-gradient(90deg, #ff9db8, #ffbe8f); }
+    .b-blue { background: linear-gradient(90deg, #a2cdff, #90afff); }
+    .b-lav { background: linear-gradient(90deg, #d7c6ff, #b9d2ff); }
 
-    .toggle-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.2rem;
-    }
-
-    .safety {
-      background: #fff4f4;
-      border: 2px solid #ffc4c4;
+    .result-box {
+      min-height: 92px;
+      white-space: pre-wrap;
+      background: #effff8;
+      border: 2px solid #a7ecd4;
       border-radius: 14px;
-      padding: 0.8rem;
-      margin-top: 0.7rem;
+      padding: 0.9rem;
+    }
+    .error {
+      min-height: 1.1rem;
+      color: #9f1010;
+      font-weight: 700;
+      margin-top: 0.1rem;
     }
 
     .help-panel {
-      background: #eefdff;
-      border: 2px solid #99edf7;
-      border-radius: 14px;
-      padding: 0.8rem;
-      margin-top: 0.8rem;
       display: none;
+      margin-top: 0.65rem;
+      background: #ecfbff;
+      border: 2px solid #9ee9f9;
+      border-radius: 14px;
+      padding: 0.75rem;
     }
-
     .help-panel.open { display: block; }
+
+    .safety {
+      margin-top: 0.75rem;
+      background: #fff2f2;
+      border: 2px solid #ffc3c3;
+      border-radius: 14px;
+      padding: 0.75rem;
+    }
 
     .toast {
       position: fixed;
       left: 50%;
+      bottom: 0.95rem;
       transform: translateX(-50%);
-      bottom: 1rem;
-      background: #1e2432;
+      background: #1c2740;
       color: #fff;
       border-radius: 999px;
-      padding: 0.55rem 0.9rem;
+      padding: 0.52rem 0.9rem;
+      font-size: 0.92rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 20;
-      font-size: 0.92rem;
+      transition: opacity .18s ease;
+      z-index: 30;
     }
-
     .toast.show { opacity: 1; }
 
-    .error {
-      color: #a10000;
-      font-weight: 700;
-      margin-top: 0.35rem;
-      min-height: 1.1rem;
-    }
-
     footer {
-      margin-top: 0.8rem;
-      text-align: center;
-      font-size: 0.85rem;
       color: var(--muted);
+      text-align: center;
+      margin-top: 0.8rem;
+      font-size: 0.87rem;
     }
 
-    @media (min-width: 720px) {
-      .card { padding: 1.25rem; }
+    .btn:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    @media (min-width: 760px) {
+      .card { padding: 1.2rem; }
       .row.two { grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 360px) {
+      .logo { width: 72px; height: 72px; }
       .btn { font-size: 0.92rem; }
     }
   </style>
 </head>
 <body>
   <main class="container" aria-label="Courage in the Face of Fear Tool">
-    <header class="card">
-      <h1>🌟 Courage in the Face of Fear</h1>
-      <p class="intro">A gentle reflection space to help you name your fear, reconnect with your strengths, and choose one small next step. This is for personal reflection and support only.</p>
-      <div class="doodles" aria-hidden="true">
-        <div class="doodle">
-          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="10" fill="#FFD93D"/><path d="M21 4V10M21 32V38M4 21H10M32 21H38M8.5 8.5L12.8 12.8M29.2 29.2L33.5 33.5M8.5 33.5L12.8 29.2M29.2 12.8L33.5 8.5" stroke="#F4A100" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="doodle">
-          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M12 31C6 26 6 17 12 13C16 10 21 12 21 16C21 12 26 10 30 13C36 17 36 26 30 31L21 36L12 31Z" fill="#FF6B8A" stroke="#D8345F" stroke-width="2"/></svg>
-        </div>
-        <div class="doodle">
-          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="6" y="9" width="30" height="22" rx="11" fill="#EAF2FF" stroke="#5E7CE2" stroke-width="2"/><circle cx="16" cy="20" r="2" fill="#5E7CE2"/><circle cx="26" cy="20" r="2" fill="#5E7CE2"/><path d="M15 26C16.5 28 18.7 29 21 29C23.3 29 25.5 28 27 26" stroke="#5E7CE2" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="doodle">
-          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M7 12H35V26H18L11 32V26H7V12Z" fill="#FFFFFF" stroke="#7A91D9" stroke-width="2"/><path d="M13 18H29M13 22H24" stroke="#7A91D9" stroke-width="2" stroke-linecap="round"/></svg>
+    <header class="card header-wrap">
+      <div class="header-top">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+        <div>
+          <h1>🌟 Courage in the Face of Fear</h1>
+          <p class="intro">A warm reflection space to help you name fear, notice its impact, and choose one realistic brave step. This tool offers reflection support only and does not replace professional care.</p>
         </div>
       </div>
-      <p class="comic-note">💬 Small brave steps count. You do not need to do everything today.</p>
+      <div class="doodles" aria-hidden="true">
+        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="10" fill="#FFD93D"/><path d="M21 4V10M21 32V38M4 21H10M32 21H38M8.5 8.5L12.8 12.8M29.2 29.2L33.5 33.5M8.5 33.5L12.8 29.2M29.2 12.8L33.5 8.5" stroke="#F3A200" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><path d="M12 31C6 26 6 17 12 13C16 10 21 12 21 16C21 12 26 10 30 13C36 17 36 26 30 31L21 36L12 31Z" fill="#FF6B8A" stroke="#D8345F" stroke-width="2"/></svg></div>
+        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><rect x="6" y="9" width="30" height="22" rx="11" fill="#EAF2FF" stroke="#5E7CE2" stroke-width="2"/><circle cx="16" cy="20" r="2" fill="#5E7CE2"/><circle cx="26" cy="20" r="2" fill="#5E7CE2"/><path d="M15 26C16.5 28 18.7 29 21 29C23.3 29 25.5 28 27 26" stroke="#5E7CE2" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><path d="M7 12H35V26H18L11 32V26H7V12Z" fill="#FFF" stroke="#7A91D9" stroke-width="2"/><path d="M13 18H29M13 22H24" stroke="#7A91D9" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="16" r="7" fill="#FFCA8C"/><path d="M10 34C11.8 27.5 16 24.8 21 24.8C26 24.8 30.2 27.5 32 34" stroke="#FF9E4A" stroke-width="2" stroke-linecap="round"/><path d="M18 16.5H18.01M24 16.5H24.01" stroke="#A65A00" stroke-width="2.2" stroke-linecap="round"/><path d="M18 20.5C19 21.5 20 22 21 22C22 22 23 21.5 24 20.5" stroke="#A65A00" stroke-width="2" stroke-linecap="round"/></svg></div>
+      </div>
+      <p class="comic-note">💬 Small brave steps matter. Progress beats perfection.</p>
     </header>
 
-    <section class="card" aria-labelledby="toolSectionTitle">
-      <h2 id="toolSectionTitle">1) Reflection prompts</h2>
+    <section class="card" aria-labelledby="reflectTitle">
+      <h2 id="reflectTitle">1) Reflection prompts</h2>
       <div class="row two">
         <div class="field">
-          <label for="nameInput">Your name (optional, for PDF)</label>
-          <input id="nameInput" type="text" maxlength="80" aria-label="Your name for PDF output" placeholder="e.g., Alex" />
+          <label for="nameInput">Your name (optional, shown in PDF)</label>
+          <input id="nameInput" type="text" maxlength="80" placeholder="e.g., Alex" aria-label="Your name for PDF output" />
         </div>
         <div class="field">
           <label for="saveToggle">Save my reflection on this device</label>
           <div class="toggle-wrap">
             <input id="saveToggle" type="checkbox" aria-label="Save my reflection toggle" />
-            <span>Keep my latest responses using local storage.</span>
+            <span>Keep your latest entry with local storage.</span>
           </div>
         </div>
       </div>
-
       <div class="field">
-        <label for="fearInput">What fear is strongest for you right now?</label>
-        <textarea id="fearInput" aria-label="Fear input" placeholder="Name the fear clearly, without judging yourself."></textarea>
+        <label for="fearInput">What fear feels strongest right now?</label>
+        <textarea id="fearInput" aria-label="Fear input" placeholder="Name the fear without judging yourself."></textarea>
       </div>
-
       <div class="field">
-        <label for="impactInput">How does this fear affect your choices or confidence?</label>
-        <textarea id="impactInput" aria-label="Impact input" placeholder="What happens in your thinking, behavior, or decisions?"></textarea>
+        <label for="impactInput">How is this fear affecting your choices or confidence?</label>
+        <textarea id="impactInput" aria-label="Impact input" placeholder="Describe your thoughts, feelings, or actions."></textarea>
       </div>
-
       <div class="field">
         <label for="courageInput">What is one small act of courage you can take in the next 24–72 hours?</label>
-        <textarea id="courageInput" aria-label="Courage action input" placeholder="Keep it realistic and kind to yourself."></textarea>
+        <textarea id="courageInput" aria-label="Courage action input" placeholder="Choose a realistic, kind next step."></textarea>
       </div>
-
       <div class="error" id="errorMsg" role="status" aria-live="polite"></div>
-      <div class="controls" aria-label="Action buttons">
-        <button class="btn primary" id="buildBtn" type="button" aria-label="Create reflection summary">✨ Create Reflection</button>
-        <button class="btn mint" id="pdfBtn" type="button" aria-label="Download PDF summary">📄 Download PDF</button>
-        <button class="btn sun" id="resetBtn" type="button" aria-label="Reset all fields">🔄 Reset</button>
+      <div class="btn-grid" aria-label="Action buttons row">
+        <button class="btn b-primary" id="buildBtn" type="button" aria-label="Create reflection summary">✨ Create Reflection</button>
+        <button class="btn b-mint" id="pdfBtn" type="button" aria-label="Download reflection PDF">📄 Download PDF</button>
+        <button class="btn b-sun" id="resetBtn" type="button" aria-label="Reset all fields">🔄 Reset</button>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="resultTitle">
-      <h2 id="resultTitle">2) Results / Reflection output</h2>
+    <section class="card" aria-labelledby="resultsTitle">
+      <h2 id="resultsTitle">2) Results / Reflection output</h2>
       <div id="resultBox" class="result-box" aria-live="polite">Your reflection summary will appear here after you click “Create Reflection”.</div>
     </section>
 
     <section class="card" aria-labelledby="shareTitle">
       <h2 id="shareTitle">3) Share this tool</h2>
       <div class="share-grid">
-        <button class="btn blue" id="copyLinkBtn" type="button" aria-label="Copy page link">🔗 Copy Link</button>
-        <a class="btn mint" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">🟢 WhatsApp</a>
-        <a class="btn lavender" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
-        <a class="btn pink" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">❌ X</a>
+        <button class="btn b-blue" id="copyLinkBtn" type="button" aria-label="Copy page link">🔗 Copy Link</button>
+        <a class="btn b-mint" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">🟢 WhatsApp</a>
+        <a class="btn b-lav" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
+        <a class="btn b-pink" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">🐦 X</a>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="helpTitle">
-      <h2 id="helpTitle">4) Help & support</h2>
-      <button class="btn blue" id="helpToggleBtn" type="button" aria-expanded="false" aria-controls="helpPanel" aria-label="Open help panel">🆘 Help</button>
+    <section class="card" aria-labelledby="supportTitle">
+      <h2 id="supportTitle">4) Support and help</h2>
+      <button class="btn b-blue" id="helpToggleBtn" type="button" aria-expanded="false" aria-controls="helpPanel" aria-label="Open help panel">🆘 Help</button>
       <div class="help-panel" id="helpPanel">
-        <p>If you feel overwhelmed, pause and take one slow breath. You deserve support.</p>
-        <a class="btn sun" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">☎️ Find a Helpline</a>
+        <p>This space is for gentle reflection. If things feel too heavy, reaching out is a strong and caring step.</p>
       </div>
-
       <div class="safety" role="note" aria-label="Safety note">
         <strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.
-        <div style="margin-top:0.6rem;">
-          <a class="btn sun" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline in safety note">Find a Helpline</a>
+        <div style="margin-top:.58rem;">
+          <a class="btn b-sun" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">☎️ Find a Helpline</a>
         </div>
       </div>
-
-      <div class="bottom-links" style="margin-top:1rem;">
-        <a class="btn blue" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help page">🆘 Help</a>
-        <a class="btn lavender" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
-        <a class="btn pink" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💖 Support us</a>
-        <a class="btn mint" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
+      <div class="bottom-grid" style="margin-top:1rem;">
+        <a class="btn b-blue" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help page">🆘 Help</a>
+        <a class="btn b-lav" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
+        <a class="btn b-pink" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💖 Support us</a>
+        <a class="btn b-mint" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
       </div>
     </section>
 
@@ -346,8 +299,9 @@
     (function () {
       'use strict';
 
-      const { jsPDF } = window.jspdf;
-      const storageKey = 'courageToolReflectionV2';
+      const storageKey = 'courageToolReflectionV3';
+      const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+      const { jsPDF } = window.jspdf || {};
 
       const els = {
         name: document.getElementById('nameInput'),
@@ -372,7 +326,7 @@
       function showToast(message) {
         els.toast.textContent = message;
         els.toast.classList.add('show');
-        setTimeout(() => els.toast.classList.remove('show'), 1800);
+        setTimeout(function () { els.toast.classList.remove('show'); }, 1800);
       }
 
       function getData() {
@@ -385,37 +339,23 @@
         };
       }
 
-      function updateShareLinks() {
-        const pageUrl = encodeURIComponent(window.location.href);
-        const msg = encodeURIComponent('This Courage in the Face of Fear reflection tool may help you take one small brave step: ' + window.location.href);
-        els.wa.href = `https://wa.me/?text=${msg}`;
-        els.fb.href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        els.x.href = `https://twitter.com/intent/tweet?text=${msg}`;
-      }
-
-      function validateForSummary() {
+      function validate() {
         const data = getData();
         if (!data.fear || !data.impact || !data.courage) {
-          els.error.textContent = 'Please complete all 3 reflection fields so your summary is meaningful.';
+          els.error.textContent = 'Please complete all reflection fields before creating results or downloading PDF.';
           return null;
         }
         els.error.textContent = '';
         return data;
       }
 
-      function buildSummaryText(data) {
-        const lineName = data.name ? `Name: ${data.name}\n` : '';
-        return `${lineName}Your fear: ${data.fear}\n\nHow fear affects you: ${data.impact}\n\nYour next courageous step: ${data.courage}\n\nSupportive reminder: Courage is not the absence of fear. It is one kind, intentional step at a time.`;
-      }
-
-      function createReflection() {
-        const data = validateForSummary();
-        if (!data) return;
-        const summary = buildSummaryText(data);
-        els.result.textContent = summary;
-        if (data.autoSave) {
-          localStorage.setItem(storageKey, JSON.stringify(data));
-        }
+      function buildSummary(data) {
+        const nameLine = data.name ? 'Name: ' + data.name + '\n\n' : '';
+        return nameLine +
+          'Your fear:\n' + data.fear + '\n\n' +
+          'How fear affects you:\n' + data.impact + '\n\n' +
+          'Your next courageous step:\n' + data.courage + '\n\n' +
+          'Supportive reminder:\nCourage is not the absence of fear—it is taking one thoughtful step while fear is present.';
       }
 
       function saveIfEnabled() {
@@ -425,57 +365,30 @@
         }
       }
 
-      function loadSaved() {
-        try {
-          const raw = localStorage.getItem(storageKey);
-          if (!raw) return;
-          const data = JSON.parse(raw);
-          els.name.value = data.name || '';
-          els.fear.value = data.fear || '';
-          els.impact.value = data.impact || '';
-          els.courage.value = data.courage || '';
-          els.saveToggle.checked = !!data.autoSave;
-          if (data.fear || data.impact || data.courage) {
-            els.result.textContent = buildSummaryText({
-              name: data.name || '',
-              fear: data.fear || '',
-              impact: data.impact || '',
-              courage: data.courage || ''
-            });
-          }
-        } catch (_) {
-          localStorage.removeItem(storageKey);
+      function createReflection() {
+        const data = validate();
+        if (!data) { return; }
+        els.result.textContent = buildSummary(data);
+        if (data.autoSave) {
+          localStorage.setItem(storageKey, JSON.stringify(data));
         }
       }
 
-      function downloadPDF() {
-        const data = validateForSummary();
-        if (!data) {
-          showToast('Add your reflection before downloading PDF.');
-          return;
-        }
+      function updateShareLinks() {
+        const href = window.location.href;
+        const encodedUrl = encodeURIComponent(href);
+        const text = encodeURIComponent('This Courage in the Face of Fear reflection tool may support you: ' + href);
+        els.wa.href = 'https://wa.me/?text=' + text;
+        els.fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
+        els.x.href = 'https://twitter.com/intent/tweet?text=' + text;
+      }
 
-        const summary = buildSummaryText(data);
-        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-        const margin = 40;
-        const width = doc.internal.pageSize.getWidth() - margin * 2;
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(18);
-        doc.text('Courage in the Face of Fear - Reflection Summary', margin, 56);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(11);
-        const wrapped = doc.splitTextToSize(summary, width);
-        doc.text(wrapped, margin, 88);
-
-        doc.setFontSize(10);
-        doc.setTextColor(60, 60, 60);
-        doc.text('Generated for personal reflection and support.', margin, 742);
-        doc.setFont('helvetica', 'bold');
-        doc.text('https://emotionalintelligencedeveloper.com/', margin, 762);
-
-        doc.save('courage-in-the-face-of-fear-reflection.pdf');
+      function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(function () {
+          showToast('Link copied!');
+        }).catch(function () {
+          showToast('Could not auto-copy. Please copy from your address bar.');
+        });
       }
 
       function resetTool() {
@@ -483,34 +396,147 @@
         els.fear.value = '';
         els.impact.value = '';
         els.courage.value = '';
+        els.saveToggle.checked = false;
         els.error.textContent = '';
         els.result.textContent = 'Your reflection summary will appear here after you click “Create Reflection”.';
-        if (els.saveToggle.checked) {
-          localStorage.removeItem(storageKey);
-        }
-        els.saveToggle.checked = false;
+        localStorage.removeItem(storageKey);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      async function copyLink() {
+      function toggleHelp() {
+        const isOpen = els.helpPanel.classList.toggle('open');
+        els.helpToggle.setAttribute('aria-expanded', String(isOpen));
+      }
+
+      function loadSaved() {
         try {
-          await navigator.clipboard.writeText(window.location.href);
-          showToast('Link copied!');
-        } catch (_) {
-          showToast('Unable to copy automatically. Please copy from your address bar.');
+          const raw = localStorage.getItem(storageKey);
+          if (!raw) { return; }
+          const data = JSON.parse(raw);
+          els.name.value = data.name || '';
+          els.fear.value = data.fear || '';
+          els.impact.value = data.impact || '';
+          els.courage.value = data.courage || '';
+          els.saveToggle.checked = Boolean(data.autoSave);
+          if (data.fear || data.impact || data.courage) {
+            els.result.textContent = buildSummary({
+              name: data.name || '',
+              fear: data.fear || '',
+              impact: data.impact || '',
+              courage: data.courage || ''
+            });
+          }
+        } catch (e) {
+          localStorage.removeItem(storageKey);
         }
       }
 
-      function toggleHelpPanel() {
-        const open = els.helpPanel.classList.toggle('open');
-        els.helpToggle.setAttribute('aria-expanded', String(open));
+      function loadLogoDataUrl() {
+        return fetch(logoUrl)
+          .then(function (res) { return res.blob(); })
+          .then(function (blob) {
+            return new Promise(function (resolve, reject) {
+              const reader = new FileReader();
+              reader.onloadend = function () { resolve(reader.result); };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            });
+          });
       }
 
-      [els.name, els.fear, els.impact, els.courage].forEach((el) => {
-        el.addEventListener('input', saveIfEnabled);
+      function drawResourceBlock(doc, pageWidth, startY) {
+        const margin = 36;
+        const blockWidth = pageWidth - margin * 2;
+        doc.setFillColor(243, 248, 255);
+        doc.roundedRect(margin, startY, blockWidth, 92, 8, 8, 'F');
+        doc.setTextColor(22, 36, 64);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('More resources', margin + 10, startY + 16);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        const resources = [
+          'Main Website: https://emotionalintelligencedeveloper.com/',
+          'Recommended Audio Books: https://emotionalintelligencedeveloper.com/recommended-books/',
+          'Self-help tools: https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
+        ];
+        let y = startY + 32;
+        resources.forEach(function (line) {
+          const wrapped = doc.splitTextToSize(line, blockWidth - 20);
+          doc.text(wrapped, margin + 10, y);
+          y += wrapped.length * 12 + 2;
+        });
+      }
+
+      function downloadPDF() {
+        if (!jsPDF) {
+          showToast('PDF library unavailable. Please try again.');
+          return;
+        }
+        const data = validate();
+        if (!data) {
+          showToast('Add your reflection before downloading PDF.');
+          return;
+        }
+
+        const summary = buildSummary(data);
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 36;
+        const contentWidth = pageWidth - margin * 2;
+
+        function writeDoc(logoDataUrl) {
+          if (logoDataUrl) {
+            doc.addImage(logoDataUrl, 'JPEG', margin, 26, 52, 52);
+          }
+
+          doc.setTextColor(22, 36, 64);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(16);
+          doc.text('Courage in the Face of Fear - Reflection Summary', margin + 60, 48);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10.5);
+          doc.setTextColor(50, 64, 88);
+          doc.text('A personal reflection support page (single-page summary).', margin + 60, 66);
+
+          doc.setDrawColor(190, 210, 255);
+          doc.line(margin, 88, pageWidth - margin, 88);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(29, 41, 64);
+          doc.setFontSize(11.5);
+          doc.text('Your reflection', margin, 110);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10.5);
+          const wrapped = doc.splitTextToSize(summary, contentWidth);
+          doc.text(wrapped, margin, 128);
+
+          drawResourceBlock(doc, pageWidth, 520);
+
+          doc.setDrawColor(210, 220, 235);
+          doc.line(margin, pageHeight - 42, pageWidth - margin, pageHeight - 42);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.setTextColor(36, 55, 85);
+          doc.text('https://emotionalintelligencedeveloper.com/', margin, pageHeight - 26);
+
+          doc.save('courage-in-the-face-of-fear-reflection.pdf');
+        }
+
+        loadLogoDataUrl().then(writeDoc).catch(function () {
+          writeDoc(null);
+        });
+      }
+
+      [els.name, els.fear, els.impact, els.courage].forEach(function (field) {
+        field.addEventListener('input', saveIfEnabled);
       });
 
-      els.saveToggle.addEventListener('change', () => {
+      els.saveToggle.addEventListener('change', function () {
         const data = getData();
         if (els.saveToggle.checked) {
           localStorage.setItem(storageKey, JSON.stringify(data));
@@ -525,7 +551,7 @@
       els.pdfBtn.addEventListener('click', downloadPDF);
       els.resetBtn.addEventListener('click', resetTool);
       els.copyLinkBtn.addEventListener('click', copyLink);
-      els.helpToggle.addEventListener('click', toggleHelpPanel);
+      els.helpToggle.addEventListener('click', toggleHelp);
 
       updateShareLinks();
       loadSaved();

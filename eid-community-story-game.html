@@ -141,18 +141,16 @@
     </section>
 
     <section class="card" id="previewSection">
-      <h3 class="title">Live Message Previews</h3>
-      <p class="sub">Up to 3 community messages can be worked on at once. Watch progress live.</p>
+      <h3 class="title">Live Message Preview</h3>
+      <p class="sub">Read the current community message so your add-on flows naturally.</p>
       <div id="previewList"></div>
     </section>
 
     <section class="card" id="activeStorySection">
       <h3 class="title">B) Story Build Round <span id="storyBadge" class="pill p-lock">Waiting for headline</span></h3>
-      <div id="activeStoryInfo" class="sub">No active story yet. Vote headlines to start up to 3 active messages.</div>
+      <div id="activeStoryInfo" class="sub">No active story yet. Vote a headline to start the single live message.</div>
 
-      <label class="sub">Choose active message to contribute
-        <select id="storySelect" aria-label="Choose active message"></select>
-      </label>
+      <button id="previewBtn" class="btn btn-muted" type="button" aria-label="Preview current message" style="margin:6px 0 10px;">Preview current message</button>
 
       <div id="storyProgressWrap" class="hidden">
         <div class="sub"><strong>Word Goal:</strong> <span id="wordCountLabel">0 / 396 words</span></div>
@@ -286,8 +284,7 @@
       headlines: [],
       snippets: [],
       archives: [],
-      urlTarget: new URLSearchParams(location.search),
-      selectedStoryId: ""
+      urlTarget: new URLSearchParams(location.search)
     };
 
     const el = {
@@ -301,7 +298,7 @@
       headlineList: document.getElementById("headlineList"),
       activeStoryInfo: document.getElementById("activeStoryInfo"),
       previewList: document.getElementById("previewList"),
-      storySelect: document.getElementById("storySelect"),
+      previewBtn: document.getElementById("previewBtn"),
       storyBadge: document.getElementById("storyBadge"),
       snippetComposer: document.getElementById("snippetComposer"),
       snippetForm: document.getElementById("snippetForm"),
@@ -444,7 +441,7 @@
 
           if (itemType === "headline" && item.votes >= VOTE_TARGET) {
             db.game.activeStories = Array.isArray(db.game.activeStories) ? db.game.activeStories : [];
-            if (db.game.activeStories.length >= 3) return { ok:false, message:"3 active messages already running. Finish one to unlock a new headline." };
+            if (db.game.activeStories.length >= 1) return { ok:false, message:"A live message is already running. Finish it before starting a new one." };
             if (db.game.activeStories.some(st=>st.headlineId===item.id)) return { ok:false, message:"This headline is already active." };
             item.status = "locked";
             db.game.activeStories.push({ id: makeId("story"), headlineId: item.id, headlineText: item.text, round: 1, pieces: [], createdAt: now(), published: false });
@@ -569,7 +566,7 @@
             const game = gameSnap.data() || {activeStories:[]};
             if (itemType === "headline" && nextVotes >= VOTE_TARGET) {
               const activeStories = Array.isArray(game.activeStories) ? game.activeStories.slice() : [];
-              if (activeStories.length >= 3) return { ok:false, message:"3 active messages already running. Finish one to unlock a new headline." };
+              if (activeStories.length >= 1) return { ok:false, message:"A live message is already running. Finish it before starting a new one." };
               if (activeStories.some(st => st.headlineId === itemId)) return { ok:false, message:"This headline is already active." };
               tx.update(itemRef, { status:"locked" });
               const storyId = "story_" + Math.random().toString(36).slice(2,10);
@@ -621,8 +618,7 @@
     function selectedStory() {
       const stories = getActiveStories();
       if (!stories.length) return null;
-      const sid = state.selectedStoryId || stories[0].id;
-      return stories.find(s=>s.id===sid) || stories[0];
+      return stories[0];
     }
 
     let store;
@@ -650,7 +646,7 @@
       }
       el.modeNotice.textContent = state.mode === "realtime"
         ? "Realtime Multi-user Mode: Firebase connected ✅"
-        : "Demo Mode (Local Only): Add Firebase config for real-time multi-user mode.";
+        : "Demo Mode (Local Only): Add Firebase config for real-time multi-user mode (incognito tabs will not share data).";
       el.userIdLabel.textContent = uidShort(state.uid);
       store.subscribeAll(data => {
         state.game = data.game || { activeStories: [] };
@@ -708,7 +704,7 @@
     }
 
     function buildShareUrl(mode, id) {
-      const u = new URL(location.href);
+      const u = new URL(GAME_LINK);
       u.searchParams.set("mode", mode);
       u.searchParams.set("id", id);
       return u.toString();
@@ -798,26 +794,21 @@
 
     function renderPreview() {
       el.previewList.textContent = "";
-      const stories = getActiveStories();
-      if (!stories.length) {
-        const p = document.createElement("p"); p.className = "sub"; p.textContent = "No active community messages yet.";
+      const st = selectedStory();
+      if (!st) {
+        const p = document.createElement("p"); p.className = "sub"; p.textContent = "No active community message yet. Vote a headline in Section A.";
         el.previewList.appendChild(p);
+        return;
       }
-      stories.forEach(st => {
-        const card = document.createElement("div"); card.className = "item";
-        const t = document.createElement("div"); t.style.fontWeight = "900"; t.textContent = st.headlineText;
-        const words = wordCount([st.headlineText].concat((st.pieces||[]).map(p=>p.text), st.conclusion?.text||"").join(" "));
-        const m = document.createElement("div"); m.className = "meta"; m.textContent = `Round ${st.round} • ${words}/${WORD_TARGET} words • ${(st.pieces||[]).length} accepted pieces`;
-        card.append(t,m);
-        el.previewList.appendChild(card);
-      });
-      el.storySelect.textContent = "";
-      stories.forEach(st => {
-        const o=document.createElement("option"); o.value = st.id; o.textContent = st.headlineText.slice(0,60);
-        el.storySelect.appendChild(o);
-      });
-      if (!stories.some(st=>st.id===state.selectedStoryId)) state.selectedStoryId = stories[0]?.id || "";
-      el.storySelect.value = state.selectedStoryId || "";
+      const card = document.createElement("div"); card.className = "item";
+      const t = document.createElement("div"); t.style.fontWeight = "900"; t.textContent = st.headlineText;
+      const words = wordCount([st.headlineText].concat((st.pieces||[]).map(p=>p.text), st.conclusion?.text||"").join(" "));
+      const m = document.createElement("div"); m.className = "meta"; m.textContent = `Round ${st.round} • ${words}/${WORD_TARGET} words • ${(st.pieces||[]).length} accepted pieces`;
+      card.append(t,m);
+      const full = [st.headlineText].concat((st.pieces||[]).map(p=>p.text), st.conclusion?.text ? [st.conclusion.text] : []).join(" ");
+      const flow = document.createElement("div"); flow.style.marginTop = "8px"; flow.textContent = full || "Message text will appear here as community lines are accepted.";
+      card.appendChild(flow);
+      el.previewList.appendChild(card);
     }
 
     function renderHeadlines() {
@@ -858,7 +849,7 @@
           toast(res?.message || "Vote added!");
           if (res?.ok && (h.votes + 1) >= VOTE_TARGET) toast("Headline chosen! Story building is now open.");
         }, "Vote headline");
-        if (h.status !== "open" || getActiveStories().length >= 3) voteBtn.disabled = true;
+        if (h.status !== "open" || getActiveStories().length >= 1) voteBtn.disabled = true;
         const shareBtn = makeButton("Share to get votes", "btn-share", ()=>shareItem("headline", h.id, h.text), "Share headline");
         actions.append(voteBtn, document.createTextNode(" "), shareBtn);
         div.appendChild(actions);
@@ -883,7 +874,7 @@
       if (!story) {
         el.storyBadge.className = "pill p-lock";
         el.storyBadge.textContent = "Waiting for headline";
-        el.activeStoryInfo.textContent = "No active message yet. Vote headlines to start up to 3 active messages.";
+        el.activeStoryInfo.textContent = "No active message yet. Vote a headline in Section A to begin.";
         el.snippetComposer.classList.add("hidden");
         el.storyProgressWrap.classList.add("hidden");
         return;
@@ -1105,7 +1096,7 @@
       const handle = safeText(el.headlineHandle.value);
       if (!text || !name || !handle) return toast("Please fill all headline fields.");
       if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
-      if (getActiveStories().length >= 3) return toast("3 active messages already running. Finish one to unlock headline submissions.");
+      if (getActiveStories().length >= 1) return toast("A live message is already running. Finish it before adding a new headline.");
       const openHeadlineCount = state.headlines.filter(h => h.status === "open").length;
       if (openHeadlineCount >= 10) return toast("Headline board is full (10 max). Vote existing headlines to continue.");
       if (!(await checkRateLimit())) return;
@@ -1183,7 +1174,7 @@
       }
     });
 
-    el.storySelect.addEventListener("change", () => { state.selectedStoryId = el.storySelect.value; renderStory(); });
+    el.previewBtn.addEventListener("click", () => { document.getElementById("previewSection").scrollIntoView({behavior:"smooth", block:"start"}); });
 
     el.backToTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
 

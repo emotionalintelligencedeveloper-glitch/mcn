@@ -2,877 +2,759 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>People-Pleaser Recovery Tool — Emotional Intelligence Developer</title>
-  <meta name="description" content="A gentle, practical reflection tool to reduce people-pleasing, build boundaries, and ease anxiety." />
-
-  <!-- Social preview (optional, works if your repo supports it) -->
-  <meta property="og:title" content="People-Pleaser Recovery Tool" />
-  <meta property="og:description" content="Notice your patterns, create a small boundary plan, and download a one-page reflection." />
-  <meta property="og:type" content="website" />
-
-  <!-- jsPDF for PDF download -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>People-Pleaser Recovery Tool | Emotional Intelligence Developer</title>
+  <meta name="description" content="A supportive reflection tool for noticing people-pleasing patterns and practicing healthier boundaries." />
   <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --accent:#2563eb;
-      --accent2:#10b981;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-      --shadow:0 10px 30px rgba(17,24,39,.08);
-      --radius:18px;
+    :root {
+      --bg: #f4fbff;
+      --surface: #ffffff;
+      --surface-soft: #f8fdff;
+      --text: #152238;
+      --muted: #4f647c;
+      --line: #d7e6f4;
+      --primary: #1f7ae0;
+      --secondary: #15a37d;
+      --accent: #f59e0b;
+      --shadow: 0 10px 26px rgba(21, 34, 56, 0.08);
+      --radius: 18px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(37,99,235,.08), transparent 60%),
-                  radial-gradient(900px 500px at 100% 30%, rgba(16,185,129,.10), transparent 55%),
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at 0% 0%, #e5f4ff 0%, transparent 40%),
+                  radial-gradient(circle at 100% 15%, #e7fff3 0%, transparent 35%),
                   var(--bg);
-      color:var(--text);
-    }
-    a{color:inherit}
-    .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding:22px 16px 44px;
-    }
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:10px 2px 18px;
-    }
-    .brand{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      min-width:0;
-    }
-    .logo{
-      width:44px;height:44px;border-radius:12px;
-      background:linear-gradient(135deg, rgba(37,99,235,.12), rgba(16,185,129,.12));
-      border:1px solid var(--line);
-      display:grid;place-items:center;
-      box-shadow:0 8px 18px rgba(0,0,0,.06);
-      flex:0 0 auto;
-      overflow:hidden;
-    }
-    .logo span{
-      font-weight:800;
-      letter-spacing:-.02em;
-      color:var(--accent);
-      font-size:14px;
-    }
-    .titleblock{min-width:0}
-    .kicker{
-      font-size:.85rem;
-      color:var(--muted);
-      margin:0 0 2px;
-      letter-spacing:.02em;
-    }
-    h1{
-      margin:0;
-      font-size:1.25rem;
-      line-height:1.2;
-      letter-spacing:-.02em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .toplinks{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .chip{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.7);
-      backdrop-filter: blur(8px);
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:.85rem;
-      text-decoration:none;
-      box-shadow:0 6px 18px rgba(0,0,0,.04);
+      color: var(--text);
+      line-height: 1.5;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .grid{grid-template-columns:1fr}
-      header{align-items:flex-start}
-      .toplinks{justify-content:flex-start}
-      h1{white-space:normal}
+    a { color: inherit; }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 18px 14px 36px;
     }
 
-    .card{
-      background:rgba(255,255,255,.82);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
-    .card h2{
-      margin:0 0 10px;
-      font-size:1.06rem;
-      letter-spacing:-.01em;
-    }
-    .sub{
-      margin:0 0 12px;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:.98rem;
-    }
-    .note{
-      margin:10px 0 0;
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.5;
-    }
-    .divider{
-      height:1px;background:var(--line);
-      margin:14px 0;
-      border-radius:999px;
+    header, main, section, footer { width: 100%; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
     }
 
-    label{
-      display:block;
-      font-weight:650;
-      margin:12px 0 6px;
-      font-size:.95rem;
-    }
-    textarea, input[type="text"]{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-size:1rem;
-      outline:none;
-    }
-    textarea:focus, input[type="text"]:focus{
-      border-color: rgba(37,99,235,.55);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
-    }
-    textarea{min-height:96px; resize:vertical}
-
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .btn{
-      border:none;
-      cursor:pointer;
-      padding:11px 14px;
-      border-radius:14px;
-      font-weight:700;
-      font-size:.95rem;
-      box-shadow:0 10px 20px rgba(0,0,0,.07);
-      transition:transform .06s ease, filter .15s ease;
-      user-select:none;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{background:var(--accent); color:white}
-    .btn.good{background:var(--accent2); color:white}
-    .btn.ghost{
-      background:rgba(255,255,255,.9);
-      border:1px solid var(--line);
-      color:var(--text);
-      box-shadow:none;
-    }
-    .btn.warn{background:var(--warn); color:#111827}
-    .btn.danger{background:var(--danger); color:white}
-
-    .pillbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .pill{
-      border:1px solid var(--line);
-      background:#fff;
-      padding:10px 12px;
-      border-radius:999px;
-      font-size:.92rem;
-      cursor:pointer;
-      transition: box-shadow .15s ease, transform .06s ease, border-color .15s ease;
-      user-select:none;
-    }
-    .pill:hover{box-shadow:0 10px 18px rgba(0,0,0,.06)}
-    .pill:active{transform:translateY(1px)}
-    .pill[aria-pressed="true"]{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    .header-wrap {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
     }
 
-    .meter{
-      margin-top:10px;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:#fff;
-    }
-    .meterhead{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      margin-bottom:8px;
-    }
-    .meterhead b{font-size:.95rem}
-    .meterhead span{color:var(--muted); font-size:.9rem}
-    input[type="range"]{width:100%}
-
-    .result{
-      display:none;
-      margin-top:12px;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(37,99,235,.25);
-      background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(16,185,129,.06));
-    }
-    .result.show{display:block}
-    .result h3{margin:0 0 8px; font-size:1.05rem}
-    .result p{margin:0 0 10px; line-height:1.6}
-    .result ul{margin:0; padding-left:18px}
-    .result li{margin:6px 0; line-height:1.5}
-    .small{
-      font-size:.9rem;
-      color:var(--muted);
-      line-height:1.5;
-      margin:6px 0 0;
+    .logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+      background: #fff;
     }
 
-    .share{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+    h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 2.8vw, 1.8rem);
+      line-height: 1.2;
     }
-    .share a, .share button{
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-weight:700;
-      font-size:.92rem;
-      cursor:pointer;
-      color:var(--text);
-    }
-    .share a:hover, .share button:hover{box-shadow:0 10px 18px rgba(0,0,0,.06)}
-    .share a:active, .share button:active{transform:translateY(1px)}
 
-    footer{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:.9rem;
-      text-align:center;
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
     }
-    .linkbtn{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:12px;
+
+    p { margin: 0 0 10px; }
+    .intro { color: var(--muted); }
+
+    .field {
+      margin-bottom: 12px;
     }
-    .linkbtn a{
-      text-decoration:none;
-      border:1px solid var(--line);
-      background:#fff;
-      padding:12px 14px;
-      border-radius:16px;
-      font-weight:800;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      box-shadow:0 10px 18px rgba(0,0,0,.05);
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
     }
-    .linkbtn a span{
-      color:var(--muted);
-      font-weight:650;
-      font-size:.92rem;
+
+    input[type="text"], textarea, input[type="range"] {
+      width: 100%;
     }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:.9rem;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:#fff;
-      margin-top:6px;
-      color:var(--muted);
+
+    input[type="text"], textarea {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
     }
-    .sr-only{
-      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
-      overflow:hidden; clip:rect(0,0,0,0); border:0;
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .hint, .inline-msg, .small-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .inline-msg.error { color: #b42318; }
+    .inline-msg.ok { color: #116149; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: var(--surface-soft);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .pill[aria-pressed="true"] {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(31,122,224,.15);
+      background: #eaf4ff;
+    }
+
+    .result-box {
+      border: 1px solid #b7daf8;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #eef7ff, #effff8);
+      padding: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .result-box.show { display: block; }
+
+    ul { margin: 8px 0 0 18px; padding: 0; }
+
+    .button-row, .share-row, .resource-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button, .link-btn {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 10px 13px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      transition: transform .05s ease, box-shadow .2s ease;
+    }
+
+    button:active, .link-btn:active { transform: translateY(1px); }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-secondary { background: var(--secondary); color: #fff; }
+    .btn-soft { background: #fff; border-color: var(--line); color: var(--text); }
+    .btn-warning { background: #fff7e8; border-color: #f7d9a1; color: #7d4e00; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: #14375b;
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      box-shadow: 0 8px 18px rgba(0,0,0,.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 100;
+    }
+
+    .toast.show { opacity: 1; }
+
+    .toggle-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      align-items: center;
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: #fcfeff;
+    }
+
+    .safety {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #fffef6;
+      border: 1px solid #f2e9bf;
+    }
+
+    .helpline-btn {
+      align-self: flex-start;
+      background: #fff;
+      border-color: #efc873;
+    }
+
+    :focus-visible {
+      outline: 3px solid #2d84e6;
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 720px) {
+      .header-wrap { grid-template-columns: 1fr; text-align: center; }
+      .logo { margin: 0 auto; }
+      .button-row > *, .share-row > *, .resource-row > * {
+        flex: 1 1 100%;
+      }
+      button, .link-btn { width: 100%; }
+    }
+
+    @media (max-width: 360px) {
+      .container { padding: 10px 8px 24px; }
+      .card { padding: 12px; }
+      h1 { font-size: 1.2rem; }
     }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand" aria-label="Emotional Intelligence Developer">
-        <div class="logo" aria-hidden="true"><span>EID</span></div>
-        <div class="titleblock">
-          <p class="kicker">Emotional Intelligence Developer</p>
-          <h1>People-Pleaser Recovery — A Gentle Reset</h1>
+  <div class="container">
+    <header class="card">
+      <div class="header-wrap">
+        <img
+          class="logo"
+          src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg"
+          alt="Emotional Intelligence Developer logo"
+          loading="lazy"
+        />
+        <div>
+          <h1>People-Pleaser Recovery Tool</h1>
+          <p class="intro">A gentle reflection space to notice patterns, protect your energy, and practice one small boundary step at a time.</p>
         </div>
       </div>
-
-      <nav class="toplinks" aria-label="Quick links">
-        <a class="chip" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit site</a>
-        <a class="chip" href="#share">Share</a>
-        <a class="chip" href="#download">Download PDF</a>
-      </nav>
     </header>
 
-    <div class="grid">
-      <!-- Main tool -->
-      <main class="card" aria-label="People-pleaser recovery tool">
-        <h2>Why people-pleasing can create anxiety</h2>
-        <p class="sub">
-          When you keep saying yes to stay safe, avoid conflict, or keep people happy, your nervous system learns:
-          <b>“If I don’t manage others, something bad will happen.”</b> Over time, that can fuel anxiety, resentment,
-          and even avoiding going out — because you expect people will take advantage.
-        </p>
-        <p class="note">
-          This is a reflection tool — not a diagnosis. Use what helps, skip what doesn’t.
-        </p>
+    <main>
+      <section class="card" aria-labelledby="toolHeading">
+        <h2 id="toolHeading">Your reflection</h2>
 
-        <div class="divider" role="presentation"></div>
+        <div class="field">
+          <label for="userName">Name (optional, for your PDF)</label>
+          <input id="userName" type="text" maxlength="80" aria-label="Optional name for PDF" placeholder="Enter your name (optional)" />
+        </div>
 
-        <h2>Quick check-in</h2>
+        <div class="field">
+          <label for="intensity">How strong is the “I must keep everyone happy” feeling right now? <span id="intensityValue">5/10</span></label>
+          <input id="intensity" type="range" min="0" max="10" value="5" aria-label="Pressure intensity from 0 to 10" />
+        </div>
 
-        <div class="meter" aria-label="Intensity slider">
-          <div class="meterhead">
-            <b>Right now, how intense is the “I must please” pressure?</b>
-            <span id="intensityLabel">5/10</span>
+        <div class="field">
+          <label for="q1">1) Where do you usually say yes when you want to say no?</label>
+          <textarea id="q1" aria-label="Where you say yes when you want to say no" placeholder="Example: extra tasks, family requests, money, time..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>2) What do you fear most if you disappoint someone?</label>
+          <div class="pill-row" role="group" aria-label="Fear options">
+            <button type="button" class="pill" data-fear="They might reject me" aria-pressed="false">They might reject me</button>
+            <button type="button" class="pill" data-fear="They might get angry" aria-pressed="false">They might get angry</button>
+            <button type="button" class="pill" data-fear="I will feel guilty" aria-pressed="false">I will feel guilty</button>
+            <button type="button" class="pill" data-fear="I will seem selfish" aria-pressed="false">I will seem selfish</button>
           </div>
-          <input id="intensity" type="range" min="0" max="10" value="5" />
-          <div class="tag" id="intensityTag" aria-live="polite">Balanced but tense</div>
+          <textarea id="q2" aria-label="Fear details" placeholder="Add any detail in your own words (optional)"></textarea>
         </div>
 
-        <label for="q1">1) Where do you often say “yes” even when you want to say “no”?</label>
-        <textarea id="q1" placeholder="Examples: family requests, work overtime, friends needing favors, lending money..."></textarea>
-
-        <label>2) What are you afraid might happen if you disappoint someone?</label>
-        <div class="pillbar" role="group" aria-label="Fear choices">
-          <button class="pill" type="button" data-pick="fear" data-value="They’ll reject me" aria-pressed="false">They’ll reject me</button>
-          <button class="pill" type="button" data-pick="fear" data-value="They’ll get angry" aria-pressed="false">They’ll get angry</button>
-          <button class="pill" type="button" data-pick="fear" data-value="I’ll feel guilty" aria-pressed="false">I’ll feel guilty</button>
-          <button class="pill" type="button" data-pick="fear" data-value="I’ll be seen as selfish" aria-pressed="false">I’ll be seen as selfish</button>
-          <button class="pill" type="button" data-pick="fear" data-value="I don’t know how to handle conflict" aria-pressed="false">Conflict feels unsafe</button>
-        </div>
-        <textarea id="q2" placeholder="Optional: add more detail in your own words..."></textarea>
-
-        <label for="q3">3) How does people-pleasing affect your energy or mood?</label>
-        <textarea id="q3" placeholder="Examples: exhausted, resentful, anxious, numb, overthinking, avoid social plans..."></textarea>
-
-        <label for="q4">4) What do you usually put aside to keep others comfortable?</label>
-        <textarea id="q4" placeholder="Examples: rest, hobbies, money, your voice, your needs, alone time..."></textarea>
-
-        <label>5) Choose one small boundary to practice this week</label>
-        <div class="pillbar" role="group" aria-label="Boundary choices">
-          <button class="pill" type="button" data-pick="boundary" data-value="Let me get back to you" aria-pressed="false">“Let me get back to you”</button>
-          <button class="pill" type="button" data-pick="boundary" data-value="I can’t today" aria-pressed="false">“I can’t today”</button>
-          <button class="pill" type="button" data-pick="boundary" data-value="No, but thank you" aria-pressed="false">“No, but thank you”</button>
-          <button class="pill" type="button" data-pick="boundary" data-value="That doesn’t work for me" aria-pressed="false">“That doesn’t work for me”</button>
-          <button class="pill" type="button" data-pick="boundary" data-value="I need time to think" aria-pressed="false">“I need time to think”</button>
+        <div class="field">
+          <label for="q3">3) How has people-pleasing affected your mood or energy lately?</label>
+          <textarea id="q3" aria-label="Mood and energy impact" placeholder="Example: tired, anxious, resentful, overthinking..."></textarea>
         </div>
 
-        <label for="q5">Your boundary (edit it so it sounds like you)</label>
-        <input id="q5" type="text" placeholder="Example: “I can’t make it tonight. I’m resting.”" />
-
-        <div class="divider" role="presentation"></div>
-
-        <div class="row">
-          <button class="btn primary" id="buildBtn" type="button">Show My Recovery Message</button>
-          <button class="btn ghost" id="resetBtn" type="button" title="Clear inputs and start again">Reset</button>
-          <button class="btn good" id="downloadBtn" type="button">Download My Reflection (PDF)</button>
+        <div class="field">
+          <label for="q4">4) What personal needs are you putting aside?</label>
+          <textarea id="q4" aria-label="Needs you are putting aside" placeholder="Example: rest, boundaries, hobbies, savings, personal goals..."></textarea>
         </div>
 
-        <section class="result" id="result" aria-live="polite" aria-label="Your recovery message">
-          <h3>Your gentle recovery message</h3>
-          <p id="recoveryText"></p>
-          <div class="divider" role="presentation"></div>
-          <h3>Your 3-step plan (small + real)</h3>
+        <div class="field">
+          <label for="q5">5) One boundary sentence you can use this week</label>
+          <textarea id="q5" aria-label="Boundary sentence" placeholder="Example: I can't commit today, I need to rest."></textarea>
+          <p class="hint">Tip: keep it short, calm, and clear.</p>
+          <p id="validationMsg" class="inline-msg" aria-live="polite"></p>
+        </div>
+
+        <div class="toggle-wrap" aria-label="Save reflection options">
+          <label for="saveToggle" style="margin:0; font-weight:700;">Save my reflection</label>
+          <input id="saveToggle" type="checkbox" aria-label="Save my reflection in local storage" />
+          <button id="clearSavedBtn" type="button" class="btn-soft" aria-label="Clear saved reflection">Clear saved reflection</button>
+          <span class="small-note">When enabled, your latest reflection is restored next time.</span>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="resultHeading">
+        <h2 id="resultHeading">Results / Reflection output</h2>
+        <div id="resultBox" class="result-box" aria-live="polite">
+          <p id="resultText"></p>
           <ul id="planList"></ul>
-          <p class="small" id="smallPrint"></p>
-        </section>
-
-        <div class="divider" role="presentation"></div>
-
-        <h2 id="share">Share this tool (so others don’t carry it alone)</h2>
-        <p class="sub">
-          People-pleasing can make someone feel trapped, anxious, and unsafe in social spaces.
-          Sharing this tool can be a soft way to say: “You’re not alone.”
-        </p>
-
-        <div class="share" aria-label="Share buttons">
-          <button type="button" id="nativeShareBtn" aria-label="Share using your device">Share</button>
-          <a id="shareWhatsApp" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-          <a id="shareX" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
-          <a id="shareFacebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-          <a id="shareLinkedIn" href="#" target="_blank" rel="noopener" aria-label="Share on LinkedIn">LinkedIn</a>
-          <button type="button" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
         </div>
-        <p class="small" id="copyStatus" aria-live="polite"></p>
-      </main>
+        <p id="resultHint" class="small-note">Complete your reflection, then choose “Build my reflection”.</p>
+      </section>
 
-      <!-- Sidebar -->
-      <aside class="card" aria-label="Helpful extras">
-        <h2>When anxiety makes you avoid going out</h2>
-        <p class="sub">
-          If you’ve learned that being “nice” means being used, your brain may try to protect you by avoiding people.
-          The goal isn’t to become cold — it’s to become <b>clear</b>.
-        </p>
-
-        <div class="divider" role="presentation"></div>
-
-        <h2>Try this 10-second pause</h2>
-        <p class="sub">
-          Before you answer a request, say (in your mind):
-          <b>“Pause. My needs count too.”</b>
-          Then choose one of these:
-        </p>
-        <div class="pillbar" role="group" aria-label="Pause options">
-          <button class="pill" type="button" data-quick="Let me think about it." aria-pressed="false">Let me think.</button>
-          <button class="pill" type="button" data-quick="I’ll reply later today." aria-pressed="false">Reply later.</button>
-          <button class="pill" type="button" data-quick="I can’t commit to that." aria-pressed="false">Can’t commit.</button>
-          <button class="pill" type="button" data-quick="No — I’m resting." aria-pressed="false">No, resting.</button>
-        </div>
-        <p class="small" id="quickLine" aria-live="polite"></p>
-
-        <div class="divider" role="presentation"></div>
-
-        <h2 id="download">One-page PDF download</h2>
-        <p class="sub">
-          Your PDF includes your answers, your recovery message, and a small boundary plan.
-          It’s designed to be simple and printable.
-        </p>
-
-        <div class="divider" role="presentation"></div>
-
-        <h2>Recommended + Support</h2>
-        <p class="sub">
-          Keep the tool free by exploring our resources below.
-        </p>
-
-        <div class="linkbtn" aria-label="Resource buttons">
-          <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">
-            View Recommended Books <span>journals + boundaries</span>
-          </a>
-          <a href="https://emotionalintelligencedeveloper.com/help/" target="_blank" rel="noopener">
-            Visit the Help Page <span>support options</span>
-          </a>
-          <a href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
-            Support This Website <span>help us grow</span>
-          </a>
+      <section class="card" aria-labelledby="actionHeading">
+        <h2 id="actionHeading">Actions</h2>
+        <div class="button-row">
+          <button id="buildBtn" type="button" class="btn-primary" aria-label="Build my reflection">Build my reflection</button>
+          <button id="downloadBtn" type="button" class="btn-secondary" aria-label="Download PDF">Download PDF</button>
+          <button id="resetBtn" type="button" class="btn-warning" aria-label="Reset reflection">Reset</button>
         </div>
 
-        <p class="note">
-          If you feel unsafe, overwhelmed, or at risk of harm, please seek urgent support in your area.
-        </p>
-      </aside>
-    </div>
+        <div class="share-row" style="margin-top: 10px;" aria-label="Share buttons">
+          <button id="copyLinkBtn" type="button" class="btn-soft" aria-label="Copy Link">Copy Link</button>
+          <a id="waShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+          <a id="fbShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+          <a id="xShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+        </div>
+      </section>
 
-    <footer>
-      Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a>
+      <section class="card" aria-labelledby="supportHeading">
+        <h2 id="supportHeading">Support, resources, and help</h2>
+        <div class="resource-row">
+          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/help/" target="_blank" rel="noopener" aria-label="Help">Help</a>
+          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">Recommended Audio Books</a>
+          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us">Support Us</a>
+          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">Explore More Free Tools</a>
+        </div>
+      </section>
+
+      <section class="card safety" aria-label="Safety note">
+        <p><strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.</p>
+        <a class="link-btn helpline-btn" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find an external Helpline">Find an external Helpline</a>
+      </section>
+    </main>
+
+    <footer class="small-note" style="text-align:center; padding: 6px 0;">
+      © Emotional Intelligence Developer · <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a>
     </footer>
   </div>
 
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
-    (function(){
-      const toolUrl = window.location.href;
-      const siteUrl = "https://emotionalintelligencedeveloper.com/";
-      const title = "People-Pleaser Recovery Tool";
-      const shareText = "A gentle tool to reduce people-pleasing, build boundaries, and ease anxiety. Try it here:";
+    (function () {
+      const STORAGE_KEY = "pp_recovery_reflection_v2";
+      const STORAGE_PREF_KEY = "pp_recovery_save_pref_v2";
+      const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
+      const SITE_URL = "https://emotionalintelligencedeveloper.com/";
+      const TOOLS_URL = "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/";
+      const BOOKS_URL = "https://emotionalintelligencedeveloper.com/recommended-books/";
+      const SUPPORT_URL = "https://emotionalintelligencedeveloper.com/support-this-website/";
 
-      const intensity = document.getElementById("intensity");
-      const intensityLabel = document.getElementById("intensityLabel");
-      const intensityTag = document.getElementById("intensityTag");
-
-      const q1 = document.getElementById("q1");
-      const q2 = document.getElementById("q2");
-      const q3 = document.getElementById("q3");
-      const q4 = document.getElementById("q4");
-      const q5 = document.getElementById("q5");
-
-      const buildBtn = document.getElementById("buildBtn");
-      const resetBtn = document.getElementById("resetBtn");
-      const downloadBtn = document.getElementById("downloadBtn");
-
-      const result = document.getElementById("result");
-      const recoveryText = document.getElementById("recoveryText");
-      const planList = document.getElementById("planList");
-      const smallPrint = document.getElementById("smallPrint");
-
-      const copyStatus = document.getElementById("copyStatus");
-      const copyLinkBtn = document.getElementById("copyLinkBtn");
-      const nativeShareBtn = document.getElementById("nativeShareBtn");
-
-      const quickLine = document.getElementById("quickLine");
-
-      const state = {
-        fearPick: "",
-        boundaryPick: "",
-        quickPick: ""
+      const refs = {
+        userName: document.getElementById("userName"),
+        intensity: document.getElementById("intensity"),
+        intensityValue: document.getElementById("intensityValue"),
+        q1: document.getElementById("q1"),
+        q2: document.getElementById("q2"),
+        q3: document.getElementById("q3"),
+        q4: document.getElementById("q4"),
+        q5: document.getElementById("q5"),
+        buildBtn: document.getElementById("buildBtn"),
+        downloadBtn: document.getElementById("downloadBtn"),
+        resetBtn: document.getElementById("resetBtn"),
+        resultBox: document.getElementById("resultBox"),
+        resultText: document.getElementById("resultText"),
+        planList: document.getElementById("planList"),
+        resultHint: document.getElementById("resultHint"),
+        copyLinkBtn: document.getElementById("copyLinkBtn"),
+        toast: document.getElementById("toast"),
+        validationMsg: document.getElementById("validationMsg"),
+        saveToggle: document.getElementById("saveToggle"),
+        clearSavedBtn: document.getElementById("clearSavedBtn"),
+        waShare: document.getElementById("waShare"),
+        fbShare: document.getElementById("fbShare"),
+        xShare: document.getElementById("xShare")
       };
 
-      function clampText(s){
-        return (s || "").toString().trim();
+      const state = { selectedFear: "", built: false, lastOutput: null };
+
+      function showToast(message) {
+        refs.toast.textContent = message;
+        refs.toast.classList.add("show");
+        setTimeout(() => refs.toast.classList.remove("show"), 1700);
       }
 
-      function vibeFromIntensity(n){
-        if(n <= 2) return { label: n + "/10", tag: "Calm right now (still worth practicing)" };
-        if(n <= 5) return { label: n + "/10", tag: "Balanced but tense" };
-        if(n <= 7) return { label: n + "/10", tag: "High pressure (pause before you answer)" };
-        return { label: n + "/10", tag: "Overwhelming (go extra gentle today)" };
+      function escapeText(text) {
+        return (text || "").toString().trim();
       }
 
-      function updateIntensity(){
-        const n = Number(intensity.value);
-        const v = vibeFromIntensity(n);
-        intensityLabel.textContent = v.label;
-        intensityTag.textContent = v.tag;
+      function updateIntensityLabel() {
+        refs.intensityValue.textContent = `${refs.intensity.value}/10`;
       }
-      intensity.addEventListener("input", updateIntensity);
-      updateIntensity();
 
-      // Pills (fear + boundary)
-      document.querySelectorAll(".pill[data-pick]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const group = btn.getAttribute("data-pick");
-          const value = btn.getAttribute("data-value");
+      function updateShareLinks() {
+        const url = encodeURIComponent(window.location.href);
+        const msg = encodeURIComponent("I found this gentle People-Pleaser Recovery Tool. You might find it helpful:");
+        refs.waShare.href = `https://wa.me/?text=${msg}%20${url}`;
+        refs.fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        refs.xShare.href = `https://twitter.com/intent/tweet?text=${msg}&url=${url}`;
+      }
 
-          // toggle behavior inside group (single select)
-          document.querySelectorAll(`.pill[data-pick="${group}"]`).forEach(b => b.setAttribute("aria-pressed", "false"));
-          btn.setAttribute("aria-pressed", "true");
+      function selectedFearFallback() {
+        return state.selectedFear || "I might upset someone";
+      }
 
-          if(group === "fear") state.fearPick = value;
-          if(group === "boundary") {
-            state.boundaryPick = value;
-            // populate q5 if empty or if user hasn't typed much
-            const current = clampText(q5.value);
-            if(!current || current.length < 6){
-              q5.value = value;
-            }
-          }
-        });
-      });
+      function collectData() {
+        return {
+          name: escapeText(refs.userName.value),
+          intensity: Number(refs.intensity.value),
+          q1: escapeText(refs.q1.value),
+          q2: escapeText(refs.q2.value),
+          q3: escapeText(refs.q3.value),
+          q4: escapeText(refs.q4.value),
+          q5: escapeText(refs.q5.value),
+          fear: selectedFearFallback()
+        };
+      }
 
-      // Quick phrase buttons
-      document.querySelectorAll(".pill[data-quick]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".pill[data-quick]").forEach(b => b.setAttribute("aria-pressed", "false"));
-          btn.setAttribute("aria-pressed", "true");
-          state.quickPick = btn.getAttribute("data-quick") || "";
-          quickLine.textContent = "Try saying: “" + state.quickPick + "”";
-        });
-      });
-
-      function buildRecovery(){
-        const n = Number(intensity.value);
-        const yesZones = clampText(q1.value);
-        const fearDetail = clampText(q2.value);
-        const moodImpact = clampText(q3.value);
-        const sacrifices = clampText(q4.value);
-        const boundary = clampText(q5.value) || state.boundaryPick || "Let me get back to you.";
-
-        const fear = state.fearPick ? state.fearPick : "I might upset someone / be judged";
-        const intensityPhrase =
-          n >= 8 ? "Your body is carrying a lot right now." :
-          n >= 6 ? "You’re under pressure to keep things smooth." :
-          n >= 3 ? "Part of you is trying to stay safe by being agreeable." :
-                   "You have space today to practice boundaries gently.";
-
-        const messageParts = [];
-        messageParts.push(intensityPhrase);
-        messageParts.push("People-pleasing often comes from a protective instinct: “If I keep others happy, I stay safe.”");
-        messageParts.push("But your needs matter too. Boundaries aren’t aggression — they’re clarity.");
-
-        if(yesZones){
-          messageParts.push("Where you often over-give: " + yesZones);
+      function validateInput(data) {
+        if (!data.q1 && !data.q2 && !data.q3 && !data.q4 && !data.q5) {
+          refs.validationMsg.textContent = "Please add at least one reflection response before building your output.";
+          refs.validationMsg.className = "inline-msg error";
+          return false;
         }
-        messageParts.push("What you fear could happen if you disappoint someone: " + fear + (fearDetail ? " — " + fearDetail : ""));
-
-        if(moodImpact){
-          messageParts.push("How it impacts you: " + moodImpact);
+        if (!data.q5) {
+          refs.validationMsg.textContent = "A boundary sentence helps this tool give useful output. Add one line in question 5.";
+          refs.validationMsg.className = "inline-msg error";
+          return false;
         }
-        if(sacrifices){
-          messageParts.push("What you’ve been putting aside: " + sacrifices);
+        refs.validationMsg.textContent = "Looks good — your reflection is ready.";
+        refs.validationMsg.className = "inline-msg ok";
+        return true;
+      }
+
+      function buildReflection() {
+        const data = collectData();
+        if (!validateInput(data)) {
+          refs.resultBox.classList.remove("show");
+          refs.resultHint.textContent = "Add a little more detail, then build your reflection.";
+          state.built = false;
+          state.lastOutput = null;
+          return null;
         }
 
-        messageParts.push("Your practice boundary for this week: “" + boundary + "”");
-        messageParts.push("You’re allowed to be kind and still say no.");
+        const intensityLine =
+          data.intensity >= 8 ? "You are carrying a lot of pressure right now, so gentle steps matter most." :
+          data.intensity >= 5 ? "You are balancing pressure and care for others — and your needs matter too." :
+          "You have a steadier moment right now to strengthen clear boundaries.";
 
-        const recovery = messageParts.join(" ");
+        const reflection = `${intensityLine} Your pattern shows up around: ${data.q1 || "noted quietly"}. ` +
+          `A key fear is: ${data.fear}${data.q2 ? ` (${data.q2})` : ""}. ` +
+          `Current impact: ${data.q3 || "you are still noticing this"}. ` +
+          `Needs being set aside: ${data.q4 || "to be explored"}. ` +
+          `Boundary to practice: “${data.q5}”.`;
 
-        // Plan
-        const plan = [];
-        plan.push("Use the pause: don’t answer immediately. Buy time with “Let me get back to you.”");
-        plan.push("Practice the boundary once this week (low-stakes first). Example: a small request, not a big confrontation.");
-        plan.push("After you hold the boundary, do one self-respect action: rest, a short walk, journaling, or telling yourself “I did the hard thing.”");
+        const plan = [
+          "Pause before replying. Give yourself a moment before saying yes.",
+          `Use your boundary sentence once this week: “${data.q5}”.`,
+          "After holding your boundary, do one caring action for yourself (rest, walk, journal, or breathing)."
+        ];
 
-        // Tailor plan a bit
-        if(n >= 8){
-          plan[0] = "Go extra gentle: delay your answer. Your nervous system needs safety first.";
-          plan.push("If guilt hits, breathe out longer than you breathe in (4 seconds in, 6 seconds out) for 60 seconds.");
-        } else if(n <= 2){
-          plan.push("Since it feels calmer today: write 1 boundary you want to keep for the next month.");
-        }
-
-        // Show
-        recoveryText.textContent = recovery;
-        planList.innerHTML = "";
-        plan.forEach(item => {
+        refs.resultText.textContent = reflection;
+        refs.planList.innerHTML = "";
+        plan.forEach((item) => {
           const li = document.createElement("li");
           li.textContent = item;
-          planList.appendChild(li);
+          refs.planList.appendChild(li);
         });
 
-        smallPrint.textContent =
-          "Reminder: people-pleasing patterns can be shaped by anxiety, past experiences, or fear of conflict. You don’t have to solve it all today — just practice one small boundary.";
+        refs.resultBox.classList.add("show");
+        refs.resultHint.textContent = "Your reflection is ready. You can share, download PDF, or reset.";
 
-        result.classList.add("show");
-        result.scrollIntoView({ behavior: "smooth", block: "start" });
+        state.built = true;
+        state.lastOutput = { data, reflection, plan };
 
-        return { recovery, plan, boundary, fear, n, yesZones, fearDetail, moodImpact, sacrifices };
+        persistIfEnabled();
+        return state.lastOutput;
       }
 
-      buildBtn.addEventListener("click", buildRecovery);
-
-      resetBtn.addEventListener("click", () => {
-        q1.value = "";
-        q2.value = "";
-        q3.value = "";
-        q4.value = "";
-        q5.value = "";
-        state.fearPick = "";
-        state.boundaryPick = "";
-        state.quickPick = "";
-
-        document.querySelectorAll(".pill[aria-pressed]").forEach(b => b.setAttribute("aria-pressed", "false"));
-        quickLine.textContent = "";
-        intensity.value = 5;
-        updateIntensity();
-
-        result.classList.remove("show");
-        copyStatus.textContent = "";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
-      // Share links
-      function setShareLinks(){
-        const url = encodeURIComponent(toolUrl);
-        const text = encodeURIComponent(shareText + " " + toolUrl);
-
-        document.getElementById("shareWhatsApp").href = "https://wa.me/?text=" + text;
-        document.getElementById("shareX").href = "https://twitter.com/intent/tweet?text=" + text;
-        document.getElementById("shareFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
-        document.getElementById("shareLinkedIn").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + url;
-      }
-      setShareLinks();
-
-      nativeShareBtn.addEventListener("click", async () => {
-        try{
-          if(navigator.share){
-            await navigator.share({ title, text: shareText, url: toolUrl });
-            copyStatus.textContent = "Shared.";
-          }else{
-            copyStatus.textContent = "Sharing not supported on this device — use the buttons or copy the link.";
-          }
-        }catch(e){
-          // user cancelled share: do nothing
+      function persistIfEnabled() {
+        const allowSave = refs.saveToggle.checked;
+        localStorage.setItem(STORAGE_PREF_KEY, allowSave ? "1" : "0");
+        if (!allowSave) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
         }
-      });
+        const payload = {
+          ...collectData(),
+          selectedFear: state.selectedFear,
+          built: state.built,
+          output: state.lastOutput
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      }
 
-      copyLinkBtn.addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText(toolUrl);
-          copyStatus.textContent = "Link copied.";
-          setTimeout(()=> copyStatus.textContent = "", 1800);
-        }catch(e){
-          // fallback
+      function restoreIfEnabled() {
+        const pref = localStorage.getItem(STORAGE_PREF_KEY) === "1";
+        refs.saveToggle.checked = pref;
+        if (!pref) return;
+
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+
+        try {
+          const saved = JSON.parse(raw);
+          refs.userName.value = saved.name || "";
+          refs.intensity.value = Number.isFinite(saved.intensity) ? saved.intensity : 5;
+          refs.q1.value = saved.q1 || "";
+          refs.q2.value = saved.q2 || "";
+          refs.q3.value = saved.q3 || "";
+          refs.q4.value = saved.q4 || "";
+          refs.q5.value = saved.q5 || "";
+          state.selectedFear = saved.selectedFear || "";
+
+          document.querySelectorAll(".pill[data-fear]").forEach((pill) => {
+            const isActive = pill.getAttribute("data-fear") === state.selectedFear;
+            pill.setAttribute("aria-pressed", isActive ? "true" : "false");
+          });
+
+          updateIntensityLabel();
+
+          if (saved.built && saved.output && saved.output.reflection) {
+            state.built = true;
+            state.lastOutput = saved.output;
+            refs.resultText.textContent = saved.output.reflection;
+            refs.planList.innerHTML = "";
+            (saved.output.plan || []).forEach((item) => {
+              const li = document.createElement("li");
+              li.textContent = item;
+              refs.planList.appendChild(li);
+            });
+            refs.resultBox.classList.add("show");
+          }
+        } catch (error) {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+
+      function clearSavedReflection() {
+        localStorage.removeItem(STORAGE_KEY);
+        showToast("Saved reflection cleared");
+      }
+
+      function resetAll() {
+        refs.userName.value = "";
+        refs.intensity.value = 5;
+        refs.q1.value = "";
+        refs.q2.value = "";
+        refs.q3.value = "";
+        refs.q4.value = "";
+        refs.q5.value = "";
+        refs.validationMsg.textContent = "";
+        refs.resultText.textContent = "";
+        refs.planList.innerHTML = "";
+        refs.resultBox.classList.remove("show");
+        refs.resultHint.textContent = "Complete your reflection, then choose “Build my reflection”.";
+        state.selectedFear = "";
+        state.built = false;
+        state.lastOutput = null;
+
+        document.querySelectorAll(".pill[data-fear]").forEach((pill) => pill.setAttribute("aria-pressed", "false"));
+        updateIntensityLabel();
+        persistIfEnabled();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      async function copyLink() {
+        const url = window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          showToast("Link copied");
+        } catch (error) {
           const ta = document.createElement("textarea");
-          ta.value = toolUrl;
+          ta.value = url;
           document.body.appendChild(ta);
           ta.select();
           document.execCommand("copy");
           document.body.removeChild(ta);
-          copyStatus.textContent = "Link copied.";
-          setTimeout(()=> copyStatus.textContent = "", 1800);
+          showToast("Link copied");
         }
-      });
+      }
 
-      // PDF generator (one-pager)
-      async function generatePDF(){
-        const data = buildRecovery(); // ensures content exists
-        const { jsPDF } = window.jspdf || {};
-        if(!jsPDF){
-          alert("PDF library didn't load. Please refresh and try again.");
+      async function logoAsDataURL() {
+        const response = await fetch(LOGO_URL, { mode: "cors" });
+        if (!response.ok) throw new Error("Logo fetch failed");
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error("Failed to process logo"));
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      async function generatePDF() {
+        const output = state.lastOutput || buildReflection();
+        if (!output || !output.reflection || !output.reflection.trim()) {
+          showToast("Please build your reflection first so the PDF is not blank.");
           return;
         }
 
+        const jspdfObj = window.jspdf;
+        if (!jspdfObj || !jspdfObj.jsPDF) {
+          showToast("PDF library did not load. Please refresh and try again.");
+          return;
+        }
+
+        let logoData;
+        try {
+          logoData = await logoAsDataURL();
+        } catch (error) {
+          showToast("Logo could not load for PDF right now. Please try again.");
+          return;
+        }
+
+        const { jsPDF } = jspdfObj;
         const doc = new jsPDF({ unit: "pt", format: "a4" });
-        const left = 44;
-        const top = 52;
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
-        const maxW = pageW - left * 2;
+        const margin = 34;
+        const usableW = pageW - margin * 2;
+        const leftW = usableW * 0.63;
+        const rightW = usableW * 0.33;
+        const colGap = usableW * 0.04;
 
-        function wrap(text, size){
-          doc.setFontSize(size);
-          return doc.splitTextToSize(text, maxW);
+        let y = 28;
+        doc.addImage(logoData, "JPEG", margin, y, 56, 56);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.text("People-Pleaser Recovery Tool", margin + 66, y + 20);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, margin + 66, y + 36);
+        if (output.data.name) {
+          doc.text(`Name: ${output.data.name}`, margin + 66, y + 50);
         }
 
-        // Header
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(siteUrl, left, 28);
+        y = 96;
+        doc.setDrawColor(200);
+        doc.line(margin, y, pageW - margin, y);
 
-        doc.setFontSize(18);
-        doc.text("People-Pleaser Recovery — One-Page Reflection", left, top);
+        const leftX = margin;
+        const rightX = margin + leftW + colGap;
+        let ly = y + 16;
+        let ry = y + 16;
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        doc.setTextColor(80);
+        function writeWrapped(x, startY, text, size, maxWidth, lineHeight, bold) {
+          doc.setFont("helvetica", bold ? "bold" : "normal");
+          doc.setFontSize(size);
+          const lines = doc.splitTextToSize(text, maxWidth);
+          lines.forEach((line) => {
+            doc.text(line, x, startY);
+            startY += lineHeight;
+          });
+          return startY;
+        }
 
-        let y = top + 20;
-        doc.text("Date: " + new Date().toLocaleDateString(), left, y);
-        y += 18;
-        doc.text("Tool: " + toolUrl, left, y);
-        y += 18;
+        ly = writeWrapped(leftX, ly, "Reflection summary", 12, leftW, 14, true);
+        ly = writeWrapped(leftX, ly + 2, output.reflection, 10, leftW, 12, false);
 
-        // Divider line
-        doc.setDrawColor(220);
-        doc.line(left, y, pageW - left, y);
-        y += 18;
+        ly += 8;
+        ly = writeWrapped(leftX, ly, "Action plan", 12, leftW, 14, true);
+        output.plan.forEach((step, index) => {
+          ly = writeWrapped(leftX, ly + 2, `${index + 1}. ${step}`, 10, leftW, 12, false);
+        });
 
-        // Summary
-        doc.setTextColor(17);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text("Your snapshot", left, y);
-        y += 14;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        const snap = [
-          "Intensity: " + data.n + "/10",
-          "Main fear: " + data.fear,
-          "Practice boundary: “" + (data.boundary || "") + "”"
-        ].join("  •  ");
-        wrap(snap, 11).forEach(line => { doc.text(line, left, y); y += 14; });
-
-        y += 6;
-        doc.setDrawColor(235);
-        doc.line(left, y, pageW - left, y);
-        y += 16;
-
-        // Answers (tight, one page)
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text("Your answers (short form)", left, y);
-        y += 14;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-
-        const qa = [
-          ["1) Where I say yes too quickly:", data.yesZones || "—"],
-          ["2) What I fear if I disappoint:", (data.fearDetail ? (data.fear + " — " + data.fearDetail) : data.fear) || "—"],
-          ["3) How it affects my mood:", data.moodImpact || "—"],
-          ["4) What I put aside:", data.sacrifices || "—"]
+        ly += 6;
+        const answers = [
+          `1) ${output.data.q1 || "—"}`,
+          `2) ${output.data.fear}${output.data.q2 ? ` - ${output.data.q2}` : ""}`,
+          `3) ${output.data.q3 || "—"}`,
+          `4) ${output.data.q4 || "—"}`,
+          `Boundary: ${output.data.q5 || "—"}`,
+          `Intensity: ${output.data.intensity}/10`
         ];
-
-        qa.forEach(([q,a]) => {
-          doc.setFont("helvetica","bold"); doc.text(q, left, y); y += 12;
-          doc.setFont("helvetica","normal");
-          wrap(a, 10).forEach(line => { doc.text(line, left, y); y += 12; });
-          y += 6;
+        ly = writeWrapped(leftX, ly, "Your responses", 12, leftW, 14, true);
+        answers.forEach((item) => {
+          ly = writeWrapped(leftX, ly + 2, item, 9.5, leftW, 11.5, false);
         });
 
-        // Recovery message (shortened)
-        doc.setDrawColor(220);
-        doc.line(left, y, pageW - left, y);
-        y += 14;
+        ry = writeWrapped(rightX, ry, "Resources", 12, rightW, 14, true);
+        const resources = [
+          SITE_URL,
+          TOOLS_URL,
+          BOOKS_URL,
+          SUPPORT_URL
+        ];
+        resources.forEach((r) => {
+          ry = writeWrapped(rightX, ry + 3, r, 9.5, rightW, 11.5, false);
+        });
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text("Your recovery message", left, y);
-        y += 14;
+        doc.setDrawColor(215);
+        doc.line(rightX - colGap / 2, y + 10, rightX - colGap / 2, pageH - 48);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        const trimmed = data.recovery.length > 520 ? (data.recovery.slice(0, 520) + "…") : data.recovery;
-        wrap(trimmed, 10).forEach(line => { doc.text(line, left, y); y += 12; });
+        doc.text("https://emotionalintelligencedeveloper.com/", margin, pageH - 20);
 
-        y += 8;
-
-        // Plan
-        doc.setDrawColor(220);
-        doc.line(left, y, pageW - left, y);
-        y += 14;
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text("Your 3-step plan", left, y);
-        y += 14;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        data.plan.slice(0, 4).forEach((p, i) => {
-          const lines = wrap((i+1) + ". " + p, 10);
-          lines.forEach(line => { doc.text(line, left, y); y += 12; });
-          y += 2;
-        });
-
-        // Footer
-        doc.setFontSize(9);
-        doc.setTextColor(110);
-        doc.text("Created by Emotional Intelligence Developer — " + siteUrl, left, pageH - 22);
-
-        doc.save("people-pleaser-recovery-one-page.pdf");
+        doc.save("people-pleaser-recovery-summary.pdf");
       }
 
-      downloadBtn.addEventListener("click", generatePDF);
-
-      // Improve keyboard flow: Enter on q5 triggers build
-      q5.addEventListener("keydown", (e) => {
-        if(e.key === "Enter"){
-          e.preventDefault();
-          buildBtn.click();
-        }
+      document.querySelectorAll(".pill[data-fear]").forEach((pill) => {
+        pill.addEventListener("click", () => {
+          document.querySelectorAll(".pill[data-fear]").forEach((el) => el.setAttribute("aria-pressed", "false"));
+          pill.setAttribute("aria-pressed", "true");
+          state.selectedFear = pill.getAttribute("data-fear") || "";
+          persistIfEnabled();
+        });
       });
 
-      // If PDF library is slow, make sure it can load before first click
-      window.addEventListener("load", () => {
-        // no-op, just ensures deferred script is ready
+      [refs.userName, refs.intensity, refs.q1, refs.q2, refs.q3, refs.q4, refs.q5].forEach((el) => {
+        el.addEventListener("input", () => {
+          if (el === refs.intensity) updateIntensityLabel();
+          persistIfEnabled();
+        });
       });
+
+      refs.saveToggle.addEventListener("change", persistIfEnabled);
+      refs.clearSavedBtn.addEventListener("click", clearSavedReflection);
+      refs.buildBtn.addEventListener("click", buildReflection);
+      refs.downloadBtn.addEventListener("click", generatePDF);
+      refs.resetBtn.addEventListener("click", resetAll);
+      refs.copyLinkBtn.addEventListener("click", copyLink);
+
+      updateIntensityLabel();
+      updateShareLinks();
+      restoreIfEnabled();
     })();
   </script>
 </body>

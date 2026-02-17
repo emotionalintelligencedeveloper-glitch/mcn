@@ -1,388 +1,1185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EID Community Story Game</title>
+  <!-- REPO NAME SUGGESTION: eid-community-story-game -->
+  <title>10-to-Write: The Community Story Game</title>
   <style>
-    :root{--bg:#f5f8ff;--card:#fff;--line:#d9e2ff;--text:#1c2450;--muted:#5d6798;--brand:#ffd166;--accent:#70d6ff;--good:#43b581;--danger:#d9534f}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    .wrap{max-width:980px;margin:0 auto;padding:14px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;box-shadow:0 6px 18px rgba(39,62,152,.08)}
-    .head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.logo{width:48px;height:48px;border-radius:50%;object-fit:cover}
-    h1,h2,h3,p{margin:.35rem 0}.muted{color:var(--muted)}.small{font-size:.86rem}.step{font-weight:700;background:#eef3ff;border-radius:999px;padding:6px 10px;display:inline-block}
-    .grid{display:grid;gap:10px}.grid3{grid-template-columns:1fr}@media(min-width:760px){.grid3{grid-template-columns:repeat(3,1fr)}}
-    label{font-size:.9rem;font-weight:600}input,textarea,button{font:inherit}
-    input,textarea{width:100%;padding:11px;border-radius:10px;border:1px solid #c8d4ff}textarea{min-height:95px;resize:vertical}
-    .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;min-height:44px}
-    .btn-main{background:linear-gradient(45deg,var(--brand),#ff9f68)}.btn-secondary{background:#eaf8ff}.btn-vote{background:linear-gradient(45deg,var(--accent),#9b9dff)}
-    .btn[disabled]{opacity:.5;cursor:not-allowed}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .item{border:1px solid var(--line);padding:12px;border-radius:12px;margin-top:10px}.votes{font-weight:800}
-    .counter{text-align:right;color:var(--muted);font-size:.84rem}.ok{color:var(--good)}.err{color:var(--danger)}
-    .bar{width:100%;height:12px;background:#e8edff;border-radius:999px;overflow:hidden}.bar>div{height:100%;background:linear-gradient(90deg,#7ad8ff,#ffd166);width:0}
-    .share a,.share button{margin-right:8px;margin-top:8px}
-    .hidden{display:none!important}.centered{max-width:760px;margin:0 auto}
-    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
-    .modal{background:#fff;max-width:760px;width:100%;max-height:85vh;overflow:auto;border-radius:14px;padding:14px}
+    :root {
+      --bg: #ffffff;
+      --card: #ffffff;
+      --card2: #f5f7ff;
+      --text: #21243d;
+      --muted: #4f5585;
+      --brand: #ffd166;
+      --brand2: #7ae582;
+      --accent: #ff70a6;
+      --accent2: #70d6ff;
+      --danger: #ff5a5f;
+      --ok: #7ae582;
+      --warn: #ffd166;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(31, 45, 112, .12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; font-family: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; background: linear-gradient(180deg, #ffffff 0%, #f6fbff 55%, #f9f3ff 100%); color: var(--text); }
+    a { color: var(--accent2); }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 14px; }
+    .banner { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-bottom: 2px solid rgba(92,101,175,.2); }
+    .brand {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 10px 14px;
+    }
+    .brand h1 { margin: 0; font-size: 1.1rem; color: var(--brand); }
+    .logo { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(92,101,175,.22); }
+    .tagline { font-size: .85rem; color: var(--muted); }
+    .how-btn { border: 0; background: linear-gradient(45deg, var(--accent), #ff9770); color: #111; font-weight: 700; padding: 10px 12px; border-radius: 999px; cursor: pointer; }
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 2px solid rgba(92,101,175,.16); border-radius: var(--radius); padding: 14px; margin-top: 14px; box-shadow: var(--shadow);
+    }
+    .title { margin: 0 0 8px; font-size: 1.1rem; }
+    .sub { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
+    .pill { display: inline-block; border-radius: 999px; padding: 6px 10px; font-size: .78rem; font-weight: 700; margin-right: 6px; }
+    .p-open { background: rgba(122,229,130,.2); color: var(--ok); border: 1px solid var(--ok); }
+    .p-lock { background: rgba(255,90,95,.2); color: #ffc9cb; border: 1px solid var(--danger); }
+    .p-win { background: rgba(255,209,102,.2); color: var(--warn); border: 1px solid var(--warn); }
+    .row { display: grid; gap: 8px; }
+    .row-3 { grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .row-3 { grid-template-columns: repeat(3,1fr);} }
+    label { font-size: .84rem; color: var(--muted); }
+    input, textarea {
+      width: 100%; border-radius: 12px; border: 2px solid rgba(92,101,175,.24); background: #fff;
+      color: var(--text); padding: 10px; font: inherit;
+    }
+    textarea { min-height: 86px; resize: vertical; }
+    .btn {
+      border: 0; border-radius: 12px; padding: 10px 12px; font-weight: 800; cursor: pointer;
+      transition: transform .12s ease, filter .2s ease;
+    }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: scale(.98); }
+    .btn-main { background: linear-gradient(45deg, var(--brand), #ff9770); color: #1a1a1a; }
+    .btn-vote { background: linear-gradient(45deg, var(--accent2), #9b5de5); color: #161616; }
+    .btn-share { background: linear-gradient(45deg, #7ae582, #70d6ff); color: #0f1021; }
+    .btn-muted { background: #3a3d70; color: #fff; }
+    .btn-danger { background: #78333b; color: #ffd8dc; }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; }
+    .item { border: 1px solid rgba(92,101,175,.2); border-radius: 14px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,.84); }
+    .meta { font-size: .8rem; color: var(--muted); }
+    .vote-box { margin-top: 8px; padding: 12px 12px; border-radius: 12px; border: 3px dashed rgba(92,101,175,.45); background: rgba(255,255,255,.98); }
+    .vote-main { font-size: 1.35rem; line-height: 1.2; font-weight: 900; color: #1d2152; }
+    .vote-sub { font-size: 1rem; font-weight: 700; color: #2f376e; }
+    .big { font-size: 1.1rem; font-weight: 900; color: var(--brand); }
+    .counter { font-size: .82rem; color: var(--muted); text-align: right; }
+    .progress { width: 100%; background: rgba(92,101,175,.18); border-radius: 999px; height: 14px; overflow: hidden; }
+    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--brand), var(--brand2)); transition: width .4s ease; }
+    .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px; background: #ffffff; color: #1f234f; border: 2px solid var(--brand); border-radius: 12px; padding: 10px 14px; opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 80; box-shadow: var(--shadow); }
+    .toast.show { opacity: 1; }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 90; }
+    .modal { width: min(94vw, 760px); max-height: 90vh; overflow: auto; background: #ffffff; border: 2px solid rgba(92,101,175,.2); border-radius: 16px; padding: 14px; color: #1d2346; }
+    .close { float:right; }
+    .bottom-bar {
+      position: sticky; bottom: 0; z-index: 40; background: rgba(255,255,255,.98); border-top: 2px solid rgba(92,101,175,.2); padding: 8px;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
+    }
+    @media (min-width: 680px) { .bottom-bar { grid-template-columns: repeat(4,minmax(0,1fr)); }}
+    .bottom-bar a { text-align: center; text-decoration: none; padding: 10px 8px; border-radius: 10px; font-weight: 800; color: #111; }
+    .b1{background:#ffd166}.b2{background:#7ae582}.b3{background:#70d6ff}.b4{background:#ff70a6}
+    .highlight { outline: 3px solid var(--brand); animation: pulse 1.1s ease 3; }
+    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(255,209,102,.7)}100%{box-shadow:0 0 0 14px rgba(255,209,102,0)} }
+    .celebrate { animation: bounce .45s ease 4 alternate; }
+    @keyframes bounce { from{transform:translateY(0)}to{transform:translateY(-6px)} }
+    .footer-note { text-align: center; font-size: .8rem; color: var(--muted); margin: 12px 0 18px; }
+    .hidden { display:none !important; }
+    #backToTop { position: fixed; right: 14px; bottom: 145px; z-index: 65; }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <section class="card">
-    <div class="head">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo"/>
-      <div>
-        <h1>10-to-Write: EID Community Story Game</h1>
-        <p class="muted small">Build one community story together. Vote to move each step.</p>
+  <div class="banner">
+    <div class="brand wrap">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
+        <div>
+        <h1>Emotional Intelligence Developer</h1>
+        <div class="tagline">Build a story together, one kind line at a time. • <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">emotionalintelligencedeveloper.com</a></div>
+        </div>
       </div>
+      <button class="how-btn" id="howBtn" aria-label="How it works">How it works</button>
     </div>
-    <div class="row">
-      <span class="step" id="stepLabel"></span>
-      <button id="previewBtn" class="btn btn-secondary">Preview Story</button>
-      <button id="newGameBtn" class="btn btn-secondary">Start New Session</button>
-    </div>
-    <p class="small" id="nextHelp"></p>
-    <div class="share" id="globalShare"></div>
-  </section>
-
-  <section class="card" id="headlineSection">
-    <h2>Step 1: Headline Proposals</h2>
-    <p class="muted small">Up to 10 active headline proposals. First to 10 votes becomes the approved headline.</p>
-    <form id="headlineForm" class="grid centered">
-      <div class="grid grid3">
-        <label>Name <input id="hName" maxlength="24" required></label>
-        <label>Social / Handle <input id="hHandle" maxlength="40" required></label>
-        <label>Headline text <input id="hText" maxlength="100" required></label>
-      </div>
-      <button class="btn btn-main" type="submit">Submit Headline</button>
-    </form>
-    <div id="headlineList"></div>
-  </section>
-
-  <section class="card hidden" id="paragraphSection">
-    <h2>Step 2: Paragraph Proposals</h2>
-    <p class="muted small">Each proposal max 300 characters. Up to 15 active proposals. A contributor may submit again only after one of their paragraphs is accepted.</p>
-    <div><strong>Story words:</strong> <span id="wordLabel">0 / 520</span></div>
-    <div class="bar"><div id="wordBar"></div></div>
-    <form id="pForm" class="grid centered" style="margin-top:10px">
-      <div class="grid grid3">
-        <label>Name <input id="pName" maxlength="24" required></label>
-        <label>Social / Handle <input id="pHandle" maxlength="40" required></label>
-        <label>Paragraph (max 300 chars)
-          <textarea id="pText" maxlength="300" required></textarea>
-          <div class="counter"><span id="pCount">0</span>/300</div>
-        </label>
-      </div>
-      <div id="gateMsg" class="small"></div>
-      <button class="btn btn-main" type="submit">Submit Paragraph Proposal</button>
-    </form>
-    <h3>Accepted Story So Far</h3>
-    <div id="acceptedList"></div>
-    <h3>Active Paragraph Proposals</h3>
-    <div id="paragraphList"></div>
-  </section>
-
-  <section class="card hidden" id="conclusionSection">
-    <h2>Step 3: Conclusion Vote</h2>
-    <p class="muted small">You are near the word target. Submit short conclusion options (max 300 chars) and vote.</p>
-    <form id="cForm" class="grid centered">
-      <div class="grid grid3">
-        <label>Name <input id="cName" maxlength="24" required></label>
-        <label>Social / Handle <input id="cHandle" maxlength="40" required></label>
-        <label>Conclusion text
-          <textarea id="cText" maxlength="300" required></textarea>
-          <div class="counter"><span id="cCount">0</span>/300</div>
-        </label>
-      </div>
-      <button class="btn btn-main" type="submit">Submit Conclusion Option</button>
-    </form>
-    <div id="conclusionList"></div>
-  </section>
-
-  <section class="card hidden" id="publishedSection">
-    <h2>Published Story</h2>
-    <div id="finalRead"></div>
-    <button id="downloadPdfBtn" class="btn btn-main">Download PDF</button>
-  </section>
-</div>
-
-<div class="modal-bg" id="previewModalBg" aria-hidden="true">
-  <div class="modal">
-    <button class="btn" id="closePreview">Close</button>
-    <h3>Story Preview</h3>
-    <div id="previewContent"></div>
   </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-(() => {
-  const KEY = 'eid_story_sessions_v2';
-  const voteTarget = 10, wordTarget = 520, nearTarget = 500;
-  const maxHeadline = 10, maxParagraph = 15;
-  const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  <main class="wrap">
+    <section class="card" aria-live="polite">
+      <h2 class="title">10-to-Write: The Community Story Game</h2>
+      <p class="sub">Community building in progress • Votes needed: <span class="big" id="voteTargetLabel">10</span></p>
+      <p class="sub" id="modeNotice"></p>
+      <div class="meta">Signed in as: <span id="userIdLabel"></span></div>
+    </section>
 
-  const $ = id => document.getElementById(id);
-  const el = {
-    stepLabel: $('stepLabel'), nextHelp: $('nextHelp'), globalShare: $('globalShare'),
-    headlineSection: $('headlineSection'), paragraphSection: $('paragraphSection'), conclusionSection: $('conclusionSection'), publishedSection: $('publishedSection'),
-    headlineForm: $('headlineForm'), hName: $('hName'), hHandle: $('hHandle'), hText: $('hText'), headlineList: $('headlineList'),
-    pForm: $('pForm'), pName: $('pName'), pHandle: $('pHandle'), pText: $('pText'), pCount: $('pCount'), paragraphList: $('paragraphList'), acceptedList: $('acceptedList'), gateMsg: $('gateMsg'), wordLabel: $('wordLabel'), wordBar: $('wordBar'),
-    cForm: $('cForm'), cName: $('cName'), cHandle: $('cHandle'), cText: $('cText'), cCount: $('cCount'), conclusionList: $('conclusionList'),
-    previewBtn: $('previewBtn'), previewModalBg: $('previewModalBg'), previewContent: $('previewContent'), closePreview: $('closePreview'),
-    finalRead: $('finalRead'), downloadPdfBtn: $('downloadPdfBtn'), newGameBtn: $('newGameBtn')
-  };
+    <section class="card" id="headlineBoard">
+      <h3 class="title">A) Headline Round (Idea Board) <span class="pill p-open">Round Open</span></h3>
+      <form id="headlineForm" class="row" aria-label="Submit headline idea">
+        <label>Headline text (max 90)
+          <input id="headlineText" maxlength="90" required aria-label="Headline text" />
+        </label>
+        <div class="row row-3">
+          <label>Name (max 24)
+            <input id="headlineName" maxlength="24" required aria-label="Headline name" />
+          </label>
+          <label>Social handle (display only)
+            <input id="headlineHandle" required aria-label="Headline handle" />
+          </label>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn btn-main" type="submit">Submit Headline</button>
+          </div>
+        </div>
+      </form>
+      <div id="headlineSubmitShare" class="item hidden" aria-live="polite"></div>
+      <div id="headlineList"></div>
+    </section>
 
-  const url = new URL(location.href);
-  let sessionId = url.searchParams.get('session') || crypto.randomUUID();
-  let voterId = localStorage.getItem('eid_voter_id') || crypto.randomUUID();
-  localStorage.setItem('eid_voter_id', voterId);
-  url.searchParams.set('session', sessionId);
-  history.replaceState({}, '', url);
+    <section class="card" id="previewSection">
+      <h3 class="title">Live Message Preview</h3>
+      <p class="sub">Read the current community message so your add-on flows naturally.</p>
+      <div id="previewList"></div>
+    </section>
 
-  const defaultSession = () => ({
-    id: sessionId, step: 'headline', createdAt: Date.now(), publishedAt: null,
-    headlineApproved: null, headlines: [], paragraphProposals: [], acceptedParagraphs: [],
-    submissionCredits: {}, conclusions: [], acceptedConclusion: null, votesByUser: {}
-  });
+    <section class="card" id="activeStorySection">
+      <h3 class="title">B) Story Build Round <span id="storyBadge" class="pill p-lock">Waiting for headline</span></h3>
+      <div id="activeStoryInfo" class="sub">No active story yet. Vote a headline to start the single live message.</div>
 
-  const loadAll = () => JSON.parse(localStorage.getItem(KEY) || '{}');
-  const saveAll = (obj) => localStorage.setItem(KEY, JSON.stringify(obj));
-  const getSession = () => {
-    const all = loadAll();
-    if (!all[sessionId]) { all[sessionId] = defaultSession(); saveAll(all); }
-    return all[sessionId];
-  };
-  const saveSession = (session) => { const all = loadAll(); all[sessionId] = session; saveAll(all); };
+      <button id="previewBtn" class="btn btn-muted" type="button" aria-label="Preview current message" style="margin:6px 0 10px;">Preview current message</button>
 
-  const t = v => String(v || '').trim();
-  const words = tx => t(tx).split(/\s+/).filter(Boolean).length;
-  const participantKey = (n,h) => `${t(n).toLowerCase()}|${t(h).toLowerCase()}`;
+      <div id="storyProgressWrap" class="hidden">
+        <div class="sub"><strong>Word Goal:</strong> <span id="wordCountLabel">0 / 396 words</span></div>
+        <div class="progress" aria-label="Word progress"><div class="bar" id="wordBar"></div></div>
+        <button id="publishBtn" class="btn btn-main" disabled style="margin-top:10px;">PDF auto-downloads only after conclusion winner is voted in</button>
+      </div>
 
-  function shareUrl(step) {
-    const u = new URL(location.href);
-    u.searchParams.set('session', sessionId);
-    u.searchParams.set('step', step);
-    return u.toString();
-  }
+      <div id="snippetComposer" class="hidden" style="margin-top:12px;">
+        <form id="snippetForm" class="row" aria-label="Submit continuation snippet">
+          <div class="row row-3">
+            <label>Name (max 24)
+              <input id="snippetName" maxlength="24" required aria-label="Snippet name" />
+            </label>
+            <label>Social handle (display only)
+              <input id="snippetHandle" required aria-label="Snippet handle" />
+            </label>
+            <label>Contribution (max 210)
+              <textarea id="snippetText" maxlength="210" required aria-label="Snippet text"></textarea>
+              <div class="counter"><span id="snippetCount">0</span> / 210</div>
+            </label>
+          </div>
+          <button class="btn btn-main" type="submit">Add Candidate Addition</button>
+        </form>
+        <div id="snippetSubmitShare" class="item hidden" aria-live="polite"></div>
+      </div>
 
-  function setStep(session, step) {
-    session.step = step;
-    const u = new URL(location.href);
-    u.searchParams.set('step', step);
-    history.replaceState({}, '', u);
-  }
+      <div id="storyPieces"></div>
+      <h4 style="margin-top:14px;">Candidate Additions</h4>
+      <div id="snippetList"></div>
+      <div id="nextRoundMsg" class="sub hidden">Next: Add the next piece!</div>
 
-  function currentStoryWordCount(session) {
-    return words((session.headlineApproved?.text || '') + ' ' + session.acceptedParagraphs.map(p => p.text).join(' '));
-  }
+      <div id="conclusionWrap" class="hidden" style="margin-top:14px;">
+        <h4>Conclusion Round (Vote to lock ending)</h4>
+        <p class="sub">Word goal reached. Submit a conclusion line. First to target votes wins and the story is exported to PDF.</p>
+        <form id="conclusionForm" class="row" aria-label="Submit conclusion">
+          <div class="row row-3">
+            <label>Name (max 24)
+              <input id="conclusionName" maxlength="24" required aria-label="Conclusion name" />
+            </label>
+            <label>Social handle (display only)
+              <input id="conclusionHandle" required aria-label="Conclusion handle" />
+            </label>
+            <label>Conclusion text (max 210)
+              <textarea id="conclusionText" maxlength="210" required aria-label="Conclusion text"></textarea>
+              <div class="counter"><span id="conclusionCount">0</span> / 210</div>
+            </label>
+          </div>
+          <button class="btn btn-main" type="submit">Submit Conclusion Candidate</button>
+        </form>
+        <div id="conclusionSubmitShare" class="item hidden" aria-live="polite"></div>
+        <div id="conclusionList"></div>
+      </div>
+    </section>
 
-  function canVote(session, itemId) {
-    const key = session.votesByUser[voterId] || [];
-    return !key.includes(itemId);
-  }
+    <section class="card" id="archiveSection">
+      <h3 class="title">Archive</h3>
+      <div id="archiveList" class="sub">No published stories yet.</div>
+    </section>
 
-  function addVote(session, itemId) {
-    session.votesByUser[voterId] = session.votesByUser[voterId] || [];
-    if (session.votesByUser[voterId].includes(itemId)) return false;
-    session.votesByUser[voterId].push(itemId);
-    return true;
-  }
 
-  function processTransitions(session) {
-    if (session.step === 'headline' && !session.headlineApproved) {
-      const winner = session.headlines.find(h => h.votes >= voteTarget && h.active);
-      if (winner) {
-        winner.active = false;
-        session.headlineApproved = {...winner, approvedAt: Date.now()};
-        setStep(session, 'paragraph');
-      }
+    <section class="card" id="globalShareSection">
+      <h3 class="title">Share & Get Votes</h3>
+      <p class="sub">Share this game and ask friends to vote for your contribution.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a id="shareX" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on X">Share on X</a>
+        <a id="shareFacebook" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Share on Facebook</a>
+        <a id="shareWhatsApp" class="btn btn-share" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">Share on WhatsApp</a>
+      </div>
+    </section>
+
+      </main>
+
+  <button id="backToTop" class="btn btn-muted" aria-label="Back to top">Back to top ⬆</button>
+
+  <div class="bottom-bar">
+    <a id="booksLink" class="b1" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Recommended Audio Books</a>
+    <a class="b2" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">Self Help Tools</a>
+    <a class="b4" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support Us</a>
+    <a class="b3" href="https://emotionalintelligencedeveloper.com/authors/" target="_blank" rel="noopener">Share your full message</a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-bg" id="howModalBg" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="howTitle">
+      <button class="btn btn-danger close" id="closeHow">Close ✕</button>
+      <h3 id="howTitle">How it works</h3>
+      <ol>
+        <li><strong>Headline Round:</strong> submit headline ideas and vote. First headline to 10 votes becomes the chosen headline.</li>
+        <li><strong>Story Build Round:</strong> submit candidate snippets (max 210 chars). First snippet to 10 votes wins the round and is appended.</li>
+        <li><strong>One winner each round:</strong> all other candidates in that round are marked “Not selected this round.”</li>
+        <li><strong>Conclusion gate:</strong> once 396+ words are reached, submit conclusion candidates and vote to lock the ending.</li>
+        <li><strong>Share to get votes:</strong> every headline, snippet, and conclusion candidate has a share button.</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // ========================= CONFIG SECTION =========================
+    // Paste your Firebase config values below. Keep empty {} to use Demo Mode.
+    const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCvLVU2I-9SSxCf4QniYuywK08lWAO9aug",
+  authDomain: "eid-community-story-game.firebaseapp.com",
+  projectId: "eid-community-story-game",
+  storageBucket: "eid-community-story-game.firebasestorage.app",
+  messagingSenderId: "592071755821",
+  appId: "1:592071755821:web:e6772ce2449a0e824390a4",
+  measurementId: "G-Z6162926T3"
+    };
+    // Optional editable link:
+    const RECOMMENDED_AUDIO_BOOKS_LINK = "https://emotionalintelligencedeveloper.com/";
+    const BRAND_LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
+    const GAME_LINK = "https://emotionalintelligencedeveloper-glitch.github.io/mcn/eid-community-story-game.html";
+    // ================================================================
+
+    const TEST_MODE = false; // Set true only for internal testing
+    const VOTE_TARGET = 1;
+    const WORD_TARGET = 396;
+    const RATE_LIMIT_COUNT = 3;
+    const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+    const BAD_WORDS = ["kike","nigger","faggot","spic","chink","tranny","wetback","raghead","retard"]; // basic list
+
+    const state = {
+      mode: "demo",
+      uid: "",
+      game: null,
+      headlines: [],
+      snippets: [],
+      archives: [],
+      urlTarget: new URLSearchParams(location.search)
+    };
+
+    const el = {
+      modeNotice: document.getElementById("modeNotice"),
+      voteTargetLabel: document.getElementById("voteTargetLabel"),
+      userIdLabel: document.getElementById("userIdLabel"),
+      headlineForm: document.getElementById("headlineForm"),
+      headlineText: document.getElementById("headlineText"),
+      headlineName: document.getElementById("headlineName"),
+      headlineHandle: document.getElementById("headlineHandle"),
+      headlineList: document.getElementById("headlineList"),
+      activeStoryInfo: document.getElementById("activeStoryInfo"),
+      previewList: document.getElementById("previewList"),
+      previewBtn: document.getElementById("previewBtn"),
+      storyBadge: document.getElementById("storyBadge"),
+      snippetComposer: document.getElementById("snippetComposer"),
+      snippetForm: document.getElementById("snippetForm"),
+      snippetName: document.getElementById("snippetName"),
+      snippetHandle: document.getElementById("snippetHandle"),
+      snippetText: document.getElementById("snippetText"),
+      snippetCount: document.getElementById("snippetCount"),
+      snippetList: document.getElementById("snippetList"),
+      storyPieces: document.getElementById("storyPieces"),
+      nextRoundMsg: document.getElementById("nextRoundMsg"),
+      wordCountLabel: document.getElementById("wordCountLabel"),
+      wordBar: document.getElementById("wordBar"),
+      storyProgressWrap: document.getElementById("storyProgressWrap"),
+      publishBtn: document.getElementById("publishBtn"),
+      archiveList: document.getElementById("archiveList"),
+      toast: document.getElementById("toast"),
+      howBtn: document.getElementById("howBtn"),
+      howModalBg: document.getElementById("howModalBg"),
+      closeHow: document.getElementById("closeHow"),
+      backToTop: document.getElementById("backToTop"),
+      booksLink: document.getElementById("booksLink"),
+      shareX: document.getElementById("shareX"),
+      shareFacebook: document.getElementById("shareFacebook"),
+      shareWhatsApp: document.getElementById("shareWhatsApp"),
+      headlineSubmitShare: document.getElementById("headlineSubmitShare"),
+      snippetSubmitShare: document.getElementById("snippetSubmitShare"),
+      conclusionWrap: document.getElementById("conclusionWrap"),
+      conclusionForm: document.getElementById("conclusionForm"),
+      conclusionName: document.getElementById("conclusionName"),
+      conclusionHandle: document.getElementById("conclusionHandle"),
+      conclusionText: document.getElementById("conclusionText"),
+      conclusionCount: document.getElementById("conclusionCount"),
+      conclusionSubmitShare: document.getElementById("conclusionSubmitShare"),
+      conclusionList: document.getElementById("conclusionList")
+    };
+
+    el.booksLink.href = RECOMMENDED_AUDIO_BOOKS_LINK;
+    el.voteTargetLabel.textContent = String(VOTE_TARGET);
+    const globalShareMessage = "Vote for my contribution in 10-to-Write: The Community Story Game!";
+    const globalShareUrl = new URL(location.href);
+    const shareText = encodeURIComponent(`${globalShareMessage} ${globalShareUrl.toString()}`);
+    el.shareX.href = `https://twitter.com/intent/tweet?text=${shareText}`;
+    el.shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(globalShareUrl.toString())}&quote=${encodeURIComponent(globalShareMessage)}`;
+    el.shareWhatsApp.href = `https://wa.me/?text=${shareText}`;
+
+    function safeText(v) { return String(v || "").trim(); }
+    function now() { return Date.now(); }
+    function uidShort(u) { return u ? `${u.slice(0, 8)}...` : "guest"; }
+    function wordCount(t) { return safeText(t).split(/\s+/).filter(Boolean).length; }
+    function hasBlockedWord(text) {
+      const lower = safeText(text).toLowerCase();
+      return BAD_WORDS.some(w => lower.includes(w));
+    }
+    function toast(msg) {
+      el.toast.textContent = msg;
+      el.toast.classList.add("show");
+      setTimeout(() => el.toast.classList.remove("show"), 2300);
+    }
+    function fmtDate(ts) {
+      const d = new Date(ts || now());
+      return d.toLocaleString();
     }
 
-    if (session.step === 'paragraph' && session.headlineApproved) {
-      let changed = true;
-      while (changed) {
-        changed = false;
-        const win = session.paragraphProposals.find(p => p.votes >= voteTarget && p.active);
-        if (win) {
-          win.active = false;
-          session.acceptedParagraphs.push({...win, acceptedAt: Date.now()});
-          const pk = participantKey(win.name, win.handle);
-          session.submissionCredits[pk] = (session.submissionCredits[pk] || 0) + 1;
-          session.paragraphProposals = session.paragraphProposals.filter(p => p.active);
-          changed = true;
+    function createDemoStore() {
+      const KEY = "eid_10_to_write_demo_v1";
+      const base = {
+        users: {},
+        votes: {},
+        game: { activeHeadlineId: "", activeHeadlineText: "", activeStories: [] },
+        headlines: {},
+        snippets: {},
+        archives: {}
+      };
+      function load() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || structuredClone(base); }
+        catch { return structuredClone(base); }
+      }
+      function save(db) { localStorage.setItem(KEY, JSON.stringify(db)); }
+      function makeId(prefix) { return prefix + "_" + Math.random().toString(36).slice(2, 10); }
+
+      return {
+        async initUser(uid) {
+          const db = load();
+          if (!db.users[uid]) db.users[uid] = { submissionTimes: [] };
+          save(db);
+        },
+        subscribeAll(onData) {
+          const emit = () => {
+            const db = load();
+            onData({
+              game: db.game,
+              headlines: Object.values(db.headlines).sort((a,b)=>b.createdAt-a.createdAt),
+              snippets: Object.values(db.snippets).sort((a,b)=>b.createdAt-a.createdAt),
+              archives: Object.values(db.archives).sort((a,b)=>b.publishedAt-a.publishedAt)
+            });
+          };
+          emit();
+          const i = setInterval(emit, 800);
+          return () => clearInterval(i);
+        },
+        async canSubmit(uid) {
+          const db = load();
+          const user = db.users[uid] || { submissionTimes: [] };
+          const cutoff = now() - RATE_LIMIT_WINDOW_MS;
+          user.submissionTimes = user.submissionTimes.filter(t => t > cutoff);
+          const allowed = user.submissionTimes.length < RATE_LIMIT_COUNT;
+          db.users[uid] = user;
+          save(db);
+          return allowed;
+        },
+        async markSubmission(uid) {
+          const db = load();
+          if (!db.users[uid]) db.users[uid] = { submissionTimes: [] };
+          db.users[uid].submissionTimes.push(now());
+          save(db);
+        },
+        async addHeadline(data) {
+          const db = load();
+          const id = makeId("h");
+          db.headlines[id] = { id, votes: 0, status: "open", createdAt: now(), ...data };
+          save(db);
+          return id;
+        },
+        async addSnippet(data) {
+          const db = load();
+          const id = makeId("s");
+          db.snippets[id] = { id, votes: 0, status: "open", createdAt: now(), ...data };
+          save(db);
+          return id;
+        },
+        async vote(itemType, itemId, uid) {
+          const db = load();
+          const voteKey = `${itemType}_${itemId}_${uid}`;
+          if (db.votes[voteKey]) return { ok: false, message: "You already voted on this." };
+          db.votes[voteKey] = { at: now() };
+          const map = itemType === "headline" ? db.headlines : db.snippets;
+          const item = map[itemId];
+          if (!item || item.status !== "open") { save(db); return { ok:false, message:"Voting closed." }; }
+          item.votes += 1;
+
+          if (itemType === "headline" && item.votes >= VOTE_TARGET) {
+            db.game.activeStories = Array.isArray(db.game.activeStories) ? db.game.activeStories : [];
+            if (db.game.activeStories.length >= 1) return { ok:false, message:"A live message is already running. Finish it before starting a new one." };
+            if (db.game.activeStories.some(st=>st.headlineId===item.id)) return { ok:false, message:"This headline is already active." };
+            item.status = "locked";
+            db.game.activeStories.push({ id: makeId("story"), headlineId: item.id, headlineText: item.text, round: 1, pieces: [], createdAt: now(), published: false });
+          }
+
+          if (itemType === "snippet" && item.votes >= VOTE_TARGET) {
+            const stories = Array.isArray(db.game.activeStories) ? db.game.activeStories : [];
+            const story = stories.find(st => st.id === item.storyId);
+            if (!story) { save(db); return {ok:true}; }
+            const round = item.round;
+            if (item.status === "open" && round === story.round) {
+              item.status = "accepted";
+              item.acceptedAt = now();
+              Object.values(db.snippets).forEach(s => {
+                if (s.storyId === story.id && s.round === round && s.id !== item.id && s.status === "open" && (item.kind ? s.kind === item.kind : true)) {
+                  s.status = "not_selected";
+                  s.closedAt = now();
+                }
+              });
+              if (item.kind === "conclusion") {
+                story.conclusion = { id: item.id, text: item.text, name: item.name, handle: item.handle, acceptedAt: item.acceptedAt };
+              } else {
+                story.pieces.push({
+                  id: item.id, text: item.text, name: item.name, handle: item.handle, acceptedAt: item.acceptedAt
+                });
+                story.round += 1;
+              }
+            }
+          }
+
+          save(db);
+          return { ok: true };
+        },
+        async publishStory(storyObj, storyId) {
+          const db = load();
+          const id = makeId("a");
+          db.archives[id] = { id, ...storyObj, publishedAt: now() };
+          db.game.activeStories = (db.game.activeStories || []).filter(st => st.id !== storyId);
+          save(db);
+          return id;
         }
       }
-      if (currentStoryWordCount(session) >= nearTarget) setStep(session, 'conclusion');
     }
 
-    if (session.step === 'conclusion' && !session.acceptedConclusion) {
-      const cw = session.conclusions.find(c => c.votes >= voteTarget && c.active);
-      if (cw) {
-        cw.active = false;
-        session.acceptedConclusion = {...cw, acceptedAt: Date.now()};
-        session.publishedAt = Date.now();
-        setStep(session, 'published');
+    function createFirebaseStore() {
+      const app = firebase.initializeApp(FIREBASE_CONFIG);
+      const auth = firebase.auth(app);
+      const db = firebase.firestore(app);
+      const root = db.collection("eid10write").doc("main");
+
+      return {
+        async initUser() {
+          const credential = await auth.signInAnonymously();
+          state.uid = credential.user.uid;
+          await root.set({ activeHeadlineId:"", activeHeadlineText:"", activeStories: [] }, { merge: true });
+          await root.collection("users").doc(state.uid).set({ updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+        },
+        subscribeAll(onData) {
+          const unsubs = [];
+          const cache = { game:null, headlines:[], snippets:[], archives:[] };
+          const emit = ()=> onData(cache);
+          unsubs.push(root.onSnapshot(s => { cache.game = s.data() || {activeStories:[]}; emit(); }));
+          unsubs.push(root.collection("headlines").orderBy("createdAt","desc").onSnapshot(s => {
+            cache.headlines = s.docs.map(d=>({id:d.id, ...d.data(), createdAt:d.data().createdAt?.toMillis?.() || now(), acceptedAt:d.data().acceptedAt?.toMillis?.() }));
+            emit();
+          }));
+          unsubs.push(root.collection("snippets").orderBy("createdAt","desc").onSnapshot(s => {
+            cache.snippets = s.docs.map(d=>({id:d.id, ...d.data(), createdAt:d.data().createdAt?.toMillis?.() || now(), acceptedAt:d.data().acceptedAt?.toMillis?.() }));
+            emit();
+          }));
+          unsubs.push(root.collection("archives").orderBy("publishedAt","desc").onSnapshot(s => {
+            cache.archives = s.docs.map(d=>({id:d.id, ...d.data(), publishedAt:d.data().publishedAt?.toMillis?.() || now()}));
+            emit();
+          }));
+          return () => unsubs.forEach(u=>u());
+        },
+        async canSubmit(uid) {
+          const ref = root.collection("users").doc(uid);
+          return db.runTransaction(async tx => {
+            const snap = await tx.get(ref);
+            const data = snap.exists ? snap.data() : { submissionTimes: [] };
+            const cutoff = now() - RATE_LIMIT_WINDOW_MS;
+            const times = (data.submissionTimes || []).filter(t => t > cutoff);
+            tx.set(ref, { submissionTimes: times }, { merge:true });
+            return times.length < RATE_LIMIT_COUNT;
+          });
+        },
+        async markSubmission(uid) {
+          const ref = root.collection("users").doc(uid);
+          await db.runTransaction(async tx => {
+            const snap = await tx.get(ref);
+            const data = snap.exists ? snap.data() : { submissionTimes: [] };
+            const cutoff = now() - RATE_LIMIT_WINDOW_MS;
+            const times = (data.submissionTimes || []).filter(t => t > cutoff);
+            times.push(now());
+            tx.set(ref, { submissionTimes: times }, { merge: true });
+          });
+        },
+        async addHeadline(data) {
+          const ref = root.collection("headlines").doc();
+          await ref.set({ ...data, votes:0, status:"open", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          return ref.id;
+        },
+        async addSnippet(data) {
+          const ref = root.collection("snippets").doc();
+          await ref.set({ ...data, votes:0, status:"open", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          return ref.id;
+        },
+        async vote(itemType, itemId, uid) {
+          const voteRef = root.collection("votes").doc(`${itemType}_${itemId}_${uid}`);
+          const itemRef = root.collection(itemType === "headline" ? "headlines" : "snippets").doc(itemId);
+          const gameRef = root;
+          return db.runTransaction(async tx => {
+            const [voteSnap, itemSnap, gameSnap] = await Promise.all([tx.get(voteRef), tx.get(itemRef), tx.get(gameRef)]);
+            if (voteSnap.exists) return { ok:false, message:"You already voted on this." };
+            const item = itemSnap.data();
+            if (!item || item.status !== "open") return { ok:false, message:"Voting closed." };
+            tx.set(voteRef, { uid, at: now() });
+            const nextVotes = (item.votes || 0) + 1;
+            tx.update(itemRef, { votes: nextVotes });
+
+            const game = gameSnap.data() || {activeStories:[]};
+            if (itemType === "headline" && nextVotes >= VOTE_TARGET) {
+              const activeStories = Array.isArray(game.activeStories) ? game.activeStories.slice() : [];
+              if (activeStories.length >= 1) return { ok:false, message:"A live message is already running. Finish it before starting a new one." };
+              if (activeStories.some(st => st.headlineId === itemId)) return { ok:false, message:"This headline is already active." };
+              tx.update(itemRef, { status:"locked" });
+              const storyId = "story_" + Math.random().toString(36).slice(2,10);
+              activeStories.push({ id: storyId, headlineId: itemId, headlineText: item.text, round: 1, pieces: [], createdAt: now(), published:false });
+              tx.set(gameRef, { activeStories }, { merge: true });
+            }
+            if (itemType === "snippet" && nextVotes >= VOTE_TARGET) {
+              const activeStories = Array.isArray(game.activeStories) ? game.activeStories.slice() : [];
+              const storyIndex = activeStories.findIndex(st => st.id === item.storyId);
+              const story = storyIndex >= 0 ? activeStories[storyIndex] : null;
+              if (story && story.round === item.round && item.status === "open") {
+                tx.update(itemRef, { status:"accepted", acceptedAt: now() });
+                const q = await root.collection("snippets").where("storyId","==", story.id).where("round","==", story.round).get();
+                q.docs.forEach(d => {
+                  const dData = d.data();
+                  if (d.id !== itemId && dData.status === "open" && (item.kind ? dData.kind === item.kind : true)) tx.update(d.ref, { status:"not_selected", closedAt: now() });
+                });
+                const pieces = Array.isArray(story.pieces) ? story.pieces.slice() : [];
+                if (item.kind === "conclusion") {
+                  activeStories[storyIndex] = { ...story, conclusion: { id:itemId, text:item.text, name:item.name, handle:item.handle, acceptedAt: now() } };
+                } else {
+                  pieces.push({ id:itemId, text:item.text, name:item.name, handle:item.handle, acceptedAt: now() });
+                  activeStories[storyIndex] = { ...story, pieces, round: story.round + 1 };
+                }
+                tx.set(gameRef, { activeStories }, { merge: true });
+              }
+            }
+            return { ok:true };
+          });
+        },
+        async publishStory(storyObj, storyId) {
+          await root.collection("archives").add({ ...storyObj, publishedAt: firebase.firestore.FieldValue.serverTimestamp() });
+          await root.set({ activeHeadlineId:"", activeHeadlineText:"", activeStories: [] }, { merge: true });
+          return true;
+        }
       }
     }
-  }
 
-  function render() {
-    const s = getSession();
-    processTransitions(s);
-    saveSession(s);
-
-    const stepText = {headline:'Step 1/4: Headline voting', paragraph:'Step 2/4: Paragraph voting', conclusion:'Step 3/4: Conclusion voting', published:'Step 4/4: Publish'}[s.step];
-    el.stepLabel.textContent = stepText;
-    el.nextHelp.textContent = s.step==='headline' ? 'What happens next: once a headline reaches 10 votes, paragraph submissions unlock automatically.' : s.step==='paragraph' ? 'What happens next: each paragraph that reaches 10 votes is accepted into the story.' : s.step==='conclusion' ? 'What happens next: when one conclusion reaches 10 votes, the story is published.' : 'What happens next: download the PDF, then the game resets to a new session.';
-
-    el.globalShare.innerHTML = '';
-    const u = shareUrl(s.step);
-    const copyBtn = document.createElement('button'); copyBtn.className='btn btn-secondary'; copyBtn.textContent='Copy Link';
-    copyBtn.onclick = async()=>{await navigator.clipboard.writeText(u); copyBtn.textContent='Copied!'; setTimeout(()=>copyBtn.textContent='Copy Link',1200)};
-    const x = `<a class="btn btn-secondary" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=${encodeURIComponent('Join this story game and vote: '+u)}">Share X</a>`;
-    const wa = `<a class="btn btn-secondary" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Join this story game and vote: '+u)}">Share WhatsApp</a>`;
-    const fb = `<a class="btn btn-secondary" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}">Share Facebook</a>`;
-    el.globalShare.append(copyBtn); el.globalShare.insertAdjacentHTML('beforeend', x+wa+fb);
-
-    el.headlineSection.classList.toggle('hidden', s.step!=='headline');
-    el.paragraphSection.classList.toggle('hidden', !(s.step==='paragraph' || s.step==='conclusion' || s.step==='published'));
-    el.conclusionSection.classList.toggle('hidden', !(s.step==='conclusion' || s.step==='published'));
-    el.publishedSection.classList.toggle('hidden', s.step!=='published');
-
-    const totalWords = currentStoryWordCount(s);
-    el.wordLabel.textContent = `${totalWords} / ${wordTarget}`;
-    el.wordBar.style.width = `${Math.min(100, Math.round((totalWords/wordTarget)*100))}%`;
-
-    el.headlineList.innerHTML = s.headlines.length ? '' : '<p class="small muted">No proposals yet.</p>';
-    s.headlines.filter(h=>h.active).forEach(h => {
-      const d=document.createElement('div'); d.className='item';
-      d.innerHTML = `<div><strong>${escapeHtml(h.text)}</strong></div><div class="small muted">By ${escapeHtml(h.name)} (${escapeHtml(h.handle)})</div><div class="votes">${h.votes}/${voteTarget} votes</div>`;
-      const b=document.createElement('button'); b.className='btn btn-vote'; b.textContent='Vote Headline'; b.disabled=!canVote(s,h.id);
-      b.onclick=()=>{const ss=getSession(); const item=ss.headlines.find(x=>x.id===h.id&&x.active); if(!item) return; if(!addVote(ss,h.id)) return; item.votes++; processTransitions(ss); saveSession(ss); render();};
-      d.appendChild(b); el.headlineList.appendChild(d);
-    });
-
-    el.acceptedList.innerHTML = `<h4>${s.headlineApproved ? escapeHtml(s.headlineApproved.text) : '<span class="muted">No approved headline yet.</span>'}</h4>`;
-    s.acceptedParagraphs.forEach((p,i)=>{
-      el.acceptedList.insertAdjacentHTML('beforeend', `<div class="item"><div>${i+1}. ${escapeHtml(p.text)}</div><div class="small muted">— ${escapeHtml(p.name)} (${escapeHtml(p.handle)})</div></div>`);
-    });
-
-    el.paragraphList.innerHTML = s.paragraphProposals.length ? '' : '<p class="small muted">No active paragraph proposals.</p>';
-    s.paragraphProposals.filter(p=>p.active).forEach(p => {
-      const d=document.createElement('div'); d.className='item';
-      d.innerHTML = `<div>${escapeHtml(p.text)}</div><div class="small muted">By ${escapeHtml(p.name)} (${escapeHtml(p.handle)})</div><div class="votes">${p.votes}/${voteTarget} votes</div>`;
-      const b=document.createElement('button'); b.className='btn btn-vote'; b.textContent='Vote Paragraph'; b.disabled=!canVote(s,p.id)||s.step==='published';
-      b.onclick=()=>{const ss=getSession(); const item=ss.paragraphProposals.find(x=>x.id===p.id&&x.active); if(!item) return; if(!addVote(ss,p.id)) return; item.votes++; processTransitions(ss); saveSession(ss); render();};
-      d.appendChild(b); el.paragraphList.appendChild(d);
-    });
-
-    el.conclusionList.innerHTML = s.conclusions.length ? '' : '<p class="small muted">No conclusion options yet.</p>';
-    s.conclusions.filter(c=>c.active).forEach(c => {
-      const d=document.createElement('div'); d.className='item';
-      d.innerHTML = `<div>${escapeHtml(c.text)}</div><div class="small muted">By ${escapeHtml(c.name)} (${escapeHtml(c.handle)})</div><div class="votes">${c.votes}/${voteTarget} votes</div>`;
-      const b=document.createElement('button'); b.className='btn btn-vote'; b.textContent='Vote Conclusion'; b.disabled=!canVote(s,c.id)||s.step==='published';
-      b.onclick=()=>{const ss=getSession(); const item=ss.conclusions.find(x=>x.id===c.id&&x.active); if(!item) return; if(!addVote(ss,c.id)) return; item.votes++; processTransitions(ss); saveSession(ss); render();};
-      d.appendChild(b); el.conclusionList.appendChild(d);
-    });
-
-    const pk = participantKey(el.pName.value, el.pHandle.value);
-    const credit = s.submissionCredits[pk] ?? 1;
-    el.gateMsg.innerHTML = credit>0 ? `<span class="ok">You can submit ${credit} paragraph proposal(s) now.</span>` : `<span class="err">Submission gate: vote and wait until one of your paragraphs gets accepted (10 votes).</span>`;
-
-    if (s.step==='published') {
-      el.finalRead.innerHTML = `<p class="small muted">Published ${new Date(s.publishedAt).toLocaleString()}</p><h3>${escapeHtml(s.headlineApproved?.text||'')}</h3>`;
-      s.acceptedParagraphs.forEach((p,i)=>{el.finalRead.insertAdjacentHTML('beforeend', `<p><strong>${i+1}.</strong> ${escapeHtml(p.text)}<br><span class="small muted">${escapeHtml(p.name)} · ${escapeHtml(p.handle)}</span></p>`);});
-      if (s.acceptedConclusion) el.finalRead.insertAdjacentHTML('beforeend', `<h4>Conclusion</h4><p>${escapeHtml(s.acceptedConclusion.text)}<br><span class="small muted">${escapeHtml(s.acceptedConclusion.name)} · ${escapeHtml(s.acceptedConclusion.handle)}</span></p>`);
+    function getActiveStories() {
+      if (Array.isArray(state.game?.activeStories)) return state.game.activeStories;
+      if (state.game?.activeStory) return [state.game.activeStory];
+      return [];
     }
 
-    el.previewContent.innerHTML = `<h4>${escapeHtml(s.headlineApproved?.text || 'Headline not approved yet')}</h4>`;
-    s.acceptedParagraphs.forEach((p,i)=>el.previewContent.insertAdjacentHTML('beforeend', `<p><strong>${i+1}.</strong> ${escapeHtml(p.text)}</p>`));
-    if (!s.acceptedParagraphs.length) el.previewContent.insertAdjacentHTML('beforeend', '<p class="small muted">No accepted paragraphs yet.</p>');
-  }
-
-  function escapeHtml(str){return String(str||'').replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[m]))}
-
-  el.headlineForm.addEventListener('submit', e=>{
-    e.preventDefault(); const s=getSession();
-    if (s.step!=='headline') return;
-    if (s.headlines.filter(h=>h.active).length >= maxHeadline) return alert('Headline proposal limit reached (10).');
-    const name=t(el.hName.value), handle=t(el.hHandle.value), text=t(el.hText.value);
-    if (!name||!handle||!text) return;
-    s.headlines.push({id:crypto.randomUUID(),name,handle,text,votes:0,active:true,createdAt:Date.now()});
-    saveSession(s); el.headlineForm.reset(); render();
-  });
-
-  el.pText.addEventListener('input',()=>{el.pText.value=el.pText.value.slice(0,300); el.pCount.textContent=el.pText.value.length;});
-  el.cText.addEventListener('input',()=>{el.cText.value=el.cText.value.slice(0,300); el.cCount.textContent=el.cText.value.length;});
-
-  el.pForm.addEventListener('submit', e=>{
-    e.preventDefault(); const s=getSession();
-    if (s.step!=='paragraph') return alert('Paragraph submissions unlock after headline approval.');
-    if (s.paragraphProposals.filter(p=>p.active).length >= maxParagraph) return alert('Active paragraph proposals are full (15). Vote a winner first.');
-    const name=t(el.pName.value), handle=t(el.pHandle.value), text=t(el.pText.value).slice(0,300);
-    if (!name||!handle||!text) return;
-    const key = participantKey(name,handle);
-    const credit = s.submissionCredits[key] ?? 1;
-    if (credit < 1) return alert('You can submit again after one of your previous paragraphs is accepted.');
-    s.submissionCredits[key] = credit - 1;
-    s.paragraphProposals.push({id:crypto.randomUUID(),name,handle,text,votes:0,active:true,createdAt:Date.now()});
-    saveSession(s); el.pText.value=''; el.pCount.textContent='0'; render();
-  });
-
-  el.cForm.addEventListener('submit', e=>{
-    e.preventDefault(); const s=getSession();
-    if (s.step!=='conclusion') return;
-    const name=t(el.cName.value), handle=t(el.cHandle.value), text=t(el.cText.value).slice(0,300);
-    if (!name||!handle||!text) return;
-    if (s.conclusions.filter(c=>c.active).length >= 15) return alert('Conclusion options full. Vote the current options.');
-    s.conclusions.push({id:crypto.randomUUID(),name,handle,text,votes:0,active:true,createdAt:Date.now()});
-    saveSession(s); el.cText.value=''; el.cCount.textContent='0'; render();
-  });
-
-  el.previewBtn.onclick = ()=>{el.previewModalBg.style.display='flex'; el.previewModalBg.setAttribute('aria-hidden','false');};
-  el.closePreview.onclick = ()=>{el.previewModalBg.style.display='none'; el.previewModalBg.setAttribute('aria-hidden','true');};
-  el.previewModalBg.addEventListener('click',e=>{if(e.target===el.previewModalBg) el.closePreview.onclick()});
-
-  el.newGameBtn.onclick = ()=>{
-    const id = crypto.randomUUID();
-    const u = new URL(location.href); u.searchParams.set('session',id); u.searchParams.set('step','headline');
-    location.href = u.toString();
-  };
-
-  async function loadDataUrl(url){
-    try{const r=await fetch(url); const b=await r.blob(); return await new Promise(res=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b);});}catch{return null}
-  }
-
-  el.downloadPdfBtn.onclick = async ()=>{
-    const s=getSession(); if (s.step!=='published') return;
-    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    const margin=14; let y=20;
-    const logo = await loadDataUrl(logoUrl);
-    if (logo) doc.addImage(logo, 'JPEG', margin, y, 22, 22);
-    doc.setFontSize(16); doc.text('Emotional Intelligence Developer - Community Story', margin + (logo?26:0), y+8);
-    doc.setFontSize(10); doc.text(`Publish date: ${new Date(s.publishedAt).toLocaleString()}`, margin, y+30);
-    doc.text(`ISO stamp: ${new Date(s.publishedAt).toISOString()}`, margin, y+36);
-    doc.text('https://emotionalintelligencedeveloper.com/', margin, y+42);
-    y += 54;
-    doc.setFontSize(14); doc.text(s.headlineApproved.text, margin, y); y+=9;
-    doc.setFontSize(11);
-    s.acceptedParagraphs.forEach((p,i)=>{
-      const lines=doc.splitTextToSize(`${i+1}. ${p.text}`, 180); if (y>260){doc.addPage(); y=20;}
-      doc.text(lines, margin, y); y+=lines.length*6;
-      doc.setFontSize(9); doc.text(`— ${p.name} (${p.handle})`, margin+120, y); y+=8; doc.setFontSize(11);
-    });
-    if (s.acceptedConclusion){ if(y>250){doc.addPage(); y=20;} doc.setFontSize(12); doc.text('Conclusion', margin, y); y+=7; doc.setFontSize(11);
-      const cl=doc.splitTextToSize(s.acceptedConclusion.text, 180); doc.text(cl, margin, y); y += cl.length*6; doc.setFontSize(9); doc.text(`— ${s.acceptedConclusion.name} (${s.acceptedConclusion.handle})`, margin+120, y);
+    function findStoryById(storyId) {
+      return getActiveStories().find(s => s.id === storyId) || null;
     }
-    doc.save(`eid-community-story-${sessionId.slice(0,8)}.pdf`);
-    setTimeout(()=>el.newGameBtn.click(), 700);
-  };
 
-  window.addEventListener('storage', (e)=>{ if (e.key===KEY) render(); });
-  setInterval(render, 1200);
-  render();
-})();
-</script>
+    function selectedStory() {
+      const stories = getActiveStories();
+      if (!stories.length) return null;
+      return stories[0];
+    }
+
+    let store;
+    async function init() {
+      const hasFirebase = FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId;
+      if (hasFirebase) {
+        try {
+          store = createFirebaseStore();
+          await store.initUser();
+          state.mode = "realtime";
+        } catch (e) {
+          console.warn("Firebase init failed; using demo mode", e);
+          state.mode = "demo";
+          store = createDemoStore();
+          state.uid = localStorage.getItem("eid_demo_uid") || ("demo_" + Math.random().toString(36).slice(2,10));
+          localStorage.setItem("eid_demo_uid", state.uid);
+          await store.initUser(state.uid);
+        }
+      } else {
+        state.mode = "demo";
+        store = createDemoStore();
+        state.uid = localStorage.getItem("eid_demo_uid") || ("demo_" + Math.random().toString(36).slice(2,10));
+        localStorage.setItem("eid_demo_uid", state.uid);
+        await store.initUser(state.uid);
+      }
+      el.modeNotice.textContent = state.mode === "realtime"
+        ? "Realtime Multi-user Mode: Firebase connected ✅"
+        : "Demo Mode (Local Only): Add Firebase config for real-time multi-user mode (incognito tabs will not share data).";
+      el.userIdLabel.textContent = uidShort(state.uid);
+      store.subscribeAll(data => {
+        state.game = data.game || { activeStories: [] };
+        state.headlines = data.headlines || [];
+        state.snippets = data.snippets || [];
+        state.archives = data.archives || [];
+        render();
+        maybeJumpToSharedTarget();
+        autoPublishIfConclusionWon();
+      });
+    }
+
+    let publishingNow = false;
+    async function autoPublishIfConclusionWon() {
+      if (publishingNow) return;
+      const story = selectedStory();
+      if (!story || !story.conclusion || story.published) return;
+      publishingNow = true;
+      try {
+        const storyObj = {
+          headlineText: story.headlineText,
+          pieces: (story.pieces || []).concat([story.conclusion]),
+          wordCount: wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text), story.conclusion.text).join(" ")),
+          publishDate: fmtDate(now())
+        };
+        await generatePdf(storyObj);
+        await store.publishStory(storyObj);
+        toast("Conclusion locked! Story exported to PDF and archived.");
+      } finally {
+        publishingNow = false;
+      }
+    }
+
+    function enforceKindness(...parts) {
+      const combined = parts.map(safeText).join(" ");
+      return !hasBlockedWord(combined);
+    }
+
+    async function checkRateLimit() {
+      const allowed = await store.canSubmit(state.uid);
+      if (!allowed) {
+        toast("Rate limit reached: max 3 submissions per 10 minutes.");
+      }
+      return allowed;
+    }
+
+    function makeButton(text, className, onClick, label) {
+      const b = document.createElement("button");
+      b.className = `btn ${className}`;
+      b.type = "button";
+      b.textContent = text;
+      if (label) b.setAttribute("aria-label", label);
+      b.addEventListener("click", onClick);
+      return b;
+    }
+
+    function buildShareUrl(mode, id) {
+      const u = new URL(GAME_LINK);
+      u.searchParams.set("mode", mode);
+      u.searchParams.set("id", id);
+      return u.toString();
+    }
+
+    async function shareItem(mode, id, title) {
+      const url = buildShareUrl(mode, id);
+      const text = `Vote for my contribution in 10-to-Write! ${title}`;
+      if (navigator.share) {
+        try { await navigator.share({ title: "10-to-Write", text, url }); return; }
+        catch {}
+      }
+      const msg = encodeURIComponent(`${text} ${url}`);
+      const holder = document.createElement("div");
+      holder.className = "item";
+      const p = document.createElement("p"); p.textContent = "Share to get votes:"; holder.appendChild(p);
+      const links = [
+        ["WhatsApp",`https://wa.me/?text=${msg}`],
+        ["Facebook",`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`],
+        ["X",`https://twitter.com/intent/tweet?text=${msg}`]
+      ];
+      links.forEach(([n,l])=>{ const a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener";a.textContent=n; a.style.marginRight="10px"; holder.appendChild(a); });
+      const cpy = makeButton("Copy link", "btn-share", async()=>{ await navigator.clipboard.writeText(url); toast("Link copied!"); holder.remove();});
+      holder.appendChild(document.createElement("br")); holder.appendChild(cpy);
+      document.body.appendChild(holder);
+      holder.style.position = "fixed"; holder.style.bottom = "180px"; holder.style.left = "50%"; holder.style.transform = "translateX(-50%)"; holder.style.zIndex = "99";
+      setTimeout(()=>holder.remove(), 9000);
+    }
+
+    function voteStatusText(votes) {
+      const cast = votes || 0;
+      const short = Math.max(0, VOTE_TARGET - cast);
+      return { cast, short };
+    }
+
+    function showSubmissionShare(container, personName, mode, id, pieceTitle) {
+      const url = buildShareUrl(mode, id);
+      const message = `Support ${personName}'s contribution in 10-to-Write and vote now: ${pieceTitle}`;
+      container.textContent = "";
+      container.classList.remove("hidden");
+      const m = document.createElement("div");
+      m.className = "meta";
+      m.textContent = message;
+      container.appendChild(m);
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.flexWrap = "wrap";
+      row.style.gap = "8px";
+      row.style.marginTop = "8px";
+      const msg = encodeURIComponent(`${message} ${url}`);
+      const links = [
+        ["X", `https://twitter.com/intent/tweet?text=${msg}`],
+        ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(message)}`],
+        ["WhatsApp", `https://wa.me/?text=${msg}`]
+      ];
+      links.forEach(([label, href]) => {
+        const a = document.createElement("a");
+        a.className = "btn btn-share";
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = label;
+        row.appendChild(a);
+      });
+      container.appendChild(row);
+    }
+
+    function maybeJumpToSharedTarget() {
+      const mode = state.urlTarget.get("mode");
+      const id = state.urlTarget.get("id");
+      if (!mode || !id) return;
+      const target = document.querySelector(`[data-share-id='${mode}_${id}']`);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.add("highlight");
+        setTimeout(() => target.classList.remove("highlight"), 3600);
+      }
+    }
+
+    function render() {
+      renderHeadlines();
+      renderPreview();
+      renderStory();
+      renderArchives();
+    }
+
+
+    function renderPreview() {
+      el.previewList.textContent = "";
+      const st = selectedStory();
+      if (!st) {
+        const p = document.createElement("p"); p.className = "sub"; p.textContent = "No active community message yet. Vote a headline in Section A.";
+        el.previewList.appendChild(p);
+        return;
+      }
+      const card = document.createElement("div"); card.className = "item";
+      const t = document.createElement("div"); t.style.fontWeight = "900"; t.textContent = st.headlineText;
+      const words = wordCount([st.headlineText].concat((st.pieces||[]).map(p=>p.text), st.conclusion?.text||"").join(" "));
+      const m = document.createElement("div"); m.className = "meta"; m.textContent = `Round ${st.round} • ${words}/${WORD_TARGET} words • ${(st.pieces||[]).length} accepted pieces`;
+      card.append(t,m);
+      const full = [st.headlineText].concat((st.pieces||[]).map(p=>p.text), st.conclusion?.text ? [st.conclusion.text] : []).join(" ");
+      const flow = document.createElement("div"); flow.style.marginTop = "8px"; flow.textContent = full || "Message text will appear here as community lines are accepted.";
+      card.appendChild(flow);
+      el.previewList.appendChild(card);
+    }
+
+    function renderHeadlines() {
+      el.headlineList.textContent = "";
+      if (!state.headlines.length) {
+        const p = document.createElement("p"); p.className = "sub"; p.textContent = "No headlines yet. Be the first!";
+        el.headlineList.appendChild(p);
+        return;
+      }
+      state.headlines.forEach((h, idx) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.dataset.shareId = `headline_${h.id}`;
+
+        const t = document.createElement("div"); t.textContent = `${idx + 1}. ${h.text}`; t.style.fontWeight = "800";
+        div.appendChild(t);
+
+        const m = document.createElement("div");
+        m.className = "meta";
+        const vs = voteStatusText(h.votes || 0);
+        m.textContent = `By ${h.name} (${h.handle})`;
+        div.appendChild(m);
+        const vb = document.createElement("div");
+        vb.className = "vote-box";
+        const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+        const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to win this round`;
+        vb.append(vm, vsb);
+        div.appendChild(vb);
+
+        const badge = document.createElement("span");
+        badge.className = "pill " + (h.status === "locked" ? "p-win" : "p-open");
+        badge.textContent = h.status === "locked" ? "Locked In" : "Round Open";
+        div.appendChild(badge);
+
+        const actions = document.createElement("div"); actions.style.marginTop = "8px";
+        const voteBtn = makeButton("Vote", "btn-vote", async()=>{
+          const res = await store.vote("headline", h.id, state.uid);
+          toast(res?.message || "Vote added!");
+          if (res?.ok && (h.votes + 1) >= VOTE_TARGET) toast("Headline chosen! Story building is now open.");
+        }, "Vote headline");
+        if (h.status !== "open" || getActiveStories().length >= 1) voteBtn.disabled = true;
+        const shareBtn = makeButton("Share to get votes", "btn-share", ()=>shareItem("headline", h.id, h.text), "Share headline");
+        actions.append(voteBtn, document.createTextNode(" "), shareBtn);
+        div.appendChild(actions);
+
+        el.headlineList.appendChild(div);
+      });
+    }
+
+    function getCurrentRoundSnippets(story) {
+      if (!story) return [];
+      return state.snippets.filter(s => s.storyId === story.id && s.kind !== "conclusion" && (s.round === story.round || s.round === story.round - 1));
+    }
+
+    function renderStory() {
+      const story = selectedStory();
+      el.storyPieces.textContent = "";
+      el.snippetList.textContent = "";
+      el.nextRoundMsg.classList.add("hidden");
+      el.conclusionList.textContent = "";
+      el.conclusionWrap.classList.add("hidden");
+
+      if (!story) {
+        el.storyBadge.className = "pill p-lock";
+        el.storyBadge.textContent = "Waiting for headline";
+        el.activeStoryInfo.textContent = "No active message yet. Vote a headline in Section A to begin.";
+        el.snippetComposer.classList.add("hidden");
+        el.storyProgressWrap.classList.add("hidden");
+        return;
+      }
+
+      el.storyBadge.className = "pill p-open";
+      el.storyBadge.textContent = "Round Open";
+      el.activeStoryInfo.textContent = `Chosen Headline: ${story.headlineText}`;
+      el.snippetComposer.classList.remove("hidden");
+      el.storyProgressWrap.classList.remove("hidden");
+
+      const headlineCard = document.createElement("div");
+      headlineCard.className = "item";
+      const ht = document.createElement("div"); ht.style.fontWeight = "900"; ht.textContent = story.headlineText;
+      const hb = document.createElement("span"); hb.className = "pill p-win"; hb.textContent = "Chosen Headline";
+      headlineCard.append(ht, hb);
+      el.storyPieces.appendChild(headlineCard);
+
+      (story.pieces || []).forEach(p => {
+        const c = document.createElement("div"); c.className = "item";
+        const tx = document.createElement("div"); tx.textContent = p.text;
+        const mt = document.createElement("div"); mt.className = "meta";
+        mt.textContent = `By ${p.name} (${p.handle}) • Accepted ${fmtDate(p.acceptedAt)}`;
+        c.append(tx, mt);
+        el.storyPieces.appendChild(c);
+      });
+
+      const totalText = [story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" ");
+      const wc = wordCount(totalText);
+      el.wordCountLabel.textContent = `${wc} / ${WORD_TARGET} words`;
+      el.wordBar.style.width = `${Math.min(100, Math.round((wc / WORD_TARGET) * 100))}%`;
+
+      const goalReached = wc >= WORD_TARGET;
+      el.publishBtn.disabled = true;
+      el.publishBtn.classList.remove("celebrate");
+      if (goalReached) {
+        el.conclusionWrap.classList.remove("hidden");
+      }
+
+      const roundSnips = getCurrentRoundSnippets(story);
+      const currentRoundOpen = roundSnips.filter(s => s.round === story.round && s.status === "open");
+      if (!currentRoundOpen.length) {
+        const p = document.createElement("p"); p.className = "sub"; p.textContent = `Round ${story.round} is open. Add a candidate snippet.`;
+        el.snippetList.appendChild(p);
+      }
+
+      roundSnips
+        .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))
+        .forEach(s => {
+          const d = document.createElement("div"); d.className = "item"; d.dataset.shareId = `snippet_${s.id}`;
+          const tx = document.createElement("div"); tx.textContent = s.text;
+          const mt = document.createElement("div"); mt.className = "meta";
+          const vs = voteStatusText(s.votes || 0);
+          mt.textContent = `By ${s.name} (${s.handle}) • Round ${s.round}`;
+          d.append(tx, mt);
+          const vb = document.createElement("div");
+          vb.className = "vote-box";
+          const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+          const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to win this round`;
+          vb.append(vm, vsb);
+          d.appendChild(vb);
+          const badge = document.createElement("span");
+          if (s.status === "accepted") { badge.className = "pill p-win"; badge.textContent = "Winner"; }
+          else if (s.status === "not_selected") { badge.className = "pill p-lock"; badge.textContent = "Not selected this round"; }
+          else { badge.className = "pill p-open"; badge.textContent = "Round Open"; }
+          d.appendChild(badge);
+
+          const actions = document.createElement("div"); actions.style.marginTop = "8px";
+          const voteBtn = makeButton("Vote", "btn-vote", async()=>{
+            const res = await store.vote("snippet", s.id, state.uid);
+            toast(res?.message || "Vote added!");
+            if (res?.ok && (s.votes + 1) >= VOTE_TARGET) {
+              el.nextRoundMsg.classList.remove("hidden");
+            }
+          }, "Vote snippet");
+          if (s.status !== "open" || s.round !== story.round) voteBtn.disabled = true;
+          const shareBtn = makeButton("Share to get votes", "btn-share", ()=>shareItem("snippet", s.id, s.text), "Share snippet");
+          actions.append(voteBtn, document.createTextNode(" "), shareBtn);
+          d.appendChild(actions);
+          el.snippetList.appendChild(d);
+        });
+
+      if (goalReached) {
+        const conclusionCandidates = state.snippets
+          .filter(c => c.storyId === story.id && c.kind === "conclusion")
+          .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+        if (!conclusionCandidates.length) {
+          const p = document.createElement("p"); p.className = "sub"; p.textContent = "No conclusion candidates yet. Submit one above.";
+          el.conclusionList.appendChild(p);
+        }
+        conclusionCandidates.forEach(c => {
+          const d = document.createElement("div"); d.className = "item"; d.dataset.shareId = `snippet_${c.id}`;
+          const tx = document.createElement("div"); tx.textContent = c.text;
+          const mt = document.createElement("div"); mt.className = "meta";
+          const vs = voteStatusText(c.votes || 0);
+          mt.textContent = `By ${c.name} (${c.handle}) • Conclusion Candidate`;
+          d.append(tx, mt);
+          const vb = document.createElement("div"); vb.className = "vote-box";
+          const vm = document.createElement("div"); vm.className = "vote-main"; vm.textContent = `Votes: ${vs.cast} / ${VOTE_TARGET}`;
+          const vsb = document.createElement("div"); vsb.className = "vote-sub"; vsb.textContent = `${vs.short} more needed to lock conclusion`;
+          vb.append(vm, vsb);
+          d.appendChild(vb);
+          const badge = document.createElement("span");
+          if (c.status === "accepted") { badge.className = "pill p-win"; badge.textContent = "Winner"; }
+          else if (c.status === "not_selected") { badge.className = "pill p-lock"; badge.textContent = "Not selected"; }
+          else { badge.className = "pill p-open"; badge.textContent = "Round Open"; }
+          d.appendChild(badge);
+          const actions = document.createElement("div"); actions.style.marginTop = "8px";
+          const voteBtn = makeButton("Vote", "btn-vote", async()=>{
+            const res = await store.vote("snippet", c.id, state.uid);
+            toast(res?.message || "Vote added!");
+          }, "Vote conclusion");
+          if (c.status !== "open") voteBtn.disabled = true;
+          const shareBtn = makeButton("Share to get votes", "btn-share", ()=>shareItem("snippet", c.id, c.text), "Share conclusion");
+          actions.append(voteBtn, document.createTextNode(" "), shareBtn);
+          d.appendChild(actions);
+          el.conclusionList.appendChild(d);
+        });
+      }
+    }
+
+    function renderArchives() {
+      el.archiveList.textContent = "";
+      if (!state.archives.length) {
+        el.archiveList.textContent = "No published stories yet.";
+        return;
+      }
+      state.archives.forEach(a => {
+        const c = document.createElement("div"); c.className = "item";
+        const t = document.createElement("div"); t.style.fontWeight = "900"; t.textContent = a.headlineText;
+        c.appendChild(t);
+        const wc = document.createElement("div"); wc.className = "meta"; wc.textContent = `Word count: ${a.wordCount} • Published: ${fmtDate(a.publishedAt)}`;
+        c.appendChild(wc);
+        (a.pieces || []).forEach(p=>{
+          const line=document.createElement("div"); line.className="meta"; line.textContent=`• ${p.text} — ${p.name} (${p.handle})`; c.appendChild(line);
+        });
+        const shareBtn = makeButton("Share Archive Entry", "btn-share", ()=>shareItem("archive", a.id, a.headlineText), "Share archive");
+        c.appendChild(shareBtn);
+        el.archiveList.appendChild(c);
+      });
+    }
+
+    async function loadImageDataUrl(url) {
+      try {
+        const res = await fetch(url, { mode: "cors" });
+        const blob = await res.blob();
+        return await new Promise((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(fr.result);
+          fr.onerror = reject;
+          fr.readAsDataURL(blob);
+        });
+      } catch {
+        return null;
+      }
+    }
+
+    async function generatePdf(storyObj) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const margin = 40;
+      const w = doc.internal.pageSize.getWidth();
+      const h = doc.internal.pageSize.getHeight();
+
+      const footer = () => {
+        doc.setFontSize(10);
+        doc.text("https://emotionalintelligencedeveloper.com/", margin, h - 22);
+        doc.text("Game: " + GAME_LINK, margin, h - 10);
+      };
+
+      let y = 58;
+      const logoData = await loadImageDataUrl(BRAND_LOGO_URL);
+      if (logoData) {
+        doc.addImage(logoData, "JPEG", margin, 34, 44, 44);
+      }
+      doc.setFontSize(18);
+      doc.text("10-to-Write: The Community Story Game", margin + 52, y);
+      y += 26;
+      doc.setFontSize(14);
+      doc.text(storyObj.headlineText, margin, y);
+      y += 20;
+      doc.setFontSize(11);
+
+      const lines = [];
+      (storyObj.pieces || []).forEach((p, i) => {
+        lines.push(`${i + 1}. ${p.text}`);
+        lines.push(`   — ${p.name} (${p.handle}), accepted ${fmtDate(p.acceptedAt)}`);
+      });
+
+      lines.forEach(line => {
+        const wrapped = doc.splitTextToSize(line, w - margin*2);
+        wrapped.forEach(l => {
+          if (y > h - 70) { footer(); doc.addPage(); y = 58; }
+          doc.text(l, margin, y); y += 16;
+        });
+      });
+
+      if (y > h - 120) { footer(); doc.addPage(); y = 58; }
+      y += 10;
+      doc.setFontSize(12);
+      doc.text("Helpful links:", margin, y); y += 18;
+      doc.textWithLink("Recommended Audio Books", margin, y, { url: RECOMMENDED_AUDIO_BOOKS_LINK }); y += 18;
+      doc.textWithLink("Self Help Tools", margin, y, { url: "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" }); y += 18;
+      doc.textWithLink("Game Link", margin, y, { url: GAME_LINK }); y += 18;
+      doc.text("Building emotional intelligence is the goal. Have your say and build messages as a community.", margin, y);
+
+      const total = doc.getNumberOfPages();
+      for (let p = 1; p <= total; p++) {
+        doc.setPage(p);
+        footer();
+      }
+      doc.save(`${storyObj.headlineText.slice(0,40).replace(/[^a-z0-9]+/gi,"_") || "community_story"}.pdf`);
+    }
+
+    el.headlineForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = safeText(el.headlineText.value).slice(0,90);
+      const name = safeText(el.headlineName.value).slice(0,24);
+      const handle = safeText(el.headlineHandle.value);
+      if (!text || !name || !handle) return toast("Please fill all headline fields.");
+      if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
+      if (getActiveStories().length >= 1) return toast("A live message is already running. Finish it before adding a new headline.");
+      const openHeadlineCount = state.headlines.filter(h => h.status === "open").length;
+      if (openHeadlineCount >= 10) return toast("Headline board is full (10 max). Vote existing headlines to continue.");
+      if (!(await checkRateLimit())) return;
+      const newId = await store.addHeadline({ text, name, handle, createdBy: state.uid });
+      await store.markSubmission(state.uid);
+      el.headlineForm.reset();
+      showSubmissionShare(el.headlineSubmitShare, name, "headline", newId, text);
+      toast("Headline added! Share this piece to get votes.");
+    });
+
+    el.snippetText.addEventListener("input", () => {
+      el.snippetCount.textContent = String(el.snippetText.value.length);
+    });
+
+    el.snippetForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const story = selectedStory();
+      if (!story) return toast("No active story right now.");
+      const existingWordCount = wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" "));
+      if (existingWordCount >= WORD_TARGET) return toast("Story body is complete. Submit a conclusion instead.");
+      const text = safeText(el.snippetText.value).slice(0,210);
+      const name = safeText(el.snippetName.value).slice(0,24);
+      const handle = safeText(el.snippetHandle.value);
+      if (!text || !name || !handle) return toast("Please fill all snippet fields.");
+      if (wordCount(text) < 2) return toast("Please add a meaningful continuation.");
+      if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
+      if (!(await checkRateLimit())) return;
+      const newId = await store.addSnippet({ storyId: story.id, round: story.round, text, name, handle, kind: "snippet", createdBy: state.uid });
+      await store.markSubmission(state.uid);
+      el.snippetForm.reset();
+      el.snippetCount.textContent = "0";
+      showSubmissionShare(el.snippetSubmitShare, name, "snippet", newId, text);
+      toast("Candidate addition submitted! Share this piece to get votes.");
+    });
+
+
+    el.conclusionText.addEventListener("input", () => {
+      el.conclusionCount.textContent = String(el.conclusionText.value.length);
+    });
+
+    el.conclusionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const story = selectedStory();
+      if (!story) return toast("No active story right now.");
+      const currentWords = wordCount([story.headlineText].concat((story.pieces || []).map(p => p.text)).join(" "));
+      if (currentWords < WORD_TARGET) return toast("Conclusion round unlocks at 396 words.");
+      const text = safeText(el.conclusionText.value).slice(0,210);
+      const name = safeText(el.conclusionName.value).slice(0,24);
+      const handle = safeText(el.conclusionHandle.value);
+      if (!text || !name || !handle) return toast("Please fill all conclusion fields.");
+      if (!enforceKindness(text, name, handle)) return toast("Please rewrite kindly.");
+      if (!(await checkRateLimit())) return;
+      const newId = await store.addSnippet({ storyId: story.id, round: story.round, text, name, handle, kind: "conclusion", createdBy: state.uid });
+      await store.markSubmission(state.uid);
+      el.conclusionForm.reset();
+      el.conclusionCount.textContent = "0";
+      showSubmissionShare(el.conclusionSubmitShare, name, "snippet", newId, text);
+      toast("Conclusion candidate submitted! Share this piece to get votes.");
+    });
+
+    // Publish is intentionally locked: PDF export only happens automatically after the winning conclusion is voted in.
+
+    el.howBtn.addEventListener("click", ()=>{
+      el.howModalBg.style.display = "flex";
+      el.howModalBg.setAttribute("aria-hidden", "false");
+    });
+    el.closeHow.addEventListener("click", ()=>{
+      el.howModalBg.style.display = "none";
+      el.howModalBg.setAttribute("aria-hidden", "true");
+    });
+    el.howModalBg.addEventListener("click", (e)=>{
+      if (e.target === el.howModalBg) {
+        el.howModalBg.style.display = "none";
+        el.howModalBg.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    el.previewBtn.addEventListener("click", () => { document.getElementById("previewSection").scrollIntoView({behavior:"smooth", block:"start"}); });
+
+    el.backToTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
+
+    init();
+  </script>
 </body>
 </html>

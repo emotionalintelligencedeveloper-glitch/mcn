@@ -16,6 +16,28 @@
         padding: 0 0.4rem;
       }
       #eid-puzzle-40 * { box-sizing: border-box; }
+      #eid-puzzle-40 .eid-intro {
+        max-width: 620px;
+        margin: 0 auto 0.55rem;
+        border: 1px solid #d5e2f2;
+        border-radius: 10px;
+        background: #f6fbff;
+        padding: 0.55rem 0.65rem;
+      }
+      #eid-puzzle-40 .eid-intro h1 {
+        margin: 0 0 0.25rem;
+        font-size: 1.06rem;
+        color: #14304d;
+      }
+      #eid-puzzle-40 .eid-intro p {
+        margin: 0;
+        font-size: 0.94rem;
+        color: #2a4766;
+      }
+      #eid-puzzle-40 .eid-highlight {
+        color: #1d5ea8;
+        font-weight: 700;
+      }
       #eid-puzzle-40 .eid-grid-wrap {
         width: min(100%, 620px);
         margin: 0 auto;
@@ -61,21 +83,62 @@
         margin: 0.55rem 0;
       }
       #eid-puzzle-40 .eid-btn {
-        border: 1px solid #bfd1e7;
-        background: #fff;
+        border: 1px solid #a9c3e2;
+        background: linear-gradient(180deg, #ffffff 0%, #edf5ff 100%);
         color: #173150;
         padding: 0.45rem 0.8rem;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
+        box-shadow: 0 2px 0 #c2d8f0, 0 4px 10px rgba(38, 94, 158, 0.15);
+        transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
       }
-      #eid-puzzle-40 .eid-btn:hover { background: #f5f9ff; }
+      #eid-puzzle-40 .eid-btn:hover {
+        background: linear-gradient(180deg, #ffffff 0%, #e6f1ff 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 0 #bdd5ef, 0 6px 12px rgba(38, 94, 158, 0.2);
+      }
+      #eid-puzzle-40 .eid-btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 #bdd5ef, 0 2px 6px rgba(38, 94, 158, 0.18);
+      }
       #eid-puzzle-40 .eid-counter { font-weight: 700; color: #1f4f8a; }
       #eid-puzzle-40 .eid-status {
-        margin: 0.35rem 0 0.65rem;
+        margin: 0.35rem 0 0.55rem;
         text-align: center;
         color: #2e4768;
         min-height: 1.4em;
+      }
+      #eid-puzzle-40 .eid-growth {
+        margin: 0 auto 0.6rem;
+        max-width: 620px;
+        border: 1px solid #d5e2f2;
+        border-radius: 8px;
+        background: #f7fbff;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.94rem;
+        color: #22415f;
+      }
+      #eid-puzzle-40 .eid-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.45rem;
+        margin: 0 auto 0.65rem;
+        max-width: 620px;
+      }
+      #eid-puzzle-40 .eid-link-btn {
+        text-decoration: none;
+        border: 1px solid #a9c3e2;
+        border-radius: 8px;
+        padding: 0.42rem 0.75rem;
+        font-weight: 700;
+        color: #173150;
+        background: linear-gradient(180deg, #ffffff 0%, #edf5ff 100%);
+        box-shadow: 0 2px 0 #c2d8f0, 0 4px 10px rgba(38, 94, 158, 0.15);
+      }
+      #eid-puzzle-40 .eid-link-btn:hover {
+        background: linear-gradient(180deg, #ffffff 0%, #e6f1ff 100%);
       }
       #eid-puzzle-40 .eid-words {
         display: grid;
@@ -103,6 +166,11 @@
       }
     </style>
 
+    <div class="eid-intro">
+      <h1>How to play this wellbeing crossword</h1>
+      <p>Drag in a straight line to find all 40 words. This puzzle strengthens <span class="eid-highlight">focus</span>, builds <span class="eid-highlight">emotional vocabulary</span>, and supports <span class="eid-highlight">mental resilience</span> through mindful pattern-finding.</p>
+    </div>
+
     <div class="eid-grid-wrap">
       <div class="eid-grid" aria-label="Wellbeing word search grid"></div>
     </div>
@@ -110,11 +178,18 @@
     <div class="eid-controls">
       <button type="button" class="eid-btn eid-new" aria-label="Generate a new puzzle">New Puzzle</button>
       <button type="button" class="eid-btn eid-reset" aria-label="Reset found words on current puzzle">Reset</button>
+      <button type="button" class="eid-btn eid-pdf" aria-label="Download wellbeing reflection PDF">Get Reflection PDF</button>
       <div class="eid-counter" aria-label="Words found counter"><span class="eid-found">0</span>/40 found</div>
     </div>
 
     <div class="eid-status" role="status" aria-live="polite">Loading puzzle…</div>
+    <div class="eid-growth" aria-live="polite">Every word you discover strengthens emotional vocabulary, focus, and self-awareness.</div>
     <ul class="eid-words" aria-label="Word list"></ul>
+
+    <div class="eid-links" aria-label="Helpful wellbeing links">
+      <a class="eid-link-btn" href="https://www.goodreads.com/shelf/show/emotional-intelligence" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+      <a class="eid-link-btn" href="https://www.helpguide.org/mental-health/wellbeing" target="_blank" rel="noopener noreferrer">Help Page</a>
+    </div>
 
     <script>
       (function () {
@@ -128,6 +203,48 @@
             'LISTENING', 'FORGIVENESS', 'ACCEPTANCE', 'FLEXIBILITY', 'INTEGRITY', 'HUMILITY', 'SELFLOVE', 'OPTIMISM', 'PURPOSE', 'BELONGING',
             'STRENGTH', 'FOCUS', 'PEACE', 'WISDOM', 'HONESTY', 'RESPECT', 'CONNECTION', 'ALTRUISM', 'BREATH', 'LIGHT'
           ];
+          var WORD_MESSAGES = {
+            AWARENESS: 'Notice your thoughts without judgment and choose your next action intentionally.',
+            EMPATHY: 'Pause and imagine another person\'s inner world before you respond.',
+            RESILIENCE: 'Small recoveries after setbacks train your mind to bounce forward.',
+            MINDFULNESS: 'Return to the present moment with one slow breath and clear attention.',
+            COMPASSION: 'Treat yourself and others with warmth, especially in difficult moments.',
+            GRATITUDE: 'Name one good thing now to shift attention toward what supports you.',
+            CALM: 'Soften your body posture to invite a calmer nervous system response.',
+            BALANCE: 'Protect time for work, rest, movement, and relationships each week.',
+            CLARITY: 'Write your next smallest step so uncertainty becomes direction.',
+            COURAGE: 'Courage grows when you do one helpful thing while fear is present.',
+            PATIENCE: 'Progress compounds when you allow growth to happen over time.',
+            KINDNESS: 'A kind word can regulate stress for both the giver and receiver.',
+            GROWTH: 'View mistakes as data that helps you improve your strategy.',
+            HEALING: 'Rest, support, and reflection are valid forms of productive recovery.',
+            HOPE: 'Hope is built by seeing options and taking one constructive step.',
+            JOY: 'Savor small positive moments to build emotional stamina.',
+            CONFIDENCE: 'Confidence follows repeated practice more than perfect outcomes.',
+            TRUST: 'Trust deepens through consistency, honesty, and healthy boundaries.',
+            BOUNDARIES: 'Clear limits protect your energy and improve relationships.',
+            PRESENCE: 'Give full attention to one task to reduce mental overload.',
+            LISTENING: 'Listen to understand first, then respond with care.',
+            FORGIVENESS: 'Forgiveness frees mental space for healing and wiser choices.',
+            ACCEPTANCE: 'Accept what is true now so your energy can move to what helps.',
+            FLEXIBILITY: 'Adaptability turns obstacles into new pathways forward.',
+            INTEGRITY: 'Align actions with values to build stable self-respect.',
+            HUMILITY: 'Being teachable accelerates growth and strengthens collaboration.',
+            SELFLOVE: 'Speak to yourself with the same support you offer a close friend.',
+            OPTIMISM: 'Realistic optimism combines hope with practical action.',
+            PURPOSE: 'Purpose gives effort meaning and improves long-term motivation.',
+            BELONGING: 'Connection and belonging are core ingredients of mental wellbeing.',
+            STRENGTH: 'You build strength each time you keep going with intention.',
+            FOCUS: 'Single-tasking improves quality, confidence, and calm.',
+            PEACE: 'Peace grows when your habits support rest and emotional regulation.',
+            WISDOM: 'Wisdom is experience plus reflection applied to today\'s choices.',
+            HONESTY: 'Honest self-checks help you correct course early.',
+            RESPECT: 'Respectful communication creates safer, healthier relationships.',
+            CONNECTION: 'Meaningful connection lowers stress and increases resilience.',
+            ALTRUISM: 'Helping others can lift mood and reinforce personal meaning.',
+            BREATH: 'Slow exhalations help settle your body and sharpen attention.',
+            LIGHT: 'Look for what gives light to your day and repeat it tomorrow.'
+          };
           var BASE_N = 18;
           var N = BASE_N;
           var DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]];
@@ -135,17 +252,65 @@
           var gridEl = root.querySelector('.eid-grid');
           var wordsEl = root.querySelector('.eid-words');
           var statusEl = root.querySelector('.eid-status');
+          var growthEl = root.querySelector('.eid-growth');
           var foundEl = root.querySelector('.eid-found');
           var newBtn = root.querySelector('.eid-new');
           var resetBtn = root.querySelector('.eid-reset');
+          var pdfBtn = root.querySelector('.eid-pdf');
 
-          if (!gridEl || !wordsEl || !statusEl || !foundEl || !newBtn || !resetBtn) return;
+          if (!gridEl || !wordsEl || !statusEl || !growthEl || !foundEl || !newBtn || !resetBtn || !pdfBtn) return;
 
           var state = { grid: [], placements: {}, found: {}, foundCells: {}, dragging: false, start: null, pointerId: null, preview: [] };
 
           function key(r, c) { return r + ',' + c; }
           function rand(n) { return Math.floor(Math.random() * n); }
           function pick(arr) { return arr[rand(arr.length)]; }
+
+          function growthText(count) {
+            if (count === 0) return 'Every word you discover strengthens emotional vocabulary, focus, and self-awareness.';
+            if (count < 10) return 'Great start. You are training attention and pattern recognition while building wellbeing language.';
+            if (count < 20) return 'Nice momentum. This level of focus supports confidence and emotional regulation.';
+            if (count < 30) return 'You are deep into the challenge. Persistence here reinforces resilience and patience.';
+            if (count < 40) return 'Almost there. Completing hard tasks boosts self-trust and a growth mindset.';
+            return 'Complete! Finishing all 40 words strengthens focus, optimism, and emotional self-leadership.';
+          }
+
+          function escapeHtml(text) {
+            return String(text)
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
+          }
+
+          function openPdfGuide() {
+            var items = WORDS.map(function (w) {
+              return '<li><strong>' + w + ':</strong> ' + escapeHtml(WORD_MESSAGES[w] || 'Practice this quality today in one small way.') + '</li>';
+            }).join('');
+            var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Wellbeing Reflection Guide</title>' +
+              '<style>body{font-family:Arial,sans-serif;color:#0f2d4a;padding:24px;line-height:1.45;}h1{margin:0 0 8px;}p{margin:8px 0;}ul{padding-left:20px;}li{margin:6px 0;}a{color:#174a84;text-decoration:none;} .small{font-size:12px;color:#4c647f;} .pdf-btn{display:inline-block;margin:8px 0;padding:8px 12px;border:1px solid #9ebfe4;border-radius:8px;background:#eff6ff;color:#174a84;font-weight:700;}</style>' +
+              '</head><body>' +
+              '<h1>Find 40 Wellbeing Words - Reflection PDF</h1>' +
+              '<p>Use this printable guide to turn each found word into a practical mental growth action.</p>' +
+              '<p><strong>Website Address:</strong> https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html</p>' +
+              '<p><a class="pdf-btn" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html">Open Website</a></p>' +
+              '<p><strong>Recommended Books:</strong> <a href="https://www.goodreads.com/shelf/show/emotional-intelligence">https://www.goodreads.com/shelf/show/emotional-intelligence</a></p>' +
+              '<p><strong>Help Page:</strong> <a href="https://www.helpguide.org/mental-health/wellbeing">https://www.helpguide.org/mental-health/wellbeing</a></p>' +
+              '<h2>Word Messages</h2><ul>' + items + '</ul>' +
+              '<p class="small">Tip: use your browser print dialog and choose "Save as PDF".</p>' +
+              '</body></html>';
+            var w = window.open('', '_blank');
+            if (!w) {
+              statusEl.textContent = 'Popup blocked. Allow popups to open and save your PDF guide.';
+              return;
+            }
+            w.document.open();
+            w.document.write(html);
+            w.document.close();
+            w.focus();
+            w.print();
+          }
 
           function emptyGrid() {
             var g = [];
@@ -261,6 +426,7 @@
             state.found = {};
             state.foundCells = {};
             foundEl.textContent = '0';
+            growthEl.textContent = growthText(0);
             clearPreview();
             var cells = gridEl.querySelectorAll('.eid-cell');
             for (var i = 0; i < cells.length; i++) cells[i].className = 'eid-cell';
@@ -343,8 +509,9 @@
             if (item) item.classList.add('done');
             var count = Object.keys(state.found).length;
             foundEl.textContent = String(count);
+            growthEl.textContent = growthText(count);
             statusEl.textContent = count === WORDS.length
-              ? 'Great work! You found all 40 words.'
+              ? 'Great work! You found all 40 words. Download your reflection PDF for next steps.'
               : 'Found: ' + word + '. ' + count + '/40 complete.';
           }
 
@@ -394,6 +561,10 @@
 
           resetBtn.addEventListener('click', function () {
             resetFound(true);
+          });
+
+          pdfBtn.addEventListener('click', function () {
+            openPdfGuide();
           });
 
           renderWords();

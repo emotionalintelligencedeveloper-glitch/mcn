@@ -1,592 +1,328 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Find 40 Wellbeing Words</title>
-</head>
-<body>
-  <div id="eid-puzzle-40">
-    <style>
-      #eid-puzzle-40 {
-        max-width: 640px;
-        margin: 0.75rem auto;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        color: #14304d;
-        padding: 0 0.4rem;
-      }
-      #eid-puzzle-40 * { box-sizing: border-box; }
-      #eid-puzzle-40 .eid-intro {
-        max-width: 620px;
-        margin: 0 auto 0.55rem;
-        border: 1px solid #d5e2f2;
-        border-radius: 10px;
-        background: #f6fbff;
-        padding: 0.55rem 0.65rem;
-      }
-      #eid-puzzle-40 .eid-intro h1 {
-        margin: 0 0 0.25rem;
-        font-size: 1.06rem;
-        color: #14304d;
-      }
-      #eid-puzzle-40 .eid-intro p {
-        margin: 0;
-        font-size: 0.94rem;
-        color: #2a4766;
-      }
-      #eid-puzzle-40 .eid-highlight {
-        color: #1d5ea8;
-        font-weight: 700;
-      }
-      #eid-puzzle-40 .eid-grid-wrap {
-        width: min(100%, 620px);
-        margin: 0 auto;
-        border: 1px solid #d7e2f0;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #fff;
-      }
-      #eid-puzzle-40 .eid-grid {
-        display: grid;
-        grid-template-columns: repeat(var(--n, 18), minmax(0, 1fr));
-        width: 100%;
-        min-height: 260px;
-        touch-action: none;
-        user-select: none;
-        -webkit-user-select: none;
-      }
-      #eid-puzzle-40 .eid-cell {
-        aspect-ratio: 1 / 1;
-        min-height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #edf2f8;
-        font-weight: 700;
-        font-size: clamp(9px, 2.2vw, 16px);
-        line-height: 1;
-        background: #fff;
-        color: #1d2d45;
-      }
-      #eid-puzzle-40 .eid-cell.preview { background: #e8f1ff; }
-      #eid-puzzle-40 .eid-cell.found {
-        background: #2f80ed;
-        color: #fff;
-        border-color: #1e63be;
-      }
-      #eid-puzzle-40 .eid-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem;
-        align-items: center;
-        justify-content: center;
-        margin: 0.55rem 0;
-      }
-      #eid-puzzle-40 .eid-btn {
-        border: 1px solid #a9c3e2;
-        background: linear-gradient(180deg, #ffffff 0%, #edf5ff 100%);
-        color: #173150;
-        padding: 0.45rem 0.8rem;
-        border-radius: 8px;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 2px 0 #c2d8f0, 0 4px 10px rgba(38, 94, 158, 0.15);
-        transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-      }
-      #eid-puzzle-40 .eid-btn:hover {
-        background: linear-gradient(180deg, #ffffff 0%, #e6f1ff 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 3px 0 #bdd5ef, 0 6px 12px rgba(38, 94, 158, 0.2);
-      }
-      #eid-puzzle-40 .eid-btn:active {
-        transform: translateY(1px);
-        box-shadow: 0 1px 0 #bdd5ef, 0 2px 6px rgba(38, 94, 158, 0.18);
-      }
-      #eid-puzzle-40 .eid-counter { font-weight: 700; color: #1f4f8a; }
-      #eid-puzzle-40 .eid-status {
-        margin: 0.35rem 0 0.55rem;
-        text-align: center;
-        color: #2e4768;
-        min-height: 1.4em;
-      }
-      #eid-puzzle-40 .eid-growth {
-        margin: 0 auto 0.6rem;
-        max-width: 620px;
-        border: 1px solid #d5e2f2;
-        border-radius: 8px;
-        background: #f7fbff;
-        padding: 0.5rem 0.6rem;
-        font-size: 0.94rem;
-        color: #22415f;
-      }
-      #eid-puzzle-40 .eid-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.45rem;
-        margin: 0 auto 0.65rem;
-        max-width: 620px;
-      }
-      #eid-puzzle-40 .eid-link-btn {
-        text-decoration: none;
-        border: 1px solid #a9c3e2;
-        border-radius: 8px;
-        padding: 0.42rem 0.75rem;
-        font-weight: 700;
-        color: #173150;
-        background: linear-gradient(180deg, #ffffff 0%, #edf5ff 100%);
-        box-shadow: 0 2px 0 #c2d8f0, 0 4px 10px rgba(38, 94, 158, 0.15);
-      }
-      #eid-puzzle-40 .eid-link-btn:hover {
-        background: linear-gradient(180deg, #ffffff 0%, #e6f1ff 100%);
-      }
-      #eid-puzzle-40 .eid-words {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.3rem;
-        max-width: 620px;
-        margin: 0 auto;
-        padding: 0;
-        list-style: none;
-      }
-      @media (min-width: 700px) {
-        #eid-puzzle-40 .eid-words { grid-template-columns: 1fr 1fr; }
-      }
-      #eid-puzzle-40 .eid-word {
-        padding: 0.33rem 0.48rem;
-        border: 1px solid #dbe6f4;
-        border-radius: 7px;
-        background: #fff;
-        font-weight: 600;
-      }
-      #eid-puzzle-40 .eid-word.done {
-        background: #2f80ed;
-        color: #fff;
-        border-color: #1f65c2;
-      }
-    </style>
+<div id="eid-puzzle-40">
+  <style>
+    #eid-puzzle-40 { max-width: 760px; margin: 1rem auto; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#14304d; }
+    #eid-puzzle-40 * { box-sizing: border-box; }
+    #eid-puzzle-40 .eid-grid-wrap { width: min(100%, 720px); margin: 0 auto; border: 1px solid #d7e2f0; border-radius: 10px; overflow: hidden; background:#fff; }
+    #eid-puzzle-40 .eid-grid { display:grid; grid-template-columns: repeat(var(--n,18), minmax(0,1fr)); width:100%; min-height: 280px; touch-action:none; user-select:none; -webkit-user-select:none; }
+    #eid-puzzle-40 .eid-cell { aspect-ratio:1/1; min-height: 20px; display:flex; align-items:center; justify-content:center; border:1px solid #edf2f8; font-weight:700; font-size:clamp(11px,2.3vw,17px); line-height:1; background:#fff; color:#1d2d45; }
+    #eid-puzzle-40 .eid-cell.preview { background:#e8f1ff; }
+    #eid-puzzle-40 .eid-cell.found { background:#2f80ed; color:#fff; border-color:#1e63be; }
+    #eid-puzzle-40 .eid-controls { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; justify-content:center; margin:.75rem 0; }
+    #eid-puzzle-40 .eid-btn { border:1px solid #bfd1e7; background:#fff; color:#173150; padding:.5rem .85rem; border-radius:8px; font-weight:600; cursor:pointer; }
+    #eid-puzzle-40 .eid-btn:hover { background:#f5f9ff; }
+    #eid-puzzle-40 .eid-counter { font-weight:700; color:#1f4f8a; }
+    #eid-puzzle-40 .eid-status { margin:.5rem 0 .9rem; text-align:center; color:#2e4768; min-height:1.5em; }
+    #eid-puzzle-40 .eid-words { display:grid; grid-template-columns:1fr; gap:.35rem; max-width:720px; margin:0 auto; padding:0; list-style:none; }
+    @media (min-width:700px){ #eid-puzzle-40 .eid-words { grid-template-columns:1fr 1fr; } }
+    #eid-puzzle-40 .eid-word { padding:.35rem .5rem; border:1px solid #dbe6f4; border-radius:7px; background:#fff; font-weight:600; }
+    #eid-puzzle-40 .eid-word.done { background:#2f80ed; color:#fff; border-color:#1f65c2; }
+    #eid-puzzle-40 .eid-head { max-width:720px; margin:0 auto .75rem; text-align:center; }
+    #eid-puzzle-40 .eid-title { margin:0; font-size:clamp(1.05rem,2.4vw,1.35rem); color:#153354; }
+    #eid-puzzle-40 .eid-subtitle { margin:.35rem 0 0; color:#355678; font-size:.95rem; line-height:1.45; }
+    #eid-puzzle-40 .eid-links { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; margin: 1rem auto 0; max-width:720px; }
+    #eid-puzzle-40 .eid-link { display:inline-block; text-decoration:none; border:1px solid #bfd1e7; background:#fff; color:#173150; padding:.5rem .85rem; border-radius:8px; font-weight:600; }
+    #eid-puzzle-40 .eid-link:hover { background:#f5f9ff; }
+  </style>
 
-    <div class="eid-intro">
-      <h1>How to play this wellbeing crossword</h1>
-      <p>Drag in a straight line to find all 40 words. This puzzle strengthens <span class="eid-highlight">focus</span>, builds <span class="eid-highlight">emotional vocabulary</span>, and supports <span class="eid-highlight">mental resilience</span> through mindful pattern-finding.</p>
-    </div>
 
-    <div class="eid-grid-wrap">
-      <div class="eid-grid" aria-label="Wellbeing word search grid"></div>
-    </div>
-
-    <div class="eid-controls">
-      <button type="button" class="eid-btn eid-new" aria-label="Generate a new puzzle">New Puzzle</button>
-      <button type="button" class="eid-btn eid-reset" aria-label="Reset found words on current puzzle">Reset</button>
-      <button type="button" class="eid-btn eid-pdf" aria-label="Download wellbeing reflection PDF">Get Reflection PDF</button>
-      <div class="eid-counter" aria-label="Words found counter"><span class="eid-found">0</span>/40 found</div>
-    </div>
-
-    <div class="eid-status" role="status" aria-live="polite">Loading puzzle…</div>
-    <div class="eid-growth" aria-live="polite">Every word you discover strengthens emotional vocabulary, focus, and self-awareness.</div>
-    <ul class="eid-words" aria-label="Word list"></ul>
-
-    <div class="eid-links" aria-label="Helpful wellbeing links">
-      <a class="eid-link-btn" href="https://www.goodreads.com/shelf/show/emotional-intelligence" target="_blank" rel="noopener noreferrer">Recommended Books</a>
-      <a class="eid-link-btn" href="https://www.helpguide.org/mental-health/wellbeing" target="_blank" rel="noopener noreferrer">Help Page</a>
-    </div>
-
-    <script>
-      (function () {
-        function init(root) {
-          if (!root || root.dataset.eidReady === '1') return;
-          root.dataset.eidReady = '1';
-
-          var WORDS = [
-            'AWARENESS', 'EMPATHY', 'RESILIENCE', 'MINDFULNESS', 'COMPASSION', 'GRATITUDE', 'CALM', 'BALANCE', 'CLARITY', 'COURAGE',
-            'PATIENCE', 'KINDNESS', 'GROWTH', 'HEALING', 'HOPE', 'JOY', 'CONFIDENCE', 'TRUST', 'BOUNDARIES', 'PRESENCE',
-            'LISTENING', 'FORGIVENESS', 'ACCEPTANCE', 'FLEXIBILITY', 'INTEGRITY', 'HUMILITY', 'SELFLOVE', 'OPTIMISM', 'PURPOSE', 'BELONGING',
-            'STRENGTH', 'FOCUS', 'PEACE', 'WISDOM', 'HONESTY', 'RESPECT', 'CONNECTION', 'ALTRUISM', 'BREATH', 'LIGHT'
-          ];
-          var WORD_MESSAGES = {
-            AWARENESS: 'Notice your thoughts without judgment and choose your next action intentionally.',
-            EMPATHY: 'Pause and imagine another person\'s inner world before you respond.',
-            RESILIENCE: 'Small recoveries after setbacks train your mind to bounce forward.',
-            MINDFULNESS: 'Return to the present moment with one slow breath and clear attention.',
-            COMPASSION: 'Treat yourself and others with warmth, especially in difficult moments.',
-            GRATITUDE: 'Name one good thing now to shift attention toward what supports you.',
-            CALM: 'Soften your body posture to invite a calmer nervous system response.',
-            BALANCE: 'Protect time for work, rest, movement, and relationships each week.',
-            CLARITY: 'Write your next smallest step so uncertainty becomes direction.',
-            COURAGE: 'Courage grows when you do one helpful thing while fear is present.',
-            PATIENCE: 'Progress compounds when you allow growth to happen over time.',
-            KINDNESS: 'A kind word can regulate stress for both the giver and receiver.',
-            GROWTH: 'View mistakes as data that helps you improve your strategy.',
-            HEALING: 'Rest, support, and reflection are valid forms of productive recovery.',
-            HOPE: 'Hope is built by seeing options and taking one constructive step.',
-            JOY: 'Savor small positive moments to build emotional stamina.',
-            CONFIDENCE: 'Confidence follows repeated practice more than perfect outcomes.',
-            TRUST: 'Trust deepens through consistency, honesty, and healthy boundaries.',
-            BOUNDARIES: 'Clear limits protect your energy and improve relationships.',
-            PRESENCE: 'Give full attention to one task to reduce mental overload.',
-            LISTENING: 'Listen to understand first, then respond with care.',
-            FORGIVENESS: 'Forgiveness frees mental space for healing and wiser choices.',
-            ACCEPTANCE: 'Accept what is true now so your energy can move to what helps.',
-            FLEXIBILITY: 'Adaptability turns obstacles into new pathways forward.',
-            INTEGRITY: 'Align actions with values to build stable self-respect.',
-            HUMILITY: 'Being teachable accelerates growth and strengthens collaboration.',
-            SELFLOVE: 'Speak to yourself with the same support you offer a close friend.',
-            OPTIMISM: 'Realistic optimism combines hope with practical action.',
-            PURPOSE: 'Purpose gives effort meaning and improves long-term motivation.',
-            BELONGING: 'Connection and belonging are core ingredients of mental wellbeing.',
-            STRENGTH: 'You build strength each time you keep going with intention.',
-            FOCUS: 'Single-tasking improves quality, confidence, and calm.',
-            PEACE: 'Peace grows when your habits support rest and emotional regulation.',
-            WISDOM: 'Wisdom is experience plus reflection applied to today\'s choices.',
-            HONESTY: 'Honest self-checks help you correct course early.',
-            RESPECT: 'Respectful communication creates safer, healthier relationships.',
-            CONNECTION: 'Meaningful connection lowers stress and increases resilience.',
-            ALTRUISM: 'Helping others can lift mood and reinforce personal meaning.',
-            BREATH: 'Slow exhalations help settle your body and sharpen attention.',
-            LIGHT: 'Look for what gives light to your day and repeat it tomorrow.'
-          };
-          var BASE_N = 18;
-          var N = BASE_N;
-          var DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]];
-
-          var gridEl = root.querySelector('.eid-grid');
-          var wordsEl = root.querySelector('.eid-words');
-          var statusEl = root.querySelector('.eid-status');
-          var growthEl = root.querySelector('.eid-growth');
-          var foundEl = root.querySelector('.eid-found');
-          var newBtn = root.querySelector('.eid-new');
-          var resetBtn = root.querySelector('.eid-reset');
-          var pdfBtn = root.querySelector('.eid-pdf');
-
-          if (!gridEl || !wordsEl || !statusEl || !growthEl || !foundEl || !newBtn || !resetBtn || !pdfBtn) return;
-
-          var state = { grid: [], placements: {}, found: {}, foundCells: {}, dragging: false, start: null, pointerId: null, preview: [] };
-
-          function key(r, c) { return r + ',' + c; }
-          function rand(n) { return Math.floor(Math.random() * n); }
-          function pick(arr) { return arr[rand(arr.length)]; }
-
-          function growthText(count) {
-            if (count === 0) return 'Every word you discover strengthens emotional vocabulary, focus, and self-awareness.';
-            if (count < 10) return 'Great start. You are training attention and pattern recognition while building wellbeing language.';
-            if (count < 20) return 'Nice momentum. This level of focus supports confidence and emotional regulation.';
-            if (count < 30) return 'You are deep into the challenge. Persistence here reinforces resilience and patience.';
-            if (count < 40) return 'Almost there. Completing hard tasks boosts self-trust and a growth mindset.';
-            return 'Complete! Finishing all 40 words strengthens focus, optimism, and emotional self-leadership.';
-          }
-
-          function escapeHtml(text) {
-            return String(text)
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#39;');
-          }
-
-          function openPdfGuide() {
-            var items = WORDS.map(function (w) {
-              return '<li><strong>' + w + ':</strong> ' + escapeHtml(WORD_MESSAGES[w] || 'Practice this quality today in one small way.') + '</li>';
-            }).join('');
-            var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Wellbeing Reflection Guide</title>' +
-              '<style>body{font-family:Arial,sans-serif;color:#0f2d4a;padding:24px;line-height:1.45;}h1{margin:0 0 8px;}p{margin:8px 0;}ul{padding-left:20px;}li{margin:6px 0;}a{color:#174a84;text-decoration:none;} .small{font-size:12px;color:#4c647f;} .pdf-btn{display:inline-block;margin:8px 0;padding:8px 12px;border:1px solid #9ebfe4;border-radius:8px;background:#eff6ff;color:#174a84;font-weight:700;}</style>' +
-              '</head><body>' +
-              '<h1>Find 40 Wellbeing Words - Reflection PDF</h1>' +
-              '<p>Use this printable guide to turn each found word into a practical mental growth action.</p>' +
-              '<p><strong>Website Address:</strong> https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html</p>' +
-              '<p><a class="pdf-btn" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html">Open Website</a></p>' +
-              '<p><strong>Recommended Books:</strong> <a href="https://www.goodreads.com/shelf/show/emotional-intelligence">https://www.goodreads.com/shelf/show/emotional-intelligence</a></p>' +
-              '<p><strong>Help Page:</strong> <a href="https://www.helpguide.org/mental-health/wellbeing">https://www.helpguide.org/mental-health/wellbeing</a></p>' +
-              '<h2>Word Messages</h2><ul>' + items + '</ul>' +
-              '<p class="small">Tip: use your browser print dialog and choose "Save as PDF".</p>' +
-              '</body></html>';
-            var w = window.open('', '_blank');
-            if (!w) {
-              statusEl.textContent = 'Popup blocked. Allow popups to open and save your PDF guide.';
-              return;
-            }
-            w.document.open();
-            w.document.write(html);
-            w.document.close();
-            w.focus();
-            w.print();
-          }
-
-          function emptyGrid() {
-            var g = [];
-            for (var r = 0; r < N; r++) {
-              g[r] = [];
-              for (var c = 0; c < N; c++) g[r][c] = '';
-            }
-            return g;
-          }
-
-          function canPlace(word, r, c, dx, dy) {
-            for (var i = 0; i < word.length; i++) {
-              var rr = r + dy * i;
-              var cc = c + dx * i;
-              if (rr < 0 || cc < 0 || rr >= N || cc >= N) return false;
-              var ch = state.grid[rr][cc];
-              if (ch && ch !== word[i]) return false;
-            }
-            return true;
-          }
-
-          function place(word, r, c, dx, dy) {
-            var coords = [];
-            for (var i = 0; i < word.length; i++) {
-              var rr = r + dy * i;
-              var cc = c + dx * i;
-              state.grid[rr][cc] = word[i];
-              coords.push([rr, cc]);
-            }
-            state.placements[word] = coords;
-          }
-
-          function buildPuzzle() {
-            var sorted = WORDS.slice().sort(function (a, b) { return b.length - a.length; });
-            var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-            for (var size = BASE_N; size <= 22; size++) {
-              N = size;
-              for (var attempts = 0; attempts < 80; attempts++) {
-                state.grid = emptyGrid();
-                state.placements = {};
-                var okAll = true;
-
-                for (var w = 0; w < sorted.length; w++) {
-                  var word = sorted[w];
-                  var placed = false;
-                  for (var t = 0; t < 2400; t++) {
-                    var d = pick(DIRS);
-                    var r = rand(N);
-                    var c = rand(N);
-                    if (canPlace(word, r, c, d[0], d[1])) {
-                      place(word, r, c, d[0], d[1]);
-                      placed = true;
-                      break;
-                    }
-                  }
-                  if (!placed) {
-                    okAll = false;
-                    break;
-                  }
-                }
-
-                if (okAll) {
-                  for (var rr = 0; rr < N; rr++) {
-                    for (var cc = 0; cc < N; cc++) {
-                      if (!state.grid[rr][cc]) state.grid[rr][cc] = letters[rand(letters.length)];
-                    }
-                  }
-                  return true;
-                }
-              }
-            }
-            return false;
-          }
-
-          function cellSelector(r, c) { return '.eid-cell[data-r="' + r + '"][data-c="' + c + '"]'; }
-
-          function renderGrid() {
-            gridEl.style.setProperty('--n', String(N));
-            gridEl.innerHTML = '';
-            for (var r = 0; r < N; r++) {
-              for (var c = 0; c < N; c++) {
-                var el = document.createElement('div');
-                el.className = 'eid-cell';
-                el.dataset.r = String(r);
-                el.dataset.c = String(c);
-                el.textContent = state.grid[r][c];
-                el.setAttribute('role', 'button');
-                el.setAttribute('aria-label', 'Row ' + (r + 1) + ' column ' + (c + 1) + ' letter ' + state.grid[r][c]);
-                gridEl.appendChild(el);
-              }
-            }
-          }
-
-          function renderWords() {
-            wordsEl.innerHTML = '';
-            for (var i = 0; i < WORDS.length; i++) {
-              var li = document.createElement('li');
-              li.className = 'eid-word';
-              li.dataset.word = WORDS[i];
-              li.textContent = WORDS[i];
-              wordsEl.appendChild(li);
-            }
-          }
-
-          function clearPreview() {
-            var previews = gridEl.querySelectorAll('.eid-cell.preview');
-            for (var i = 0; i < previews.length; i++) previews[i].classList.remove('preview');
-            state.preview = [];
-          }
-
-          function resetFound(updateMessage) {
-            state.found = {};
-            state.foundCells = {};
-            foundEl.textContent = '0';
-            growthEl.textContent = growthText(0);
-            clearPreview();
-            var cells = gridEl.querySelectorAll('.eid-cell');
-            for (var i = 0; i < cells.length; i++) cells[i].className = 'eid-cell';
-            var words = wordsEl.querySelectorAll('.eid-word');
-            for (var j = 0; j < words.length; j++) words[j].classList.remove('done');
-            if (updateMessage) statusEl.textContent = 'Reset complete. Find all 40 words.';
-          }
-
-          function eventCell(e) {
-            var t = e.target && e.target.closest ? e.target.closest('.eid-cell') : null;
-            if (!t || !gridEl.contains(t)) return null;
-            return [parseInt(t.dataset.r, 10), parseInt(t.dataset.c, 10)];
-          }
-
-          function cellFromPoint(e) {
-            var target = document.elementFromPoint(e.clientX, e.clientY);
-            if (!target) return null;
-            var t = target.closest ? target.closest('.eid-cell') : null;
-            if (!t || !gridEl.contains(t)) return null;
-            return [parseInt(t.dataset.r, 10), parseInt(t.dataset.c, 10)];
-          }
-
-          function straightPath(a, b) {
-            if (!a || !b) return [];
-            var dr = b[0] - a[0];
-            var dc = b[1] - a[1];
-            var straight = (dr === 0 && dc !== 0) || (dc === 0 && dr !== 0) || (Math.abs(dr) === Math.abs(dc) && dr !== 0);
-            if (!straight) return [];
-            var sr = dr === 0 ? 0 : dr / Math.abs(dr);
-            var sc = dc === 0 ? 0 : dc / Math.abs(dc);
-            var len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
-            var out = [];
-            for (var i = 0; i < len; i++) out.push([a[0] + sr * i, a[1] + sc * i]);
-            return out;
-          }
-
-          function paintPreview(path) {
-            clearPreview();
-            state.preview = path;
-            for (var i = 0; i < path.length; i++) {
-              var r = path[i][0];
-              var c = path[i][1];
-              if (state.foundCells[key(r, c)]) continue;
-              var el = gridEl.querySelector(cellSelector(r, c));
-              if (el) el.classList.add('preview');
-            }
-          }
-
-          function letters(path) {
-            var s = '';
-            for (var i = 0; i < path.length; i++) s += state.grid[path[i][0]][path[i][1]];
-            return s;
-          }
-
-          function finalize(path) {
-            if (path.length < 2) return;
-            var s = letters(path);
-            var rev = s.split('').reverse().join('');
-            var word = state.placements[s] ? s : (state.placements[rev] ? rev : '');
-            if (!word || state.found[word]) {
-              statusEl.textContent = 'Not a listed word. Keep trying.';
-              return;
-            }
-
-            state.found[word] = true;
-            var coords = state.placements[word] || [];
-            for (var i = 0; i < coords.length; i++) {
-              var r = coords[i][0];
-              var c = coords[i][1];
-              var k = key(r, c);
-              state.foundCells[k] = true;
-              var cell = gridEl.querySelector(cellSelector(r, c));
-              if (cell) {
-                cell.classList.remove('preview');
-                cell.classList.add('found');
-              }
-            }
-
-            var item = wordsEl.querySelector('.eid-word[data-word="' + word + '"]');
-            if (item) item.classList.add('done');
-            var count = Object.keys(state.found).length;
-            foundEl.textContent = String(count);
-            growthEl.textContent = growthText(count);
-            statusEl.textContent = count === WORDS.length
-              ? 'Great work! You found all 40 words. Download your reflection PDF for next steps.'
-              : 'Found: ' + word + '. ' + count + '/40 complete.';
-          }
-
-          gridEl.addEventListener('pointerdown', function (e) {
-            var start = eventCell(e);
-            if (!start) return;
-            e.preventDefault();
-            state.dragging = true;
-            state.start = start;
-            state.pointerId = e.pointerId;
-            if (gridEl.setPointerCapture) gridEl.setPointerCapture(e.pointerId);
-            paintPreview([start]);
-          }, { passive: false });
-
-          gridEl.addEventListener('pointermove', function (e) {
-            if (!state.dragging || e.pointerId !== state.pointerId) return;
-            var end = eventCell(e) || cellFromPoint(e);
-            if (!end) return;
-            var p = straightPath(state.start, end);
-            paintPreview(p.length ? p : [state.start]);
-          }, { passive: false });
-
-          function endDrag(e) {
-            if (!state.dragging || e.pointerId !== state.pointerId) return;
-            e.preventDefault();
-            var end = eventCell(e) || cellFromPoint(e) || state.start;
-            var p = straightPath(state.start, end);
-            finalize(p.length > 1 ? p : state.preview);
-            clearPreview();
-            state.dragging = false;
-            state.start = null;
-            state.pointerId = null;
-          }
-
-          gridEl.addEventListener('pointerup', endDrag, { passive: false });
-          gridEl.addEventListener('pointercancel', endDrag, { passive: false });
-
-          newBtn.addEventListener('click', function () {
-            if (buildPuzzle()) {
-              renderGrid();
-              resetFound(false);
-              statusEl.textContent = 'New puzzle generated. Drag across letters to find words.';
-            } else {
-              statusEl.textContent = 'Could not build puzzle. Please press New Puzzle again.';
-            }
-          });
-
-          resetBtn.addEventListener('click', function () {
-            resetFound(true);
-          });
-
-          pdfBtn.addEventListener('click', function () {
-            openPdfGuide();
-          });
-
-          renderWords();
-          if (buildPuzzle()) {
-            renderGrid();
-            resetFound(false);
-            statusEl.textContent = 'Puzzle ready. Drag across letters in a straight line.';
-          } else {
-            statusEl.textContent = 'Unable to build puzzle in this browser. Please refresh and try again.';
-          }
-        }
-
-        function boot() {
-          init(document.getElementById('eid-puzzle-40'));
-        }
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', boot, { once: true });
-        }
-        boot();
-      })();
-    </script>
+  <div class="eid-head">
+    <h2 class="eid-title">Wellbeing & Emotional Intelligence Word Puzzle</h2>
+    <p class="eid-subtitle">This puzzle is here to support reflection and emotional wellbeing. Find all 40 uplifting words by dragging in a straight line (forward, backward, or diagonal).</p>
   </div>
-</body>
-</html>
+
+  <div class="eid-grid-wrap">
+    <div class="eid-grid" aria-label="Wellbeing word search grid"></div>
+  </div>
+
+  <div class="eid-controls">
+    <button type="button" class="eid-btn eid-new" aria-label="Generate a new puzzle">New Puzzle</button>
+    <button type="button" class="eid-btn eid-reset" aria-label="Reset found words on current puzzle">Reset</button>
+    <div class="eid-counter" aria-label="Words found counter"><span class="eid-found">0</span>/40 found</div>
+  </div>
+
+  <div class="eid-status" role="status" aria-live="polite">Loading puzzle…</div>
+  <ul class="eid-words" aria-label="Word list"></ul>
+
+  <div class="eid-links" aria-label="Helpful links">
+    <a class="eid-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
+    <a class="eid-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Help Page</a>
+  </div>
+
+  <script>
+  (function(){
+    function init(root){
+      if(!root || root.dataset.eidReady === '1') return;
+      root.dataset.eidReady = '1';
+
+      var WORDS = [
+        'AWARENESS','EMPATHY','RESILIENCE','MINDFULNESS','COMPASSION','GRATITUDE','CALM','BALANCE','CLARITY','COURAGE',
+        'PATIENCE','KINDNESS','GROWTH','HEALING','HOPE','JOY','CONFIDENCE','TRUST','BOUNDARIES','PRESENCE',
+        'LISTENING','FORGIVENESS','ACCEPTANCE','FLEXIBILITY','INTEGRITY','HUMILITY','SELFLOVE','OPTIMISM','PURPOSE','BELONGING',
+        'STRENGTH','FOCUS','PEACE','WISDOM','HONESTY','RESPECT','CONNECTION','ALTRUISM','BREATH','LIGHT'
+      ];
+      var BASE_N = 18;
+      var N = BASE_N;
+      var DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]];
+
+      var gridEl = root.querySelector('.eid-grid');
+      var wordsEl = root.querySelector('.eid-words');
+      var statusEl = root.querySelector('.eid-status');
+      var foundEl = root.querySelector('.eid-found');
+      var newBtn = root.querySelector('.eid-new');
+      var resetBtn = root.querySelector('.eid-reset');
+
+      if(!gridEl || !wordsEl || !statusEl || !foundEl || !newBtn || !resetBtn){ return; }
+
+      var state = { grid: [], placements: {}, found: {}, foundCells: {}, dragging: false, start: null, pointerId: null, preview: [] };
+
+      function key(r,c){ return r + ',' + c; }
+      function rand(n){ return Math.floor(Math.random() * n); }
+      function pick(arr){ return arr[rand(arr.length)]; }
+
+      function emptyGrid(){
+        var g = [];
+        for(var r=0; r<N; r++){
+          g[r] = [];
+          for(var c=0; c<N; c++) g[r][c] = '';
+        }
+        return g;
+      }
+
+      function canPlace(word, r, c, dx, dy){
+        for(var i=0; i<word.length; i++){
+          var rr = r + dy * i, cc = c + dx * i;
+          if(rr < 0 || cc < 0 || rr >= N || cc >= N) return false;
+          var ch = state.grid[rr][cc];
+          if(ch && ch !== word[i]) return false;
+        }
+        return true;
+      }
+
+      function place(word, r, c, dx, dy){
+        var coords = [];
+        for(var i=0; i<word.length; i++){
+          var rr = r + dy * i, cc = c + dx * i;
+          state.grid[rr][cc] = word[i];
+          coords.push([rr,cc]);
+        }
+        state.placements[word] = coords;
+      }
+
+      function buildPuzzle(){
+        var sorted = WORDS.slice().sort(function(a,b){ return b.length - a.length; });
+        var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        for(var size = BASE_N; size <= 22; size++){
+          N = size;
+          for(var attempts = 0; attempts < 80; attempts++){
+            state.grid = emptyGrid();
+            state.placements = {};
+            var okAll = true;
+
+            for(var w=0; w<sorted.length; w++){
+              var word = sorted[w], placed = false;
+              for(var t=0; t<2400; t++){
+                var d = pick(DIRS), r = rand(N), c = rand(N);
+                if(canPlace(word, r, c, d[0], d[1])){
+                  place(word, r, c, d[0], d[1]);
+                  placed = true;
+                  break;
+                }
+              }
+              if(!placed){ okAll = false; break; }
+            }
+
+            if(okAll){
+              for(var rr=0; rr<N; rr++){
+                for(var cc=0; cc<N; cc++){
+                  if(!state.grid[rr][cc]) state.grid[rr][cc] = letters[rand(letters.length)];
+                }
+              }
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      function cellSelector(r,c){ return '.eid-cell[data-r="'+r+'"][data-c="'+c+'"]'; }
+
+      function renderGrid(){
+        gridEl.style.setProperty('--n', String(N));
+        gridEl.innerHTML = '';
+        for(var r=0; r<N; r++){
+          for(var c=0; c<N; c++){
+            var el = document.createElement('div');
+            el.className = 'eid-cell';
+            el.dataset.r = String(r);
+            el.dataset.c = String(c);
+            el.textContent = state.grid[r][c];
+            el.setAttribute('role','button');
+            el.setAttribute('aria-label','Row ' + (r+1) + ' column ' + (c+1) + ' letter ' + state.grid[r][c]);
+            gridEl.appendChild(el);
+          }
+        }
+      }
+
+      function renderWords(){
+        wordsEl.innerHTML = '';
+        for(var i=0; i<WORDS.length; i++){
+          var li = document.createElement('li');
+          li.className = 'eid-word';
+          li.dataset.word = WORDS[i];
+          li.textContent = WORDS[i];
+          wordsEl.appendChild(li);
+        }
+      }
+
+      function resetFound(updateMessage){
+        state.found = {};
+        state.foundCells = {};
+        foundEl.textContent = '0';
+        clearPreview();
+        var cells = gridEl.querySelectorAll('.eid-cell');
+        for(var i=0; i<cells.length; i++) cells[i].className = 'eid-cell';
+        var words = wordsEl.querySelectorAll('.eid-word');
+        for(var j=0; j<words.length; j++) words[j].classList.remove('done');
+        if(updateMessage) statusEl.textContent = 'Reset complete. Find all 40 words.';
+      }
+
+      function clearPreview(){
+        var previews = gridEl.querySelectorAll('.eid-cell.preview');
+        for(var i=0; i<previews.length; i++) previews[i].classList.remove('preview');
+        state.preview = [];
+      }
+
+      function eventCell(e){
+        var t = e.target && e.target.closest ? e.target.closest('.eid-cell') : null;
+        if(!t || !gridEl.contains(t)) return null;
+        return [parseInt(t.dataset.r,10), parseInt(t.dataset.c,10)];
+      }
+
+      function cellFromPoint(e){
+        var target = document.elementFromPoint(e.clientX, e.clientY);
+        if(!target) return null;
+        var t = target.closest ? target.closest('#eid-puzzle-40 .eid-cell') : null;
+        if(!t || !gridEl.contains(t)) return null;
+        return [parseInt(t.dataset.r,10), parseInt(t.dataset.c,10)];
+      }
+
+      function straightPath(a,b){
+        if(!a || !b) return [];
+        var dr = b[0] - a[0], dc = b[1] - a[1];
+        var straight = (dr === 0 && dc !== 0) || (dc === 0 && dr !== 0) || (Math.abs(dr) === Math.abs(dc) && dr !== 0);
+        if(!straight) return [];
+        var sr = dr === 0 ? 0 : dr / Math.abs(dr);
+        var sc = dc === 0 ? 0 : dc / Math.abs(dc);
+        var len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
+        var out = [];
+        for(var i=0; i<len; i++) out.push([a[0] + sr*i, a[1] + sc*i]);
+        return out;
+      }
+
+      function paintPreview(path){
+        clearPreview();
+        state.preview = path;
+        for(var i=0; i<path.length; i++){
+          var r = path[i][0], c = path[i][1];
+          if(state.foundCells[key(r,c)]) continue;
+          var el = gridEl.querySelector(cellSelector(r,c));
+          if(el) el.classList.add('preview');
+        }
+      }
+
+      function letters(path){
+        var s = '';
+        for(var i=0; i<path.length; i++) s += state.grid[path[i][0]][path[i][1]];
+        return s;
+      }
+
+      function finalize(path){
+        if(path.length < 2) return;
+        var s = letters(path), rev = s.split('').reverse().join('');
+        var word = state.placements[s] ? s : (state.placements[rev] ? rev : '');
+        if(!word || state.found[word]){
+          statusEl.textContent = 'Not a listed word. Keep trying.';
+          return;
+        }
+
+        state.found[word] = true;
+        var coords = state.placements[word] || [];
+        for(var i=0; i<coords.length; i++){
+          var r = coords[i][0], c = coords[i][1], k = key(r,c);
+          state.foundCells[k] = true;
+          var cell = gridEl.querySelector(cellSelector(r,c));
+          if(cell){ cell.classList.remove('preview'); cell.classList.add('found'); }
+        }
+
+        var item = wordsEl.querySelector('.eid-word[data-word="' + word + '"]');
+        if(item) item.classList.add('done');
+        var count = Object.keys(state.found).length;
+        foundEl.textContent = String(count);
+        statusEl.textContent = count === WORDS.length ? 'Great work! You found all 40 words.' : 'Found: ' + word + '. ' + count + '/40 complete.';
+      }
+
+      gridEl.addEventListener('pointerdown', function(e){
+        var start = eventCell(e);
+        if(!start) return;
+        e.preventDefault();
+        state.dragging = true;
+        state.start = start;
+        state.pointerId = e.pointerId;
+        if(gridEl.setPointerCapture) gridEl.setPointerCapture(e.pointerId);
+        paintPreview([start]);
+      }, {passive:false});
+
+      gridEl.addEventListener('pointermove', function(e){
+        if(!state.dragging || e.pointerId !== state.pointerId) return;
+        var end = eventCell(e) || cellFromPoint(e);
+        if(!end) return;
+        var p = straightPath(state.start, end);
+        paintPreview(p.length ? p : [state.start]);
+      }, {passive:false});
+
+      function endDrag(e){
+        if(!state.dragging || e.pointerId !== state.pointerId) return;
+        e.preventDefault();
+        var end = eventCell(e) || cellFromPoint(e) || state.start;
+        var p = straightPath(state.start, end);
+        finalize(p.length > 1 ? p : state.preview);
+        clearPreview();
+        state.dragging = false;
+        state.start = null;
+        state.pointerId = null;
+      }
+
+      gridEl.addEventListener('pointerup', endDrag, {passive:false});
+      gridEl.addEventListener('pointercancel', endDrag, {passive:false});
+
+      newBtn.addEventListener('click', function(){
+        if(buildPuzzle()){
+          renderGrid();
+          resetFound(false);
+          statusEl.textContent = 'New puzzle generated. Drag across letters to find words.';
+        } else {
+          statusEl.textContent = 'Could not build puzzle. Please press New Puzzle again.';
+        }
+      });
+
+      resetBtn.addEventListener('click', function(){ resetFound(true); });
+
+      renderWords();
+      if(buildPuzzle()){
+        renderGrid();
+        resetFound(false);
+        statusEl.textContent = 'Puzzle ready. Drag across letters in a straight line.';
+      } else {
+        statusEl.textContent = 'Unable to build puzzle in this browser. Please refresh and try again.';
+      }
+    }
+
+    function boot(){ init(document.getElementById('eid-puzzle-40')); }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    }
+    boot();
+  })();
+  </script>
+</div>

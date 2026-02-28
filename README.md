@@ -2,7 +2,7 @@ Emotional Intelligence Developer
 
 <img width="1097" height="867" alt="free wellbeing tools" src="https://github.com/user-attachments/assets/3de7de6a-8318-4b28-a14a-ac6a042ac904" />
 
-🚀 Contributions Welcome — See Issues
+🚀 Contributions Welcome — [Join here](https://github.com/emotionalintelligencedeveloper-glitch/mcn/issues/2)
 
 Open-Source Emotional Wellbeing Tools
 

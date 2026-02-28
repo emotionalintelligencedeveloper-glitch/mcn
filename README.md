@@ -46,3 +46,5 @@ If these tools help you, please consider sponsoring the project.
 ⭐ If this project supports you, please star the repository to help others discover it.
 
 Together, we can help people navigate life with more clarity, resilience, and emotional strength.
+
+🚀 Contributions Welcome — [Join here](https://github.com/emotionalintelligencedeveloper-glitch/mcn/issues/2)

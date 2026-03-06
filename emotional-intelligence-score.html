@@ -16,7 +16,6 @@
       --accent:#2a7a78;
       --accent-dark:#1e5f5d;
       --soft:#e8f6f5;
-      --gold:#d9a441;
       --shadow:0 14px 36px rgba(16, 24, 40, 0.08);
       --radius:22px;
     }
@@ -431,18 +430,12 @@
       font-size:0.96rem;
     }
 
-    .pdf-note{
-      font-size:0.9rem;
-      color:var(--muted);
-      margin-top:10px;
-    }
-
     .footer-links{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
       justify-content:center;
-      margin:28px 0 12px;
+      margin:28px 0 10px;
     }
 
     .footer-links a{
@@ -456,11 +449,46 @@
       box-shadow:0 8px 20px rgba(16,24,40,0.04);
     }
 
+    .support-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:0.94rem;
+      margin:0 0 10px;
+    }
+
     .footer-note{
       text-align:center;
       color:var(--muted);
       font-size:0.92rem;
       margin-bottom:25px;
+    }
+
+    .field{
+      margin-top:18px;
+      max-width:420px;
+    }
+
+    .field label{
+      display:block;
+      font-weight:700;
+      margin-bottom:8px;
+      color:var(--text);
+    }
+
+    .field input{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      font-size:0.98rem;
+      outline:none;
+      background:#fff;
+      color:var(--text);
+    }
+
+    .field input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(42,122,120,0.10);
     }
 
     @media (max-width: 760px){
@@ -506,7 +534,7 @@
       <h1>What Is Your Emotional Intelligence Score?</h1>
       <p class="sub">
         Discover how you currently score in self-awareness, empathy, emotional regulation, and communication.
-        Answer 20 quick questions, get your result instantly, download a branded PDF, and share your score.
+        Answer 20 quick questions, get your result instantly, and share your score.
       </p>
 
       <div class="intro-grid">
@@ -523,8 +551,8 @@
           <span>Built for social sharing</span>
         </div>
         <div class="mini">
-          <strong>PDF Download</strong>
-          <span>With your logo included</span>
+          <strong>Instant Results</strong>
+          <span>Easy to understand</span>
         </div>
       </div>
     </section>
@@ -533,8 +561,13 @@
       <h2>See how your emotional intelligence shows up in daily life</h2>
       <p class="muted">
         This quiz is designed to feel simple, human, and easy to complete. Your final result gives you one
-        overall emotional intelligence score and four deeper scores:
+        overall emotional intelligence score and four deeper scores.
       </p>
+
+      <div class="field">
+        <label for="userName">Your name for the PDF result</label>
+        <input type="text" id="userName" placeholder="Enter your name" maxlength="60" />
+      </div>
 
       <div class="intro-grid" style="margin-top:16px;">
         <div class="mini"><strong>Self-Awareness</strong><span>Understanding your inner state</span></div>
@@ -623,16 +656,19 @@
           <button class="secondary" id="pdfBtn">Download PDF</button>
           <button class="secondary" id="restartBtn">Retake Quiz</button>
         </div>
-        <div class="pdf-note">
-          Your PDF includes the Emotional Intelligence Developer logo and your category scores.
-        </div>
       </div>
     </section>
 
     <div class="footer-links">
       <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Website</a>
       <a href="https://emotionalintelligencedeveloper.com/the-emotional-intelligence-tools-library/" target="_blank" rel="noopener">More Free Tools</a>
+      <a href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support This Website</a>
     </div>
+
+    <div class="support-note">
+      We need funds to maintain free tools for everyone.
+    </div>
+
     <div class="footer-note">
       Emotional Intelligence Developer — practical tools for self-reflection, emotional growth, and wellbeing.
     </div>
@@ -642,89 +678,29 @@
 
   <script>
     const quizData = [
-      {
-        category: "Self-Awareness",
-        question: "I can usually tell what I am feeling before my mood affects my behaviour."
-      },
-      {
-        category: "Self-Awareness",
-        question: "When something upsets me, I can name the emotion instead of just saying I feel bad."
-      },
-      {
-        category: "Self-Awareness",
-        question: "I notice patterns in what triggers stress, frustration, or discouragement in me."
-      },
-      {
-        category: "Self-Awareness",
-        question: "I can tell when my body is giving me signs that I need rest, space, or support."
-      },
-      {
-        category: "Self-Awareness",
-        question: "I reflect on my reactions instead of assuming I am always completely right."
-      },
+      { category: "Self-Awareness", question: "I can usually tell what I am feeling before my mood affects my behaviour." },
+      { category: "Self-Awareness", question: "When something upsets me, I can name the emotion instead of just saying I feel bad." },
+      { category: "Self-Awareness", question: "I notice patterns in what triggers stress, frustration, or discouragement in me." },
+      { category: "Self-Awareness", question: "I can tell when my body is giving me signs that I need rest, space, or support." },
+      { category: "Self-Awareness", question: "I reflect on my reactions instead of assuming I am always completely right." },
 
-      {
-        category: "Empathy",
-        question: "I try to understand what someone else may be feeling before I judge their reaction."
-      },
-      {
-        category: "Empathy",
-        question: "People often feel heard when they talk to me."
-      },
-      {
-        category: "Empathy",
-        question: "I can usually pick up on emotional shifts in another person's tone or body language."
-      },
-      {
-        category: "Empathy",
-        question: "Even when I disagree with someone, I try to respect their emotional experience."
-      },
-      {
-        category: "Empathy",
-        question: "I make space for other people's feelings without needing to make everything about me."
-      },
+      { category: "Empathy", question: "I try to understand what someone else may be feeling before I judge their reaction." },
+      { category: "Empathy", question: "People often feel heard when they talk to me." },
+      { category: "Empathy", question: "I can usually pick up on emotional shifts in another person's tone or body language." },
+      { category: "Empathy", question: "Even when I disagree with someone, I try to respect their emotional experience." },
+      { category: "Empathy", question: "I make space for other people's feelings without needing to make everything about me." },
 
-      {
-        category: "Regulation",
-        question: "I can calm myself down enough to respond thoughtfully in tense situations."
-      },
-      {
-        category: "Regulation",
-        question: "When I feel hurt, angry, or overwhelmed, I do not always react immediately."
-      },
-      {
-        category: "Regulation",
-        question: "I have at least one healthy way to cope when stress builds up."
-      },
-      {
-        category: "Regulation",
-        question: "I can recover emotionally after a difficult conversation or disappointing moment."
-      },
-      {
-        category: "Regulation",
-        question: "I do not let one bad moment completely control the rest of my day."
-      },
+      { category: "Regulation", question: "I can calm myself down enough to respond thoughtfully in tense situations." },
+      { category: "Regulation", question: "When I feel hurt, angry, or overwhelmed, I do not always react immediately." },
+      { category: "Regulation", question: "I have at least one healthy way to cope when stress builds up." },
+      { category: "Regulation", question: "I can recover emotionally after a difficult conversation or disappointing moment." },
+      { category: "Regulation", question: "I do not let one bad moment completely control the rest of my day." },
 
-      {
-        category: "Communication",
-        question: "I can express how I feel in a way that is honest without being unnecessarily hurtful."
-      },
-      {
-        category: "Communication",
-        question: "I communicate my needs instead of expecting other people to guess them."
-      },
-      {
-        category: "Communication",
-        question: "I can handle feedback without shutting down or becoming defensive every time."
-      },
-      {
-        category: "Communication",
-        question: "I try to resolve misunderstandings instead of avoiding them for too long."
-      },
-      {
-        category: "Communication",
-        question: "In difficult conversations, I try to stay respectful and clear."
-      }
+      { category: "Communication", question: "I can express how I feel in a way that is honest without being unnecessarily hurtful." },
+      { category: "Communication", question: "I communicate my needs instead of expecting other people to guess them." },
+      { category: "Communication", question: "I can handle feedback without shutting down or becoming defensive every time." },
+      { category: "Communication", question: "I try to resolve misunderstandings instead of avoiding them for too long." },
+      { category: "Communication", question: "In difficult conversations, I try to stay respectful and clear." }
     ];
 
     const labels = [
@@ -752,6 +728,7 @@
     const startBtn = document.getElementById("startBtn");
     const backBtn = document.getElementById("backBtn");
     const nextBtn = document.getElementById("nextBtn");
+    const userNameInput = document.getElementById("userName");
 
     const questionCounter = document.getElementById("questionCounter");
     const questionDomain = document.getElementById("questionDomain");
@@ -792,6 +769,11 @@
       [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
       screen.classList.add("active");
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getUserName(){
+      const name = userNameInput.value.trim();
+      return name || "Website Visitor";
     }
 
     function renderQuestion(){
@@ -1016,9 +998,7 @@ https://emotionalintelligencedeveloper.com/`;
       if (navigator.share){
         try{
           await navigator.share(shareData);
-        } catch (err){
-          // user canceled or share failed
-        }
+        } catch (err){}
       } else {
         try{
           await navigator.clipboard.writeText(text);
@@ -1058,6 +1038,7 @@ https://emotionalintelligencedeveloper.com/`;
     async function downloadPDF(){
       const { jsPDF } = window.jspdf;
       const { overall, scaled } = calculateResults();
+      const personName = getUserName();
 
       const doc = new jsPDF({
         orientation: "p",
@@ -1096,25 +1077,30 @@ https://emotionalintelligencedeveloper.com/`;
 
       doc.setDrawColor(219, 229, 234);
       doc.setFillColor(255, 255, 255);
-      doc.roundedRect(42, y, pageWidth - 84, 112, 18, 18, "FD");
+      doc.roundedRect(42, y, pageWidth - 84, 132, 18, 18, "FD");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.setTextColor(18, 33, 43);
+      safeText(doc, `Name: ${personName}`, 60, y + 24);
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.setTextColor(30, 95, 93);
-      safeText(doc, `Overall EI Score: ${overall}/100`, 60, y + 32);
+      safeText(doc, `Overall EI Score: ${overall}/100`, 60, y + 52);
 
       doc.setFont("helvetica", "bold");
       doc.setTextColor(18, 33, 43);
       doc.setFontSize(14);
-      safeText(doc, getOverallHeadline(overall), 60, y + 58);
+      safeText(doc, getOverallHeadline(overall), 60, y + 78);
 
       doc.setFont("helvetica", "normal");
       doc.setTextColor(93, 107, 117);
       doc.setFontSize(10.5);
       const summaryLines = doc.splitTextToSize(getOverallSummary(overall), pageWidth - 124);
-      doc.text(summaryLines, 60, y + 80);
+      doc.text(summaryLines, 60, y + 100);
 
-      y += 138;
+      y += 156;
 
       const domainEntries = [
         ["Self-Awareness", scaled.selfAwareness, getDomainMessage("Self-Awareness", scaled.selfAwareness)],

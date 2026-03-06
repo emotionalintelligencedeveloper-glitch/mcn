@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Is Your Emotional Intelligence Score? | Emotional Intelligence Developer</title>
+  <meta name="description" content="Take this emotional intelligence score quiz to discover your self-awareness, empathy, emotional regulation, and communication strengths." />
+
+  <style>
+    :root{
+      --bg:#eef4f7;
+      --card:#ffffff;
+      --text:#12212b;
+      --muted:#5d6b75;
+      --line:#dbe5ea;
+      --accent:#2a7a78;
+      --accent-dark:#1e5f5d;
+      --soft:#e8f6f5;
+      --gold:#d9a441;
+      --shadow:0 14px 36px rgba(16, 24, 40, 0.08);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#eef4f7 0%, #f8fbfc 100%);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    .wrap{
+      max-width:940px;
+      margin:0 auto;
+      padding:22px;
+    }
+
+    .hero,
+    .card,
+    .question-card,
+    .result-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      padding:28px 24px;
+      margin-top:18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -60px -60px auto;
+      width:220px;
+      height:220px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(42,122,120,0.12), rgba(42,122,120,0));
+      pointer-events:none;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+
+    .brand img{
+      width:68px;
+      height:68px;
+      object-fit:cover;
+      border-radius:18px;
+      border:2px solid #fff;
+      box-shadow:0 8px 22px rgba(0,0,0,0.09);
+      background:#fff;
+    }
+
+    .brand-text{
+      min-width:220px;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      font-size:0.84rem;
+      font-weight:700;
+      color:var(--accent-dark);
+      background:var(--soft);
+      padding:7px 12px;
+      border-radius:999px;
+      margin-bottom:10px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(1.9rem, 3vw, 2.7rem);
+      line-height:1.15;
+      letter-spacing:-0.02em;
+    }
+
+    .sub{
+      margin:0;
+      max-width:720px;
+      color:var(--muted);
+      font-size:1.03rem;
+    }
+
+    .intro-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .mini{
+      background:#f8fbfc;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px 12px;
+      text-align:center;
+    }
+
+    .mini strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:4px;
+    }
+
+    .mini span{
+      color:var(--muted);
+      font-size:0.93rem;
+    }
+
+    .card{
+      padding:22px;
+      margin-top:22px;
+    }
+
+    .screen{
+      display:none;
+    }
+
+    .screen.active{
+      display:block;
+    }
+
+    h2{
+      margin:0 0 8px;
+      font-size:1.45rem;
+      line-height:1.2;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .btn-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button,
+    .link-btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:13px 18px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:0.98rem;
+      transition:transform .15s ease, background .15s ease, opacity .15s ease;
+    }
+
+    button:hover,
+    .link-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .primary{
+      background:var(--accent);
+      color:#fff;
+    }
+
+    .primary:hover{
+      background:var(--accent-dark);
+    }
+
+    .secondary{
+      background:#edf4f6;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .secondary:hover{
+      background:#e4eef1;
+    }
+
+    .question-card{
+      padding:24px;
+      margin-top:20px;
+    }
+
+    .progress-wrap{
+      margin-top:6px;
+      margin-bottom:18px;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+
+    .progress-bar{
+      width:100%;
+      height:12px;
+      background:#eaf0f3;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--line);
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), #4fa5a2);
+      transition:width .25s ease;
+    }
+
+    .category-tag{
+      display:inline-block;
+      background:var(--soft);
+      color:var(--accent-dark);
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:0.82rem;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .question-title{
+      font-size:1.25rem;
+      font-weight:800;
+      line-height:1.35;
+      margin-bottom:14px;
+    }
+
+    .scale{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .option{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:14px 14px;
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      cursor:pointer;
+      transition:border-color .16s ease, background .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+
+    .option:hover{
+      transform:translateY(-1px);
+      border-color:#b8cdd4;
+      box-shadow:0 8px 20px rgba(16,24,40,0.04);
+    }
+
+    .option input{
+      margin-top:4px;
+      transform:scale(1.2);
+      accent-color:var(--accent);
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .option.selected{
+      border-color:var(--accent);
+      background:#f5fbfb;
+    }
+
+    .option strong{
+      display:block;
+      font-size:0.98rem;
+      margin-bottom:2px;
+    }
+
+    .option span{
+      color:var(--muted);
+      font-size:0.92rem;
+    }
+
+    .nav-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .result-card{
+      padding:24px;
+      margin-top:20px;
+    }
+
+    .score-hero{
+      text-align:center;
+      padding:26px 18px;
+      background:linear-gradient(180deg,#f8fcfc 0%, #edf8f7 100%);
+      border:1px solid var(--line);
+      border-radius:20px;
+    }
+
+    .score-circle{
+      width:150px;
+      height:150px;
+      margin:0 auto 14px;
+      border-radius:50%;
+      border:8px solid #d6eceb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff;
+      box-shadow:inset 0 0 0 6px #f2f8f8;
+    }
+
+    .score-circle span{
+      display:block;
+      font-size:2.3rem;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .score-circle small{
+      display:block;
+      color:var(--muted);
+      font-size:0.82rem;
+      margin-top:4px;
+      letter-spacing:.04em;
+    }
+
+    .result-title{
+      font-size:1.5rem;
+      margin:0 0 6px;
+    }
+
+    .result-summary{
+      max-width:700px;
+      margin:0 auto;
+      color:var(--muted);
+    }
+
+    .domain-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+      margin-top:20px;
+    }
+
+    .domain{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:#fff;
+    }
+
+    .domain h3{
+      margin:0 0 8px;
+      font-size:1.05rem;
+    }
+
+    .domain-score{
+      font-size:1.6rem;
+      font-weight:800;
+      color:var(--accent-dark);
+      margin-bottom:8px;
+    }
+
+    .bar{
+      width:100%;
+      height:11px;
+      border-radius:999px;
+      overflow:hidden;
+      background:#edf3f5;
+      border:1px solid var(--line);
+      margin:10px 0 10px;
+    }
+
+    .bar > div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg, var(--accent), #67b6b3);
+    }
+
+    .share-box{
+      margin-top:20px;
+      padding:18px;
+      border:1px dashed #b8ccd2;
+      border-radius:18px;
+      background:#f9fcfc;
+    }
+
+    .share-preview{
+      white-space:pre-wrap;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      color:#31424d;
+      margin-top:12px;
+      font-size:0.96rem;
+    }
+
+    .pdf-note{
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-top:10px;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin:28px 0 12px;
+    }
+
+    .footer-links a{
+      color:var(--accent-dark);
+      font-weight:700;
+      text-decoration:none;
+      background:#fff;
+      border:1px solid var(--line);
+      padding:12px 16px;
+      border-radius:14px;
+      box-shadow:0 8px 20px rgba(16,24,40,0.04);
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:0.92rem;
+      margin-bottom:25px;
+    }
+
+    @media (max-width: 760px){
+      .intro-grid,
+      .domain-grid{
+        grid-template-columns:1fr;
+      }
+
+      .wrap{
+        padding:16px;
+      }
+
+      .hero,
+      .card,
+      .question-card,
+      .result-card{
+        border-radius:18px;
+      }
+
+      .score-circle{
+        width:128px;
+        height:128px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="brand">
+        <img
+          src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg"
+          alt="Emotional Intelligence Developer logo"
+          id="siteLogo"
+        />
+        <div class="brand-text">
+          <div class="eyebrow">Shareable Emotional Intelligence Quiz</div>
+          <div style="font-weight:800;font-size:1rem;">Emotional Intelligence Developer</div>
+        </div>
+      </div>
+
+      <h1>What Is Your Emotional Intelligence Score?</h1>
+      <p class="sub">
+        Discover how you currently score in self-awareness, empathy, emotional regulation, and communication.
+        Answer 20 quick questions, get your result instantly, download a branded PDF, and share your score.
+      </p>
+
+      <div class="intro-grid">
+        <div class="mini">
+          <strong>20 Questions</strong>
+          <span>Fast and engaging</span>
+        </div>
+        <div class="mini">
+          <strong>4 Core Areas</strong>
+          <span>Clear category scoring</span>
+        </div>
+        <div class="mini">
+          <strong>Share Result</strong>
+          <span>Built for social sharing</span>
+        </div>
+        <div class="mini">
+          <strong>PDF Download</strong>
+          <span>With your logo included</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card screen active" id="startScreen">
+      <h2>See how your emotional intelligence shows up in daily life</h2>
+      <p class="muted">
+        This quiz is designed to feel simple, human, and easy to complete. Your final result gives you one
+        overall emotional intelligence score and four deeper scores:
+      </p>
+
+      <div class="intro-grid" style="margin-top:16px;">
+        <div class="mini"><strong>Self-Awareness</strong><span>Understanding your inner state</span></div>
+        <div class="mini"><strong>Empathy</strong><span>Reading and valuing others</span></div>
+        <div class="mini"><strong>Regulation</strong><span>Managing reactions and stress</span></div>
+        <div class="mini"><strong>Communication</strong><span>Expressing yourself clearly</span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="primary" id="startBtn">Start My Score</button>
+      </div>
+    </section>
+
+    <section class="question-card screen" id="quizScreen">
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <div style="font-weight:800;" id="questionCounter">Question 1 of 20</div>
+          <div class="muted" id="questionDomain">Self-Awareness</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="category-tag" id="categoryTag">Self-Awareness</div>
+      <div class="question-title" id="questionText"></div>
+
+      <div class="muted" style="margin-bottom:8px;">Choose the answer that feels most true for you lately.</div>
+
+      <div class="scale" id="optionsWrap"></div>
+
+      <div class="nav-row">
+        <button class="secondary" id="backBtn">Back</button>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+    </section>
+
+    <section class="result-card screen" id="resultScreen">
+      <div class="score-hero">
+        <div class="score-circle">
+          <div>
+            <span id="overallScore">0</span>
+            <small>EI SCORE</small>
+          </div>
+        </div>
+        <h2 class="result-title" id="resultLabel">Your Emotional Intelligence Score</h2>
+        <p class="result-summary" id="resultSummary"></p>
+      </div>
+
+      <div class="domain-grid">
+        <div class="domain">
+          <h3>Self-Awareness</h3>
+          <div class="domain-score" id="selfAwarenessScore">0</div>
+          <div class="bar"><div id="selfAwarenessBar"></div></div>
+          <div class="muted" id="selfAwarenessText"></div>
+        </div>
+
+        <div class="domain">
+          <h3>Empathy</h3>
+          <div class="domain-score" id="empathyScore">0</div>
+          <div class="bar"><div id="empathyBar"></div></div>
+          <div class="muted" id="empathyText"></div>
+        </div>
+
+        <div class="domain">
+          <h3>Regulation</h3>
+          <div class="domain-score" id="regulationScore">0</div>
+          <div class="bar"><div id="regulationBar"></div></div>
+          <div class="muted" id="regulationText"></div>
+        </div>
+
+        <div class="domain">
+          <h3>Communication</h3>
+          <div class="domain-score" id="communicationScore">0</div>
+          <div class="bar"><div id="communicationBar"></div></div>
+          <div class="muted" id="communicationText"></div>
+        </div>
+      </div>
+
+      <div class="share-box">
+        <strong>Share your result</strong>
+        <div class="share-preview" id="sharePreview"></div>
+        <div class="btn-row">
+          <button class="primary" id="shareBtn">Share My Score</button>
+          <button class="secondary" id="copyBtn">Copy Text</button>
+          <button class="secondary" id="pdfBtn">Download PDF</button>
+          <button class="secondary" id="restartBtn">Retake Quiz</button>
+        </div>
+        <div class="pdf-note">
+          Your PDF includes the Emotional Intelligence Developer logo and your category scores.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-links">
+      <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Website</a>
+      <a href="https://emotionalintelligencedeveloper.com/the-emotional-intelligence-tools-library/" target="_blank" rel="noopener">More Free Tools</a>
+    </div>
+    <div class="footer-note">
+      Emotional Intelligence Developer — practical tools for self-reflection, emotional growth, and wellbeing.
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script>
+    const quizData = [
+      {
+        category: "Self-Awareness",
+        question: "I can usually tell what I am feeling before my mood affects my behaviour."
+      },
+      {
+        category: "Self-Awareness",
+        question: "When something upsets me, I can name the emotion instead of just saying I feel bad."
+      },
+      {
+        category: "Self-Awareness",
+        question: "I notice patterns in what triggers stress, frustration, or discouragement in me."
+      },
+      {
+        category: "Self-Awareness",
+        question: "I can tell when my body is giving me signs that I need rest, space, or support."
+      },
+      {
+        category: "Self-Awareness",
+        question: "I reflect on my reactions instead of assuming I am always completely right."
+      },
+
+      {
+        category: "Empathy",
+        question: "I try to understand what someone else may be feeling before I judge their reaction."
+      },
+      {
+        category: "Empathy",
+        question: "People often feel heard when they talk to me."
+      },
+      {
+        category: "Empathy",
+        question: "I can usually pick up on emotional shifts in another person's tone or body language."
+      },
+      {
+        category: "Empathy",
+        question: "Even when I disagree with someone, I try to respect their emotional experience."
+      },
+      {
+        category: "Empathy",
+        question: "I make space for other people's feelings without needing to make everything about me."
+      },
+
+      {
+        category: "Regulation",
+        question: "I can calm myself down enough to respond thoughtfully in tense situations."
+      },
+      {
+        category: "Regulation",
+        question: "When I feel hurt, angry, or overwhelmed, I do not always react immediately."
+      },
+      {
+        category: "Regulation",
+        question: "I have at least one healthy way to cope when stress builds up."
+      },
+      {
+        category: "Regulation",
+        question: "I can recover emotionally after a difficult conversation or disappointing moment."
+      },
+      {
+        category: "Regulation",
+        question: "I do not let one bad moment completely control the rest of my day."
+      },
+
+      {
+        category: "Communication",
+        question: "I can express how I feel in a way that is honest without being unnecessarily hurtful."
+      },
+      {
+        category: "Communication",
+        question: "I communicate my needs instead of expecting other people to guess them."
+      },
+      {
+        category: "Communication",
+        question: "I can handle feedback without shutting down or becoming defensive every time."
+      },
+      {
+        category: "Communication",
+        question: "I try to resolve misunderstandings instead of avoiding them for too long."
+      },
+      {
+        category: "Communication",
+        question: "In difficult conversations, I try to stay respectful and clear."
+      }
+    ];
+
+    const labels = [
+      { value: 1, title: "Rarely", description: "This is not usually true for me" },
+      { value: 2, title: "Sometimes", description: "True once in a while" },
+      { value: 3, title: "Often", description: "True more regularly" },
+      { value: 4, title: "Usually", description: "True in many situations" },
+      { value: 5, title: "Almost Always", description: "This describes me very well" }
+    ];
+
+    const categoryKeys = {
+      "Self-Awareness": "selfAwareness",
+      "Empathy": "empathy",
+      "Regulation": "regulation",
+      "Communication": "communication"
+    };
+
+    let currentQuestion = 0;
+    let answers = new Array(quizData.length).fill(null);
+
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+
+    const startBtn = document.getElementById("startBtn");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const questionCounter = document.getElementById("questionCounter");
+    const questionDomain = document.getElementById("questionDomain");
+    const categoryTag = document.getElementById("categoryTag");
+    const questionText = document.getElementById("questionText");
+    const optionsWrap = document.getElementById("optionsWrap");
+    const progressFill = document.getElementById("progressFill");
+
+    const overallScoreEl = document.getElementById("overallScore");
+    const resultLabel = document.getElementById("resultLabel");
+    const resultSummary = document.getElementById("resultSummary");
+    const sharePreview = document.getElementById("sharePreview");
+
+    const fieldRefs = {
+      selfAwareness: {
+        score: document.getElementById("selfAwarenessScore"),
+        bar: document.getElementById("selfAwarenessBar"),
+        text: document.getElementById("selfAwarenessText")
+      },
+      empathy: {
+        score: document.getElementById("empathyScore"),
+        bar: document.getElementById("empathyBar"),
+        text: document.getElementById("empathyText")
+      },
+      regulation: {
+        score: document.getElementById("regulationScore"),
+        bar: document.getElementById("regulationBar"),
+        text: document.getElementById("regulationText")
+      },
+      communication: {
+        score: document.getElementById("communicationScore"),
+        bar: document.getElementById("communicationBar"),
+        text: document.getElementById("communicationText")
+      }
+    };
+
+    function showScreen(screen){
+      [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+      screen.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderQuestion(){
+      const item = quizData[currentQuestion];
+      questionCounter.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+      questionDomain.textContent = item.category;
+      categoryTag.textContent = item.category;
+      questionText.textContent = item.question;
+      progressFill.style.width = `${((currentQuestion) / quizData.length) * 100}%`;
+
+      optionsWrap.innerHTML = "";
+      labels.forEach(label => {
+        const option = document.createElement("label");
+        option.className = "option";
+        if (answers[currentQuestion] === label.value) option.classList.add("selected");
+
+        option.innerHTML = `
+          <input type="radio" name="answer" value="${label.value}" ${answers[currentQuestion] === label.value ? "checked" : ""}>
+          <div>
+            <strong>${label.title}</strong>
+            <span>${label.description}</span>
+          </div>
+        `;
+
+        option.addEventListener("click", () => {
+          answers[currentQuestion] = label.value;
+          renderQuestion();
+        });
+
+        optionsWrap.appendChild(option);
+      });
+
+      backBtn.style.visibility = currentQuestion === 0 ? "hidden" : "visible";
+      nextBtn.textContent = currentQuestion === quizData.length - 1 ? "See My Result" : "Next";
+    }
+
+    function getLevel(score){
+      if (score >= 85) return "Very strong";
+      if (score >= 70) return "Strong";
+      if (score >= 55) return "Developing well";
+      if (score >= 40) return "Growing";
+      return "Needs attention";
+    }
+
+    function getDomainMessage(domain, score){
+      const level = getLevel(score);
+
+      const messages = {
+        "Self-Awareness": {
+          high: "You appear tuned into your emotions and are likely good at noticing your patterns before they take over.",
+          mid: "You have a decent awareness of your inner world, with room to become even more reflective and intentional.",
+          low: "You may benefit from slowing down and checking in with your feelings before they build up."
+        },
+        "Empathy": {
+          high: "You seem good at picking up on other people's emotions and making people feel understood.",
+          mid: "You likely care deeply, and with more intentional listening your empathy could become even stronger.",
+          low: "You may need more space to pause, listen, and consider what others are experiencing."
+        },
+        "Regulation": {
+          high: "You seem able to steady yourself emotionally and recover well when life feels difficult.",
+          mid: "You have some helpful coping ability, though stress may still throw you off more than you would like.",
+          low: "Strong feelings may be hard to manage at times, and supportive tools could help you respond more calmly."
+        },
+        "Communication": {
+          high: "You likely express yourself clearly, respectfully, and with emotional honesty.",
+          mid: "You have a solid base, though difficult conversations may still feel challenging at times.",
+          low: "You may find it hard to express your needs or work through emotionally charged conversations."
+        }
+      };
+
+      let detail = "";
+      if (score >= 70) detail = messages[domain].high;
+      else if (score >= 45) detail = messages[domain].mid;
+      else detail = messages[domain].low;
+
+      return `${level}. ${detail}`;
+    }
+
+    function calculateResults(){
+      const totals = {
+        selfAwareness: 0,
+        empathy: 0,
+        regulation: 0,
+        communication: 0
+      };
+
+      quizData.forEach((q, i) => {
+        const key = categoryKeys[q.category];
+        totals[key] += Number(answers[i] || 0);
+      });
+
+      const scaled = {};
+      Object.keys(totals).forEach(key => {
+        scaled[key] = Math.round((totals[key] / 25) * 100);
+      });
+
+      const overall = Math.round(
+        (scaled.selfAwareness + scaled.empathy + scaled.regulation + scaled.communication) / 4
+      );
+
+      return { overall, scaled };
+    }
+
+    function getOverallHeadline(score){
+      if (score >= 85) return "You have a very strong emotional intelligence profile";
+      if (score >= 70) return "You have a strong emotional intelligence profile";
+      if (score >= 55) return "You have a promising emotional intelligence profile";
+      if (score >= 40) return "You are building your emotional intelligence";
+      return "Your emotional intelligence may need more support right now";
+    }
+
+    function getOverallSummary(score){
+      if (score >= 85){
+        return "You seem highly emotionally aware, thoughtful, and balanced. You likely understand both your own feelings and the feelings of others, and you may already bring emotional steadiness into relationships and communication.";
+      }
+      if (score >= 70){
+        return "You show strong emotional intelligence in many areas. You likely have healthy insight, empathy, and communication habits, with a few areas that could still become even stronger over time.";
+      }
+      if (score >= 55){
+        return "You have a solid foundation to build on. Some emotional intelligence habits are already present, and with practice you could become much more confident in handling emotions, conflict, and connection.";
+      }
+      if (score >= 40){
+        return "You may be in a season of learning, stress, or self-discovery. This result does not mean you are failing. It means there is room to build tools that help you understand yourself and others more clearly.";
+      }
+      return "You may be carrying emotional strain, overwhelm, or patterns that make self-awareness and connection harder right now. Growth is still possible, and small reflective steps can make a meaningful difference.";
+    }
+
+    function buildShareText(overall, scaled){
+      return `I got ${overall}/100 on the Emotional Intelligence Score quiz.
+
+Self-Awareness: ${scaled.selfAwareness}/100
+Empathy: ${scaled.empathy}/100
+Regulation: ${scaled.regulation}/100
+Communication: ${scaled.communication}/100
+
+Take the quiz:
+https://emotionalintelligencedeveloper-glitch.github.io/mcn/emotional-intelligence-score.html
+
+From Emotional Intelligence Developer
+https://emotionalintelligencedeveloper.com/`;
+    }
+
+    function renderResults(){
+      const { overall, scaled } = calculateResults();
+
+      overallScoreEl.textContent = overall;
+      resultLabel.textContent = getOverallHeadline(overall);
+      resultSummary.textContent = getOverallSummary(overall);
+
+      fieldRefs.selfAwareness.score.textContent = `${scaled.selfAwareness}/100`;
+      fieldRefs.selfAwareness.bar.style.width = `${scaled.selfAwareness}%`;
+      fieldRefs.selfAwareness.text.textContent = getDomainMessage("Self-Awareness", scaled.selfAwareness);
+
+      fieldRefs.empathy.score.textContent = `${scaled.empathy}/100`;
+      fieldRefs.empathy.bar.style.width = `${scaled.empathy}%`;
+      fieldRefs.empathy.text.textContent = getDomainMessage("Empathy", scaled.empathy);
+
+      fieldRefs.regulation.score.textContent = `${scaled.regulation}/100`;
+      fieldRefs.regulation.bar.style.width = `${scaled.regulation}%`;
+      fieldRefs.regulation.text.textContent = getDomainMessage("Regulation", scaled.regulation);
+
+      fieldRefs.communication.score.textContent = `${scaled.communication}/100`;
+      fieldRefs.communication.bar.style.width = `${scaled.communication}%`;
+      fieldRefs.communication.text.textContent = getDomainMessage("Communication", scaled.communication);
+
+      sharePreview.textContent = buildShareText(overall, scaled);
+    }
+
+    startBtn.addEventListener("click", () => {
+      currentQuestion = 0;
+      showScreen(quizScreen);
+      renderQuestion();
+    });
+
+    backBtn.addEventListener("click", () => {
+      if (currentQuestion > 0){
+        currentQuestion--;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (!answers[currentQuestion]){
+        alert("Please choose an answer before continuing.");
+        return;
+      }
+
+      if (currentQuestion < quizData.length - 1){
+        currentQuestion++;
+        renderQuestion();
+      } else {
+        progressFill.style.width = "100%";
+        renderResults();
+        showScreen(resultScreen);
+      }
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      answers = new Array(quizData.length).fill(null);
+      currentQuestion = 0;
+      showScreen(startScreen);
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      const text = sharePreview.textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Your score text has been copied.");
+      } catch (err){
+        alert("Copy failed. Please copy the text manually.");
+      }
+    });
+
+    document.getElementById("shareBtn").addEventListener("click", async () => {
+      const text = sharePreview.textContent;
+      const shareData = {
+        title: "My Emotional Intelligence Score",
+        text,
+        url: "https://emotionalintelligencedeveloper-glitch.github.io/mcn/emotional-intelligence-score.html"
+      };
+
+      if (navigator.share){
+        try{
+          await navigator.share(shareData);
+        } catch (err){
+          // user canceled or share failed
+        }
+      } else {
+        try{
+          await navigator.clipboard.writeText(text);
+          alert("Sharing is not supported here, so your score text was copied instead.");
+        } catch (err){
+          alert("Sharing is not supported in this browser.");
+        }
+      }
+    });
+
+    function loadImageAsDataURL(url){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = function(){
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          try{
+            const dataURL = canvas.toDataURL("image/jpeg", 0.92);
+            resolve(dataURL);
+          } catch (e){
+            reject(e);
+          }
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+
+    function safeText(doc, text, x, y, options = {}){
+      doc.text(String(text), x, y, options);
+    }
+
+    async function downloadPDF(){
+      const { jsPDF } = window.jspdf;
+      const { overall, scaled } = calculateResults();
+
+      const doc = new jsPDF({
+        orientation: "p",
+        unit: "pt",
+        format: "a4"
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      let y = 48;
+
+      doc.setFillColor(248, 252, 252);
+      doc.roundedRect(26, 26, pageWidth - 52, pageHeight - 52, 18, 18, "F");
+
+      try{
+        const logoData = await loadImageAsDataURL("https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg");
+        doc.addImage(logoData, "JPEG", 42, y, 48, 48);
+      } catch (e){
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(42, 122, 120);
+        safeText(doc, "Emotional Intelligence Developer", 42, y + 26);
+      }
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(18, 33, 43);
+      doc.setFontSize(22);
+      safeText(doc, "What Is Your Emotional Intelligence Score?", 102, y + 20);
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(93, 107, 117);
+      doc.setFontSize(10.5);
+      safeText(doc, "Personal emotional intelligence report", 102, y + 40);
+
+      y += 82;
+
+      doc.setDrawColor(219, 229, 234);
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(42, y, pageWidth - 84, 112, 18, 18, "FD");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(30, 95, 93);
+      safeText(doc, `Overall EI Score: ${overall}/100`, 60, y + 32);
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(18, 33, 43);
+      doc.setFontSize(14);
+      safeText(doc, getOverallHeadline(overall), 60, y + 58);
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(93, 107, 117);
+      doc.setFontSize(10.5);
+      const summaryLines = doc.splitTextToSize(getOverallSummary(overall), pageWidth - 124);
+      doc.text(summaryLines, 60, y + 80);
+
+      y += 138;
+
+      const domainEntries = [
+        ["Self-Awareness", scaled.selfAwareness, getDomainMessage("Self-Awareness", scaled.selfAwareness)],
+        ["Empathy", scaled.empathy, getDomainMessage("Empathy", scaled.empathy)],
+        ["Regulation", scaled.regulation, getDomainMessage("Regulation", scaled.regulation)],
+        ["Communication", scaled.communication, getDomainMessage("Communication", scaled.communication)]
+      ];
+
+      domainEntries.forEach((entry, index) => {
+        const boxX = index % 2 === 0 ? 42 : pageWidth / 2 + 8;
+        const boxY = y + Math.floor(index / 2) * 148;
+        const boxW = pageWidth / 2 - 50;
+        const title = entry[0];
+        const score = entry[1];
+        const text = entry[2];
+
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(219, 229, 234);
+        doc.roundedRect(boxX, boxY, boxW, 130, 16, 16, "FD");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.setTextColor(18, 33, 43);
+        safeText(doc, title, boxX + 16, boxY + 24);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.setTextColor(30, 95, 93);
+        safeText(doc, `${score}/100`, boxX + 16, boxY + 48);
+
+        doc.setDrawColor(219, 229, 234);
+        doc.setFillColor(237, 243, 245);
+        doc.roundedRect(boxX + 16, boxY + 58, boxW - 32, 10, 10, 10, "FD");
+
+        doc.setFillColor(42, 122, 120);
+        doc.roundedRect(boxX + 16, boxY + 58, (boxW - 32) * (score / 100), 10, 10, 10, "F");
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9.6);
+        doc.setTextColor(93, 107, 117);
+        const lines = doc.splitTextToSize(text, boxW - 32);
+        doc.text(lines, boxX + 16, boxY + 86);
+      });
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(93, 107, 117);
+      doc.setFontSize(9.5);
+      safeText(doc, "From Emotional Intelligence Developer", 42, pageHeight - 44);
+      safeText(doc, "https://emotionalintelligencedeveloper.com/", pageWidth - 225, pageHeight - 44);
+
+      doc.save("emotional-intelligence-score-report.pdf");
+    }
+
+    document.getElementById("pdfBtn").addEventListener("click", async () => {
+      try{
+        await downloadPDF();
+      } catch (err){
+        alert("The PDF could not be generated right now. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

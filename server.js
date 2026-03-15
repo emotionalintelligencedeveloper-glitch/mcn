@@ -23,46 +23,63 @@ const io = new Server(server, {
   }
 });
 
+/* DO NOT CHANGE — YOUR SECRETS */
 const API_KEY = process.env.MY_SECRET_API_KEY;
 const ADMIN_ID = process.env.ADMIN_ID;
 const ADMIN_PW = process.env.ADMIN_PW;
 
+/* GAME CONSTANTS */
+
+const VOTE_TARGET = 10;
+const WORD_TARGET = 396;
+
 let roundNumber = 1;
-let roundActive = true;
-let fullMessage = "";
-let currentMessages = [];
-let activeUsers = new Map();        // socket.id -> username
-let submittedUsers = new Set();     // username per round
-let votedUsers = new Set();         // socket.id per round
 
-function sanitizeUsername(value) {
-  return String(value || "").trim().slice(0, 31);
-}
+/* GAME STATE */
 
-function sanitizeMessage(value) {
-  return String(value || "").trim().replace(/\s+/g, " ").slice(0, 220);
+let game = {
+  phase: "headline",
+  lockedHeadlineText: "",
+  storyPieces: [],
+  finalStory: "",
+  currentHeadlines: [],
+  currentMessages: [],
+  currentConclusions: [],
+  headlineSubmissions: new Set(),
+  messageSubmissions: new Set(),
+  conclusionSubmissions: new Set(),
+  votedUsers: new Set()
+};
+
+let activeUsers = new Map();
+
+/* HELPERS */
+
+function sanitize(value, max) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, max);
 }
 
 function validUsername(username) {
   return /^[A-Za-z0-9._\- ]{1,31}$/.test(username);
 }
 
-function validMessage(text) {
-  return text.length >= 2 && text.length <= 220;
+function wordCount(text) {
+  return String(text || "").trim().split(/\s+/).filter(Boolean).length;
 }
 
 function publicState() {
   return {
+    phase: game.phase,
     roundNumber,
-    roundActive,
-    fullMessage,
-    currentMessages: currentMessages.map((m) => ({
-      id: m.id,
-      username: m.username,
-      text: m.text,
-      votes: m.votes
-    })),
-    playerCount: activeUsers.size
+    lockedHeadlineText: game.lockedHeadlineText,
+    storyPieces: game.storyPieces,
+    finalStory: game.finalStory,
+    currentHeadlines: game.currentHeadlines,
+    currentMessages: game.currentMessages,
+    currentConclusions: game.currentConclusions,
+    playerCount: activeUsers.size,
+    voteTarget: VOTE_TARGET,
+    wordTarget: WORD_TARGET
   };
 }
 
@@ -71,206 +88,291 @@ function emitState() {
   io.emit("playerCount", { count: activeUsers.size });
 }
 
+function getWinner(list) {
+  if (!list.length) return null;
+  return list.reduce((best, item) => {
+    if (item.votes > best.votes) return item;
+    if (item.votes === best.votes && item.createdAt < best.createdAt) return item;
+    return best;
+  });
+}
+
+/* SOCKET CONNECTION */
+
 io.on("connection", (socket) => {
+
   socket.emit("gameState", publicState());
 
+  /* REGISTER USER */
+
   socket.on("registerUser", (data = {}) => {
-    const username = sanitizeUsername(data.username);
+
+    const username = sanitize(data.username, 31);
 
     if (!validUsername(username)) {
-      socket.emit("gameError", {
-        message: "Username must be 1 to 31 characters and use only letters, numbers, spaces, dots, hyphens, or underscores."
-      });
-      return;
-    }
-
-    const usernameTaken = Array.from(activeUsers.entries()).some(
-      ([socketId, existingUsername]) =>
-        socketId !== socket.id &&
-        existingUsername.toLowerCase() === username.toLowerCase()
-    );
-
-    if (usernameTaken) {
-      socket.emit("gameError", {
-        message: "That username is already in use. Please choose another one."
-      });
+      socket.emit("gameError", { message: "Invalid username." });
       return;
     }
 
     activeUsers.set(socket.id, username);
 
-    socket.emit("registered", {
-      ok: true,
-      username
-    });
+    socket.emit("registered", { username });
 
-    io.emit("playerCount", { count: activeUsers.size });
+    emitState();
   });
 
-  socket.on("submitMessage", (data = {}) => {
-    if (!roundActive) {
-      socket.emit("gameError", { message: "This round is closed." });
+  /* SUBMIT HEADLINE */
+
+  socket.on("submitHeadline", (data = {}) => {
+
+    if (game.phase !== "headline") {
+      socket.emit("gameError", { message: "Headline round closed." });
       return;
     }
 
     const username = activeUsers.get(socket.id);
     if (!username) {
-      socket.emit("gameError", { message: "Register your username first." });
+      socket.emit("gameError", { message: "Register first." });
       return;
     }
 
-    const text = sanitizeMessage(data.text);
+    const text = sanitize(data.text, 90);
 
-    if (!validMessage(text)) {
-      socket.emit("gameError", { message: "Message must be 2 to 220 characters." });
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Headline too short." });
       return;
     }
 
-    if (submittedUsers.has(username.toLowerCase())) {
-      socket.emit("gameError", { message: "You already submitted one message this round." });
+    if (game.headlineSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted headline." });
       return;
     }
 
-    const newMessage = {
+    const item = {
       id: crypto.randomUUID(),
-      username,
       text,
+      username,
       votes: 0,
       createdAt: Date.now()
     };
 
-    currentMessages.push(newMessage);
-    submittedUsers.add(username.toLowerCase());
+    game.currentHeadlines.push(item);
+    game.headlineSubmissions.add(username);
 
-    io.emit("newMessage", {
-      id: newMessage.id,
-      username: newMessage.username,
-      text: newMessage.text,
-      votes: newMessage.votes
-    });
-
-    io.emit("gameState", publicState());
+    io.emit("newHeadline", item);
+    emitState();
   });
 
-  socket.on("castVote", (data = {}) => {
-    if (!roundActive) {
-      socket.emit("gameError", { message: "Voting is closed." });
+  /* SUBMIT MESSAGE */
+
+  socket.on("submitMessage", (data = {}) => {
+
+    if (game.phase !== "message") {
+      socket.emit("gameError", { message: "Message round closed." });
       return;
     }
 
-    const messageId = String(data.messageId || "").trim();
-    const msg = currentMessages.find((m) => m.id === messageId);
+    const username = activeUsers.get(socket.id);
 
-    if (!msg) {
-      socket.emit("gameError", { message: "Message not found." });
+    const text = sanitize(data.text, 300);
+
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Message too short." });
       return;
     }
 
-    if (votedUsers.has(socket.id)) {
-      socket.emit("gameError", { message: "You already voted this round." });
+    if (game.messageSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted paragraph." });
       return;
     }
 
-    msg.votes += 1;
-    votedUsers.add(socket.id);
+    const item = {
+      id: crypto.randomUUID(),
+      text,
+      username,
+      votes: 0,
+      createdAt: Date.now()
+    };
 
-    io.emit("updateVotes", {
-      id: msg.id,
-      votes: msg.votes
-    });
+    game.currentMessages.push(item);
+    game.messageSubmissions.add(username);
+
+    io.emit("newMessage", item);
+    emitState();
   });
 
-  socket.on("adminDelete", (data = {}) => {
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
-      socket.emit("gameError", { message: "Unauthorized admin action." });
+  /* SUBMIT CONCLUSION */
+
+  socket.on("submitConclusion", (data = {}) => {
+
+    if (game.phase !== "conclusion") {
+      socket.emit("gameError", { message: "Conclusion round closed." });
       return;
     }
 
-    const messageId = String(data.messageId || "").trim();
-    const removed = currentMessages.find((m) => m.id === messageId);
+    const username = activeUsers.get(socket.id);
 
-    currentMessages = currentMessages.filter((m) => m.id !== messageId);
+    const text = sanitize(data.text, 300);
 
-    if (removed) {
-      submittedUsers.delete(removed.username.toLowerCase());
-      io.emit("messageRemoved", { id: messageId });
-      io.emit("gameState", publicState());
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Conclusion too short." });
+      return;
     }
+
+    if (game.conclusionSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted conclusion." });
+      return;
+    }
+
+    const item = {
+      id: crypto.randomUUID(),
+      text,
+      username,
+      votes: 0,
+      createdAt: Date.now()
+    };
+
+    game.currentConclusions.push(item);
+    game.conclusionSubmissions.add(username);
+
+    io.emit("newConclusion", item);
+    emitState();
   });
 
-  socket.on("finalizeRound", (data = {}) => {
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
-      socket.emit("gameError", { message: "Unauthorized admin action." });
+  /* VOTE */
+
+  socket.on("castVote", ({ messageId }) => {
+
+    if (game.votedUsers.has(socket.id)) {
+      socket.emit("gameError", { message: "Already voted." });
       return;
     }
 
-    roundActive = false;
+    let list;
 
-    let winner = null;
+    if (game.phase === "headline") list = game.currentHeadlines;
+    if (game.phase === "message") list = game.currentMessages;
+    if (game.phase === "conclusion") list = game.currentConclusions;
 
-    if (currentMessages.length > 0) {
-      winner = currentMessages.reduce((best, current) => {
-        if (current.votes > best.votes) return current;
-        if (current.votes === best.votes && current.createdAt < best.createdAt) return current;
-        return best;
-      });
+    const item = list.find(x => x.id === messageId);
 
-      fullMessage = fullMessage
-        ? `${fullMessage} ${winner.text}`.trim()
-        : winner.text.trim();
-    }
+    if (!item) return;
 
-    io.emit("roundFinalized", {
-      fullMessage,
-      winningMessage: winner
-        ? {
-            id: winner.id,
-            username: winner.username,
-            text: winner.text,
-            votes: winner.votes
-          }
-        : null
-    });
+    item.votes++;
 
-    roundNumber += 1;
-    roundActive = true;
-    currentMessages = [];
-    submittedUsers = new Set();
-    votedUsers = new Set();
+    game.votedUsers.add(socket.id);
 
-    io.emit("nextSection", {
-      roundNumber,
-      fullMessage,
-      currentMessages: []
-    });
+    io.emit("updateVotes", { id: item.id, votes: item.votes });
 
     emitState();
   });
 
-  socket.on("disconnect", () => {
-    const username = activeUsers.get(socket.id);
+  /* ADMIN DELETE */
 
-    activeUsers.delete(socket.id);
-    votedUsers.delete(socket.id);
+  socket.on("adminDelete", (data = {}) => {
 
-    if (username) {
-      const usernameLower = username.toLowerCase();
-      const stillConnectedWithSameName = Array.from(activeUsers.values()).some(
-        (name) => name.toLowerCase() === usernameLower
-      );
-
-      if (!stillConnectedWithSameName) {
-        const stillHasMessageThisRound = currentMessages.some(
-          (msg) => msg.username.toLowerCase() === usernameLower
-        );
-
-        if (!stillHasMessageThisRound) {
-          submittedUsers.delete(usernameLower);
-        }
-      }
+    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
     }
 
-    io.emit("playerCount", { count: activeUsers.size });
+    const { phase, messageId } = data;
+
+    let list;
+
+    if (phase === "headline") list = game.currentHeadlines;
+    if (phase === "message") list = game.currentMessages;
+    if (phase === "conclusion") list = game.currentConclusions;
+
+    const updated = list.filter(x => x.id !== messageId);
+
+    if (phase === "headline") game.currentHeadlines = updated;
+    if (phase === "message") game.currentMessages = updated;
+    if (phase === "conclusion") game.currentConclusions = updated;
+
+    io.emit("submissionRemoved", { phase, id: messageId });
+
+    emitState();
+  });
+
+  /* FINALIZE ROUND */
+
+  socket.on("finalizeRound", (data = {}) => {
+
+    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
+    }
+
+    if (game.phase === "headline") {
+
+      const winner = getWinner(game.currentHeadlines);
+      if (!winner) return;
+
+      game.lockedHeadlineText = winner.text;
+
+      game.currentHeadlines = [];
+      game.headlineSubmissions.clear();
+      game.votedUsers.clear();
+
+      game.phase = "message";
+
+      io.emit("roundFinalized", { winner });
+
+      emitState();
+      return;
+    }
+
+    if (game.phase === "message") {
+
+      const winner = getWinner(game.currentMessages);
+      if (!winner) return;
+
+      game.storyPieces.push({ text: winner.text });
+
+      const words = wordCount(game.storyPieces.map(x => x.text).join(" "));
+
+      game.currentMessages = [];
+      game.messageSubmissions.clear();
+      game.votedUsers.clear();
+
+      roundNumber++;
+
+      if (words >= WORD_TARGET) {
+        game.phase = "conclusion";
+      }
+
+      io.emit("roundFinalized", { winner });
+
+      emitState();
+      return;
+    }
+
+    if (game.phase === "conclusion") {
+
+      const winner = getWinner(game.currentConclusions);
+      if (!winner) return;
+
+      const storyBody = game.storyPieces.map(x => x.text).join(" ");
+
+      game.finalStory = `${game.lockedHeadlineText}\n\n${storyBody}\n\n${winner.text}`;
+
+      game.phase = "published";
+
+      io.emit("roundFinalized", { winner });
+
+      emitState();
+    }
+  });
+
+  /* DISCONNECT */
+
+  socket.on("disconnect", () => {
+
+    activeUsers.delete(socket.id);
+    game.votedUsers.delete(socket.id);
+
+    emitState();
   });
 });
 
@@ -281,5 +383,5 @@ app.get("/health", (_req, res) => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
-  console.log(`Game server running on port ${PORT}`);
+  console.log("Game server running on port", PORT);
 });

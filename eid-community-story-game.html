@@ -1,499 +1,387 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>10-to-Write: Community Story Game</title>
-  <style>
-    :root {
-      --bg: #f6f8ff;
-      --card: #ffffff;
-      --text: #1f2a44;
-      --muted: #5b678b;
-      --line: #dbe2ff;
-      --brand: #ffc857;
-      --brand-dark: #e8b13d;
-      --danger: #d64545;
-      --ok: #2f9c68;
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
+const crypto = require("crypto");
+const { Server } = require("socket.io");
+
+const app = express();
+
+const FRONTEND_ORIGIN = "https://emotionalintelligencedeveloper-glitch.github.io";
+
+app.use(cors({
+  origin: FRONTEND_ORIGIN
+}));
+
+app.use(express.json());
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: FRONTEND_ORIGIN,
+    methods: ["GET", "POST"]
+  }
+});
+
+/* DO NOT CHANGE — YOUR SECRETS */
+const API_KEY = process.env.MY_SECRET_API_KEY;
+const ADMIN_ID = process.env.ADMIN_ID;
+const ADMIN_PW = process.env.ADMIN_PW;
+
+/* GAME CONSTANTS */
+
+const VOTE_TARGET = 10;
+const WORD_TARGET = 396;
+
+let roundNumber = 1;
+
+/* GAME STATE */
+
+let game = {
+  phase: "headline",
+  lockedHeadlineText: "",
+  storyPieces: [],
+  finalStory: "",
+  currentHeadlines: [],
+  currentMessages: [],
+  currentConclusions: [],
+  headlineSubmissions: new Set(),
+  messageSubmissions: new Set(),
+  conclusionSubmissions: new Set(),
+  votedUsers: new Set()
+};
+
+let activeUsers = new Map();
+
+/* HELPERS */
+
+function sanitize(value, max) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, max);
+}
+
+function validUsername(username) {
+  return /^[A-Za-z0-9._\- ]{1,31}$/.test(username);
+}
+
+function wordCount(text) {
+  return String(text || "").trim().split(/\s+/).filter(Boolean).length;
+}
+
+function publicState() {
+  return {
+    phase: game.phase,
+    roundNumber,
+    lockedHeadlineText: game.lockedHeadlineText,
+    storyPieces: game.storyPieces,
+    finalStory: game.finalStory,
+    currentHeadlines: game.currentHeadlines,
+    currentMessages: game.currentMessages,
+    currentConclusions: game.currentConclusions,
+    playerCount: activeUsers.size,
+    voteTarget: VOTE_TARGET,
+    wordTarget: WORD_TARGET
+  };
+}
+
+function emitState() {
+  io.emit("gameState", publicState());
+  io.emit("playerCount", { count: activeUsers.size });
+}
+
+function getWinner(list) {
+  if (!list.length) return null;
+  return list.reduce((best, item) => {
+    if (item.votes > best.votes) return item;
+    if (item.votes === best.votes && item.createdAt < best.createdAt) return item;
+    return best;
+  });
+}
+
+/* SOCKET CONNECTION */
+
+io.on("connection", (socket) => {
+
+  socket.emit("gameState", publicState());
+
+  /* REGISTER USER */
+
+  socket.on("registerUser", (data = {}) => {
+
+    const username = sanitize(data.username, 31);
+
+    if (!validUsername(username)) {
+      socket.emit("gameError", { message: "Invalid username." });
+      return;
     }
 
-    * { box-sizing: border-box; }
+    activeUsers.set(socket.id, username);
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #fff, var(--bg));
-      color: var(--text);
+    socket.emit("registered", { username });
+
+    emitState();
+  });
+
+  /* SUBMIT HEADLINE */
+
+  socket.on("submitHeadline", (data = {}) => {
+
+    if (game.phase !== "headline") {
+      socket.emit("gameError", { message: "Headline round closed." });
+      return;
     }
 
-    .container {
-      max-width: 940px;
-      margin: 0 auto;
-      padding: 16px;
+    const username = activeUsers.get(socket.id);
+    if (!username) {
+      socket.emit("gameError", { message: "Register first." });
+      return;
     }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 14px;
+    const text = sanitize(data.text, 90);
+
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Headline too short." });
+      return;
     }
 
-    h1, h2, h3 { margin: 0 0 8px; }
-    .muted { color: var(--muted); font-size: 0.95rem; }
-
-    .grid {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      align-items: end;
+    if (game.headlineSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted headline." });
+      return;
     }
 
-    label {
-      display: block;
-      font-size: 0.92rem;
-      margin-bottom: 6px;
-    }
-
-    input, textarea, button {
-      width: 100%;
-      font: inherit;
-      border-radius: 8px;
-    }
-
-    input, textarea {
-      border: 1px solid var(--line);
-      padding: 10px;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    button {
-      border: 0;
-      padding: 10px 12px;
-      cursor: pointer;
-      background: #e9eeff;
-      color: #22367c;
-      font-weight: 600;
-    }
-
-    button.primary {
-      background: var(--brand);
-      color: #2a2202;
-    }
-
-    button.primary:hover { background: var(--brand-dark); }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    #status {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: #f8faff;
-      min-height: 40px;
-    }
-
-    .story {
-      border: 1px dashed var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      white-space: pre-wrap;
-      line-height: 1.45;
-      background: #fbfcff;
-    }
-
-    .message {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 12px;
-      margin-top: 10px;
-      background: #fff;
-    }
-
-    .message-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .message-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .danger {
-      background: #ffe8e8;
-      color: #7f1e1e;
-    }
-
-    .success { color: var(--ok); }
-    .error { color: var(--danger); }
-  </style>
-</head>
-<body>
-  <main class="container">
-    <section class="card">
-      <h1>10-to-Write: Community Story Game</h1>
-      <p class="muted">Create one message each round, vote once, and grow one shared community story.</p>
-      <div class="grid">
-        <div><strong>Players:</strong> <span id="playerCount">0</span></div>
-        <div><strong>Round:</strong> <span id="roundNumber">1</span></div>
-      </div>
-      <div id="status" aria-live="polite">Connecting...</div>
-    </section>
-
-    <section class="card">
-      <h2>Join Game</h2>
-      <div class="grid">
-        <div>
-          <label for="username">Username (1-31 characters)</label>
-          <input id="username" maxlength="31" autocomplete="off" />
-        </div>
-        <div>
-          <button id="registerBtn" class="primary" type="button">Register</button>
-        </div>
-      </div>
-      <p class="muted">Allowed: letters, numbers, spaces, dots, hyphens, underscores.</p>
-    </section>
-
-    <section class="card">
-      <h2>Round Message</h2>
-      <label for="messageInput">Message (2-220 characters)</label>
-      <textarea id="messageInput" maxlength="220"></textarea>
-      <div class="grid" style="margin-top: 10px;">
-        <div>
-          <button id="submitMessageBtn" class="primary" type="button">Submit Message</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Current Round Messages</h2>
-      <div id="messages"></div>
-    </section>
-
-    <section class="card">
-      <h2>Growing Story</h2>
-      <div id="fullMessage" class="story">No story yet.</div>
-    </section>
-
-    <section class="card" id="adminPanel">
-      <h3>Admin Tools</h3>
-      <div class="grid">
-        <div>
-          <label for="adminId">Admin ID</label>
-          <input id="adminId" autocomplete="off" />
-        </div>
-        <div>
-          <label for="adminPw">Admin Password</label>
-          <input id="adminPw" type="password" autocomplete="off" />
-        </div>
-        <div>
-          <button id="finalizeRoundBtn" class="primary" type="button">Finalize Round</button>
-        </div>
-      </div>
-      <p class="muted">Delete buttons appear next to messages when admin credentials are filled in.</p>
-    </section>
-  </main>
-
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
-  <script>
-    const BACKEND_URL = "https://mcn-m5nx.onrender.com";
-
-    const USERNAME_REGEX = /^[A-Za-z0-9._\- ]{1,31}$/;
-
-    const el = {
-      username: document.getElementById('username'),
-      registerBtn: document.getElementById('registerBtn'),
-      messageInput: document.getElementById('messageInput'),
-      submitMessageBtn: document.getElementById('submitMessageBtn'),
-      status: document.getElementById('status'),
-      playerCount: document.getElementById('playerCount'),
-      roundNumber: document.getElementById('roundNumber'),
-      fullMessage: document.getElementById('fullMessage'),
-      messages: document.getElementById('messages'),
-      adminId: document.getElementById('adminId'),
-      adminPw: document.getElementById('adminPw'),
-      finalizeRoundBtn: document.getElementById('finalizeRoundBtn')
+    const item = {
+      id: crypto.randomUUID(),
+      text,
+      username,
+      votes: 0,
+      createdAt: Date.now()
     };
 
-    let socket;
-    let state = {
-      roundNumber: 1,
-      fullStory: '',
-      messages: []
+    game.currentHeadlines.push(item);
+    game.headlineSubmissions.add(username);
+
+    io.emit("newHeadline", item);
+    emitState();
+  });
+
+  /* SUBMIT MESSAGE */
+
+  socket.on("submitMessage", (data = {}) => {
+
+    if (game.phase !== "message") {
+      socket.emit("gameError", { message: "Message round closed." });
+      return;
+    }
+
+    const username = activeUsers.get(socket.id);
+
+    const text = sanitize(data.text, 300);
+
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Message too short." });
+      return;
+    }
+
+    if (game.messageSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted paragraph." });
+      return;
+    }
+
+    const item = {
+      id: crypto.randomUUID(),
+      text,
+      username,
+      votes: 0,
+      createdAt: Date.now()
     };
-    let myUsername = '';
-    let hasSubmittedThisRound = false;
-    let hasVotedThisRound = false;
 
-    function setStatus(message, type = 'normal') {
-      el.status.textContent = message;
-      el.status.classList.remove('error', 'success');
-      if (type === 'error') el.status.classList.add('error');
-      if (type === 'success') el.status.classList.add('success');
+    game.currentMessages.push(item);
+    game.messageSubmissions.add(username);
+
+    io.emit("newMessage", item);
+    emitState();
+  });
+
+  /* SUBMIT CONCLUSION */
+
+  socket.on("submitConclusion", (data = {}) => {
+
+    if (game.phase !== "conclusion") {
+      socket.emit("gameError", { message: "Conclusion round closed." });
+      return;
     }
 
-    function validateUsername(username) {
-      return USERNAME_REGEX.test(username.trim());
+    const username = activeUsers.get(socket.id);
+
+    const text = sanitize(data.text, 300);
+
+    if (text.length < 2) {
+      socket.emit("gameError", { message: "Conclusion too short." });
+      return;
     }
 
-    function validateMessage(message) {
-      const cleaned = message.trim().replace(/\s+/g, ' ');
-      return cleaned.length >= 2 && cleaned.length <= 220;
+    if (game.conclusionSubmissions.has(username)) {
+      socket.emit("gameError", { message: "Already submitted conclusion." });
+      return;
     }
 
-    function isAdminReady() {
-      return el.adminId.value.trim().length > 0 && el.adminPw.value.trim().length > 0;
+    const item = {
+      id: crypto.randomUUID(),
+      text,
+      username,
+      votes: 0,
+      createdAt: Date.now()
+    };
+
+    game.currentConclusions.push(item);
+    game.conclusionSubmissions.add(username);
+
+    io.emit("newConclusion", item);
+    emitState();
+  });
+
+  /* VOTE */
+
+  socket.on("castVote", ({ messageId }) => {
+
+    if (game.votedUsers.has(socket.id)) {
+      socket.emit("gameError", { message: "Already voted." });
+      return;
     }
 
-    function updateHeader() {
-      el.roundNumber.textContent = String(state.roundNumber || 1);
-      el.fullMessage.textContent = state.fullStory || 'No story yet.';
+    let list;
+
+    if (game.phase === "headline") list = game.currentHeadlines;
+    if (game.phase === "message") list = game.currentMessages;
+    if (game.phase === "conclusion") list = game.currentConclusions;
+
+    const item = list.find(x => x.id === messageId);
+
+    if (!item) return;
+
+    item.votes++;
+
+    game.votedUsers.add(socket.id);
+
+    io.emit("updateVotes", { id: item.id, votes: item.votes });
+
+    emitState();
+  });
+
+  /* ADMIN DELETE */
+
+  socket.on("adminDelete", (data = {}) => {
+
+    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
     }
 
-    function renderMessages() {
-      el.messages.innerHTML = '';
+    const { phase, messageId } = data;
 
-      if (!state.messages || state.messages.length === 0) {
-        el.messages.innerHTML = '<p class="muted">No messages yet. Be the first this round.</p>';
-        return;
+    let list;
+
+    if (phase === "headline") list = game.currentHeadlines;
+    if (phase === "message") list = game.currentMessages;
+    if (phase === "conclusion") list = game.currentConclusions;
+
+    const updated = list.filter(x => x.id !== messageId);
+
+    if (phase === "headline") game.currentHeadlines = updated;
+    if (phase === "message") game.currentMessages = updated;
+    if (phase === "conclusion") game.currentConclusions = updated;
+
+    io.emit("submissionRemoved", { phase, id: messageId });
+
+    emitState();
+  });
+
+  /* FINALIZE ROUND */
+
+  socket.on("finalizeRound", (data = {}) => {
+
+    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
+    }
+
+    if (game.phase === "headline") {
+
+      const winner = getWinner(game.currentHeadlines);
+      if (!winner) return;
+
+      game.lockedHeadlineText = winner.text;
+
+      game.currentHeadlines = [];
+      game.headlineSubmissions.clear();
+      game.votedUsers.clear();
+
+      game.phase = "message";
+
+      io.emit("roundFinalized", { winner });
+
+      emitState();
+      return;
+    }
+
+    if (game.phase === "message") {
+
+      const winner = getWinner(game.currentMessages);
+      if (!winner) return;
+
+      game.storyPieces.push({ text: winner.text });
+
+      const words = wordCount(game.storyPieces.map(x => x.text).join(" "));
+
+      game.currentMessages = [];
+      game.messageSubmissions.clear();
+      game.votedUsers.clear();
+
+      roundNumber++;
+
+      if (words >= WORD_TARGET) {
+        game.phase = "conclusion";
       }
 
-      state.messages.forEach((msg) => {
-        const card = document.createElement('div');
-        card.className = 'message';
+      io.emit("roundFinalized", { winner });
 
-        const head = document.createElement('div');
-        head.className = 'message-head';
-        head.innerHTML = `<span><strong>${escapeHtml(msg.username)}</strong></span><span>Votes: <strong id="vote-${msg.id}">${msg.votes}</strong></span>`;
-
-        const body = document.createElement('div');
-        body.textContent = msg.text;
-
-        const actions = document.createElement('div');
-        actions.className = 'message-actions';
-
-        const voteBtn = document.createElement('button');
-        voteBtn.textContent = hasVotedThisRound ? 'Voted' : 'Vote';
-        voteBtn.disabled = hasVotedThisRound;
-        voteBtn.addEventListener('click', () => {
-          if (!myUsername) {
-            setStatus('Register username first.', 'error');
-            return;
-          }
-          if (hasVotedThisRound) {
-            setStatus('You already voted this round.', 'error');
-            return;
-          }
-          socket.emit('castVote', { messageId: msg.id });
-        });
-
-        actions.appendChild(voteBtn);
-
-        if (isAdminReady()) {
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'danger';
-          deleteBtn.textContent = 'Delete (Admin)';
-          deleteBtn.addEventListener('click', () => {
-            socket.emit('adminDelete', {
-              messageId: msg.id,
-              adminId: el.adminId.value.trim(),
-              adminPw: el.adminPw.value
-            });
-          });
-          actions.appendChild(deleteBtn);
-        }
-
-        card.appendChild(head);
-        card.appendChild(body);
-        card.appendChild(actions);
-        el.messages.appendChild(card);
-      });
+      emitState();
+      return;
     }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+    if (game.phase === "conclusion") {
+
+      const winner = getWinner(game.currentConclusions);
+      if (!winner) return;
+
+      const storyBody = game.storyPieces.map(x => x.text).join(" ");
+
+      game.finalStory = `${game.lockedHeadlineText}\n\n${storyBody}\n\n${winner.text}`;
+
+      game.phase = "published";
+
+      io.emit("roundFinalized", { winner });
+
+      emitState();
     }
+  });
 
-    function applyGameState(gameState) {
-      state.roundNumber = gameState.roundNumber || 1;
-      state.fullStory = gameState.fullMessage || '';
-      state.messages = Array.isArray(gameState.currentMessages) ? gameState.currentMessages : [];
-      el.playerCount.textContent = String(gameState.playerCount || 0);
+  /* DISCONNECT */
 
-      const myMessageExists = state.messages.some((msg) => msg.username && msg.username.toLowerCase() === myUsername.toLowerCase());
-      hasSubmittedThisRound = myMessageExists;
+  socket.on("disconnect", () => {
 
-      updateHeader();
-      renderMessages();
-    }
+    activeUsers.delete(socket.id);
+    game.votedUsers.delete(socket.id);
 
-    function connect() {
-      socket = io(BACKEND_URL, {
-        transports: ['websocket', 'polling']
-      });
+    emitState();
+  });
+});
 
-      socket.on('connect', () => {
-        setStatus('Connected. Register your username to begin.', 'success');
-        if (myUsername) {
-          socket.emit('registerUser', { username: myUsername });
-        }
-      });
+app.get("/health", (_req, res) => {
+  res.json({ ok: true });
+});
 
-      socket.on('disconnect', () => {
-        setStatus('Disconnected from server. Trying to reconnect...', 'error');
-      });
+const PORT = process.env.PORT || 3000;
 
-      socket.on('registered', (payload = {}) => {
-        if (payload.username) {
-          myUsername = payload.username;
-        }
-        setStatus(`Joined as @${myUsername}.`, 'success');
-      });
-
-      socket.on('playerCount', (payload = {}) => {
-        el.playerCount.textContent = String(payload.count || 0);
-      });
-
-      socket.on('gameState', (payload = {}) => {
-        applyGameState(payload);
-      });
-
-      socket.on('newMessage', (message = {}) => {
-        if (!message.id) return;
-
-        const exists = state.messages.some((msg) => msg.id === message.id);
-        if (!exists) {
-          state.messages.push(message);
-        }
-
-        if (message.username && message.username.toLowerCase() === myUsername.toLowerCase()) {
-          hasSubmittedThisRound = true;
-        }
-
-        renderMessages();
-      });
-
-      socket.on('updateVotes', ({ id, votes } = {}) => {
-        const target = state.messages.find((msg) => msg.id === id);
-        if (target) target.votes = votes;
-
-        const voteEl = document.getElementById(`vote-${id}`);
-        if (voteEl) voteEl.textContent = String(votes);
-
-        hasVotedThisRound = true;
-        renderMessages();
-      });
-
-      socket.on('messageRemoved', ({ id } = {}) => {
-        const removed = state.messages.find((msg) => msg.id === id);
-        state.messages = state.messages.filter((msg) => msg.id !== id);
-
-        if (removed && removed.username && removed.username.toLowerCase() === myUsername.toLowerCase()) {
-          hasSubmittedThisRound = false;
-        }
-
-        renderMessages();
-        setStatus('A message was removed by admin moderation.', 'success');
-      });
-
-      socket.on('roundFinalized', ({ winningMessage, fullMessage } = {}) => {
-        if (typeof fullMessage === 'string') {
-          state.fullStory = fullMessage;
-          el.fullMessage.textContent = fullMessage || 'No story yet.';
-        }
-        const winnerText = winningMessage ? `Winning message: "${winningMessage.text}"` : 'Round finalized.';
-        setStatus(winnerText, 'success');
-      });
-
-      socket.on('nextSection', ({ roundNumber, fullMessage } = {}) => {
-        state.roundNumber = Number(roundNumber || state.roundNumber + 1);
-        state.fullStory = fullMessage || state.fullStory;
-        state.messages = [];
-        hasSubmittedThisRound = false;
-        hasVotedThisRound = false;
-        el.messageInput.value = '';
-        updateHeader();
-        renderMessages();
-        setStatus(`Round ${state.roundNumber} started. Submit one new message.`, 'success');
-      });
-
-      socket.on('gameError', ({ message } = {}) => {
-        if (message === 'You already voted this round.') {
-          hasVotedThisRound = true;
-          renderMessages();
-        }
-        if (message === 'You already submitted one message this round.') {
-          hasSubmittedThisRound = true;
-        }
-        setStatus(message || 'Action failed.', 'error');
-      });
-    }
-
-    el.registerBtn.addEventListener('click', () => {
-      const username = el.username.value.trim();
-      if (!validateUsername(username)) {
-        setStatus('Invalid username. Use 1-31 characters: letters, numbers, spaces, dots, hyphens, underscores.', 'error');
-        return;
-      }
-      myUsername = username;
-      socket.emit('registerUser', { username });
-    });
-
-    el.submitMessageBtn.addEventListener('click', () => {
-      const text = el.messageInput.value.trim().replace(/\s+/g, ' ');
-
-      if (!myUsername) {
-        setStatus('Register username first.', 'error');
-        return;
-      }
-
-      if (!validateMessage(text)) {
-        setStatus('Invalid message. Use 2-220 characters.', 'error');
-        return;
-      }
-
-      if (hasSubmittedThisRound) {
-        setStatus('You already submitted one message this round.', 'error');
-        return;
-      }
-
-      socket.emit('submitMessage', { text });
-      setStatus('Submitting message...', 'success');
-    });
-
-    el.finalizeRoundBtn.addEventListener('click', () => {
-      const adminId = el.adminId.value.trim();
-      const adminPw = el.adminPw.value;
-
-      if (adminId.length === 0 || adminPw.trim().length === 0) {
-        setStatus('Enter admin credentials to finalize round.', 'error');
-        return;
-      }
-
-      socket.emit('finalizeRound', { adminId, adminPw });
-    });
-
-    el.adminId.addEventListener('input', renderMessages);
-    el.adminPw.addEventListener('input', renderMessages);
-
-    connect();
-  </script>
-</body>
-</html>
+server.listen(PORT, () => {
+  console.log("Game server running on port", PORT);
+});

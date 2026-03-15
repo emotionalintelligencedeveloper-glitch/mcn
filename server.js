@@ -84,6 +84,19 @@ io.on("connection", (socket) => {
       return;
     }
 
+    const usernameTaken = Array.from(activeUsers.entries()).some(
+      ([socketId, existingUsername]) =>
+        socketId !== socket.id &&
+        existingUsername.toLowerCase() === username.toLowerCase()
+    );
+
+    if (usernameTaken) {
+      socket.emit("gameError", {
+        message: "That username is already in use. Please choose another one."
+      });
+      return;
+    }
+
     activeUsers.set(socket.id, username);
 
     socket.emit("registered", {
@@ -235,7 +248,28 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    const username = activeUsers.get(socket.id);
+
     activeUsers.delete(socket.id);
+    votedUsers.delete(socket.id);
+
+    if (username) {
+      const usernameLower = username.toLowerCase();
+      const stillConnectedWithSameName = Array.from(activeUsers.values()).some(
+        (name) => name.toLowerCase() === usernameLower
+      );
+
+      if (!stillConnectedWithSameName) {
+        const stillHasMessageThisRound = currentMessages.some(
+          (msg) => msg.username.toLowerCase() === usernameLower
+        );
+
+        if (!stillHasMessageThisRound) {
+          submittedUsers.delete(usernameLower);
+        }
+      }
+    }
+
     io.emit("playerCount", { count: activeUsers.size });
   });
 });

@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 const { Server } = require("socket.io");
 
 const app = express();
@@ -33,6 +35,10 @@ const VOTE_TARGET = 10;
 const WORD_TARGET = 396;
 const MAX_PAST_GAMES = 50;
 
+/* PERSISTENT STORAGE */
+const DATA_DIR = path.join(__dirname, "data");
+const DATA_FILE = path.join(DATA_DIR, "community-story-game.json");
+
 /* ROUND NUMBER */
 let roundNumber = 1;
 
@@ -42,6 +48,76 @@ let activeUsers = new Map();
 let pastGames = [];
 
 /* HELPERS */
+
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+}
+
+function serializeGameState() {
+  return {
+    roundNumber,
+    game: {
+      phase: game.phase,
+      lockedHeadlineText: game.lockedHeadlineText,
+      storyPieces: game.storyPieces,
+      finalStory: game.finalStory,
+      currentHeadlines: game.currentHeadlines,
+      currentMessages: game.currentMessages,
+      currentConclusions: game.currentConclusions,
+      headlineSubmissions: Array.from(game.headlineSubmissions || []),
+      messageSubmissions: Array.from(game.messageSubmissions || []),
+      conclusionSubmissions: Array.from(game.conclusionSubmissions || [])
+    },
+    pastGames
+  };
+}
+
+function saveState() {
+  try {
+    ensureDataDir();
+    fs.writeFileSync(DATA_FILE, JSON.stringify(serializeGameState(), null, 2), "utf8");
+  } catch (err) {
+    console.error("Failed to save game state:", err);
+  }
+}
+
+function loadState() {
+  try {
+    ensureDataDir();
+
+    if (!fs.existsSync(DATA_FILE)) {
+      return;
+    }
+
+    const raw = fs.readFileSync(DATA_FILE, "utf8");
+    if (!raw) return;
+
+    const parsed = JSON.parse(raw);
+
+    roundNumber = Number(parsed.roundNumber || 1);
+
+    const savedGame = parsed.game || {};
+    game = createFreshGame();
+
+    game.phase = savedGame.phase || "headline";
+    game.lockedHeadlineText = savedGame.lockedHeadlineText || "";
+    game.storyPieces = Array.isArray(savedGame.storyPieces) ? savedGame.storyPieces : [];
+    game.finalStory = savedGame.finalStory || "";
+    game.currentHeadlines = Array.isArray(savedGame.currentHeadlines) ? savedGame.currentHeadlines : [];
+    game.currentMessages = Array.isArray(savedGame.currentMessages) ? savedGame.currentMessages : [];
+    game.currentConclusions = Array.isArray(savedGame.currentConclusions) ? savedGame.currentConclusions : [];
+    game.headlineSubmissions = new Set(Array.isArray(savedGame.headlineSubmissions) ? savedGame.headlineSubmissions : []);
+    game.messageSubmissions = new Set(Array.isArray(savedGame.messageSubmissions) ? savedGame.messageSubmissions : []);
+    game.conclusionSubmissions = new Set(Array.isArray(savedGame.conclusionSubmissions) ? savedGame.conclusionSubmissions : []);
+    game.votedUsers = new Set();
+
+    pastGames = Array.isArray(parsed.pastGames) ? parsed.pastGames : [];
+  } catch (err) {
+    console.error("Failed to load game state:", err);
+  }
+}
 
 function createFreshGame() {
   return {
@@ -142,6 +218,7 @@ function publicState() {
 function emitState() {
   io.emit("gameState", publicState());
   io.emit("playerCount", { count: activeUsers.size });
+  saveState();
 }
 
 function getWinner(list) {
@@ -219,10 +296,26 @@ function deletePastGameByIndex(index) {
   return true;
 }
 
+/* LOAD SAVED STATE ON START */
+loadState();
+
 /* SOCKET CONNECTION */
 
 io.on("connection", (socket) => {
   socket.emit("gameState", publicState());
+  socket.emit("playerCount", { count: activeUsers.size });
+
+  socket.on("getGameState", () => {
+    socket.emit("gameState", publicState());
+  });
+
+  socket.on("requestGameState", () => {
+    socket.emit("gameState", publicState());
+  });
+
+  socket.on("syncState", () => {
+    socket.emit("gameState", publicState());
+  });
 
   /* REGISTER USER */
 
@@ -590,6 +683,16 @@ io.on("connection", (socket) => {
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "10-to-Write game server",
+    phase: game.phase,
+    roundNumber,
+    pastGames: pastGames.length
+  });
 });
 
 const PORT = process.env.PORT || 3000;

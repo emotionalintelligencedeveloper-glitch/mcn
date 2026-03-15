@@ -540,6 +540,11 @@
     const USERNAME_REGEX = /^[A-Za-z0-9._ -]{1,31}$/;
     const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
 
+    const STORAGE_KEYS = {
+      username: "eid_story_game_username",
+      gameState: "eid_story_game_cached_state"
+    };
+
     const state = {
       phase: "headline",
       voteTarget: 10,
@@ -618,6 +623,7 @@
     };
 
     let socket;
+    let lastConnectAttemptAt = 0;
 
     function safe(v) {
       return String(v || "").trim();
@@ -633,6 +639,50 @@
       }[c]));
     }
 
+    function saveUsername() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.username, state.myUsername || "");
+      } catch {}
+    }
+
+    function loadUsername() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEYS.username) || "";
+        if (saved) {
+          state.myUsername = saved;
+          el.username.value = saved;
+        }
+      } catch {}
+    }
+
+    function saveCachedState() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.gameState, JSON.stringify({
+          phase: state.phase,
+          voteTarget: state.voteTarget,
+          wordTarget: state.wordTarget,
+          roundNumber: state.roundNumber,
+          lockedHeadlineText: state.lockedHeadlineText,
+          storyPieces: state.storyPieces,
+          finalStory: state.finalStory,
+          currentHeadlines: state.currentHeadlines,
+          currentMessages: state.currentMessages,
+          currentConclusions: state.currentConclusions,
+          playerCount: state.playerCount,
+          pastGames: state.pastGames
+        }));
+      } catch {}
+    }
+
+    function loadCachedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.gameState);
+        if (!raw) return;
+        const cached = JSON.parse(raw);
+        applyGameState(cached, { preserveVoteState: true, isCachedLoad: true });
+      } catch {}
+    }
+
     function showError(msg) {
       el.errorBox.textContent = msg;
       el.errorBox.classList.remove("hidden");
@@ -643,7 +693,7 @@
       el.okBox.textContent = msg;
       el.okBox.classList.remove("hidden");
       el.errorBox.classList.add("hidden");
-      setTimeout(() => el.okBox.classList.add("hidden"), 2000);
+      setTimeout(() => el.okBox.classList.add("hidden"), 2500);
     }
 
     function validateUsername(username) {
@@ -878,6 +928,7 @@ ${link}`;
       el.voteTargetLabel.textContent = String(state.voteTarget);
       el.playerCount.textContent = String(state.playerCount || 0);
       el.roundNumber.textContent = String(state.roundNumber || 1);
+      el.username.value = state.myUsername || "";
 
       const bodyWords = wordCount((state.storyPieces || []).map((p) => p.text).join(" "));
 
@@ -919,20 +970,37 @@ ${link}`;
       el.copyStoryBtn.classList.toggle("hidden", !isAdminReady());
     }
 
-    function applyGameState(payload = {}) {
-      state.phase = payload.phase || "headline";
-      state.voteTarget = Number(payload.voteTarget || 10);
-      state.wordTarget = Number(payload.wordTarget || 396);
-      state.roundNumber = Number(payload.roundNumber || 1);
-      state.lockedHeadlineText = payload.lockedHeadlineText || "";
-      state.storyPieces = Array.isArray(payload.storyPieces) ? payload.storyPieces : [];
-      state.finalStory = payload.finalStory || "";
-      state.currentHeadlines = Array.isArray(payload.currentHeadlines) ? payload.currentHeadlines : [];
-      state.currentMessages = Array.isArray(payload.currentMessages) ? payload.currentMessages : [];
-      state.currentConclusions = Array.isArray(payload.currentConclusions) ? payload.currentConclusions : [];
-      state.playerCount = Number(payload.playerCount || 0);
-      state.pastGames = Array.isArray(payload.pastGames) ? payload.pastGames : [];
-      state.hasVoted = false;
+    function mergeArrayIfPresent(nextValue, currentValue) {
+      return Array.isArray(nextValue) ? nextValue : currentValue;
+    }
+
+    function applyGameState(payload = {}, options = {}) {
+      const preserveVoteState = !!options.preserveVoteState;
+      const isCachedLoad = !!options.isCachedLoad;
+
+      state.phase = payload.phase || state.phase || "headline";
+      state.voteTarget = Number(payload.voteTarget || state.voteTarget || 10);
+      state.wordTarget = Number(payload.wordTarget || state.wordTarget || 396);
+      state.roundNumber = Number(payload.roundNumber || state.roundNumber || 1);
+      state.lockedHeadlineText = typeof payload.lockedHeadlineText === "string" ? payload.lockedHeadlineText : state.lockedHeadlineText;
+      state.storyPieces = mergeArrayIfPresent(payload.storyPieces, state.storyPieces);
+      state.finalStory = typeof payload.finalStory === "string" ? payload.finalStory : state.finalStory;
+      state.currentHeadlines = mergeArrayIfPresent(payload.currentHeadlines, state.currentHeadlines);
+      state.currentMessages = mergeArrayIfPresent(payload.currentMessages, state.currentMessages);
+      state.currentConclusions = mergeArrayIfPresent(payload.currentConclusions, state.currentConclusions);
+      state.playerCount = Number(payload.playerCount || state.playerCount || 0);
+
+      if (Array.isArray(payload.pastGames)) {
+        state.pastGames = payload.pastGames;
+      } else if (!isCachedLoad && !state.pastGames.length) {
+        state.pastGames = [];
+      }
+
+      if (!preserveVoteState) {
+        state.hasVoted = false;
+      }
+
+      saveCachedState();
       render();
     }
 
@@ -981,9 +1049,7 @@ ${link}`;
       try {
         const logoData = await loadImageAsDataURL(LOGO_URL);
         pdf.addImage(logoData, "JPEG", margin, y, 20, 20);
-      } catch (e) {
-        // continue without logo if image loading fails
-      }
+      } catch {}
 
       pdf.setFont("times", "bold");
       pdf.setFontSize(18);
@@ -1023,22 +1089,57 @@ ${link}`;
       flashOk("PDF downloaded.");
     }
 
+    function requestFreshState() {
+      if (!socket) return;
+      socket.emit("getGameState");
+      socket.emit("requestGameState");
+      socket.emit("syncState");
+    }
+
     function connect() {
-      socket = io(BACKEND_URL, { transports: ["websocket", "polling"] });
+      lastConnectAttemptAt = Date.now();
+
+      socket = io(BACKEND_URL, {
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 25000
+      });
 
       socket.on("connect", () => {
         flashOk("Connected to live game.");
+        requestFreshState();
+
+        if (state.myUsername) {
+          socket.emit("registerUser", { username: state.myUsername });
+        }
+      });
+
+      socket.io.on("reconnect", () => {
+        flashOk("Reconnected. Refreshing live game...");
+        requestFreshState();
+
         if (state.myUsername) {
           socket.emit("registerUser", { username: state.myUsername });
         }
       });
 
       socket.on("disconnect", () => {
-        showError("Disconnected from server. Trying to reconnect...");
+        showError("Disconnected from server. Reconnecting...");
+      });
+
+      socket.on("connect_error", () => {
+        const seconds = Math.max(1, Math.round((Date.now() - lastConnectAttemptAt) / 1000));
+        showError(`Server is waking up or reconnecting. Please wait... (${seconds}s)`);
       });
 
       socket.on("registered", (payload = {}) => {
-        if (payload.username) state.myUsername = payload.username;
+        if (payload.username) {
+          state.myUsername = payload.username;
+          saveUsername();
+        }
         flashOk(`Joined as @${state.myUsername}.`);
         render();
       });
@@ -1046,6 +1147,7 @@ ${link}`;
       socket.on("playerCount", ({ count } = {}) => {
         state.playerCount = Number(count || 0);
         el.playerCount.textContent = String(state.playerCount);
+        saveCachedState();
       });
 
       socket.on("gameState", (payload = {}) => {
@@ -1055,6 +1157,7 @@ ${link}`;
       socket.on("newHeadline", (item = {}) => {
         if (item.id && !state.currentHeadlines.some((x) => x.id === item.id)) {
           state.currentHeadlines.push(item);
+          saveCachedState();
           render();
         }
       });
@@ -1062,6 +1165,7 @@ ${link}`;
       socket.on("newMessage", (item = {}) => {
         if (item.id && !state.currentMessages.some((x) => x.id === item.id)) {
           state.currentMessages.push(item);
+          saveCachedState();
           render();
         }
       });
@@ -1069,6 +1173,7 @@ ${link}`;
       socket.on("newConclusion", (item = {}) => {
         if (item.id && !state.currentConclusions.some((x) => x.id === item.id)) {
           state.currentConclusions.push(item);
+          saveCachedState();
           render();
         }
       });
@@ -1079,6 +1184,7 @@ ${link}`;
           if (found) found.votes = Number(votes || 0);
         });
         state.hasVoted = true;
+        saveCachedState();
         render();
       });
 
@@ -1086,6 +1192,7 @@ ${link}`;
         if (phase === "headline") state.currentHeadlines = state.currentHeadlines.filter((x) => x.id !== id);
         if (phase === "message") state.currentMessages = state.currentMessages.filter((x) => x.id !== id);
         if (phase === "conclusion") state.currentConclusions = state.currentConclusions.filter((x) => x.id !== id);
+        saveCachedState();
         render();
         flashOk("Submission deleted.");
       });
@@ -1096,6 +1203,7 @@ ${link}`;
         } else if (Number.isInteger(index) && index >= 0) {
           state.pastGames = state.pastGames.filter((_, i) => i !== index);
         }
+        saveCachedState();
         render();
         flashOk("Past game deleted.");
       });
@@ -1109,6 +1217,7 @@ ${link}`;
         state.currentMessages = [];
         state.currentConclusions = [];
         state.hasVoted = false;
+        saveCachedState();
         render();
         flashOk("Game reset.");
       });
@@ -1123,6 +1232,7 @@ ${link}`;
         if (finalStory) {
           state.finalStory = finalStory;
         }
+        saveCachedState();
       });
 
       socket.on("gameError", ({ message } = {}) => {
@@ -1149,6 +1259,8 @@ ${link}`;
         return;
       }
       state.myUsername = username;
+      saveUsername();
+      render();
       socket.emit("registerUser", { username });
     });
 
@@ -1166,8 +1278,11 @@ ${link}`;
       e.preventDefault();
       if (!state.myUsername) return showError("Register username first.");
 
+      const text = safe(el.headlineText.value);
+      if (!text) return showError("Write your headline first.");
+
       socket.emit("submitHeadline", {
-        text: safe(el.headlineText.value),
+        text,
         name: safe(el.headlineName.value),
         social: safe(el.headlineSocial.value),
         handle: safe(el.headlineHandle.value)
@@ -1332,6 +1447,9 @@ ${link}`;
     el.adminUserId.addEventListener("input", render);
     el.adminPassword.addEventListener("input", render);
 
+    loadUsername();
+    loadCachedState();
+    render();
     connect();
   </script>
 </body>

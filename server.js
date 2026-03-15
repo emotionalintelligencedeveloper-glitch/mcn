@@ -441,10 +441,6 @@ io.on("connection", (socket) => {
       return;
     }
 
-    if (game.phase === "published") {
-      archiveCurrentPublishedGame();
-    }
-
     resetToNewGame();
 
     io.emit("publishedStoryDeleted");

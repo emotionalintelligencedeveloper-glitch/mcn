@@ -15,7 +15,6 @@
       --accent: #53b3cb;
       --ok: #3db07a;
       --danger: #d64545;
-      --danger-dark: #b73131;
       --line: #dde4ff;
       --radius: 14px;
       --shadow: 0 12px 30px rgba(31, 45, 112, 0.12);
@@ -24,6 +23,7 @@
       --soft-red: #ffe9ea;
       --soft-yellow: #fff7db;
       --dark: #1f2338;
+      --purple: #6d4aff;
     }
 
     * { box-sizing: border-box; }
@@ -98,7 +98,7 @@
       .brand { align-items: flex-start; }
     }
 
-    input, textarea, button { font: inherit; }
+    input, textarea, button, a { font: inherit; }
 
     input, textarea {
       width: 100%;
@@ -111,7 +111,7 @@
 
     textarea { min-height: 90px; resize: vertical; }
 
-    button {
+    button, .footer-btn {
       border: 0;
       border-radius: 10px;
       padding: 10px 12px;
@@ -119,6 +119,11 @@
       color: #1f2338;
       font-weight: 600;
       width: 100%;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
     }
 
     button:disabled { cursor: not-allowed; opacity: 0.6; }
@@ -126,8 +131,11 @@
     .btn-main { background: var(--brand); color: #2b2100; }
     .btn-main:hover { background: var(--brand-dark); }
 
-    .btn-muted { background: var(--soft-blue); color: #23316a; }
-    .btn-muted:hover { background: #dfe8ff; }
+    .btn-muted, .footer-btn {
+      background: var(--soft-blue);
+      color: #23316a;
+    }
+    .btn-muted:hover, .footer-btn:hover { background: #dfe8ff; }
 
     .btn-danger { background: var(--soft-red); color: #7a1f25; }
     .btn-danger:hover { background: #ffd7da; }
@@ -137,6 +145,9 @@
 
     .btn-green { background: var(--ok); color: #fff; }
     .btn-green:hover { background: #2f9967; }
+
+    .btn-purple { background: #efe9ff; color: #4729a8; }
+    .btn-purple:hover { background: #e4d8ff; }
 
     .pill {
       border-radius: 999px;
@@ -159,12 +170,17 @@
 
     .item-title {
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       white-space: pre-wrap;
       word-break: break-word;
+      font-size: 1rem;
     }
 
-    .meta { font-size: 12px; color: var(--muted); }
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
 
     .between {
       display: flex;
@@ -187,7 +203,7 @@
 
     .story {
       white-space: pre-wrap;
-      line-height: 1.6;
+      line-height: 1.7;
       border: 1px dashed #d8def6;
       border-radius: 12px;
       padding: 12px;
@@ -195,28 +211,40 @@
       word-break: break-word;
     }
 
-    .story-title {
-      font-size: 1.15rem;
+    .story-preview-title {
+      font-size: 1.1rem;
       font-weight: 800;
       margin-bottom: 10px;
-      color: #182243;
     }
 
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
+    .story-paragraph {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e6ebff;
     }
 
-    .footer-links a, .brand a {
-      color: #2946ac;
-      text-decoration: none;
+    .story-paragraph:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .story-credit {
+      margin-top: 8px;
+      color: #4b5a82;
+      font-size: 0.92rem;
       font-weight: 600;
     }
 
-    .footer-links a:hover, .brand a:hover {
-      text-decoration: underline;
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 760px) {
+      .footer-links { grid-template-columns: 1fr; }
     }
 
     .soft-box {
@@ -241,9 +269,10 @@
       margin-top: 10px;
     }
 
-    .small-actions button {
+    .small-actions button,
+    .small-actions a {
       width: auto;
-      min-width: 150px;
+      min-width: 140px;
     }
 
     .note {
@@ -259,6 +288,42 @@
       border: 1px solid #f4e1a1;
       background: var(--soft-yellow);
       font-weight: 700;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 760px) {
+      .how-steps { grid-template-columns: 1fr; }
+    }
+
+    .step-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .step-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #16224b;
+    }
+
+    .entry-share-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .entry-share-row button {
+      width: auto;
+      min-width: 120px;
     }
   </style>
 </head>
@@ -288,6 +353,30 @@
 
       <div id="errorBox" class="error hidden"></div>
       <div id="okBox" class="ok hidden"></div>
+    </section>
+
+    <section class="card">
+      <h3>How to Play</h3>
+      <p class="sub">This game works best when players share their entry to get votes from friends.</p>
+
+      <div class="how-steps">
+        <div class="step-card">
+          <strong>1. Register</strong>
+          Join the game with a username so you can submit and vote.
+        </div>
+        <div class="step-card">
+          <strong>2. Add your entry</strong>
+          Submit a headline, paragraph, or conclusion depending on the live round.
+        </div>
+        <div class="step-card">
+          <strong>3. Share it</strong>
+          Use the share buttons under your entry to send people to the live game page.
+        </div>
+        <div class="step-card">
+          <strong>4. Reach 10 votes</strong>
+          When your entry wins the round, it gets added to the story with your name and social handle shown below it.
+        </div>
+      </div>
     </section>
 
     <section class="card">
@@ -326,8 +415,8 @@
       <div class="sub" id="wordProgress">0 / 396 words</div>
 
       <div class="soft-box" style="margin:12px 0;">
-        <strong>Build on the preview:</strong>
-        <p class="sub" style="margin-top:6px;">Read the live preview, then add your next paragraph for voting.</p>
+        <strong>Build on the preview</strong>
+        <p class="sub" style="margin-top:6px;">Each winning message becomes its own paragraph. The winner name and social handle appear below the paragraph.</p>
       </div>
 
       <form id="messageForm" class="hidden">
@@ -387,7 +476,7 @@
           <button id="nativeShareBtn" class="btn-main" type="button">Share</button>
         </div>
 
-        <p class="note">Best growth idea: players share their own entry and ask people to vote on the live game link.</p>
+        <p class="note">Best growth idea: every player should use the share buttons under their own entry before it reaches 10 votes.</p>
       </div>
     </section>
 
@@ -412,9 +501,9 @@
     <section class="card">
       <h3>Support Emotional Intelligence Developer</h3>
       <div class="footer-links">
-        <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Main Site</a>
-        <a href="https://emotionalintelligencedeveloper.com/contact" target="_blank" rel="noopener">Contact</a>
-        <a href="https://emotionalintelligencedeveloper.com/start-here-emotional-intelligence-developer/" target="_blank" rel="noopener">Wellbeing Resources</a>
+        <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Main Site</a>
+        <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/contact" target="_blank" rel="noopener">Contact</a>
+        <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/start-here-emotional-intelligence-developer/" target="_blank" rel="noopener">Wellbeing Resources</a>
       </div>
     </section>
   </main>
@@ -547,15 +636,68 @@
         .trim();
     }
 
-    function buildPreviewStory() {
+    function buildPreviewHtml() {
       const headline = safe(state.lockedHeadlineText);
-      const body = (state.storyPieces || []).map((p) => safe(p.text)).filter(Boolean).join(" ");
-      if (headline && body) return `${headline}\n\n${body}`;
-      return headline || body || "";
+      const pieces = Array.isArray(state.storyPieces) ? state.storyPieces : [];
+
+      if (!headline && !pieces.length) return "No story yet.";
+
+      let html = "";
+
+      if (headline) {
+        html += `<div class="story-preview-title">${esc(headline)}</div>`;
+      }
+
+      if (pieces.length) {
+        html += pieces.map((piece) => `
+          <div class="story-paragraph">
+            <div>${esc(piece.text || "")}</div>
+            <div class="story-credit">Won by ${esc(formatIdentity(piece))}</div>
+          </div>
+        `).join("");
+      }
+
+      return html;
     }
 
-    function buildPublishedStory() {
-      return safe(state.finalStory || buildPreviewStory());
+    function buildPublishedStoryText() {
+      const headline = safe(state.lockedHeadlineText);
+      const pieces = Array.isArray(state.storyPieces) ? state.storyPieces : [];
+      const finalStory = safe(state.finalStory);
+
+      if (finalStory) return finalStory;
+
+      let text = headline ? headline + "\n\n" : "";
+      text += pieces.map((piece) => {
+        const credit = formatIdentity(piece);
+        return `${safe(piece.text)}\n— Won by ${credit}`;
+      }).join("\n\n");
+
+      return text.trim();
+    }
+
+    function buildPublishedHtml() {
+      const headline = safe(state.lockedHeadlineText);
+      const pieces = Array.isArray(state.storyPieces) ? state.storyPieces : [];
+
+      if (!headline && !pieces.length && !state.finalStory) return "No published story yet.";
+
+      let html = "";
+
+      if (headline) {
+        html += `<div class="story-preview-title">${esc(headline)}</div>`;
+      }
+
+      if (pieces.length) {
+        html += pieces.map((piece) => `
+          <div class="story-paragraph">
+            <div>${esc(piece.text || "")}</div>
+            <div class="story-credit">Won by ${esc(formatIdentity(piece))}</div>
+          </div>
+        `).join("");
+      }
+
+      return html || esc(state.finalStory || "");
     }
 
     function isAdminReady() {
@@ -572,12 +714,69 @@
     }
 
     function formatIdentity(item) {
-      const name = esc(item.name || item.username || "Anonymous");
-      const social = esc(item.social || "");
-      const handle = esc(item.handle || "");
+      const name = safe(item.name || item.username || "Anonymous");
+      const social = safe(item.social || "");
+      const handle = safe(item.handle || "");
       if (social && handle) return `${name} (${social}: ${handle})`;
       if (handle) return `${name} (${handle})`;
       return name;
+    }
+
+    function getEntryShareText(item, phase) {
+      const link = window.location.href;
+      const roundName =
+        phase === "headline" ? "headline round" :
+        phase === "message" ? "paragraph round" :
+        phase === "conclusion" ? "conclusion round" : "story round";
+
+      return `Please vote for my entry in the 10-to-Write Community Story Game.
+
+My ${roundName} entry:
+"${safe(item.text)}"
+
+By ${formatIdentity(item)}
+
+Vote here:
+${link}`;
+    }
+
+    async function copyToClipboard(text, successMsg) {
+      try {
+        await navigator.clipboard.writeText(text);
+        flashOk(successMsg);
+      } catch {
+        showError("Copy failed on this browser.");
+      }
+    }
+
+    function shareToWhatsApp(text) {
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    }
+
+    function shareToX(text) {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+    }
+
+    function shareToFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+    }
+
+    async function nativeShareText(text) {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "10-to-Write: The Community Story Game",
+            text,
+            url: window.location.href
+          });
+          flashOk("Shared.");
+        } catch {
+          flashOk("Share cancelled.");
+        }
+      } else {
+        copyToClipboard(text, "Share text copied.");
+      }
     }
 
     function renderList(listEl, items, phase) {
@@ -591,10 +790,15 @@
       listEl.innerHTML = sorted.map((item, i) => `
         <div class="item">
           <div class="item-title">${i + 1}. ${esc(item.text)}</div>
-          <div class="meta">By ${formatIdentity(item)} • Votes: <strong id="vote-${item.id}">${Number(item.votes || 0)}</strong></div>
+          <div class="meta">By ${esc(formatIdentity(item))} • Votes: <strong id="vote-${item.id}">${Number(item.votes || 0)}</strong> / ${state.voteTarget}</div>
+
           <div class="between" style="margin-top:8px;">
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="small-actions">
               <button class="btn-muted vote-btn" data-phase="${phase}" data-id="${item.id}" ${state.hasVoted || state.phase !== phase ? "disabled" : ""}>Vote</button>
+              <button class="btn-purple share-copy-btn" data-phase="${phase}" data-id="${item.id}" type="button">Copy Share Text</button>
+              <button class="btn-green share-wa-btn" data-phase="${phase}" data-id="${item.id}" type="button">WhatsApp</button>
+              <button class="btn-dark share-x-btn" data-phase="${phase}" data-id="${item.id}" type="button">X</button>
+              <button class="btn-muted share-native-btn" data-phase="${phase}" data-id="${item.id}" type="button">Share</button>
               ${isAdminReady() ? `<button class="btn-danger delete-btn" data-phase="${phase}" data-id="${item.id}">Delete</button>` : ""}
             </div>
           </div>
@@ -608,12 +812,11 @@
       el.playerCount.textContent = String(state.playerCount || 0);
       el.roundNumber.textContent = String(state.roundNumber || 1);
 
-      const preview = buildPreviewStory();
       const bodyWords = wordCount((state.storyPieces || []).map((p) => p.text).join(" "));
 
-      el.storyPreview.textContent = preview || "No story yet.";
+      el.storyPreview.innerHTML = buildPreviewHtml();
       el.wordProgress.textContent = `${bodyWords} / ${state.wordTarget} words`;
-      el.storyInfo.textContent = state.lockedHeadlineText ? `Headline: ${state.lockedHeadlineText}` : "Vote a headline to begin.";
+      el.storyInfo.textContent = state.lockedHeadlineText ? `Winning headline: ${state.lockedHeadlineText}` : "Vote a headline to begin.";
 
       el.headlineBadge.textContent = state.phase === "headline" ? "Open" : "Locked";
       el.storyBadge.textContent =
@@ -639,9 +842,9 @@
       renderList(el.conclusionList, state.currentConclusions, "conclusion");
 
       if (state.phase === "published") {
-        el.publishedStory.textContent = buildPublishedStory();
+        el.publishedStory.innerHTML = buildPublishedHtml();
       } else {
-        el.publishedStory.textContent = "";
+        el.publishedStory.innerHTML = "";
       }
     }
 
@@ -661,23 +864,19 @@
       render();
     }
 
-    function getShareText() {
-      const story = buildPublishedStory();
+    function getStoryShareText() {
+      const story = buildPublishedStoryText();
       const link = window.location.href;
-      return `Vote on this live community story game:\n\n${story}\n\nVote here:\n${link}`;
-    }
+      return `Vote on this live community story game:
 
-    async function copyToClipboard(text, successMsg) {
-      try {
-        await navigator.clipboard.writeText(text);
-        flashOk(successMsg);
-      } catch {
-        showError("Copy failed on this browser.");
-      }
+${story}
+
+Vote here:
+${link}`;
     }
 
     function downloadPdf() {
-      const story = buildPublishedStory();
+      const story = buildPublishedStoryText();
       if (!story) return showError("No published story to download.");
 
       const { jsPDF } = window.jspdf;
@@ -715,39 +914,6 @@
       pdf.text("Emotional Intelligence Developer", margin, pageHeight - 10);
       pdf.save("community-story.pdf");
       flashOk("PDF downloaded.");
-    }
-
-    function shareWhatsApp() {
-      const text = encodeURIComponent(getShareText());
-      window.open(`https://wa.me/?text=${text}`, "_blank");
-    }
-
-    function shareX() {
-      const text = encodeURIComponent(getShareText());
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-    }
-
-    function shareFacebook() {
-      const url = encodeURIComponent(window.location.href);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
-    }
-
-    async function nativeShare() {
-      const text = getShareText();
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: "10-to-Write: The Community Story Game",
-            text,
-            url: window.location.href
-          });
-          flashOk("Shared.");
-        } catch {
-          flashOk("Share cancelled.");
-        }
-      } else {
-        copyToClipboard(text, "Share text copied.");
-      }
     }
 
     function connect() {
@@ -846,6 +1012,14 @@
       });
     }
 
+    function findEntryByIdAndPhase(phase, id) {
+      let list = [];
+      if (phase === "headline") list = state.currentHeadlines;
+      if (phase === "message") list = state.currentMessages;
+      if (phase === "conclusion") list = state.currentConclusions;
+      return list.find((item) => item.id === id);
+    }
+
     el.registerBtn.addEventListener("click", () => {
       const username = safe(el.username.value);
       if (!validateUsername(username)) {
@@ -934,6 +1108,38 @@
           adminId: safe(el.adminUserId.value),
           adminPw: safe(el.adminPassword.value)
         });
+        return;
+      }
+
+      const copyBtn = e.target.closest(".share-copy-btn");
+      if (copyBtn) {
+        const item = findEntryByIdAndPhase(copyBtn.dataset.phase, copyBtn.dataset.id);
+        if (!item) return;
+        copyToClipboard(getEntryShareText(item, copyBtn.dataset.phase), "Entry share text copied.");
+        return;
+      }
+
+      const waBtn = e.target.closest(".share-wa-btn");
+      if (waBtn) {
+        const item = findEntryByIdAndPhase(waBtn.dataset.phase, waBtn.dataset.id);
+        if (!item) return;
+        shareToWhatsApp(getEntryShareText(item, waBtn.dataset.phase));
+        return;
+      }
+
+      const xBtn = e.target.closest(".share-x-btn");
+      if (xBtn) {
+        const item = findEntryByIdAndPhase(xBtn.dataset.phase, xBtn.dataset.id);
+        if (!item) return;
+        shareToX(getEntryShareText(item, xBtn.dataset.phase));
+        return;
+      }
+
+      const nativeBtn = e.target.closest(".share-native-btn");
+      if (nativeBtn) {
+        const item = findEntryByIdAndPhase(nativeBtn.dataset.phase, nativeBtn.dataset.id);
+        if (!item) return;
+        nativeShareText(getEntryShareText(item, nativeBtn.dataset.phase));
       }
     });
 
@@ -954,11 +1160,11 @@
 
     el.downloadPdfBtn.addEventListener("click", downloadPdf);
     el.copyVoteLinkBtn.addEventListener("click", () => copyToClipboard(window.location.href, "Vote link copied."));
-    el.copyStoryBtn.addEventListener("click", () => copyToClipboard(buildPublishedStory(), "Story copied."));
-    el.shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
-    el.shareXBtn.addEventListener("click", shareX);
-    el.shareFacebookBtn.addEventListener("click", shareFacebook);
-    el.nativeShareBtn.addEventListener("click", nativeShare);
+    el.copyStoryBtn.addEventListener("click", () => copyToClipboard(buildPublishedStoryText(), "Story copied."));
+    el.shareWhatsAppBtn.addEventListener("click", () => shareToWhatsApp(getStoryShareText()));
+    el.shareXBtn.addEventListener("click", () => shareToX(getStoryShareText()));
+    el.shareFacebookBtn.addEventListener("click", shareToFacebook);
+    el.nativeShareBtn.addEventListener("click", () => nativeShareText(getStoryShareText()));
 
     connect();
   </script>

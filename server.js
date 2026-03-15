@@ -211,6 +211,14 @@ function archiveCurrentPublishedGame() {
   }
 }
 
+function deletePastGameByIndex(index) {
+  if (!Number.isInteger(index)) return false;
+  if (index < 0 || index >= pastGames.length) return false;
+
+  pastGames.splice(index, 1);
+  return true;
+}
+
 /* SOCKET CONNECTION */
 
 io.on("connection", (socket) => {
@@ -430,6 +438,36 @@ io.on("connection", (socket) => {
     removeUsernameSubmissionLock(phase, removedItem);
 
     io.emit("submissionRemoved", { phase, id: messageId });
+    emitState();
+  });
+
+  /* ADMIN DELETE PAST GAME */
+
+  socket.on("adminDeletePastGame", (data = {}) => {
+    if (!isAdminValid(data)) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
+    }
+
+    const index = Number(data.pastGameIndex);
+
+    if (!Number.isInteger(index) || index < 0 || index >= pastGames.length) {
+      socket.emit("gameError", { message: "Past game not found." });
+      return;
+    }
+
+    const deleted = deletePastGameByIndex(index);
+
+    if (!deleted) {
+      socket.emit("gameError", { message: "Failed to delete past game." });
+      return;
+    }
+
+    io.emit("pastGameDeleted", {
+      index,
+      pastGames: publicPastGames()
+    });
+
     emitState();
   });
 

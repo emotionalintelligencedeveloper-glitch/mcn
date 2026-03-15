@@ -202,19 +202,24 @@
     .ok { background: #e9fff0; color: #1f5f2f; }
 
     .story {
-      white-space: pre-wrap;
       line-height: 1.7;
       border: 1px dashed #d8def6;
       border-radius: 12px;
-      padding: 12px;
+      padding: 14px;
       background: #fafcff;
       word-break: break-word;
+    }
+
+    .story-inner {
+      max-width: 620px;
+      margin: 0 auto;
     }
 
     .story-preview-title {
       font-size: 1.1rem;
       font-weight: 800;
       margin-bottom: 10px;
+      white-space: pre-wrap;
     }
 
     .story-paragraph {
@@ -227,6 +232,10 @@
       margin-bottom: 0;
       border-bottom: 0;
       padding-bottom: 0;
+    }
+
+    .story-text {
+      white-space: pre-wrap;
     }
 
     .story-credit {
@@ -314,16 +323,23 @@
       color: #16224b;
     }
 
-    .entry-share-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
+    .past-game {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      background: #fff;
     }
 
-    .entry-share-row button {
-      width: auto;
-      min-width: 120px;
+    .past-game-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .past-game-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -362,7 +378,7 @@
       <div class="how-steps">
         <div class="step-card">
           <strong>1. Register</strong>
-          Join the game with a username so you can submit and vote.
+          Join the game with a username so you can submit, vote, and download finished stories.
         </div>
         <div class="step-card">
           <strong>2. Add your entry</strong>
@@ -370,11 +386,11 @@
         </div>
         <div class="step-card">
           <strong>3. Share it</strong>
-          Use the share buttons under your entry to send people to the live game page.
+          Use the share buttons under your entry to bring voters to the live game.
         </div>
         <div class="step-card">
           <strong>4. Reach 10 votes</strong>
-          When your entry wins the round, it gets added to the story with your name and social handle shown below it.
+          When your entry wins, it is added to the story with your credit below it.
         </div>
       </div>
     </section>
@@ -411,7 +427,7 @@
     <section class="card">
       <h3>Story Build Round <span class="pill p-lock" id="storyBadge">Waiting</span></h3>
       <p id="storyInfo" class="sub">Vote a headline to begin.</p>
-      <div class="story" id="storyPreview">No story yet.</div>
+      <div class="story"><div class="story-inner" id="storyPreview">No story yet.</div></div>
       <div class="sub" id="wordProgress">0 / 396 words</div>
 
       <div class="soft-box" style="margin:12px 0;">
@@ -457,16 +473,16 @@
 
     <section class="card hidden" id="publishCard">
       <h3>Published Story</h3>
-      <div class="story" id="publishedStory"></div>
+      <div class="story"><div class="story-inner" id="publishedStory"></div></div>
 
       <div class="share-box">
         <strong>Share this story to get votes and visitors</strong>
-        <p class="sub" style="margin-top:6px;">Use these buttons to spread the game and let players ask friends to vote.</p>
+        <p class="sub" style="margin-top:6px;">Only registered players can download the PDF.</p>
 
         <div class="grid-share">
           <button id="downloadPdfBtn" class="btn-dark" type="button">Download PDF</button>
           <button id="copyVoteLinkBtn" class="btn-muted" type="button">Copy Vote Link</button>
-          <button id="copyStoryBtn" class="btn-muted" type="button">Copy Story Text</button>
+          <button id="copyStoryBtn" class="btn-muted hidden" type="button">Copy Story Text</button>
           <button id="shareWhatsAppBtn" class="btn-green" type="button">Share on WhatsApp</button>
           <button id="shareXBtn" class="btn-dark" type="button">Share on X</button>
           <button id="shareFacebookBtn" class="btn-muted" type="button">Share on Facebook</button>
@@ -476,13 +492,19 @@
           <button id="nativeShareBtn" class="btn-main" type="button">Share</button>
         </div>
 
-        <p class="note">Best growth idea: every player should use the share buttons under their own entry before it reaches 10 votes.</p>
+        <p class="note">Moderator can copy story text after entering moderator details.</p>
       </div>
     </section>
 
     <section class="card">
+      <h3>Past Games</h3>
+      <p class="sub">Finished stories stay here while a new game is running.</p>
+      <div id="pastGamesList"></div>
+    </section>
+
+    <section class="card">
       <h3>Moderator Controls</h3>
-      <p class="sub">Use your moderator code to remove submissions and finalize each stage.</p>
+      <p class="sub">Use your moderator code to remove submissions, copy story text, finalize stages, and reset after publish.</p>
       <div class="grid-3">
         <label>Moderator User ID <input id="adminUserId" /></label>
         <label>Moderator Password <input id="adminPassword" type="password" /></label>
@@ -492,7 +514,8 @@
       </div>
 
       <div class="small-actions">
-        <button id="deletePublishedBtn" class="btn-danger" type="button">Delete Published Story</button>
+        <button id="copyModeratorStoryBtn" class="btn-muted" type="button">Copy Story Text</button>
+        <button id="resetGameBtn" class="btn-danger" type="button">Reset Game</button>
       </div>
 
       <div class="sub">Delete buttons appear next to submissions when moderator credentials are filled in.</div>
@@ -514,6 +537,7 @@
   <script>
     const BACKEND_URL = "https://mcn-m5nx.onrender.com";
     const USERNAME_REGEX = /^[A-Za-z0-9._ -]{1,31}$/;
+    const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
 
     const state = {
       phase: "headline",
@@ -528,7 +552,8 @@
       currentConclusions: [],
       playerCount: 0,
       myUsername: "",
-      hasVoted: false
+      hasVoted: false,
+      pastGames: []
     };
 
     const el = {
@@ -577,7 +602,8 @@
       adminUserId: document.getElementById("adminUserId"),
       adminPassword: document.getElementById("adminPassword"),
       finalizeRoundBtn: document.getElementById("finalizeRoundBtn"),
-      deletePublishedBtn: document.getElementById("deletePublishedBtn"),
+      copyModeratorStoryBtn: document.getElementById("copyModeratorStoryBtn"),
+      resetGameBtn: document.getElementById("resetGameBtn"),
 
       downloadPdfBtn: document.getElementById("downloadPdfBtn"),
       copyVoteLinkBtn: document.getElementById("copyVoteLinkBtn"),
@@ -585,7 +611,9 @@
       shareWhatsAppBtn: document.getElementById("shareWhatsAppBtn"),
       shareXBtn: document.getElementById("shareXBtn"),
       shareFacebookBtn: document.getElementById("shareFacebookBtn"),
-      nativeShareBtn: document.getElementById("nativeShareBtn")
+      nativeShareBtn: document.getElementById("nativeShareBtn"),
+
+      pastGamesList: document.getElementById("pastGamesList")
     };
 
     let socket;
@@ -651,7 +679,7 @@
       if (pieces.length) {
         html += pieces.map((piece) => `
           <div class="story-paragraph">
-            <div>${esc(piece.text || "")}</div>
+            <div class="story-text">${esc(piece.text || "")}</div>
             <div class="story-credit">Won by ${esc(formatIdentity(piece))}</div>
           </div>
         `).join("");
@@ -660,10 +688,10 @@
       return html;
     }
 
-    function buildPublishedStoryText() {
-      const headline = safe(state.lockedHeadlineText);
-      const pieces = Array.isArray(state.storyPieces) ? state.storyPieces : [];
-      const finalStory = safe(state.finalStory);
+    function buildPublishedStoryTextFromParts(parts, headlineText, finalStoryText) {
+      const headline = safe(headlineText);
+      const pieces = Array.isArray(parts) ? parts : [];
+      const finalStory = safe(finalStoryText);
 
       if (finalStory) return finalStory;
 
@@ -674,6 +702,10 @@
       }).join("\n\n");
 
       return text.trim();
+    }
+
+    function buildPublishedStoryText() {
+      return buildPublishedStoryTextFromParts(state.storyPieces, state.lockedHeadlineText, state.finalStory);
     }
 
     function buildPublishedHtml() {
@@ -691,7 +723,7 @@
       if (pieces.length) {
         html += pieces.map((piece) => `
           <div class="story-paragraph">
-            <div>${esc(piece.text || "")}</div>
+            <div class="story-text">${esc(piece.text || "")}</div>
             <div class="story-credit">Won by ${esc(formatIdentity(piece))}</div>
           </div>
         `).join("");
@@ -702,6 +734,10 @@
 
     function isAdminReady() {
       return safe(el.adminUserId.value).length > 0 && safe(el.adminPassword.value).length > 0;
+    }
+
+    function isRegisteredUser() {
+      return safe(state.myUsername).length > 0;
     }
 
     function phaseText(phase) {
@@ -779,6 +815,32 @@ ${link}`;
       }
     }
 
+    function renderPastGames() {
+      const games = Array.isArray(state.pastGames) ? state.pastGames : [];
+
+      if (!games.length) {
+        el.pastGamesList.innerHTML = `<p class="sub">No past games yet.</p>`;
+        return;
+      }
+
+      el.pastGamesList.innerHTML = games.slice().reverse().map((game, index) => {
+        const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
+        const title = safe(game.lockedHeadlineText || `Past Game ${index + 1}`);
+        const created = safe(game.completedAtLabel || "");
+        return `
+          <div class="past-game">
+            <div class="past-game-title">${esc(title)}</div>
+            <div class="past-game-meta">${esc(created)}</div>
+            <div class="small-actions">
+              <button class="btn-muted past-copy-btn" data-index="${index}" type="button">Copy Story</button>
+              <button class="btn-dark past-pdf-btn" data-index="${index}" type="button">Download PDF</button>
+            </div>
+            <div class="note">${esc(storyText.slice(0, 180))}${storyText.length > 180 ? "..." : ""}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
     function renderList(listEl, items, phase) {
       const sorted = [...(items || [])].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
 
@@ -840,12 +902,16 @@ ${link}`;
       renderList(el.headlineList, state.currentHeadlines, "headline");
       renderList(el.messageList, state.currentMessages, "message");
       renderList(el.conclusionList, state.currentConclusions, "conclusion");
+      renderPastGames();
 
       if (state.phase === "published") {
         el.publishedStory.innerHTML = buildPublishedHtml();
       } else {
         el.publishedStory.innerHTML = "";
       }
+
+      el.downloadPdfBtn.disabled = !isRegisteredUser();
+      el.copyStoryBtn.classList.toggle("hidden", !isAdminReady());
     }
 
     function applyGameState(payload = {}) {
@@ -860,6 +926,7 @@ ${link}`;
       state.currentMessages = Array.isArray(payload.currentMessages) ? payload.currentMessages : [];
       state.currentConclusions = Array.isArray(payload.currentConclusions) ? payload.currentConclusions : [];
       state.playerCount = Number(payload.playerCount || 0);
+      state.pastGames = Array.isArray(payload.pastGames) ? payload.pastGames : [];
       state.hasVoted = false;
       render();
     }
@@ -875,10 +942,24 @@ Vote here:
 ${link}`;
     }
 
-    function downloadPdf() {
-      const story = buildPublishedStoryText();
-      if (!story) return showError("No published story to download.");
+    function loadImageAsDataURL(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL("image/jpeg"));
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
 
+    async function buildPdfFromStory(storyText, filename = "community-story.pdf") {
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({
         orientation: "p",
@@ -890,16 +971,25 @@ ${link}`;
       const pageHeight = pdf.internal.pageSize.getHeight();
       const margin = 18;
       const usableWidth = pageWidth - (margin * 2);
+      let y = 18;
+
+      try {
+        const logoData = await loadImageAsDataURL(LOGO_URL);
+        pdf.addImage(logoData, "JPEG", margin, y, 20, 20);
+      } catch (e) {
+        // continue without logo if cross-origin image loading fails
+      }
 
       pdf.setFont("times", "bold");
       pdf.setFontSize(18);
-      pdf.text("10-to-Write Community Story", margin, 20);
+      pdf.text("10-to-Write Community Story", margin + 26, 24);
+
+      y = 42;
 
       pdf.setFont("times", "normal");
       pdf.setFontSize(12);
 
-      const lines = pdf.splitTextToSize(story, usableWidth);
-      let y = 32;
+      const lines = pdf.splitTextToSize(storyText, usableWidth);
 
       for (const line of lines) {
         if (y > pageHeight - 20) {
@@ -912,7 +1002,19 @@ ${link}`;
 
       pdf.setFontSize(10);
       pdf.text("Emotional Intelligence Developer", margin, pageHeight - 10);
-      pdf.save("community-story.pdf");
+      pdf.save(filename);
+    }
+
+    async function downloadPdf() {
+      if (!isRegisteredUser()) {
+        showError("Register first to download the PDF.");
+        return;
+      }
+
+      const story = buildPublishedStoryText();
+      if (!story) return showError("No published story to download.");
+
+      await buildPdfFromStory(story, "community-story.pdf");
       flashOk("PDF downloaded.");
     }
 
@@ -933,6 +1035,7 @@ ${link}`;
       socket.on("registered", (payload = {}) => {
         if (payload.username) state.myUsername = payload.username;
         flashOk(`Joined as @${state.myUsername}.`);
+        render();
       });
 
       socket.on("playerCount", ({ count } = {}) => {
@@ -992,7 +1095,7 @@ ${link}`;
         state.currentConclusions = [];
         state.hasVoted = false;
         render();
-        flashOk("Published story deleted.");
+        flashOk("Game reset.");
       });
 
       socket.on("roundFinalized", ({ winner, finalStory } = {}) => {
@@ -1018,6 +1121,11 @@ ${link}`;
       if (phase === "message") list = state.currentMessages;
       if (phase === "conclusion") list = state.currentConclusions;
       return list.find((item) => item.id === id);
+    }
+
+    function getPastGameByRenderedIndex(renderedIndex) {
+      const games = Array.isArray(state.pastGames) ? state.pastGames.slice().reverse() : [];
+      return games[Number(renderedIndex)];
     }
 
     el.registerBtn.addEventListener("click", () => {
@@ -1091,7 +1199,7 @@ ${link}`;
       flashOk("Conclusion submitted.");
     });
 
-    document.body.addEventListener("click", (e) => {
+    document.body.addEventListener("click", async (e) => {
       const voteBtn = e.target.closest(".vote-btn");
       if (voteBtn) {
         if (!state.myUsername) return showError("Register username first.");
@@ -1140,6 +1248,26 @@ ${link}`;
         const item = findEntryByIdAndPhase(nativeBtn.dataset.phase, nativeBtn.dataset.id);
         if (!item) return;
         nativeShareText(getEntryShareText(item, nativeBtn.dataset.phase));
+        return;
+      }
+
+      const pastCopyBtn = e.target.closest(".past-copy-btn");
+      if (pastCopyBtn) {
+        const game = getPastGameByRenderedIndex(pastCopyBtn.dataset.index);
+        if (!game) return;
+        const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
+        copyToClipboard(storyText, "Past story copied.");
+        return;
+      }
+
+      const pastPdfBtn = e.target.closest(".past-pdf-btn");
+      if (pastPdfBtn) {
+        if (!isRegisteredUser()) return showError("Register first to download the PDF.");
+        const game = getPastGameByRenderedIndex(pastPdfBtn.dataset.index);
+        if (!game) return;
+        const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
+        await buildPdfFromStory(storyText, "past-community-story.pdf");
+        flashOk("Past game PDF downloaded.");
       }
     });
 
@@ -1150,7 +1278,12 @@ ${link}`;
       });
     });
 
-    el.deletePublishedBtn.addEventListener("click", () => {
+    el.copyModeratorStoryBtn.addEventListener("click", () => {
+      if (!isAdminReady()) return showError("Enter moderator credentials first.");
+      copyToClipboard(buildPublishedStoryText(), "Story text copied for publishing.");
+    });
+
+    el.resetGameBtn.addEventListener("click", () => {
       if (!isAdminReady()) return showError("Enter moderator credentials first.");
       socket.emit("adminDeletePublishedStory", {
         adminId: safe(el.adminUserId.value),
@@ -1160,7 +1293,10 @@ ${link}`;
 
     el.downloadPdfBtn.addEventListener("click", downloadPdf);
     el.copyVoteLinkBtn.addEventListener("click", () => copyToClipboard(window.location.href, "Vote link copied."));
-    el.copyStoryBtn.addEventListener("click", () => copyToClipboard(buildPublishedStoryText(), "Story copied."));
+    el.copyStoryBtn.addEventListener("click", () => {
+      if (!isAdminReady()) return showError("Enter moderator credentials first.");
+      copyToClipboard(buildPublishedStoryText(), "Story copied.");
+    });
     el.shareWhatsAppBtn.addEventListener("click", () => shareToWhatsApp(getStoryShareText()));
     el.shareXBtn.addEventListener("click", () => shareToX(getStoryShareText()));
     el.shareFacebookBtn.addEventListener("click", shareToFacebook);

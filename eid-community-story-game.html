@@ -15,9 +15,15 @@
       --accent: #53b3cb;
       --ok: #3db07a;
       --danger: #d64545;
+      --danger-dark: #b73131;
       --line: #dde4ff;
       --radius: 14px;
       --shadow: 0 12px 30px rgba(31, 45, 112, 0.12);
+      --soft-blue: #edf2ff;
+      --soft-green: #e9fff0;
+      --soft-red: #ffe9ea;
+      --soft-yellow: #fff7db;
+      --dark: #1f2338;
     }
 
     * { box-sizing: border-box; }
@@ -46,7 +52,13 @@
       border: 1px solid rgba(221, 228, 255, 0.75);
     }
 
-    .brand { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
 
     .brand img {
       width: 84px;
@@ -62,9 +74,15 @@
     h2, h3 { margin: 0 0 10px; }
     .sub { color: var(--muted); margin: 6px 0; font-size: 0.96rem; }
 
-    .status-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+    .status-strip {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
 
-    .grid-2, .grid-3, .grid-4 {
+    .grid-2, .grid-3, .grid-4, .grid-share {
       display: grid;
       gap: 10px;
       align-items: end;
@@ -73,9 +91,10 @@
     .grid-2 { grid-template-columns: 1fr 1fr; }
     .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
     .grid-4 { grid-template-columns: 1fr 1fr 1fr auto; }
+    .grid-share { grid-template-columns: repeat(3, 1fr); }
 
     @media (max-width: 760px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .grid-share { grid-template-columns: 1fr; }
       .brand { align-items: flex-start; }
     }
 
@@ -103,10 +122,21 @@
     }
 
     button:disabled { cursor: not-allowed; opacity: 0.6; }
+
     .btn-main { background: var(--brand); color: #2b2100; }
     .btn-main:hover { background: var(--brand-dark); }
-    .btn-muted { background: #edf2ff; color: #23316a; }
-    .btn-danger { background: #ffe9ea; color: #7a1f25; }
+
+    .btn-muted { background: var(--soft-blue); color: #23316a; }
+    .btn-muted:hover { background: #dfe8ff; }
+
+    .btn-danger { background: var(--soft-red); color: #7a1f25; }
+    .btn-danger:hover { background: #ffd7da; }
+
+    .btn-dark { background: var(--dark); color: #fff; }
+    .btn-dark:hover { background: #111522; }
+
+    .btn-green { background: var(--ok); color: #fff; }
+    .btn-green:hover { background: #2f9967; }
 
     .pill {
       border-radius: 999px;
@@ -127,7 +157,13 @@
       background: #fff;
     }
 
-    .item-title { font-weight: 700; margin-bottom: 4px; }
+    .item-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
     .meta { font-size: 12px; color: var(--muted); }
 
     .between {
@@ -151,22 +187,78 @@
 
     .story {
       white-space: pre-wrap;
-      line-height: 1.55;
+      line-height: 1.6;
       border: 1px dashed #d8def6;
       border-radius: 12px;
       padding: 12px;
       background: #fafcff;
+      word-break: break-word;
     }
 
-    .footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-    .footer-links a, .brand a { color: #2946ac; text-decoration: none; font-weight: 600; }
-    .footer-links a:hover, .brand a:hover { text-decoration: underline; }
+    .story-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #182243;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .footer-links a, .brand a {
+      color: #2946ac;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-links a:hover, .brand a:hover {
+      text-decoration: underline;
+    }
 
     .soft-box {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, #ffffff, #f7f9ff);
       border-radius: 12px;
       padding: 14px;
+    }
+
+    .share-box {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7f9ff);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .small-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .small-actions button {
+      width: auto;
+      min-width: 150px;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .winning-headline {
+      margin: 12px 0 0;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #f4e1a1;
+      background: var(--soft-yellow);
+      font-weight: 700;
     }
   </style>
 </head>
@@ -191,6 +283,8 @@
         <p class="sub">Players: <strong id="playerCount">0</strong></p>
         <p class="sub">Round: <strong id="roundNumber">1</strong></p>
       </div>
+
+      <div id="winningHeadlineBox" class="winning-headline hidden"></div>
 
       <div id="errorBox" class="error hidden"></div>
       <div id="okBox" class="ok hidden"></div>
@@ -240,7 +334,10 @@
         <label>Message (max 300 chars)
           <textarea id="messageText" maxlength="300"></textarea>
         </label>
-        <div class="grid-4">
+        <div class="small-actions">
+          <button id="cleanMessageBtn" class="btn-muted" type="button">Clean Pasted Text</button>
+        </div>
+        <div class="grid-4" style="margin-top:10px;">
           <label>1. Name <input id="messageName" maxlength="24" /></label>
           <label>2. Social Media <input id="messageSocial" maxlength="24" placeholder="X / Facebook / Instagram" /></label>
           <label>3. Handle <input id="messageHandle" maxlength="31" placeholder="yourhandle" /></label>
@@ -256,7 +353,10 @@
         <label>Conclusion (max 300 chars)
           <textarea id="conclusionText" maxlength="300"></textarea>
         </label>
-        <div class="grid-4">
+        <div class="small-actions">
+          <button id="cleanConclusionBtn" class="btn-muted" type="button">Clean Pasted Text</button>
+        </div>
+        <div class="grid-4" style="margin-top:10px;">
           <label>1. Name <input id="conclusionName" maxlength="24" /></label>
           <label>2. Social Media <input id="conclusionSocial" maxlength="24" placeholder="X / Facebook / Instagram" /></label>
           <label>3. Handle <input id="conclusionHandle" maxlength="31" placeholder="yourhandle" /></label>
@@ -269,6 +369,26 @@
     <section class="card hidden" id="publishCard">
       <h3>Published Story</h3>
       <div class="story" id="publishedStory"></div>
+
+      <div class="share-box">
+        <strong>Share this story to get votes and visitors</strong>
+        <p class="sub" style="margin-top:6px;">Use these buttons to spread the game and let players ask friends to vote.</p>
+
+        <div class="grid-share">
+          <button id="downloadPdfBtn" class="btn-dark" type="button">Download PDF</button>
+          <button id="copyVoteLinkBtn" class="btn-muted" type="button">Copy Vote Link</button>
+          <button id="copyStoryBtn" class="btn-muted" type="button">Copy Story Text</button>
+          <button id="shareWhatsAppBtn" class="btn-green" type="button">Share on WhatsApp</button>
+          <button id="shareXBtn" class="btn-dark" type="button">Share on X</button>
+          <button id="shareFacebookBtn" class="btn-muted" type="button">Share on Facebook</button>
+        </div>
+
+        <div class="small-actions">
+          <button id="nativeShareBtn" class="btn-main" type="button">Share</button>
+        </div>
+
+        <p class="note">Best growth idea: players share their own entry and ask people to vote on the live game link.</p>
+      </div>
     </section>
 
     <section class="card">
@@ -281,6 +401,11 @@
           <button id="finalizeRoundBtn" class="btn-main" type="button">Finalize Current Stage</button>
         </div>
       </div>
+
+      <div class="small-actions">
+        <button id="deletePublishedBtn" class="btn-danger" type="button">Delete Published Story</button>
+      </div>
+
       <div class="sub">Delete buttons appear next to submissions when moderator credentials are filled in.</div>
     </section>
 
@@ -295,6 +420,8 @@
   </main>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
     const BACKEND_URL = "https://mcn-m5nx.onrender.com";
     const USERNAME_REGEX = /^[A-Za-z0-9._ -]{1,31}$/;
@@ -324,6 +451,7 @@
       okBox: document.getElementById("okBox"),
       username: document.getElementById("username"),
       registerBtn: document.getElementById("registerBtn"),
+      winningHeadlineBox: document.getElementById("winningHeadlineBox"),
 
       headlineBadge: document.getElementById("headlineBadge"),
       headlineForm: document.getElementById("headlineForm"),
@@ -343,6 +471,7 @@
       messageSocial: document.getElementById("messageSocial"),
       messageHandle: document.getElementById("messageHandle"),
       messageList: document.getElementById("messageList"),
+      cleanMessageBtn: document.getElementById("cleanMessageBtn"),
 
       conclusionCard: document.getElementById("conclusionCard"),
       conclusionForm: document.getElementById("conclusionForm"),
@@ -351,13 +480,23 @@
       conclusionSocial: document.getElementById("conclusionSocial"),
       conclusionHandle: document.getElementById("conclusionHandle"),
       conclusionList: document.getElementById("conclusionList"),
+      cleanConclusionBtn: document.getElementById("cleanConclusionBtn"),
 
       publishCard: document.getElementById("publishCard"),
       publishedStory: document.getElementById("publishedStory"),
 
       adminUserId: document.getElementById("adminUserId"),
       adminPassword: document.getElementById("adminPassword"),
-      finalizeRoundBtn: document.getElementById("finalizeRoundBtn")
+      finalizeRoundBtn: document.getElementById("finalizeRoundBtn"),
+      deletePublishedBtn: document.getElementById("deletePublishedBtn"),
+
+      downloadPdfBtn: document.getElementById("downloadPdfBtn"),
+      copyVoteLinkBtn: document.getElementById("copyVoteLinkBtn"),
+      copyStoryBtn: document.getElementById("copyStoryBtn"),
+      shareWhatsAppBtn: document.getElementById("shareWhatsAppBtn"),
+      shareXBtn: document.getElementById("shareXBtn"),
+      shareFacebookBtn: document.getElementById("shareFacebookBtn"),
+      nativeShareBtn: document.getElementById("nativeShareBtn")
     };
 
     let socket;
@@ -386,7 +525,7 @@
       el.okBox.textContent = msg;
       el.okBox.classList.remove("hidden");
       el.errorBox.classList.add("hidden");
-      setTimeout(() => el.okBox.classList.add("hidden"), 1800);
+      setTimeout(() => el.okBox.classList.add("hidden"), 2000);
     }
 
     function validateUsername(username) {
@@ -397,11 +536,26 @@
       return safe(t).split(/\s+/).filter(Boolean).length;
     }
 
+    function cleanSubmission(text) {
+      return String(text || "")
+        .replace(/Here is a \*\*\d+\-word message[\s\S]*?\-\-\-/gi, "")
+        .replace(/Here is a\s+\d+\-word message[\s\S]*?\-\-\-/gi, "")
+        .replace(/\*\*/g, "")
+        .replace(/^---+/gm, "")
+        .replace(/^\s*Title:\s*/gim, "")
+        .replace(/^\s*Headline:\s*/gim, "")
+        .trim();
+    }
+
     function buildPreviewStory() {
       const headline = safe(state.lockedHeadlineText);
       const body = (state.storyPieces || []).map((p) => safe(p.text)).filter(Boolean).join(" ");
       if (headline && body) return `${headline}\n\n${body}`;
       return headline || body || "";
+    }
+
+    function buildPublishedStory() {
+      return safe(state.finalStory || buildPreviewStory());
     }
 
     function isAdminReady() {
@@ -473,12 +627,21 @@
       el.conclusionForm.classList.toggle("hidden", state.phase !== "conclusion");
       el.publishCard.classList.toggle("hidden", state.phase !== "published");
 
+      if (state.lockedHeadlineText) {
+        el.winningHeadlineBox.textContent = `Winning headline: ${state.lockedHeadlineText}`;
+        el.winningHeadlineBox.classList.remove("hidden");
+      } else {
+        el.winningHeadlineBox.classList.add("hidden");
+      }
+
       renderList(el.headlineList, state.currentHeadlines, "headline");
       renderList(el.messageList, state.currentMessages, "message");
       renderList(el.conclusionList, state.currentConclusions, "conclusion");
 
       if (state.phase === "published") {
-        el.publishedStory.textContent = state.finalStory || preview;
+        el.publishedStory.textContent = buildPublishedStory();
+      } else {
+        el.publishedStory.textContent = "";
       }
     }
 
@@ -496,6 +659,95 @@
       state.playerCount = Number(payload.playerCount || 0);
       state.hasVoted = false;
       render();
+    }
+
+    function getShareText() {
+      const story = buildPublishedStory();
+      const link = window.location.href;
+      return `Vote on this live community story game:\n\n${story}\n\nVote here:\n${link}`;
+    }
+
+    async function copyToClipboard(text, successMsg) {
+      try {
+        await navigator.clipboard.writeText(text);
+        flashOk(successMsg);
+      } catch {
+        showError("Copy failed on this browser.");
+      }
+    }
+
+    function downloadPdf() {
+      const story = buildPublishedStory();
+      if (!story) return showError("No published story to download.");
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: "p",
+        unit: "mm",
+        format: "a4"
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 18;
+      const usableWidth = pageWidth - (margin * 2);
+
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(18);
+      pdf.text("10-to-Write Community Story", margin, 20);
+
+      pdf.setFont("times", "normal");
+      pdf.setFontSize(12);
+
+      const lines = pdf.splitTextToSize(story, usableWidth);
+      let y = 32;
+
+      for (const line of lines) {
+        if (y > pageHeight - 20) {
+          pdf.addPage();
+          y = 20;
+        }
+        pdf.text(line, margin, y);
+        y += 7;
+      }
+
+      pdf.setFontSize(10);
+      pdf.text("Emotional Intelligence Developer", margin, pageHeight - 10);
+      pdf.save("community-story.pdf");
+      flashOk("PDF downloaded.");
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(getShareText());
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    }
+
+    function shareX() {
+      const text = encodeURIComponent(getShareText());
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+    }
+
+    function shareFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+    }
+
+    async function nativeShare() {
+      const text = getShareText();
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "10-to-Write: The Community Story Game",
+            text,
+            url: window.location.href
+          });
+          flashOk("Shared.");
+        } catch {
+          flashOk("Share cancelled.");
+        }
+      } else {
+        copyToClipboard(text, "Share text copied.");
+      }
     }
 
     function connect() {
@@ -564,6 +816,19 @@
         flashOk("Submission deleted.");
       });
 
+      socket.on("publishedStoryDeleted", () => {
+        state.phase = "headline";
+        state.lockedHeadlineText = "";
+        state.storyPieces = [];
+        state.finalStory = "";
+        state.currentHeadlines = [];
+        state.currentMessages = [];
+        state.currentConclusions = [];
+        state.hasVoted = false;
+        render();
+        flashOk("Published story deleted.");
+      });
+
       socket.on("roundFinalized", ({ winner, finalStory } = {}) => {
         state.hasVoted = false;
         if (winner && winner.text) {
@@ -591,6 +856,16 @@
       socket.emit("registerUser", { username });
     });
 
+    el.cleanMessageBtn.addEventListener("click", () => {
+      el.messageText.value = cleanSubmission(el.messageText.value);
+      flashOk("Message cleaned.");
+    });
+
+    el.cleanConclusionBtn.addEventListener("click", () => {
+      el.conclusionText.value = cleanSubmission(el.conclusionText.value);
+      flashOk("Conclusion cleaned.");
+    });
+
     el.headlineForm.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!state.myUsername) return showError("Register username first.");
@@ -610,8 +885,11 @@
       e.preventDefault();
       if (!state.myUsername) return showError("Register username first.");
 
+      const cleaned = cleanSubmission(el.messageText.value);
+      if (!cleaned) return showError("Write your message first.");
+
       socket.emit("submitMessage", {
-        text: safe(el.messageText.value),
+        text: cleaned,
         name: safe(el.messageName.value),
         social: safe(el.messageSocial.value),
         handle: safe(el.messageHandle.value)
@@ -625,8 +903,11 @@
       e.preventDefault();
       if (!state.myUsername) return showError("Register username first.");
 
+      const cleaned = cleanSubmission(el.conclusionText.value);
+      if (!cleaned) return showError("Write your conclusion first.");
+
       socket.emit("submitConclusion", {
-        text: safe(el.conclusionText.value),
+        text: cleaned,
         name: safe(el.conclusionName.value),
         social: safe(el.conclusionSocial.value),
         handle: safe(el.conclusionHandle.value)
@@ -662,6 +943,22 @@
         adminPw: safe(el.adminPassword.value)
       });
     });
+
+    el.deletePublishedBtn.addEventListener("click", () => {
+      if (!isAdminReady()) return showError("Enter moderator credentials first.");
+      socket.emit("adminDeletePublishedStory", {
+        adminId: safe(el.adminUserId.value),
+        adminPw: safe(el.adminPassword.value)
+      });
+    });
+
+    el.downloadPdfBtn.addEventListener("click", downloadPdf);
+    el.copyVoteLinkBtn.addEventListener("click", () => copyToClipboard(window.location.href, "Vote link copied."));
+    el.copyStoryBtn.addEventListener("click", () => copyToClipboard(buildPublishedStory(), "Story copied."));
+    el.shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
+    el.shareXBtn.addEventListener("click", shareX);
+    el.shareFacebookBtn.addEventListener("click", shareFacebook);
+    el.nativeShareBtn.addEventListener("click", nativeShare);
 
     connect();
   </script>

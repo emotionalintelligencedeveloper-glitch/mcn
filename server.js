@@ -3,7 +3,6 @@ const http = require("http");
 const cors = require("cors");
 const crypto = require("crypto");
 const fs = require("fs");
-const path = require("path");
 const { Server } = require("socket.io");
 
 const app = express();
@@ -36,8 +35,7 @@ const WORD_TARGET = 396;
 const MAX_PAST_GAMES = 50;
 
 /* PERSISTENT STORAGE */
-const DATA_DIR = path.join(__dirname, "data");
-const DATA_FILE = path.join(DATA_DIR, "community-story-game.json");
+const DATA_FILE = "/data/community-story-game.json";
 
 /* ROUND NUMBER */
 let roundNumber = 1;
@@ -48,12 +46,6 @@ let activeUsers = new Map();
 let pastGames = [];
 
 /* HELPERS */
-
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
 
 function serializeGameState() {
   return {
@@ -76,8 +68,9 @@ function serializeGameState() {
 
 function saveState() {
   try {
-    ensureDataDir();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(serializeGameState(), null, 2), "utf8");
+    const tempFile = `${DATA_FILE}.tmp`;
+    fs.writeFileSync(tempFile, JSON.stringify(serializeGameState(), null, 2), "utf8");
+    fs.renameSync(tempFile, DATA_FILE);
   } catch (err) {
     console.error("Failed to save game state:", err);
   }
@@ -85,8 +78,6 @@ function saveState() {
 
 function loadState() {
   try {
-    ensureDataDir();
-
     if (!fs.existsSync(DATA_FILE)) {
       return;
     }
@@ -294,6 +285,15 @@ function deletePastGameByIndex(index) {
 
   pastGames.splice(index, 1);
   return true;
+}
+
+function shutdownSafely(signal) {
+  try {
+    saveState();
+    console.log(`State saved during ${signal}`);
+  } catch (err) {
+    console.error(`Failed to save during ${signal}:`, err);
+  }
 }
 
 /* LOAD SAVED STATE ON START */
@@ -693,6 +693,19 @@ app.get("/", (_req, res) => {
     roundNumber,
     pastGames: pastGames.length
   });
+});
+
+process.on("SIGINT", () => shutdownSafely("SIGINT"));
+process.on("SIGTERM", () => shutdownSafely("SIGTERM"));
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception:", err);
+  shutdownSafely("uncaughtException");
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled rejection:", err);
+  shutdownSafely("unhandledRejection");
 });
 
 const PORT = process.env.PORT || 3000;

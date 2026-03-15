@@ -89,6 +89,27 @@ function isAdminValid(data = {}) {
   return data.adminId === ADMIN_ID && data.adminPw === ADMIN_PW;
 }
 
+function formatWinnerCredit(item = {}) {
+  const name = item.name || item.username || "Anonymous";
+  const social = item.social || "";
+  const handle = item.handle || "";
+
+  if (social && handle) return `${name} (${social}: ${handle})`;
+  if (handle) return `${name} (${handle})`;
+  return name;
+}
+
+function buildFinalStoryFromPieces() {
+  const headline = game.lockedHeadlineText || "";
+  const pieces = Array.isArray(game.storyPieces) ? game.storyPieces : [];
+
+  const body = pieces.map((piece) => {
+    return `${piece.text}\n— Won by ${formatWinnerCredit(piece)}`;
+  }).join("\n\n");
+
+  return [headline, body].filter(Boolean).join("\n\n");
+}
+
 function publicState() {
   return {
     phase: game.phase,
@@ -130,6 +151,22 @@ function getListForPhase(phase) {
 function resetToNewGame() {
   game = createFreshGame();
   roundNumber = 1;
+}
+
+function removeUsernameSubmissionLock(phase, removedItem) {
+  if (!removedItem || !removedItem.username) return;
+
+  if (phase === "headline") {
+    game.headlineSubmissions.delete(removedItem.username);
+  }
+
+  if (phase === "message") {
+    game.messageSubmissions.delete(removedItem.username);
+  }
+
+  if (phase === "conclusion") {
+    game.conclusionSubmissions.delete(removedItem.username);
+  }
 }
 
 /* SOCKET CONNECTION */
@@ -329,8 +366,9 @@ io.on("connection", (socket) => {
       return;
     }
 
-    const exists = list.some((x) => x.id === messageId);
-    if (!exists) {
+    const removedItem = list.find((x) => x.id === messageId);
+
+    if (!removedItem) {
       socket.emit("gameError", { message: "Submission not found." });
       return;
     }
@@ -338,12 +376,16 @@ io.on("connection", (socket) => {
     if (phase === "headline") {
       game.currentHeadlines = game.currentHeadlines.filter((x) => x.id !== messageId);
     }
+
     if (phase === "message") {
       game.currentMessages = game.currentMessages.filter((x) => x.id !== messageId);
     }
+
     if (phase === "conclusion") {
       game.currentConclusions = game.currentConclusions.filter((x) => x.id !== messageId);
     }
+
+    removeUsernameSubmissionLock(phase, removedItem);
 
     io.emit("submissionRemoved", { phase, id: messageId });
     emitState();
@@ -373,6 +415,7 @@ io.on("connection", (socket) => {
 
     if (game.phase === "headline") {
       const winner = getWinner(game.currentHeadlines);
+
       if (!winner) {
         socket.emit("gameError", { message: "No headline submissions to finalize." });
         return;
@@ -391,12 +434,19 @@ io.on("connection", (socket) => {
 
     if (game.phase === "message") {
       const winner = getWinner(game.currentMessages);
+
       if (!winner) {
         socket.emit("gameError", { message: "No message submissions to finalize." });
         return;
       }
 
-      game.storyPieces.push({ text: winner.text });
+      game.storyPieces.push({
+        text: winner.text,
+        username: winner.username || "",
+        name: winner.name || "",
+        social: winner.social || "",
+        handle: winner.handle || ""
+      });
 
       const words = wordCount(game.storyPieces.map((x) => x.text).join(" "));
 
@@ -417,13 +467,21 @@ io.on("connection", (socket) => {
 
     if (game.phase === "conclusion") {
       const winner = getWinner(game.currentConclusions);
+
       if (!winner) {
         socket.emit("gameError", { message: "No conclusion submissions to finalize." });
         return;
       }
 
-      const storyBody = game.storyPieces.map((x) => x.text).join(" ");
-      game.finalStory = `${game.lockedHeadlineText}\n\n${storyBody}\n\n${winner.text}`;
+      game.storyPieces.push({
+        text: winner.text,
+        username: winner.username || "",
+        name: winner.name || "",
+        social: winner.social || "",
+        handle: winner.handle || ""
+      });
+
+      game.finalStory = buildFinalStoryFromPieces();
       game.phase = "published";
       game.currentConclusions = [];
       game.conclusionSubmissions.clear();

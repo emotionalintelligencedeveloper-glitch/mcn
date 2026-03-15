@@ -1,387 +1,746 @@
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-const crypto = require("crypto");
-const { Server } = require("socket.io");
-
-const app = express();
-
-const FRONTEND_ORIGIN = "https://emotionalintelligencedeveloper-glitch.github.io";
-
-app.use(cors({
-  origin: FRONTEND_ORIGIN
-}));
-
-app.use(express.json());
-
-const server = http.createServer(app);
-
-const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_ORIGIN,
-    methods: ["GET", "POST"]
-  }
-});
-
-/* DO NOT CHANGE — YOUR SECRETS */
-const API_KEY = process.env.MY_SECRET_API_KEY;
-const ADMIN_ID = process.env.ADMIN_ID;
-const ADMIN_PW = process.env.ADMIN_PW;
-
-/* GAME CONSTANTS */
-
-const VOTE_TARGET = 10;
-const WORD_TARGET = 396;
-
-let roundNumber = 1;
-
-/* GAME STATE */
-
-let game = {
-  phase: "headline",
-  lockedHeadlineText: "",
-  storyPieces: [],
-  finalStory: "",
-  currentHeadlines: [],
-  currentMessages: [],
-  currentConclusions: [],
-  headlineSubmissions: new Set(),
-  messageSubmissions: new Set(),
-  conclusionSubmissions: new Set(),
-  votedUsers: new Set()
-};
-
-let activeUsers = new Map();
-
-/* HELPERS */
-
-function sanitize(value, max) {
-  return String(value || "").trim().replace(/\s+/g, " ").slice(0, max);
-}
-
-function validUsername(username) {
-  return /^[A-Za-z0-9._\- ]{1,31}$/.test(username);
-}
-
-function wordCount(text) {
-  return String(text || "").trim().split(/\s+/).filter(Boolean).length;
-}
-
-function publicState() {
-  return {
-    phase: game.phase,
-    roundNumber,
-    lockedHeadlineText: game.lockedHeadlineText,
-    storyPieces: game.storyPieces,
-    finalStory: game.finalStory,
-    currentHeadlines: game.currentHeadlines,
-    currentMessages: game.currentMessages,
-    currentConclusions: game.currentConclusions,
-    playerCount: activeUsers.size,
-    voteTarget: VOTE_TARGET,
-    wordTarget: WORD_TARGET
-  };
-}
-
-function emitState() {
-  io.emit("gameState", publicState());
-  io.emit("playerCount", { count: activeUsers.size });
-}
-
-function getWinner(list) {
-  if (!list.length) return null;
-  return list.reduce((best, item) => {
-    if (item.votes > best.votes) return item;
-    if (item.votes === best.votes && item.createdAt < best.createdAt) return item;
-    return best;
-  });
-}
-
-/* SOCKET CONNECTION */
-
-io.on("connection", (socket) => {
-
-  socket.emit("gameState", publicState());
-
-  /* REGISTER USER */
-
-  socket.on("registerUser", (data = {}) => {
-
-    const username = sanitize(data.username, 31);
-
-    if (!validUsername(username)) {
-      socket.emit("gameError", { message: "Invalid username." });
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10-to-Write: The Community Story Game</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --card: #ffffff;
+      --text: #1e2640;
+      --muted: #4e587b;
+      --brand: #ffc857;
+      --brand-dark: #dca52f;
+      --accent: #53b3cb;
+      --ok: #3db07a;
+      --danger: #d64545;
+      --line: #dde4ff;
+      --radius: 14px;
+      --shadow: 0 12px 30px rgba(31, 45, 112, 0.12);
     }
 
-    activeUsers.set(socket.id, username);
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-    socket.emit("registered", { username });
-
-    emitState();
-  });
-
-  /* SUBMIT HEADLINE */
-
-  socket.on("submitHeadline", (data = {}) => {
-
-    if (game.phase !== "headline") {
-      socket.emit("gameError", { message: "Headline round closed." });
-      return;
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff, var(--bg) 70%);
+      color: var(--text);
+      line-height: 1.45;
     }
 
-    const username = activeUsers.get(socket.id);
-    if (!username) {
-      socket.emit("gameError", { message: "Register first." });
-      return;
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
-    const text = sanitize(data.text, 90);
-
-    if (text.length < 2) {
-      socket.emit("gameError", { message: "Headline too short." });
-      return;
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(221, 228, 255, 0.75);
     }
 
-    if (game.headlineSubmissions.has(username)) {
-      socket.emit("gameError", { message: "Already submitted headline." });
-      return;
+    .brand { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+
+    .brand img {
+      width: 84px;
+      height: 84px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 2px solid #fff;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      flex-shrink: 0;
     }
 
-    const item = {
-      id: crypto.randomUUID(),
-      text,
-      username,
-      votes: 0,
-      createdAt: Date.now()
+    .brand h1 { margin: 0; font-size: clamp(1.35rem, 2vw, 1.7rem); }
+    h2, h3 { margin: 0 0 10px; }
+    .sub { color: var(--muted); margin: 6px 0; font-size: 0.96rem; }
+
+    .status-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+
+    .grid-2 {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+
+    .grid-3 {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: end;
+    }
+
+    .grid-4 {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      align-items: end;
+    }
+
+    @media (max-width: 760px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .brand { align-items: flex-start; }
+    }
+
+    input, textarea, button { font: inherit; }
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: #1f2338;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    button:disabled { cursor: not-allowed; opacity: 0.6; }
+    .btn-main { background: var(--brand); color: #2b2100; }
+    .btn-main:hover { background: var(--brand-dark); }
+    .btn-muted { background: #edf2ff; color: #23316a; }
+    .btn-danger { background: #ffe9ea; color: #7a1f25; }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .p-open { background: #fff5ce; color: #6f5000; }
+    .p-lock { background: #daf6dd; color: #0f5e2e; }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      margin: 10px 0;
+      background: #fff;
+    }
+
+    .item-title { font-weight: 700; margin-bottom: 4px; }
+    .meta { font-size: 12px; color: var(--muted); }
+
+    .between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hidden { display: none !important; }
+
+    .error, .ok {
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .error { background: #ffe9ea; color: #7a1f25; }
+    .ok { background: #e9fff0; color: #1f5f2f; }
+
+    .story {
+      white-space: pre-wrap;
+      line-height: 1.55;
+      border: 1px dashed #d8def6;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fafcff;
+    }
+
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .footer-links a, .jump-link, .brand a { color: #2946ac; text-decoration: none; font-weight: 600; }
+    .footer-links a:hover, .jump-link:hover, .brand a:hover { text-decoration: underline; }
+
+    .soft-box {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7f9ff);
+      border-radius: 12px;
+      padding: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="brand">
+        <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
+        <div>
+          <h1>Emotional Intelligence Developer</h1>
+          <p class="sub">A high emotional intelligence community game driving wellbeing, team support, and community.</p>
+          <p class="sub"><a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">emotionalintelligencedeveloper.com</a></p>
+        </div>
+      </div>
+
+      <h2>10-to-Write: The Community Story Game</h2>
+      <p class="sub">Headline, body, conclusion — one community story built together in live rounds.</p>
+
+      <div class="status-strip">
+        <p class="sub">Phase: <strong id="phaseLabel">Loading...</strong></p>
+        <p class="sub">Votes needed: <strong id="voteTargetLabel">10</strong></p>
+        <p class="sub">Players: <strong id="playerCount">0</strong></p>
+        <p class="sub">Round: <strong id="roundNumber">1</strong></p>
+      </div>
+
+      <div id="errorBox" class="error hidden"></div>
+      <div id="okBox" class="ok hidden"></div>
+    </section>
+
+    <section class="card">
+      <h3>Join Game</h3>
+      <div class="grid-2">
+        <label>Username (1-31 characters)
+          <input id="username" maxlength="31" autocomplete="off" />
+        </label>
+        <div>
+          <button id="registerBtn" class="btn-main" type="button">Register</button>
+        </div>
+      </div>
+      <p class="sub">Allowed: letters, numbers, spaces, dots, hyphens, underscores.</p>
+    </section>
+
+    <section class="card" id="headlineCard">
+      <h3>Headline Round <span class="pill p-open" id="headlineBadge">Open</span></h3>
+      <form id="headlineForm">
+        <label>Headline text (max 90)
+          <input id="headlineText" maxlength="90" />
+        </label>
+        <div class="grid-4">
+          <label>1. Name <input id="headlineName" maxlength="24" /></label>
+          <label>2. Social Media <input id="headlineSocial" maxlength="24" placeholder="X / Facebook / Instagram" /></label>
+          <label>3. Handle <input id="headlineHandle" maxlength="31" placeholder="yourhandle" /></label>
+          <button class="btn-main" type="submit">Submit Headline</button>
+        </div>
+        <div class="meta">Max 10 open headlines.</div>
+      </form>
+      <div id="headlineList"></div>
+    </section>
+
+    <section class="card" id="storyCard">
+      <h3>Story Build Round <span class="pill p-lock" id="storyBadge">Waiting</span></h3>
+      <p id="storyInfo" class="sub">Vote a headline to begin.</p>
+      <div class="story" id="storyPreview">No story yet.</div>
+      <div class="sub" id="wordProgress">0 / 396 words</div>
+
+      <div class="soft-box" style="margin:12px 0;">
+        <strong>Build on the preview:</strong>
+        <p class="sub" style="margin-top:6px;">Read the live preview, then add your next paragraph for voting.</p>
+        <button id="jumpToMessageBtn" class="btn-muted" type="button">Add Your Paragraph for Voting</button>
+      </div>
+
+      <form id="messageForm" class="hidden">
+        <label>Message (max 300 chars)
+          <textarea id="messageText" maxlength="300"></textarea>
+        </label>
+        <div class="grid-4">
+          <label>1. Name <input id="messageName" maxlength="24" /></label>
+          <label>2. Social Media <input id="messageSocial" maxlength="24" placeholder="X / Facebook / Instagram" /></label>
+          <label>3. Handle <input id="messageHandle" maxlength="31" placeholder="yourhandle" /></label>
+          <button class="btn-main" type="submit">Submit Message</button>
+        </div>
+      </form>
+      <div id="messageList"></div>
+    </section>
+
+    <section class="card hidden" id="conclusionCard">
+      <h3>Conclusion Round</h3>
+      <form id="conclusionForm">
+        <label>Conclusion (max 300 chars)
+          <textarea id="conclusionText" maxlength="300"></textarea>
+        </label>
+        <div class="grid-4">
+          <label>1. Name <input id="conclusionName" maxlength="24" /></label>
+          <label>2. Social Media <input id="conclusionSocial" maxlength="24" placeholder="X / Facebook / Instagram" /></label>
+          <label>3. Handle <input id="conclusionHandle" maxlength="31" placeholder="yourhandle" /></label>
+          <button class="btn-main" type="submit">Submit Conclusion</button>
+        </div>
+      </form>
+      <div id="conclusionList"></div>
+    </section>
+
+    <section class="card hidden" id="publishCard">
+      <h3>Published Story</h3>
+      <div class="story" id="publishedStory"></div>
+      <div class="between" style="margin-top: 10px;">
+        <div class="sub">This is the final community version.</div>
+        <button id="restartBtn" class="btn-main" type="button" style="max-width:220px;">Restart Game</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Moderator Controls</h3>
+      <p class="sub">Use your moderator code to remove submissions and finalize each stage.</p>
+      <div class="grid-3">
+        <label>Moderator User ID <input id="adminUserId" /></label>
+        <label>Moderator Password <input id="adminPassword" type="password" /></label>
+        <div>
+          <button id="finalizeRoundBtn" class="btn-main" type="button">Finalize Current Stage</button>
+        </div>
+      </div>
+      <div class="sub">Delete buttons appear next to submissions when moderator credentials are filled in.</div>
+    </section>
+
+    <section class="card">
+      <h3>Support Emotional Intelligence Developer</h3>
+      <div class="footer-links">
+        <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Main Site</a>
+        <a href="https://emotionalintelligencedeveloper.com/contact" target="_blank" rel="noopener">Contact</a>
+        <a href="https://emotionalintelligencedeveloper.com/category/wellbeing/" target="_blank" rel="noopener">Wellbeing Resources</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+  <script>
+    const BACKEND_URL = "https://mcn-m5nx.onrender.com";
+    const USERNAME_REGEX = /^[A-Za-z0-9._\\- ]{1,31}$/;
+
+    const state = {
+      phase: "headline",
+      voteTarget: 10,
+      wordTarget: 396,
+      roundNumber: 1,
+      lockedHeadlineText: "",
+      storyPieces: [],
+      finalStory: "",
+      currentHeadlines: [],
+      currentMessages: [],
+      currentConclusions: [],
+      playerCount: 0,
+      myUsername: "",
+      hasVoted: false,
+      myHeadlineSubmitted: false,
+      myMessageSubmitted: false,
+      myConclusionSubmitted: false
     };
 
-    game.currentHeadlines.push(item);
-    game.headlineSubmissions.add(username);
+    const el = {
+      phaseLabel: document.getElementById("phaseLabel"),
+      voteTargetLabel: document.getElementById("voteTargetLabel"),
+      playerCount: document.getElementById("playerCount"),
+      roundNumber: document.getElementById("roundNumber"),
+      errorBox: document.getElementById("errorBox"),
+      okBox: document.getElementById("okBox"),
+      username: document.getElementById("username"),
+      registerBtn: document.getElementById("registerBtn"),
 
-    io.emit("newHeadline", item);
-    emitState();
-  });
+      headlineBadge: document.getElementById("headlineBadge"),
+      headlineForm: document.getElementById("headlineForm"),
+      headlineText: document.getElementById("headlineText"),
+      headlineName: document.getElementById("headlineName"),
+      headlineSocial: document.getElementById("headlineSocial"),
+      headlineHandle: document.getElementById("headlineHandle"),
+      headlineList: document.getElementById("headlineList"),
 
-  /* SUBMIT MESSAGE */
+      storyBadge: document.getElementById("storyBadge"),
+      storyInfo: document.getElementById("storyInfo"),
+      storyPreview: document.getElementById("storyPreview"),
+      wordProgress: document.getElementById("wordProgress"),
+      jumpToMessageBtn: document.getElementById("jumpToMessageBtn"),
+      messageForm: document.getElementById("messageForm"),
+      messageText: document.getElementById("messageText"),
+      messageName: document.getElementById("messageName"),
+      messageSocial: document.getElementById("messageSocial"),
+      messageHandle: document.getElementById("messageHandle"),
+      messageList: document.getElementById("messageList"),
 
-  socket.on("submitMessage", (data = {}) => {
+      conclusionCard: document.getElementById("conclusionCard"),
+      conclusionForm: document.getElementById("conclusionForm"),
+      conclusionText: document.getElementById("conclusionText"),
+      conclusionName: document.getElementById("conclusionName"),
+      conclusionSocial: document.getElementById("conclusionSocial"),
+      conclusionHandle: document.getElementById("conclusionHandle"),
+      conclusionList: document.getElementById("conclusionList"),
 
-    if (game.phase !== "message") {
-      socket.emit("gameError", { message: "Message round closed." });
-      return;
-    }
+      publishCard: document.getElementById("publishCard"),
+      publishedStory: document.getElementById("publishedStory"),
+      restartBtn: document.getElementById("restartBtn"),
 
-    const username = activeUsers.get(socket.id);
-
-    const text = sanitize(data.text, 300);
-
-    if (text.length < 2) {
-      socket.emit("gameError", { message: "Message too short." });
-      return;
-    }
-
-    if (game.messageSubmissions.has(username)) {
-      socket.emit("gameError", { message: "Already submitted paragraph." });
-      return;
-    }
-
-    const item = {
-      id: crypto.randomUUID(),
-      text,
-      username,
-      votes: 0,
-      createdAt: Date.now()
+      adminUserId: document.getElementById("adminUserId"),
+      adminPassword: document.getElementById("adminPassword"),
+      finalizeRoundBtn: document.getElementById("finalizeRoundBtn")
     };
 
-    game.currentMessages.push(item);
-    game.messageSubmissions.add(username);
+    let socket;
 
-    io.emit("newMessage", item);
-    emitState();
-  });
+    function safe(v) { return String(v || "").trim(); }
 
-  /* SUBMIT CONCLUSION */
-
-  socket.on("submitConclusion", (data = {}) => {
-
-    if (game.phase !== "conclusion") {
-      socket.emit("gameError", { message: "Conclusion round closed." });
-      return;
+    function esc(s) {
+      return safe(s).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c]));
     }
 
-    const username = activeUsers.get(socket.id);
-
-    const text = sanitize(data.text, 300);
-
-    if (text.length < 2) {
-      socket.emit("gameError", { message: "Conclusion too short." });
-      return;
+    function wordCount(t) {
+      return safe(t).split(/\s+/).filter(Boolean).length;
     }
 
-    if (game.conclusionSubmissions.has(username)) {
-      socket.emit("gameError", { message: "Already submitted conclusion." });
-      return;
+    function clearMessages() {
+      el.errorBox.classList.add("hidden");
+      el.okBox.classList.add("hidden");
+      el.errorBox.textContent = "";
+      el.okBox.textContent = "";
     }
 
-    const item = {
-      id: crypto.randomUUID(),
-      text,
-      username,
-      votes: 0,
-      createdAt: Date.now()
-    };
-
-    game.currentConclusions.push(item);
-    game.conclusionSubmissions.add(username);
-
-    io.emit("newConclusion", item);
-    emitState();
-  });
-
-  /* VOTE */
-
-  socket.on("castVote", ({ messageId }) => {
-
-    if (game.votedUsers.has(socket.id)) {
-      socket.emit("gameError", { message: "Already voted." });
-      return;
+    function showError(msg) {
+      el.errorBox.textContent = msg;
+      el.errorBox.classList.remove("hidden");
+      el.okBox.classList.add("hidden");
     }
 
-    let list;
-
-    if (game.phase === "headline") list = game.currentHeadlines;
-    if (game.phase === "message") list = game.currentMessages;
-    if (game.phase === "conclusion") list = game.currentConclusions;
-
-    const item = list.find(x => x.id === messageId);
-
-    if (!item) return;
-
-    item.votes++;
-
-    game.votedUsers.add(socket.id);
-
-    io.emit("updateVotes", { id: item.id, votes: item.votes });
-
-    emitState();
-  });
-
-  /* ADMIN DELETE */
-
-  socket.on("adminDelete", (data = {}) => {
-
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
-      socket.emit("gameError", { message: "Unauthorized admin action." });
-      return;
+    function flashOk(msg) {
+      el.okBox.textContent = msg;
+      el.okBox.classList.remove("hidden");
+      el.errorBox.classList.add("hidden");
+      setTimeout(() => el.okBox.classList.add("hidden"), 1800);
     }
 
-    const { phase, messageId } = data;
-
-    let list;
-
-    if (phase === "headline") list = game.currentHeadlines;
-    if (phase === "message") list = game.currentMessages;
-    if (phase === "conclusion") list = game.currentConclusions;
-
-    const updated = list.filter(x => x.id !== messageId);
-
-    if (phase === "headline") game.currentHeadlines = updated;
-    if (phase === "message") game.currentMessages = updated;
-    if (phase === "conclusion") game.currentConclusions = updated;
-
-    io.emit("submissionRemoved", { phase, id: messageId });
-
-    emitState();
-  });
-
-  /* FINALIZE ROUND */
-
-  socket.on("finalizeRound", (data = {}) => {
-
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
-      socket.emit("gameError", { message: "Unauthorized admin action." });
-      return;
+    function validateUsername(username) {
+      return USERNAME_REGEX.test(safe(username));
     }
 
-    if (game.phase === "headline") {
-
-      const winner = getWinner(game.currentHeadlines);
-      if (!winner) return;
-
-      game.lockedHeadlineText = winner.text;
-
-      game.currentHeadlines = [];
-      game.headlineSubmissions.clear();
-      game.votedUsers.clear();
-
-      game.phase = "message";
-
-      io.emit("roundFinalized", { winner });
-
-      emitState();
-      return;
+    function buildPreviewStory() {
+      const headline = safe(state.lockedHeadlineText);
+      const body = (state.storyPieces || []).map((p) => safe(p.text)).filter(Boolean).join(" ");
+      if (headline && body) return `${headline}\n\n${body}`;
+      return headline || body || "";
     }
 
-    if (game.phase === "message") {
+    function isAdminReady() {
+      return safe(el.adminUserId.value).length > 0 && safe(el.adminPassword.value).length > 0;
+    }
 
-      const winner = getWinner(game.currentMessages);
-      if (!winner) return;
+    function resetMyRoundFlagsFromState() {
+      const lower = state.myUsername.toLowerCase();
+      state.myHeadlineSubmitted = state.currentHeadlines.some((x) => safe(x.username).toLowerCase() === lower);
+      state.myMessageSubmitted = state.currentMessages.some((x) => safe(x.username).toLowerCase() === lower);
+      state.myConclusionSubmitted = state.currentConclusions.some((x) => safe(x.username).toLowerCase() === lower);
+    }
 
-      game.storyPieces.push({ text: winner.text });
+    function phaseText(phase) {
+      return ({
+        headline: "Headline Voting",
+        message: "Message Voting",
+        conclusion: "Conclusion Voting",
+        published: "Published"
+      }[phase] || "Headline Voting");
+    }
 
-      const words = wordCount(game.storyPieces.map(x => x.text).join(" "));
+    function formatIdentity(item) {
+      const name = esc(item.name || item.username || "Anonymous");
+      const social = esc(item.social || "");
+      const handle = esc(item.handle || "");
+      if (social && handle) return `${name} (${social}: ${handle})`;
+      if (handle) return `${name} (${handle})`;
+      return name;
+    }
 
-      game.currentMessages = [];
-      game.messageSubmissions.clear();
-      game.votedUsers.clear();
+    function renderList(listEl, items, phase) {
+      const sorted = [...(items || [])].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
 
-      roundNumber++;
-
-      if (words >= WORD_TARGET) {
-        game.phase = "conclusion";
+      if (!sorted.length) {
+        listEl.innerHTML = `<p class="sub">No ${phase}s yet.</p>`;
+        return;
       }
 
-      io.emit("roundFinalized", { winner });
-
-      emitState();
-      return;
+      listEl.innerHTML = sorted.map((item, i) => `
+        <div class="item">
+          <div class="item-title">${i + 1}. ${esc(item.text)}</div>
+          <div class="meta">By ${formatIdentity(item)} • Votes: <strong id="vote-${item.id}">${Number(item.votes || 0)}</strong></div>
+          <div class="between" style="margin-top:8px;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn-muted vote-btn" data-phase="${phase}" data-id="${item.id}" ${state.hasVoted || state.phase !== phase ? "disabled" : ""}>Vote</button>
+              ${isAdminReady() ? `<button class="btn-danger delete-btn" data-phase="${phase}" data-id="${item.id}">Delete</button>` : ""}
+            </div>
+          </div>
+        </div>
+      `).join("");
     }
 
-    if (game.phase === "conclusion") {
+    function render() {
+      el.phaseLabel.textContent = phaseText(state.phase);
+      el.voteTargetLabel.textContent = String(state.voteTarget);
+      el.playerCount.textContent = String(state.playerCount || 0);
+      el.roundNumber.textContent = String(state.roundNumber || 1);
 
-      const winner = getWinner(game.currentConclusions);
-      if (!winner) return;
+      const preview = buildPreviewStory();
+      const bodyWords = wordCount((state.storyPieces || []).map((p) => p.text).join(" "));
 
-      const storyBody = game.storyPieces.map(x => x.text).join(" ");
+      el.storyPreview.textContent = preview || "No story yet.";
+      el.wordProgress.textContent = `${bodyWords} / ${state.wordTarget} words`;
+      el.storyInfo.textContent = state.lockedHeadlineText
+        ? `Headline: ${state.lockedHeadlineText}`
+        : "Vote a headline to begin.";
 
-      game.finalStory = `${game.lockedHeadlineText}\n\n${storyBody}\n\n${winner.text}`;
+      el.headlineBadge.textContent = state.phase === "headline" ? "Open" : "Locked";
+      el.storyBadge.textContent =
+        state.phase === "message" ? "Open" :
+        state.phase === "conclusion" ? "Conclusion stage" :
+        state.phase === "published" ? "Complete" : "Waiting";
 
-      game.phase = "published";
+      el.headlineForm.classList.toggle("hidden", state.phase !== "headline");
+      el.messageForm.classList.toggle("hidden", state.phase !== "message");
+      el.conclusionCard.classList.toggle("hidden", !(state.phase === "conclusion" || state.phase === "published"));
+      el.conclusionForm.classList.toggle("hidden", state.phase !== "conclusion");
+      el.publishCard.classList.toggle("hidden", state.phase !== "published");
 
-      io.emit("roundFinalized", { winner });
+      renderList(el.headlineList, state.currentHeadlines, "headline");
+      renderList(el.messageList, state.currentMessages, "message");
+      renderList(el.conclusionList, state.currentConclusions, "conclusion");
 
-      emitState();
+      if (state.phase === "published") {
+        el.publishedStory.textContent = state.finalStory || preview;
+      }
     }
-  });
 
-  /* DISCONNECT */
+    function applyGameState(payload = {}) {
+      state.phase = payload.phase || "headline";
+      state.voteTarget = Number(payload.voteTarget || 10);
+      state.wordTarget = Number(payload.wordTarget || 396);
+      state.roundNumber = Number(payload.roundNumber || 1);
+      state.lockedHeadlineText = payload.lockedHeadlineText || "";
+      state.storyPieces = Array.isArray(payload.storyPieces) ? payload.storyPieces : [];
+      state.finalStory = payload.finalStory || "";
+      state.currentHeadlines = Array.isArray(payload.currentHeadlines) ? payload.currentHeadlines : [];
+      state.currentMessages = Array.isArray(payload.currentMessages) ? payload.currentMessages : [];
+      state.currentConclusions = Array.isArray(payload.currentConclusions) ? payload.currentConclusions : [];
+      state.playerCount = Number(payload.playerCount || 0);
 
-  socket.on("disconnect", () => {
+      resetMyRoundFlagsFromState();
+      state.hasVoted = false;
+      clearMessages();
+      render();
+    }
 
-    activeUsers.delete(socket.id);
-    game.votedUsers.delete(socket.id);
+    function connect() {
+      socket = io(BACKEND_URL, {
+        transports: ["websocket", "polling"]
+      });
 
-    emitState();
-  });
-});
+      socket.on("connect", () => {
+        flashOk("Connected to live game.");
+        if (state.myUsername) {
+          socket.emit("registerUser", { username: state.myUsername });
+        }
+      });
 
-app.get("/health", (_req, res) => {
-  res.json({ ok: true });
-});
+      socket.on("disconnect", () => {
+        showError("Disconnected from server. Trying to reconnect...");
+      });
 
-const PORT = process.env.PORT || 3000;
+      socket.on("registered", (payload = {}) => {
+        if (payload.username) state.myUsername = payload.username;
+        flashOk(`Joined as @${state.myUsername}.`);
+      });
 
-server.listen(PORT, () => {
-  console.log("Game server running on port", PORT);
-});
+      socket.on("playerCount", ({ count } = {}) => {
+        state.playerCount = Number(count || 0);
+        el.playerCount.textContent = String(state.playerCount);
+      });
+
+      socket.on("gameState", (payload = {}) => {
+        applyGameState(payload);
+      });
+
+      socket.on("newHeadline", (item = {}) => {
+        if (item.id && !state.currentHeadlines.some((x) => x.id === item.id)) {
+          state.currentHeadlines.push(item);
+          resetMyRoundFlagsFromState();
+          render();
+        }
+      });
+
+      socket.on("newMessage", (item = {}) => {
+        if (item.id && !state.currentMessages.some((x) => x.id === item.id)) {
+          state.currentMessages.push(item);
+          resetMyRoundFlagsFromState();
+          render();
+        }
+      });
+
+      socket.on("newConclusion", (item = {}) => {
+        if (item.id && !state.currentConclusions.some((x) => x.id === item.id)) {
+          state.currentConclusions.push(item);
+          resetMyRoundFlagsFromState();
+          render();
+        }
+      });
+
+      socket.on("updateVotes", ({ id, votes } = {}) => {
+        [state.currentHeadlines, state.currentMessages, state.currentConclusions].forEach((list) => {
+          const found = list.find((x) => x.id === id);
+          if (found) found.votes = Number(votes || 0);
+        });
+
+        const voteEl = document.getElementById(`vote-${id}`);
+        if (voteEl) voteEl.textContent = String(votes || 0);
+
+        state.hasVoted = true;
+        render();
+      });
+
+      socket.on("submissionRemoved", ({ phase, id } = {}) => {
+        if (phase === "headline") state.currentHeadlines = state.currentHeadlines.filter((x) => x.id !== id);
+        if (phase === "message") state.currentMessages = state.currentMessages.filter((x) => x.id !== id);
+        if (phase === "conclusion") state.currentConclusions = state.currentConclusions.filter((x) => x.id !== id);
+
+        resetMyRoundFlagsFromState();
+        render();
+        flashOk("Submission deleted.");
+      });
+
+      socket.on("roundFinalized", ({ winner, finalStory } = {}) => {
+        state.hasVoted = false;
+
+        if (winner && winner.text) {
+          flashOk(`Winning text added: "${winner.text}"`);
+        } else {
+          flashOk("Round finalized.");
+        }
+
+        if (finalStory) {
+          state.finalStory = finalStory;
+        }
+      });
+
+      socket.on("gameError", ({ message } = {}) => {
+        showError(message || "Action failed.");
+      });
+    }
+
+    el.registerBtn.addEventListener("click", () => {
+      const username = safe(el.username.value);
+      if (!validateUsername(username)) {
+        showError("Invalid username. Use 1-31 characters: letters, numbers, spaces, dots, hyphens, underscores.");
+        return;
+      }
+      state.myUsername = username;
+      socket.emit("registerUser", { username });
+    });
+
+    el.headlineForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (!state.myUsername) return showError("Register username first.");
+      if (state.phase !== "headline") return showError("Headline round is closed.");
+      if (state.myHeadlineSubmitted) return showError("You already submitted one headline this round.");
+
+      socket.emit("submitHeadline", {
+        text: safe(el.headlineText.value),
+        name: safe(el.headlineName.value),
+        social: safe(el.headlineSocial.value),
+        handle: safe(el.headlineHandle.value)
+      });
+
+      el.headlineText.value = "";
+      flashOk("Headline submitted.");
+    });
+
+    el.messageForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (!state.myUsername) return showError("Register username first.");
+      if (state.phase !== "message") return showError("Message round is closed.");
+      if (state.myMessageSubmitted) return showError("You already submitted one paragraph this round.");
+
+      socket.emit("submitMessage", {
+        text: safe(el.messageText.value),
+        name: safe(el.messageName.value),
+        social: safe(el.messageSocial.value),
+        handle: safe(el.messageHandle.value)
+      });
+
+      el.messageText.value = "";
+      flashOk("Paragraph submitted.");
+    });
+
+    el.conclusionForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (!state.myUsername) return showError("Register username first.");
+      if (state.phase !== "conclusion") return showError("Conclusion round is closed.");
+      if (state.myConclusionSubmitted) return showError("You already submitted one conclusion this round.");
+
+      socket.emit("submitConclusion", {
+        text: safe(el.conclusionText.value),
+        name: safe(el.conclusionName.value),
+        social: safe(el.conclusionSocial.value),
+        handle: safe(el.conclusionHandle.value)
+      });
+
+      el.conclusionText.value = "";
+      flashOk("Conclusion submitted.");
+    });
+
+    document.body.addEventListener("click", (e) => {
+      const voteBtn = e.target.closest(".vote-btn");
+      if (voteBtn) {
+        if (!state.myUsername) return showError("Register username first.");
+        if (state.hasVoted) return showError("You already voted this round.");
+
+        socket.emit("castVote", {
+          messageId: voteBtn.dataset.id
+        });
+        return;
+      }
+
+      const deleteBtn = e.target.closest(".delete-btn");
+      if (deleteBtn) {
+        socket.emit("adminDelete", {
+          phase: deleteBtn.dataset.phase,
+          messageId: deleteBtn.dataset.id,
+          adminId: safe(el.adminUserId.value),
+          adminPw: safe(el.adminPassword.value)
+        });
+      }
+    });
+
+    el.finalizeRoundBtn.addEventListener("click", () => {
+      socket.emit("finalizeRound", {
+        adminId: safe(el.adminUserId.value),
+        adminPw: safe(el.adminPassword.value)
+      });
+    });
+
+    el.restartBtn.addEventListener("click", () => {
+      socket.emit("restartGame", {
+        adminId: safe(el.adminUserId.value),
+        adminPw: safe(el.adminPassword.value)
+      });
+    });
+
+    el.jumpToMessageBtn.addEventListener("click", () => {
+      el.messageForm.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    el.adminUserId.addEventListener("input", render);
+    el.adminPassword.addEventListener("input", render);
+
+    connect();
+  </script>
+</body>
+</html>

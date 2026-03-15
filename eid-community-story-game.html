@@ -64,26 +64,15 @@
 
     .status-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
 
-    .grid-2 {
+    .grid-2, .grid-3, .grid-4 {
       display: grid;
       gap: 10px;
-      grid-template-columns: 1fr 1fr;
       align-items: end;
     }
 
-    .grid-3 {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr 1fr 1fr;
-      align-items: end;
-    }
-
-    .grid-4 {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      align-items: end;
-    }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr auto; }
 
     @media (max-width: 760px) {
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
@@ -91,6 +80,7 @@
     }
 
     input, textarea, button { font: inherit; }
+
     input, textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -169,8 +159,8 @@
     }
 
     .footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-    .footer-links a, .jump-link, .brand a { color: #2946ac; text-decoration: none; font-weight: 600; }
-    .footer-links a:hover, .jump-link:hover, .brand a:hover { text-decoration: underline; }
+    .footer-links a, .brand a { color: #2946ac; text-decoration: none; font-weight: 600; }
+    .footer-links a:hover, .brand a:hover { text-decoration: underline; }
 
     .soft-box {
       border: 1px solid var(--line);
@@ -219,7 +209,7 @@
       <p class="sub">Allowed: letters, numbers, spaces, dots, hyphens, underscores.</p>
     </section>
 
-    <section class="card" id="headlineCard">
+    <section class="card">
       <h3>Headline Round <span class="pill p-open" id="headlineBadge">Open</span></h3>
       <form id="headlineForm">
         <label>Headline text (max 90)
@@ -231,12 +221,11 @@
           <label>3. Handle <input id="headlineHandle" maxlength="31" placeholder="yourhandle" /></label>
           <button class="btn-main" type="submit">Submit Headline</button>
         </div>
-        <div class="meta">Max 10 open headlines.</div>
       </form>
       <div id="headlineList"></div>
     </section>
 
-    <section class="card" id="storyCard">
+    <section class="card">
       <h3>Story Build Round <span class="pill p-lock" id="storyBadge">Waiting</span></h3>
       <p id="storyInfo" class="sub">Vote a headline to begin.</p>
       <div class="story" id="storyPreview">No story yet.</div>
@@ -245,7 +234,6 @@
       <div class="soft-box" style="margin:12px 0;">
         <strong>Build on the preview:</strong>
         <p class="sub" style="margin-top:6px;">Read the live preview, then add your next paragraph for voting.</p>
-        <button id="jumpToMessageBtn" class="btn-muted" type="button">Add Your Paragraph for Voting</button>
       </div>
 
       <form id="messageForm" class="hidden">
@@ -281,10 +269,6 @@
     <section class="card hidden" id="publishCard">
       <h3>Published Story</h3>
       <div class="story" id="publishedStory"></div>
-      <div class="between" style="margin-top: 10px;">
-        <div class="sub">This is the final community version.</div>
-        <button id="restartBtn" class="btn-main" type="button" style="max-width:220px;">Restart Game</button>
-      </div>
     </section>
 
     <section class="card">
@@ -313,7 +297,7 @@
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
   <script>
     const BACKEND_URL = "https://mcn-m5nx.onrender.com";
-    const USERNAME_REGEX = /^[A-Za-z0-9._\\- ]{1,31}$/;
+    const USERNAME_REGEX = /^[A-Za-z0-9._ -]{1,31}$/;
 
     const state = {
       phase: "headline",
@@ -328,10 +312,7 @@
       currentConclusions: [],
       playerCount: 0,
       myUsername: "",
-      hasVoted: false,
-      myHeadlineSubmitted: false,
-      myMessageSubmitted: false,
-      myConclusionSubmitted: false
+      hasVoted: false
     };
 
     const el = {
@@ -356,7 +337,6 @@
       storyInfo: document.getElementById("storyInfo"),
       storyPreview: document.getElementById("storyPreview"),
       wordProgress: document.getElementById("wordProgress"),
-      jumpToMessageBtn: document.getElementById("jumpToMessageBtn"),
       messageForm: document.getElementById("messageForm"),
       messageText: document.getElementById("messageText"),
       messageName: document.getElementById("messageName"),
@@ -374,7 +354,6 @@
 
       publishCard: document.getElementById("publishCard"),
       publishedStory: document.getElementById("publishedStory"),
-      restartBtn: document.getElementById("restartBtn"),
 
       adminUserId: document.getElementById("adminUserId"),
       adminPassword: document.getElementById("adminPassword"),
@@ -383,7 +362,9 @@
 
     let socket;
 
-    function safe(v) { return String(v || "").trim(); }
+    function safe(v) {
+      return String(v || "").trim();
+    }
 
     function esc(s) {
       return safe(s).replace(/[&<>"']/g, (c) => ({
@@ -393,17 +374,6 @@
         '"': "&quot;",
         "'": "&#39;"
       }[c]));
-    }
-
-    function wordCount(t) {
-      return safe(t).split(/\s+/).filter(Boolean).length;
-    }
-
-    function clearMessages() {
-      el.errorBox.classList.add("hidden");
-      el.okBox.classList.add("hidden");
-      el.errorBox.textContent = "";
-      el.okBox.textContent = "";
     }
 
     function showError(msg) {
@@ -423,6 +393,10 @@
       return USERNAME_REGEX.test(safe(username));
     }
 
+    function wordCount(t) {
+      return safe(t).split(/\s+/).filter(Boolean).length;
+    }
+
     function buildPreviewStory() {
       const headline = safe(state.lockedHeadlineText);
       const body = (state.storyPieces || []).map((p) => safe(p.text)).filter(Boolean).join(" ");
@@ -432,13 +406,6 @@
 
     function isAdminReady() {
       return safe(el.adminUserId.value).length > 0 && safe(el.adminPassword.value).length > 0;
-    }
-
-    function resetMyRoundFlagsFromState() {
-      const lower = state.myUsername.toLowerCase();
-      state.myHeadlineSubmitted = state.currentHeadlines.some((x) => safe(x.username).toLowerCase() === lower);
-      state.myMessageSubmitted = state.currentMessages.some((x) => safe(x.username).toLowerCase() === lower);
-      state.myConclusionSubmitted = state.currentConclusions.some((x) => safe(x.username).toLowerCase() === lower);
     }
 
     function phaseText(phase) {
@@ -492,9 +459,7 @@
 
       el.storyPreview.textContent = preview || "No story yet.";
       el.wordProgress.textContent = `${bodyWords} / ${state.wordTarget} words`;
-      el.storyInfo.textContent = state.lockedHeadlineText
-        ? `Headline: ${state.lockedHeadlineText}`
-        : "Vote a headline to begin.";
+      el.storyInfo.textContent = state.lockedHeadlineText ? `Headline: ${state.lockedHeadlineText}` : "Vote a headline to begin.";
 
       el.headlineBadge.textContent = state.phase === "headline" ? "Open" : "Locked";
       el.storyBadge.textContent =
@@ -529,17 +494,12 @@
       state.currentMessages = Array.isArray(payload.currentMessages) ? payload.currentMessages : [];
       state.currentConclusions = Array.isArray(payload.currentConclusions) ? payload.currentConclusions : [];
       state.playerCount = Number(payload.playerCount || 0);
-
-      resetMyRoundFlagsFromState();
       state.hasVoted = false;
-      clearMessages();
       render();
     }
 
     function connect() {
-      socket = io(BACKEND_URL, {
-        transports: ["websocket", "polling"]
-      });
+      socket = io(BACKEND_URL, { transports: ["websocket", "polling"] });
 
       socket.on("connect", () => {
         flashOk("Connected to live game.");
@@ -569,7 +529,6 @@
       socket.on("newHeadline", (item = {}) => {
         if (item.id && !state.currentHeadlines.some((x) => x.id === item.id)) {
           state.currentHeadlines.push(item);
-          resetMyRoundFlagsFromState();
           render();
         }
       });
@@ -577,7 +536,6 @@
       socket.on("newMessage", (item = {}) => {
         if (item.id && !state.currentMessages.some((x) => x.id === item.id)) {
           state.currentMessages.push(item);
-          resetMyRoundFlagsFromState();
           render();
         }
       });
@@ -585,7 +543,6 @@
       socket.on("newConclusion", (item = {}) => {
         if (item.id && !state.currentConclusions.some((x) => x.id === item.id)) {
           state.currentConclusions.push(item);
-          resetMyRoundFlagsFromState();
           render();
         }
       });
@@ -595,10 +552,6 @@
           const found = list.find((x) => x.id === id);
           if (found) found.votes = Number(votes || 0);
         });
-
-        const voteEl = document.getElementById(`vote-${id}`);
-        if (voteEl) voteEl.textContent = String(votes || 0);
-
         state.hasVoted = true;
         render();
       });
@@ -607,21 +560,17 @@
         if (phase === "headline") state.currentHeadlines = state.currentHeadlines.filter((x) => x.id !== id);
         if (phase === "message") state.currentMessages = state.currentMessages.filter((x) => x.id !== id);
         if (phase === "conclusion") state.currentConclusions = state.currentConclusions.filter((x) => x.id !== id);
-
-        resetMyRoundFlagsFromState();
         render();
         flashOk("Submission deleted.");
       });
 
       socket.on("roundFinalized", ({ winner, finalStory } = {}) => {
         state.hasVoted = false;
-
         if (winner && winner.text) {
           flashOk(`Winning text added: "${winner.text}"`);
         } else {
           flashOk("Round finalized.");
         }
-
         if (finalStory) {
           state.finalStory = finalStory;
         }
@@ -644,10 +593,7 @@
 
     el.headlineForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
       if (!state.myUsername) return showError("Register username first.");
-      if (state.phase !== "headline") return showError("Headline round is closed.");
-      if (state.myHeadlineSubmitted) return showError("You already submitted one headline this round.");
 
       socket.emit("submitHeadline", {
         text: safe(el.headlineText.value),
@@ -662,10 +608,7 @@
 
     el.messageForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
       if (!state.myUsername) return showError("Register username first.");
-      if (state.phase !== "message") return showError("Message round is closed.");
-      if (state.myMessageSubmitted) return showError("You already submitted one paragraph this round.");
 
       socket.emit("submitMessage", {
         text: safe(el.messageText.value),
@@ -680,10 +623,7 @@
 
     el.conclusionForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
       if (!state.myUsername) return showError("Register username first.");
-      if (state.phase !== "conclusion") return showError("Conclusion round is closed.");
-      if (state.myConclusionSubmitted) return showError("You already submitted one conclusion this round.");
 
       socket.emit("submitConclusion", {
         text: safe(el.conclusionText.value),
@@ -701,10 +641,7 @@
       if (voteBtn) {
         if (!state.myUsername) return showError("Register username first.");
         if (state.hasVoted) return showError("You already voted this round.");
-
-        socket.emit("castVote", {
-          messageId: voteBtn.dataset.id
-        });
+        socket.emit("castVote", { messageId: voteBtn.dataset.id });
         return;
       }
 
@@ -725,20 +662,6 @@
         adminPw: safe(el.adminPassword.value)
       });
     });
-
-    el.restartBtn.addEventListener("click", () => {
-      socket.emit("restartGame", {
-        adminId: safe(el.adminUserId.value),
-        adminPw: safe(el.adminPassword.value)
-      });
-    });
-
-    el.jumpToMessageBtn.addEventListener("click", () => {
-      el.messageForm.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-
-    el.adminUserId.addEventListener("input", render);
-    el.adminPassword.addEventListener("input", render);
 
     connect();
   </script>

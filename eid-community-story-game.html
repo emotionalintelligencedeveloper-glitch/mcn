@@ -208,8 +208,6 @@
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
   <script>
-    // IMPORTANT: Set this to your deployed Node.js backend URL.
-    // Example: const BACKEND_URL = "https://your-backend-domain.com";
     const BACKEND_URL = "https://mcn-m5nx.onrender.com";
 
     const USERNAME_REGEX = /^[A-Za-z0-9._\- ]{1,31}$/;
@@ -335,8 +333,13 @@
 
     function applyGameState(gameState) {
       state.roundNumber = gameState.roundNumber || 1;
-      state.fullStory = gameState.fullStory || '';
-      state.messages = Array.isArray(gameState.messages) ? gameState.messages : [];
+      state.fullStory = gameState.fullMessage || '';
+      state.messages = Array.isArray(gameState.currentMessages) ? gameState.currentMessages : [];
+      el.playerCount.textContent = String(gameState.playerCount || 0);
+
+      const myMessageExists = state.messages.some((msg) => msg.username && msg.username.toLowerCase() === myUsername.toLowerCase());
+      hasSubmittedThisRound = myMessageExists;
+
       updateHeader();
       renderMessages();
     }
@@ -357,6 +360,13 @@
         setStatus('Disconnected from server. Trying to reconnect...', 'error');
       });
 
+      socket.on('registered', (payload = {}) => {
+        if (payload.username) {
+          myUsername = payload.username;
+        }
+        setStatus(`Joined as @${myUsername}.`, 'success');
+      });
+
       socket.on('playerCount', (payload = {}) => {
         el.playerCount.textContent = String(payload.count || 0);
       });
@@ -365,37 +375,56 @@
         applyGameState(payload);
       });
 
-      socket.on('newMessage', (message) => {
-        if (!message || message.round !== state.roundNumber) return;
-        state.messages.push(message);
+      socket.on('newMessage', (message = {}) => {
+        if (!message.id) return;
+
+        const exists = state.messages.some((msg) => msg.id === message.id);
+        if (!exists) {
+          state.messages.push(message);
+        }
+
+        if (message.username && message.username.toLowerCase() === myUsername.toLowerCase()) {
+          hasSubmittedThisRound = true;
+        }
+
         renderMessages();
       });
 
-      socket.on('updateVotes', ({ messageId, votes } = {}) => {
-        const target = state.messages.find((msg) => msg.id === messageId);
+      socket.on('updateVotes', ({ id, votes } = {}) => {
+        const target = state.messages.find((msg) => msg.id === id);
         if (target) target.votes = votes;
-        const voteEl = document.getElementById(`vote-${messageId}`);
+
+        const voteEl = document.getElementById(`vote-${id}`);
         if (voteEl) voteEl.textContent = String(votes);
+
+        hasVotedThisRound = true;
+        renderMessages();
       });
 
-      socket.on('messageRemoved', ({ messageId } = {}) => {
-        state.messages = state.messages.filter((msg) => msg.id !== messageId);
+      socket.on('messageRemoved', ({ id } = {}) => {
+        const removed = state.messages.find((msg) => msg.id === id);
+        state.messages = state.messages.filter((msg) => msg.id !== id);
+
+        if (removed && removed.username && removed.username.toLowerCase() === myUsername.toLowerCase()) {
+          hasSubmittedThisRound = false;
+        }
+
         renderMessages();
         setStatus('A message was removed by admin moderation.', 'success');
       });
 
-      socket.on('roundFinalized', ({ roundNumber, winningMessage, fullStory } = {}) => {
-        if (typeof fullStory === 'string') {
-          state.fullStory = fullStory;
-          el.fullMessage.textContent = fullStory || 'No story yet.';
+      socket.on('roundFinalized', ({ winningMessage, fullMessage } = {}) => {
+        if (typeof fullMessage === 'string') {
+          state.fullStory = fullMessage;
+          el.fullMessage.textContent = fullMessage || 'No story yet.';
         }
         const winnerText = winningMessage ? `Winning message: "${winningMessage.text}"` : 'Round finalized.';
-        setStatus(`Round ${roundNumber} finalized. ${winnerText}`, 'success');
+        setStatus(winnerText, 'success');
       });
 
-      socket.on('nextSection', ({ roundNumber, fullStory } = {}) => {
+      socket.on('nextSection', ({ roundNumber, fullMessage } = {}) => {
         state.roundNumber = Number(roundNumber || state.roundNumber + 1);
-        state.fullStory = fullStory || state.fullStory;
+        state.fullStory = fullMessage || state.fullStory;
         state.messages = [];
         hasSubmittedThisRound = false;
         hasVotedThisRound = false;
@@ -406,6 +435,13 @@
       });
 
       socket.on('gameError', ({ message } = {}) => {
+        if (message === 'You already voted this round.') {
+          hasVotedThisRound = true;
+          renderMessages();
+        }
+        if (message === 'You already submitted one message this round.') {
+          hasSubmittedThisRound = true;
+        }
         setStatus(message || 'Action failed.', 'error');
       });
     }
@@ -418,7 +454,6 @@
       }
       myUsername = username;
       socket.emit('registerUser', { username });
-      setStatus(`Registered as ${username}.`, 'success');
     });
 
     el.submitMessageBtn.addEventListener('click', () => {
@@ -440,8 +475,7 @@
       }
 
       socket.emit('submitMessage', { text });
-      hasSubmittedThisRound = true;
-      setStatus('Message submitted. You can now vote once this round.', 'success');
+      setStatus('Submitting message...', 'success');
     });
 
     el.finalizeRoundBtn.addEventListener('click', () => {

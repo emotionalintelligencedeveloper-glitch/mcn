@@ -31,14 +31,15 @@ const ADMIN_PW = process.env.ADMIN_PW;
 /* GAME CONSTANTS */
 const VOTE_TARGET = 10;
 const WORD_TARGET = 396;
+const MAX_PAST_GAMES = 50;
 
 /* ROUND NUMBER */
 let roundNumber = 1;
 
 /* GAME STATE */
 let game = createFreshGame();
-
 let activeUsers = new Map();
+let pastGames = [];
 
 /* HELPERS */
 
@@ -99,15 +100,26 @@ function formatWinnerCredit(item = {}) {
   return name;
 }
 
-function buildFinalStoryFromPieces() {
-  const headline = game.lockedHeadlineText || "";
-  const pieces = Array.isArray(game.storyPieces) ? game.storyPieces : [];
+function buildFinalStoryFromPieces(storyGame = game) {
+  const headline = storyGame.lockedHeadlineText || "";
+  const pieces = Array.isArray(storyGame.storyPieces) ? storyGame.storyPieces : [];
 
   const body = pieces.map((piece) => {
     return `${piece.text}\n— Won by ${formatWinnerCredit(piece)}`;
   }).join("\n\n");
 
   return [headline, body].filter(Boolean).join("\n\n");
+}
+
+function publicPastGames() {
+  return pastGames.map((item) => ({
+    lockedHeadlineText: item.lockedHeadlineText,
+    storyPieces: item.storyPieces,
+    finalStory: item.finalStory,
+    roundNumber: item.roundNumber,
+    completedAt: item.completedAt,
+    completedAtLabel: item.completedAtLabel
+  }));
 }
 
 function publicState() {
@@ -122,7 +134,8 @@ function publicState() {
     currentConclusions: game.currentConclusions,
     playerCount: activeUsers.size,
     voteTarget: VOTE_TARGET,
-    wordTarget: WORD_TARGET
+    wordTarget: WORD_TARGET,
+    pastGames: publicPastGames()
   };
 }
 
@@ -166,6 +179,35 @@ function removeUsernameSubmissionLock(phase, removedItem) {
 
   if (phase === "conclusion") {
     game.conclusionSubmissions.delete(removedItem.username);
+  }
+}
+
+function archiveCurrentPublishedGame() {
+  if (!game.lockedHeadlineText && !game.storyPieces.length && !game.finalStory) {
+    return;
+  }
+
+  const finalStory = game.finalStory || buildFinalStoryFromPieces(game);
+
+  pastGames.push({
+    lockedHeadlineText: game.lockedHeadlineText,
+    storyPieces: Array.isArray(game.storyPieces)
+      ? game.storyPieces.map((piece) => ({
+          text: piece.text || "",
+          username: piece.username || "",
+          name: piece.name || "",
+          social: piece.social || "",
+          handle: piece.handle || ""
+        }))
+      : [],
+    finalStory,
+    roundNumber,
+    completedAt: Date.now(),
+    completedAtLabel: new Date().toLocaleString("en-ZA")
+  });
+
+  if (pastGames.length > MAX_PAST_GAMES) {
+    pastGames = pastGames.slice(-MAX_PAST_GAMES);
   }
 }
 
@@ -391,12 +433,16 @@ io.on("connection", (socket) => {
     emitState();
   });
 
-  /* ADMIN DELETE PUBLISHED STORY */
+  /* ADMIN RESET / DELETE PUBLISHED STORY */
 
   socket.on("adminDeletePublishedStory", (data = {}) => {
     if (!isAdminValid(data)) {
       socket.emit("gameError", { message: "Unauthorized admin action." });
       return;
+    }
+
+    if (game.phase === "published") {
+      archiveCurrentPublishedGame();
     }
 
     resetToNewGame();
@@ -481,11 +527,13 @@ io.on("connection", (socket) => {
         handle: winner.handle || ""
       });
 
-      game.finalStory = buildFinalStoryFromPieces();
+      game.finalStory = buildFinalStoryFromPieces(game);
       game.phase = "published";
       game.currentConclusions = [];
       game.conclusionSubmissions.clear();
       game.votedUsers.clear();
+
+      archiveCurrentPublishedGame();
 
       io.emit("roundFinalized", { winner, finalStory: game.finalStory });
       emitState();

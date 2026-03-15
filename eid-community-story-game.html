@@ -247,7 +247,7 @@
 
     .footer-links {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-top: 8px;
     }
@@ -527,6 +527,7 @@
         <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Main Site</a>
         <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/contact" target="_blank" rel="noopener">Contact</a>
         <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/start-here-emotional-intelligence-developer/" target="_blank" rel="noopener">Wellbeing Resources</a>
+        <a class="footer-btn" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support Us</a>
       </div>
     </section>
   </main>
@@ -823,7 +824,10 @@ ${link}`;
         return;
       }
 
+      const canAdmin = isAdminReady();
+
       el.pastGamesList.innerHTML = games.slice().reverse().map((game, index) => {
+        const originalIndex = games.length - 1 - index;
         const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
         const title = safe(game.lockedHeadlineText || `Past Game ${index + 1}`);
         const created = safe(game.completedAtLabel || "");
@@ -832,8 +836,9 @@ ${link}`;
             <div class="past-game-title">${esc(title)}</div>
             <div class="past-game-meta">${esc(created)}</div>
             <div class="small-actions">
-              <button class="btn-muted past-copy-btn" data-index="${index}" type="button">Copy Story</button>
-              <button class="btn-dark past-pdf-btn" data-index="${index}" type="button">Download PDF</button>
+              ${canAdmin ? `<button class="btn-muted past-copy-btn" data-index="${originalIndex}" type="button">Copy Story</button>` : ``}
+              <button class="btn-dark past-pdf-btn" data-index="${originalIndex}" type="button">Download PDF</button>
+              ${canAdmin ? `<button class="btn-danger past-delete-btn" data-index="${originalIndex}" type="button">Delete Past Game</button>` : ``}
             </div>
             <div class="note">${esc(storyText.slice(0, 180))}${storyText.length > 180 ? "..." : ""}</div>
           </div>
@@ -1085,6 +1090,16 @@ ${link}`;
         flashOk("Submission deleted.");
       });
 
+      socket.on("pastGameDeleted", ({ index, pastGames } = {}) => {
+        if (Array.isArray(pastGames)) {
+          state.pastGames = pastGames;
+        } else if (Number.isInteger(index) && index >= 0) {
+          state.pastGames = state.pastGames.filter((_, i) => i !== index);
+        }
+        render();
+        flashOk("Past game deleted.");
+      });
+
       socket.on("publishedStoryDeleted", () => {
         state.phase = "headline";
         state.lockedHeadlineText = "";
@@ -1123,9 +1138,8 @@ ${link}`;
       return list.find((item) => item.id === id);
     }
 
-    function getPastGameByRenderedIndex(renderedIndex) {
-      const games = Array.isArray(state.pastGames) ? state.pastGames.slice().reverse() : [];
-      return games[Number(renderedIndex)];
+    function getPastGameByOriginalIndex(originalIndex) {
+      return Array.isArray(state.pastGames) ? state.pastGames[Number(originalIndex)] : null;
     }
 
     el.registerBtn.addEventListener("click", () => {
@@ -1253,7 +1267,8 @@ ${link}`;
 
       const pastCopyBtn = e.target.closest(".past-copy-btn");
       if (pastCopyBtn) {
-        const game = getPastGameByRenderedIndex(pastCopyBtn.dataset.index);
+        if (!isAdminReady()) return showError("Enter moderator credentials first.");
+        const game = getPastGameByOriginalIndex(pastCopyBtn.dataset.index);
         if (!game) return;
         const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
         copyToClipboard(storyText, "Past story copied.");
@@ -1263,11 +1278,23 @@ ${link}`;
       const pastPdfBtn = e.target.closest(".past-pdf-btn");
       if (pastPdfBtn) {
         if (!isRegisteredUser()) return showError("Register first to download the PDF.");
-        const game = getPastGameByRenderedIndex(pastPdfBtn.dataset.index);
+        const game = getPastGameByOriginalIndex(pastPdfBtn.dataset.index);
         if (!game) return;
         const storyText = buildPublishedStoryTextFromParts(game.storyPieces || [], game.lockedHeadlineText || "", game.finalStory || "");
         await buildPdfFromStory(storyText, "past-community-story.pdf");
         flashOk("Past game PDF downloaded.");
+        return;
+      }
+
+      const pastDeleteBtn = e.target.closest(".past-delete-btn");
+      if (pastDeleteBtn) {
+        if (!isAdminReady()) return showError("Enter moderator credentials first.");
+        socket.emit("adminDeletePastGame", {
+          pastGameIndex: Number(pastDeleteBtn.dataset.index),
+          adminId: safe(el.adminUserId.value),
+          adminPw: safe(el.adminPassword.value)
+        });
+        return;
       }
     });
 
@@ -1301,6 +1328,9 @@ ${link}`;
     el.shareXBtn.addEventListener("click", () => shareToX(getStoryShareText()));
     el.shareFacebookBtn.addEventListener("click", shareToFacebook);
     el.nativeShareBtn.addEventListener("click", () => nativeShareText(getStoryShareText()));
+
+    el.adminUserId.addEventListener("input", render);
+    el.adminPassword.addEventListener("input", render);
 
     connect();
   </script>

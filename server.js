@@ -29,34 +29,52 @@ const ADMIN_ID = process.env.ADMIN_ID;
 const ADMIN_PW = process.env.ADMIN_PW;
 
 /* GAME CONSTANTS */
-
 const VOTE_TARGET = 10;
 const WORD_TARGET = 396;
 
+/* ROUND NUMBER */
 let roundNumber = 1;
 
 /* GAME STATE */
-
-let game = {
-  phase: "headline",
-  lockedHeadlineText: "",
-  storyPieces: [],
-  finalStory: "",
-  currentHeadlines: [],
-  currentMessages: [],
-  currentConclusions: [],
-  headlineSubmissions: new Set(),
-  messageSubmissions: new Set(),
-  conclusionSubmissions: new Set(),
-  votedUsers: new Set()
-};
+let game = createFreshGame();
 
 let activeUsers = new Map();
 
 /* HELPERS */
 
+function createFreshGame() {
+  return {
+    phase: "headline",
+    lockedHeadlineText: "",
+    storyPieces: [],
+    finalStory: "",
+    currentHeadlines: [],
+    currentMessages: [],
+    currentConclusions: [],
+    headlineSubmissions: new Set(),
+    messageSubmissions: new Set(),
+    conclusionSubmissions: new Set(),
+    votedUsers: new Set()
+  };
+}
+
 function sanitize(value, max) {
   return String(value || "").trim().replace(/\s+/g, " ").slice(0, max);
+}
+
+function cleanSubmission(text) {
+  return String(text || "")
+    .replace(/Here is a \*\*\d+\-word message[\s\S]*?\-\-\-/gi, "")
+    .replace(/Here is a\s+\d+\-word message[\s\S]*?\-\-\-/gi, "")
+    .replace(/\*\*/g, "")
+    .replace(/^---+/gm, "")
+    .replace(/^\s*Title:\s*/gim, "")
+    .replace(/^\s*Headline:\s*/gim, "")
+    .trim();
+}
+
+function sanitizeStoryText(value, max) {
+  return sanitize(cleanSubmission(value), max);
 }
 
 function validUsername(username) {
@@ -65,6 +83,10 @@ function validUsername(username) {
 
 function wordCount(text) {
   return String(text || "").trim().split(/\s+/).filter(Boolean).length;
+}
+
+function isAdminValid(data = {}) {
+  return data.adminId === ADMIN_ID && data.adminPw === ADMIN_PW;
 }
 
 function publicState() {
@@ -89,7 +111,8 @@ function emitState() {
 }
 
 function getWinner(list) {
-  if (!list.length) return null;
+  if (!Array.isArray(list) || !list.length) return null;
+
   return list.reduce((best, item) => {
     if (item.votes > best.votes) return item;
     if (item.votes === best.votes && item.createdAt < best.createdAt) return item;
@@ -97,16 +120,26 @@ function getWinner(list) {
   });
 }
 
+function getListForPhase(phase) {
+  if (phase === "headline") return game.currentHeadlines;
+  if (phase === "message") return game.currentMessages;
+  if (phase === "conclusion") return game.currentConclusions;
+  return null;
+}
+
+function resetToNewGame() {
+  game = createFreshGame();
+  roundNumber = 1;
+}
+
 /* SOCKET CONNECTION */
 
 io.on("connection", (socket) => {
-
   socket.emit("gameState", publicState());
 
   /* REGISTER USER */
 
   socket.on("registerUser", (data = {}) => {
-
     const username = sanitize(data.username, 31);
 
     if (!validUsername(username)) {
@@ -115,16 +148,13 @@ io.on("connection", (socket) => {
     }
 
     activeUsers.set(socket.id, username);
-
     socket.emit("registered", { username });
-
     emitState();
   });
 
   /* SUBMIT HEADLINE */
 
   socket.on("submitHeadline", (data = {}) => {
-
     if (game.phase !== "headline") {
       socket.emit("gameError", { message: "Headline round closed." });
       return;
@@ -136,7 +166,7 @@ io.on("connection", (socket) => {
       return;
     }
 
-    const text = sanitize(data.text, 90);
+    const text = sanitizeStoryText(data.text, 90);
 
     if (text.length < 2) {
       socket.emit("gameError", { message: "Headline too short." });
@@ -152,6 +182,9 @@ io.on("connection", (socket) => {
       id: crypto.randomUUID(),
       text,
       username,
+      name: sanitize(data.name, 24),
+      social: sanitize(data.social, 24),
+      handle: sanitize(data.handle, 31),
       votes: 0,
       createdAt: Date.now()
     };
@@ -166,15 +199,18 @@ io.on("connection", (socket) => {
   /* SUBMIT MESSAGE */
 
   socket.on("submitMessage", (data = {}) => {
-
     if (game.phase !== "message") {
       socket.emit("gameError", { message: "Message round closed." });
       return;
     }
 
     const username = activeUsers.get(socket.id);
+    if (!username) {
+      socket.emit("gameError", { message: "Register first." });
+      return;
+    }
 
-    const text = sanitize(data.text, 300);
+    const text = sanitizeStoryText(data.text, 300);
 
     if (text.length < 2) {
       socket.emit("gameError", { message: "Message too short." });
@@ -190,6 +226,9 @@ io.on("connection", (socket) => {
       id: crypto.randomUUID(),
       text,
       username,
+      name: sanitize(data.name, 24),
+      social: sanitize(data.social, 24),
+      handle: sanitize(data.handle, 31),
       votes: 0,
       createdAt: Date.now()
     };
@@ -204,15 +243,18 @@ io.on("connection", (socket) => {
   /* SUBMIT CONCLUSION */
 
   socket.on("submitConclusion", (data = {}) => {
-
     if (game.phase !== "conclusion") {
       socket.emit("gameError", { message: "Conclusion round closed." });
       return;
     }
 
     const username = activeUsers.get(socket.id);
+    if (!username) {
+      socket.emit("gameError", { message: "Register first." });
+      return;
+    }
 
-    const text = sanitize(data.text, 300);
+    const text = sanitizeStoryText(data.text, 300);
 
     if (text.length < 2) {
       socket.emit("gameError", { message: "Conclusion too short." });
@@ -228,6 +270,9 @@ io.on("connection", (socket) => {
       id: crypto.randomUUID(),
       text,
       username,
+      name: sanitize(data.name, 24),
+      social: sanitize(data.social, 24),
+      handle: sanitize(data.handle, 31),
       votes: 0,
       createdAt: Date.now()
     };
@@ -241,137 +286,164 @@ io.on("connection", (socket) => {
 
   /* VOTE */
 
-  socket.on("castVote", ({ messageId }) => {
-
+  socket.on("castVote", ({ messageId } = {}) => {
     if (game.votedUsers.has(socket.id)) {
       socket.emit("gameError", { message: "Already voted." });
       return;
     }
 
-    let list;
+    const list = getListForPhase(game.phase);
 
-    if (game.phase === "headline") list = game.currentHeadlines;
-    if (game.phase === "message") list = game.currentMessages;
-    if (game.phase === "conclusion") list = game.currentConclusions;
+    if (!list) {
+      socket.emit("gameError", { message: "Voting is not open right now." });
+      return;
+    }
 
-    const item = list.find(x => x.id === messageId);
+    const item = list.find((x) => x.id === messageId);
 
-    if (!item) return;
+    if (!item) {
+      socket.emit("gameError", { message: "Vote target not found." });
+      return;
+    }
 
-    item.votes++;
-
+    item.votes += 1;
     game.votedUsers.add(socket.id);
 
     io.emit("updateVotes", { id: item.id, votes: item.votes });
-
     emitState();
   });
 
-  /* ADMIN DELETE */
+  /* ADMIN DELETE SUBMISSION */
 
   socket.on("adminDelete", (data = {}) => {
-
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+    if (!isAdminValid(data)) {
       socket.emit("gameError", { message: "Unauthorized admin action." });
       return;
     }
 
     const { phase, messageId } = data;
+    const list = getListForPhase(phase);
 
-    let list;
+    if (!list) {
+      socket.emit("gameError", { message: "Invalid delete phase." });
+      return;
+    }
 
-    if (phase === "headline") list = game.currentHeadlines;
-    if (phase === "message") list = game.currentMessages;
-    if (phase === "conclusion") list = game.currentConclusions;
+    const exists = list.some((x) => x.id === messageId);
+    if (!exists) {
+      socket.emit("gameError", { message: "Submission not found." });
+      return;
+    }
 
-    const updated = list.filter(x => x.id !== messageId);
-
-    if (phase === "headline") game.currentHeadlines = updated;
-    if (phase === "message") game.currentMessages = updated;
-    if (phase === "conclusion") game.currentConclusions = updated;
+    if (phase === "headline") {
+      game.currentHeadlines = game.currentHeadlines.filter((x) => x.id !== messageId);
+    }
+    if (phase === "message") {
+      game.currentMessages = game.currentMessages.filter((x) => x.id !== messageId);
+    }
+    if (phase === "conclusion") {
+      game.currentConclusions = game.currentConclusions.filter((x) => x.id !== messageId);
+    }
 
     io.emit("submissionRemoved", { phase, id: messageId });
+    emitState();
+  });
 
+  /* ADMIN DELETE PUBLISHED STORY */
+
+  socket.on("adminDeletePublishedStory", (data = {}) => {
+    if (!isAdminValid(data)) {
+      socket.emit("gameError", { message: "Unauthorized admin action." });
+      return;
+    }
+
+    resetToNewGame();
+
+    io.emit("publishedStoryDeleted");
     emitState();
   });
 
   /* FINALIZE ROUND */
 
   socket.on("finalizeRound", (data = {}) => {
-
-    if (data.adminId !== ADMIN_ID || data.adminPw !== ADMIN_PW) {
+    if (!isAdminValid(data)) {
       socket.emit("gameError", { message: "Unauthorized admin action." });
       return;
     }
 
     if (game.phase === "headline") {
-
       const winner = getWinner(game.currentHeadlines);
-      if (!winner) return;
+      if (!winner) {
+        socket.emit("gameError", { message: "No headline submissions to finalize." });
+        return;
+      }
 
       game.lockedHeadlineText = winner.text;
-
       game.currentHeadlines = [];
       game.headlineSubmissions.clear();
       game.votedUsers.clear();
-
       game.phase = "message";
 
       io.emit("roundFinalized", { winner });
-
       emitState();
       return;
     }
 
     if (game.phase === "message") {
-
       const winner = getWinner(game.currentMessages);
-      if (!winner) return;
+      if (!winner) {
+        socket.emit("gameError", { message: "No message submissions to finalize." });
+        return;
+      }
 
       game.storyPieces.push({ text: winner.text });
 
-      const words = wordCount(game.storyPieces.map(x => x.text).join(" "));
+      const words = wordCount(game.storyPieces.map((x) => x.text).join(" "));
 
       game.currentMessages = [];
       game.messageSubmissions.clear();
       game.votedUsers.clear();
 
-      roundNumber++;
+      roundNumber += 1;
 
       if (words >= WORD_TARGET) {
         game.phase = "conclusion";
       }
 
       io.emit("roundFinalized", { winner });
-
       emitState();
       return;
     }
 
     if (game.phase === "conclusion") {
-
       const winner = getWinner(game.currentConclusions);
-      if (!winner) return;
+      if (!winner) {
+        socket.emit("gameError", { message: "No conclusion submissions to finalize." });
+        return;
+      }
 
-      const storyBody = game.storyPieces.map(x => x.text).join(" ");
-
+      const storyBody = game.storyPieces.map((x) => x.text).join(" ");
       game.finalStory = `${game.lockedHeadlineText}\n\n${storyBody}\n\n${winner.text}`;
-
       game.phase = "published";
+      game.currentConclusions = [];
+      game.conclusionSubmissions.clear();
+      game.votedUsers.clear();
 
-      io.emit("roundFinalized", { winner });
-
+      io.emit("roundFinalized", { winner, finalStory: game.finalStory });
       emitState();
+      return;
+    }
+
+    if (game.phase === "published") {
+      socket.emit("gameError", { message: "Story is already published." });
     }
   });
 
   /* DISCONNECT */
 
   socket.on("disconnect", () => {
-
     activeUsers.delete(socket.id);
     game.votedUsers.delete(socket.id);
-
     emitState();
   });
 });

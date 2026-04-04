@@ -3,748 +3,1049 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>I'm Stuck — Decision Support Tool</title>
+  <title>I'm Stuck — Decision Support Tool | Emotional Intelligence Developer</title>
   <style>
     :root {
-      --bg: #f6fbff;
+      --bg: #f4f7f2;
       --card: #ffffff;
-      --text: #1f2937;
-      --muted: #475569;
-      --line: #d8e2ec;
-      --primary: #2563eb;
-      --primary-soft: #eaf1ff;
-      --accent: #f97316;
-      --good: #16a34a;
-      --pink: #ec4899;
-      --purple: #7c3aed;
-      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-      --focus: 0 0 0 3px rgba(37, 99, 235, 0.35);
+      --text: #1e2d1f;
+      --muted: #4a5e4b;
+      --hint: #7a9a7b;
+      --border: #ccdece;
+      --brand: #4a7c59;
+      --brand-light: #eaf3ec;
+      --brand-mid: #b8d9be;
+      --accent: #7ab893;
+      --accent-light: #e4f2e8;
+      --warm-gold: #7a6a3a;
+      --warm-gold-light: #f7f3e8;
+      --warm-gold-mid: #ddd0a0;
+      --soft-sage: #5a7a5e;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      font-family: "Trebuchet MS", "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
       color: var(--text);
-      background: linear-gradient(180deg, #ecfeff 0%, #fef9ff 45%, #f8fafc 100%);
-      line-height: 1.45;
+      line-height: 1.7;
+      font-size: 16px;
     }
 
     .container {
-      max-width: 980px;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 20px 16px 40px;
     }
 
-    .card {
+    /* HEADER */
+    .header {
       background: var(--card);
-      border: 2px solid #eff6ff;
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
-    h1, h2, h3 { margin: 0 0 8px; }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
 
-    h1 { font-size: 1.65rem; }
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
 
-    .intro {
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
       color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .tool-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--warm-gold-light);
+      border: 1px solid var(--warm-gold-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--warm-gold);
+      font-style: italic;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* INPUTS */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    /* DECISION TYPE SELECT */
+    .decision-card {
+      border: 1px solid var(--warm-gold-mid);
+      background: var(--warm-gold-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .decision-label {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .decision-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    /* DYNAMIC PROMPTS */
+    .prompts-card {
+      border: 1px solid var(--brand-mid);
+      background: var(--accent-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .prompts-intro {
+      font-size: 14px;
+      color: var(--soft-sage);
+      font-style: italic;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      background: #fff;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--brand-mid);
+    }
+
+    .prompt-field {
       margin-bottom: 12px;
     }
 
-    .doodle-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 8px 0 14px;
-    }
+    .prompt-field:last-child { margin-bottom: 0; }
 
-    .doodle {
-      width: 62px;
-      height: 62px;
-      border-radius: 16px;
-      border: 2px solid #dbeafe;
-      background: #fff;
-      display: grid;
-      place-items: center;
-    }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    @media (max-width: 760px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      h1 { font-size: 1.4rem; }
-    }
-
-    label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
+    .prompt-field-label {
+      font-size: 13px;
+      color: var(--muted);
       margin-bottom: 6px;
-    }
-
-    .field label.block {
+      font-style: italic;
       display: block;
-      margin-top: 6px;
     }
 
-    input[type="text"], textarea, select {
+    textarea {
       width: 100%;
-      padding: 10px 12px;
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      font: inherit;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
       color: var(--text);
       background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
     }
 
-    textarea { min-height: 94px; resize: vertical; }
+    textarea:focus { outline: none; border-color: var(--brand); }
 
-    .helper { color: var(--muted); font-size: 0.95rem; }
-
-    .prompt-box {
-      border: 2px solid #bfdbfe;
-      background: #eff6ff;
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 8px;
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
     }
 
-    .result {
-      border: 2px dashed #93c5fd;
-      background: #f0f9ff;
-      border-radius: 14px;
-      padding: 12px;
-      min-height: 94px;
-      white-space: pre-wrap;
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9a7b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
     }
 
-    .button-row {
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* NAME FIELD */
+    .name-field {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .name-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* ERROR */
+    .error-msg {
+      display: none;
+      background: #fdf0f0;
+      border: 1px solid #e8c0c0;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 14px;
+      color: #b94040;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    .result-row {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--brand-mid);
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .result-row-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .result-row-value {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .result-advice {
+      margin-top: 14px;
+      padding: 13px 15px;
+      background: var(--warm-gold-light);
+      border: 1px solid var(--warm-gold-mid);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--warm-gold);
+      font-style: italic;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 4px;
     }
 
     .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-weight: 800;
-      cursor: pointer;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      color: #0b1220;
-      background: #e2e8f0;
-      min-height: 44px;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
 
-    .btn:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: none;
-      box-shadow: var(--focus);
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
     }
 
-    .btn.primary { background: linear-gradient(180deg, #60a5fa, #2563eb); color: #fff; }
-    .btn.pink { background: linear-gradient(180deg, #f9a8d4, #ec4899); color: #fff; }
-    .btn.orange { background: linear-gradient(180deg, #fdba74, #f97316); color: #fff; }
-    .btn.green { background: linear-gradient(180deg, #86efac, #16a34a); color: #fff; }
-    .btn.purple { background: linear-gradient(180deg, #c4b5fd, #7c3aed); color: #fff; }
-    .btn.sky { background: linear-gradient(180deg, #7dd3fc, #0284c7); color: #fff; }
-
-    .actions-bottom {
-      border-top: 2px solid #e2e8f0;
-      padding-top: 12px;
-      margin-top: 12px;
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
     }
 
-    .safety {
-      border: 2px solid #fecaca;
-      background: #fff1f2;
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 12px;
-    }
-
+    /* TOAST */
     .toast {
       position: fixed;
+      bottom: 20px;
       left: 50%;
-      bottom: 16px;
-      transform: translateX(-50%);
-      background: #0f172a;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
       color: #fff;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 0.95rem;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
-      z-index: 50;
-    }
-
-    .toast.show { opacity: 1; }
-
-    .resource-list {
-      display: grid;
-      gap: 6px;
-      margin-top: 6px;
-      font-size: 0.95rem;
-    }
-
-    .small { font-size: 0.9rem; color: var(--muted); }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
       white-space: nowrap;
-      border: 0;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { text-decoration: underline; }
+
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <main class="container" aria-label="Decision support tool main content">
-    <header class="card" aria-label="Tool header">
-      <h1>🌈 I’m Stuck — Decision Support Tool</h1>
-      <p class="intro">This reflection tool helps you organise your thoughts and pick one gentle next step. It offers supportive reflection only and does not provide medical advice.</p>
-      <div class="doodle-row" aria-hidden="true">
-        <div class="doodle">
-          <svg viewBox="0 0 64 64" width="48" height="48"><circle cx="32" cy="30" r="18" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/><circle cx="25" cy="27" r="2.4" fill="#1f2937"/><circle cx="39" cy="27" r="2.4" fill="#1f2937"/><path d="M24 35c2.8 3 13.2 3 16 0" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/><path d="M32 6v8M50 14l-5 5M14 14l5 5" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="doodle">
-          <svg viewBox="0 0 64 64" width="48" height="48"><path d="M14 16h36a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H31l-11 9v-9h-6a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8z" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><path d="M20 28h24M20 36h16" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="doodle">
-          <svg viewBox="0 0 64 64" width="48" height="48"><path d="M32 52s-18-11-18-24a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 13-18 24-18 24z" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/><circle cx="25" cy="30" r="2" fill="#7a284a"/><circle cx="39" cy="30" r="2" fill="#7a284a"/><path d="M25 37c3 2.5 11 2.5 14 0" fill="none" stroke="#7a284a" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>I'm Stuck — Decision Support Tool</h1>
+    <p class="tagline">A gentle reflection space to help you untangle what feels difficult and find one small, clear step forward.</p>
+    <span class="disclaimer">Supportive reflection only — not medical or professional advice</span>
+    <p class="tool-note">Being stuck is not a failure. It usually means you care about getting it right. Let's slow it down together.</p>
+  </header>
+
+  <!-- MAIN CARD -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Your reflection</p>
+
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my reflection on this device
+    </label>
+    <p style="font-size:13px;color:var(--hint);margin-bottom:18px;font-style:italic;">Stored only on this device using localStorage — nothing is sent anywhere.</p>
+
+    <!-- NAME -->
+    <div class="name-field">
+      <label for="userName">Your name (optional — shown in PDF)</label>
+      <input type="text" id="userName" maxlength="60" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+    </div>
+
+    <!-- DECISION TYPE -->
+    <div class="decision-card">
+      <label class="decision-label" for="decisionType">What feels most stuck right now?</label>
+      <p class="decision-hint">Choosing a theme loads questions tailored to your situation.</p>
+      <select id="decisionType" aria-label="What feels most stuck right now">
+        <option value="">Choose one…</option>
+        <option value="Work or study decision">Work or study decision</option>
+        <option value="Relationship or family choice">Relationship or family choice</option>
+        <option value="Personal wellbeing routine">Personal wellbeing routine</option>
+        <option value="Money or practical planning">Money or practical planning</option>
+        <option value="Something else">Something else</option>
+      </select>
+    </div>
+
+    <!-- DYNAMIC PROMPTS -->
+    <div class="prompts-card" id="promptsCard">
+      <div class="prompts-intro" id="promptsIntro">Choose a theme above to load questions tailored to your situation.</div>
+      <div class="prompt-field">
+        <label class="prompt-field-label" for="topicQ1">Your response</label>
+        <textarea id="topicQ1" aria-label="Tailored prompt one" placeholder="Choose a theme above to see your first question…"></textarea>
       </div>
-    </header>
-
-    <section class="card" aria-label="Tool interaction section">
-      <h2>🧩 Reflection check-in</h2>
-      <div class="grid grid-2">
-        <div class="field">
-          <label class="block" for="userName">Your name (optional, for PDF)</label>
-          <input aria-label="Your name" id="userName" type="text" maxlength="60" placeholder="e.g., Alex" />
-        </div>
-        <div class="field">
-          <label class="block" for="decisionType">What feels most stuck right now?</label>
-          <select aria-label="What feels most stuck right now" id="decisionType">
-            <option value="">Choose one…</option>
-            <option>Work or study decision</option>
-            <option>Relationship or family choice</option>
-            <option>Personal wellbeing routine</option>
-            <option>Money or practical planning</option>
-            <option>Something else</option>
-          </select>
-        </div>
+      <div class="prompt-field">
+        <label class="prompt-field-label" for="topicQ2">Your response</label>
+        <textarea id="topicQ2" aria-label="Tailored prompt two" placeholder="Choose a theme above to see your second question…"></textarea>
       </div>
-
-      <section class="prompt-box" id="dynamicPromptSection" aria-label="Guided prompts based on selected area">
-        <h3>🧭 Guided prompts for your selected area</h3>
-        <p class="helper" id="promptIntro">Choose “What feels most stuck right now?” to load tailored questions.</p>
-        <div class="grid">
-          <div class="field">
-            <label class="block" id="promptLabel1" for="topicQ1">Prompt 1</label>
-            <textarea aria-label="Tailored prompt one" id="topicQ1" placeholder="Your response..."></textarea>
-          </div>
-          <div class="field">
-            <label class="block" id="promptLabel2" for="topicQ2">Prompt 2</label>
-            <textarea aria-label="Tailored prompt two" id="topicQ2" placeholder="Your response..."></textarea>
-          </div>
-          <div class="field">
-            <label class="block" id="promptLabel3" for="topicQ3">Prompt 3</label>
-            <textarea aria-label="Tailored prompt three" id="topicQ3" placeholder="Your response..."></textarea>
-          </div>
-        </div>
-      </section>
-
-      <div class="grid grid-2">
-        <div class="field">
-          <label class="block" for="situation">What is happening?</label>
-          <textarea aria-label="Describe the situation" id="situation" placeholder="Briefly describe the current situation."></textarea>
-        </div>
-        <div class="field">
-          <label class="block" for="worry">Main worry</label>
-          <textarea aria-label="Main worry" id="worry" placeholder="What are you most worried about?"></textarea>
-        </div>
+      <div class="prompt-field">
+        <label class="prompt-field-label" for="topicQ3">Your response</label>
+        <textarea id="topicQ3" aria-label="Tailored prompt three" placeholder="Choose a theme above to see your third question…"></textarea>
       </div>
+    </div>
 
-      <div class="grid grid-2">
-        <div class="field">
-          <label class="block" for="bestOutcome">Best realistic outcome</label>
-          <textarea aria-label="Best realistic outcome" id="bestOutcome" placeholder="What would a good-enough outcome look like?"></textarea>
-        </div>
-        <div class="field">
-          <label class="block" for="nextStep">One tiny next step (under 15 minutes)</label>
-          <textarea aria-label="One tiny next step" id="nextStep" placeholder="Example: Write 3 bullet points and message one trusted person."></textarea>
-        </div>
-      </div>
+    <!-- SITUATION -->
+    <div class="question">
+      <label class="question-label" for="situation">What is happening?</label>
+      <p class="question-hint">Describe the situation briefly — just enough to give it shape.</p>
+      <textarea id="situation" maxlength="700" placeholder="Briefly describe what is going on…" aria-label="Describe the situation"></textarea>
+    </div>
 
-      <div class="button-row">
-        <label for="saveToggle"><input aria-label="Save my reflection" id="saveToggle" type="checkbox" /> Save my reflection</label>
-      </div>
-      <p class="helper">If enabled, your latest reflection stays on this device using localStorage.</p>
-    </section>
+    <!-- WORRY -->
+    <div class="question">
+      <label class="question-label" for="worry">What are you most worried about?</label>
+      <p class="question-hint">Name the fear underneath the stuckness if you can.</p>
+      <textarea id="worry" maxlength="600" placeholder="What is the worry underneath all of this?" aria-label="Main worry"></textarea>
+    </div>
 
-    <section class="card" aria-label="Results section">
-      <h2>💡 Your reflection summary</h2>
-      <div id="result" class="result" tabindex="0" aria-live="polite">Your summary will appear here after you click “Create Reflection”.</div>
-      <div class="button-row" aria-label="Action buttons row">
-        <button aria-label="Create reflection" class="btn primary" id="createBtn" type="button">✨ Create Reflection</button>
-        <button aria-label="Download PDF" class="btn green" id="pdfBtn" type="button">📄 Download PDF</button>
-        <button aria-label="Reset tool" class="btn orange" id="resetBtn" type="button">🔄 Reset</button>
-      </div>
+    <!-- BEST OUTCOME -->
+    <div class="question">
+      <label class="question-label" for="bestOutcome">What would a good-enough outcome look like?</label>
+      <p class="question-hint">Not perfect — just good enough. Realistic and liveable.</p>
+      <textarea id="bestOutcome" maxlength="500" placeholder="It does not have to be perfect — what would feel okay?" aria-label="Best realistic outcome"></textarea>
+    </div>
 
-      <h3 style="margin-top:12px;">🔗 Share</h3>
-      <div class="button-row">
-        <button aria-label="Copy link" class="btn sky" id="copyBtn" type="button">📋 Copy Link</button>
-        <a aria-label="Share on WhatsApp" class="btn green" id="waShare" href="#" target="_blank" rel="noopener">🟢 WhatsApp</a>
-        <a aria-label="Share on Facebook" class="btn primary" id="fbShare" href="#" target="_blank" rel="noopener">📘 Facebook</a>
-        <a aria-label="Share on X" class="btn" style="background:linear-gradient(180deg,#cbd5e1,#1f2937);color:#fff;" id="xShare" href="#" target="_blank" rel="noopener">❌ X</a>
-      </div>
-    </section>
+    <!-- NEXT STEP -->
+    <div class="question">
+      <label class="question-label" for="nextStep">What is one small next step you could take in under 15 minutes?</label>
+      <p class="question-hint">Something concrete, kind, and achievable today.</p>
+      <textarea id="nextStep" maxlength="400" placeholder="e.g. Write 3 bullet points and message one trusted person…" aria-label="One tiny next step"></textarea>
+    </div>
 
-    <section class="card actions-bottom" aria-label="Support and help links">
-      <h2>🫶 Support & resources</h2>
-      <div class="button-row">
-        <a aria-label="Help" class="btn purple" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">🆘 Help</a>
-        <a aria-label="Recommended Audio Books" class="btn pink" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
-        <a aria-label="Support us" class="btn orange" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">💖 Support Us</a>
-        <a aria-label="Explore More Free Tools" class="btn sky" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧰 Explore More Free Tools</a>
-      </div>
+    <!-- ERROR -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
 
-      <div class="safety" aria-label="Safety note">
-        <strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.
-        <div class="button-row">
-          <a aria-label="Find a Helpline" class="btn pink" href="https://findahelpline.com/" target="_blank" rel="noopener">📞 Find a Helpline</a>
-        </div>
-      </div>
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite"></div>
 
-      <p class="small" style="margin-top:12px;">Made for supportive reflection by Emotional Intelligence Developer.</p>
-    </section>
-  </main>
+    <!-- ACTIONS -->
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="createBtn" aria-label="Create reflection">Create my reflection</button>
+      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF">Download PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite">Link copied!</div>
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyBtn" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    (function () {
-      const STORAGE_KEY = "mcnDecisionSupportReflectionV1";
-      const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
-      const WEBSITE = "https://emotionalintelligencedeveloper.com/";
-      const BOOKS = "https://emotionalintelligencedeveloper.com/recommended-books/";
-      const TOOLS = "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/";
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
-      const DECISION_GUIDES = {
-        "Work or study decision": {
-          intro: "Work/study choices are easier when you weigh impact, effort, and support.",
-          prompts: [
-            "Which option best matches your current energy, time, and priorities?",
-            "What short-term pressure is loud right now, and what long-term goal matters more?",
-            "Who can offer practical feedback before your next step?"
-          ],
-          advice: "General guidance: shortlist 2–3 options, compare benefits/risks, then commit to one small trial action this week."
-        },
-        "Relationship or family choice": {
-          intro: "For relationship decisions, clarity about boundaries and needs usually helps more than perfect wording.",
-          prompts: [
-            "What boundary or need do you want to protect most here?",
-            "What conversation outcome is realistic (not perfect) for this week?",
-            "What wording can stay respectful and clear in one or two sentences?"
-          ],
-          advice: "General guidance: use calm timing, 'I' statements, and one clear ask. Focus on progress in communication, not winning."
-        },
-        "Personal wellbeing routine": {
-          intro: "Wellbeing choices often improve when the routine is tiny, repeatable, and easy to start.",
-          prompts: [
-            "What 5–10 minute habit would help you feel more steady each day?",
-            "Which obstacle usually disrupts your routine, and what backup plan can you use?",
-            "What sign will tell you this routine is helping after one week?"
-          ],
-          advice: "General guidance: begin with one small daily anchor (sleep, movement, breathing, or journaling) and track consistency over intensity."
-        },
-        "Money or practical planning": {
-          intro: "Practical and money decisions become clearer when broken into immediate, short-term, and later steps.",
-          prompts: [
-            "What is the single most urgent practical task in the next 24–72 hours?",
-            "What minimum safe plan can reduce pressure this month?",
-            "What information or support would make this decision less stressful?"
-          ],
-          advice: "General guidance: separate essentials from optional spending/tasks, then prioritize one stabilizing action before bigger changes."
-        },
-        "Something else": {
-          intro: "When the situation is complex, start by reducing overwhelm and naming one controllable step.",
-          prompts: [
-            "What part of this situation can you influence right now?",
-            "What would 'good enough for today' look like?",
-            "What support, tool, or person would make your next step easier?"
-          ],
-          advice: "General guidance: make a simple pros/concerns list, choose one step, and review how it feels before making a larger decision."
-        }
-      };
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-      const elements = {
-        userName: document.getElementById("userName"),
-        decisionType: document.getElementById("decisionType"),
-        situation: document.getElementById("situation"),
-        worry: document.getElementById("worry"),
-        bestOutcome: document.getElementById("bestOutcome"),
-        nextStep: document.getElementById("nextStep"),
-        topicQ1: document.getElementById("topicQ1"),
-        topicQ2: document.getElementById("topicQ2"),
-        topicQ3: document.getElementById("topicQ3"),
-        promptLabel1: document.getElementById("promptLabel1"),
-        promptLabel2: document.getElementById("promptLabel2"),
-        promptLabel3: document.getElementById("promptLabel3"),
-        promptIntro: document.getElementById("promptIntro"),
-        saveToggle: document.getElementById("saveToggle"),
-        result: document.getElementById("result"),
-        createBtn: document.getElementById("createBtn"),
-        pdfBtn: document.getElementById("pdfBtn"),
-        resetBtn: document.getElementById("resetBtn"),
-        copyBtn: document.getElementById("copyBtn"),
-        waShare: document.getElementById("waShare"),
-        fbShare: document.getElementById("fbShare"),
-        xShare: document.getElementById("xShare"),
-        toast: document.getElementById("toast")
-      };
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not professional advice.
+    </p>
+  </footer>
 
-      let latestSummary = "";
+</div>
 
-      function showToast(message) {
-        elements.toast.textContent = message;
-        elements.toast.classList.add("show");
-        window.setTimeout(() => elements.toast.classList.remove("show"), 1800);
-      }
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      function getData() {
-        const selected = elements.decisionType.value.trim();
-        const guide = DECISION_GUIDES[selected] || null;
-        return {
-          userName: elements.userName.value.trim(),
-          decisionType: selected,
-          situation: elements.situation.value.trim(),
-          worry: elements.worry.value.trim(),
-          bestOutcome: elements.bestOutcome.value.trim(),
-          nextStep: elements.nextStep.value.trim(),
-          topicQ1: elements.topicQ1.value.trim(),
-          topicQ2: elements.topicQ2.value.trim(),
-          topicQ3: elements.topicQ3.value.trim(),
-          tailoredAdvice: guide ? guide.advice : "General guidance: pick one small step you can complete today, then review how you feel afterward."
-        };
-      }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
 
-      function updatePromptSet() {
-        const selected = elements.decisionType.value.trim();
-        const guide = DECISION_GUIDES[selected];
-        if (!guide) {
-          elements.promptIntro.textContent = "Choose “What feels most stuck right now?” to load tailored questions.";
-          elements.promptLabel1.textContent = "Prompt 1";
-          elements.promptLabel2.textContent = "Prompt 2";
-          elements.promptLabel3.textContent = "Prompt 3";
-          elements.topicQ1.placeholder = "Your response...";
-          elements.topicQ2.placeholder = "Your response...";
-          elements.topicQ3.placeholder = "Your response...";
-          return;
-        }
-        elements.promptIntro.textContent = guide.intro;
-        elements.promptLabel1.textContent = "1) " + guide.prompts[0];
-        elements.promptLabel2.textContent = "2) " + guide.prompts[1];
-        elements.promptLabel3.textContent = "3) " + guide.prompts[2];
-        elements.topicQ1.placeholder = guide.prompts[0];
-        elements.topicQ2.placeholder = guide.prompts[1];
-        elements.topicQ3.placeholder = guide.prompts[2];
-      }
+  const STORAGE_KEY = 'decisionSupportV5';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = window.jspdf && window.jspdf.jsPDF;
 
-      function updateShareLinks() {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent("I found this gentle Decision Support Tool for reflection: " + window.location.href);
-        elements.waShare.href = "https://wa.me/?text=" + text;
-        elements.fbShare.href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
-        elements.xShare.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("A supportive reflection tool:") + "&url=" + url;
-      }
+  const $ = id => document.getElementById(id);
 
-      function renderSummary() {
-        const data = getData();
-        if (!data.situation || !data.worry || !data.nextStep) {
-          showToast("Please complete situation, worry, and next step first.");
-          return "";
-        }
+  const GUIDES = {
+    'Work or study decision': {
+      intro: 'Work and study choices often become clearer when you separate short-term pressure from longer-term priorities.',
+      prompts: [
+        'Which option best matches your current energy, time, and priorities right now?',
+        'What short-term pressure is loudest, and what longer-term goal matters more to you?',
+        'Who could offer honest, practical feedback before you take your next step?'
+      ],
+      advice: 'Shortlist two or three options, compare their realistic benefits and risks, then commit to one small trial action this week. You do not need to decide everything at once.'
+    },
+    'Relationship or family choice': {
+      intro: 'Relationship decisions tend to feel clearer when you focus on what you need — not on finding the perfect words.',
+      prompts: [
+        'What boundary or need do you most want to protect in this situation?',
+        'What conversation outcome feels realistic this week — not perfect, just progress?',
+        'What could you say in one or two sentences that is both honest and respectful?'
+      ],
+      advice: 'Choose a calm moment, use "I" statements, and make one clear request. Progress in communication matters more than winning an argument.'
+    },
+    'Personal wellbeing routine': {
+      intro: 'Wellbeing routines tend to stick when they are tiny, repeatable, and easy to start — especially on hard days.',
+      prompts: [
+        'What one 5-to-10 minute habit would help you feel steadier each day?',
+        'What usually disrupts your routine, and what is a simple backup plan?',
+        'What would tell you after one week that this routine is actually helping?'
+      ],
+      advice: 'Start with one daily anchor — sleep, movement, breathing, or journaling. Consistency matters more than intensity. Even two minutes done daily is real progress.'
+    },
+    'Money or practical planning': {
+      intro: 'Practical and financial decisions become much less overwhelming when broken into immediate, short-term, and later steps.',
+      prompts: [
+        'What is the single most urgent practical task in the next 24 to 72 hours?',
+        'What is the minimum safe plan that would reduce pressure this month?',
+        'What information or support would make this decision feel less stressful?'
+      ],
+      advice: 'Separate essentials from optional decisions, then prioritise one stabilising action before making any larger changes. Small financial clarity compounds over time.'
+    },
+    'Something else': {
+      intro: 'When the situation feels complex or hard to name, start by reducing overwhelm — then find one thing you can actually control.',
+      prompts: [
+        'What part of this situation can you genuinely influence right now?',
+        'What would "good enough for today" look like — not perfect, just liveable?',
+        'What support, tool, or person would make your next step feel more possible?'
+      ],
+      advice: 'Write a simple pros and considerations list, choose one step, and review how it feels before making any larger decisions. Clarity usually comes through action, not just thinking.'
+    }
+  };
 
-        const greeting = data.userName ? `Name: ${data.userName}\n` : "";
-        const summary =
-`${greeting}Focus area: ${data.decisionType || "Not selected"}
+  let toastTimer;
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
 
-What is happening:
-${data.situation}
+  function updatePromptSet() {
+    const selected = $('decisionType').value;
+    const guide = GUIDES[selected];
+    const intro = $('promptsIntro');
+    const q1 = $('topicQ1');
+    const q2 = $('topicQ2');
+    const q3 = $('topicQ3');
 
-Main worry:
-${data.worry}
+    if (!guide) {
+      intro.textContent = 'Choose a theme above to load questions tailored to your situation.';
+      q1.placeholder = 'Choose a theme above to see your first question…';
+      q2.placeholder = 'Choose a theme above to see your second question…';
+      q3.placeholder = 'Choose a theme above to see your third question…';
+      return;
+    }
 
-Guided answers for this area:
-• ${elements.promptLabel1.textContent.replace(/^1\)\s*/, "")} 
-  ${data.topicQ1 || "No response yet."}
-• ${elements.promptLabel2.textContent.replace(/^2\)\s*/, "")} 
-  ${data.topicQ2 || "No response yet."}
-• ${elements.promptLabel3.textContent.replace(/^3\)\s*/, "")} 
-  ${data.topicQ3 || "No response yet."}
+    intro.textContent = guide.intro;
+    q1.placeholder = guide.prompts[0];
+    q2.placeholder = guide.prompts[1];
+    q3.placeholder = guide.prompts[2];
+  }
 
-Best realistic outcome:
-${data.bestOutcome || "Not provided yet."}
+  function getData() {
+    const selected = $('decisionType').value;
+    const guide = GUIDES[selected];
+    return {
+      name: $('userName').value.trim(),
+      decisionType: selected,
+      situation: $('situation').value.trim(),
+      worry: $('worry').value.trim(),
+      bestOutcome: $('bestOutcome').value.trim(),
+      nextStep: $('nextStep').value.trim(),
+      topicQ1: $('topicQ1').value.trim(),
+      topicQ2: $('topicQ2').value.trim(),
+      topicQ3: $('topicQ3').value.trim(),
+      tailoredAdvice: guide ? guide.advice : 'Pick one small step you can complete today, then review how you feel afterward.',
+      promptLabels: guide ? guide.prompts : ['Question 1', 'Question 2', 'Question 3'],
+      autoSave: $('saveToggle').checked
+    };
+  }
 
-One tiny next step:
-${data.nextStep}
+  function validate() {
+    const d = getData();
+    const errEl = $('errorMsg');
+    const missing = [];
+    if (!d.situation) missing.push('what is happening');
+    if (!d.worry) missing.push('your main worry');
+    if (!d.nextStep) missing.push('one small next step');
+    if (missing.length) {
+      errEl.textContent = 'Please complete ' + missing.join(', ') + ' before creating your reflection.';
+      errEl.style.display = 'block';
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return null;
+    }
+    errEl.style.display = 'none';
+    return d;
+  }
 
-Supportive reminder:
-A small step done calmly is still meaningful progress.
+  function buildResultHTML(d) {
+    const guide = GUIDES[d.decisionType];
+    let html = '<div class="result-title">Your reflection summary</div>';
 
-Broader suggested feedback:
-${data.tailoredAdvice}`;
+    if (d.decisionType) {
+      html += '<div class="result-row"><div class="result-row-label">Focus area</div><div class="result-row-value">' + d.decisionType + '</div></div>';
+    }
 
-        latestSummary = summary;
-        elements.result.textContent = summary;
-        return summary;
-      }
+    html += '<div class="result-row"><div class="result-row-label">What is happening</div><div class="result-row-value">' + d.situation + '</div></div>';
+    html += '<div class="result-row"><div class="result-row-label">Main worry</div><div class="result-row-value">' + d.worry + '</div></div>';
 
-      function saveIfEnabled() {
-        if (!elements.saveToggle.checked) {
-          localStorage.removeItem(STORAGE_KEY);
-          return;
-        }
-        const payload = { ...getData(), latestSummary, saveEnabled: true };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      }
+    if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
+      html += '<div class="result-row"><div class="result-row-label">Guided responses</div><div class="result-row-value">';
+      if (d.topicQ1) html += '<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--hint);">' + guide.prompts[0] + '</span><br>' + d.topicQ1 + '</div>';
+      if (d.topicQ2) html += '<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--hint);">' + guide.prompts[1] + '</span><br>' + d.topicQ2 + '</div>';
+      if (d.topicQ3) html += '<div><span style="font-size:12px;color:var(--hint);">' + guide.prompts[2] + '</span><br>' + d.topicQ3 + '</div>';
+      html += '</div></div>';
+    }
 
-      function restoreSaved() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return;
-          const data = JSON.parse(raw);
-          elements.userName.value = data.userName || "";
-          elements.decisionType.value = data.decisionType || "";
-          elements.situation.value = data.situation || "";
-          elements.worry.value = data.worry || "";
-          elements.bestOutcome.value = data.bestOutcome || "";
-          elements.nextStep.value = data.nextStep || "";
-          elements.topicQ1.value = data.topicQ1 || "";
-          elements.topicQ2.value = data.topicQ2 || "";
-          elements.topicQ3.value = data.topicQ3 || "";
-          elements.saveToggle.checked = !!data.saveEnabled;
-          updatePromptSet();
-          if (data.latestSummary) {
-            latestSummary = data.latestSummary;
-            elements.result.textContent = data.latestSummary;
-          }
-        } catch (error) {
-          console.error("Could not restore saved reflection.", error);
-        }
-      }
+    if (d.bestOutcome) {
+      html += '<div class="result-row"><div class="result-row-label">Good-enough outcome</div><div class="result-row-value">' + d.bestOutcome + '</div></div>';
+    }
 
-      function resetAll() {
-        elements.userName.value = "";
-        elements.decisionType.value = "";
-        elements.situation.value = "";
-        elements.worry.value = "";
-        elements.bestOutcome.value = "";
-        elements.nextStep.value = "";
-        elements.topicQ1.value = "";
-        elements.topicQ2.value = "";
-        elements.topicQ3.value = "";
-        elements.saveToggle.checked = false;
-        latestSummary = "";
-        updatePromptSet();
-        elements.result.textContent = "Your summary will appear here after you click “Create Reflection”.";
-        localStorage.removeItem(STORAGE_KEY);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+    html += '<div class="result-row"><div class="result-row-label">Your next step</div><div class="result-row-value">' + d.nextStep + '</div></div>';
+    html += '<div class="result-advice">' + d.tailoredAdvice + '</div>';
+    html += '<div style="font-size:14px;color:var(--muted);font-style:italic;margin-top:12px;">A small step done calmly is still meaningful progress. You do not have to solve everything today.</div>';
 
-      async function fetchImageAsDataURL(url) {
-        const response = await fetch(url, { mode: "cors" });
-        if (!response.ok) throw new Error("Logo fetch failed");
-        const blob = await response.blob();
-        return await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      }
+    return html;
+  }
 
-      function ensureSummaryForPdf() {
-        const built = renderSummary();
-        const text = built || latestSummary;
-        if (!text || text.includes("Your summary will appear here")) {
-          showToast("Please create your reflection before downloading PDF.");
-          return "";
-        }
-        return text;
-      }
+  function createReflection() {
+    const d = validate();
+    if (!d) return;
+    const box = $('resultBox');
+    box.innerHTML = buildResultHTML(d);
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (d.autoSave) saveLocal(d);
+  }
 
-      async function downloadPdf() {
-        const summary = ensureSummaryForPdf();
-        if (!summary) return;
+  function saveLocal(d) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch(_) {}
+  }
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 34;
-        const footerTop = pageHeight - 44;
-        const footerTextY = pageHeight - 28;
-        let y = margin;
+  function saveIfEnabled() {
+    if ($('saveToggle').checked) saveLocal();
+  }
 
-        const lineHeight = 12;
-
-        function drawWrappedText(text, x, yPos, maxWidth, maxY, opts = {}) {
-          const lines = doc.splitTextToSize(text, maxWidth);
-          const maxLines = Math.max(1, Math.floor((maxY - yPos) / lineHeight));
-          const clipped = lines.slice(0, maxLines);
-          const wasClipped = lines.length > maxLines;
-          if (wasClipped && clipped.length > 0) {
-            clipped[clipped.length - 1] = String(clipped[clipped.length - 1]).replace(/\s+$/,'') + ' …';
-          }
-          doc.text(clipped, x, yPos, { maxWidth, ...opts });
-          return {
-            height: clipped.length * lineHeight,
-            clipped: wasClipped
-          };
-        }
-
-        doc.setFillColor(240, 249, 255);
-        doc.roundedRect(margin - 8, margin - 8, pageWidth - (margin * 2) + 16, pageHeight - 100, 12, 12, "F");
-
-        try {
-          const logoData = await fetchImageAsDataURL(LOGO_URL);
-          doc.addImage(logoData, "JPEG", margin, y, 58, 58);
-        } catch (error) {
-          console.warn("Logo could not be added to PDF.", error);
-          doc.setFontSize(10);
-          doc.text("Logo unavailable", margin, y + 24);
-        }
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.text("Decision Support Reflection", margin + 68, y + 22);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text("A gentle one-page summary for personal reflection.", margin + 68, y + 39);
-        y += 74;
-
-        doc.setDrawColor(147, 197, 253);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 14;
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text("Your Reflection", margin, y);
-        y += 14;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-
-        const summaryMaxY = footerTop - 118;
-        const summaryBox = drawWrappedText(summary, margin, y, pageWidth - (margin * 2), summaryMaxY);
-        y += summaryBox.height + 12;
-
-        doc.setFont("helvetica", "bold");
-        doc.text("Find more resources", margin, y);
-        y += 12;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        const resources = [
-          "• Main website: " + WEBSITE,
-          "• Recommended books: " + BOOKS,
-          "• Wellbeing & self-help tools: " + TOOLS
-        ];
-
-        for (const line of resources) {
-          const resourceMaxY = footerTop - 10;
-          const resourcePart = drawWrappedText(line, margin + 6, y, pageWidth - (margin * 2) - 6, resourceMaxY);
-          y += resourcePart.height + 2;
-        }
-
-        if (summaryBox.clipped) {
-          doc.setFont("helvetica", "italic");
-          doc.setFontSize(9);
-          const noteY = Math.max(margin + 90, footerTop - 58);
-          doc.text("Note: Reflection text shortened to keep this PDF readable on one page.", margin, noteY);
-        }
-
-        const footerText = "https://emotionalintelligencedeveloper.com/";
-        doc.setDrawColor(203, 213, 225);
-        doc.line(margin, footerTop, pageWidth - margin, footerTop);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.text(footerText, pageWidth / 2, footerTextY, { align: "center" });
-
-        const cleanName = (elements.userName.value || "reflection").trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "reflection";
-        doc.save(`decision-support-${cleanName}.pdf`);
-      }
-
-      elements.createBtn.addEventListener("click", () => {
-        renderSummary();
-        saveIfEnabled();
-      });
-
-      elements.pdfBtn.addEventListener("click", downloadPdf);
-      elements.resetBtn.addEventListener("click", resetAll);
-
-      elements.copyBtn.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(window.location.href);
-          showToast("Link copied to clipboard!");
-        } catch (error) {
-          console.error("Clipboard copy failed.", error);
-          showToast("Could not copy automatically. Please copy from address bar.");
-        }
-      });
-
-      const autoSaveFields = ["userName", "decisionType", "situation", "worry", "bestOutcome", "nextStep", "topicQ1", "topicQ2", "topicQ3"];
-      autoSaveFields.forEach((id) => {
-        elements[id].addEventListener("input", () => {
-          if (elements.saveToggle.checked) saveIfEnabled();
-        });
-      });
-
-      elements.decisionType.addEventListener("change", () => {
-        updatePromptSet();
-        if (elements.saveToggle.checked) saveIfEnabled();
-      });
-
-      elements.saveToggle.addEventListener("change", () => {
-        if (elements.saveToggle.checked) {
-          saveIfEnabled();
-          showToast("Reflection saving enabled on this device.");
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-          showToast("Saved reflection removed from this device.");
-        }
-      });
-
-      updateShareLinks();
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d) return;
+      $('userName').value = d.name || '';
+      $('decisionType').value = d.decisionType || '';
+      $('situation').value = d.situation || '';
+      $('worry').value = d.worry || '';
+      $('bestOutcome').value = d.bestOutcome || '';
+      $('nextStep').value = d.nextStep || '';
+      $('topicQ1').value = d.topicQ1 || '';
+      $('topicQ2').value = d.topicQ2 || '';
+      $('topicQ3').value = d.topicQ3 || '';
+      $('saveToggle').checked = Boolean(d.autoSave);
       updatePromptSet();
-      restoreSaved();
-    })();
-  </script>
+      if (d.situation && d.worry && d.nextStep) {
+        const box = $('resultBox');
+        box.innerHTML = buildResultHTML(d);
+        box.style.display = 'block';
+      }
+    } catch(_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    }
+  }
+
+  function resetTool() {
+    ['userName','situation','worry','bestOutcome','nextStep','topicQ1','topicQ2','topicQ3'].forEach(id => { $(id).value = ''; });
+    $('decisionType').value = '';
+    $('saveToggle').checked = false;
+    $('errorMsg').style.display = 'none';
+    $('resultBox').style.display = 'none';
+    updatePromptSet();
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Tool reset.');
+  }
+
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This free decision support tool helped me find clarity and a next step: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    const d = validate();
+    if (!d) return;
+
+    showToast('Preparing your PDF…');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header band
+    doc.setFillColor(234, 243, 236);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 45, 31);
+    doc.text('Decision Support Reflection', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 94, 75);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+
+    y += 86;
+
+    if (d.name) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 45, 31);
+      doc.text('Name: ' + d.name, margin, y);
+      y += 18;
+    }
+
+    // Reflection rows
+    const guide = GUIDES[d.decisionType];
+    const rows = [
+      ['Focus area', d.decisionType || 'Not selected'],
+      ['What is happening', d.situation],
+      ['Main worry', d.worry],
+      ['Good-enough outcome', d.bestOutcome || 'Not provided'],
+      ['Your next step', d.nextStep]
+    ];
+
+    if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
+      if (d.topicQ1) rows.splice(2, 0, [guide.prompts[0].slice(0, 60) + '…', d.topicQ1]);
+      if (d.topicQ2) rows.splice(3, 0, [guide.prompts[1].slice(0, 60) + '…', d.topicQ2]);
+      if (d.topicQ3) rows.splice(4, 0, [guide.prompts[2].slice(0, 60) + '…', d.topicQ3]);
+    }
+
+    doc.setFontSize(9.5);
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(234, 243, 236);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(74, 122, 89);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 45, 31);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Tailored advice
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setFillColor(247, 243, 232);
+    const advLines = doc.splitTextToSize(d.tailoredAdvice, pageW - margin * 2 - 20);
+    const advH = advLines.length * 12 + 20;
+    doc.roundedRect(margin, y, pageW - margin * 2, advH, 4, 4, 'F');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.3);
+    doc.setTextColor(122, 106, 58);
+    doc.text(advLines, margin + 10, y + 14);
+    y += advH + 14;
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(184, 217, 190);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 122, 89);
+    doc.text('Understanding why we get stuck — and how to move forward', margin, y);
+    y += 14;
+
+    const educational = [
+      [
+        'Why decisions feel so hard',
+        'Research in decision science, including work by psychologist Barry Schwartz in "The Paradox of Choice," shows that having too many options — or caring too much about the outcome — actually increases anxiety and reduces the quality of our decisions. The brain experiences uncertainty similarly to physical threat, which is why being stuck can feel so exhausting. Naming the decision clearly and reducing options to two or three is one of the most evidence-based ways to reduce this cognitive load.'
+      ],
+      [
+        'The role of values in feeling stuck',
+        'We most often feel stuck when a decision touches something we deeply value — our relationships, our security, our sense of identity. Psychologist Russ Harris, whose work underpins Acceptance and Commitment Therapy (ACT), suggests that clarifying your values before making a decision can act as a compass. Asking "what kind of person do I want to be in this situation?" is often more helpful than asking "what is the right answer?"'
+      ],
+      [
+        'Why small steps work',
+        'Behavioural activation — a technique from Cognitive Behavioural Therapy — shows that action comes before motivation, not after. We often wait to feel ready before acting. But research consistently shows that taking one small concrete step creates the momentum and emotional shift needed to continue. You do not need to feel certain to begin. You only need to begin.'
+      ],
+      [
+        'The cost of postponing decisions',
+        'Studies from the Journal of Consumer Research found that decision postponement — also called "status quo bias" — often increases anxiety over time rather than reducing it. The mental energy of carrying an unresolved decision drains emotional resources that could go toward other things. Even a provisional decision ("I will try this for two weeks") reduces the cognitive and emotional burden significantly.'
+      ],
+      [
+        'Who to talk to — and why it helps',
+        'Research on social support and decision-making consistently shows that verbalising a problem to a trusted, calm person — even without receiving advice — helps the brain reorganise and prioritise information. This is sometimes called the "external processing" effect. You do not need someone who has all the answers. You need someone who can listen without judgment while you find your own.'
+      ]
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(74, 122, 89);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 45, 31);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(184, 217, 190);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 122, 89);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 45, 31);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(184, 217, 190);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(122, 154, 123);
+    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
+
+    const cleanName = (d.name || 'reflection').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'reflection';
+    doc.save('decision-support-' + cleanName + '.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  // Event listeners
+  $('decisionType').addEventListener('change', () => { updatePromptSet(); saveIfEnabled(); });
+  ['userName','situation','worry','bestOutcome','nextStep','topicQ1','topicQ2','topicQ3'].forEach(id => {
+    $(id).addEventListener('input', saveIfEnabled);
+  });
+
+  $('saveToggle').addEventListener('change', () => {
+    if ($('saveToggle').checked) { saveLocal(); showToast('Auto-save enabled.'); }
+    else { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} showToast('Auto-save off.'); }
+  });
+
+  $('createBtn').addEventListener('click', createReflection);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('copyBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  updateShareLinks();
+  updatePromptSet();
+  loadLocal();
+}());
+</script>
 </body>
 </html>

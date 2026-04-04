@@ -3,809 +3,1323 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Boundary Builder Tool</title>
-  <meta name="description" content="A friendly reflection tool for building healthy boundaries." />
+  <title>Boundary Builder Tool | Emotional Intelligence Developer</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    :root{
-      --bg:#fff7ec;
-      --bg-soft:#f2fbff;
-      --card:#ffffff;
-      --text:#1f2a37;
-      --muted:#526173;
-      --line:#dce8f5;
-      --focus:#3b82f6;
-      --shadow:0 10px 26px rgba(63, 90, 130, .14);
-      --r:18px;
-      --chip:#eef6ff;
-      --chip-active:#8ed2ff;
+    :root {
+      --bg: #f5f0f7;
+      --card: #ffffff;
+      --text: #1e1a2e;
+      --muted: #5a5070;
+      --hint: #9a90aa;
+      --border: #ddd0e8;
+      --brand: #7a5c9a;
+      --brand-light: #f0eaf7;
+      --brand-mid: #c8b0e0;
+      --accent: #a07cc0;
+      --accent-light: #ede5f5;
+      --rose: #b06080;
+      --rose-light: #f7eaef;
+      --rose-mid: #e0b0c8;
+      --warm: #f9f6fb;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --chip-bg: #ede5f5;
+      --chip-active-bg: #c8b0e0;
+      --chip-active-border: #7a5c9a;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:"Comic Sans MS","Trebuchet MS",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      background:linear-gradient(180deg,var(--bg),var(--bg-soft));
-      color:var(--text);
-      line-height:1.45;
-      overflow-x:hidden;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
     }
-    .wrap{width:min(980px,100% - 1rem);margin:0 auto;padding:1rem 0 3rem}
-    .card{background:var(--card);border:2px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:1rem;margin:.75rem 0}
-    h1,h2,h3{line-height:1.2;margin:.2rem 0 .6rem}
-    h1{font-size:clamp(1.5rem,4.2vw,2.15rem)}
-    h2{font-size:clamp(1.2rem,3.2vw,1.5rem)}
-    p{margin:.4rem 0}
-    .muted{color:var(--muted)}
-    .hero{display:grid;gap:.8rem;place-items:center;text-align:center}
-    .logo{width:min(100%,400px);max-height:110px;object-fit:contain;border-radius:12px}
-    .doodle-row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
-    .doodle{width:64px;height:64px;border:2px dashed #f7b7d2;border-radius:14px;background:#fff8fd;padding:6px}
-    .grid{display:grid;gap:.65rem}
-    .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    label{font-weight:700;display:block;margin:.6rem 0 .25rem}
-    input[type="text"],input[type="range"],textarea,select{
-      width:100%;padding:.7rem;border:2px solid #cfe0f3;border-radius:12px;font:inherit;background:#fff;
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
     }
-    textarea{min-height:90px;resize:vertical}
-    .btn,a.btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
-      min-height:48px;border-radius:999px;border:2px solid transparent;
-      padding:.7rem 1rem;font-weight:700;text-decoration:none;color:#122033;background:#eaf3ff;cursor:pointer;width:100%;
-      transition:transform .1s ease,filter .2s ease;
+
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
     }
-    .btn:hover,a.btn:hover{filter:brightness(.98)}
-    .btn:active,a.btn:active{transform:translateY(1px)}
-    .btn:focus-visible,a.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
-      outline:3px solid var(--focus);outline-offset:2px;
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .primary{background:#5ec0ff;color:#07233f}
-    .sunny{background:#ffd86b}
-    .mint{background:#8ef0cb}
-    .pink{background:#ffb8da}
-    .lav{background:#c9beff}
-    .orange{background:#ffc89a}
-    .share-row,.action-row,.utility-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem}
-    .tool-output{border:2px dashed #b9d3f3;background:#f7fbff;border-radius:14px;padding:.8rem;white-space:pre-wrap}
-    .safety{background:#fff6f6;border:2px solid #ffcdcd;border-radius:14px;padding:.8rem}
-    .toast{position:fixed;right:.75rem;bottom:.75rem;background:#10253e;color:#fff;padding:.65rem .85rem;border-radius:10px;opacity:0;transform:translateY(12px);transition:.25s;z-index:9}
-    .toast.show{opacity:1;transform:translateY(0)}
-    .switch{display:flex;align-items:center;gap:.5rem;padding:.5rem;border:1px solid var(--line);border-radius:12px;background:#fbfeff;margin-top:.55rem}
-    .help-bottom{margin-top:.5rem}
-    .chip-wrap{display:flex;flex-wrap:wrap;gap:.45rem}
-    .chip{background:var(--chip);border:2px solid #c8def9;border-radius:999px;padding:.5rem .75rem;min-height:42px;font-weight:700;cursor:pointer}
-    .chip[aria-pressed="true"]{background:var(--chip-active);border-color:#56afe7}
-    .segmented{display:flex;gap:.4rem;flex-wrap:wrap}
-    .tone-btn{flex:1;min-width:120px;background:#eff6ff;border:2px solid #c4daf6}
-    .tone-btn.active{background:#73c6ff;border-color:#3498db;color:#06263f}
-    .preview{border-left:4px solid #74c6ff;background:#f4fbff;padding:.65rem .75rem;border-radius:10px;margin-top:.5rem}
-    .score-wrap{border:2px solid #cae2f8;background:#f8fcff;border-radius:12px;padding:.7rem}
-    .progress{height:14px;background:#e4f1ff;border-radius:999px;overflow:hidden}
-    .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,#89d6ff,#5ec0ff);transition:width .2s ease}
-    .badge{display:inline-block;background:#dff2ff;padding:.3rem .6rem;border-radius:999px;font-weight:700;margin-top:.5rem}
-    .reply-card{border:2px dashed #b9d3f3;border-radius:12px;padding:.65rem;background:#f9fcff;display:grid;gap:.45rem}
-    .reply-list{display:grid;gap:.5rem}
-    .mini-btn{width:auto;min-height:40px;padding:.45rem .75rem}
-    @media (max-width:740px){
-      .g2,.g3,.share-row,.action-row,.utility-row{grid-template-columns:1fr}
-      .wrap{width:min(980px,100% - .6rem)}
-      .tone-btn{min-width:0}
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--warm);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .tool-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--rose-light);
+      border: 1px solid var(--rose-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--rose);
+      font-style: italic;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* QUESTION BLOCKS */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a90aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      transition: border-color 0.2s;
+    }
+
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* CHIPS */
+    .chips-card {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .chips-label {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .chips-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--chip-bg);
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 7px 14px;
+      min-height: 38px;
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip:hover { border-color: var(--brand); color: var(--text); }
+
+    .chip[aria-pressed="true"] {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    /* CLARITY SCORE */
+    .score-card {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .score-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .score-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .score-number {
+      font-size: 24px;
+      font-weight: normal;
+      color: var(--brand);
+    }
+
+    .score-bar-wrap {
+      height: 8px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .score-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 99px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 13px;
+      font-family: "Georgia", serif;
+    }
+
+    /* TONE SELECTOR */
+    .tone-card {
+      border: 1px solid var(--rose-mid);
+      background: var(--rose-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .tone-label {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .tone-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tone-btn {
+      padding: 10px 8px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--rose-mid);
+      background: #fff;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .tone-btn:hover { border-color: var(--rose); }
+
+    .tone-btn.active {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: #fff;
+    }
+
+    .tone-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tone-slider-label {
+      font-size: 12px;
+      color: var(--hint);
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--rose-mid);
+      border-radius: 99px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--rose);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    .tone-val {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--rose);
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .tone-preview {
+      background: #fff;
+      border: 1px solid var(--rose-mid);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text);
+      font-style: italic;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .tone-preview-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    /* PRACTICE MODE */
+    .practice-card {
+      border: 1px solid var(--brand-mid);
+      background: var(--accent-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .reply-list { display: grid; gap: 10px; margin-top: 12px; }
+
+    .reply-card {
+      background: #fff;
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 13px 15px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .reply-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .reply-copy {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-family: "Georgia", serif;
+      font-size: 12px;
+      color: var(--brand);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+
+    .reply-copy:hover { opacity: 0.8; }
+
+    /* RESULT */
+    .result-box {
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      min-height: 80px;
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* NAME FIELD */
+    .name-field {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .name-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-rose { background: var(--rose); color: #fff; border-color: var(--rose); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .tone-buttons { grid-template-columns: 1fr; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { text-decoration: underline; }
+
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <main class="wrap" aria-label="Boundary Builder Tool">
-    <header class="card hero">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
-      <h1>🌈 Boundary Builder Tool</h1>
-      <p class="muted">A gentle reflection space to help you name your needs and communicate boundaries with confidence.</p>
-      <div class="doodle-row" aria-hidden="true">
-        <svg class="doodle" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="#fff1a8"/><circle cx="24" cy="27" r="2.5"/><circle cx="40" cy="27" r="2.5"/><path d="M22 39c4 5 16 5 20 0" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/></svg>
-        <svg class="doodle" viewBox="0 0 64 64"><path d="M32 52S9 39 9 24a10 10 0 0 1 17-7 10 10 0 0 1 6 4 10 10 0 0 1 6-4 10 10 0 0 1 17 7c0 15-23 28-23 28z" fill="#ff7fb0"/></svg>
-        <svg class="doodle" viewBox="0 0 64 64"><path d="M14 24h26a8 8 0 0 1 0 16H27l-9 8 2-8h-6a8 8 0 0 1 0-16z" fill="#bfe7ff" stroke="#4b79a8" stroke-width="2"/></svg>
-        <svg class="doodle" viewBox="0 0 64 64"><circle cx="32" cy="32" r="18" fill="#d9ffe9" stroke="#58aa7a" stroke-width="2"/><path d="M20 35c3-1 5-5 6-8 2 7 6 10 18 8" fill="none" stroke="#2f7d53" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-    </header>
+<div class="container">
 
-    <section class="card">
-      <h2>1) Reflect on your situation</h2>
-      <div class="grid g2">
-        <div>
-          <label for="situation">What situation is draining your energy?</label>
-          <textarea id="situation" aria-label="Situation reflection" placeholder="Example: I feel pressured to answer messages late at night."></textarea>
-        </div>
-        <div>
-          <label for="need">What boundary do you need right now?</label>
-          <textarea id="need" aria-label="Needed boundary" placeholder="Example: I need to reply during daytime hours only."></textarea>
-        </div>
-      </div>
-    </section>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Boundary Builder Tool</h1>
+    <p class="tagline">A gentle space to name what you need, find your words, and practise setting boundaries with confidence.</p>
+    <span class="disclaimer">Reflection and wellbeing support only — not professional advice</span>
+    <p class="tool-note">Setting a boundary is an act of self-respect. You are allowed to protect your energy.</p>
+  </header>
 
-    <section class="card">
-      <h2>2) Identify what’s being crossed</h2>
-      <label>Boundary categories</label>
+  <!-- MAIN CARD -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Your reflection</p>
+
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my reflection on this device
+    </label>
+    <label class="save-row">
+      <input type="checkbox" id="autoSaveToggle" checked />
+      Auto-save while I type
+    </label>
+
+    <!-- NAME -->
+    <div class="name-field">
+      <label for="nameInput">Your name (optional — shown in PDF)</label>
+      <input type="text" id="nameInput" maxlength="60" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+    </div>
+
+    <!-- SITUATION -->
+    <div class="question">
+      <label class="question-label" for="situation">What situation is draining your energy?</label>
+      <p class="question-hint">Describe what is happening — no need to justify it.</p>
+      <textarea id="situation" maxlength="700" placeholder="e.g. I feel pressured to answer messages late at night…" aria-label="Situation description"></textarea>
+    </div>
+
+    <!-- NEED -->
+    <div class="question">
+      <label class="question-label" for="need">What boundary do you need right now?</label>
+      <p class="question-hint">Try to name it simply and directly.</p>
+      <textarea id="need" maxlength="500" placeholder="e.g. I need to reply only during daytime hours…" aria-label="Boundary needed"></textarea>
+    </div>
+
+    <!-- CATEGORY CHIPS -->
+    <div class="chips-card">
+      <label class="chips-label">What type of boundary is this?</label>
+      <p class="chips-hint">Select all that apply.</p>
       <div id="categoryChips" class="chip-wrap" role="group" aria-label="Boundary categories"></div>
-      <label style="margin-top:.8rem">What are you feeling?</label>
-      <div id="feelingChips" class="chip-wrap" role="group" aria-label="Feelings checklist"></div>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2>3) Your boundary clarity (mini game)</h2>
-      <div class="score-wrap">
-        <strong>Boundary Clarity Score: <span id="clarityScore">0</span>/100</strong>
-        <div class="progress" aria-hidden="true" style="margin-top:.45rem"><span id="clarityBar"></span></div>
-        <div id="clarityBadge" class="badge">Starting</div>
+    <!-- FEELING CHIPS -->
+    <div class="chips-card">
+      <label class="chips-label">What are you feeling right now?</label>
+      <p class="chips-hint">Naming feelings helps clarify the boundary.</p>
+      <div id="feelingChips" class="chip-wrap" role="group" aria-label="Feelings"></div>
+    </div>
+
+    <!-- CLARITY SCORE -->
+    <div class="score-card">
+      <div class="score-top">
+        <span class="score-label">Boundary clarity score</span>
+        <span class="score-number" id="clarityScore">0</span><span class="score-label">/100</span>
       </div>
-    </section>
+      <div class="score-bar-wrap"><div class="score-bar" id="clarityBar"></div></div>
+      <div style="margin-top:8px;"><span class="score-badge" id="clarityBadge">Starting</span></div>
+    </div>
 
-    <section class="card">
-      <h2>4) Choose your boundary style</h2>
-      <label>Choose tone</label>
-      <div class="segmented" role="group" aria-label="Boundary tone">
-        <button class="btn tone-btn" type="button" data-tone="warm">Warm</button>
-        <button class="btn tone-btn" type="button" data-tone="firm">Firm</button>
-        <button class="btn tone-btn" type="button" data-tone="very firm">Very firm</button>
+    <!-- TONE -->
+    <div class="tone-card">
+      <label class="tone-label">Choose your boundary tone</label>
+      <div class="tone-buttons" role="group" aria-label="Boundary tone">
+        <button class="tone-btn active" type="button" data-tone="warm">Warm</button>
+        <button class="tone-btn" type="button" data-tone="firm">Firm</button>
+        <button class="tone-btn" type="button" data-tone="very firm">Very firm</button>
       </div>
-      <input id="tone" type="hidden" value="warm" />
-      <label for="toneSlider">Tone slider (optional): gentle → direct</label>
-      <input id="toneSlider" type="range" min="1" max="5" step="1" value="3" aria-label="Tone slider" />
-      <div id="toneSliderLabel" class="muted">Level 3/5</div>
-      <div id="tonePreview" class="preview">I value this connection, and I need this boundary to feel safe and respected.</div>
-      <label for="script">Draft or edit your boundary statement (request)</label>
-      <textarea id="script" aria-label="Boundary statement" placeholder="I care about this relationship, and I need to stop calls after 9pm so I can rest."></textarea>
-    </section>
-
-    <section class="card">
-      <h2>5) Consequences + Self-protection plan</h2>
-      <div class="grid g2">
-        <div>
-          <label for="consequence">If this boundary is ignored, what will you do next (a calm consequence)?</label>
-          <textarea id="consequence" placeholder="If this continues, I will pause responding until daytime."></textarea>
-        </div>
-        <div>
-          <label for="supportNeeded">What support do you need to follow through?</label>
-          <textarea id="supportNeeded" placeholder="Example: I need a friend check-in and reminders to stay consistent."></textarea>
-        </div>
+      <div class="tone-slider-row">
+        <span class="tone-slider-label">Gentle</span>
+        <input type="range" id="toneSlider" min="1" max="5" step="1" value="3" aria-label="Tone level 1 to 5" />
+        <span class="tone-slider-label">Direct</span>
+        <span class="tone-val" id="toneVal">3/5</span>
       </div>
-      <label style="margin-top:.8rem">Self-care after setting this boundary</label>
-      <div id="selfCareChips" class="chip-wrap" role="group" aria-label="Self-care checklist"></div>
-    </section>
+      <div class="tone-preview-label">Live preview</div>
+      <div class="tone-preview" id="tonePreview">I value this connection, and I need this boundary to feel safe and respected.</div>
+    </div>
 
-    <section class="card">
-      <h2>6) Practice Mode (interactive)</h2>
-      <label for="practiceScenario">They respond with…</label>
-      <select id="practiceScenario" aria-label="Roleplay scenario">
+    <!-- BOUNDARY STATEMENT -->
+    <div class="question">
+      <label class="question-label" for="script">Write or edit your boundary statement</label>
+      <p class="question-hint">Use the live preview above as a starting point, or write your own.</p>
+      <textarea id="script" maxlength="600" placeholder="e.g. I care about this relationship, and I need to stop calls after 9pm so I can rest…" aria-label="Boundary statement"></textarea>
+    </div>
+
+    <!-- CONSEQUENCE + SUPPORT -->
+    <div class="question">
+      <label class="question-label" for="consequence">If this boundary is ignored, what will you do?</label>
+      <p class="question-hint">A calm, clear consequence — not a threat. Something you can actually follow through on.</p>
+      <textarea id="consequence" maxlength="500" placeholder="e.g. If this continues, I will pause responding until daytime…" aria-label="Consequence if boundary ignored"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="supportNeeded">What support do you need to follow through?</label>
+      <p class="question-hint">A friend check-in, a reminder, a quiet space — anything that helps you stay consistent.</p>
+      <textarea id="supportNeeded" maxlength="500" placeholder="e.g. I need a friend to check in with me…" aria-label="Support needed"></textarea>
+    </div>
+
+    <!-- SELF-CARE CHIPS -->
+    <div class="chips-card">
+      <label class="chips-label">Self-care after setting this boundary</label>
+      <p class="chips-hint">Choose what you will do to look after yourself.</p>
+      <div id="selfCareChips" class="chip-wrap" role="group" aria-label="Self-care options"></div>
+    </div>
+
+    <!-- PRACTICE MODE -->
+    <div class="practice-card">
+      <label class="question-label" for="practiceScenario">Practice mode — how do they respond?</label>
+      <p class="question-hint">Choose a scenario and get three suggested replies based on your tone and boundary.</p>
+      <select id="practiceScenario" aria-label="Practice scenario">
         <option value="guilt">They guilt trip me</option>
         <option value="angry">They get angry</option>
         <option value="ignore">They ignore it</option>
         <option value="agree">They agree</option>
       </select>
-      <div id="practiceReplies" class="reply-list" style="margin-top:.6rem"></div>
-    </section>
+      <div id="practiceReplies" class="reply-list"></div>
+    </div>
 
-    <section class="card">
-      <div class="grid g2">
-        <div>
-          <label for="nameInput">Name for PDF (optional)</label>
-          <input id="nameInput" type="text" aria-label="Name for PDF" placeholder="Your name" maxlength="60" />
-        </div>
-        <div style="display:grid;align-content:end">
-          <div class="switch">
-            <input id="saveToggle" type="checkbox" aria-label="Save my reflection" />
-            <label for="saveToggle" style="margin:0">💾 Save my reflection on this device</label>
-          </div>
-          <div class="switch">
-            <input id="autoSaveToggle" type="checkbox" checked aria-label="Autosave while typing" />
-            <label for="autoSaveToggle" style="margin:0">⚡ Autosave while typing</label>
-          </div>
-        </div>
-      </div>
-      <div class="action-row" style="margin-top:.6rem">
-        <button id="generateBtn" class="btn primary" aria-label="Generate reflection output">✨ Generate Reflection</button>
-        <button id="downloadPdf" class="btn sunny" aria-label="Download PDF summary">📄 Download PDF</button>
-        <button id="resetBtn" class="btn pink" aria-label="Reset all inputs">🔄 Reset</button>
-        <button id="copyOutput" class="btn mint" aria-label="Copy result text">📋 Copy Result</button>
-      </div>
-    </section>
+    <!-- RESULT -->
+    <div class="section-label" style="margin-top:18px;">Your reflection summary</div>
+    <div class="result-box" id="result" aria-live="polite">Your summary will appear here after you click Generate Reflection.</div>
 
-    <section class="card" aria-live="polite">
-      <h2>2) Results / Reflection</h2>
-      <div id="result" class="tool-output">Your reflection summary will appear here.</div>
-    </section>
+    <!-- PRIMARY ACTIONS — simplified -->
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="generateBtn" aria-label="Generate reflection">Generate reflection</button>
+      <button type="button" class="btn btn-secondary" id="downloadPdf" aria-label="Download PDF">Download PDF</button>
+      <button type="button" class="btn btn-outline" id="copyOutput" aria-label="Copy summary text">Copy summary</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
 
-    <section class="card">
-      <h3>3) Share this tool</h3>
-      <div class="share-row">
-        <button id="copyLink" class="btn lav" aria-label="Copy page link">🔗 Copy Link</button>
-        <a id="waShare" class="btn mint" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">💬 WhatsApp</a>
-        <a id="fbShare" class="btn primary" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
-        <a id="xShare" class="btn orange" href="#" target="_blank" rel="noopener" aria-label="Share on X">🐦 X</a>
-      </div>
-    </section>
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLink" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
 
-    <section class="card">
-      <h3>4) Helpful links</h3>
-      <div class="utility-row">
-        <a class="btn sunny" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore more free tools">🧰 Explore More Free Tools</a>
-        <a class="btn lav" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💖 Support us</a>
-        <a class="btn mint" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
-        <a class="btn pink" href="https://emotionalintelligencedeveloper.com/forums/" target="_blank" rel="noopener" aria-label="Help">❓ Help</a>
-      </div>
-    </section>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
-    <section class="card safety">
-      <strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.
-      <div class="help-bottom">
-        <a class="btn orange" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">🆘 Find a Helpline</a>
-      </div>
-    </section>
-  </main>
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not professional advice.
+    </p>
+  </footer>
 
-  <script>
-    (function () {
-      const STORAGE_KEY = "mcn_boundary_builder_reflection_v2";
-      const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
-      const categoryOptions = ["Time", "Emotional", "Physical", "Digital", "Money", "Work", "Family", "Relationships", "Personal space"];
-      const feelingOptions = ["Overwhelmed", "Resentful", "Guilty", "Anxious", "Drained", "Disrespected", "Pressured", "Unseen"];
-      const selfCareOptions = ["Take a walk", "Deep breathing", "Journal", "Message a trusted person", "Drink water + rest", "Repeat affirmation"];
+</div>
 
-      const els = {
-        situation: document.getElementById("situation"),
-        need: document.getElementById("need"),
-        tone: document.getElementById("tone"),
-        toneButtons: Array.from(document.querySelectorAll(".tone-btn")),
-        toneSlider: document.getElementById("toneSlider"),
-        toneSliderLabel: document.getElementById("toneSliderLabel"),
-        tonePreview: document.getElementById("tonePreview"),
-        script: document.getElementById("script"),
-        consequence: document.getElementById("consequence"),
-        supportNeeded: document.getElementById("supportNeeded"),
-        nameInput: document.getElementById("nameInput"),
-        saveToggle: document.getElementById("saveToggle"),
-        autoSaveToggle: document.getElementById("autoSaveToggle"),
-        categoryChips: document.getElementById("categoryChips"),
-        feelingChips: document.getElementById("feelingChips"),
-        selfCareChips: document.getElementById("selfCareChips"),
-        practiceScenario: document.getElementById("practiceScenario"),
-        practiceReplies: document.getElementById("practiceReplies"),
-        clarityScore: document.getElementById("clarityScore"),
-        clarityBar: document.getElementById("clarityBar"),
-        clarityBadge: document.getElementById("clarityBadge"),
-        result: document.getElementById("result"),
-        generateBtn: document.getElementById("generateBtn"),
-        downloadPdf: document.getElementById("downloadPdf"),
-        resetBtn: document.getElementById("resetBtn"),
-        copyOutput: document.getElementById("copyOutput"),
-        copyLink: document.getElementById("copyLink"),
-        waShare: document.getElementById("waShare"),
-        fbShare: document.getElementById("fbShare"),
-        xShare: document.getElementById("xShare"),
-        toast: document.getElementById("toast")
-      };
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      function showToast(msg) {
-        els.toast.textContent = msg;
-        els.toast.classList.add("show");
-        setTimeout(() => els.toast.classList.remove("show"), 2200);
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'boundaryBuilderV5';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+
+  const categoryOptions = ['Time','Emotional','Physical','Digital','Money','Work','Family','Relationships','Personal space'];
+  const feelingOptions = ['Overwhelmed','Resentful','Guilty','Anxious','Drained','Disrespected','Pressured','Unseen'];
+  const selfCareOptions = ['Take a walk','Deep breathing','Journal','Message a trusted person','Drink water and rest','Repeat an affirmation'];
+
+  const $ = id => document.getElementById(id);
+
+  let currentTone = 'warm';
+  let toastTimer;
+
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // Build chips
+  function buildChips(containerId, options, group) {
+    const wrap = $(containerId);
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = opt;
+      btn.dataset.group = group;
+      btn.dataset.value = opt;
+      btn.setAttribute('aria-pressed', 'false');
+      wrap.appendChild(btn);
+    });
+  }
+
+  buildChips('categoryChips', categoryOptions, 'category');
+  buildChips('feelingChips', feelingOptions, 'feeling');
+  buildChips('selfCareChips', selfCareOptions, 'selfcare');
+
+  function selectedValues(group) {
+    return Array.from(document.querySelectorAll(`.chip[data-group="${group}"][aria-pressed="true"]`)).map(n => n.dataset.value);
+  }
+
+  function setChipSelection(group, values) {
+    const set = new Set(values || []);
+    document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(chip => {
+      chip.setAttribute('aria-pressed', set.has(chip.dataset.value) ? 'true' : 'false');
+    });
+  }
+
+  // Chip click
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const pressed = chip.getAttribute('aria-pressed') === 'true';
+    chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+    updateAll();
+    maybeAutoSave();
+  });
+
+  // Tone buttons
+  document.querySelectorAll('.tone-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentTone = btn.dataset.tone;
+      document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === currentTone));
+      updateAll();
+      maybeAutoSave();
+    });
+  });
+
+  // Tone slider
+  $('toneSlider').addEventListener('input', () => { updateAll(); maybeAutoSave(); });
+
+  function getToneLabel() {
+    if (currentTone === 'firm') return 'Firm and clear';
+    if (currentTone === 'very firm') return 'Very firm';
+    return 'Warm and kind';
+  }
+
+  function toneWording() {
+    const level = parseInt($('toneSlider').value, 10);
+    const need = $('need').value.trim() || 'I need this boundary';
+    const intros = {
+      warm: ['I really value our connection','I care about this relationship','I appreciate you and want this to work','I want to stay connected','I need this to be clear'],
+      firm: ['I respect you and I need this honoured','I need this to be clear','This boundary is important to me','I expect this boundary to be respected','I am being direct about this'],
+      'very firm': ['This is non-negotiable for me','I am setting a clear limit','This boundary must be respected','I will not continue if this is crossed','I am stating this clearly']
+    };
+    const ends = [
+      'so I can feel safe and balanced.',
+      'so I can protect my wellbeing.',
+      'so I can keep showing up with respect.',
+      'and I need consistency on this.',
+      'and I will follow through if it is ignored.'
+    ];
+    const idx = Math.max(0, Math.min(4, level - 1));
+    return `${intros[currentTone][idx]}, ${need} ${ends[idx]}`;
+  }
+
+  function getPracticeReplies() {
+    const scenario = $('practiceScenario').value;
+    const need = $('need').value.trim() || 'I need this boundary respected';
+    const consequence = $('consequence').value.trim() || 'I will take space and revisit later';
+
+    const map = {
+      guilt: {
+        warm: [`I hear you, and ${need}.`, `I care about you, and I still need this respected.`, `I understand this is hard. I am keeping this boundary.`],
+        firm: [`I understand your feelings, and ${need}.`, `I am not changing this boundary.`, `If this continues, ${consequence}.`],
+        'very firm': [`Guilt will not change my boundary. ${need}.`, `This boundary stands.`, `If you push this again, ${consequence}.`]
+      },
+      angry: {
+        warm: [`I want to talk when we are calmer. ${need}.`, `I hear that you are upset. I still need this boundary.`, `Let us pause now and continue respectfully later.`],
+        firm: [`I will not continue while being shouted at. ${need}.`, `We can continue when the tone is respectful.`, `If anger continues, ${consequence}.`],
+        'very firm': [`I am ending this conversation now.`, `This boundary is not up for debate.`, `Continue this and ${consequence}.`]
+      },
+      ignore: {
+        warm: [`I notice my request was missed. ${need}.`, `I am repeating my boundary so we are clear.`, `Please acknowledge this boundary.`],
+        firm: [`My boundary has not been respected. ${need}.`, `I need a clear response to move forward.`, `If ignored again, ${consequence}.`],
+        'very firm': [`Ignoring this boundary is not acceptable.`, `I am acting on my boundary now.`, `${consequence}.`]
+      },
+      agree: {
+        warm: [`Thank you for understanding — this helps me feel safe.`, `I appreciate you respecting this boundary.`, `Thanks for working with me on this.`],
+        firm: [`Thank you for agreeing. I need this to stay consistent.`, `Let us keep this boundary in place.`, `I appreciate your cooperation.`],
+        'very firm': [`Good. I expect this boundary to be maintained.`, `Thank you for confirming this clearly.`, `We will proceed with this boundary in place.`]
       }
+    };
 
-      function createChip(label, group, isMulti = true) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "chip";
-        btn.textContent = label;
-        btn.dataset.group = group;
-        btn.dataset.value = label;
-        btn.dataset.multi = isMulti ? "true" : "false";
-        btn.setAttribute("aria-pressed", "false");
-        return btn;
+    return map[scenario][currentTone] || [];
+  }
+
+  function renderPracticeReplies() {
+    const replies = getPracticeReplies();
+    const container = $('practiceReplies');
+    container.innerHTML = '';
+    replies.forEach((text, i) => {
+      const card = document.createElement('div');
+      card.className = 'reply-card';
+      const p = document.createElement('div');
+      p.className = 'reply-text';
+      p.textContent = (i + 1) + '. ' + text;
+      const btn = document.createElement('button');
+      btn.className = 'reply-copy';
+      btn.type = 'button';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', () => copyText(text, 'Reply copied.'));
+      card.appendChild(p);
+      card.appendChild(btn);
+      container.appendChild(card);
+    });
+  }
+
+  function scoreData(data) {
+    let score = 0;
+    if (data.situation) score += 20;
+    if (data.need) score += 20;
+    if (data.categories.length) score += 15;
+    if (data.feelings.length) score += 15;
+    if (data.consequence) score += 15;
+    if (data.script) score += 15;
+    return Math.min(100, score);
+  }
+
+  function scoreBadge(score) {
+    if (score >= 86) return 'Unshakeable';
+    if (score >= 61) return 'Strong';
+    if (score >= 31) return 'Building';
+    return 'Starting';
+  }
+
+  function getData() {
+    return {
+      name: $('nameInput').value.trim(),
+      situation: $('situation').value.trim(),
+      need: $('need').value.trim(),
+      tone: currentTone,
+      toneSlider: parseInt($('toneSlider').value, 10),
+      script: $('script').value.trim(),
+      consequence: $('consequence').value.trim(),
+      supportNeeded: $('supportNeeded').value.trim(),
+      categories: selectedValues('category'),
+      feelings: selectedValues('feeling'),
+      selfCare: selectedValues('selfcare'),
+      practiceScenario: $('practiceScenario').value,
+      autoSave: $('autoSaveToggle').checked,
+      saveOn: $('saveToggle').checked
+    };
+  }
+
+  function buildSummary(data) {
+    const score = scoreData(data);
+    const badge = scoreBadge(score);
+    const preview = toneWording();
+    const replies = getPracticeReplies().map((r, i) => `  ${i+1}. ${r}`).join('\n');
+    const scenarioLabel = $('practiceScenario').options[$('practiceScenario').selectedIndex].text;
+
+    return [
+      data.name ? `Boundary reflection for ${data.name}` : 'Boundary reflection',
+      '',
+      `Situation: ${data.situation || 'Not provided'}`,
+      `Boundary needed: ${data.need || 'Not provided'}`,
+      `Category: ${data.categories.length ? data.categories.join(', ') : 'Not selected'}`,
+      `Feelings: ${data.feelings.length ? data.feelings.join(', ') : 'Not selected'}`,
+      '',
+      `Tone: ${getToneLabel()} — Level ${data.toneSlider}/5`,
+      `Tone preview: ${preview}`,
+      `Boundary statement: ${data.script || 'Not written yet'}`,
+      '',
+      `If boundary is ignored: ${data.consequence || 'Not provided'}`,
+      `Support needed: ${data.supportNeeded || 'Not provided'}`,
+      `Self-care plan: ${data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'}`,
+      '',
+      `Practice scenario: ${scenarioLabel}`,
+      `Suggested replies:\n${replies}`,
+      '',
+      `Boundary clarity score: ${score}/100 — ${badge}`
+    ].join('\n');
+  }
+
+  function updateAll() {
+    $('toneVal').textContent = $('toneSlider').value + '/5';
+    $('tonePreview').textContent = toneWording();
+    renderPracticeReplies();
+    const data = getData();
+    const score = scoreData(data);
+    $('clarityScore').textContent = score;
+    $('clarityBar').style.width = score + '%';
+    $('clarityBadge').textContent = scoreBadge(score);
+    $('result').textContent = buildSummary(data);
+  }
+
+  function saveLocal(d) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch(_) {}
+  }
+
+  function maybeAutoSave() {
+    if ($('autoSaveToggle').checked && $('saveToggle').checked) saveLocal();
+  }
+
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d) return;
+      $('nameInput').value = d.name || '';
+      $('situation').value = d.situation || '';
+      $('need').value = d.need || '';
+      $('script').value = d.script || '';
+      $('consequence').value = d.consequence || '';
+      $('supportNeeded').value = d.supportNeeded || '';
+      $('saveToggle').checked = Boolean(d.saveOn);
+      $('autoSaveToggle').checked = d.autoSave !== false;
+      if (d.toneSlider) $('toneSlider').value = d.toneSlider;
+      if (d.tone) {
+        currentTone = d.tone;
+        document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === currentTone));
       }
+      if (d.practiceScenario) $('practiceScenario').value = d.practiceScenario;
+      setChipSelection('category', d.categories || []);
+      setChipSelection('feeling', d.feelings || []);
+      setChipSelection('selfcare', d.selfCare || []);
+      updateAll();
+    } catch(_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    }
+  }
 
-      function buildChipGroups() {
-        categoryOptions.forEach((item) => els.categoryChips.appendChild(createChip(item, "category", true)));
-        feelingOptions.forEach((item) => els.feelingChips.appendChild(createChip(item, "feeling", true)));
-        selfCareOptions.forEach((item) => els.selfCareChips.appendChild(createChip(item, "selfcare", true)));
-      }
+  function resetTool() {
+    ['nameInput','situation','need','script','consequence','supportNeeded'].forEach(id => { $(id).value = ''; });
+    currentTone = 'warm';
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === 'warm'));
+    $('toneSlider').value = 3;
+    $('saveToggle').checked = false;
+    $('autoSaveToggle').checked = true;
+    $('practiceScenario').value = 'guilt';
+    setChipSelection('category', []);
+    setChipSelection('feeling', []);
+    setChipSelection('selfcare', []);
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    updateAll();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Tool reset.');
+  }
 
-      function selectedValues(group) {
-        return Array.from(document.querySelectorAll(`.chip[data-group="${group}"][aria-pressed="true"]`)).map((n) => n.dataset.value);
-      }
+  async function copyText(text, msg) {
+    try { await navigator.clipboard.writeText(text); showToast(msg); }
+    catch(_) { showToast('Could not copy. Please copy manually.'); }
+  }
 
-      function getToneLabel(value) {
-        if (value === "firm") return "Firm and clear";
-        if (value === "very firm") return "Very firm";
-        return "Warm and kind";
-      }
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This free Boundary Builder tool helped me find my words: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
 
-      function toneWording() {
-        const tone = els.tone.value;
-        const level = Number(els.toneSlider.value);
-        const intros = {
-          warm: ["I really value our connection", "I care about this relationship", "I appreciate you and want this to work", "I want to stay connected", "I need this to be clear"],
-          firm: ["I respect you and I need this honored", "I need this to be clear", "This boundary is important to me", "I expect this boundary to be respected", "I am being direct about this"],
-          "very firm": ["This is non-negotiable for me", "I am setting a clear limit", "This boundary must be respected", "I will not continue if this is crossed", "I am stating this clearly"],
-        };
-        const ends = [
-          "so I can feel safe and balanced.",
-          "so I can protect my wellbeing.",
-          "so I can keep showing up with respect.",
-          "and I need consistency on this.",
-          "and I will follow through if it is ignored."
-        ];
-        const idx = Math.max(0, Math.min(4, level - 1));
-        return `${intros[tone][idx]}, ${els.need.value.trim() || "I need this boundary"} ${ends[idx]}`;
-      }
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
 
-      function getData() {
-        return {
-          situation: els.situation.value.trim(),
-          need: els.need.value.trim(),
-          tone: els.tone.value,
-          toneSlider: Number(els.toneSlider.value),
-          script: els.script.value.trim(),
-          consequence: els.consequence.value.trim(),
-          supportNeeded: els.supportNeeded.value.trim(),
-          nameInput: els.nameInput.value.trim(),
-          saveOn: els.saveToggle.checked,
-          autoSaveOn: els.autoSaveToggle.checked,
-          categories: selectedValues("category"),
-          feelings: selectedValues("feeling"),
-          selfCare: selectedValues("selfcare"),
-          practiceScenario: els.practiceScenario.value,
-          practiceReplies: getPracticeReplies(false)
-        };
-      }
+  async function downloadPDF() {
+    const jsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    const data = getData();
+    if (!data.situation && !data.need && !data.script) {
+      showToast('Please add some reflection before downloading.');
+      return;
+    }
 
-      function setChipSelection(group, values) {
-        const set = new Set(values || []);
-        document.querySelectorAll(`.chip[data-group="${group}"]`).forEach((chip) => {
-          chip.setAttribute("aria-pressed", set.has(chip.dataset.value) ? "true" : "false");
-        });
-      }
+    showToast('Preparing your PDF…');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
 
-      function setTone(tone) {
-        els.tone.value = tone;
-        els.toneButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.tone === tone));
-      }
+    // Header
+    doc.setFillColor(240, 234, 247);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
 
-      function setData(data) {
-        els.situation.value = data.situation || "";
-        els.need.value = data.need || "";
-        setTone(data.tone || "warm");
-        els.toneSlider.value = data.toneSlider || 3;
-        els.script.value = data.script || "";
-        els.consequence.value = data.consequence || "";
-        els.supportNeeded.value = data.supportNeeded || "";
-        els.nameInput.value = data.nameInput || "";
-        els.saveToggle.checked = Boolean(data.saveOn);
-        els.autoSaveToggle.checked = data.autoSaveOn !== false;
-        setChipSelection("category", data.categories || []);
-        setChipSelection("feeling", data.feelings || []);
-        setChipSelection("selfcare", data.selfCare || []);
-        els.practiceScenario.value = data.practiceScenario || "guilt";
-      }
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
 
-      function scoreData(data) {
-        let score = 0;
-        if (data.situation) score += 20;
-        if (data.need) score += 20;
-        if (data.categories.length) score += 15;
-        if (data.feelings.length) score += 15;
-        if (data.consequence) score += 15;
-        if (data.script) score += 15;
-        return Math.min(100, score);
-      }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 26, 46);
+    doc.text('Boundary Builder Reflection', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 80, 112);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
 
-      function scoreBadge(score) {
-        if (score >= 86) return "Unshakeable";
-        if (score >= 61) return "Strong";
-        if (score >= 31) return "Building";
-        return "Starting";
-      }
+    if (data.name) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 26, 46);
+      doc.text('Name: ' + data.name, margin, y);
+      y += 18;
+    }
 
-      function getPracticeReplies(returnStoredIfMissing = true) {
-        const scenario = els.practiceScenario.value;
-        const tone = els.tone.value;
-        const baseNeed = els.need.value.trim() || "I need this boundary respected";
-        const consequence = els.consequence.value.trim() || "I will take space and revisit later";
+    // Summary rows
+    const score = scoreData(data);
+    const rows = [
+      ['Situation', data.situation || 'Not provided'],
+      ['Boundary needed', data.need || 'Not provided'],
+      ['Type of boundary', data.categories.length ? data.categories.join(', ') : 'Not selected'],
+      ['Feelings identified', data.feelings.length ? data.feelings.join(', ') : 'Not selected'],
+      ['Tone', getToneLabel() + ' — Level ' + data.toneSlider + '/5'],
+      ['Tone preview', toneWording()],
+      ['Boundary statement', data.script || 'Not written'],
+      ['If boundary is ignored', data.consequence || 'Not provided'],
+      ['Support needed', data.supportNeeded || 'Not provided'],
+      ['Self-care plan', data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'],
+      ['Clarity score', score + '/100 — ' + scoreBadge(score)]
+    ];
 
-        const map = {
-          guilt: {
-            warm: [
-              `I hear you, and ${baseNeed}.`,
-              `I care about you, and I still need this respected.`,
-              `I understand this is hard. I am keeping this boundary.`
-            ],
-            firm: [
-              `I understand your feelings, and ${baseNeed}.`,
-              `I am not changing this boundary.`,
-              `If this continues, ${consequence}.`
-            ],
-            "very firm": [
-              `Guilt will not change my boundary. ${baseNeed}.`,
-              `This boundary stands.`,
-              `If you push this again, ${consequence}.`
-            ]
-          },
-          angry: {
-            warm: [
-              `I want to talk when we're calmer. ${baseNeed}.`,
-              `I hear that you're upset. I still need this boundary.`,
-              `Let's pause now and continue respectfully later.`
-            ],
-            firm: [
-              `I won't continue while being shouted at. ${baseNeed}.`,
-              `We can continue when the tone is respectful.`,
-              `If anger continues, ${consequence}.`
-            ],
-            "very firm": [
-              `I am ending this conversation now.`,
-              `This boundary is not up for debate.`,
-              `Continue this behavior and ${consequence}.`
-            ]
-          },
-          ignore: {
-            warm: [
-              `I notice my request was missed. ${baseNeed}.`,
-              `I'm repeating my boundary so we're clear.`,
-              `Please respond by acknowledging this boundary.`
-            ],
-            firm: [
-              `My boundary has not been respected. ${baseNeed}.`,
-              `I need a clear response to move forward.`,
-              `If ignored again, ${consequence}.`
-            ],
-            "very firm": [
-              `Ignoring this boundary is not acceptable.`,
-              `I am acting on my boundary now.`,
-              `${consequence}.`
-            ]
-          },
-          agree: {
-            warm: [
-              `Thank you for understanding—this helps me feel safe.`,
-              `I appreciate you respecting this boundary.`,
-              `Thanks for working with me on this.`
-            ],
-            firm: [
-              `Thank you for agreeing. I need this to stay consistent.`,
-              `Great—let's keep this boundary in place.`,
-              `I appreciate your cooperation.`
-            ],
-            "very firm": [
-              `Good. I expect this boundary to be maintained.`,
-              `Thank you for confirming this clearly.`,
-              `We'll proceed with this boundary in place.`
-            ]
-          }
-        };
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(240, 234, 247);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(122, 92, 154);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 26, 46);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
 
-        const replies = map[scenario][tone];
-        if (!returnStoredIfMissing || replies) return replies;
-        return [];
-      }
+    // Practice replies
+    const replies = getPracticeReplies();
+    if (replies.length) {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      const scenarioLabel = $('practiceScenario').options[$('practiceScenario').selectedIndex].text;
+      doc.setFillColor(237, 229, 245);
+      const replyText = replies.map((r, i) => `${i+1}. ${r}`).join('\n');
+      const lines = doc.splitTextToSize('Scenario: ' + scenarioLabel + '\n' + replyText, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(122, 92, 154);
+      doc.text('PRACTICE REPLIES', margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 26, 46);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 12;
+    }
 
-      function renderPracticeReplies() {
-        const replies = getPracticeReplies(false);
-        els.practiceReplies.innerHTML = "";
-        replies.forEach((text, i) => {
-          const card = document.createElement("div");
-          card.className = "reply-card";
-          const p = document.createElement("div");
-          p.textContent = `${i + 1}. ${text}`;
-          const btn = document.createElement("button");
-          btn.className = "btn mini-btn lav";
-          btn.type = "button";
-          btn.textContent = "Copy reply";
-          btn.addEventListener("click", () => copyText(text, "Reply copied 💬"));
-          card.appendChild(p);
-          card.appendChild(btn);
-          els.practiceReplies.appendChild(card);
-        });
-      }
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(200, 176, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(122, 92, 154);
+    doc.text('Understanding boundaries — what research tells us', margin, y);
+    y += 14;
 
-      function buildSummary(data) {
-        const score = scoreData(data);
-        const badge = scoreBadge(score);
-        const previewLine = toneWording();
-        const replies = data.practiceReplies.length ? data.practiceReplies.map((r, i) => `${i + 1}) ${r}`).join("\n") : "Not generated yet.";
+    const educational = [
+      ['What a boundary actually is',
+       'A boundary is not a wall — it is a definition of what you are willing to accept in a relationship or situation. Psychologist Nedra Tawwab, author of Set Boundaries, Find Peace, describes boundaries as "expectations and needs that help you feel safe and comfortable in your relationships." They are an act of self-respect and clarity, not rejection.'],
+      ['Why boundaries feel so hard to set',
+       'Research in relational psychology consistently shows that people struggle most with boundaries when they fear conflict, abandonment, or being seen as difficult. This is particularly common for people raised in environments where needs were dismissed. The discomfort of setting a boundary is temporary. The cost of not setting one accumulates over time.'],
+      ['The difference between a boundary and a demand',
+       'A boundary defines what you will do — not what the other person must do. "I will not answer calls after 9pm" is a boundary. "You must stop calling me after 9pm" is a demand. This distinction, from the work of therapist Sharon Martin, is important because boundaries are within your control regardless of the other person\'s response.'],
+      ['What happens in the body when boundaries are crossed',
+       'When a personal boundary is repeatedly violated, the nervous system registers this as a form of threat. Chronic boundary violations are associated with elevated cortisol levels, increased anxiety, and reduced sense of personal agency — findings supported by research in psychoneuroimmunology. Naming and holding boundaries is therefore not just emotional work — it is physiological self-care.'],
+      ['How to hold a boundary when it is challenged',
+       'Research from Dialectical Behaviour Therapy (DBT), developed by Marsha Linehan, identifies the DEAR MAN skill — Describe, Express, Assert, Reinforce, Mindfully, Appear confident, Negotiate — as an evidence-based approach to communicating needs clearly while maintaining relationships. The key finding: calm, consistent repetition of a boundary is more effective than emotional escalation.']
+    ];
 
-        return [
-          `Boundary Reflection${data.nameInput ? ` for ${data.nameInput}` : ""}`,
-          "",
-          `Situation summary: ${data.situation || "Not provided yet."}`,
-          `Boundary needed: ${data.need || "Not provided yet."}`,
-          `Category: ${data.categories.length ? data.categories.join(", ") : "Not selected yet."}`,
-          `Feelings: ${data.feelings.length ? data.feelings.join(", ") : "Not selected yet."}`,
-          `Tone: ${getToneLabel(data.tone)} (Level ${data.toneSlider}/5)`,
-          `Live tone preview: ${previewLine}`,
-          `Boundary statement (final): ${data.script || "Not provided yet."}`,
-          `Consequence (if ignored): ${data.consequence || "Not provided yet."}`,
-          `Support needed: ${data.supportNeeded || "Not provided yet."}`,
-          `Self-care plan: ${data.selfCare.length ? data.selfCare.join(", ") : "Not selected yet."}`,
-          "",
-          `Practice scenario: ${els.practiceScenario.options[els.practiceScenario.selectedIndex].text}`,
-          `Practice reply options:\n${replies}`,
-          "",
-          `Boundary Clarity Score: ${score}/100 (${badge})`
-        ].join("\n");
-      }
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(122, 92, 154);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 26, 46);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
 
-      function updateTonePreview() {
-        els.toneSliderLabel.textContent = `Level ${els.toneSlider.value}/5`;
-        els.tonePreview.textContent = toneWording();
-      }
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(200, 176, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(122, 92, 154);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 26, 46);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
 
-      function updateScore() {
-        const score = scoreData(getData());
-        els.clarityScore.textContent = String(score);
-        els.clarityBar.style.width = `${score}%`;
-        els.clarityBadge.textContent = scoreBadge(score);
-      }
+    // Footer
+    doc.setDrawColor(200, 176, 224);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(154, 144, 170);
+    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
 
-      function updateResult() {
-        updateTonePreview();
-        renderPracticeReplies();
-        updateScore();
-        const summary = buildSummary(getData());
-        els.result.textContent = summary;
-      }
+    doc.save('boundary-builder-reflection.pdf');
+    showToast('PDF downloaded!');
+  }
 
-      function saveIfEnabled() {
-        const data = getData();
-        if (data.saveOn) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      }
+  // Event listeners
+  ['situation','need','script','consequence','supportNeeded','nameInput'].forEach(id => {
+    $(id).addEventListener('input', () => { updateAll(); maybeAutoSave(); });
+  });
 
-      function maybeAutoSave() {
-        if (els.autoSaveToggle.checked) saveIfEnabled();
-      }
+  $('practiceScenario').addEventListener('change', () => { updateAll(); maybeAutoSave(); });
 
-      function loadSaved() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return;
-          const data = JSON.parse(raw);
-          setData(data);
-        } catch (e) {
-          console.warn("Could not load saved reflection", e);
-        }
-      }
+  $('saveToggle').addEventListener('change', () => {
+    if ($('saveToggle').checked) { saveLocal(); showToast('Save enabled.'); }
+    else { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} showToast('Save off.'); }
+  });
 
-      function validateForPdf() {
-        const data = getData();
-        if (!data.situation && !data.need && !data.script && !data.consequence && !data.supportNeeded) {
-          showToast("Please add some reflection before downloading PDF 🌱");
-          return null;
-        }
-        return data;
-      }
+  $('autoSaveToggle').addEventListener('change', () => {
+    showToast($('autoSaveToggle').checked ? 'Auto-save on.' : 'Auto-save off.');
+  });
 
-      async function loadImageWithData(url) {
-        const response = await fetch(url, { mode: "cors" });
-        const blob = await response.blob();
-        const dataUrl = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
+  $('generateBtn').addEventListener('click', () => {
+    updateAll();
+    saveLocal();
+    showToast('Reflection updated.');
+  });
 
-        const image = await new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = dataUrl;
-        });
+  $('downloadPdf').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('copyOutput').addEventListener('click', () => copyText($('result').textContent, 'Summary copied.'));
+  $('copyLink').addEventListener('click', () => copyText(window.location.href, 'Link copied.'));
 
-        const format = blob.type.includes("png") ? "PNG" : "JPEG";
-        return {
-          dataUrl,
-          format,
-          width: image.naturalWidth,
-          height: image.naturalHeight
-        };
-      }
-
-      async function createPdf() {
-        const data = validateForPdf();
-        if (!data) return;
-        if (!window.jspdf || !window.jspdf.jsPDF) {
-          showToast("PDF library is still loading. Please try again in a moment.");
-          return;
-        }
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "p", unit: "pt", format: "a4" });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 36;
-        const lineHeight = 14;
-        const footerSpace = 28;
-        let y = margin;
-
-        function ensurePageSpace(spaceNeeded) {
-          if (y + spaceNeeded > pageHeight - margin - footerSpace) {
-            doc.addPage();
-            y = margin;
-          }
-        }
-
-        try {
-          const logo = await loadImageWithData(LOGO_URL);
-          const maxLogoWidth = 110;
-          const maxLogoHeight = 48;
-          const logoRatio = logo.height / logo.width;
-          let drawWidth = maxLogoWidth;
-          let drawHeight = drawWidth * logoRatio;
-          if (drawHeight > maxLogoHeight) {
-            drawHeight = maxLogoHeight;
-            drawWidth = drawHeight / logoRatio;
-          }
-
-          doc.addImage(logo.dataUrl, logo.format, margin, y, drawWidth, drawHeight);
-
-          const titleX = margin + drawWidth + 16;
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(16);
-          doc.text("Boundary Builder - Reflection Summary", titleX, y + 18);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10.5);
-          doc.text("emotionalintelligencedeveloper.com", titleX, y + 35);
-          y += Math.max(drawHeight, 44) + 16;
-        } catch (_) {
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(16);
-          doc.text("Boundary Builder - Reflection Summary", margin, y + 16);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10.5);
-          doc.text("emotionalintelligencedeveloper.com", margin, y + 32);
-          y += 50;
-        }
-
-        doc.setDrawColor(180, 205, 230);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 14;
-
-        const lines = buildSummary(data).split("\n");
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-
-        lines.forEach((line) => {
-          const wrapped = doc.splitTextToSize(line || " ", pageWidth - margin * 2);
-          ensurePageSpace((wrapped.length * lineHeight) + 6);
-          doc.text(wrapped, margin, y);
-          y += (wrapped.length * lineHeight) + 3;
-        });
-
-        ensurePageSpace(70);
-        y += 8;
-        doc.setDrawColor(160, 185, 210);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 16;
-
-        doc.setFont("helvetica", "bold");
-        doc.text("More resources", margin, y);
-        y += 14;
-        doc.setFont("helvetica", "normal");
-
-        const resources = [
-          "Main site: https://emotionalintelligencedeveloper.com/",
-          "Recommended Audio Books: https://emotionalintelligencedeveloper.com/recommended-books/",
-          "Self-help tools: https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/"
-        ];
-
-        resources.forEach((item) => {
-          const wrapped = doc.splitTextToSize("• " + item, pageWidth - margin * 2);
-          ensurePageSpace((wrapped.length * lineHeight) + 4);
-          doc.text(wrapped, margin, y);
-          y += (wrapped.length * lineHeight) + 2;
-        });
-
-        const footerText = "https://emotionalintelligencedeveloper.com/";
-        doc.setFontSize(10);
-        doc.setTextColor(50);
-        const pages = doc.getNumberOfPages();
-        for (let p = 1; p <= pages; p += 1) {
-          doc.setPage(p);
-          doc.text(footerText, pageWidth / 2, pageHeight - 16, { align: "center" });
-        }
-
-        doc.save("boundary-builder-reflection.pdf");
-        showToast("PDF downloaded ✅");
-      }
-
-      async function copyText(text, successMsg) {
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast(successMsg);
-        } catch (_) {
-          showToast("Copy failed. Please copy manually.");
-        }
-      }
-
-      function setupShareLinks() {
-        const url = encodeURIComponent(window.location.href);
-        const msg = encodeURIComponent("Try this Boundary Builder Tool for reflection: " + window.location.href);
-        els.waShare.href = `https://wa.me/?text=${msg}`;
-        els.fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        els.xShare.href = `https://twitter.com/intent/tweet?url=${url}&text=${encodeURIComponent("Helpful reflection tool:")}`;
-      }
-
-      function resetAll() {
-        setData({
-          situation: "",
-          need: "",
-          tone: "warm",
-          toneSlider: 3,
-          script: "",
-          consequence: "",
-          supportNeeded: "",
-          nameInput: "",
-          saveOn: false,
-          autoSaveOn: true,
-          categories: [],
-          feelings: [],
-          selfCare: [],
-          practiceScenario: "guilt"
-        });
-        localStorage.removeItem(STORAGE_KEY);
-        updateResult();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        showToast("Reset complete 🌟");
-      }
-
-      buildChipGroups();
-
-      document.addEventListener("click", (event) => {
-        const chip = event.target.closest(".chip");
-        if (!chip) return;
-        const pressed = chip.getAttribute("aria-pressed") === "true";
-        chip.setAttribute("aria-pressed", pressed ? "false" : "true");
-        updateResult();
-        maybeAutoSave();
-      });
-
-      els.toneButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          setTone(btn.dataset.tone);
-          updateResult();
-          maybeAutoSave();
-        });
-      });
-
-      [els.situation, els.need, els.toneSlider, els.script, els.consequence, els.supportNeeded, els.nameInput, els.saveToggle, els.autoSaveToggle, els.practiceScenario].forEach((el) => {
-        el.addEventListener("input", () => {
-          updateResult();
-          maybeAutoSave();
-        });
-        el.addEventListener("change", () => {
-          updateResult();
-          maybeAutoSave();
-        });
-      });
-
-      els.generateBtn.addEventListener("click", () => {
-        updateResult();
-        saveIfEnabled();
-        showToast("Reflection updated ✨");
-      });
-
-      els.copyOutput.addEventListener("click", () => copyText(els.result.textContent, "Result copied 📋"));
-      els.copyLink.addEventListener("click", () => copyText(window.location.href, "Link copied 🔗"));
-      els.downloadPdf.addEventListener("click", createPdf);
-      els.resetBtn.addEventListener("click", resetAll);
-
-      loadSaved();
-      setupShareLinks();
-      setTone(els.tone.value || "warm");
-      updateResult();
-    })();
-  </script>
+  updateShareLinks();
+  loadLocal();
+  updateAll();
+}());
+</script>
 </body>
 </html>

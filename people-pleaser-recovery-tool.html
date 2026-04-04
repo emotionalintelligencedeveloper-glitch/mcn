@@ -4,758 +4,1143 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>People-Pleaser Recovery Tool | Emotional Intelligence Developer</title>
-  <meta name="description" content="A supportive reflection tool for noticing people-pleasing patterns and practicing healthier boundaries." />
-  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f4fbff;
-      --surface: #ffffff;
-      --surface-soft: #f8fdff;
-      --text: #152238;
-      --muted: #4f647c;
-      --line: #d7e6f4;
-      --primary: #1f7ae0;
-      --secondary: #15a37d;
-      --accent: #f59e0b;
-      --shadow: 0 10px 26px rgba(21, 34, 56, 0.08);
-      --radius: 18px;
+      --bg: #f5f7f0;
+      --card: #ffffff;
+      --text: #1e2818;
+      --muted: #506050;
+      --hint: #8aa08a;
+      --border: #cdd8c0;
+      --brand: #5a7a40;
+      --brand-light: #edf3e8;
+      --brand-mid: #b8d0a0;
+      --accent: #7aaa50;
+      --accent-light: #e4f0d8;
+      --terracotta: #8a5a3a;
+      --terracotta-light: #f7efe8;
+      --terracotta-mid: #d8b898;
+      --warm: #f8f6f0;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
     }
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background: radial-gradient(circle at 0% 0%, #e5f4ff 0%, transparent 40%),
-                  radial-gradient(circle at 100% 15%, #e7fff3 0%, transparent 35%),
-                  var(--bg);
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.7;
+      font-size: 16px;
     }
 
-    a { color: inherit; }
     .container {
-      max-width: 1000px;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 18px 14px 36px;
+      padding: 20px 16px 40px;
     }
 
-    header, main, section, footer { width: 100%; }
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
 
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--warm);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .tool-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--terracotta-light);
+      border: 1px solid var(--terracotta-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--terracotta);
+      font-style: italic;
+    }
+
+    /* CARD */
     .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* QUESTIONS */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
       padding: 16px;
       margin-bottom: 14px;
     }
 
-    .header-wrap {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .logo {
-      width: 76px;
-      height: 76px;
-      border-radius: 14px;
-      object-fit: cover;
-      border: 2px solid #fff;
-      box-shadow: 0 8px 20px rgba(0,0,0,.12);
-      background: #fff;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.25rem, 2.8vw, 1.8rem);
-      line-height: 1.2;
-    }
-
-    h2 {
-      margin: 0 0 10px;
-      font-size: 1.1rem;
-    }
-
-    p { margin: 0 0 10px; }
-    .intro { color: var(--muted); }
-
-    .field {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-    }
-
-    input[type="text"], textarea, input[type="range"] {
-      width: 100%;
-    }
-
-    input[type="text"], textarea {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 11px;
-      font-size: 1rem;
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
       color: var(--text);
-      background: #fff;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
     }
 
     textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
       min-height: 88px;
       resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
     }
 
-    .hint, .inline-msg, .small-note {
-      font-size: 0.88rem;
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    /* INTENSITY SLIDER */
+    .intensity-wrap { margin-top: 8px; }
+
+    .intensity-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .intensity-label {
+      font-size: 12px;
+      color: var(--hint);
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--brand-mid);
+      border-radius: 99px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    .intensity-val {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--terracotta);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .intensity-meaning {
+      font-size: 13px;
       color: var(--muted);
-      margin-top: 4px;
+      font-style: italic;
+      min-height: 20px;
     }
 
-    .inline-msg.error { color: #b42318; }
-    .inline-msg.ok { color: #116149; }
+    /* FEAR PILLS */
+    .pills-card {
+      border: 1px solid var(--terracotta-mid);
+      background: var(--terracotta-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .pills-label {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .pills-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .pill {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 12px;
-      background: var(--surface-soft);
+      background: #fff;
+      border: 1.5px solid var(--terracotta-mid);
+      border-radius: 99px;
+      padding: 8px 16px;
+      min-height: 40px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--muted);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
     }
+
+    .pill:hover { border-color: var(--terracotta); color: var(--text); }
 
     .pill[aria-pressed="true"] {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(31,122,224,.15);
-      background: #eaf4ff;
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #fff;
     }
 
-    .result-box {
-      border: 1px solid #b7daf8;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #eef7ff, #effff8);
-      padding: 14px;
-      margin-top: 10px;
+    /* VALIDATION */
+    .validation-msg {
+      font-size: 13px;
+      font-style: italic;
+      margin-bottom: 14px;
       display: none;
     }
 
-    .result-box.show { display: block; }
+    .validation-msg.error { color: #b94040; display: block; }
+    .validation-msg.ok { color: var(--brand); display: block; }
 
-    ul { margin: 8px 0 0 18px; padding: 0; }
+    /* RESULT */
+    .result-box {
+      display: none;
+      margin-bottom: 16px;
+    }
 
-    .button-row, .share-row, .resource-row {
+    .result-summary {
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    .result-row {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--brand-mid);
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .result-row-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .result-row-value {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ACTION PLAN */
+    .action-plan {
+      background: var(--terracotta-light);
+      border: 1px solid var(--terracotta-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .action-plan-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+
+    .action-item:last-child { margin-bottom: 0; }
+
+    .action-num {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: #fff;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .action-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .result-closing {
+      font-size: 14px;
+      color: var(--brand);
+      font-style: italic;
+      text-align: center;
+      padding: 12px 16px;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* NAME FIELD */
+    .name-field {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .name-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 4px;
     }
 
-    button, .link-btn {
-      border: 1px solid transparent;
-      border-radius: 12px;
-      padding: 10px 13px;
-      font-size: 0.94rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
+    .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
-      transition: transform .05s ease, box-shadow .2s ease;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
 
-    button:active, .link-btn:active { transform: translateY(1px); }
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
 
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-secondary { background: var(--secondary); color: #fff; }
-    .btn-soft { background: #fff; border-color: var(--line); color: var(--text); }
-    .btn-warning { background: #fff7e8; border-color: #f7d9a1; color: #7d4e00; }
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-terracotta { background: var(--terracotta); color: #fff; border-color: var(--terracotta); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
 
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .pill { width: 100%; justify-content: center; }
+    }
+
+    /* TOAST */
     .toast {
       position: fixed;
+      bottom: 20px;
       left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: #14375b;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
       color: #fff;
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 0.86rem;
-      box-shadow: 0 8px 18px rgba(0,0,0,.2);
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .2s ease;
+      transition: opacity 0.2s, transform 0.2s;
       z-index: 100;
+      white-space: nowrap;
     }
 
-    .toast.show { opacity: 1; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .toggle-wrap {
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 14px;
-      align-items: center;
-      margin-top: 8px;
-      padding: 10px;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
-      background: #fcfeff;
-    }
-
-    .safety {
-      display: flex;
-      flex-direction: column;
       gap: 10px;
-      background: #fffef6;
-      border: 1px solid #f2e9bf;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
 
-    .helpline-btn {
-      align-self: flex-start;
-      background: #fff;
-      border-color: #efc873;
+    .footer-link {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
     }
 
-    :focus-visible {
-      outline: 3px solid #2d84e6;
-      outline-offset: 2px;
-    }
+    .footer-link:hover { text-decoration: underline; }
 
-    @media (max-width: 720px) {
-      .header-wrap { grid-template-columns: 1fr; text-align: center; }
-      .logo { margin: 0 auto; }
-      .button-row > *, .share-row > *, .resource-row > * {
-        flex: 1 1 100%;
-      }
-      button, .link-btn { width: 100%; }
-    }
-
-    @media (max-width: 360px) {
-      .container { padding: 10px 8px 24px; }
-      .card { padding: 12px; }
-      h1 { font-size: 1.2rem; }
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="card">
-      <div class="header-wrap">
-        <img
-          class="logo"
-          src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg"
-          alt="Emotional Intelligence Developer logo"
-          loading="lazy"
-        />
-        <div>
-          <h1>People-Pleaser Recovery Tool</h1>
-          <p class="intro">A gentle reflection space to notice patterns, protect your energy, and practice one small boundary step at a time.</p>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>People-Pleaser Recovery Tool</h1>
+    <p class="tagline">A gentle reflection space to notice your patterns, protect your energy, and practise one small boundary step at a time.</p>
+    <span class="disclaimer">Reflection and wellbeing support only — not professional advice</span>
+    <p class="tool-note">Your needs are not a burden. Noticing the pattern is already a courageous first step.</p>
+  </header>
+
+  <!-- MAIN CARD -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Your reflection</p>
+
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my reflection on this device
+    </label>
+
+    <!-- NAME -->
+    <div class="name-field">
+      <label for="userName">Your name (optional — shown in PDF)</label>
+      <input type="text" id="userName" maxlength="80" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+    </div>
+
+    <!-- INTENSITY -->
+    <div class="question">
+      <label class="question-label">How strong is the "I must keep everyone happy" feeling right now?</label>
+      <p class="question-hint">Move the slider to where you honestly are today.</p>
+      <div class="intensity-wrap">
+        <div class="intensity-row">
+          <span class="intensity-label">Low</span>
+          <input type="range" id="intensitySlider" min="0" max="10" step="1" value="5" aria-label="Pressure intensity 0 to 10" />
+          <span class="intensity-label">High</span>
+          <span class="intensity-val" id="intensityVal">5/10</span>
         </div>
+        <p class="intensity-meaning" id="intensityMeaning">You are balancing pressure and care for others — and your needs matter too.</p>
       </div>
-    </header>
+    </div>
 
-    <main>
-      <section class="card" aria-labelledby="toolHeading">
-        <h2 id="toolHeading">Your reflection</h2>
+    <!-- Q1 -->
+    <div class="question">
+      <label class="question-label" for="q1">Where do you usually say yes when you want to say no?</label>
+      <p class="question-hint">At work, with family, with friends, with money, with your time — wherever it shows up most.</p>
+      <textarea id="q1" maxlength="600" placeholder="e.g. Extra tasks at work, helping family even when exhausted…" aria-label="Where you say yes when you want to say no"></textarea>
+    </div>
 
-        <div class="field">
-          <label for="userName">Name (optional, for your PDF)</label>
-          <input id="userName" type="text" maxlength="80" aria-label="Optional name for PDF" placeholder="Enter your name (optional)" />
-        </div>
+    <!-- Q2 — FEAR PILLS -->
+    <div class="pills-card">
+      <label class="pills-label">What do you fear most if you disappoint someone?</label>
+      <p class="pills-hint">Choose one that resonates — then add detail if you like.</p>
+      <div class="pill-row" role="group" aria-label="Fear options">
+        <button type="button" class="pill" data-fear="They might reject me" aria-pressed="false">They might reject me</button>
+        <button type="button" class="pill" data-fear="They might get angry" aria-pressed="false">They might get angry</button>
+        <button type="button" class="pill" data-fear="I will feel guilty" aria-pressed="false">I will feel guilty</button>
+        <button type="button" class="pill" data-fear="I will seem selfish" aria-pressed="false">I will seem selfish</button>
+      </div>
+      <textarea id="q2" maxlength="500" placeholder="Add any detail in your own words (optional)…" aria-label="Fear details"></textarea>
+    </div>
 
-        <div class="field">
-          <label for="intensity">How strong is the “I must keep everyone happy” feeling right now? <span id="intensityValue">5/10</span></label>
-          <input id="intensity" type="range" min="0" max="10" value="5" aria-label="Pressure intensity from 0 to 10" />
-        </div>
+    <!-- Q3 -->
+    <div class="question">
+      <label class="question-label" for="q3">How has people-pleasing affected your mood or energy lately?</label>
+      <p class="question-hint">Tired, anxious, resentful, disconnected — name what you notice.</p>
+      <textarea id="q3" maxlength="600" placeholder="e.g. I feel drained and quietly resentful…" aria-label="Mood and energy impact"></textarea>
+    </div>
 
-        <div class="field">
-          <label for="q1">1) Where do you usually say yes when you want to say no?</label>
-          <textarea id="q1" aria-label="Where you say yes when you want to say no" placeholder="Example: extra tasks, family requests, money, time..."></textarea>
-        </div>
+    <!-- Q4 -->
+    <div class="question">
+      <label class="question-label" for="q4">What personal needs are you putting aside?</label>
+      <p class="question-hint">Rest, boundaries, hobbies, savings, goals, time alone — whatever you have been neglecting.</p>
+      <textarea id="q4" maxlength="600" placeholder="e.g. Rest, my own projects, time to just exist without performing…" aria-label="Needs being put aside"></textarea>
+    </div>
 
-        <div class="field">
-          <label>2) What do you fear most if you disappoint someone?</label>
-          <div class="pill-row" role="group" aria-label="Fear options">
-            <button type="button" class="pill" data-fear="They might reject me" aria-pressed="false">They might reject me</button>
-            <button type="button" class="pill" data-fear="They might get angry" aria-pressed="false">They might get angry</button>
-            <button type="button" class="pill" data-fear="I will feel guilty" aria-pressed="false">I will feel guilty</button>
-            <button type="button" class="pill" data-fear="I will seem selfish" aria-pressed="false">I will seem selfish</button>
-          </div>
-          <textarea id="q2" aria-label="Fear details" placeholder="Add any detail in your own words (optional)"></textarea>
-        </div>
+    <!-- Q5 -->
+    <div class="question">
+      <label class="question-label" for="q5">One boundary sentence you can use this week</label>
+      <p class="question-hint">Keep it short, calm, and something you can actually say. This is the most important part.</p>
+      <textarea id="q5" maxlength="400" placeholder="e.g. I can't commit to that today — I need to rest…" aria-label="Boundary sentence to practise"></textarea>
+    </div>
 
-        <div class="field">
-          <label for="q3">3) How has people-pleasing affected your mood or energy lately?</label>
-          <textarea id="q3" aria-label="Mood and energy impact" placeholder="Example: tired, anxious, resentful, overthinking..."></textarea>
-        </div>
+    <!-- VALIDATION -->
+    <div class="validation-msg" id="validationMsg" role="alert" aria-live="polite"></div>
 
-        <div class="field">
-          <label for="q4">4) What personal needs are you putting aside?</label>
-          <textarea id="q4" aria-label="Needs you are putting aside" placeholder="Example: rest, boundaries, hobbies, savings, personal goals..."></textarea>
-        </div>
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite">
+      <div class="result-summary" id="resultSummary"></div>
+      <div class="action-plan" id="actionPlan"></div>
+      <div class="result-closing" id="resultClosing"></div>
+    </div>
 
-        <div class="field">
-          <label for="q5">5) One boundary sentence you can use this week</label>
-          <textarea id="q5" aria-label="Boundary sentence" placeholder="Example: I can't commit today, I need to rest."></textarea>
-          <p class="hint">Tip: keep it short, calm, and clear.</p>
-          <p id="validationMsg" class="inline-msg" aria-live="polite"></p>
-        </div>
+    <!-- ACTIONS -->
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="buildBtn" aria-label="Build my reflection">Build my reflection</button>
+      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF">Download PDF</button>
+      <button type="button" class="btn btn-outline" id="clearSavedBtn" aria-label="Clear saved reflection">Clear saved</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
 
-        <div class="toggle-wrap" aria-label="Save reflection options">
-          <label for="saveToggle" style="margin:0; font-weight:700;">Save my reflection</label>
-          <input id="saveToggle" type="checkbox" aria-label="Save my reflection in local storage" />
-          <button id="clearSavedBtn" type="button" class="btn-soft" aria-label="Clear saved reflection">Clear saved reflection</button>
-          <span class="small-note">When enabled, your latest reflection is restored next time.</span>
-        </div>
-      </section>
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
 
-      <section class="card" aria-labelledby="resultHeading">
-        <h2 id="resultHeading">Results / Reflection output</h2>
-        <div id="resultBox" class="result-box" aria-live="polite">
-          <p id="resultText"></p>
-          <ul id="planList"></ul>
-        </div>
-        <p id="resultHint" class="small-note">Complete your reflection, then choose “Build my reflection”.</p>
-      </section>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
-      <section class="card" aria-labelledby="actionHeading">
-        <h2 id="actionHeading">Actions</h2>
-        <div class="button-row">
-          <button id="buildBtn" type="button" class="btn-primary" aria-label="Build my reflection">Build my reflection</button>
-          <button id="downloadBtn" type="button" class="btn-secondary" aria-label="Download PDF">Download PDF</button>
-          <button id="resetBtn" type="button" class="btn-warning" aria-label="Reset reflection">Reset</button>
-        </div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-        <div class="share-row" style="margin-top: 10px;" aria-label="Share buttons">
-          <button id="copyLinkBtn" type="button" class="btn-soft" aria-label="Copy Link">Copy Link</button>
-          <a id="waShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-          <a id="fbShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-          <a id="xShare" class="link-btn btn-soft" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
-        </div>
-      </section>
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not professional advice.
+    </p>
+  </footer>
 
-      <section class="card" aria-labelledby="supportHeading">
-        <h2 id="supportHeading">Support, resources, and help</h2>
-        <div class="resource-row">
-          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/help/" target="_blank" rel="noopener" aria-label="Help">Help</a>
-          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">Recommended Audio Books</a>
-          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us">Support Us</a>
-          <a class="link-btn btn-soft" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">Explore More Free Tools</a>
-        </div>
-      </section>
+</div>
 
-      <section class="card safety" aria-label="Safety note">
-        <p><strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.</p>
-        <a class="link-btn helpline-btn" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find an external Helpline">Find an external Helpline</a>
-      </section>
-    </main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <footer class="small-note" style="text-align:center; padding: 6px 0;">
-      © Emotional Intelligence Developer · <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a>
-    </footer>
-  </div>
+<script>
+(function () {
+  'use strict';
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  const STORAGE_KEY = 'ppRecoveryV5';
+  const STORAGE_PREF = 'ppRecoveryPrefV5';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
 
-  <script>
-    (function () {
-      const STORAGE_KEY = "pp_recovery_reflection_v2";
-      const STORAGE_PREF_KEY = "pp_recovery_save_pref_v2";
-      const LOGO_URL = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
-      const SITE_URL = "https://emotionalintelligencedeveloper.com/";
-      const TOOLS_URL = "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/";
-      const BOOKS_URL = "https://emotionalintelligencedeveloper.com/recommended-books/";
-      const SUPPORT_URL = "https://emotionalintelligencedeveloper.com/support-this-website/";
+  const $ = id => document.getElementById(id);
 
-      const refs = {
-        userName: document.getElementById("userName"),
-        intensity: document.getElementById("intensity"),
-        intensityValue: document.getElementById("intensityValue"),
-        q1: document.getElementById("q1"),
-        q2: document.getElementById("q2"),
-        q3: document.getElementById("q3"),
-        q4: document.getElementById("q4"),
-        q5: document.getElementById("q5"),
-        buildBtn: document.getElementById("buildBtn"),
-        downloadBtn: document.getElementById("downloadBtn"),
-        resetBtn: document.getElementById("resetBtn"),
-        resultBox: document.getElementById("resultBox"),
-        resultText: document.getElementById("resultText"),
-        planList: document.getElementById("planList"),
-        resultHint: document.getElementById("resultHint"),
-        copyLinkBtn: document.getElementById("copyLinkBtn"),
-        toast: document.getElementById("toast"),
-        validationMsg: document.getElementById("validationMsg"),
-        saveToggle: document.getElementById("saveToggle"),
-        clearSavedBtn: document.getElementById("clearSavedBtn"),
-        waShare: document.getElementById("waShare"),
-        fbShare: document.getElementById("fbShare"),
-        xShare: document.getElementById("xShare")
-      };
+  const intensityMeanings = [
+    'Very low — a quiet background hum right now.',
+    'Low — you are noticing it but managing well.',
+    'Mild — it surfaces in certain situations.',
+    'Moderate — starting to affect your choices.',
+    'Noticeable — showing up regularly.',
+    'You are balancing pressure and care for others — and your needs matter too.',
+    'Significant — people-pleasing is costing you real energy.',
+    'Quite strong — it is shaping most of your decisions.',
+    'Very strong — you are carrying a lot right now.',
+    'Intense — gentle steps matter most.',
+    'Overwhelming — please be very gentle with yourself today.'
+  ];
 
-      const state = { selectedFear: "", built: false, lastOutput: null };
+  let selectedFear = '';
+  let lastOutput = null;
+  let toastTimer;
 
-      function showToast(message) {
-        refs.toast.textContent = message;
-        refs.toast.classList.add("show");
-        setTimeout(() => refs.toast.classList.remove("show"), 1700);
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // Intensity slider
+  $('intensitySlider').addEventListener('input', () => {
+    updateIntensity();
+    saveIfEnabled();
+  });
+
+  function updateIntensity() {
+    const v = parseInt($('intensitySlider').value, 10);
+    $('intensityVal').textContent = v + '/10';
+    $('intensityMeaning').textContent = intensityMeanings[v] || '';
+  }
+
+  // Fear pills — single select
+  document.querySelectorAll('.pill[data-fear]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const wasPressed = pill.getAttribute('aria-pressed') === 'true';
+      document.querySelectorAll('.pill[data-fear]').forEach(p => p.setAttribute('aria-pressed', 'false'));
+      if (!wasPressed) {
+        pill.setAttribute('aria-pressed', 'true');
+        selectedFear = pill.dataset.fear;
+      } else {
+        selectedFear = '';
       }
+      saveIfEnabled();
+    });
+  });
 
-      function escapeText(text) {
-        return (text || "").toString().trim();
-      }
+  function getData() {
+    return {
+      name: $('userName').value.trim(),
+      intensity: parseInt($('intensitySlider').value, 10),
+      q1: $('q1').value.trim(),
+      q2: $('q2').value.trim(),
+      q3: $('q3').value.trim(),
+      q4: $('q4').value.trim(),
+      q5: $('q5').value.trim(),
+      fear: selectedFear,
+      saveOn: $('saveToggle').checked
+    };
+  }
 
-      function updateIntensityLabel() {
-        refs.intensityValue.textContent = `${refs.intensity.value}/10`;
-      }
+  function validate(d) {
+    const errEl = $('validationMsg');
+    if (!d.q1 && !d.q3 && !d.q4 && !d.q5) {
+      errEl.textContent = 'Please add at least one reflection response before building your output.';
+      errEl.className = 'validation-msg error';
+      return false;
+    }
+    if (!d.q5) {
+      errEl.textContent = 'A boundary sentence (question 5) helps this tool give its most useful output. Please add one.';
+      errEl.className = 'validation-msg error';
+      return false;
+    }
+    errEl.textContent = 'Your reflection is ready.';
+    errEl.className = 'validation-msg ok';
+    return true;
+  }
 
-      function updateShareLinks() {
-        const url = encodeURIComponent(window.location.href);
-        const msg = encodeURIComponent("I found this gentle People-Pleaser Recovery Tool. You might find it helpful:");
-        refs.waShare.href = `https://wa.me/?text=${msg}%20${url}`;
-        refs.fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        refs.xShare.href = `https://twitter.com/intent/tweet?text=${msg}&url=${url}`;
-      }
+  function getIntensityContext(v) {
+    if (v >= 8) return 'You are carrying a lot of pressure right now. Gentle, small steps matter most — and you deserve care too.';
+    if (v >= 5) return 'You are balancing real pressure alongside care for others. Your needs belong in that balance.';
+    return 'You have a steadier moment right now — a good time to practise and strengthen clearer boundaries.';
+  }
 
-      function selectedFearFallback() {
-        return state.selectedFear || "I might upset someone";
-      }
+  function getFearResponse(fear) {
+    if (!fear) return 'You are noticing the pull toward keeping everyone comfortable — that awareness is where change begins.';
+    if (fear === 'They might reject me') return 'The fear of rejection is one of the most powerful drivers of people-pleasing. Real belonging does not require you to shrink yourself.';
+    if (fear === 'They might get angry') return 'When anger feels threatening, saying no can feel dangerous. But other people\'s emotional reactions are not your responsibility to manage at the cost of your own wellbeing.';
+    if (fear === 'I will feel guilty') return 'Guilt from saying no is often a sign that your values and your conditioning are in conflict — not that you have done something wrong.';
+    if (fear === 'I will seem selfish') return 'Protecting your energy and time is not selfishness. It is the foundation of being able to show up genuinely for others at all.';
+    return 'That fear is worth sitting with — it is telling you something important about where your boundaries need the most support.';
+  }
 
-      function collectData() {
-        return {
-          name: escapeText(refs.userName.value),
-          intensity: Number(refs.intensity.value),
-          q1: escapeText(refs.q1.value),
-          q2: escapeText(refs.q2.value),
-          q3: escapeText(refs.q3.value),
-          q4: escapeText(refs.q4.value),
-          q5: escapeText(refs.q5.value),
-          fear: selectedFearFallback()
-        };
-      }
+  function buildResult(d) {
+    const intensityCtx = getIntensityContext(d.intensity);
+    const fearResponse = getFearResponse(d.fear);
 
-      function validateInput(data) {
-        if (!data.q1 && !data.q2 && !data.q3 && !data.q4 && !data.q5) {
-          refs.validationMsg.textContent = "Please add at least one reflection response before building your output.";
-          refs.validationMsg.className = "inline-msg error";
-          return false;
-        }
-        if (!data.q5) {
-          refs.validationMsg.textContent = "A boundary sentence helps this tool give useful output. Add one line in question 5.";
-          refs.validationMsg.className = "inline-msg error";
-          return false;
-        }
-        refs.validationMsg.textContent = "Looks good — your reflection is ready.";
-        refs.validationMsg.className = "inline-msg ok";
-        return true;
-      }
+    // Summary HTML
+    let summaryHtml = '<div class="result-title">Your reflection summary</div>';
 
-      function buildReflection() {
-        const data = collectData();
-        if (!validateInput(data)) {
-          refs.resultBox.classList.remove("show");
-          refs.resultHint.textContent = "Add a little more detail, then build your reflection.";
-          state.built = false;
-          state.lastOutput = null;
-          return null;
-        }
+    const rows = [
+      ['Pressure level', d.intensity + '/10 — ' + intensityCtx],
+      ['Where you say yes', d.q1 || '—'],
+      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ' — ' + d.q2 : '')],
+      ['What this fear means', fearResponse],
+      ['Impact on mood and energy', d.q3 || '—'],
+      ['Needs you are putting aside', d.q4 || '—'],
+      ['Your boundary sentence', d.q5]
+    ];
 
-        const intensityLine =
-          data.intensity >= 8 ? "You are carrying a lot of pressure right now, so gentle steps matter most." :
-          data.intensity >= 5 ? "You are balancing pressure and care for others — and your needs matter too." :
-          "You have a steadier moment right now to strengthen clear boundaries.";
+    rows.forEach(([label, value]) => {
+      summaryHtml += '<div class="result-row">';
+      summaryHtml += '<div class="result-row-label">' + label + '</div>';
+      summaryHtml += '<div class="result-row-value">' + value + '</div>';
+      summaryHtml += '</div>';
+    });
 
-        const reflection = `${intensityLine} Your pattern shows up around: ${data.q1 || "noted quietly"}. ` +
-          `A key fear is: ${data.fear}${data.q2 ? ` (${data.q2})` : ""}. ` +
-          `Current impact: ${data.q3 || "you are still noticing this"}. ` +
-          `Needs being set aside: ${data.q4 || "to be explored"}. ` +
-          `Boundary to practice: “${data.q5}”.`;
+    $('resultSummary').innerHTML = summaryHtml;
 
-        const plan = [
-          "Pause before replying. Give yourself a moment before saying yes.",
-          `Use your boundary sentence once this week: “${data.q5}”.`,
-          "After holding your boundary, do one caring action for yourself (rest, walk, journal, or breathing)."
-        ];
+    // Action plan
+    const actions = [
+      'Pause before replying. Give yourself a breath or a moment before automatically saying yes. You are allowed to say "let me get back to you."',
+      'Use your boundary sentence once this week: "' + d.q5 + '" — say it out loud to yourself first if that helps.',
+      'After holding your boundary, do one kind thing for yourself — rest, a walk, journaling, or slow breathing. You earned it.'
+    ];
 
-        refs.resultText.textContent = reflection;
-        refs.planList.innerHTML = "";
-        plan.forEach((item) => {
-          const li = document.createElement("li");
-          li.textContent = item;
-          refs.planList.appendChild(li);
-        });
+    let actionHtml = '<div class="action-plan-title">Your 3-step action plan this week</div>';
+    actions.forEach((text, i) => {
+      actionHtml += '<div class="action-item">';
+      actionHtml += '<div class="action-num">' + (i + 1) + '</div>';
+      actionHtml += '<div class="action-text">' + text + '</div>';
+      actionHtml += '</div>';
+    });
 
-        refs.resultBox.classList.add("show");
-        refs.resultHint.textContent = "Your reflection is ready. You can share, download PDF, or reset.";
+    $('actionPlan').innerHTML = actionHtml;
 
-        state.built = true;
-        state.lastOutput = { data, reflection, plan };
+    $('resultClosing').textContent = 'Recovery from people-pleasing is not about becoming cold or uncaring. It is about learning to include yourself in the people you care for.';
 
-        persistIfEnabled();
-        return state.lastOutput;
-      }
+    const box = $('resultBox');
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      function persistIfEnabled() {
-        const allowSave = refs.saveToggle.checked;
-        localStorage.setItem(STORAGE_PREF_KEY, allowSave ? "1" : "0");
-        if (!allowSave) {
-          localStorage.removeItem(STORAGE_KEY);
-          return;
-        }
-        const payload = {
-          ...collectData(),
-          selectedFear: state.selectedFear,
-          built: state.built,
-          output: state.lastOutput
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      }
+    lastOutput = { d, intensityCtx, fearResponse, actions };
+    return lastOutput;
+  }
 
-      function restoreIfEnabled() {
-        const pref = localStorage.getItem(STORAGE_PREF_KEY) === "1";
-        refs.saveToggle.checked = pref;
-        if (!pref) return;
+  function buildReflection() {
+    const d = getData();
+    if (!validate(d)) return null;
+    const out = buildResult(d);
+    saveIfEnabled();
+    return out;
+  }
 
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
+  function saveIfEnabled() {
+    try {
+      const pref = $('saveToggle').checked;
+      localStorage.setItem(STORAGE_PREF, pref ? '1' : '0');
+      if (!pref) { localStorage.removeItem(STORAGE_KEY); return; }
+      const d = getData();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...d, selectedFear, built: !!lastOutput }));
+    } catch(_) {}
+  }
 
-        try {
-          const saved = JSON.parse(raw);
-          refs.userName.value = saved.name || "";
-          refs.intensity.value = Number.isFinite(saved.intensity) ? saved.intensity : 5;
-          refs.q1.value = saved.q1 || "";
-          refs.q2.value = saved.q2 || "";
-          refs.q3.value = saved.q3 || "";
-          refs.q4.value = saved.q4 || "";
-          refs.q5.value = saved.q5 || "";
-          state.selectedFear = saved.selectedFear || "";
-
-          document.querySelectorAll(".pill[data-fear]").forEach((pill) => {
-            const isActive = pill.getAttribute("data-fear") === state.selectedFear;
-            pill.setAttribute("aria-pressed", isActive ? "true" : "false");
-          });
-
-          updateIntensityLabel();
-
-          if (saved.built && saved.output && saved.output.reflection) {
-            state.built = true;
-            state.lastOutput = saved.output;
-            refs.resultText.textContent = saved.output.reflection;
-            refs.planList.innerHTML = "";
-            (saved.output.plan || []).forEach((item) => {
-              const li = document.createElement("li");
-              li.textContent = item;
-              refs.planList.appendChild(li);
-            });
-            refs.resultBox.classList.add("show");
-          }
-        } catch (error) {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      }
-
-      function clearSavedReflection() {
-        localStorage.removeItem(STORAGE_KEY);
-        showToast("Saved reflection cleared");
-      }
-
-      function resetAll() {
-        refs.userName.value = "";
-        refs.intensity.value = 5;
-        refs.q1.value = "";
-        refs.q2.value = "";
-        refs.q3.value = "";
-        refs.q4.value = "";
-        refs.q5.value = "";
-        refs.validationMsg.textContent = "";
-        refs.resultText.textContent = "";
-        refs.planList.innerHTML = "";
-        refs.resultBox.classList.remove("show");
-        refs.resultHint.textContent = "Complete your reflection, then choose “Build my reflection”.";
-        state.selectedFear = "";
-        state.built = false;
-        state.lastOutput = null;
-
-        document.querySelectorAll(".pill[data-fear]").forEach((pill) => pill.setAttribute("aria-pressed", "false"));
-        updateIntensityLabel();
-        persistIfEnabled();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      async function copyLink() {
-        const url = window.location.href;
-        try {
-          await navigator.clipboard.writeText(url);
-          showToast("Link copied");
-        } catch (error) {
-          const ta = document.createElement("textarea");
-          ta.value = url;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          document.body.removeChild(ta);
-          showToast("Link copied");
-        }
-      }
-
-      async function logoAsDataURL() {
-        const response = await fetch(LOGO_URL, { mode: "cors" });
-        if (!response.ok) throw new Error("Logo fetch failed");
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = () => reject(new Error("Failed to process logo"));
-          reader.readAsDataURL(blob);
-        });
-      }
-
-      async function generatePDF() {
-        const output = state.lastOutput || buildReflection();
-        if (!output || !output.reflection || !output.reflection.trim()) {
-          showToast("Please build your reflection first so the PDF is not blank.");
-          return;
-        }
-
-        const jspdfObj = window.jspdf;
-        if (!jspdfObj || !jspdfObj.jsPDF) {
-          showToast("PDF library did not load. Please refresh and try again.");
-          return;
-        }
-
-        let logoData;
-        try {
-          logoData = await logoAsDataURL();
-        } catch (error) {
-          showToast("Logo could not load for PDF right now. Please try again.");
-          return;
-        }
-
-        const { jsPDF } = jspdfObj;
-        const doc = new jsPDF({ unit: "pt", format: "a4" });
-        const pageW = doc.internal.pageSize.getWidth();
-        const pageH = doc.internal.pageSize.getHeight();
-        const margin = 34;
-        const usableW = pageW - margin * 2;
-        const leftW = usableW * 0.63;
-        const rightW = usableW * 0.33;
-        const colGap = usableW * 0.04;
-
-        let y = 28;
-        doc.addImage(logoData, "JPEG", margin, y, 56, 56);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(15);
-        doc.text("People-Pleaser Recovery Tool", margin + 66, y + 20);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, margin + 66, y + 36);
-        if (output.data.name) {
-          doc.text(`Name: ${output.data.name}`, margin + 66, y + 50);
-        }
-
-        y = 96;
-        doc.setDrawColor(200);
-        doc.line(margin, y, pageW - margin, y);
-
-        const leftX = margin;
-        const rightX = margin + leftW + colGap;
-        let ly = y + 16;
-        let ry = y + 16;
-
-        function writeWrapped(x, startY, text, size, maxWidth, lineHeight, bold) {
-          doc.setFont("helvetica", bold ? "bold" : "normal");
-          doc.setFontSize(size);
-          const lines = doc.splitTextToSize(text, maxWidth);
-          lines.forEach((line) => {
-            doc.text(line, x, startY);
-            startY += lineHeight;
-          });
-          return startY;
-        }
-
-        ly = writeWrapped(leftX, ly, "Reflection summary", 12, leftW, 14, true);
-        ly = writeWrapped(leftX, ly + 2, output.reflection, 10, leftW, 12, false);
-
-        ly += 8;
-        ly = writeWrapped(leftX, ly, "Action plan", 12, leftW, 14, true);
-        output.plan.forEach((step, index) => {
-          ly = writeWrapped(leftX, ly + 2, `${index + 1}. ${step}`, 10, leftW, 12, false);
-        });
-
-        ly += 6;
-        const answers = [
-          `1) ${output.data.q1 || "—"}`,
-          `2) ${output.data.fear}${output.data.q2 ? ` - ${output.data.q2}` : ""}`,
-          `3) ${output.data.q3 || "—"}`,
-          `4) ${output.data.q4 || "—"}`,
-          `Boundary: ${output.data.q5 || "—"}`,
-          `Intensity: ${output.data.intensity}/10`
-        ];
-        ly = writeWrapped(leftX, ly, "Your responses", 12, leftW, 14, true);
-        answers.forEach((item) => {
-          ly = writeWrapped(leftX, ly + 2, item, 9.5, leftW, 11.5, false);
-        });
-
-        ry = writeWrapped(rightX, ry, "Resources", 12, rightW, 14, true);
-        const resources = [
-          SITE_URL,
-          TOOLS_URL,
-          BOOKS_URL,
-          SUPPORT_URL
-        ];
-        resources.forEach((r) => {
-          ry = writeWrapped(rightX, ry + 3, r, 9.5, rightW, 11.5, false);
-        });
-
-        doc.setDrawColor(215);
-        doc.line(rightX - colGap / 2, y + 10, rightX - colGap / 2, pageH - 48);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text("https://emotionalintelligencedeveloper.com/", margin, pageH - 20);
-
-        doc.save("people-pleaser-recovery-summary.pdf");
-      }
-
-      document.querySelectorAll(".pill[data-fear]").forEach((pill) => {
-        pill.addEventListener("click", () => {
-          document.querySelectorAll(".pill[data-fear]").forEach((el) => el.setAttribute("aria-pressed", "false"));
-          pill.setAttribute("aria-pressed", "true");
-          state.selectedFear = pill.getAttribute("data-fear") || "";
-          persistIfEnabled();
-        });
+  function loadLocal() {
+    try {
+      const pref = localStorage.getItem(STORAGE_PREF) === '1';
+      $('saveToggle').checked = pref;
+      if (!pref) return;
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      $('userName').value = d.name || '';
+      $('intensitySlider').value = d.intensity !== undefined ? d.intensity : 5;
+      $('q1').value = d.q1 || '';
+      $('q2').value = d.q2 || '';
+      $('q3').value = d.q3 || '';
+      $('q4').value = d.q4 || '';
+      $('q5').value = d.q5 || '';
+      selectedFear = d.selectedFear || d.fear || '';
+      document.querySelectorAll('.pill[data-fear]').forEach(p => {
+        p.setAttribute('aria-pressed', p.dataset.fear === selectedFear ? 'true' : 'false');
       });
+      updateIntensity();
+      if (d.built && d.q5) buildResult(d);
+    } catch(_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    }
+  }
 
-      [refs.userName, refs.intensity, refs.q1, refs.q2, refs.q3, refs.q4, refs.q5].forEach((el) => {
-        el.addEventListener("input", () => {
-          if (el === refs.intensity) updateIntensityLabel();
-          persistIfEnabled();
-        });
-      });
+  function clearSaved() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    showToast('Saved reflection cleared.');
+  }
 
-      refs.saveToggle.addEventListener("change", persistIfEnabled);
-      refs.clearSavedBtn.addEventListener("click", clearSavedReflection);
-      refs.buildBtn.addEventListener("click", buildReflection);
-      refs.downloadBtn.addEventListener("click", generatePDF);
-      refs.resetBtn.addEventListener("click", resetAll);
-      refs.copyLinkBtn.addEventListener("click", copyLink);
+  function resetTool() {
+    ['userName','q1','q2','q3','q4','q5'].forEach(id => { $(id).value = ''; });
+    $('intensitySlider').value = 5;
+    $('saveToggle').checked = false;
+    selectedFear = '';
+    lastOutput = null;
+    document.querySelectorAll('.pill[data-fear]').forEach(p => p.setAttribute('aria-pressed', 'false'));
+    $('validationMsg').className = 'validation-msg';
+    $('resultBox').style.display = 'none';
+    updateIntensity();
+    try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(STORAGE_PREF); } catch(_) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Tool reset.');
+  }
 
-      updateIntensityLabel();
-      updateShareLinks();
-      restoreIfEnabled();
-    })();
-  </script>
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This free People-Pleaser Recovery Tool helped me notice my patterns and find my words: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+
+    const out = lastOutput || buildReflection();
+    if (!out) return;
+
+    showToast('Preparing your PDF…');
+    const { d, intensityCtx, fearResponse, actions } = out;
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(237, 243, 232);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 40, 24);
+    doc.text('People-Pleaser Recovery Reflection', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(80, 96, 80);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    if (d.name) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 40, 24);
+      doc.text('Name: ' + d.name, margin, y);
+      y += 18;
+    }
+
+    // Reflection rows
+    const rows = [
+      ['Pressure level', d.intensity + '/10 — ' + intensityCtx],
+      ['Where you say yes', d.q1 || 'Not provided'],
+      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ' — ' + d.q2 : '')],
+      ['What this fear means', fearResponse],
+      ['Impact on mood and energy', d.q3 || 'Not provided'],
+      ['Needs being put aside', d.q4 || 'Not provided'],
+      ['Boundary sentence to practise', d.q5]
+    ];
+
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(237, 243, 232);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(90, 122, 64);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 40, 24);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Action plan
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    doc.setFillColor(247, 239, 232);
+    const actLines = actions.map((a, i) => (i+1) + '. ' + a).join('\n');
+    const allActLines = doc.splitTextToSize(actLines, pageW - margin * 2 - 22);
+    const actH = allActLines.length * 12 + 28;
+    doc.roundedRect(margin, y, pageW - margin * 2, actH, 4, 4, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(138, 90, 58);
+    doc.text('YOUR 3-STEP ACTION PLAN THIS WEEK', margin + 10, y + 14);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(30, 40, 24);
+    doc.text(allActLines, margin + 10, y + 26);
+    y += actH + 14;
+
+    // Closing
+    if (y > pageH - 60) { doc.addPage(); y = margin; }
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.3);
+    doc.setTextColor(90, 122, 64);
+    const closingLines = doc.splitTextToSize('Recovery from people-pleasing is not about becoming cold or uncaring. It is about learning to include yourself in the people you care for.', pageW - margin * 2);
+    doc.text(closingLines, margin, y);
+    y += closingLines.length * 12 + 16;
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(184, 208, 160);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(90, 122, 64);
+    doc.text('Understanding people-pleasing — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['What people-pleasing really is',
+       'People-pleasing is not simply being kind — it is a pattern of prioritising others\' comfort, approval, and emotional states over your own needs, values, and wellbeing. Psychologist Harriet Braiker, who coined the term "disease to please," identified it as a compulsive need for approval that develops as a coping mechanism, often rooted in childhood experiences where love or safety felt conditional on good behaviour.'],
+      ['The neuroscience of approval-seeking',
+       'Research in social neuroscience shows that social approval activates the same reward pathways in the brain as food and money. When we receive approval, dopamine is released. When we face disapproval or conflict, the brain\'s threat-detection systems activate — which is why saying no can feel physically uncomfortable. Understanding this helps de-shame the pattern: it is not weakness, it is a learned neurological response.'],
+      ['The fawn response — trauma\'s connection to people-pleasing',
+       'Therapist Pete Walker introduced the concept of the "fawn" trauma response alongside fight, flight, and freeze. Fawning describes the tendency to manage perceived threats through appeasement — agreeing, complying, and accommodating to avoid conflict or harm. Research in trauma-informed care recognises people-pleasing as a survival strategy that often develops in environments where conflict was unsafe. Recovery involves building tolerance for discomfort, not eliminating care for others.'],
+      ['Why guilt after saying no is not evidence of wrongdoing',
+       'A consistent finding in cognitive behavioural therapy research is that guilt is not a reliable moral compass — it is a conditioned emotional response. People who have been rewarded for compliance and punished for assertiveness learn to associate boundaries with guilt. The guilt that arises when you say no is often the activation of this old conditioning, not evidence that you have done something wrong. It fades with repetition and self-compassion.'],
+      ['How boundaries actually improve relationships',
+       'Counter-intuitive research from relationship psychology, including studies by John Gottman, suggests that the ability to maintain personal boundaries is positively correlated with relationship satisfaction — not negatively. Clear, respectful boundaries increase trust, reduce resentment, and allow for more genuine connection. People-pleasing, by contrast, creates hidden resentment and erodes authenticity over time.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(90, 122, 64);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 40, 24);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(184, 208, 160);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 122, 64);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 40, 24);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(184, 208, 160);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 160, 138);
+    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
+
+    doc.save('people-pleaser-recovery-reflection.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  // Input listeners
+  ['userName','q1','q2','q3','q4','q5'].forEach(id => {
+    $(id).addEventListener('input', saveIfEnabled);
+  });
+
+  $('saveToggle').addEventListener('change', () => {
+    saveIfEnabled();
+    showToast($('saveToggle').checked ? 'Save enabled.' : 'Save off.');
+  });
+
+  $('buildBtn').addEventListener('click', buildReflection);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('clearSavedBtn').addEventListener('click', clearSaved);
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  updateIntensity();
+  updateShareLinks();
+  loadLocal();
+}());
+</script>
 </body>
 </html>

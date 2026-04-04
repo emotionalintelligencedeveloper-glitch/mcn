@@ -3,653 +3,1036 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Courage in the Face of Fear Tool | Emotional Intelligence Developer</title>
+  <title>Courage in the Face of Fear | Emotional Intelligence Developer</title>
   <style>
     :root {
-      --bg1: #e9f8ff;
-      --bg2: #f7f2ff;
-      --bg3: #fff9ec;
-      --text: #1b2740;
-      --muted: #4f6186;
-      --line: #c8d7ff;
-      --card: #fff;
-      --focus: #0b57d0;
-      --shadow: 0 10px 24px rgba(92, 123, 220, 0.18);
+      --brand: #5b8fa8;
+      --brand-light: #e8f4f9;
+      --brand-mid: #c5dfe9;
+      --accent: #7dbea0;
+      --accent-light: #e8f5ef;
+      --warm: #f7f3ee;
+      --card: #ffffff;
+      --text: #1e2a35;
+      --muted: #5a6a76;
+      --hint: #8a9aa6;
+      --border: #dde6eb;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --support-light: #fdf0e8;
+      --courage: #7b6fa0;
+      --courage-light: #f0eef8;
+      --courage-mid: #d0c9e8;
     }
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--warm);
       color: var(--text);
-      font-family: "Trebuchet MS", "Comic Sans MS", system-ui, -apple-system, Segoe UI, sans-serif;
-      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+      line-height: 1.65;
+      font-size: 16px;
     }
-    a, button, textarea, input, select { font: inherit; }
-    .container { width: min(1000px, 96vw); margin: 0 auto; padding: 0.8rem 0.35rem 2rem; }
-    .card {
-      margin-top: 0.9rem;
-      padding: 1rem;
-      border-radius: 22px;
-      border: 3px solid var(--line);
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* HEADER */
+    .header {
       background: var(--card);
-      box-shadow: var(--shadow);
-    }
-    h1, h2, h3 { margin: 0.25rem 0 0.6rem; line-height: 1.25; }
-    h1 { font-size: clamp(1.32rem, 3.4vw, 2rem); }
-    h2 { font-size: clamp(1.08rem, 2.7vw, 1.35rem); }
-    h3 { font-size: clamp(1rem, 2.4vw, 1.1rem); }
-    p { margin: 0.2rem 0 0.75rem; }
-
-    .hero { background: linear-gradient(150deg, #fff 0%, #edf4ff 63%, #fff5e6 100%); }
-    .hero-top { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem; align-items: center; }
-    .logo {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      border: 3px solid #95b5ff;
-      object-fit: cover;
-      background: #fff;
-      box-shadow: 0 5px 14px rgba(31, 58, 121, .2);
-    }
-    .intro { color: var(--muted); max-width: 72ch; font-size: clamp(0.96rem, 2.4vw, 1.05rem); }
-
-    .doodles { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.45rem; }
-    .doodle {
-      width: 58px; height: 58px;
-      border: 2px dashed #8baeff;
-      border-radius: 14px;
-      display: grid; place-items: center;
-      background: #fff;
-    }
-    .comic-note {
-      margin-top: 0.7rem;
-      display: inline-block;
-      padding: 0.62rem 0.82rem;
-      background: #fff6dc;
-      border: 2px solid #ffce61;
-      border-radius: 14px;
-      font-weight: 800;
-    }
-
-    .row { display: grid; gap: 0.8rem; grid-template-columns: 1fr; }
-    .field { margin-bottom: 0.86rem; }
-    label { font-weight: 800; display: block; margin-bottom: 0.35rem; }
-    textarea, input[type="text"], select {
-      width: 100%;
-      border: 2px solid #b8caf5;
-      border-radius: 14px;
-      background: #fff;
-      color: var(--text);
-      padding: 0.72rem;
-    }
-    textarea { min-height: 84px; resize: vertical; }
-
-    .toggle-wrap {
-      display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
-      border: 2px solid #d3e1ff; border-radius: 12px; background: #f2f8ff; padding: 0.52rem;
-    }
-
-    .btn-grid, .share-grid, .bottom-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.55rem;
-      margin-top: 0.8rem;
-    }
-    .btn {
-      text-decoration: none;
-      border-radius: 999px;
-      border: 2px solid transparent;
-      font-weight: 800;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
       text-align: center;
-      padding: 0.62rem 0.85rem;
-      color: #212a3f;
-      background: #ececec;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.12);
-      cursor: pointer;
-      transition: transform .14s ease;
     }
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
-    .b-primary { color: #fff; background: linear-gradient(90deg, #6e9dff, #7f6dff); }
-    .b-mint { background: linear-gradient(90deg, #64ead5, #70d4ff); }
-    .b-sun { background: linear-gradient(90deg, #ffe47b, #ffc162); }
-    .b-blue { background: linear-gradient(90deg, #9fcbff, #8dabff); }
-    .b-pink { background: linear-gradient(90deg, #ff9eb8, #ffba93); }
-    .b-lav { background: linear-gradient(90deg, #d8c7ff, #b8d1ff); }
 
-    .error { min-height: 1.05rem; color: #9d1313; font-weight: 700; }
-    .result-box {
-      min-height: 88px;
-      border: 2px solid #a7ecd5;
-      background: #effff8;
-      border-radius: 14px;
-      padding: 0.86rem;
-      white-space: pre-wrap;
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .guidance-grid { display: grid; gap: 0.66rem; grid-template-columns: 1fr; margin-top: 0.7rem; }
-    .guidance-item {
-      background: #f2f7ff;
-      border: 2px solid #cddcff;
+
+    .logo {
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
-      padding: 0.62rem;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
     }
 
-    .safety {
-      background: #fff1f1;
-      border: 2px solid #ffc4c4;
-      border-radius: 14px;
-      padding: 0.75rem;
-      margin-top: 0.8rem;
+    .brand-name {
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
     }
 
-    .toast {
-      position: fixed;
-      left: 50%; bottom: 0.95rem;
-      transform: translateX(-50%);
-      background: #1c2740;
+    h1 {
+      font-family: "Georgia", serif;
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--warm);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .courage-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--courage-light);
+      border: 1px solid var(--courage-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--courage);
+      font-style: italic;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: "Georgia", serif;
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* QUESTION */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
+      font-family: "Georgia", serif;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    /* PACE SELECTOR */
+    .pace-card {
+      border: 1px solid var(--courage-mid);
+      background: var(--courage-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .pace-label {
+      font-size: 15px;
+      font-family: "Georgia", serif;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .pace-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .pace-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .pace-option input[type="radio"] { display: none; }
+
+    .pace-option label {
+      display: block;
+      text-align: center;
+      padding: 10px 6px;
+      border: 1.5px solid var(--courage-mid);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: "Georgia", serif;
+      line-height: 1.4;
+    }
+
+    .pace-option input[type="radio"]:checked + label {
+      background: var(--courage);
+      border-color: var(--courage);
       color: #fff;
-      border-radius: 999px;
-      padding: 0.52rem 0.9rem;
-      font-size: 0.92rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .18s ease;
-      z-index: 30;
-    }
-    .toast.show { opacity: 1; }
-
-    footer { text-align: center; margin-top: 0.75rem; color: var(--muted); font-size: 0.86rem; }
-
-    .btn:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
     }
 
-    @media (min-width: 760px) {
-      .card { padding: 1.2rem; }
-      .row.two { grid-template-columns: 1fr 1fr; }
+    .pace-option label:hover { border-color: var(--courage); }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* NAME FIELD */
+    .name-field {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .name-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* ERROR */
+    .error-msg {
+      display: none;
+      background: #fdf0f0;
+      border: 1px solid #e8c0c0;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 14px;
+      color: #b94040;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .result-summary {
+      background: var(--accent-light);
+      border: 1px solid #a8d5bc;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 14px;
+      white-space: pre-wrap;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .result-summary-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #3a7a58;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    /* GUIDANCE CARDS */
+    .guidance-title {
+      font-family: "Georgia", serif;
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--courage);
+      margin-bottom: 12px;
+    }
+
+    .guidance-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 540px) {
       .guidance-grid { grid-template-columns: 1fr 1fr; }
     }
-    @media (max-width: 360px) {
-      .logo { width: 72px; height: 72px; }
-      .btn { font-size: .91rem; }
+
+    .guidance-card {
+      background: var(--courage-light);
+      border: 1px solid var(--courage-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .guidance-card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--courage);
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .guidance-card-body {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* BUTTONS */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-courage { background: var(--courage); color: #fff; border-color: var(--courage); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .pace-options { grid-template-columns: 1fr; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { text-decoration: underline; }
+
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <main class="container" aria-label="Courage in the Face of Fear tool">
-    <header class="card hero">
-      <div class="hero-top">
-        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-        <div>
-          <h1>🌟 Courage in the Face of Fear</h1>
-          <p class="intro">Use this guided reflection to break fear into smaller parts and create a practical plan. This page supports reflection and wellbeing check-ins only.</p>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Courage in the Face of Fear</h1>
+    <p class="tagline">A guided reflection to help you understand your fear, find your strengths, and take one kind step forward.</p>
+    <span class="disclaimer">Reflection and wellbeing support only — not a diagnosis or medical tool</span>
+    <p class="courage-note">Fear can be loud. Your next step can still be clear.</p>
+  </header>
+
+  <!-- REFLECTION CARD -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Your reflection</p>
+
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my reflection on this device
+    </label>
+
+    <!-- NAME -->
+    <div class="name-field">
+      <label for="nameInput">Your name (optional — shown in PDF)</label>
+      <input type="text" id="nameInput" maxlength="80" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+    </div>
+
+    <!-- Q1 -->
+    <div class="question">
+      <label class="question-label" for="fearInput">What fear feels strongest right now?</label>
+      <p class="question-hint">Fear of failing, rejection, conflict, uncertainty — whatever feels most present for you.</p>
+      <textarea id="fearInput" maxlength="600" placeholder="Write honestly — this space is just for you…" aria-label="Strongest fear"></textarea>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question">
+      <label class="question-label" for="triggerInput">What usually triggers this fear?</label>
+      <p class="question-hint">Situations, people, deadlines, or thoughts that bring it to the surface.</p>
+      <textarea id="triggerInput" maxlength="600" placeholder="What tends to set it off?" aria-label="Fear triggers"></textarea>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question">
+      <label class="question-label" for="impactInput">How is this fear affecting your decisions or confidence?</label>
+      <p class="question-hint">How does it change your actions, energy, or the choices you make?</p>
+      <textarea id="impactInput" maxlength="600" placeholder="How does it show up in your daily life?" aria-label="Impact of fear"></textarea>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question">
+      <label class="question-label" for="strengthInput">What strengths have helped you through hard moments before?</label>
+      <p class="question-hint">Persistence, honesty, kindness, planning, asking for support — anything that has carried you.</p>
+      <textarea id="strengthInput" maxlength="600" placeholder="You have more strength than you might realise…" aria-label="Past strengths"></textarea>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question">
+      <label class="question-label" for="supportInput">Who or what can support your next step?</label>
+      <p class="question-hint">People, routines, reminders, communities, or environments that help you feel safe enough to move.</p>
+      <textarea id="supportInput" maxlength="600" placeholder="You don't have to do this alone…" aria-label="Support resources"></textarea>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question">
+      <label class="question-label" for="courageInput">What is one small act of courage you can take in the next 24–72 hours?</label>
+      <p class="question-hint">Keep it specific, realistic, and kind to yourself.</p>
+      <textarea id="courageInput" maxlength="600" placeholder="Even the smallest step counts…" aria-label="Next courageous step"></textarea>
+    </div>
+
+    <!-- PACE -->
+    <div class="pace-card">
+      <label class="pace-label">What pace feels right for you right now?</label>
+      <p class="pace-hint">There is no wrong answer — choose what feels honest.</p>
+      <div class="pace-options">
+        <div class="pace-option">
+          <input type="radio" name="pace" id="paceGentle" value="gentle" checked />
+          <label for="paceGentle">Gentle<br><span style="font-size:11px;opacity:0.8;">Very small steps</span></label>
+        </div>
+        <div class="pace-option">
+          <input type="radio" name="pace" id="paceSteady" value="steady" />
+          <label for="paceSteady">Steady<br><span style="font-size:11px;opacity:0.8;">One clear step</span></label>
+        </div>
+        <div class="pace-option">
+          <input type="radio" name="pace" id="paceBold" value="bold" />
+          <label for="paceBold">Bold<br><span style="font-size:11px;opacity:0.8;">A stretch with support</span></label>
         </div>
       </div>
-      <div class="doodles" aria-hidden="true">
-        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="10" fill="#FFD93D"/><path d="M21 4V10M21 32V38M4 21H10M32 21H38M8.5 8.5L12.8 12.8M29.2 29.2L33.5 33.5M8.5 33.5L12.8 29.2M29.2 12.8L33.5 8.5" stroke="#F3A200" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><path d="M12 31C6 26 6 17 12 13C16 10 21 12 21 16C21 12 26 10 30 13C36 17 36 26 30 31L21 36L12 31Z" fill="#FF6B8A" stroke="#D8345F" stroke-width="2"/></svg></div>
-        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><rect x="6" y="9" width="30" height="22" rx="11" fill="#EAF2FF" stroke="#5E7CE2" stroke-width="2"/><circle cx="16" cy="20" r="2" fill="#5E7CE2"/><circle cx="26" cy="20" r="2" fill="#5E7CE2"/><path d="M15 26C16.5 28 18.7 29 21 29C23.3 29 25.5 28 27 26" stroke="#5E7CE2" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="doodle"><svg width="40" height="40" viewBox="0 0 42 42" fill="none"><path d="M7 12H35V26H18L11 32V26H7V12Z" fill="#FFF" stroke="#7A91D9" stroke-width="2"/><path d="M13 18H29M13 22H24" stroke="#7A91D9" stroke-width="2" stroke-linecap="round"/></svg></div>
-      </div>
-      <p class="comic-note">💬 Fear can be loud. Your next step can still be clear.</p>
-    </header>
+    </div>
 
-    <section class="card" aria-labelledby="promptTitle">
-      <h2 id="promptTitle">1) Guided reflection questions</h2>
-      <div class="row two">
-        <div class="field">
-          <label for="nameInput">Your name (optional, shown in PDF)</label>
-          <input id="nameInput" type="text" maxlength="80" placeholder="e.g., Alex" aria-label="Your name for PDF" />
-        </div>
-        <div class="field">
-          <label for="saveToggle">Save my reflection on this device</label>
-          <div class="toggle-wrap">
-            <input id="saveToggle" type="checkbox" aria-label="Save my reflection toggle" />
-            <span>Keep your latest responses with localStorage.</span>
-          </div>
-        </div>
-      </div>
+    <!-- ERROR -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
 
-      <div class="field">
-        <label for="fearInput">Q1. What fear feels strongest right now?</label>
-        <textarea id="fearInput" aria-label="Strongest fear" placeholder="Example: Fear of failing, rejection, conflict, uncertainty..."></textarea>
-      </div>
-      <div class="field">
-        <label for="triggerInput">Q2. What usually triggers this fear?</label>
-        <textarea id="triggerInput" aria-label="Fear triggers" placeholder="What situations, people, deadlines, or thoughts activate it?"></textarea>
-      </div>
-      <div class="field">
-        <label for="impactInput">Q3. How is this fear affecting your decisions or confidence?</label>
-        <textarea id="impactInput" aria-label="Impact of fear" placeholder="How does it change your actions, energy, or choices?"></textarea>
-      </div>
-      <div class="field">
-        <label for="strengthInput">Q4. What strengths have helped you through hard moments before?</label>
-        <textarea id="strengthInput" aria-label="Past strengths" placeholder="Examples: persistence, honesty, kindness, planning, asking for support."></textarea>
-      </div>
-      <div class="field">
-        <label for="supportInput">Q5. Who or what can support your next step?</label>
-        <textarea id="supportInput" aria-label="Support resources" placeholder="People, routines, reminders, communities, or helpful environments."></textarea>
-      </div>
-      <div class="field">
-        <label for="courageInput">Q6. What is one small act of courage you can take in the next 24–72 hours?</label>
-        <textarea id="courageInput" aria-label="Next courageous step" placeholder="Keep it specific and realistic."></textarea>
-      </div>
-      <div class="field">
-        <label for="paceSelect">Pace for your next step</label>
-        <select id="paceSelect" aria-label="Preferred pace">
-          <option value="gentle">Gentle pace (very small steps)</option>
-          <option value="steady">Steady pace (one clear step)</option>
-          <option value="bold">Bold pace (stretch step with support)</option>
-        </select>
-      </div>
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite">
+      <div class="result-summary" id="resultSummary"></div>
+      <p class="guidance-title">Your personalised guidance</p>
+      <div class="guidance-grid" id="guidanceGrid"></div>
+    </div>
 
-      <div id="errorMsg" class="error" role="status" aria-live="polite"></div>
-      <div class="btn-grid" aria-label="Action buttons">
-        <button id="buildBtn" class="btn b-primary" type="button" aria-label="Create reflection">✨ Create Reflection</button>
-        <button id="pdfBtn" class="btn b-mint" type="button" aria-label="Download PDF">📄 Download PDF</button>
-        <button id="resetBtn" class="btn b-sun" type="button" aria-label="Reset tool">🔄 Reset</button>
-      </div>
-    </section>
+    <!-- ACTIONS -->
+    <div class="section-label" style="margin-top: 18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom: 18px;">
+      <button type="button" class="btn btn-courage" id="buildBtn" aria-label="Create my reflection">Create my reflection</button>
+      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF">Download PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
 
-    <section class="card" aria-labelledby="resultTitle">
-      <h2 id="resultTitle">2) Results / Reflection output</h2>
-      <div id="resultBox" class="result-box" aria-live="polite">Complete the questions and click “Create Reflection” to see your summary and personalised guidance.</div>
-      <div id="guidanceGrid" class="guidance-grid" aria-live="polite"></div>
-    </section>
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
 
-    <section class="card" aria-labelledby="shareTitle">
-      <h2 id="shareTitle">3) Share this tool</h2>
-      <div class="share-grid">
-        <button id="copyLinkBtn" class="btn b-blue" type="button" aria-label="Copy link">🔗 Copy Link</button>
-        <a id="waShare" class="btn b-mint" target="_blank" rel="noopener" aria-label="Share on WhatsApp">🟢 WhatsApp</a>
-        <a id="fbShare" class="btn b-lav" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
-        <a id="xShare" class="btn b-pink" target="_blank" rel="noopener" aria-label="Share on X">🐦 X</a>
-      </div>
-    </section>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
-    <section class="card" aria-labelledby="resourcesTitle">
-      <h2 id="resourcesTitle">Resources and quick links</h2>
-      <div class="safety" role="note" aria-label="Safety note">
-        <strong>Safety note:</strong> This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.
-        <div style="margin-top:0.55rem;">
-          <a class="btn b-sun" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">☎️ Find a Helpline</a>
-        </div>
-      </div>
-      <div class="bottom-grid">
-        <a class="btn b-blue" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help page">🆘 Help</a>
-        <a class="btn b-lav" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
-        <a class="btn b-pink" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💖 Support us</a>
-        <a class="btn b-mint" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
-      </div>
-    </section>
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-    <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
-  </main>
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; If you feel unsafe, please reach out for support.
+    </p>
+  </footer>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    (function () {
-      'use strict';
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      const storageKey = 'courageToolReflectionV4';
-      const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-      const jsPDF = window.jspdf && window.jspdf.jsPDF;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
 
-      const els = {
-        name: document.getElementById('nameInput'),
-        saveToggle: document.getElementById('saveToggle'),
-        fear: document.getElementById('fearInput'),
-        trigger: document.getElementById('triggerInput'),
-        impact: document.getElementById('impactInput'),
-        strength: document.getElementById('strengthInput'),
-        support: document.getElementById('supportInput'),
-        courage: document.getElementById('courageInput'),
-        pace: document.getElementById('paceSelect'),
-        error: document.getElementById('errorMsg'),
-        result: document.getElementById('resultBox'),
-        guidanceGrid: document.getElementById('guidanceGrid'),
-        buildBtn: document.getElementById('buildBtn'),
-        pdfBtn: document.getElementById('pdfBtn'),
-        resetBtn: document.getElementById('resetBtn'),
-        copyLinkBtn: document.getElementById('copyLinkBtn'),
-        wa: document.getElementById('waShare'),
-        fb: document.getElementById('fbShare'),
-        x: document.getElementById('xShare'),
-        toast: document.getElementById('toast')
-      };
+  const storageKey = 'courageToolV5';
+  const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = window.jspdf && window.jspdf.jsPDF;
 
-      function showToast(message) {
-        els.toast.textContent = message;
-        els.toast.classList.add('show');
-        setTimeout(function () { els.toast.classList.remove('show'); }, 1800);
+  const $ = id => document.getElementById(id);
+
+  const fields = {
+    name: $('nameInput'),
+    save: $('saveToggle'),
+    fear: $('fearInput'),
+    trigger: $('triggerInput'),
+    impact: $('impactInput'),
+    strength: $('strengthInput'),
+    support: $('supportInput'),
+    courage: $('courageInput')
+  };
+
+  function getPace() {
+    const checked = document.querySelector('input[name="pace"]:checked');
+    return checked ? checked.value : 'gentle';
+  }
+
+  function setPace(val) {
+    const el = document.querySelector('input[name="pace"][value="' + val + '"]');
+    if (el) el.checked = true;
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function getData() {
+    return {
+      name: fields.name.value.trim(),
+      fear: fields.fear.value.trim(),
+      trigger: fields.trigger.value.trim(),
+      impact: fields.impact.value.trim(),
+      strength: fields.strength.value.trim(),
+      support: fields.support.value.trim(),
+      courage: fields.courage.value.trim(),
+      pace: getPace(),
+      autoSave: fields.save.checked
+    };
+  }
+
+  function validate() {
+    const d = getData();
+    const missing = [];
+    if (!d.fear) missing.push('your strongest fear (Q1)');
+    if (!d.trigger) missing.push('what triggers it (Q2)');
+    if (!d.impact) missing.push('how it affects you (Q3)');
+    if (!d.strength) missing.push('your strengths (Q4)');
+    if (!d.support) missing.push('your support (Q5)');
+    if (!d.courage) missing.push('your courage step (Q6)');
+
+    const errEl = $('errorMsg');
+    if (missing.length) {
+      errEl.textContent = 'Please complete ' + missing.join(', ') + ' before creating your reflection.';
+      errEl.style.display = 'block';
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return null;
+    }
+    errEl.style.display = 'none';
+    return d;
+  }
+
+  function hasWords(text, words) {
+    const t = text.toLowerCase();
+    return words.some(w => t.includes(w));
+  }
+
+  function guidanceForFear(fear) {
+    if (hasWords(fear, ['failure', 'fail', 'mistake', 'not good enough', 'wrong'])) {
+      return 'Failing is not the opposite of succeeding — it is part of it. Every person you admire has stumbled. What matters most is that you are still willing to try, and that takes real courage.';
+    }
+    if (hasWords(fear, ['rejection', 'judged', 'embarrass', 'opinion', 'what will people'])) {
+      return 'The fear of being judged is one of the most human fears there is. You are not alone in it. Remember: other people\'s opinions are shaped by their own story, not the full truth of who you are.';
+    }
+    if (hasWords(fear, ['change', 'unknown', 'uncertain', 'future', 'what if'])) {
+      return 'Uncertainty is uncomfortable, but it also means that things are not fixed. The future is still being written — including by you. Focus on what you can do today, even just one small thing.';
+    }
+    if (hasWords(fear, ['loss', 'losing', 'lose', 'grief', 'left'])) {
+      return 'Fear of loss often comes from how much something matters to you. That love or care is real and worth honouring. You can grieve what you fear losing while still finding ways to move gently forward.';
+    }
+    return 'Whatever your fear is, it deserves to be taken seriously — not dismissed. Naming it honestly, as you have done here, is already an act of courage. You are already further than you think.';
+  }
+
+  function guidanceForTrigger(trigger) {
+    if (hasWords(trigger, ['deadline', 'time', 'late', 'urgent', 'pressure'])) {
+      return 'When time pressure rises, your nervous system can go into overdrive. Try starting with just five minutes on one task — not to finish it, but to break the freeze. Momentum is kinder than force.';
+    }
+    if (hasWords(trigger, ['person', 'boss', 'partner', 'family', 'friend', 'people', 'someone'])) {
+      return 'When certain people trigger fear in us, it often reflects something important — about what we need, or what a boundary might look like. You do not have to figure it all out at once. Just notice it with kindness.';
+    }
+    if (hasWords(trigger, ['thought', 'mind', 'think', 'voice', 'myself'])) {
+      return 'Sometimes the loudest trigger is the one inside our own head. If your thoughts are working against you, try gently asking: "Is this thought a fact, or is it fear speaking?" You get to question it.';
+    }
+    return 'Understanding what sets off your fear gives you something powerful — awareness. When you know the trigger, you can prepare, pause, or ask for support before the wave gets too big.';
+  }
+
+  function guidanceForImpact(impact) {
+    if (hasWords(impact, ['avoid', 'procrastin', 'delay', 'stuck', 'freeze', 'paralys'])) {
+      return 'Avoidance makes complete sense — it protects you in the short term. But it can also keep you in place longer than you want. When you feel stuck, try the smallest possible version of the thing. Tiny movement matters.';
+    }
+    if (hasWords(impact, ['sleep', 'tired', 'exhaust', 'panic', 'anxious', 'body'])) {
+      return 'Your body is carrying a lot right now. That is worth acknowledging, not pushing through. Rest is not weakness — it is part of how you recover the energy to be brave again. Please be gentle with yourself.';
+    }
+    if (hasWords(impact, ['confidence', 'belief', 'doubt', 'worth', 'enough'])) {
+      return 'Fear has a way of shrinking how we see ourselves. But your worth is not measured by your confidence levels on a hard day. You are more capable than fear is letting you feel right now.';
+    }
+    return 'Noticing how fear affects you is not a small thing — it takes honesty and self-awareness. That same awareness is what will help you choose a different response, one small moment at a time.';
+  }
+
+  function guidanceForStrength(strength) {
+    const s = strength.length > 100 ? strength.slice(0, 100) + '…' : strength;
+    return 'You named this strength: "' + s + '". That is real. It has carried you before, and it can carry you again. Today, think of one small way to lean on it — not perfectly, just intentionally.';
+  }
+
+  function guidanceForSupport(support) {
+    return 'You already know where support lives — that matters more than you might think. Reaching out, or simply setting up your environment to feel safer, is not a sign of weakness. It is wisdom in action.';
+  }
+
+  function guidanceForPace(pace) {
+    if (pace === 'gentle') return 'A gentle pace is a brave choice, not a slow one. Small steps taken with care and consistency often go further than big leaps made from fear or pressure. You are allowed to go softly.';
+    if (pace === 'bold') return 'Choosing a bold pace takes courage. Just make sure your supports are in place before you step forward — not because you need permission, but because you deserve a safety net under your stretch.';
+    return 'A steady pace is exactly right for many situations. Clear, consistent, sustainable movement forward. You do not have to sprint. You just have to keep going, at a pace that is honest for you.';
+  }
+
+  function guidanceForCourage(courage) {
+    const c = courage.length > 100 ? courage.slice(0, 100) + '…' : courage;
+    return 'Your next step: "' + c + '". When you feel ready, write down exactly when and where you will do this. Giving it a time and place makes it real. And when it feels hard — remember why you wrote it down.';
+  }
+
+  function buildGuidance(d) {
+    return [
+      { label: 'About your fear', body: guidanceForFear(d.fear) },
+      { label: 'About your trigger', body: guidanceForTrigger(d.trigger) },
+      { label: 'About the impact', body: guidanceForImpact(d.impact) },
+      { label: 'Your strength', body: guidanceForStrength(d.strength) },
+      { label: 'Your support', body: guidanceForSupport(d.support) },
+      { label: 'Your pace', body: guidanceForPace(d.pace) },
+      { label: 'Your next step', body: guidanceForCourage(d.courage) }
+    ];
+  }
+
+  function buildSummary(d) {
+    let lines = '';
+    if (d.name) lines += 'Name: ' + d.name + '\n\n';
+    lines += 'Fear: ' + d.fear + '\n\n';
+    lines += 'Trigger: ' + d.trigger + '\n\n';
+    lines += 'Impact: ' + d.impact + '\n\n';
+    lines += 'Strengths: ' + d.strength + '\n\n';
+    lines += 'Support: ' + d.support + '\n\n';
+    lines += 'Courage step (24–72h): ' + d.courage + '\n\n';
+    lines += 'Pace chosen: ' + d.pace.charAt(0).toUpperCase() + d.pace.slice(1) + '\n\n';
+    lines += 'Reminder: Courage means acting with care while fear is present — not waiting for fear to disappear.';
+    return lines;
+  }
+
+  function renderResult(d) {
+    const summaryEl = $('resultSummary');
+    summaryEl.innerHTML = '<div class="result-summary-title">Your reflection summary</div>' + buildSummary(d).replace(/\n/g, '<br>');
+
+    const grid = $('guidanceGrid');
+    grid.innerHTML = '';
+    buildGuidance(d).forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'guidance-card';
+      card.innerHTML = '<div class="guidance-card-label">' + item.label + '</div><div class="guidance-card-body">' + item.body + '</div>';
+      grid.appendChild(card);
+    });
+
+    const resultBox = $('resultBox');
+    resultBox.style.display = 'block';
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function createReflection() {
+    const d = validate();
+    if (!d) return;
+    renderResult(d);
+    if (d.autoSave) saveLocal(d);
+  }
+
+  function saveLocal(d) {
+    try { localStorage.setItem(storageKey, JSON.stringify(d || getData())); } catch(_) {}
+  }
+
+  function saveIfEnabled() {
+    if (fields.save.checked) saveLocal();
+  }
+
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d) return;
+      fields.name.value = d.name || '';
+      fields.fear.value = d.fear || '';
+      fields.trigger.value = d.trigger || '';
+      fields.impact.value = d.impact || '';
+      fields.strength.value = d.strength || '';
+      fields.support.value = d.support || '';
+      fields.courage.value = d.courage || '';
+      fields.save.checked = Boolean(d.autoSave);
+      if (d.pace) setPace(d.pace);
+      if (d.fear && d.trigger && d.impact && d.strength && d.support && d.courage) {
+        renderResult(d);
       }
+    } catch(_) {
+      try { localStorage.removeItem(storageKey); } catch(_) {}
+    }
+  }
 
-      function getData() {
-        return {
-          name: els.name.value.trim(),
-          fear: els.fear.value.trim(),
-          trigger: els.trigger.value.trim(),
-          impact: els.impact.value.trim(),
-          strength: els.strength.value.trim(),
-          support: els.support.value.trim(),
-          courage: els.courage.value.trim(),
-          pace: els.pace.value,
-          autoSave: els.saveToggle.checked
-        };
-      }
+  function resetTool() {
+    Object.values(fields).forEach(f => { if (f.type === 'checkbox') f.checked = false; else f.value = ''; });
+    setPace('gentle');
+    $('errorMsg').style.display = 'none';
+    $('resultBox').style.display = 'none';
+    $('guidanceGrid').innerHTML = '';
+    try { localStorage.removeItem(storageKey); } catch(_) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Tool reset.');
+  }
 
-      function validate() {
-        const d = getData();
-        if (!d.fear || !d.trigger || !d.impact || !d.strength || !d.support || !d.courage) {
-          els.error.textContent = 'Please answer all 6 reflection questions to generate your personalised guidance.';
-          return null;
-        }
-        els.error.textContent = '';
-        return d;
-      }
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This Courage in the Face of Fear reflection tool helped me find my next step: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
 
-      function hasWords(text, list) {
-        const t = text.toLowerCase();
-        return list.some(function (w) { return t.indexOf(w) !== -1; });
-      }
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
 
-      function guidanceForFear(fear) {
-        if (hasWords(fear, ['failure', 'fail', 'mistake', 'not good enough'])) {
-          return 'Reframe: failing is feedback, not identity. Try one low-stakes experiment this week and review what it teaches you.';
-        }
-        if (hasWords(fear, ['rejection', 'judged', 'embarrass', 'opinion'])) {
-          return 'Social fear tip: define your own success first. If one person disagrees, that is information—not a verdict on your worth.';
-        }
-        if (hasWords(fear, ['change', 'unknown', 'uncertain', 'future'])) {
-          return 'Uncertainty tip: separate what you can control today from what you cannot. Act on one controllable item in the next 10 minutes.';
-        }
-        return 'Name the fear in one sentence. Then ask: “What is the smallest safe action that moves me 1% forward?”';
-      }
+  async function downloadPDF() {
+    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    const d = validate();
+    if (!d) { showToast('Please complete all questions first.'); return; }
 
-      function guidanceForTrigger(trigger) {
-        if (hasWords(trigger, ['deadline', 'time', 'late', 'urgent'])) {
-          return 'Trigger plan: use a 15-minute starter timer and begin with one tiny task. Momentum usually lowers the fear response.';
-        }
-        if (hasWords(trigger, ['person', 'boss', 'partner', 'family', 'friend'])) {
-          return 'Relational trigger plan: prepare one boundary sentence in advance and keep your tone calm and brief.';
-        }
-        return 'Trigger plan: track where, when, and with whom fear spikes. Patterns reveal where to place support before stress rises.';
-      }
+    showToast('Preparing your PDF…');
 
-      function guidanceForImpact(impact) {
-        if (hasWords(impact, ['avoid', 'procrast', 'delay', 'stuck'])) {
-          return 'When avoidance appears, shrink the task by 50% and do only the first visible action. Completion beats intensity.';
-        }
-        if (hasWords(impact, ['sleep', 'tired', 'exhaust', 'panic'])) {
-          return 'Nervous-system reset: inhale 4, exhale 6 for one minute, then continue with a gentler pace and clearer limit.';
-        }
-        return 'Notice the cost of fear kindly (time, energy, confidence). This gives you motivation to choose one better response.';
-      }
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
 
-      function guidanceForStrength(strength) {
-        return 'Anchor strength: "' + strength.slice(0, 110) + '". Use it deliberately today by pairing it with one concrete action.';
-      }
+    // Header
+    doc.setFillColor(240, 238, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
 
-      function guidanceForSupport(support) {
-        return 'Support map: schedule one check-in and one practical aid (calendar reminder, note, accountability message, or quiet workspace).';
-      }
+    try {
+      const logoData = await imageToDataUrl(logoUrl);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
 
-      function guidanceForPace(pace) {
-        if (pace === 'gentle') return 'Pace: gentle. Break your step into a 5-minute start, a pause, and a short review.';
-        if (pace === 'bold') return 'Pace: bold. Choose a stretch step, but add safety supports before you begin.';
-        return 'Pace: steady. Pick one clear step that is challenging but achievable this week.';
-      }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 42, 53);
+    doc.text('Courage in the Face of Fear', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 106, 118);
+    doc.text('Reflection Summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
 
-      function buildSummary(d) {
-        const nameLine = d.name ? 'Name: ' + d.name + '\n\n' : '';
-        return nameLine +
-          'Fear identified: ' + d.fear + '\n\n' +
-          'Main trigger: ' + d.trigger + '\n\n' +
-          'Current impact: ' + d.impact + '\n\n' +
-          'Your strengths: ' + d.strength + '\n\n' +
-          'Support options: ' + d.support + '\n\n' +
-          'Courage step (24–72h): ' + d.courage + '\n\n' +
-          'Reminder: Courage means acting with care while fear is present, not waiting for fear to disappear.';
-      }
+    y += 86;
 
-      function buildGuidance(d) {
-        return [
-          { title: 'Response to Q1 (fear)', body: guidanceForFear(d.fear) },
-          { title: 'Response to Q2 (trigger)', body: guidanceForTrigger(d.trigger) },
-          { title: 'Response to Q3 (impact)', body: guidanceForImpact(d.impact) },
-          { title: 'Response to Q4 (strengths)', body: guidanceForStrength(d.strength) },
-          { title: 'Response to Q5 (support)', body: guidanceForSupport(d.support) },
-          { title: 'Response to pace choice', body: guidanceForPace(d.pace) },
-          { title: 'Response to Q6 (next step)', body: 'Micro-plan: define when, where, and first action for "' + d.courage.slice(0, 95) + '" so follow-through is easier.' }
-        ];
-      }
+    if (d.name) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 42, 53);
+      doc.text('Name: ' + d.name, margin, y);
+      y += 18;
+    }
 
-      function renderGuidance(items) {
-        els.guidanceGrid.innerHTML = '';
-        items.forEach(function (item) {
-          const article = document.createElement('article');
-          article.className = 'guidance-item';
-          const heading = document.createElement('h3');
-          heading.textContent = item.title;
-          const para = document.createElement('p');
-          para.textContent = item.body;
-          article.appendChild(heading);
-          article.appendChild(para);
-          els.guidanceGrid.appendChild(article);
-        });
-      }
+    // Summary blocks
+    const qLabels = [
+      ['Fear', d.fear],
+      ['Trigger', d.trigger],
+      ['Impact', d.impact],
+      ['Strengths', d.strength],
+      ['Support', d.support],
+      ['Courage step (24–72h)', d.courage],
+      ['Pace chosen', d.pace.charAt(0).toUpperCase() + d.pace.slice(1)]
+    ];
 
-      function createReflection() {
-        const data = validate();
-        if (!data) return;
-        const summary = buildSummary(data);
-        const guidance = buildGuidance(data);
-        els.result.textContent = summary;
-        renderGuidance(guidance);
-        if (data.autoSave) localStorage.setItem(storageKey, JSON.stringify(data));
-      }
+    doc.setFontSize(9.5);
+    qLabels.forEach(([label, val]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(248, 252, 255);
+      const lines = doc.splitTextToSize(val, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(123, 111, 160);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 42, 53);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
 
-      function saveIfEnabled() {
-        const data = getData();
-        if (data.autoSave) localStorage.setItem(storageKey, JSON.stringify(data));
-      }
+    // Guidance
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(200, 200, 220);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(123, 111, 160);
+    doc.text('Your personalised guidance', margin, y);
+    y += 14;
 
-      function resetTool() {
-        [els.name, els.fear, els.trigger, els.impact, els.strength, els.support, els.courage].forEach(function (el) { el.value = ''; });
-        els.pace.value = 'gentle';
-        els.saveToggle.checked = false;
-        els.error.textContent = '';
-        els.result.textContent = 'Complete the questions and click “Create Reflection” to see your summary and personalised guidance.';
-        els.guidanceGrid.innerHTML = '';
-        localStorage.removeItem(storageKey);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+    buildGuidance(d).forEach(item => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(123, 111, 160);
+      doc.text(item.label.toUpperCase(), margin, y);
+      y += 11;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9.3);
+      doc.setTextColor(30, 42, 53);
+      const glines = doc.splitTextToSize(item.body, pageW - margin * 2);
+      doc.text(glines, margin, y);
+      y += glines.length * 11 + 10;
+    });
 
-      function updateShareLinks() {
-        const href = window.location.href;
-        const encoded = encodeURIComponent(href);
-        const text = encodeURIComponent('This Courage in the Face of Fear reflection tool helped me create a practical next step: ' + href);
-        els.wa.href = 'https://wa.me/?text=' + text;
-        els.fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encoded;
-        els.x.href = 'https://twitter.com/intent/tweet?text=' + text;
-      }
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(200, 200, 220);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(91, 143, 168);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 42, 53);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
 
-      function copyLink() {
-        navigator.clipboard.writeText(window.location.href).then(function () {
-          showToast('Link copied!');
-        }).catch(function () {
-          showToast('Could not auto-copy. Please copy from your address bar.');
-        });
-      }
+    // Footer
+    doc.setDrawColor(200, 220, 230);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 154, 166);
+    doc.text('This tool supports reflection and self-awareness. If you feel unsafe or at risk, please seek urgent help.', margin, pageH - 22);
 
-      function loadSaved() {
-        try {
-          const raw = localStorage.getItem(storageKey);
-          if (!raw) return;
-          const d = JSON.parse(raw);
-          els.name.value = d.name || '';
-          els.fear.value = d.fear || '';
-          els.trigger.value = d.trigger || '';
-          els.impact.value = d.impact || '';
-          els.strength.value = d.strength || '';
-          els.support.value = d.support || '';
-          els.courage.value = d.courage || '';
-          els.pace.value = d.pace || 'gentle';
-          els.saveToggle.checked = Boolean(d.autoSave);
-          if (d.fear && d.trigger && d.impact && d.strength && d.support && d.courage) {
-            els.result.textContent = buildSummary(d);
-            renderGuidance(buildGuidance(d));
-          }
-        } catch (e) {
-          localStorage.removeItem(storageKey);
-        }
-      }
+    doc.save('courage-in-the-face-of-fear-reflection.pdf');
+    showToast('PDF downloaded!');
+  }
 
-      function loadLogoDataUrl() {
-        return fetch(logoUrl)
-          .then(function (res) { return res.blob(); })
-          .then(function (blob) {
-            return new Promise(function (resolve, reject) {
-              const reader = new FileReader();
-              reader.onloadend = function () { resolve(reader.result); };
-              reader.onerror = reject;
-              reader.readAsDataURL(blob);
-            });
-          });
-      }
+  // Event listeners
+  Object.values(fields).forEach(f => {
+    f.addEventListener('input', saveIfEnabled);
+    f.addEventListener('change', saveIfEnabled);
+  });
 
-      function drawPdfResourceColumn(doc, x, y, w) {
-        doc.setFillColor(243, 248, 255);
-        doc.roundedRect(x, y, w, 104, 8, 8, 'F');
-        doc.setTextColor(20, 35, 64);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('More resources', x + 10, y + 16);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9.8);
-        const lines = [
-          'Main website:',
-          'https://emotionalintelligencedeveloper.com/',
-          'Recommended Audio Books:',
-          'https://emotionalintelligencedeveloper.com/recommended-books/',
-          'Self-help tools:',
-          'https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
-        ];
-        let yy = y + 30;
-        lines.forEach(function (line) {
-          const wrap = doc.splitTextToSize(line, w - 20);
-          doc.text(wrap, x + 10, yy);
-          yy += wrap.length * 11 + 2;
-        });
-      }
+  document.querySelectorAll('input[name="pace"]').forEach(el => el.addEventListener('change', saveIfEnabled));
 
-      function downloadPDF() {
-        if (!jsPDF) {
-          showToast('PDF library is unavailable. Please retry.');
-          return;
-        }
-        const data = validate();
-        if (!data) {
-          showToast('Please complete all questions before downloading PDF.');
-          return;
-        }
+  fields.save.addEventListener('change', () => {
+    if (fields.save.checked) { saveLocal(); showToast('Auto-save enabled.'); }
+    else { try { localStorage.removeItem(storageKey); } catch(_) {} showToast('Auto-save off.'); }
+  });
 
-        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-        const width = doc.internal.pageSize.getWidth();
-        const height = doc.internal.pageSize.getHeight();
-        const margin = 32;
-        const colGap = 12;
-        const leftW = (width - margin * 2 - colGap) * 0.62;
-        const rightW = (width - margin * 2 - colGap) * 0.38;
+  $('buildBtn').addEventListener('click', createReflection);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
 
-        const summary = buildSummary(data);
-        const guidance = buildGuidance(data).map(function (g) { return g.title + ': ' + g.body; }).join('\n\n');
-
-        function finalize(logoData) {
-          if (logoData) doc.addImage(logoData, 'JPEG', margin, 22, 52, 52);
-
-          doc.setTextColor(20, 34, 63);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(16);
-          doc.text('Courage in the Face of Fear - Reflection PDF', margin + 60, 44);
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(10);
-          doc.text('Personal reflection support summary (single page).', margin + 60, 62);
-
-          doc.setDrawColor(193, 210, 245);
-          doc.line(margin, 82, width - margin, 82);
-
-          let y = 102;
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(11.2);
-          doc.text('Reflection summary', margin, y);
-          y += 16;
-
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(9.6);
-          const summaryWrap = doc.splitTextToSize(summary, leftW);
-          doc.text(summaryWrap.slice(0, 26), margin, y);
-
-          const guidanceY = 418;
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(11.2);
-          doc.text('Personalised guidance', margin, guidanceY);
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(9.4);
-          const gWrap = doc.splitTextToSize(guidance, leftW);
-          doc.text(gWrap.slice(0, 22), margin, guidanceY + 16);
-
-          drawPdfResourceColumn(doc, margin + leftW + colGap, 102, rightW);
-
-          doc.setFillColor(255, 244, 244);
-          doc.roundedRect(margin + leftW + colGap, 232, rightW, 146, 8, 8, 'F');
-          doc.setTextColor(38, 54, 86);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(10.2);
-          doc.text('Safety note', margin + leftW + colGap + 10, 248);
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(9.4);
-          const safety = doc.splitTextToSize('This tool is for reflection and support. If you feel unsafe or at risk, seek immediate support from local services or Find a Helpline: https://findahelpline.com/', rightW - 20);
-          doc.text(safety, margin + leftW + colGap + 10, 264);
-
-          doc.setDrawColor(210, 220, 235);
-          doc.line(margin, height - 42, width - margin, height - 42);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(10);
-          doc.text('https://emotionalintelligencedeveloper.com/', margin, height - 26);
-
-          doc.save('courage-in-the-face-of-fear-reflection.pdf');
-        }
-
-        loadLogoDataUrl().then(finalize).catch(function () { finalize(null); });
-      }
-
-      [els.name, els.fear, els.trigger, els.impact, els.strength, els.support, els.courage, els.pace].forEach(function (field) {
-        field.addEventListener('input', saveIfEnabled);
-        field.addEventListener('change', saveIfEnabled);
-      });
-
-      els.saveToggle.addEventListener('change', function () {
-        const d = getData();
-        if (d.autoSave) {
-          localStorage.setItem(storageKey, JSON.stringify(d));
-          showToast('Auto-save enabled.');
-        } else {
-          localStorage.removeItem(storageKey);
-          showToast('Auto-save turned off.');
-        }
-      });
-
-      els.buildBtn.addEventListener('click', createReflection);
-      els.pdfBtn.addEventListener('click', downloadPDF);
-      els.resetBtn.addEventListener('click', resetTool);
-      els.copyLinkBtn.addEventListener('click', copyLink);
-
-      updateShareLinks();
-      loadSaved();
-    }());
-  </script>
+  updateShareLinks();
+  loadLocal();
+}());
+</script>
 </body>
 </html>

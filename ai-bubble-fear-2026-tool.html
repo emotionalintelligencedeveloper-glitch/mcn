@@ -3,621 +3,1107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Bubble Fear (2026) — Reflection & Preparedness Tool</title>
+  <title>AI & Work Fear Tool | Emotional Intelligence Developer</title>
   <style>
     :root {
-      --bg: #fffaf0;
+      --brand: #5b8fa8;
+      --brand-light: #e8f4f9;
+      --brand-mid: #c5dfe9;
+      --accent: #7dbea0;
+      --accent-light: #e8f5ef;
+      --warm: #f7f3ee;
       --card: #ffffff;
-      --ink: #1f2937;
-      --muted: #4b5563;
-      --border: #ffd59e;
-      --accent: #ff7a59;
-      --accent-2: #5b8def;
-      --accent-3: #49b77d;
-      --accent-4: #f7c948;
-      --danger: #b91c1c;
-      --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-      --radius: 16px;
+      --text: #1e2a35;
+      --muted: #5a6a76;
+      --hint: #8a9aa6;
+      --border: #dde6eb;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --amber: #b07d2e;
+      --amber-light: #fdf6e8;
+      --amber-mid: #e8d5a0;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      font-family: "Trebuchet MS", "Comic Sans MS", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at top left, #fff7d6 0%, #ffeef6 45%, #ecf8ff 100%);
-      color: var(--ink);
-      line-height: 1.5;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--warm);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 16px;
     }
 
     .container {
-      width: min(980px, 100%);
+      max-width: 680px;
       margin: 0 auto;
-      padding: 16px;
+      padding: 20px 16px 40px;
     }
 
-    .card {
+    /* HEADER */
+    .header {
       background: var(--card);
-      border: 3px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
     }
 
-    header {
-      display: grid;
-      gap: 10px;
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
+
     h1 {
-      margin: 0;
-      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--warm);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .tool-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--amber-light);
+      border: 1px solid var(--amber-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--amber);
+      font-style: italic;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* QUESTION BLOCKS */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9aa6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* INTENSITY SLIDER */
+    .intensity-wrap {
+      margin-top: 10px;
+    }
+
+    .intensity-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
+      margin-top: 6px;
     }
 
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
+    .intensity-label {
+      font-size: 12px;
+      color: var(--hint);
+      white-space: nowrap;
     }
 
-    .doodle-row {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(42px, 72px));
-      gap: 8px;
-      justify-content: start;
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--brand-mid);
+      border-radius: 99px;
+      outline: none;
     }
 
-    .doodle {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 999px;
-      background: #fff;
-      border: 2px dashed #ffc17f;
-      display: grid;
-      place-items: center;
-      padding: 4px;
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--amber);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
 
-    section {
-      margin-top: 16px;
-      border: 2px solid #ffe4bc;
-      border-radius: var(--radius);
-      padding: 14px;
-      background: #fffefb;
+    .intensity-val {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--amber);
+      min-width: 28px;
+      text-align: center;
     }
 
-    section h2 {
-      margin: 0 0 8px;
-      font-size: 1.08rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .intensity-meaning {
+      font-size: 12px;
+      color: var(--hint);
+      font-style: italic;
+      margin-top: 4px;
+      min-height: 18px;
     }
 
-    .grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* ACTION CHECKBOXES */
+    .actions-card {
+      border: 1px solid var(--amber-mid);
+      background: var(--amber-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
     }
 
-    @media (max-width: 760px) {
-      .grid { grid-template-columns: 1fr; }
-      .doodle-row { grid-template-columns: repeat(5, 1fr); }
-    }
-
-    label {
+    .actions-label {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 5px;
       display: block;
-      margin-bottom: 4px;
-      font-weight: 700;
     }
 
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
-      width: 100%;
-      border: 2px solid #ffd7a8;
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 0.98rem;
-      background: #fff;
-      color: var(--ink);
+    .actions-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
     }
 
-    textarea { min-height: 86px; resize: vertical; }
-
-    .hint { margin: 5px 0 0; color: var(--muted); font-size: 0.9rem; }
-
-    .chips {
+    .action-chips {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 480px) {
+      .action-chips { grid-template-columns: 1fr 1fr; }
     }
 
     .chip {
-      border: 2px solid #bcd7ff;
-      border-radius: 12px;
-      padding: 8px;
-      background: #f7fbff;
       display: flex;
-      gap: 8px;
-      align-items: start;
-      cursor: pointer;
-    }
-
-    @media (max-width: 640px) {
-      .chips { grid-template-columns: 1fr; }
-    }
-
-    .result {
-      background: #f1fbf5;
-      border: 2px solid #8ee3b8;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 10px;
-      white-space: pre-wrap;
-      font-size: 0.97rem;
-    }
-
-    .actions,
-    .share-row,
-    .bottom-links {
-      display: flex;
+      align-items: flex-start;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
+      padding: 11px 13px;
+      border: 1px solid var(--amber-mid);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.4;
     }
 
-    button,
-    .btn-link {
-      border: none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 800;
+    .chip:hover { border-color: var(--amber); }
+
+    .chip input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      accent-color: var(--amber);
+      margin-top: 2px;
       cursor: pointer;
-      text-decoration: none;
-      color: #111827;
+    }
+
+    .chip.selected {
+      border-color: var(--amber);
+      background: var(--amber-light);
+    }
+
+    .custom-action-wrap {
+      margin-top: 10px;
+    }
+
+    .custom-action-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-style: italic;
+      display: block;
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* NAME FIELD */
+    .name-field {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .name-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* ERROR */
+    .error-msg {
+      display: none;
+      background: #fdf0f0;
+      border: 1px solid #e8c0c0;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 14px;
+      color: #b94040;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .result-summary {
+      background: var(--accent-light);
+      border: 1px solid #a8d5bc;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .result-summary-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #3a7a58;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .result-row {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #c5e3d1;
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .result-row-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .result-row-value {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .result-closing {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--amber-light);
+      border: 1px solid var(--amber-mid);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--amber);
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      transition: transform 0.08s ease;
-      font-size: 0.95rem;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
 
-    button:hover,
-    .btn-link:hover { transform: translateY(-1px); }
-    button:active,
-    .btn-link:active { transform: translateY(1px); }
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
 
-    .primary { background: #ff9b82; }
-    .secondary { background: #9fd0ff; }
-    .green { background: #aaf0c4; }
-    .yellow { background: #ffe58f; }
-    .purple { background: #d9c6ff; }
-    .pink { background: #ffc6df; }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-      color: var(--muted);
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
     }
 
-    .error {
-      color: var(--danger);
-      font-weight: 700;
-      margin-top: 8px;
-      min-height: 1.2em;
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
     }
 
-    .safety {
-      background: #fff5f7;
-      border: 2px solid #ffc8d5;
-    }
-
+    /* TOAST */
     .toast {
       position: fixed;
-      bottom: 16px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%);
-      background: #111827;
-      color: white;
-      padding: 10px 14px;
-      border-radius: 999px;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 2000;
-      font-size: 0.92rem;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
     }
 
-    .toast.show { opacity: 1; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    :focus-visible {
-      outline: 3px solid #2563eb;
-      outline-offset: 2px;
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
     }
 
-    @media (max-width: 420px) {
-      .container { padding: 10px; }
-      .card { padding: 12px; }
-      button, .btn-link { width: 100%; justify-content: center; }
-      .share-row, .actions, .bottom-links { gap: 8px; }
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { text-decoration: underline; }
+
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <article class="card">
-      <header>
-        <h1>🫧 AI Bubble Fear (2026) Tool 🌤️</h1>
-        <p class="subtitle">A gentle reflection tool to help you calm fear, separate facts from worry, and choose practical next steps. This is for reflection and support only.</p>
-        <div class="doodle-row" aria-hidden="true">
-          <div class="doodle">
-            <svg viewBox="0 0 64 64" width="52" height="52"><circle cx="32" cy="32" r="24" fill="#ffec9a" stroke="#f0b429" stroke-width="3"/><circle cx="24" cy="28" r="3" fill="#1f2937"/><circle cx="40" cy="28" r="3" fill="#1f2937"/><path d="M22 39c3 5 17 5 20 0" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
-          </div>
-          <div class="doodle">
-            <svg viewBox="0 0 64 64" width="52" height="52"><path d="M20 12h24a10 10 0 0 1 10 10v12a10 10 0 0 1-10 10H34l-10 8 2-8h-6A10 10 0 0 1 10 34V22a10 10 0 0 1 10-10Z" fill="#d9e9ff" stroke="#5b8def" stroke-width="3"/></svg>
-          </div>
-          <div class="doodle">
-            <svg viewBox="0 0 64 64" width="52" height="52"><path d="M32 53S9 39 15 24c4-10 16-8 17 1 1-9 13-11 17-1 6 15-17 29-17 29Z" fill="#ff9fb3" stroke="#e11d48" stroke-width="3"/></svg>
-          </div>
-          <div class="doodle">
-            <svg viewBox="0 0 64 64" width="52" height="52"><circle cx="32" cy="32" r="20" fill="#d5f5e6" stroke="#2e8b57" stroke-width="3"/><path d="M20 36c5-6 19-6 24 0" fill="none" stroke="#2e8b57" stroke-width="3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="doodle">
-            <svg viewBox="0 0 64 64" width="52" height="52"><circle cx="32" cy="32" r="7" fill="#f7c948"/><g stroke="#f7c948" stroke-width="4" stroke-linecap="round"><path d="M32 8v10"/><path d="M32 46v10"/><path d="M8 32h10"/><path d="M46 32h10"/></g></svg>
-          </div>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>AI &amp; Work Fear Tool</h1>
+    <p class="tagline">A calm reflection space to help you separate worry from reality, understand what you are feeling, and find one grounded step forward.</p>
+    <span class="disclaimer">Reflection and wellbeing support only — not a diagnosis or medical tool</span>
+    <p class="tool-note">What you are feeling about AI and the future of work is real, valid, and shared by many people. You are not alone in this.</p>
+  </header>
+
+  <!-- REFLECTION CARD -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Your reflection</p>
+
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my reflection on this device
+    </label>
+
+    <!-- NAME -->
+    <div class="name-field">
+      <label for="pdfName">Your name (optional — shown in PDF)</label>
+      <input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+    </div>
+
+    <!-- FEAR THEME -->
+    <div class="question">
+      <label class="question-label" for="fearTheme">What is weighing on you most right now?</label>
+      <p class="question-hint">Choose the theme that feels closest to what you are carrying.</p>
+      <select id="fearTheme" aria-label="Choose your main fear theme">
+        <option value="">Select a theme…</option>
+        <option value="Job loss or role changes">Job loss or role changes</option>
+        <option value="Falling behind on skills">Falling behind on skills</option>
+        <option value="Not knowing what to prepare for">Not knowing what to prepare for</option>
+        <option value="Information overload and doom scrolling">Information overload and doom scrolling</option>
+        <option value="General uncertainty about the future">General uncertainty about the future</option>
+        <option value="Financial pressure and security">Financial pressure and security</option>
+        <option value="Feeling left behind by technology">Feeling left behind by technology</option>
+      </select>
+    </div>
+
+    <!-- INTENSITY -->
+    <div class="question">
+      <label class="question-label">How intense does this fear feel right now?</label>
+      <p class="question-hint">Move the slider to where you are today — there is no wrong answer.</p>
+      <div class="intensity-wrap">
+        <div class="intensity-row">
+          <span class="intensity-label">Low</span>
+          <input type="range" id="intensitySlider" min="0" max="10" step="1" value="5" aria-label="Fear intensity 0 to 10" />
+          <span class="intensity-label">High</span>
+          <span class="intensity-val" id="intensityVal">5</span><span class="intensity-label">/10</span>
         </div>
-      </header>
+        <p class="intensity-meaning" id="intensityMeaning">Noticeable — it is on your mind but manageable.</p>
+      </div>
+    </div>
 
-      <section aria-labelledby="tool-title">
-        <h2 id="tool-title">🧭 Tool interaction</h2>
-        <div class="grid">
-          <div>
-            <label for="fearTheme">Main fear theme</label>
-            <select id="fearTheme" aria-label="Choose your main fear theme">
-              <option value="">Choose one</option>
-              <option>Job loss or role changes</option>
-              <option>Falling behind on skills</option>
-              <option>Not knowing what to prepare for</option>
-              <option>Information overload / doom scrolling</option>
-              <option>General uncertainty about the future</option>
-            </select>
-          </div>
-          <div>
-            <label for="intensity">Fear intensity (0–10)</label>
-            <input id="intensity" type="number" min="0" max="10" step="1" placeholder="e.g., 7" aria-label="Fear intensity from 0 to 10" />
-          </div>
-        </div>
+    <!-- FEAR DESCRIPTION -->
+    <div class="question">
+      <label class="question-label" for="fearText">What does this fear actually look like for you?</label>
+      <p class="question-hint">What thoughts come up? What scenarios are you imagining? Be as honest as you like.</p>
+      <textarea id="fearText" maxlength="700" placeholder="Write freely — this is a private space for you…" aria-label="Describe your fear"></textarea>
+    </div>
 
-        <div class="grid" style="margin-top:10px;">
-          <div>
-            <label for="fearText">Describe your fear (optional)</label>
-            <textarea id="fearText" aria-label="Describe your fear"></textarea>
-          </div>
-          <div>
-            <label for="grounding">What helps you feel grounded today?</label>
-            <textarea id="grounding" aria-label="Grounding strategy"></textarea>
-          </div>
-        </div>
+    <!-- GROUNDING -->
+    <div class="question">
+      <label class="question-label" for="grounding">What helps you feel more grounded when worry rises?</label>
+      <p class="question-hint">A person, a habit, a place, a reminder — anything that steadies you.</p>
+      <textarea id="grounding" maxlength="500" placeholder="Even small things count…" aria-label="What helps you feel grounded"></textarea>
+    </div>
 
-        <label for="factCheck" style="margin-top:10px;">One balanced thought to challenge panic</label>
-        <textarea id="factCheck" aria-label="Balanced thought"></textarea>
+    <!-- BALANCED THOUGHT -->
+    <div class="question">
+      <label class="question-label" for="factCheck">What is one more balanced thought you can hold alongside the fear?</label>
+      <p class="question-hint">Not to dismiss the fear, but to give it some company. Something that is also true.</p>
+      <textarea id="factCheck" maxlength="500" placeholder="e.g. I have adapted to change before. I have skills that matter…" aria-label="A balanced thought to challenge panic"></textarea>
+    </div>
 
-        <h3 style="margin:12px 0 8px;">✅ Tiny action plan (choose up to 3)</h3>
-        <div class="chips" role="group" aria-label="Action plan options">
-          <label class="chip"><input type="checkbox" class="action" value="Schedule two 25-minute skill sessions" /> 📚 Schedule two 25-minute skill sessions</label>
-          <label class="chip"><input type="checkbox" class="action" value="Set a daily AI/news limit" /> ⏱️ Set a daily AI/news limit</label>
-          <label class="chip"><input type="checkbox" class="action" value="Talk with one trusted person" /> 💬 Talk with one trusted person</label>
-          <label class="chip"><input type="checkbox" class="action" value="Update resume/portfolio for 20 minutes" /> 🧾 Update resume/portfolio for 20 minutes</label>
-          <label class="chip"><input type="checkbox" class="action" value="Choose one practical AI skill to explore" /> 🤖 Choose one practical AI skill to explore</label>
-          <label class="chip"><input type="checkbox" class="action" value="Keep one non-tech calming routine" /> 🌿 Keep one non-tech calming routine</label>
-        </div>
+    <!-- BOUNDARY -->
+    <div class="question">
+      <label class="question-label" for="boundary">What is one boundary you can set around news or AI content?</label>
+      <p class="question-hint">Protecting your attention is not avoidance — it is self-care.</p>
+      <input type="text" id="boundary" maxlength="200" placeholder="e.g. No AI news scrolling after 9pm…" aria-label="One media boundary" />
+    </div>
 
-        <div class="grid" style="margin-top:10px;">
-          <div>
-            <label for="boundary">One media boundary</label>
-            <input id="boundary" type="text" placeholder="e.g., No AI scrolling after 8:30 PM" aria-label="Media boundary" />
-          </div>
-          <div>
-            <label for="kindness">One self-kindness reminder</label>
-            <input id="kindness" type="text" placeholder="e.g., I can learn at a human pace" aria-label="Self-kindness reminder" />
-          </div>
-        </div>
-      </section>
+    <!-- KINDNESS -->
+    <div class="question">
+      <label class="question-label" for="kindness">What is one kind thing you can remind yourself of this week?</label>
+      <p class="question-hint">Something true and gentle — the way you would speak to a friend.</p>
+      <input type="text" id="kindness" maxlength="200" placeholder="e.g. I am allowed to learn at a human pace…" aria-label="Self-kindness reminder" />
+    </div>
 
-      <section aria-labelledby="results-title">
-        <h2 id="results-title">📝 Results & Reflection</h2>
-        <p class="hint">Click “See My Reflection” to generate your summary.</p>
-        <div id="reflectionOutput" class="result" aria-live="polite">Your reflection will appear here.</div>
+    <!-- ACTION PLAN -->
+    <div class="actions-card">
+      <label class="actions-label">Choose up to 3 small actions for this week</label>
+      <p class="actions-hint">Tiny, consistent steps matter more than big sudden ones. Pick what feels honest.</p>
+      <div class="action-chips" id="actionChips" role="group" aria-label="Action options">
+        <label class="chip" id="chip0">
+          <input type="checkbox" class="action-cb" value="Schedule two 25-minute skill learning sessions" />
+          Schedule two 25-minute skill learning sessions
+        </label>
+        <label class="chip" id="chip1">
+          <input type="checkbox" class="action-cb" value="Set a daily limit on AI and news content" />
+          Set a daily limit on AI and news content
+        </label>
+        <label class="chip" id="chip2">
+          <input type="checkbox" class="action-cb" value="Talk with one trusted person about how I am feeling" />
+          Talk with one trusted person about how I am feeling
+        </label>
+        <label class="chip" id="chip3">
+          <input type="checkbox" class="action-cb" value="Spend 20 minutes updating my CV or portfolio" />
+          Spend 20 minutes updating my CV or portfolio
+        </label>
+        <label class="chip" id="chip4">
+          <input type="checkbox" class="action-cb" value="Choose one practical AI skill to explore this week" />
+          Choose one practical AI skill to explore this week
+        </label>
+        <label class="chip" id="chip5">
+          <input type="checkbox" class="action-cb" value="Keep one calming non-tech routine this week" />
+          Keep one calming non-tech routine this week
+        </label>
+      </div>
 
-        <div class="toggle-row">
-          <input type="checkbox" id="saveToggle" aria-label="Save my reflection with local storage" />
-          <label for="saveToggle" style="margin:0; font-weight:600;">Save my reflection</label>
-          <span class="hint">(stored only on this device/browser)</span>
-        </div>
+      <div class="custom-action-wrap">
+        <label class="custom-action-label" for="customAction">Or write your own action (optional)</label>
+        <input type="text" id="customAction" maxlength="200" placeholder="e.g. Research retraining options for 30 minutes…" aria-label="Custom action" />
+      </div>
+    </div>
 
-        <div class="grid" style="margin-top:10px;">
-          <div>
-            <label for="pdfName">Name for PDF (optional)</label>
-            <input id="pdfName" type="text" aria-label="Optional name for PDF" placeholder="e.g., Alex" />
-          </div>
-        </div>
+    <!-- ERROR -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
 
-        <div class="actions" aria-label="Action buttons row">
-          <button type="button" id="buildBtn" class="primary" aria-label="Generate reflection">✨ See My Reflection</button>
-          <button type="button" id="pdfBtn" class="green" aria-label="Download one page PDF">📄 Download PDF</button>
-          <button type="button" id="resetBtn" class="secondary" aria-label="Reset all fields">🔄 Reset</button>
-        </div>
-        <p id="errorMsg" class="error" role="alert"></p>
-      </section>
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite">
+      <div class="result-summary" id="resultSummary"></div>
+    </div>
 
-      <section aria-labelledby="share-title">
-        <h2 id="share-title">📣 Share</h2>
-        <div class="share-row">
-          <button type="button" id="copyLinkBtn" class="yellow" aria-label="Copy page link">🔗 Copy Link</button>
-          <a id="waShare" class="btn-link green" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">🟢 WhatsApp</a>
-          <a id="fbShare" class="btn-link blue" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook" style="background:#b8d3ff;">🔵 Facebook</a>
-          <a id="xShare" class="btn-link" href="#" target="_blank" rel="noopener" aria-label="Share on X" style="background:#e5e7eb;">⚫ X</a>
-        </div>
-      </section>
+    <!-- ACTIONS -->
+    <div class="section-label" style="margin-top: 18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom: 18px;">
+      <button type="button" class="btn btn-amber" id="buildBtn" aria-label="See my reflection">See my reflection</button>
+      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF">Download PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
 
-      <section class="safety" aria-labelledby="safety-title">
-        <h2 id="safety-title">🛟 Safety note</h2>
-        <p>This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.</p>
-        <a class="btn-link pink" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find a Helpline">🆘 Find a Helpline</a>
-      </section>
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
 
-      <section aria-labelledby="links-title">
-        <h2 id="links-title">🌈 More support</h2>
-        <div class="bottom-links">
-          <a class="btn-link secondary" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help">🧠 Help</a>
-          <a class="btn-link yellow" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">🎧 Recommended Audio Books</a>
-          <a class="btn-link green" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support us">💛 Support us</a>
-          <a class="btn-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">🧰 Explore More Free Tools</a>
-        </div>
-      </section>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
-      <footer style="margin-top:14px; color:#6b7280; font-size:0.9rem; text-align:center;">
-        Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-      </footer>
-    </article>
-  </main>
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; If you feel unsafe, please reach out for support.
+    </p>
+  </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    (function () {
-      const STORAGE_KEY = "aiBubbleFear2026Reflection";
-      const SAVE_TOGGLE_KEY = "aiBubbleFear2026SaveEnabled";
+</div>
 
-      const fearTheme = document.getElementById("fearTheme");
-      const intensity = document.getElementById("intensity");
-      const fearText = document.getElementById("fearText");
-      const grounding = document.getElementById("grounding");
-      const factCheck = document.getElementById("factCheck");
-      const boundary = document.getElementById("boundary");
-      const kindness = document.getElementById("kindness");
-      const reflectionOutput = document.getElementById("reflectionOutput");
-      const errorMsg = document.getElementById("errorMsg");
-      const saveToggle = document.getElementById("saveToggle");
-      const pdfName = document.getElementById("pdfName");
-      const toast = document.getElementById("toast");
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      const buildBtn = document.getElementById("buildBtn");
-      const pdfBtn = document.getElementById("pdfBtn");
-      const resetBtn = document.getElementById("resetBtn");
-      const copyLinkBtn = document.getElementById("copyLinkBtn");
-      const waShare = document.getElementById("waShare");
-      const fbShare = document.getElementById("fbShare");
-      const xShare = document.getElementById("xShare");
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
 
-      function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add("show");
-        window.setTimeout(() => toast.classList.remove("show"), 1800);
-      }
+  const STORAGE_KEY = 'aiBubbleFearV5';
+  const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = window.jspdf && window.jspdf.jsPDF;
 
-      function getActions() {
-        return Array.from(document.querySelectorAll(".action:checked")).map((x) => x.value).slice(0, 3);
-      }
+  const $ = id => document.getElementById(id);
 
-      function validateCoreInput() {
-        const hasAny = fearTheme.value.trim() || fearText.value.trim() || factCheck.value.trim() || getActions().length > 0 || boundary.value.trim() || kindness.value.trim();
-        if (!hasAny) {
-          errorMsg.textContent = "Please add at least one reflection input before generating results or PDF.";
-          return false;
-        }
-        const val = intensity.value.trim();
-        if (val !== "") {
-          const n = Number(val);
-          if (Number.isNaN(n) || n < 0 || n > 10) {
-            errorMsg.textContent = "Fear intensity must be a number from 0 to 10.";
-            return false;
-          }
-        }
-        errorMsg.textContent = "";
-        return true;
-      }
+  const intensityMeanings = [
+    'Barely there — a quiet background hum.',
+    'Very mild — easy to set aside for now.',
+    'Mild — present but not overwhelming.',
+    'Noticeable — coming up more than you would like.',
+    'Moderate — it is affecting how you think and feel.',
+    'Noticeable — it is on your mind but manageable.',
+    'Significant — taking up real mental energy.',
+    'Quite strong — hard to think around it.',
+    'Very strong — affecting daily life and decisions.',
+    'Intense — feeling quite overwhelmed right now.',
+    'Overwhelming — please be very gentle with yourself today.'
+  ];
 
-      function buildReflectionText() {
-        if (!validateCoreInput()) return "";
+  let toastTimer;
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
 
-        const selectedActions = getActions();
-        const lines = [
-          "AI Bubble Fear (2026) Reflection",
-          "",
-          "1) Fear theme: " + (fearTheme.value || "Not selected"),
-          "2) Intensity (0-10): " + (intensity.value || "Not provided"),
-          "3) What I am feeling: " + (fearText.value.trim() || "Not provided"),
-          "4) Grounding support: " + (grounding.value.trim() || "Not provided"),
-          "5) Balanced thought: " + (factCheck.value.trim() || "Not provided"),
-          "6) Tiny actions this week: " + (selectedActions.length ? selectedActions.join("; ") : "None selected"),
-          "7) Boundary: " + (boundary.value.trim() || "Not provided"),
-          "8) Self-kindness reminder: " + (kindness.value.trim() || "Not provided"),
-          "",
-          "Reminder: Small consistent steps reduce panic and build confidence over time."
-        ];
+  // Intensity slider
+  const slider = $('intensitySlider');
+  const intensityVal = $('intensityVal');
+  const intensityMeaning = $('intensityMeaning');
 
-        return lines.join("\n");
-      }
+  function updateIntensity() {
+    const v = parseInt(slider.value, 10);
+    intensityVal.textContent = v;
+    intensityMeaning.textContent = intensityMeanings[v] || '';
+  }
 
-      function refreshShareLinks() {
-        const pageUrl = window.location.href;
-        const msg = "I used this AI Bubble Fear reflection tool. It helped me calm and plan tiny steps:";
-        const encoded = encodeURIComponent(msg + " " + pageUrl);
-        waShare.href = "https://wa.me/?text=" + encoded;
-        fbShare.href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(pageUrl);
-        xShare.href = "https://twitter.com/intent/tweet?text=" + encoded;
-      }
+  slider.addEventListener('input', () => { updateIntensity(); saveIfEnabled(); });
+  updateIntensity();
 
-      function saveState() {
-        if (!saveToggle.checked) return;
-        const payload = {
-          fearTheme: fearTheme.value,
-          intensity: intensity.value,
-          fearText: fearText.value,
-          grounding: grounding.value,
-          factCheck: factCheck.value,
-          actions: getActions(),
-          boundary: boundary.value,
-          kindness: kindness.value,
-          pdfName: pdfName.value,
-          reflectionOutput: reflectionOutput.textContent
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      }
+  // Action chips — max 3
+  function getSelectedActions() {
+    const checked = Array.from(document.querySelectorAll('.action-cb:checked')).map(cb => cb.value);
+    const custom = $('customAction').value.trim();
+    if (custom) checked.push(custom);
+    return checked.slice(0, 3);
+  }
 
-      function loadState() {
-        const enabled = localStorage.getItem(SAVE_TOGGLE_KEY) === "1";
-        saveToggle.checked = enabled;
-        if (!enabled) return;
-
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        try {
-          const data = JSON.parse(raw);
-          fearTheme.value = data.fearTheme || "";
-          intensity.value = data.intensity || "";
-          fearText.value = data.fearText || "";
-          grounding.value = data.grounding || "";
-          factCheck.value = data.factCheck || "";
-          boundary.value = data.boundary || "";
-          kindness.value = data.kindness || "";
-          pdfName.value = data.pdfName || "";
-          reflectionOutput.textContent = data.reflectionOutput || "Your reflection will appear here.";
-
-          const actions = Array.isArray(data.actions) ? data.actions : [];
-          document.querySelectorAll(".action").forEach((cb) => {
-            cb.checked = actions.includes(cb.value);
-          });
-        } catch (_e) {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      }
-
-      function clearAll() {
-        fearTheme.value = "";
-        intensity.value = "";
-        fearText.value = "";
-        grounding.value = "";
-        factCheck.value = "";
-        boundary.value = "";
-        kindness.value = "";
-        pdfName.value = "";
-        reflectionOutput.textContent = "Your reflection will appear here.";
-        errorMsg.textContent = "";
-        document.querySelectorAll(".action").forEach((cb) => { cb.checked = false; });
-        if (saveToggle.checked) {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function downloadPdf() {
-        const reflection = buildReflectionText();
-        if (!reflection) return;
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: "pt", format: "a4" });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 38;
-        const nameText = pdfName.value.trim() ? "Name: " + pdfName.value.trim() : "Name: (not provided)";
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.text("AI Bubble Fear (2026) Reflection Summary", margin, 44);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        doc.text(nameText, margin, 65);
-
-        const wrapped = doc.splitTextToSize(reflection, pageWidth - margin * 2);
-        const maxLines = Math.floor((pageHeight - 125) / 14);
-        const safeLines = wrapped.slice(0, maxLines);
-        doc.text(safeLines, margin, 90, { lineHeightFactor: 1.25 });
-
-        doc.setFontSize(10);
-        doc.setTextColor(80, 80, 80);
-        doc.text("https://emotionalintelligencedeveloper.com/", pageWidth / 2, pageHeight - 22, { align: "center" });
-
-        doc.save("ai-bubble-fear-2026-reflection.pdf");
-        showToast("PDF downloaded");
-      }
-
-      buildBtn.addEventListener("click", function () {
-        const text = buildReflectionText();
-        if (!text) return;
-        reflectionOutput.textContent = text;
-        if (saveToggle.checked) saveState();
+  document.querySelectorAll('.action-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const checked = document.querySelectorAll('.action-cb:checked');
+      if (checked.length > 3) { cb.checked = false; showToast('You can choose up to 3 actions.'); return; }
+      document.querySelectorAll('.chip').forEach(chip => {
+        const input = chip.querySelector('.action-cb');
+        if (input) chip.classList.toggle('selected', input.checked);
       });
+      saveIfEnabled();
+    });
+  });
 
-      pdfBtn.addEventListener("click", function () {
-        downloadPdf();
-        if (saveToggle.checked) saveState();
-      });
+  function getData() {
+    return {
+      name: $('pdfName').value.trim(),
+      fearTheme: $('fearTheme').value,
+      intensity: slider.value,
+      fearText: $('fearText').value.trim(),
+      grounding: $('grounding').value.trim(),
+      factCheck: $('factCheck').value.trim(),
+      boundary: $('boundary').value.trim(),
+      kindness: $('kindness').value.trim(),
+      actions: Array.from(document.querySelectorAll('.action-cb:checked')).map(cb => cb.value),
+      customAction: $('customAction').value.trim(),
+      autoSave: $('saveToggle').checked
+    };
+  }
 
-      resetBtn.addEventListener("click", clearAll);
+  function validate() {
+    const d = getData();
+    const hasContent = d.fearTheme || d.fearText || d.factCheck || d.boundary || d.kindness || d.actions.length || d.customAction;
+    const errEl = $('errorMsg');
+    if (!hasContent) {
+      errEl.textContent = 'Please fill in at least one field before generating your reflection.';
+      errEl.style.display = 'block';
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return null;
+    }
+    errEl.style.display = 'none';
+    return d;
+  }
 
-      copyLinkBtn.addEventListener("click", async function () {
-        try {
-          await navigator.clipboard.writeText(window.location.href);
-          showToast("Link copied");
-        } catch (_e) {
-          showToast("Could not copy automatically. Please copy from address bar.");
-        }
-      });
+  function allActions(d) {
+    const list = [...d.actions];
+    if (d.customAction) list.push(d.customAction);
+    return list.slice(0, 3);
+  }
 
-      saveToggle.addEventListener("change", function () {
-        localStorage.setItem(SAVE_TOGGLE_KEY, saveToggle.checked ? "1" : "0");
-        if (saveToggle.checked) {
-          saveState();
-          showToast("Save enabled");
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-          showToast("Save disabled");
-        }
-      });
+  function buildResultHTML(d) {
+    const actions = allActions(d);
+    let html = '<div class="result-summary-title">Your reflection summary</div>';
 
-      document.querySelectorAll("input, textarea, select").forEach((el) => {
-        el.addEventListener("input", function () {
-          if (saveToggle.checked) saveState();
+    const rows = [
+      ['What is weighing on you', d.fearTheme || '—'],
+      ['Fear intensity', d.intensity + ' / 10 — ' + intensityMeanings[parseInt(d.intensity, 10)]],
+      ['What this fear looks like', d.fearText || '—'],
+      ['What helps you feel grounded', d.grounding || '—'],
+      ['A more balanced thought', d.factCheck || '—'],
+      ['Your media boundary', d.boundary || '—'],
+      ['Your self-kindness reminder', d.kindness || '—'],
+      ['Your actions this week', actions.length ? actions.join(' · ') : '—']
+    ];
+
+    rows.forEach(([label, value]) => {
+      html += '<div class="result-row">';
+      html += '<div class="result-row-label">' + label + '</div>';
+      html += '<div class="result-row-value">' + value + '</div>';
+      html += '</div>';
+    });
+
+    html += '<div class="result-closing">You do not need to have all the answers right now. Small, honest steps — taken with care — are enough. You are already doing something brave by reflecting.</div>';
+    return html;
+  }
+
+  function showResult(d) {
+    const box = $('resultBox');
+    $('resultSummary').innerHTML = buildResultHTML(d);
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function createReflection() {
+    const d = validate();
+    if (!d) return;
+    showResult(d);
+    if (d.autoSave) saveLocal(d);
+  }
+
+  function saveLocal(d) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch(_) {}
+  }
+
+  function saveIfEnabled() {
+    if ($('saveToggle').checked) saveLocal();
+  }
+
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d) return;
+      $('pdfName').value = d.name || '';
+      $('fearTheme').value = d.fearTheme || '';
+      $('fearText').value = d.fearText || '';
+      $('grounding').value = d.grounding || '';
+      $('factCheck').value = d.factCheck || '';
+      $('boundary').value = d.boundary || '';
+      $('kindness').value = d.kindness || '';
+      $('customAction').value = d.customAction || '';
+      $('saveToggle').checked = Boolean(d.autoSave);
+      if (d.intensity !== undefined) { slider.value = d.intensity; updateIntensity(); }
+      if (Array.isArray(d.actions)) {
+        document.querySelectorAll('.action-cb').forEach(cb => {
+          cb.checked = d.actions.includes(cb.value);
+          const chip = cb.closest('.chip');
+          if (chip) chip.classList.toggle('selected', cb.checked);
         });
-      });
+      }
+      if (d.fearTheme || d.fearText || d.factCheck) showResult(d);
+    } catch(_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    }
+  }
 
-      refreshShareLinks();
-      loadState();
-    })();
-  </script>
+  function resetTool() {
+    $('pdfName').value = '';
+    $('fearTheme').value = '';
+    $('fearText').value = '';
+    $('grounding').value = '';
+    $('factCheck').value = '';
+    $('boundary').value = '';
+    $('kindness').value = '';
+    $('customAction').value = '';
+    $('saveToggle').checked = false;
+    slider.value = 5;
+    updateIntensity();
+    document.querySelectorAll('.action-cb').forEach(cb => { cb.checked = false; });
+    document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('selected'));
+    $('errorMsg').style.display = 'none';
+    $('resultBox').style.display = 'none';
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Tool reset.');
+  }
+
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This AI & Work Fear reflection tool helped me feel less alone and find a next step: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    const d = validate();
+    if (!d) return;
+
+    showToast('Preparing your PDF…');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header band
+    doc.setFillColor(253, 246, 232);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+
+    try {
+      const logoData = await imageToDataUrl(logoUrl);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 42, 53);
+    doc.text('AI & Work Fear Reflection', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 106, 118);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+
+    y += 86;
+
+    if (d.name) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 42, 53);
+      doc.text('Name: ' + d.name, margin, y);
+      y += 18;
+    }
+
+    const actions = allActions(d);
+    const rows = [
+      ['What is weighing on you', d.fearTheme || 'Not selected'],
+      ['Fear intensity', d.intensity + '/10 — ' + intensityMeanings[parseInt(d.intensity, 10)]],
+      ['What this fear looks like', d.fearText || 'Not provided'],
+      ['What helps you feel grounded', d.grounding || 'Not provided'],
+      ['A more balanced thought', d.factCheck || 'Not provided'],
+      ['Your media boundary', d.boundary || 'Not provided'],
+      ['Your self-kindness reminder', d.kindness || 'Not provided'],
+      ['Your actions this week', actions.length ? actions.join('; ') : 'Not selected']
+    ];
+
+    doc.setFontSize(9.5);
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(248, 252, 255);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(176, 125, 46);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 42, 53);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Closing note
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setFillColor(253, 246, 232);
+    const closingLines = doc.splitTextToSize('You do not need to have all the answers right now. Small, honest steps — taken with care — are enough. You are already doing something brave by reflecting.', pageW - margin * 2 - 20);
+    const closingH = closingLines.length * 12 + 20;
+    doc.roundedRect(margin, y, pageW - margin * 2, closingH, 4, 4, 'F');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.3);
+    doc.setTextColor(176, 125, 46);
+    doc.text(closingLines, margin + 10, y + 14);
+    y += closingH + 12;
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(200, 220, 230);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(91, 143, 168);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 42, 53);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(200, 220, 230);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 154, 166);
+    doc.text('This tool supports reflection and self-awareness. If you feel unsafe or at risk, please seek urgent help.', margin, pageH - 22);
+
+    doc.save('ai-work-fear-reflection.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  // General input save listeners
+  ['pdfName','fearTheme','fearText','grounding','factCheck','boundary','kindness','customAction'].forEach(id => {
+    $(id).addEventListener('input', saveIfEnabled);
+  });
+
+  $('saveToggle').addEventListener('change', () => {
+    if ($('saveToggle').checked) { saveLocal(); showToast('Auto-save enabled.'); }
+    else { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} showToast('Auto-save off.'); }
+  });
+
+  $('buildBtn').addEventListener('click', createReflection);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  updateShareLinks();
+  loadLocal();
+}());
+</script>
 </body>
 </html>

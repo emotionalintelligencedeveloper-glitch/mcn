@@ -2,744 +2,1687 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Emotional Trigger Mapping Tool | Emotional Intelligence Developer</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    :root{
-      --bg:#eef5fb;
-      --card:#ffffff;
-      --ink:#0f172a;
-      --muted:#475569;
-      --brand:#2563eb;
-      --brand-2:#1d4ed8;
-      --ok:#0f766e;
-      --border:#dbe4f0;
-      --soft:#f8fbff;
-      --focus:#f59e0b;
-      --danger:#b91c1c;
-      --chip:#e2ecff;
-      --chip-active:#c9dcff;
+    :root {
+      --bg: #f2f4f8;
+      --card: #ffffff;
+      --text: #1a1e2e;
+      --muted: #4a5068;
+      --hint: #8a90a8;
+      --border: #d0d4e8;
+      --brand: #4a5aaa;
+      --brand-light: #eaecf8;
+      --brand-mid: #b0b8e0;
+      --accent: #6a7acc;
+      --accent-light: #e4e8f8;
+      --teal: #3a8a7a;
+      --teal-light: #e4f2ee;
+      --teal-mid: #a0c8c0;
+      --warm: #f8f6f2;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --chip-bg: #eaecf8;
+      --chip-active: #4a5aaa;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--ink);
-      background:linear-gradient(180deg,#eaf3fb 0%,#f7fbff 100%);
-      line-height:1.5;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      padding-bottom: 80px;
     }
-    a{color:inherit}
-    .container{
-      width:min(1100px,94vw);
-      margin:1rem auto 7rem;
-      display:grid;
-      gap:1rem;
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 20px;
     }
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow:0 8px 24px rgba(15,23,42,.08);
-      padding:1rem;
+
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
     }
-    h1,h2,h3{line-height:1.2;margin:.2rem 0 .6rem}
-    h1{font-size:clamp(1.4rem,2.5vw,2rem)}
-    h2{font-size:clamp(1.1rem,2.1vw,1.4rem)}
-    p{margin:.4rem 0;color:var(--muted)}
-    .safety{border-left:4px solid var(--brand);background:var(--soft);padding:.75rem 1rem;border-radius:12px;font-size:.95rem}
 
-    .progress-wrap{position:sticky;top:0;z-index:10;background:rgba(247,251,255,.95);backdrop-filter:blur(5px);padding:.6rem .2rem .2rem}
-    .progressbar{height:10px;background:#dbeafe;border-radius:999px;overflow:hidden}
-    .progressbar span{display:block;height:100%;width:14%;background:linear-gradient(90deg,var(--brand),#60a5fa);transition:width .25s ease}
-    .step-label{font-weight:700;font-size:.92rem;color:#1e3a8a;margin-top:.4rem}
-    .step-dots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.32rem;margin-top:.5rem}
-    .dot{border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:999px;font-size:.75rem;padding:.18rem .25rem;text-align:center;font-weight:700}
-    .dot.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
-
-    .steps{display:grid;gap:1rem}
-    .step{display:none}
-    .step.active{display:block}
-    .step-tip{background:#f8fbff;border:1px solid #bfd5f6;border-radius:12px;padding:.65rem .8rem;margin-bottom:.7rem}
-    .step-tip strong{color:#1d4ed8}
-
-    label{font-weight:600;display:block;margin:.6rem 0 .3rem}
-    textarea,input[type="text"],select,input[type="range"]{width:100%}
-    textarea,input[type="text"],select{padding:.65rem .75rem;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;background:#fff}
-    textarea{min-height:84px;resize:vertical}
-
-    .emotion-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem}
-    .emotion-card{border:1px solid var(--border);border-radius:14px;padding:.7rem;background:#fff;cursor:pointer;display:grid;gap:.4rem;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
-    .emotion-card:hover,.emotion-card:focus-visible{transform:translateY(-2px);border-color:#93c5fd;box-shadow:0 4px 14px rgba(37,99,235,.2)}
-    .emotion-card.selected{border:2px solid var(--brand);background:#f0f7ff}
-    .emotion-card svg{width:100%;height:100px;border-radius:10px;background:#f1f5f9}
-    .pill-list{display:flex;flex-wrap:wrap;gap:.4rem}
-    .pill{background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:.2rem .6rem;font-size:.78rem}
-
-    .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem}
-    .slider-wrap{background:#f8fbff;border:1px solid #dbeafe;border-radius:12px;padding:.7rem}
-    .slider-val{font-size:.95rem;font-weight:700;color:#1e40af}
-
-    .chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
-    .chip{border:1px solid #b6caee;background:var(--chip);color:#1e3a8a;padding:.38rem .62rem;border-radius:999px;font-size:.87rem;cursor:pointer}
-    .chip.active{background:var(--chip-active);border-color:#7ea7e8}
-
-    .group-title{font-weight:700;color:#1e3a8a;margin:.85rem 0 .2rem}
-    .body-map,.needs-grid,.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.45rem}
-    .checkline,.choice{display:flex;gap:.45rem;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.45rem}
-
-    .summary{background:#f8fbff;border:1px dashed #97b6ea;border-radius:12px;padding:.75rem;white-space:pre-wrap}
-    .insights{background:#f8fbff;border:1px solid #d0e2fb;border-radius:12px;padding:.75rem}
-    .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
-    button,.btn{border:0;border-radius:10px;padding:.62rem .9rem;font-weight:700;cursor:pointer;background:#e2e8f0;color:#0f172a;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
-    .primary{background:var(--brand);color:#fff}
-    .primary:hover{background:var(--brand-2)}
-    .good{background:#0ea5a4;color:#fff}
-    .warn{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-
-    .reg-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem}
-    .tool{border:1px solid #d9e6f7;border-radius:12px;padding:.7rem;background:#f8fbff}
-    .timer{width:120px;height:120px;border-radius:50%;margin:.5rem auto;border:7px solid #bfdbfe;display:grid;place-items:center;font-weight:700;color:#1e3a8a;position:relative;overflow:hidden}
-    .timer::after{content:"";position:absolute;inset:0;background:conic-gradient(#60a5fa calc(var(--prog,0)*1%),transparent 0);opacity:.35}
-    .timer span{position:relative;z-index:1;background:#fff;border-radius:999px;padding:.2rem .45rem}
-
-    .history-list{display:grid;gap:.5rem}
-    .history-item{display:flex;justify-content:space-between;gap:.5rem;align-items:center;border:1px solid #dbe4f0;border-radius:10px;padding:.5rem;background:#fff}
-    .history-meta{font-size:.88rem;color:#334155}
-
-    .share-row{display:flex;flex-wrap:wrap;gap:.45rem}
-    .link-group{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
-    .bottom-links{display:grid;gap:.7rem}
-    .required-links{display:flex;flex-wrap:wrap;gap:.6rem}
-    .required-links .btn{background:#fef9c3;border:1px solid #fde047}
-    .support{background:#dcfce7 !important;border-color:#86efac !important}
-    .help-now{background:#fee2e2 !important;border:1px solid #fca5a5 !important}
-
-    .sticky-bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(15,23,42,.92);padding:.55rem .7rem calc(.55rem + env(safe-area-inset-bottom));display:flex;gap:.55rem;justify-content:center}
-    .sticky-bar button{flex:1;max-width:220px;background:#1d4ed8;color:#fff}
-
-    :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-    @media (max-width:720px){
-      .container{margin-bottom:8.2rem}
-      .required-links .btn{flex:1}
-      .share-row .btn{flex:1}
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 14px;
     }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--hint);
+      background: var(--warm);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    /* PROGRESS */
+    .progress-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      color: var(--brand);
+      font-weight: bold;
+    }
+
+    .progress-count {
+      font-size: 12px;
+      color: var(--hint);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--brand-light);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .step-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid var(--brand-mid);
+      background: var(--brand-light);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Georgia", serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .step-dot.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .step-dot.done {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    /* STEP CARD */
+    .step-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .step-card.active { display: block; }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+
+    .step-tip {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+
+    /* INPUTS */
+    .field { margin-bottom: 14px; }
+
+    .field-label {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .field-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 80px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a90a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      transition: border-color 0.2s;
+    }
+
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* SLIDER */
+    .slider-wrap {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0 4px;
+    }
+
+    .slider-end { font-size: 12px; color: var(--hint); white-space: nowrap; }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--brand-mid);
+      border-radius: 99px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--brand);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    .slider-val {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--brand);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .slider-meaning {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      min-height: 20px;
+    }
+
+    /* EMOTION CARDS */
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 480px) {
+      .emotion-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .emotion-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      background: #fff;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .emotion-card:hover { border-color: var(--brand); }
+
+    .emotion-card.selected {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .emotion-card.selected .emotion-signals { color: rgba(255,255,255,0.8); }
+
+    .emotion-name {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .emotion-card.selected .emotion-name { color: #fff; }
+
+    .emotion-signals {
+      font-size: 11px;
+      color: var(--hint);
+      line-height: 1.4;
+    }
+
+    /* CHIPS */
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      background: var(--chip-bg);
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip:hover { border-color: var(--brand); }
+    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    /* CHECKBOXES */
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 480px) {
+      .check-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--muted);
+      transition: border-color 0.15s;
+    }
+
+    .check-item:hover { border-color: var(--brand); }
+    .check-item input { accent-color: var(--brand); cursor: pointer; }
+
+    /* PLAN CHOICES */
+    .plan-choices {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .plan-choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .plan-choice:hover { border-color: var(--brand); }
+    .plan-choice input { accent-color: var(--brand); margin-top: 3px; }
+    .plan-choice-title { font-size: 14px; color: var(--text); font-weight: bold; margin-bottom: 2px; }
+    .plan-choice-text { font-size: 13px; color: var(--muted); }
+
+    /* REGULATION TOOLS */
+    .reg-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .reg-tool {
+      background: var(--teal-light);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .reg-tool-title {
+      font-size: 15px;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+
+    .reg-tool-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .breath-timer {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 6px solid var(--teal-mid);
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--teal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .breath-timer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: conic-gradient(var(--teal-mid) calc(var(--prog, 0) * 1%), transparent 0);
+      opacity: 0.4;
+    }
+
+    .breath-state { position: relative; z-index: 1; text-align: center; }
+
+    /* SUMMARY / HISTORY */
+    .summary-box {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      white-space: pre-wrap;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 14px;
+      font-family: "Georgia", serif;
+    }
+
+    .insights-box {
+      background: var(--teal-light);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      white-space: pre-wrap;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .history-list { display: grid; gap: 8px; margin-bottom: 12px; }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+    }
+
+    .history-meta { font-size: 13px; color: var(--muted); }
+    .history-emotion { font-size: 14px; color: var(--text); font-weight: bold; }
+
+    /* STEP NAV */
+    .step-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* CARD TITLE */
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* GENERAL CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+    .btn-small {
+      padding: 8px 16px;
+      min-height: 36px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .step-nav { flex-direction: column; }
+    }
+
+    /* STICKY BAR */
+    .sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 30, 46, 0.96);
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .sticky-bar .btn {
+      flex: 1;
+      max-width: 200px;
+      font-size: 13px;
+      padding: 10px 16px;
+      min-height: 42px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
   </style>
 </head>
 <body>
-  <main class="container" id="app">
-    <section class="card">
-      <h1>Emotional Trigger Mapping Tool</h1>
-      <p>Map what happened, how your body reacted, what your mind said, and what can help right now.</p>
-      <div class="safety" aria-live="polite">
-        <strong>This tool is for reflection, not diagnosis.</strong><br>
-        If you feel unsafe or in immediate danger, contact local emergency services.
-      </div>
-      <p style="font-size:.9rem">Site: Emotional Intelligence Developer</p>
-    </section>
+<div class="container">
 
-    <section class="card progress-wrap" aria-label="Progress">
-      <div class="progressbar" aria-hidden="true"><span id="progressFill"></span></div>
-      <div class="step-label" id="stepLabel">Step 1 of 7: Choose emotion</div>
-      <div class="step-dots" id="stepDots" aria-hidden="true"></div>
-    </section>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Emotional Trigger Mapping Tool</h1>
+    <p class="tagline">A 7-step guided reflection to map what happened, how your body reacted, what your mind said, and what can help right now.</p>
+    <span class="disclaimer">Reflection and self-awareness only — not a diagnosis or medical tool</span>
+  </header>
 
-    <section class="card steps" id="steps">
-      <article class="step active" data-step="1">
-        <h2>Step 1: Emotion + intensity</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Start with the closest emotion, not the perfect one. Track intensity now, then capture what escalates or eases it.</div>
-        <div class="emotion-grid" id="emotionGrid"></div>
-        <div class="split">
-          <div class="slider-wrap">
-            <label for="intensityRange">Emotion intensity (0-10)</label>
-            <input id="intensityRange" type="range" min="0" max="10" value="5" />
-            <div class="slider-val" id="intensityValue">Current intensity: 5 / 10</div>
-          </div>
-          <div>
-            <label for="worseText">What makes this worse?</label>
-            <textarea id="worseText" placeholder="Examples: replaying argument, doom scrolling, skipping meals."></textarea>
-            <label for="helpText">What helps even a little?</label>
-            <textarea id="helpText" placeholder="Examples: stepping outside, slower breathing, one supportive text."></textarea>
-          </div>
-        </div>
-      </article>
-
-      <article class="step" data-step="2">
-        <h2>Step 2: Trigger map + boundary</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Separate event from interpretation. Name trigger type and boundary to reduce confusion and improve communication.</div>
-        <label for="triggerText">Trigger notes</label>
-        <textarea id="triggerText" placeholder="What happened right before the emotional reaction?"></textarea>
-
-        <div class="group-title">Trigger type tags</div>
-        <div class="chips" id="triggerTags"></div>
-
-        <label for="boundaryText">What boundary was crossed (or feared to be crossed)?</label>
-        <textarea id="boundaryText" placeholder="Examples: time boundary, respect boundary, privacy boundary, role clarity."></textarea>
-      </article>
-
-      <article class="step" data-step="3">
-        <h2>Step 3: Body signals + stress</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Your earliest body signal is often the best early warning. Catching it earlier helps prevent emotional flooding.</div>
-        <div class="body-map" id="bodyMap"></div>
-        <div class="split">
-          <div class="slider-wrap">
-            <label for="stressRange">Stress level (0-10)</label>
-            <input id="stressRange" type="range" min="0" max="10" value="4" />
-            <div class="slider-val" id="stressValue">Current stress: 4 / 10</div>
-          </div>
-          <div>
-            <label for="earliestSignal">Earliest body signal you noticed</label>
-            <input id="earliestSignal" type="text" placeholder="Example: jaw tightening or stomach drop." />
-            <label for="bodyText">Body notes</label>
-            <textarea id="bodyText" placeholder="Anything else in your body sensations?"></textarea>
-          </div>
-        </div>
-      </article>
-
-      <article class="step" data-step="4">
-        <h2>Step 4: Mind story + reframe</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Distortions are common under stress. Naming one can make room for a more balanced thought.</div>
-        <label for="thoughtText">Mind story / automatic thought</label>
-        <textarea id="thoughtText" placeholder="Example: 'I always mess this up' or 'I'm not safe here'."></textarea>
-        <label for="distortionSelect">Cognitive distortion helper</label>
-        <select id="distortionSelect">
-          <option value="">Choose one distortion (optional)</option>
-          <option>All-or-nothing thinking</option>
-          <option>Catastrophizing</option>
-          <option>Mind reading</option>
-          <option>Fortune telling</option>
-          <option>Personalization</option>
-          <option>Overgeneralization</option>
-          <option>Should statements</option>
-          <option>Emotional reasoning</option>
-        </select>
-        <label for="balancedThought">Alternative balanced thought</label>
-        <textarea id="balancedThought" placeholder="Use: 'A more balanced view is...'. Keep it honest and compassionate."></textarea>
-        <button id="generateBalanced" type="button">Generate balanced thought prompt</button>
-      </article>
-
-      <article class="step" data-step="5">
-        <h2>Step 5: Needs + smallest next action</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Needs are not weakness. Turning needs into tiny actions is a practical path to regulation.</div>
-        <div class="needs-grid" id="needsGrid"></div>
-        <label for="needText">Anything else you need right now?</label>
-        <textarea id="needText" placeholder="Add your own need in your own words."></textarea>
-        <label for="smallAction">Smallest next action (under 10 minutes)</label>
-        <input id="smallAction" type="text" placeholder="Example: drink water, send one sentence, step outside for 3 minutes." />
-      </article>
-
-      <article class="step" data-step="6">
-        <h2>Step 6: Response plan (R → C → R → P)</h2>
-        <div class="step-tip"><strong>Step tip:</strong> A complete response plan includes self-regulation, communication, repair if needed, and prevention for next time.</div>
-        <div class="plan-grid" id="planGrid"></div>
-        <label for="regulatePlan">Regulate: What will calm your nervous system first?</label>
-        <textarea id="regulatePlan" placeholder="Example: 4 rounds box breathing + water + no replying for 20 minutes."></textarea>
-        <label for="communicatePlan">Communicate: What boundary or request will you state?</label>
-        <textarea id="communicatePlan" placeholder="Example: 'I need more time to respond clearly. I'll reply by 4pm.'"></textarea>
-        <label for="repairPlan">Repair: What repair step is needed (if any)?</label>
-        <textarea id="repairPlan" placeholder="Example: acknowledge tone, clarify intention, offer one corrective action."></textarea>
-        <label for="preventPlan">Prevent: What system change can reduce repeats?</label>
-        <textarea id="preventPlan" placeholder="Example: set meeting agenda, reduce sensory load, schedule recovery breaks."></textarea>
-      </article>
-
-      <article class="step" data-step="7">
-        <h2>Step 7: Review, save, and export</h2>
-        <div class="step-tip"><strong>Step tip:</strong> Your quick summary is for pattern learning, not perfection. Save consistently to reveal recurring triggers and leverage points.</div>
-        <div class="summary" id="summaryBox" aria-live="polite"></div>
-        <div class="insights" id="insightsBox" aria-live="polite"></div>
-      </article>
-
-      <div class="actions">
-        <button id="prevBtn" type="button" aria-label="Previous step">← Back</button>
-        <button class="primary" id="nextBtn" type="button" aria-label="Next step">Next →</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Regulation tools (grounding + boundaries)</h2>
-      <div class="reg-tools">
-        <div class="tool">
-          <h3>5-4-3-2-1 grounding</h3>
-          <p>Notice: 5 things you see, 4 feel, 3 hear, 2 smell, 1 taste. Slow pace, no pressure.</p>
-        </div>
-        <div class="tool">
-          <h3>Box breathing</h3>
-          <div class="timer" style="--prog:0" id="breathTimer"><span id="breathState">Ready</span></div>
-          <div class="actions"><button id="startBreath" class="good" type="button">Start 1 min</button><button id="stopBreath" type="button">Stop</button></div>
-          <p style="font-size:.88rem">Inhale 4 • Hold 4 • Exhale 4 • Hold 4</p>
-        </div>
-        <div class="tool">
-          <h3>Name it to tame it</h3>
-          <p>Label your emotion with simple words: “This is anxiety” or “This is shame.” Naming can reduce intensity.</p>
-        </div>
-        <div class="tool">
-          <h3>Boundary micro-script</h3>
-          <p><em>“I’m not able to do that right now.”</em></p>
-          <button id="copyBoundary" type="button">Copy script</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>History (local-only)</h2>
-      <p>Saved only on this device. Stores last 10 entries.</p>
-      <div class="history-list" id="historyList"></div>
-      <div class="actions">
-        <button class="warn" id="clearHistory" type="button">Clear history</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Share</h2>
-      <div class="share-row">
-        <button class="btn" data-share="copy" type="button">Copy Link</button>
-        <button class="btn" data-share="whatsapp" type="button">WhatsApp</button>
-        <button class="btn" data-share="facebook" type="button">Facebook</button>
-        <button class="btn" data-share="twitter" type="button">X/Twitter</button>
-        <button class="btn" data-share="email" type="button">Email</button>
-      </div>
-    </section>
-
-    <section class="card bottom-links">
-      <div class="required-links" aria-label="Required links">
-        <a class="btn" target="_blank" rel="noopener" href="https://emotionalintelligencedeveloper.com/recommended-books/">Recommended Books</a>
-        <a class="btn" target="_blank" rel="noopener" href="https://emotionalintelligencedeveloper.com/help-page/">Help Page</a>
-        <a class="btn support" target="_blank" rel="noopener" href="https://emotionalintelligencedeveloper.com/support-this-website/">Support Us</a>
-      </div>
-      <div class="link-group">
-        <a class="btn help-now" target="_blank" rel="noopener" href="https://findahelpline.com/">Get Help Now</a>
-      </div>
-    </section>
-  </main>
-
-  <div class="sticky-bar" role="toolbar" aria-label="Quick actions">
-    <button id="quickSave" type="button">Save</button>
-    <button id="quickPdf" type="button">Download PDF</button>
-    <button id="quickShare" type="button">Share</button>
+  <!-- PROGRESS -->
+  <div class="progress-card" aria-label="Progress through steps">
+    <div class="progress-top">
+      <span class="progress-label" id="stepLabel">Step 1 of 7 — Emotion and intensity</span>
+      <span class="progress-count" id="stepCount">1/7</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+    <div class="step-dots" id="stepDots" aria-hidden="true"></div>
   </div>
 
-  <script>
-    const $ = (s,root=document)=>root.querySelector(s);
-    const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+  <!-- STEP 1: EMOTION + INTENSITY -->
+  <div class="step-card active" data-step="1">
+    <p class="step-title">Step 1 — Emotion and intensity</p>
+    <p class="step-tip">Start with the closest emotion, not the perfect one. You can always refine it later.</p>
 
-    const stepNames = ['Emotion + intensity','Trigger map + boundary','Body signals + stress','Mind story + reframe','Needs + action','Response plan','Review / save'];
-    const stepTips = [
-      'Pick the closest emotion and rate intensity for a baseline.',
-      'Name trigger type and boundary so it is easier to communicate later.',
-      'Your first body cue is often the earliest warning signal.',
-      'Label distortion to reduce automatic belief in stress thoughts.',
-      'Select needs and convert one into a tiny next action.',
-      'Build all four parts: regulate, communicate, repair, prevent.',
-      'Review patterns and save to track growth over time.'
-    ];
+    <div class="field">
+      <label class="field-label">Which emotion feels closest right now?</label>
+      <div class="emotion-grid" id="emotionGrid"></div>
+    </div>
 
-    const emotions = [
-      {name:'Calm',signals:['steady breathing','looser muscles']},
-      {name:'Joy',signals:['warm chest','smiling','energy']},
-      {name:'Anger',signals:['hot face','tight jaw','fast pulse']},
-      {name:'Anxiety',signals:['butterflies','chest tightness','restless hands']},
-      {name:'Sadness',signals:['heavy body','tears','low energy']},
-      {name:'Shame',signals:['urge to hide','sunken posture']},
-      {name:'Overwhelm',signals:['mental fog','irritability','shutdown urge']},
-      {name:'Lonely',signals:['empty feeling','ache in chest']}
-    ];
+    <div class="slider-wrap">
+      <label class="field-label" for="intensityRange">How intense does this feel? (0–10)</label>
+      <div class="slider-row">
+        <span class="slider-end">Low</span>
+        <input type="range" id="intensityRange" min="0" max="10" step="1" value="5" aria-label="Emotion intensity" />
+        <span class="slider-end">High</span>
+        <span class="slider-val" id="intensityVal">5/10</span>
+      </div>
+      <p class="slider-meaning" id="intensityMeaning">Noticeable — present and affecting you.</p>
+    </div>
 
-    const triggerTags = ['social','work','identity','sensory','family','time pressure','financial','health','digital overload'];
-    const bodySignals = ['Tight chest','Racing heart','Shaky hands','Butterflies in stomach','Heavy limbs','Jaw clenching','Headache','Numbness','Restless energy','Tearfulness','Hot face','Dry mouth'];
-    const needsList = ['Rest','Safety','Space','Clarity','Comfort','Connection','Respect'];
-    const planTemplates = [
-      {key:'slow',title:'Stabilize first',text:'Pause, regulate body, then respond later.'},
-      {key:'assert',title:'Assertive boundary',text:'Name need + specific boundary + follow-up time.'},
-      {key:'repair',title:'Repair conversation',text:'Acknowledge impact, clarify, and reset plan.'}
-    ];
+    <div class="field">
+      <label class="field-label" for="worseText">What makes this worse?</label>
+      <textarea id="worseText" maxlength="500" placeholder="e.g. Replaying the argument, doom scrolling, skipping meals…"></textarea>
+    </div>
 
-    const appState = {
-      currentStep:1,
-      selectedEmotion:'',
-      intensity:5,
-      worseText:'',
-      helpText:'',
-      triggerText:'',
-      selectedTags:[],
-      boundaryText:'',
-      bodySignals:[],
-      stressLevel:4,
-      earliestSignal:'',
-      bodyText:'',
-      thoughtText:'',
-      distortion:'',
-      balancedThought:'',
-      needs:[],
-      needText:'',
-      smallAction:'',
-      planTemplate:'',
-      regulatePlan:'',
-      communicatePlan:'',
-      repairPlan:'',
-      preventPlan:''
-    };
+    <div class="field">
+      <label class="field-label" for="helpText">What helps even a little?</label>
+      <textarea id="helpText" maxlength="500" placeholder="e.g. Stepping outside, slower breathing, one supportive message…"></textarea>
+    </div>
 
-    function esc(t){return String(t||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev1" disabled>Back</button>
+      <button type="button" class="btn btn-primary" id="next1">Next — Trigger map</button>
+    </div>
+  </div>
 
-    function renderEmotions(){
-      $('#emotionGrid').innerHTML = emotions.map((e,i)=>`
-        <button class="emotion-card" type="button" data-emotion="${esc(e.name)}" aria-pressed="false">
-          <svg viewBox="0 0 220 100" role="img" aria-label="${esc(e.name)} visual">
-            <rect x="0" y="0" width="220" height="100" fill="#f1f5f9"></rect>
-            <circle cx="110" cy="50" r="32" fill="#dbeafe"></circle>
-            <text x="110" y="55" text-anchor="middle" font-size="15" fill="#1e3a8a">${esc(e.name)}</text>
-          </svg>
-          <strong>${esc(e.name)}</strong>
-          <div class="pill-list">${e.signals.map(s=>`<span class="pill">${esc(s)}</span>`).join('')}</div>
-        </button>
-      `).join('');
-    }
+  <!-- STEP 2: TRIGGER MAP -->
+  <div class="step-card" data-step="2">
+    <p class="step-title">Step 2 — Trigger map and boundary</p>
+    <p class="step-tip">Separate the event from your interpretation. Naming the trigger type helps you communicate more clearly.</p>
 
-    function renderChips(){
-      $('#triggerTags').innerHTML = triggerTags.map(tag=>`<button class="chip" type="button" data-tag="${esc(tag)}">${esc(tag)}</button>`).join('');
-    }
+    <div class="field">
+      <label class="field-label" for="triggerText">What happened right before the emotional reaction?</label>
+      <textarea id="triggerText" maxlength="600" placeholder="Describe the situation or moment as objectively as you can…"></textarea>
+    </div>
 
-    function renderBody(){
-      $('#bodyMap').innerHTML = bodySignals.map(s=>`<label class="checkline"><input type="checkbox" class="body-check" value="${esc(s)}"/> <span>${esc(s)}</span></label>`).join('');
-    }
+    <div class="field">
+      <label class="field-label">Trigger type tags</label>
+      <p class="field-hint">Select all that apply.</p>
+      <div class="chips-wrap" id="triggerChips" role="group" aria-label="Trigger type tags"></div>
+    </div>
 
-    function renderNeeds(){
-      $('#needsGrid').innerHTML = needsList.map(n=>`<label class="choice"><input type="checkbox" class="need-check" value="${esc(n)}"/> <span>${esc(n)}</span></label>`).join('');
-    }
+    <div class="field">
+      <label class="field-label" for="boundaryText">What boundary was crossed — or felt at risk of being crossed?</label>
+      <textarea id="boundaryText" maxlength="500" placeholder="e.g. Time boundary, respect boundary, privacy, role clarity…"></textarea>
+    </div>
 
-    function renderPlans(){
-      $('#planGrid').innerHTML = planTemplates.map(p=>`<label class="choice"><input type="radio" name="planTemplate" value="${esc(p.key)}"/> <span><strong>${esc(p.title)}</strong><br>${esc(p.text)}</span></label>`).join('');
-    }
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev2">Back</button>
+      <button type="button" class="btn btn-primary" id="next2">Next — Body signals</button>
+    </div>
+  </div>
 
-    function renderDots(){
-      $('#stepDots').innerHTML = stepNames.map((_,i)=>`<span class="dot ${i+1===appState.currentStep?'active':''}">${i+1}</span>`).join('');
-    }
+  <!-- STEP 3: BODY SIGNALS -->
+  <div class="step-card" data-step="3">
+    <p class="step-title">Step 3 — Body signals and stress</p>
+    <p class="step-tip">Your earliest body signal is often your best early warning. Catching it sooner helps prevent emotional flooding.</p>
 
-    function readForm(){
-      appState.intensity = Number($('#intensityRange').value);
-      appState.worseText = $('#worseText').value.trim();
-      appState.helpText = $('#helpText').value.trim();
-      appState.triggerText = $('#triggerText').value.trim();
-      appState.boundaryText = $('#boundaryText').value.trim();
-      appState.bodySignals = $$('.body-check:checked').map(c=>c.value);
-      appState.stressLevel = Number($('#stressRange').value);
-      appState.earliestSignal = $('#earliestSignal').value.trim();
-      appState.bodyText = $('#bodyText').value.trim();
-      appState.thoughtText = $('#thoughtText').value.trim();
-      appState.distortion = $('#distortionSelect').value;
-      appState.balancedThought = $('#balancedThought').value.trim();
-      appState.needs = $$('.need-check:checked').map(c=>c.value);
-      appState.needText = $('#needText').value.trim();
-      appState.smallAction = $('#smallAction').value.trim();
-      appState.planTemplate = $('input[name="planTemplate"]:checked')?.value || appState.planTemplate;
-      appState.regulatePlan = $('#regulatePlan').value.trim();
-      appState.communicatePlan = $('#communicatePlan').value.trim();
-      appState.repairPlan = $('#repairPlan').value.trim();
-      appState.preventPlan = $('#preventPlan').value.trim();
-    }
+    <div class="field">
+      <label class="field-label">Which body signals are you noticing?</label>
+      <p class="field-hint">Select all that apply.</p>
+      <div class="check-grid" id="bodyGrid" role="group" aria-label="Body signals"></div>
+    </div>
 
-    function updateProgress(){
-      $('#progressFill').style.width = `${(appState.currentStep/7)*100}%`;
-      $('#stepLabel').textContent = `Step ${appState.currentStep} of 7: ${stepNames[appState.currentStep-1]}`;
-      $$('.step').forEach(s=>s.classList.toggle('active', Number(s.dataset.step)===appState.currentStep));
-      $('#prevBtn').disabled = appState.currentStep===1;
-      $('#nextBtn').textContent = appState.currentStep===7 ? 'Finish' : 'Next →';
-      renderDots();
-      if(appState.currentStep===7){ buildSummary(); renderInsights(); }
-    }
+    <div class="slider-wrap">
+      <label class="field-label" for="stressRange">Overall stress level right now (0–10)</label>
+      <div class="slider-row">
+        <span class="slider-end">Low</span>
+        <input type="range" id="stressRange" min="0" max="10" step="1" value="4" aria-label="Stress level" />
+        <span class="slider-end">High</span>
+        <span class="slider-val" id="stressVal">4/10</span>
+      </div>
+      <p class="slider-meaning" id="stressMeaning">Moderate — stress is affecting some decisions.</p>
+    </div>
 
-    function buildSummary(){
-      readForm();
-      const planTitle = planTemplates.find(p=>p.key===appState.planTemplate)?.title || 'Not selected';
-      const summary = [
-        `Quick Summary`,
-        `Date/Time: ${new Date().toLocaleString()}`,
-        `Emotion: ${appState.selectedEmotion || 'Not selected'} (Intensity ${appState.intensity}/10)`,
-        `Trigger: ${appState.triggerText || '—'}`,
-        `Trigger tags: ${appState.selectedTags.join(', ') || '—'}`,
-        `Boundary crossed: ${appState.boundaryText || '—'}`,
-        `Body signals: ${appState.bodySignals.join(', ') || '—'}`,
-        `Stress level: ${appState.stressLevel}/10 | Earliest signal: ${appState.earliestSignal || '—'}`,
-        `Mind story: ${appState.thoughtText || '—'}`,
-        `Distortion: ${appState.distortion || '—'}`,
-        `Balanced thought: ${appState.balancedThought || '—'}`,
-        `Needs: ${appState.needs.join(', ') || '—'} | Added: ${appState.needText || '—'}`,
-        `Smallest next action: ${appState.smallAction || '—'}`,
-        '',
-        `Plan`,
-        `Template: ${planTitle}`,
-        `Regulate: ${appState.regulatePlan || '—'}`,
-        `Communicate: ${appState.communicatePlan || '—'}`,
-        `Repair: ${appState.repairPlan || '—'}`,
-        `Prevent: ${appState.preventPlan || '—'}`,
-        '',
-        `What makes it worse: ${appState.worseText || '—'}`,
-        `What helps: ${appState.helpText || '—'}`
-      ].join('\n');
-      $('#summaryBox').textContent = summary;
-      return summary;
-    }
+    <div class="field">
+      <label class="field-label" for="earliestSignal">What was the earliest body signal you noticed?</label>
+      <input type="text" id="earliestSignal" maxlength="200" placeholder="e.g. Jaw tightening, stomach dropping, chest tightness…" />
+    </div>
 
-    function getHistory(){
-      return JSON.parse(localStorage.getItem('triggerHistory') || '[]');
-    }
+    <div class="field">
+      <label class="field-label" for="bodyText">Any other body notes?</label>
+      <textarea id="bodyText" maxlength="400" placeholder="Anything else you noticed in your body…"></textarea>
+    </div>
 
-    function saveEntry(){
-      const summary = buildSummary();
-      const entry = {
-        id: Date.now(),
-        time: new Date().toLocaleString(),
-        emotion: appState.selectedEmotion || 'Not selected',
-        triggerTags: [...appState.selectedTags],
-        bodySignals: [...appState.bodySignals],
-        data: JSON.parse(JSON.stringify(appState)),
-        summary
-      };
-      const updated = [entry, ...getHistory()].slice(0,10);
-      localStorage.setItem('triggerHistory', JSON.stringify(updated));
-      renderHistory();
-      renderInsights();
-      alert('Saved to local history on this device.');
-    }
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev3">Back</button>
+      <button type="button" class="btn btn-primary" id="next3">Next — Mind story</button>
+    </div>
+  </div>
 
-    function renderHistory(){
-      const list = getHistory();
-      $('#historyList').innerHTML = list.length ? list.map(item=>`
-        <div class="history-item">
-          <div class="history-meta"><strong>${esc(item.emotion)}</strong><br>${esc(item.time)}</div>
-          <button type="button" data-open="${item.id}">Open</button>
+  <!-- STEP 4: MIND STORY -->
+  <div class="step-card" data-step="4">
+    <p class="step-title">Step 4 — Mind story and reframe</p>
+    <p class="step-tip">Naming a cognitive distortion creates space between the thought and your reaction. You do not have to believe every thought that arrives under stress.</p>
+
+    <div class="field">
+      <label class="field-label" for="thoughtText">What is the automatic thought or story your mind is telling?</label>
+      <textarea id="thoughtText" maxlength="600" placeholder="e.g. 'I always mess this up' or 'No one understands me'…"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="distortionSelect">Does this thought fit a common pattern? (optional)</label>
+      <select id="distortionSelect">
+        <option value="">Choose a cognitive distortion…</option>
+        <option>All-or-nothing thinking</option>
+        <option>Catastrophizing</option>
+        <option>Mind reading</option>
+        <option>Fortune telling</option>
+        <option>Personalization</option>
+        <option>Overgeneralization</option>
+        <option>Should statements</option>
+        <option>Emotional reasoning</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="balancedThought">A more balanced thought</label>
+      <p class="field-hint">Use the prompt generator below if helpful, or write your own.</p>
+      <textarea id="balancedThought" maxlength="600" placeholder="A more balanced view is…"></textarea>
+      <div class="btn-row" style="margin-top:8px;">
+        <button type="button" class="btn btn-outline btn-small" id="generateBalanced">Generate a prompt</button>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev4">Back</button>
+      <button type="button" class="btn btn-primary" id="next4">Next — Needs and action</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: NEEDS + ACTION -->
+  <div class="step-card" data-step="5">
+    <p class="step-title">Step 5 — Needs and smallest next action</p>
+    <p class="step-tip">Needs are not weakness. Turning one need into a tiny action is a practical path to regulation.</p>
+
+    <div class="field">
+      <label class="field-label">What do you need right now?</label>
+      <p class="field-hint">Select all that apply.</p>
+      <div class="check-grid" id="needsGrid" role="group" aria-label="Needs"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="needText">Anything else you need?</label>
+      <textarea id="needText" maxlength="400" placeholder="Add your own need in your own words…"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="smallAction">Smallest next action (under 10 minutes)</label>
+      <p class="field-hint">Something concrete and achievable right now.</p>
+      <input type="text" id="smallAction" maxlength="200" placeholder="e.g. Drink water, step outside for 3 minutes, send one sentence…" />
+    </div>
+
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev5">Back</button>
+      <button type="button" class="btn btn-primary" id="next5">Next — Response plan</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: RESPONSE PLAN -->
+  <div class="step-card" data-step="6">
+    <p class="step-title">Step 6 — Response plan</p>
+    <p class="step-tip">A complete response covers all four parts: regulate your nervous system, communicate your need, repair if needed, and prevent repeats.</p>
+
+    <div class="field">
+      <label class="field-label">Choose a plan template to start with</label>
+      <div class="plan-choices" id="planChoices" role="radiogroup" aria-label="Plan templates"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="regulatePlan">Regulate — what will calm your nervous system first?</label>
+      <textarea id="regulatePlan" maxlength="500" placeholder="e.g. 4 rounds of box breathing, drink water, no replying for 20 minutes…"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="communicatePlan">Communicate — what boundary or request will you state?</label>
+      <textarea id="communicatePlan" maxlength="500" placeholder="e.g. 'I need more time to respond clearly. I'll reply by 4pm.'…"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="repairPlan">Repair — what repair step is needed, if any?</label>
+      <textarea id="repairPlan" maxlength="500" placeholder="e.g. Acknowledge tone, clarify intention, offer one corrective action…"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="preventPlan">Prevent — what system change can reduce repeats?</label>
+      <textarea id="preventPlan" maxlength="500" placeholder="e.g. Set meeting agenda, schedule recovery breaks, reduce sensory load…"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev6">Back</button>
+      <button type="button" class="btn btn-primary" id="next6">Next — Review and save</button>
+    </div>
+  </div>
+
+  <!-- STEP 7: REVIEW -->
+  <div class="step-card" data-step="7">
+    <p class="step-title">Step 7 — Review, save, and export</p>
+    <p class="step-tip">Your summary is for pattern learning, not perfection. Save consistently to reveal recurring triggers over time.</p>
+
+    <div class="summary-box" id="summaryBox">Your summary will appear here.</div>
+    <div class="insights-box" id="insightsBox">Pattern insights will appear after you save entries.</div>
+
+    <div class="section-label" style="margin-top:4px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:16px;">
+      <button type="button" class="btn btn-primary" id="saveEntry">Save this entry</button>
+      <button type="button" class="btn btn-teal" id="downloadPdfBtn">Download PDF</button>
+    </div>
+
+    <div class="step-nav">
+      <button type="button" class="btn btn-outline" id="prev7">Back</button>
+      <button type="button" class="btn btn-outline" id="restartBtn">Start new entry</button>
+    </div>
+  </div>
+
+  <!-- REGULATION TOOLS -->
+  <div class="card">
+    <p class="card-title">Regulation tools</p>
+    <div class="reg-grid">
+      <div class="reg-tool">
+        <p class="reg-tool-title">5-4-3-2-1 grounding</p>
+        <p class="reg-tool-body">Notice: 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste. Slow pace, no pressure.</p>
+      </div>
+      <div class="reg-tool">
+        <p class="reg-tool-title">Box breathing</p>
+        <div class="breath-timer" id="breathTimer"><div class="breath-state" id="breathState">Ready</div></div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button type="button" class="btn btn-teal btn-small" id="startBreath">Start 1 min</button>
+          <button type="button" class="btn btn-outline btn-small" id="stopBreath">Stop</button>
         </div>
-      `).join('') : '<p>No saved entries yet.</p>';
-    }
+        <p class="reg-tool-body" style="margin-top:8px;font-size:12px;">Inhale 4 · Hold 4 · Exhale 4 · Hold 4</p>
+      </div>
+      <div class="reg-tool">
+        <p class="reg-tool-title">Name it to tame it</p>
+        <p class="reg-tool-body">Label your emotion simply: "This is anxiety" or "This is grief." Naming can reduce intensity by engaging the thinking brain.</p>
+      </div>
+      <div class="reg-tool">
+        <p class="reg-tool-title">Boundary micro-script</p>
+        <p class="reg-tool-body" style="font-style:italic;margin-bottom:10px;">"I'm not able to do that right now."</p>
+        <button type="button" class="btn btn-outline btn-small" id="copyBoundary">Copy script</button>
+      </div>
+    </div>
+  </div>
 
-    function loadEntry(id){
-      const item = getHistory().find(i=>String(i.id)===String(id));
-      if(!item) return;
-      Object.assign(appState, item.data || {});
-      $('#intensityRange').value = appState.intensity ?? 5;
-      $('#worseText').value = appState.worseText || '';
-      $('#helpText').value = appState.helpText || '';
-      $('#triggerText').value = appState.triggerText || '';
-      $('#boundaryText').value = appState.boundaryText || '';
-      $('#stressRange').value = appState.stressLevel ?? 4;
-      $('#earliestSignal').value = appState.earliestSignal || '';
-      $('#bodyText').value = appState.bodyText || '';
-      $('#thoughtText').value = appState.thoughtText || '';
-      $('#distortionSelect').value = appState.distortion || '';
-      $('#balancedThought').value = appState.balancedThought || '';
-      $('#needText').value = appState.needText || '';
-      $('#smallAction').value = appState.smallAction || '';
-      $('#regulatePlan').value = appState.regulatePlan || '';
-      $('#communicatePlan').value = appState.communicatePlan || '';
-      $('#repairPlan').value = appState.repairPlan || '';
-      $('#preventPlan').value = appState.preventPlan || '';
-      $$('.emotion-card').forEach(card=>{
-        const active = card.dataset.emotion===appState.selectedEmotion;
-        card.classList.toggle('selected', active);
-        card.setAttribute('aria-pressed', String(active));
-      });
-      $$('.chip').forEach(chip=>chip.classList.toggle('active', (appState.selectedTags||[]).includes(chip.dataset.tag)));
-      $$('.body-check').forEach(c=>c.checked = (appState.bodySignals||[]).includes(c.value));
-      $$('.need-check').forEach(c=>c.checked = (appState.needs||[]).includes(c.value));
-      const planRadio = $(`input[name="planTemplate"][value="${appState.planTemplate}"]`);
-      if(planRadio) planRadio.checked = true;
-      $('#intensityValue').textContent = `Current intensity: ${appState.intensity}/10`;
-      $('#stressValue').textContent = `Current stress: ${appState.stressLevel}/10`;
-      appState.currentStep = 7;
-      updateProgress();
-    }
+  <!-- HISTORY -->
+  <div class="card">
+    <p class="card-title">Your saved entries</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;font-style:italic;">Saved only on this device. Stores up to 10 entries.</p>
+    <div class="history-list" id="historyList"></div>
+    <button type="button" class="btn btn-danger btn-small" id="clearHistory">Clear all history</button>
+  </div>
 
-    function renderInsights(){
-      const list = getHistory();
-      if(!list.length){
-        $('#insightsBox').textContent = 'Pattern insights will appear after you save entries.';
-        return;
-      }
-      const countTop = (items, limit=3) => Object.entries(items).sort((a,b)=>b[1]-a[1]).slice(0,limit);
-      const emo = {}, trig = {}, body = {};
-      list.forEach(entry=>{
-        emo[entry.emotion] = (emo[entry.emotion]||0)+1;
-        (entry.triggerTags||[]).forEach(t=>trig[t]=(trig[t]||0)+1);
-        (entry.bodySignals||[]).forEach(b=>body[b]=(body[b]||0)+1);
-      });
-      const fmt = arr => arr.length ? arr.map(([k,v])=>`${k} (${v})`).join(', ') : 'Not enough data yet';
-      $('#insightsBox').textContent = [
-        'Pattern Insights (last 10 saved entries)',
-        `Top emotions: ${fmt(countTop(emo))}`,
-        `Top trigger tags: ${fmt(countTop(trig))}`,
-        `Top body signals: ${fmt(countTop(body))}`
-      ].join('\n');
-    }
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
 
-    function wrapText(text, maxLen=90){
-      const words = String(text||'').split(/\s+/);
-      const lines = [];
-      let line = '';
-      words.forEach(word=>{
-        if((line + ' ' + word).trim().length > maxLen){
-          if(line) lines.push(line.trim());
-          line = word;
-        } else {
-          line += ` ${word}`;
-        }
-      });
-      if(line.trim()) lines.push(line.trim());
-      return lines.length ? lines : [''];
-    }
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-    function pdfEscape(text){
-      return String(text||'').replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
-    }
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    </div>
 
-    function makeSimplePdf(pageLineGroups){
-      const objects = [];
-      const addObj = (content) => { objects.push(content); return objects.length; };
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not a diagnosis or medical tool.
+    </p>
+  </footer>
 
-      const fontId = addObj('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
-      const contentIds = pageLineGroups.map(lines => {
-        const cmds = ['BT','/F1 11 Tf','40 800 Td'];
-        lines.forEach((line, idx)=>{
-          cmds.push(`(${pdfEscape(line)}) Tj`);
-          if(idx !== lines.length-1) cmds.push('0 -14 Td');
-        });
-        cmds.push('ET');
-        const stream = cmds.join('\n');
-        return addObj(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-      });
+</div>
 
-      const pagesId = addObj('');
-      const pageIds = contentIds.map(cid => addObj(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${cid} 0 R >>`));
-      objects[pagesId-1] = `<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pageIds.length} >>`;
-      const catalogId = addObj(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
+<!-- STICKY BAR -->
+<div class="sticky-bar" role="toolbar" aria-label="Quick actions">
+  <button type="button" class="btn btn-primary" id="stickySave">Save entry</button>
+  <button type="button" class="btn btn-teal" id="stickyPdf">Download PDF</button>
+</div>
 
-      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
-      const offsets = [0];
-      objects.forEach((obj, index) => {
-        offsets.push(pdf.length);
-        pdf += `${index+1} 0 obj\n${obj}\nendobj\n`;
-      });
-      const xrefStart = pdf.length;
-      pdf += `xref\n0 ${objects.length+1}\n`;
-      pdf += '0000000000 65535 f \n';
-      for(let i=1;i<offsets.length;i++) pdf += `${String(offsets[i]).padStart(10,'0')} 00000 n \n`;
-      pdf += `trailer\n<< /Size ${objects.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
-      return new Blob([new Uint8Array([...pdf].map(c=>c.charCodeAt(0)))], {type:'application/pdf'});
-    }
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    function downloadPDF(){
-      const summary = buildSummary();
-      const lines = summary.split('\n').flatMap(line=>wrapText(line, 92));
-      const pages = [];
-      while(lines.length) pages.push(lines.splice(0, 52));
-      const blob = makeSimplePdf(pages.length ? pages : [['Emotional Trigger Mapping Tool']]);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'emotional-trigger-map.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url), 1000);
-    }
+<script>
+(function () {
+  'use strict';
 
-    function share(kind){
-      const url = location.href;
-      const text = 'Emotional Trigger Mapping Tool';
-      const map = {
-        whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-        email: `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(text + '\n' + url)}`
-      };
-      if(kind==='copy'){
-        navigator.clipboard.writeText(url).then(()=>alert('Link copied.')).catch(()=>prompt('Copy this link:', url));
-        return;
-      }
-      window.open(map[kind], '_blank', 'noopener');
-    }
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const HISTORY_KEY = 'triggerMapHistoryV2';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
 
-    function nativeShare(){
-      const payload = {title:'Emotional Trigger Mapping Tool', text:'Try this reflection tool', url:location.href};
-      if(navigator.share){ navigator.share(payload).catch(()=>{}); }
-      else share('copy');
-    }
+  const $ = id => document.getElementById(id);
+  const $$ = s => Array.from(document.querySelectorAll(s));
 
-    let breathInterval = null;
-    function startBreathing(){
-      clearInterval(breathInterval);
-      let sec = 60;
-      const states = ['Inhale','Hold','Exhale','Hold'];
-      const timer = $('#breathTimer');
-      $('#breathState').textContent = 'Inhale 60s';
-      timer.style.setProperty('--prog', 0);
-      breathInterval = setInterval(()=>{
-        sec--;
-        const cycleSec = 60-sec;
-        const state = states[Math.floor((cycleSec%16)/4)];
-        $('#breathState').textContent = sec>0 ? `${state} ${sec}s` : 'Done';
-        timer.style.setProperty('--prog', Math.min(100, (cycleSec/60)*100));
-        if(sec<=0) clearInterval(breathInterval);
-      },1000);
-    }
+  let currentStep = 1;
+  let breathInterval = null;
+  let toastTimer;
 
-    document.addEventListener('click',(e)=>{
-      const emotion = e.target.closest('.emotion-card');
-      if(emotion){
-        appState.selectedEmotion = emotion.dataset.emotion;
-        $$('.emotion-card').forEach(c=>{
-          const active = c===emotion;
-          c.classList.toggle('selected', active);
-          c.setAttribute('aria-pressed', String(active));
-        });
-      }
+  const stepNames = [
+    'Emotion and intensity',
+    'Trigger map and boundary',
+    'Body signals and stress',
+    'Mind story and reframe',
+    'Needs and next action',
+    'Response plan',
+    'Review and save'
+  ];
 
-      const chip = e.target.closest('.chip');
-      if(chip){
-        chip.classList.toggle('active');
-        const tag = chip.dataset.tag;
-        if(chip.classList.contains('active')) appState.selectedTags = [...new Set([...appState.selectedTags, tag])];
-        else appState.selectedTags = appState.selectedTags.filter(t=>t!==tag);
-      }
+  const emotions = [
+    { name: 'Calm', signals: 'Steady breathing, loose muscles' },
+    { name: 'Joy', signals: 'Warm chest, energy, lightness' },
+    { name: 'Anger', signals: 'Hot face, tight jaw, fast pulse' },
+    { name: 'Anxiety', signals: 'Butterflies, chest tightness, restlessness' },
+    { name: 'Sadness', signals: 'Heavy body, low energy, tearfulness' },
+    { name: 'Shame', signals: 'Urge to hide, sunken posture' },
+    { name: 'Overwhelm', signals: 'Mental fog, irritability, shutdown urge' },
+    { name: 'Lonely', signals: 'Empty feeling, ache in chest' }
+  ];
 
-      if(e.target.matches('#prevBtn')){ readForm(); appState.currentStep = Math.max(1, appState.currentStep-1); updateProgress(); }
-      if(e.target.matches('#nextBtn')){ readForm(); appState.currentStep = Math.min(7, appState.currentStep+1); updateProgress(); }
-      if(e.target.matches('#quickSave')) saveEntry();
-      if(e.target.matches('#quickPdf')) downloadPDF();
-      if(e.target.matches('#quickShare')) nativeShare();
-      if(e.target.matches('#generateBalanced')){
-        const thought = $('#thoughtText').value.trim() || 'this situation';
-        const dist = $('#distortionSelect').value || 'a stress reaction';
-        $('#balancedThought').value = `A more balanced view is: I may be reading ${dist.toLowerCase()}, and I can check facts before reacting. One realistic next step is... (${thought})`;
-      }
-      if(e.target.matches('#copyBoundary')) navigator.clipboard.writeText('I’m not able to do that right now.').then(()=>alert('Boundary script copied.'));
-      if(e.target.matches('#startBreath')) startBreathing();
-      if(e.target.matches('#stopBreath')){ clearInterval(breathInterval); $('#breathState').textContent = 'Stopped'; $('#breathTimer').style.setProperty('--prog',0); }
-      if(e.target.matches('#clearHistory')){
-        if(confirm('Clear all saved history on this device?')){ localStorage.removeItem('triggerHistory'); renderHistory(); renderInsights(); }
-      }
+  const triggerTags = ['social','work','identity','sensory','family','time pressure','financial','health','digital overload'];
+  const bodySignals = ['Tight chest','Racing heart','Shaky hands','Butterflies','Heavy limbs','Jaw clenching','Headache','Numbness','Restless energy','Tearfulness','Hot face','Dry mouth'];
+  const needsList = ['Rest','Safety','Space','Clarity','Comfort','Connection','Respect'];
 
-      const shareBtn = e.target.closest('[data-share]');
-      if(shareBtn) share(shareBtn.dataset.share);
-      const open = e.target.closest('[data-open]');
-      if(open) loadEntry(open.dataset.open);
+  const planTemplates = [
+    { key: 'slow', title: 'Stabilise first', text: 'Pause and regulate your body before responding.' },
+    { key: 'assert', title: 'Assertive boundary', text: 'Name your need and set a specific, clear boundary.' },
+    { key: 'repair', title: 'Repair conversation', text: 'Acknowledge impact, clarify, and reset together.' }
+  ];
+
+  const intensityMeanings = ['Barely there','Very mild','Mild','Noticeable','Moderate','Noticeable — present and affecting you','Significant','Quite strong','Very strong','Intense','Overwhelming'];
+  const stressMeanings = ['Very low','Low','Mild','Moderate','Moderate — affecting some decisions','Noticeable','Significant','High','Very high','Intense','Overwhelming'];
+
+  // App state
+  const state = {
+    selectedEmotion: '',
+    intensity: 5,
+    worseText: '',
+    helpText: '',
+    triggerText: '',
+    selectedTags: [],
+    boundaryText: '',
+    bodySignals: [],
+    stressLevel: 4,
+    earliestSignal: '',
+    bodyText: '',
+    thoughtText: '',
+    distortion: '',
+    balancedThought: '',
+    needs: [],
+    needText: '',
+    smallAction: '',
+    planTemplate: '',
+    regulatePlan: '',
+    communicatePlan: '',
+    repairPlan: '',
+    preventPlan: ''
+  };
+
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  // Build UI
+  function buildEmotionGrid() {
+    $('emotionGrid').innerHTML = emotions.map(e => `
+      <button type="button" class="emotion-card" data-emotion="${e.name}" aria-pressed="false">
+        <div class="emotion-name">${e.name}</div>
+        <div class="emotion-signals">${e.signals}</div>
+      </button>
+    `).join('');
+  }
+
+  function buildTriggerChips() {
+    $('triggerChips').innerHTML = triggerTags.map(t => `
+      <button type="button" class="chip" data-tag="${t}">${t}</button>
+    `).join('');
+  }
+
+  function buildBodyGrid() {
+    $('bodyGrid').innerHTML = bodySignals.map(s => `
+      <label class="check-item">
+        <input type="checkbox" class="body-check" value="${s}" />
+        ${s}
+      </label>
+    `).join('');
+  }
+
+  function buildNeedsGrid() {
+    $('needsGrid').innerHTML = needsList.map(n => `
+      <label class="check-item">
+        <input type="checkbox" class="need-check" value="${n}" />
+        ${n}
+      </label>
+    `).join('');
+  }
+
+  function buildPlanChoices() {
+    $('planChoices').innerHTML = planTemplates.map(p => `
+      <label class="plan-choice">
+        <input type="radio" name="planTemplate" value="${p.key}" />
+        <div>
+          <div class="plan-choice-title">${p.title}</div>
+          <div class="plan-choice-text">${p.text}</div>
+        </div>
+      </label>
+    `).join('');
+  }
+
+  function buildStepDots() {
+    $('stepDots').innerHTML = stepNames.map((_, i) => {
+      const n = i + 1;
+      const cls = n === currentStep ? 'active' : n < currentStep ? 'done' : '';
+      return `<div class="step-dot ${cls}" data-goto="${n}">${n}</div>`;
+    }).join('');
+  }
+
+  function updateProgress() {
+    const pct = Math.round((currentStep / 7) * 100);
+    $('progressFill').style.width = pct + '%';
+    $('stepLabel').textContent = 'Step ' + currentStep + ' of 7 — ' + stepNames[currentStep - 1];
+    $('stepCount').textContent = currentStep + '/7';
+    $$('.step-card').forEach(card => {
+      card.classList.toggle('active', parseInt(card.dataset.step, 10) === currentStep);
     });
+    buildStepDots();
+    if (currentStep === 7) buildSummary();
+  }
 
-    document.addEventListener('input',(e)=>{
-      if(e.target.id==='intensityRange') $('#intensityValue').textContent = `Current intensity: ${e.target.value}/10`;
-      if(e.target.id==='stressRange') $('#stressValue').textContent = `Current stress: ${e.target.value}/10`;
-    });
+  function goTo(n) {
+    readForm();
+    currentStep = Math.max(1, Math.min(7, n));
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-    $('#quickSave').setAttribute('aria-label','Save entry');
-    $('#quickPdf').setAttribute('aria-label','Download PDF');
-    $('#quickShare').setAttribute('aria-label','Share this tool');
+  // Read form into state
+  function readForm() {
+    state.intensity = parseInt($('intensityRange').value, 10);
+    state.worseText = $('worseText').value.trim();
+    state.helpText = $('helpText').value.trim();
+    state.triggerText = $('triggerText').value.trim();
+    state.boundaryText = $('boundaryText').value.trim();
+    state.bodySignals = $$('.body-check:checked').map(c => c.value);
+    state.stressLevel = parseInt($('stressRange').value, 10);
+    state.earliestSignal = $('earliestSignal').value.trim();
+    state.bodyText = $('bodyText').value.trim();
+    state.thoughtText = $('thoughtText').value.trim();
+    state.distortion = $('distortionSelect').value;
+    state.balancedThought = $('balancedThought').value.trim();
+    state.needs = $$('.need-check:checked').map(c => c.value);
+    state.needText = $('needText').value.trim();
+    state.smallAction = $('smallAction').value.trim();
+    const planRadio = document.querySelector('input[name="planTemplate"]:checked');
+    if (planRadio) state.planTemplate = planRadio.value;
+    state.regulatePlan = $('regulatePlan').value.trim();
+    state.communicatePlan = $('communicatePlan').value.trim();
+    state.repairPlan = $('repairPlan').value.trim();
+    state.preventPlan = $('preventPlan').value.trim();
+  }
 
-    renderEmotions();
-    renderChips();
-    renderBody();
-    renderNeeds();
-    renderPlans();
+  function buildSummary() {
+    readForm();
+    const planTitle = planTemplates.find(p => p.key === state.planTemplate)?.title || 'Not selected';
+    const lines = [
+      'Emotional Trigger Map',
+      'Date: ' + new Date().toLocaleString(),
+      '',
+      'EMOTION AND INTENSITY',
+      'Emotion: ' + (state.selectedEmotion || 'Not selected'),
+      'Intensity: ' + state.intensity + '/10 — ' + (intensityMeanings[state.intensity] || ''),
+      'What makes it worse: ' + (state.worseText || '—'),
+      'What helps: ' + (state.helpText || '—'),
+      '',
+      'TRIGGER MAP',
+      'Trigger: ' + (state.triggerText || '—'),
+      'Trigger tags: ' + (state.selectedTags.join(', ') || '—'),
+      'Boundary crossed: ' + (state.boundaryText || '—'),
+      '',
+      'BODY SIGNALS',
+      'Signals: ' + (state.bodySignals.join(', ') || '—'),
+      'Stress level: ' + state.stressLevel + '/10',
+      'Earliest signal: ' + (state.earliestSignal || '—'),
+      'Body notes: ' + (state.bodyText || '—'),
+      '',
+      'MIND STORY',
+      'Automatic thought: ' + (state.thoughtText || '—'),
+      'Distortion pattern: ' + (state.distortion || '—'),
+      'Balanced thought: ' + (state.balancedThought || '—'),
+      '',
+      'NEEDS AND ACTION',
+      'Needs: ' + (state.needs.join(', ') || '—'),
+      'Additional need: ' + (state.needText || '—'),
+      'Smallest next action: ' + (state.smallAction || '—'),
+      '',
+      'RESPONSE PLAN',
+      'Plan template: ' + planTitle,
+      'Regulate: ' + (state.regulatePlan || '—'),
+      'Communicate: ' + (state.communicatePlan || '—'),
+      'Repair: ' + (state.repairPlan || '—'),
+      'Prevent: ' + (state.preventPlan || '—')
+    ].join('\n');
+
+    $('summaryBox').textContent = lines;
+    return lines;
+  }
+
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(_) { return []; }
+  }
+
+  function saveEntry() {
+    readForm();
+    const summary = buildSummary();
+    const entry = {
+      id: Date.now(),
+      time: new Date().toLocaleString(),
+      emotion: state.selectedEmotion || 'Not selected',
+      tags: [...state.selectedTags],
+      bodySignals: [...state.bodySignals],
+      data: JSON.parse(JSON.stringify(state)),
+      summary
+    };
+    const updated = [entry, ...getHistory()].slice(0, 10);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(updated)); } catch(_) {}
     renderHistory();
     renderInsights();
-    updateProgress();
-  </script>
+    showToast('Entry saved to this device.');
+  }
+
+  function renderHistory() {
+    const list = getHistory();
+    const container = $('historyList');
+    if (!list.length) {
+      container.innerHTML = '<p style="font-size:13px;color:var(--hint);font-style:italic;">No saved entries yet.</p>';
+      return;
+    }
+    container.innerHTML = list.map(item => `
+      <div class="history-item">
+        <div>
+          <div class="history-emotion">${item.emotion}</div>
+          <div class="history-meta">${item.time} · ${item.tags.join(', ') || 'no tags'}</div>
+        </div>
+        <button type="button" class="btn btn-outline btn-small" data-open="${item.id}">Open</button>
+      </div>
+    `).join('');
+  }
+
+  function loadEntry(id) {
+    const item = getHistory().find(i => String(i.id) === String(id));
+    if (!item || !item.data) return;
+    Object.assign(state, item.data);
+
+    $('intensityRange').value = state.intensity;
+    $('stressRange').value = state.stressLevel;
+    $('worseText').value = state.worseText || '';
+    $('helpText').value = state.helpText || '';
+    $('triggerText').value = state.triggerText || '';
+    $('boundaryText').value = state.boundaryText || '';
+    $('earliestSignal').value = state.earliestSignal || '';
+    $('bodyText').value = state.bodyText || '';
+    $('thoughtText').value = state.thoughtText || '';
+    $('distortionSelect').value = state.distortion || '';
+    $('balancedThought').value = state.balancedThought || '';
+    $('needText').value = state.needText || '';
+    $('smallAction').value = state.smallAction || '';
+    $('regulatePlan').value = state.regulatePlan || '';
+    $('communicatePlan').value = state.communicatePlan || '';
+    $('repairPlan').value = state.repairPlan || '';
+    $('preventPlan').value = state.preventPlan || '';
+
+    $$('.emotion-card').forEach(c => {
+      const active = c.dataset.emotion === state.selectedEmotion;
+      c.classList.toggle('selected', active);
+      c.setAttribute('aria-pressed', String(active));
+    });
+    $$('.chip[data-tag]').forEach(c => c.classList.toggle('active', state.selectedTags.includes(c.dataset.tag)));
+    $$('.body-check').forEach(c => { c.checked = state.bodySignals.includes(c.value); });
+    $$('.need-check').forEach(c => { c.checked = state.needs.includes(c.value); });
+    const planRadio = document.querySelector(`input[name="planTemplate"][value="${state.planTemplate}"]`);
+    if (planRadio) planRadio.checked = true;
+
+    updateIntensity();
+    updateStress();
+    goTo(7);
+  }
+
+  function renderInsights() {
+    const list = getHistory();
+    if (!list.length) {
+      $('insightsBox').textContent = 'Pattern insights will appear after you save entries.';
+      return;
+    }
+    const count = items => {
+      const map = {};
+      items.forEach(v => { map[v] = (map[v] || 0) + 1; });
+      return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${k} (${v}x)`).join(', ');
+    };
+    const allEmo = list.map(e => e.emotion);
+    const allTags = list.flatMap(e => e.tags || []);
+    const allBody = list.flatMap(e => e.bodySignals || []);
+
+    $('insightsBox').textContent = [
+      'Pattern insights — last ' + list.length + ' saved entries',
+      'Top emotions: ' + (count(allEmo) || 'Not enough data'),
+      'Top trigger tags: ' + (count(allTags) || 'Not enough data'),
+      'Top body signals: ' + (count(allBody) || 'Not enough data')
+    ].join('\n');
+  }
+
+  function updateIntensity() {
+    const v = parseInt($('intensityRange').value, 10);
+    $('intensityVal').textContent = v + '/10';
+    $('intensityMeaning').textContent = intensityMeanings[v] || '';
+  }
+
+  function updateStress() {
+    const v = parseInt($('stressRange').value, 10);
+    $('stressVal').textContent = v + '/10';
+    $('stressMeaning').textContent = stressMeanings[v] || '';
+  }
+
+  // Breathing timer
+  function startBreath() {
+    clearInterval(breathInterval);
+    let sec = 60;
+    const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+    const timer = $('breathTimer');
+    $('breathState').textContent = 'Inhale';
+    timer.style.setProperty('--prog', 0);
+    breathInterval = setInterval(() => {
+      sec--;
+      const elapsed = 60 - sec;
+      const phase = phases[Math.floor((elapsed % 16) / 4)];
+      $('breathState').textContent = sec > 0 ? phase + '\n' + sec + 's' : 'Done';
+      timer.style.setProperty('--prog', Math.min(100, (elapsed / 60) * 100));
+      if (sec <= 0) clearInterval(breathInterval);
+    }, 1000);
+  }
+
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    readForm();
+    showToast('Preparing your PDF…');
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(234, 236, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(26, 30, 46);
+    doc.text('Emotional Trigger Mapping Tool', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 80, 104);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Summary sections
+    const planTitle = planTemplates.find(p => p.key === state.planTemplate)?.title || 'Not selected';
+    const sections = [
+      ['Emotion and intensity', [
+        ['Emotion', state.selectedEmotion || 'Not selected'],
+        ['Intensity', state.intensity + '/10 — ' + (intensityMeanings[state.intensity] || '')],
+        ['What makes it worse', state.worseText || '—'],
+        ['What helps', state.helpText || '—']
+      ]],
+      ['Trigger map', [
+        ['Trigger', state.triggerText || '—'],
+        ['Trigger tags', state.selectedTags.join(', ') || '—'],
+        ['Boundary crossed', state.boundaryText || '—']
+      ]],
+      ['Body signals', [
+        ['Signals', state.bodySignals.join(', ') || '—'],
+        ['Stress level', state.stressLevel + '/10'],
+        ['Earliest signal', state.earliestSignal || '—'],
+        ['Body notes', state.bodyText || '—']
+      ]],
+      ['Mind story', [
+        ['Automatic thought', state.thoughtText || '—'],
+        ['Distortion pattern', state.distortion || '—'],
+        ['Balanced thought', state.balancedThought || '—']
+      ]],
+      ['Needs and action', [
+        ['Needs', state.needs.join(', ') || '—'],
+        ['Additional need', state.needText || '—'],
+        ['Smallest next action', state.smallAction || '—']
+      ]],
+      ['Response plan', [
+        ['Plan template', planTitle],
+        ['Regulate', state.regulatePlan || '—'],
+        ['Communicate', state.communicatePlan || '—'],
+        ['Repair', state.repairPlan || '—'],
+        ['Prevent', state.preventPlan || '—']
+      ]]
+    ];
+
+    sections.forEach(([sectionTitle, rows]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(74, 90, 170);
+      doc.text(sectionTitle.toUpperCase(), margin, y);
+      y += 10;
+      doc.setDrawColor(176, 184, 224);
+      doc.line(margin, y, pageW - margin, y);
+      y += 10;
+
+      rows.forEach(([label, value]) => {
+        if (y > pageH - 60) { doc.addPage(); y = margin; }
+        doc.setFillColor(234, 236, 248);
+        const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+        const bh = lines.length * 12 + 24;
+        doc.roundedRect(margin, y, pageW - margin * 2, bh, 3, 3, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(106, 122, 204);
+        doc.text(label.toUpperCase(), margin + 8, y + 12);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.3);
+        doc.setTextColor(26, 30, 46);
+        doc.text(lines, margin + 8, y + 22);
+        y += bh + 6;
+      });
+      y += 8;
+    });
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 90, 170);
+    doc.text('Understanding emotional triggers — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['What an emotional trigger actually is',
+       'An emotional trigger is any stimulus — a word, tone, situation, or memory — that activates a disproportionately strong emotional response relative to the present moment. Research in affective neuroscience, including the work of Joseph LeDoux, shows that the amygdala can initiate an emotional response before the prefrontal cortex has time to evaluate the situation. This means emotional reactions are often faster than conscious thought — not a sign of weakness, but of how the nervous system is wired.'],
+      ['The body as an early warning system',
+       'Somatic therapy and polyvagal theory (developed by Stephen Porges) identify the body as the first responder to perceived threat. Physical signals — tight chest, jaw clenching, stomach drop — often precede conscious awareness of emotion by several seconds. Mapping these body signals creates a personal early warning system, allowing for earlier intervention before full emotional flooding occurs.'],
+      ['Cognitive distortions and stress thinking',
+       'Cognitive Behavioural Therapy (CBT) research, pioneered by Aaron Beck and Albert Ellis, identifies recurring patterns of distorted thinking that amplify emotional distress. These include all-or-nothing thinking, catastrophizing, and mind reading. Studies consistently show that simply naming a distortion — without necessarily resolving it — reduces its emotional weight. The act of labelling activates the prefrontal cortex and can interrupt automatic reactivity.'],
+      ['The regulate-communicate-repair-prevent model',
+       'Crisis communication research and trauma-informed practice both support a sequential approach to emotional responses. Attempting to communicate during peak activation produces worse outcomes than pausing to regulate first. The R-C-R-P framework used in this tool is grounded in work from Dialectical Behaviour Therapy (DBT) and non-violent communication (NVC), which consistently show that regulated nervous systems produce clearer, more productive communication.'],
+      ['Pattern tracking and emotional intelligence growth',
+       'Research by psychologist Marc Brackett at the Yale Centre for Emotional Intelligence shows that consistent self-reflection on emotional triggers is one of the most effective methods for developing emotional regulation over time. Pattern recognition — seeing which situations, people, or times of day produce the strongest reactions — creates the foundation for proactive coping rather than reactive management. Saving entries consistently is not journaling for its own sake: it is building a personal emotional dataset.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(74, 90, 170);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 30, 46);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 90, 170);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 30, 46);
+    ['Main site: emotionalintelligencedeveloper.com',
+     'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+     'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+     'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 144, 168);
+    doc.text('This tool supports reflection and self-awareness. Not a diagnosis or substitute for professional support.', margin, pageH - 22);
+
+    doc.save('emotional-trigger-map.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This free Emotional Trigger Mapping Tool helped me understand my reactions: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  // Event delegation
+  document.addEventListener('click', e => {
+    // Emotion cards
+    const emotionCard = e.target.closest('.emotion-card');
+    if (emotionCard) {
+      const name = emotionCard.dataset.emotion;
+      const wasSelected = state.selectedEmotion === name;
+      state.selectedEmotion = wasSelected ? '' : name;
+      $$('.emotion-card').forEach(c => {
+        const active = c.dataset.emotion === state.selectedEmotion && state.selectedEmotion;
+        c.classList.toggle('selected', !!active);
+        c.setAttribute('aria-pressed', String(!!active));
+      });
+    }
+
+    // Trigger chips
+    const chip = e.target.closest('.chip[data-tag]');
+    if (chip) {
+      chip.classList.toggle('active');
+      const tag = chip.dataset.tag;
+      state.selectedTags = chip.classList.contains('active')
+        ? [...new Set([...state.selectedTags, tag])]
+        : state.selectedTags.filter(t => t !== tag);
+    }
+
+    // Step dots
+    const dot = e.target.closest('.step-dot');
+    if (dot && dot.dataset.goto) goTo(parseInt(dot.dataset.goto, 10));
+
+    // Nav buttons
+    if (e.target.id === 'next1') goTo(2);
+    if (e.target.id === 'next2') goTo(3);
+    if (e.target.id === 'next3') goTo(4);
+    if (e.target.id === 'next4') goTo(5);
+    if (e.target.id === 'next5') goTo(6);
+    if (e.target.id === 'next6') goTo(7);
+    if (e.target.id === 'prev2') goTo(1);
+    if (e.target.id === 'prev3') goTo(2);
+    if (e.target.id === 'prev4') goTo(3);
+    if (e.target.id === 'prev5') goTo(4);
+    if (e.target.id === 'prev6') goTo(5);
+    if (e.target.id === 'prev7') goTo(6);
+    if (e.target.id === 'restartBtn') { readForm(); currentStep = 1; updateProgress(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    // Actions
+    if (e.target.id === 'saveEntry' || e.target.id === 'stickySave') saveEntry();
+    if (e.target.id === 'downloadPdfBtn' || e.target.id === 'stickyPdf') downloadPDF();
+    if (e.target.id === 'startBreath') startBreath();
+    if (e.target.id === 'stopBreath') {
+      clearInterval(breathInterval);
+      $('breathState').textContent = 'Ready';
+      $('breathTimer').style.setProperty('--prog', 0);
+    }
+    if (e.target.id === 'copyBoundary') {
+      navigator.clipboard.writeText("I'm not able to do that right now.").then(() => showToast('Boundary script copied.')).catch(() => showToast('Copy from address bar.'));
+    }
+    if (e.target.id === 'clearHistory') {
+      if (confirm('Clear all saved entries on this device?')) {
+        try { localStorage.removeItem(HISTORY_KEY); } catch(_) {}
+        renderHistory();
+        renderInsights();
+        showToast('History cleared.');
+      }
+    }
+    if (e.target.id === 'copyLinkBtn') {
+      navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!')).catch(() => showToast('Copy from your address bar.'));
+    }
+
+    // History open
+    const openBtn = e.target.closest('[data-open]');
+    if (openBtn) loadEntry(openBtn.dataset.open);
+
+    // Generate balanced thought
+    if (e.target.id === 'generateBalanced') {
+      const thought = $('thoughtText').value.trim() || 'this situation';
+      const dist = $('distortionSelect').value || 'a stress-based pattern';
+      $('balancedThought').value = `A more balanced view is: I may be experiencing ${dist.toLowerCase()} right now. A more realistic perspective on "${thought}" might be that this moment does not define the whole picture, and I can respond rather than react.`;
+    }
+  });
+
+  // Sliders
+  $('intensityRange').addEventListener('input', updateIntensity);
+  $('stressRange').addEventListener('input', updateStress);
+
+  // Init
+  buildEmotionGrid();
+  buildTriggerChips();
+  buildBodyGrid();
+  buildNeedsGrid();
+  buildPlanChoices();
+  renderHistory();
+  renderInsights();
+  updateProgress();
+  updateIntensity();
+  updateStress();
+  updateShareLinks();
+}());
+</script>
 </body>
 </html>

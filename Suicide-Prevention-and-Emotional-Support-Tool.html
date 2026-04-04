@@ -1,522 +1,1079 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>You Matter — Emotional Support & Suicide Prevention Tool</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You Matter — Emotional Support & Crisis Check-In | Emotional Intelligence Developer</title>
   <style>
     :root {
-      --bg: #f3f4f6;
+      --brand: #5b8fa8;
+      --brand-light: #e8f4f9;
+      --brand-mid: #c5dfe9;
+      --accent: #7dbea0;
+      --accent-light: #e8f5ef;
+      --warm: #f7f3ee;
       --card: #ffffff;
-      --accent: #1f6feb;
-      --accent-dark: #1a56c4;
-      --soft: #eff6ff;
-      --muted: #6b7280;
-      --safe: #10b981;
-      --danger-bg: #fef2f2;
-      --danger-border: #fca5a5;
-      --warning-bg: #fff7ed;
-      --warning-border: #fed7aa;
-      --focus: #111827;
+      --text: #1e2a35;
+      --muted: #5a6a76;
+      --hint: #8a9aa6;
+      --border: #dde6eb;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --crisis-bg: #1a1f2e;
+      --crisis-text: #ffffff;
+      --urgent-bg: #fff0f0;
+      --urgent-border: #f5a0a0;
+      --urgent-text: #8b1a1a;
+      --safe-bg: #e8f5ef;
+      --safe-border: #a8d5bc;
+      --safe-text: #2d6a4f;
+      --pause-bg: #f0eef8;
+      --pause-border: #c9c0e8;
+      --pause-text: #4a3f7a;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      margin: 0;
-      background: var(--bg);
-      color: #111;
-      line-height: 1.55;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--warm);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
     }
 
-    .wrap {
-      max-width: 900px;
-      margin: 28px auto;
-      padding: 18px;
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
     }
 
-    .card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+    /* STICKY CRISIS BAR */
+    .crisis-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--crisis-bg);
+      color: var(--crisis-text);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 14px;
     }
 
-    h1 { margin: 0 0 10px; font-size: 1.5rem; }
-    h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    .crisis-bar strong { font-size: 14px; }
 
-    .lead {
-      color: var(--muted);
-      margin-bottom: 18px;
+    .crisis-bar a {
+      color: #93c5fd;
+      font-weight: bold;
+      text-decoration: underline;
+      white-space: nowrap;
     }
 
-    .notice {
-      background: var(--warning-bg);
-      border: 1px solid var(--warning-border);
-      border-radius: 12px;
-      padding: 14px;
+    /* URGENT NOTICE */
+    .urgent-notice {
+      display: none;
+      background: var(--urgent-bg);
+      border: 2px solid var(--urgent-border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
       margin-bottom: 16px;
     }
 
-    .notice.emergency {
-      background: var(--danger-bg);
-      border-color: var(--danger-border);
-      display: none;
+    .urgent-notice-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--urgent-text);
+      margin-bottom: 10px;
     }
 
-    .safety-list { margin: 8px 0 0; padding-left: 18px; }
+    .urgent-notice ul {
+      padding-left: 20px;
+      color: var(--urgent-text);
+      font-size: 15px;
+    }
 
-    .q {
-      margin: 14px 0;
-      padding: 14px;
+    .urgent-notice ul li { margin-bottom: 6px; }
+
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e5e7eb;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
     }
 
-    .q h3 { margin: 0 0 10px; font-size: 0.98rem; }
-    .q fieldset { border: 0; padding: 0; margin: 0; }
-    .q legend { font-weight: 700; margin-bottom: 8px; }
-    .q label { display: block; margin: 8px 0; }
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
 
-    input[type="radio"] { transform: translateY(1px); }
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
 
-    textarea,
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 14px;
+    }
+
+    .you-matter-note {
+      padding: 14px 18px;
+      background: var(--safe-bg);
+      border: 1px solid var(--safe-border);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      color: var(--safe-text);
+      line-height: 1.7;
+    }
+
+    .immediate-danger {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: var(--urgent-bg);
+      border: 1px solid var(--urgent-border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--urgent-text);
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    /* QUESTIONS */
+    .question {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 15px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .question-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .question-note {
+      font-size: 13px;
+      color: var(--hint);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
     select {
       width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
       background: #fff;
-      font: inherit;
-      color: inherit;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9aa6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
     }
 
-    textarea { min-height: 90px; resize: vertical; }
+    select:focus { outline: none; border-color: var(--brand); }
 
-    .mini-note {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 8px;
-    }
-
-    .controls,
-    .quick-actions {
+    /* RADIO OPTIONS */
+    .radio-option {
       display: flex;
+      align-items: flex-start;
       gap: 10px;
-      margin-top: 16px;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .radio-option:hover { border-color: var(--brand); }
+
+    .radio-option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      margin-top: 2px;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    .radio-option.high-risk {
+      border-color: var(--urgent-border);
+      background: var(--urgent-bg);
+    }
+
+    /* PAUSE BOX */
+    .pause-box {
+      background: var(--pause-bg);
+      border: 1px solid var(--pause-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 16px;
+    }
+
+    .pause-title {
+      font-size: 1.05rem;
+      color: var(--pause-text);
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+
+    .pause-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 12px;
+    }
+
+    .pause-steps li {
+      padding: 7px 0;
+      font-size: 15px;
+      color: var(--text);
+      border-bottom: 1px solid var(--pause-border);
+    }
+
+    .pause-steps li:last-child { border-bottom: none; }
+
+    .pause-note {
+      font-size: 14px;
+      color: var(--pause-text);
+      font-style: italic;
+    }
+
+    /* CRISIS RESOURCES */
+    .crisis-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--safe-border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .crisis-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--safe-text);
+      margin-bottom: 6px;
+    }
+
+    .crisis-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .resource-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 480px) {
+      .resource-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .resource-item {
+      background: var(--safe-bg);
+      border: 1px solid var(--safe-border);
+      border-radius: var(--radius-md);
+      padding: 13px 15px;
+    }
+
+    .resource-item-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--safe-text);
+      margin-bottom: 4px;
+    }
+
+    .resource-item-body {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .resource-item a {
+      color: var(--brand);
+      font-size: 13px;
+    }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      background: var(--safe-bg);
+      border: 1px solid var(--safe-border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .result-box h3 {
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--safe-text);
+      margin-bottom: 12px;
+    }
+
+    .result-block {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--safe-border);
+    }
+
+    .result-block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .result-block-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--safe-text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .script-box {
+      background: #fff;
+      border: 1px solid var(--safe-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-style: italic;
+      color: var(--text);
+      margin-top: 8px;
+      font-size: 15px;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
       flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
     }
 
     .btn {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 0;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn:hover { background: var(--accent-dark); }
-    .btn.secondary { background: #e5e7eb; color: #111; }
-    .btn.success { background: var(--safe); }
-
-    .result {
-      display: none;
-      margin-top: 18px;
-      padding: 16px;
-      border-radius: 12px;
-      background: var(--soft);
-      border: 1px solid #bfdbfe;
-    }
-
-    .help-box {
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 12px;
-      background: #ecfeff;
-      border: 1px solid #67e8f9;
-    }
-
-    .resource-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .resource-card {
-      border: 1px solid #bae6fd;
-      background: #f0f9ff;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .resource-card h4 { margin: 0 0 6px; }
-    .resource-card p { margin: 0; font-size: 0.93rem; }
-
-    .sticky-help {
-      position: sticky;
-      top: 0;
-      z-index: 8;
-      margin: -24px -24px 16px;
-      padding: 12px 24px;
-      background: #111827;
-      color: #fff;
-      border-radius: 14px 14px 0 0;
-      display: flex;
-      justify-content: space-between;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .sticky-help a {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .download {
-      margin-top: 16px;
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 10px;
-      background: var(--safe);
-      color: #fff;
-      font-weight: 700;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
       cursor: pointer;
-      border: 0;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
       white-space: nowrap;
-      border: 0;
     }
 
-    :focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-safe { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support { background: #888; color: #fff; border-color: #888; font-size: 14px; }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
     }
 
-    footer {
-      margin-top: 18px;
-      font-size: 12px;
-      color: var(--muted);
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 20px;
       text-align: center;
     }
 
     .footer-links {
-      margin-top: 12px;
       display: flex;
-      justify-content: center;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 12px;
     }
 
     .footer-link {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #e5e7eb;
-      color: #111;
-      font-weight: 700;
+      font-size: 13px;
+      color: var(--brand);
       text-decoration: none;
     }
 
-    .footer-link.primary {
-      background: #f59e0b;
+    .footer-link:hover { text-decoration: underline; }
+
+    .footer-credit {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="sticky-help" role="region" aria-label="Fast support links">
-        <span><strong>If you might act on self-harm thoughts, call emergency services now.</strong></span>
-        <span><a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer">Find crisis lines by country</a></span>
+
+<!-- STICKY CRISIS BAR -->
+<div class="crisis-bar" role="region" aria-label="Emergency support">
+  <strong>If you might act on thoughts of self-harm — call emergency services now.</strong>
+  <a href="https://findahelpline.com" target="_blank" rel="noopener">Find crisis lines by country</a>
+</div>
+
+<div class="container">
+
+  <!-- URGENT NOTICE (shown on high-risk selection) -->
+  <div class="urgent-notice" id="urgentNotice" aria-live="assertive" role="alert">
+    <div class="urgent-notice-title">Your safety comes first right now.</div>
+    <ul>
+      <li>Call emergency services in your area now.</li>
+      <li>Move away from anything you could use to harm yourself.</li>
+      <li>Text or call one trusted person: <em>"Please stay with me right now."</em></li>
+      <li>If you cannot call, go to your nearest emergency department.</li>
+    </ul>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>You Matter</h1>
+    <p class="tagline">If you are here, something feels heavy. This space is for the next few minutes only — no pressure, no judgment. <strong>You are not alone in this moment.</strong></p>
+
+    <div class="you-matter-note">
+      Wanting the pain to stop is not the same as wanting life to end. What you are feeling right now is a signal — not a verdict on your worth or your future.
+    </div>
+
+    <div class="immediate-danger">
+      <strong>If you are in immediate danger:</strong> Contact local emergency services now, or ask someone nearby to help you call.
+    </div>
+  </header>
+
+  <!-- BREATHING PAUSE -->
+  <div class="pause-box" aria-label="Breathing pause">
+    <p class="pause-title">Before anything else — one 30-second pause</p>
+    <ul class="pause-steps">
+      <li>Breathe in slowly through your nose for 4 counts</li>
+      <li>Hold gently for 3 counts</li>
+      <li>Breathe out slowly through your mouth for 6 counts</li>
+      <li>Repeat once more if you can</li>
+    </ul>
+    <p class="pause-note">Strong urges rise and fall like waves. Waiting — even 10 minutes — can make a difference. You do not have to decide anything right now.</p>
+  </div>
+
+  <!-- CRISIS SUPPORT -->
+  <div class="crisis-card" id="crisisSection" aria-labelledby="crisis-heading">
+    <p class="crisis-title" id="crisis-heading">Crisis support — free and confidential</p>
+    <p class="crisis-subtitle">If speaking feels hard, you can start with: "I am not safe by myself right now."</p>
+    <div class="resource-grid">
+      <div class="resource-item">
+        <div class="resource-item-title">United States &amp; Canada</div>
+        <div class="resource-item-body">Call or text <strong>988</strong><br><a href="https://988lifeline.org" target="_blank" rel="noopener">988lifeline.org</a></div>
       </div>
-
-      <h1>You Matter — A Gentle Check-In</h1>
-      <p class="lead">
-        If you’re here, something feels heavy. This space is for the next few minutes only — no pressure,
-        no judgment, just support. <strong>You are not alone in this moment.</strong>
-      </p>
-
-      <div class="notice">
-        <strong>If you are in immediate danger:</strong><br>
-        Contact local emergency services now, or ask someone nearby to help you call.
+      <div class="resource-item">
+        <div class="resource-item-title">United Kingdom &amp; Ireland</div>
+        <div class="resource-item-body">Samaritans: <strong>116 123</strong><br><a href="https://www.samaritans.org" target="_blank" rel="noopener">samaritans.org</a></div>
       </div>
-
-      <div class="notice emergency" id="urgentNotice" aria-live="assertive">
-        <strong>🚨 Your safety comes first right now.</strong>
-        <ul class="safety-list">
-          <li>Call emergency services in your area now.</li>
-          <li>Move away from anything you could use to harm yourself.</li>
-          <li>Text or call one trusted person: <em>“Please stay with me right now.”</em></li>
-        </ul>
+      <div class="resource-item">
+        <div class="resource-item-title">Australia</div>
+        <div class="resource-item-body">Lifeline: <strong>13 11 14</strong><br><a href="https://www.lifeline.org.au" target="_blank" rel="noopener">lifeline.org.au</a></div>
       </div>
-
-      <div class="q">
-        <fieldset>
-          <legend>Safety check: Which statement fits best right now?</legend>
-          <label><input type="radio" name="safetyNow" value="I feel emotionally overwhelmed, but not in immediate danger."> I feel emotionally overwhelmed, but not in immediate danger.</label>
-          <label><input type="radio" name="safetyNow" value="I am having thoughts of harming myself, but do not have a plan right now."> I am having thoughts of harming myself, but do not have a plan right now.</label>
-          <label><input type="radio" name="safetyNow" value="I might act on thoughts of harming myself soon."> I might act on thoughts of harming myself soon.</label>
-        </fieldset>
-        <p class="mini-note">This only helps tailor support. You are not being judged.</p>
+      <div class="resource-item">
+        <div class="resource-item-title">All other countries</div>
+        <div class="resource-item-body">Find local lines by country<br><a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></div>
       </div>
-
-      <div class="q">
-        <h3>How are you feeling right now?</h3>
-        <select id="feelingNow">
-          <option value="">Select what fits best…</option>
-          <option>😔 Empty or numb</option>
-          <option>😢 Overwhelming sadness</option>
-          <option>😟 Anxious or panicked</option>
-          <option>😡 Angry at myself or others</option>
-          <option>😞 Hopeless or trapped</option>
-          <option>😣 Tired of fighting</option>
-          <option>🙂 I just need someone to listen</option>
-        </select>
-      </div>
-
-      <div class="q">
-        <h3>Which thought keeps looping right now?</h3>
-        <select id="thoughtLoop">
-          <option value="">Choose one…</option>
-          <option>“This pain will never end”</option>
-          <option>“I’m a burden to others”</option>
-          <option>“No one would understand me”</option>
-          <option>“I’ve tried everything already”</option>
-          <option>“I don’t want to die, I want the pain to stop”</option>
-        </select>
-      </div>
-
-      <div class="help-box">
-        <h2>⏸️ 30-second pause</h2>
-        <p>You don’t need to decide everything right now. Try this cycle once:</p>
-        <ul>
-          <li>🫁 Breathe in slowly through your nose</li>
-          <li>⏳ Hold for 3 seconds</li>
-          <li>🌬️ Breathe out gently through your mouth</li>
-        </ul>
-        <p><strong>Strong urges rise and fall like waves.</strong> Waiting can save a life — including yours.</p>
-      </div>
-
-      <div class="help-box">
-        <h2>📞 Crisis support (free and confidential)</h2>
-        <p>If speaking feels hard, start with: <em>“I’m not safe by myself right now.”</em></p>
-        <div class="resource-links">
-          <div class="resource-card">
-            <h4>United States & Canada</h4>
-            <p>Call or text <strong>988</strong>.<br><a href="https://988lifeline.org" target="_blank" rel="noopener noreferrer">988lifeline.org</a></p>
-          </div>
-          <div class="resource-card">
-            <h4>United Kingdom & ROI</h4>
-            <p>Call Samaritans: <strong>116 123</strong>.<br><a href="https://www.samaritans.org" target="_blank" rel="noopener noreferrer">samaritans.org</a></p>
-          </div>
-          <div class="resource-card">
-            <h4>All other countries</h4>
-            <p>Find local hotline numbers.<br><a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer">findahelpline.com</a></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="q"><h3>What has been weighing most heavily on your mind?</h3><textarea id="q1"></textarea></div>
-      <div class="q"><h3>What emotions feel strongest right now?</h3><textarea id="q2"></textarea></div>
-      <div class="q"><h3>What helped you survive hard moments before?</h3><textarea id="q3"></textarea></div>
-      <div class="q"><h3>If someone you love felt this way, what would you tell them?</h3><textarea id="q4"></textarea></div>
-      <div class="q"><h3>One small reason you could stay today:</h3><textarea id="q5"></textarea></div>
-      <div class="q"><h3>Who can you contact in the next 10 minutes?</h3><textarea id="q6" placeholder="Name + number or service"></textarea></div>
-      <div class="q"><h3>What can you do in the next 10 minutes to lower risk?</h3><textarea id="q7" placeholder="Example: go to shared space, remove harmful objects, text someone"></textarea></div>
-
-      <div class="controls">
-        <button class="btn" onclick="showSupport()">Show My Support Message</button>
-        <button class="btn secondary" onclick="resetTool()">Reset</button>
-      </div>
-
-      <div id="result" class="result" aria-live="polite"></div>
-
-      <div class="quick-actions">
-        <button class="btn secondary" onclick="copySupportPlan()">Copy My 10-Minute Plan</button>
-        <button class="btn success" onclick="scrollToResources()">Jump to Crisis Support</button>
-      </div>
-
-      <button class="download" onclick="downloadPDF()">Download My Reflection (PDF)</button>
-
-      <footer>
-        <div class="footer-links" aria-label="Support resources">
-          <a class="footer-link primary" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Find Support Options</a>
-          <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
-        </div>
-        Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-      </footer>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const { jsPDF } = window.jspdf;
+  <!-- CHECK-IN CARD -->
+  <section class="card" aria-labelledby="checkin-heading">
+    <p class="card-title" id="checkin-heading">Your gentle check-in</p>
 
-    function getSafety() {
-      return document.querySelector('input[name="safetyNow"]:checked')?.value || "";
+    <!-- SAFETY CHECK -->
+    <div class="question">
+      <label class="question-label">Safety check — which statement fits best right now?</label>
+      <p class="question-hint">This only helps tailor the support shown to you. You are not being judged.</p>
+      <div role="radiogroup" aria-label="Safety check options">
+        <label class="radio-option">
+          <input type="radio" name="safetyNow" value="overwhelmed" />
+          I feel emotionally overwhelmed, but not in immediate danger.
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="safetyNow" value="thoughts" />
+          I am having thoughts of harming myself, but do not have a plan right now.
+        </label>
+        <label class="radio-option high-risk">
+          <input type="radio" name="safetyNow" value="mightact" />
+          I might act on thoughts of harming myself soon.
+        </label>
+      </div>
+      <p class="question-note">Whatever you selected — you made the right choice by being here.</p>
+    </div>
+
+    <!-- FEELING NOW -->
+    <div class="question">
+      <label class="question-label" for="feelingNow">How are you feeling right now?</label>
+      <p class="question-hint">Choose what fits closest — you do not have to have the exact words.</p>
+      <select id="feelingNow" aria-label="How you are feeling right now">
+        <option value="">Select what fits best…</option>
+        <option value="Empty or numb">Empty or numb</option>
+        <option value="Overwhelming sadness">Overwhelming sadness</option>
+        <option value="Anxious or panicked">Anxious or panicked</option>
+        <option value="Angry at myself or others">Angry at myself or others</option>
+        <option value="Hopeless or trapped">Hopeless or trapped</option>
+        <option value="Tired of fighting">Tired of fighting</option>
+        <option value="I just need someone to listen">I just need someone to listen</option>
+      </select>
+    </div>
+
+    <!-- THOUGHT LOOP -->
+    <div class="question">
+      <label class="question-label" for="thoughtLoop">Which thought keeps looping right now?</label>
+      <p class="question-hint">Recognising the thought is the first step to creating distance from it.</p>
+      <select id="thoughtLoop" aria-label="Thought that keeps looping">
+        <option value="">Choose one if it fits…</option>
+        <option value="This pain will never end">"This pain will never end"</option>
+        <option value="I am a burden to others">"I am a burden to others"</option>
+        <option value="No one would understand me">"No one would understand me"</option>
+        <option value="I have tried everything already">"I have tried everything already"</option>
+        <option value="I do not want to die, I want the pain to stop">"I do not want to die, I want the pain to stop"</option>
+      </select>
+    </div>
+
+    <!-- OPEN QUESTIONS -->
+    <div class="question">
+      <label class="question-label" for="q1">What has been weighing most heavily on your mind?</label>
+      <p class="question-hint">You do not need to explain it perfectly. Just write what is there.</p>
+      <textarea id="q1" maxlength="700" placeholder="Write freely — this is only for you…" aria-label="What has been weighing on your mind"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q2">What emotions feel strongest right now?</label>
+      <textarea id="q2" maxlength="500" placeholder="As many or as few words as you need…" aria-label="Strongest emotions right now"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q3">What has helped you survive hard moments before?</label>
+      <p class="question-hint">Even small things — a person, a song, a place, a memory.</p>
+      <textarea id="q3" maxlength="500" placeholder="You have survived difficult moments before…" aria-label="What has helped you before"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q4">If someone you love felt this way, what would you tell them?</label>
+      <p class="question-hint">Try to offer yourself the same words.</p>
+      <textarea id="q4" maxlength="500" placeholder="Speak to yourself as you would to someone you care about…" aria-label="What you would tell someone you love"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q5">One small reason you could stay today:</label>
+      <p class="question-hint">It does not have to be big. It just has to be true.</p>
+      <textarea id="q5" maxlength="400" placeholder="Even one small reason is enough for today…" aria-label="One reason to stay today"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q6">Who can you contact in the next 10 minutes?</label>
+      <p class="question-hint">A person, a helpline, or a text — any contact counts.</p>
+      <textarea id="q6" maxlength="300" placeholder="Name, number, or service…" aria-label="Who you can contact"></textarea>
+    </div>
+
+    <div class="question">
+      <label class="question-label" for="q7">What can you do in the next 10 minutes to lower your risk?</label>
+      <p class="question-hint">Moving to a shared space, removing objects, texting someone — any step helps.</p>
+      <textarea id="q7" maxlength="400" placeholder="Even moving rooms is a meaningful step…" aria-label="What you can do to lower risk"></textarea>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-msg" id="errorMsg" style="display:none; color:#b94040; font-size:14px; font-style:italic; margin-bottom:14px;" role="alert" aria-live="polite"></div>
+
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite"></div>
+
+    <!-- ACTIONS -->
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="showSupportBtn" aria-label="Show my support message">Show my support message</button>
+      <button type="button" class="btn btn-safe" id="copyPlanBtn" aria-label="Copy my 10-minute plan">Copy 10-minute plan</button>
+      <button type="button" class="btn btn-outline" id="jumpCrisisBtn" aria-label="Jump to crisis support">Jump to crisis support</button>
+    </div>
+
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="pdfBtn" aria-label="Download PDF reflection">Download PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    </div>
+
+    <!-- SHARE -->
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn" aria-label="Copy link">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support this website</a>
+    </div>
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; This tool supports reflection only. If you are in danger, please seek urgent help now.
+    </p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const logoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = window.jspdf && window.jspdf.jsPDF;
+
+  const $ = id => document.getElementById(id);
+
+  let toastTimer;
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  function getSafety() {
+    const checked = document.querySelector('input[name="safetyNow"]:checked');
+    return checked ? checked.value : '';
+  }
+
+  function getSafetyLabel() {
+    const v = getSafety();
+    if (v === 'overwhelmed') return 'I feel emotionally overwhelmed, but not in immediate danger.';
+    if (v === 'thoughts') return 'I am having thoughts of harming myself, but do not have a plan right now.';
+    if (v === 'mightact') return 'I might act on thoughts of harming myself soon.';
+    return '';
+  }
+
+  // Safety radio — show urgent notice on high risk
+  document.querySelectorAll('input[name="safetyNow"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const urgent = $('urgentNotice');
+      urgent.style.display = getSafety() === 'mightact' ? 'block' : 'none';
+      if (getSafety() === 'mightact') urgent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function showSupport() {
+    const safety = getSafety();
+    const safetyLabel = getSafetyLabel();
+    const feeling = $('feelingNow').value;
+    const thought = $('thoughtLoop').value;
+    const highRisk = safety === 'mightact';
+
+    let html = '';
+
+    if (highRisk) {
+      html += '<div style="background:var(--urgent-bg);border:1px solid var(--urgent-border);border-radius:10px;padding:14px;margin-bottom:14px;">';
+      html += '<div style="font-weight:bold;color:var(--urgent-text);margin-bottom:8px;">Please reach out for help right now.</div>';
+      html += '<div style="color:var(--urgent-text);font-size:14px;">Call emergency services, a crisis line, or go to your nearest emergency department. You do not have to manage this alone.</div>';
+      html += '</div>';
     }
 
-    function showSupport() {
-      const feeling = document.getElementById("feelingNow").value;
-      const thought = document.getElementById("thoughtLoop").value;
-      const safety = getSafety();
-      const box = document.getElementById("result");
-      const urgentNotice = document.getElementById("urgentNotice");
-      const highRisk = safety.includes("might act");
+    html += '<h3>You are not broken. You are in pain — and pain can change.</h3>';
 
-      urgentNotice.style.display = highRisk ? "block" : "none";
-
-      box.innerHTML = `
-        <strong>💛 You are not broken.</strong><br><br>
-        ${safety ? `Safety check: <strong>${safety}</strong><br><br>` : ""}
-        ${feeling ? `Right now you’re feeling: <strong>${feeling}</strong><br><br>` : ""}
-        ${thought ? `You selected this thought: <em>${thought}</em><br><br>` : ""}
-
-        <strong>🧠 Gentle truth:</strong><br>
-        Wanting pain to stop does not mean you want life to end. Thoughts are distress signals — not facts about your worth.<br><br>
-
-        <strong>📌 Next 10-minute plan:</strong><br>
-        1) Move to a safer place, ideally where you are not alone.<br>
-        2) Contact one person or hotline now.<br>
-        3) Delay any harmful action for 10 more minutes while breathing slowly.<br><br>
-
-        <strong>🫂 Script you can copy:</strong><br>
-        <em>“I’m not okay and I need support right now. Can you stay with me?”</em><br><br>
-
-        If staying feels hard, focus on one thing only: <strong>stay for today.</strong>
-      `;
-      box.style.display = "block";
-      box.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (safetyLabel) {
+      html += '<div class="result-block"><div class="result-block-label">Your safety check</div><div>' + safetyLabel + '</div></div>';
     }
 
-    function resetTool() {
-      document.querySelectorAll("textarea, select").forEach(el => el.value = "");
-      document.querySelectorAll('input[name="safetyNow"]').forEach(el => el.checked = false);
-      document.getElementById("result").style.display = "none";
-      document.getElementById("urgentNotice").style.display = "none";
+    if (feeling) {
+      html += '<div class="result-block"><div class="result-block-label">How you are feeling</div><div>' + feeling + '</div></div>';
     }
 
-    function copySupportPlan() {
-      const safety = getSafety() || "(not selected)";
-      const contact = document.getElementById("q6").value.trim() || "(not written)";
-      const action = document.getElementById("q7").value.trim() || "(not written)";
-      const stayReason = document.getElementById("q5").value.trim() || "(not written)";
-
-      const text = `My 10-minute safety plan\n\nSafety level: ${safety}\nContact now: ${contact}\nRisk-lowering step: ${action}\nReason to stay today: ${stayReason}\n\nIf I feel at immediate risk, I will call emergency services.`;
-
-      if (!navigator.clipboard) {
-        alert("Copy is not supported in this browser. You can manually copy the text from your responses.");
-        return;
-      }
-
-      navigator.clipboard.writeText(text)
-        .then(() => alert("Your 10-minute plan was copied. You can paste it into a message now."))
-        .catch(() => alert("Copy failed. Please manually copy your responses from this page."));
+    if (thought) {
+      html += '<div class="result-block"><div class="result-block-label">The thought you named</div><div style="font-style:italic;">"' + thought + '"</div>';
+      html += '<div style="font-size:14px;color:var(--muted);margin-top:6px;">Thoughts are distress signals — not facts about your worth or your future. They feel true when pain is high. They are not.</div></div>';
     }
 
-    function scrollToResources() {
-      const resourcesHeading = Array.from(document.querySelectorAll("h2")).find(h => h.textContent.includes("Crisis support"));
-      if (resourcesHeading) {
-        resourcesHeading.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
+    html += '<div class="result-block"><div class="result-block-label">A gentle truth</div>';
+    html += '<div>Wanting pain to stop does not mean you want life to end. Every person who has survived a crisis moment has said the same: the feeling passed. It will pass for you too — but you need support to get there.</div></div>';
 
-    function downloadPDF() {
-      const cleanPdfText = (value) => {
-        const noEmoji = value.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "");
-        return noEmoji.replace(/\s+/g, " ").trim();
-      };
+    html += '<div class="result-block"><div class="result-block-label">Your next 10 minutes</div>';
+    html += '<div>1. Move to a safer space — ideally where you are not alone.<br>2. Contact one person or helpline right now.<br>3. Delay any harmful action for 10 more minutes. Just 10.<br>4. Breathe slowly while you wait.</div></div>';
 
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const left = 40;
-      const maxWidth = 515;
-      let y = 50;
+    html += '<div class="result-block"><div class="result-block-label">Words you can use right now</div>';
+    html += '<div class="script-box">"I am not okay and I need support right now. Can you stay with me?"</div></div>';
 
-      const feeling = document.getElementById("feelingNow").value || "(not selected)";
-      const thought = document.getElementById("thoughtLoop").value || "(not selected)";
-      const safety = getSafety() || "(not selected)";
+    html += '<div style="font-size:14px;color:var(--safe-text);font-style:italic;margin-top:10px;">If staying feels impossible — focus on one thing only: stay for today. Just today.</div>';
 
-      const answers = [
-        { q: "My current safety check:", a: safety },
-        { q: "How I am feeling right now:", a: feeling },
-        { q: "The thought looping in my mind:", a: thought },
-        { q: "What has been weighing most heavily on my mind:", a: q1.value },
-        { q: "What emotions feel strongest right now:", a: q2.value },
-        { q: "What has helped me survive hard moments before:", a: q3.value },
-        { q: "What I would tell someone I love:", a: q4.value },
-        { q: "One small reason I could stay today:", a: q5.value },
-        { q: "Person/service I can contact in next 10 minutes:", a: q6.value },
-        { q: "Action I can take in next 10 minutes to lower risk:", a: q7.value }
-      ];
+    const box = $('resultBox');
+    box.innerHTML = html;
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-      doc.setFontSize(20);
-      doc.text("You Matter — Personal Reflection", left, y);
-      y += 28;
+  function copyPlan() {
+    const safety = getSafetyLabel() || '(not selected)';
+    const contact = $('q6').value.trim() || '(not written)';
+    const action = $('q7').value.trim() || '(not written)';
+    const reason = $('q5').value.trim() || '(not written)';
 
-      doc.setFontSize(11);
-      doc.text("https://emotionalintelligencedeveloper.com/", left, y);
-      y += 18;
+    const text = [
+      'My 10-minute safety plan',
+      '',
+      'Safety level: ' + safety,
+      'Contact now: ' + contact,
+      'Risk-lowering step: ' + action,
+      'Reason to stay today: ' + reason,
+      '',
+      'If I feel at immediate risk, I will call emergency services.',
+      '',
+      'Crisis support: findahelpline.com | 988 (US/CA) | 116 123 (UK/IE) | 13 11 14 (AU)'
+    ].join('\n');
 
-      doc.setFontSize(12);
-      doc.text(
-        doc.splitTextToSize(
-          "This document captures this moment. You do not need to solve everything now. You can share this with someone you trust.",
-          maxWidth
-        ),
-        left,
-        y
-      );
-      y += 50;
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('10-minute plan copied. Paste it into a message now.'))
+      .catch(() => showToast('Could not copy. Please copy your responses manually.'));
+  }
 
-      answers.forEach(item => {
-        doc.setFontSize(13);
-        doc.setFont(undefined, "bold");
-        doc.text(item.q, left, y);
-        y += 18;
+  function resetTool() {
+    ['q1','q2','q3','q4','q5','q6','q7'].forEach(id => { $(id).value = ''; });
+    $('feelingNow').value = '';
+    $('thoughtLoop').value = '';
+    document.querySelectorAll('input[name="safetyNow"]').forEach(r => r.checked = false);
+    $('resultBox').style.display = 'none';
+    $('urgentNotice').style.display = 'none';
+    $('errorMsg').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-        doc.setFontSize(12);
-        doc.setFont(undefined, "normal");
-        const text = item.a && item.a.trim() ? item.a : "(not written)";
-        const wrapped = doc.splitTextToSize(cleanPdfText(text), maxWidth);
-        doc.text(wrapped, left + 8, y);
-        y += wrapped.length * 14 + 18;
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('This free emotional support tool helped me in a hard moment: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
 
-        if (y > 760) {
-          doc.addPage();
-          y = 50;
-        }
-      });
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
 
-      doc.setFontSize(11);
-      doc.text(
-        doc.splitTextToSize(
-          "If you are in immediate danger, seek urgent help now or contact someone you trust immediately.",
-          maxWidth
-        ),
-        left,
-        Math.min(y + 20, 800)
-      );
+  async function downloadPDF() {
+    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    showToast('Preparing your PDF…');
 
-      doc.setFontSize(10);
-      doc.text("Website: https://emotionalintelligencedeveloper.com/", left, 820);
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
 
-      doc.save("you-matter-reflection.pdf");
-    }
-  </script>
+    // Header band
+    doc.setFillColor(232, 245, 239);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+
+    try {
+      const logoData = await imageToDataUrl(logoUrl);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 42, 53);
+    doc.text('You Matter — Personal Reflection', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 106, 118);
+    doc.text('Emotional Intelligence Developer', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+
+    y += 86;
+
+    // Opening message
+    doc.setFillColor(232, 245, 239);
+    const openingLines = doc.splitTextToSize('This document captures this moment. You do not need to solve everything now. You can share this with someone you trust, or keep it as a reminder that you reached out for support.', pageW - margin * 2 - 20);
+    const openingH = openingLines.length * 12 + 20;
+    doc.roundedRect(margin, y, pageW - margin * 2, openingH, 4, 4, 'F');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.5);
+    doc.setTextColor(45, 106, 79);
+    doc.text(openingLines, margin + 10, y + 14);
+    y += openingH + 14;
+
+    // Reflection responses
+    const responses = [
+      ['Your safety check', getSafetyLabel() || 'Not selected'],
+      ['How you are feeling', $('feelingNow').value || 'Not selected'],
+      ['Thought that keeps looping', $('thoughtLoop').value || 'Not selected'],
+      ['What has been weighing on your mind', $('q1').value || 'Not written'],
+      ['Strongest emotions right now', $('q2').value || 'Not written'],
+      ['What has helped you survive hard moments before', $('q3').value || 'Not written'],
+      ['What you would tell someone you love', $('q4').value || 'Not written'],
+      ['One small reason to stay today', $('q5').value || 'Not written'],
+      ['Who you can contact in the next 10 minutes', $('q6').value || 'Not written'],
+      ['What you can do in the next 10 minutes', $('q7').value || 'Not written']
+    ];
+
+    responses.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(248, 252, 255);
+      const clean = value.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+      const lines = doc.splitTextToSize(clean, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(45, 106, 79);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 42, 53);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    y += 6;
+    doc.setDrawColor(168, 213, 188);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(45, 106, 79);
+    doc.text('Understanding what you are experiencing', margin, y);
+    y += 14;
+
+    const educationalSections = [
+      [
+        'What suicidal thoughts really mean',
+        'Research shows that suicidal thoughts are most often an expression of unbearable pain — not a genuine desire to end life. Studies by the American Foundation for Suicide Prevention confirm that the majority of people who survive a suicidal crisis report relief and go on to lead meaningful lives. The thought "I want to die" is very often the mind\'s way of saying "I cannot bear this pain any longer." That pain is real and deserves serious support — not judgment.'
+      ],
+      [
+        'Why urges pass — the wave model',
+        'Crisis urges follow a predictable pattern: they rise, peak, and fall — much like waves. Crisis intervention research, including work from the National Suicide Prevention Lifeline, consistently shows that delaying action — even by 10 to 30 minutes — significantly reduces the likelihood of acting on an urge. This is why the 10-minute delay strategy is widely used by mental health professionals. You are not expected to feel better immediately. You are only asked to wait a little longer.'
+      ],
+      [
+        'The role of connection in survival',
+        'Social connection is one of the most well-evidenced protective factors against suicide. A landmark 2017 study in JAMA Psychiatry found that people with strong social support were significantly less likely to act on suicidal thoughts. Reaching out — even with one text message — activates this protection. You do not need to explain everything. You just need to not be alone right now.'
+      ],
+      [
+        'What crisis lines actually do',
+        'Crisis lines are staffed by trained listeners, not just call handlers. They are confidential in most countries, free of charge, and available 24 hours a day. You do not need to be in immediate danger to call. You can call because you are struggling. Many people describe the act of calling as the moment things began to shift — not because the problem was solved, but because they were heard.'
+      ],
+      [
+        'Grounding techniques that work',
+        'When the nervous system is in crisis, grounding exercises can interrupt the escalation. The 5-4-3-2-1 technique (name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste) is widely used in trauma therapy to bring the mind back to the present moment. Slow, extended exhales — breathing out longer than you breathe in — activate the parasympathetic nervous system and can physically reduce the intensity of a panic or crisis state within minutes.'
+      ]
+    ];
+
+    educationalSections.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(45, 106, 79);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 42, 53);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Crisis resources in PDF
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(168, 213, 188);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(45, 106, 79);
+    doc.text('Crisis support lines', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(30, 42, 53);
+    [
+      'United States & Canada: Call or text 988 — 988lifeline.org',
+      'United Kingdom & Ireland: Samaritans 116 123 — samaritans.org',
+      'Australia: Lifeline 13 11 14 — lifeline.org.au',
+      'All countries: findahelpline.com',
+      '',
+      'More free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(168, 213, 188);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 154, 166);
+    doc.text('This document is for reflection support only. If you are in immediate danger, please seek urgent help now.', margin, pageH - 22);
+
+    doc.save('you-matter-reflection.pdf');
+    showToast('PDF downloaded.');
+  }
+
+  // Event listeners
+  $('showSupportBtn').addEventListener('click', showSupport);
+  $('copyPlanBtn').addEventListener('click', copyPlan);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetTool);
+  $('jumpCrisisBtn').addEventListener('click', () => {
+    $('crisisSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  updateShareLinks();
+}());
+</script>
 </body>
 </html>

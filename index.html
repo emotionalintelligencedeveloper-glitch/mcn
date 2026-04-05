@@ -1,234 +1,672 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Emotional Intelligence Course Hub</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <title>Emotional Intelligence Course Hub | Emotional Intelligence Developer</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f6f9ff;
-      --panel: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --line: #dbe4f0;
-      --brand: #2563eb;
-      --accent: #0ea5e9;
-      --good: #22c55e;
-      --warn: #f59e0b;
-      --pink: #ec4899;
-      --purple: #8b5cf6;
-      --radius: 16px;
-      --shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
+      --bg: #f3f4f8;
+      --card: #ffffff;
+      --text: #1a1e2e;
+      --muted: #4a5068;
+      --hint: #8a90a8;
+      --border: #d0d4e8;
+      --brand: #4a5aaa;
+      --brand-light: #eaecf8;
+      --brand-mid: #b0b8e0;
+      --accent: #6a7acc;
+      --accent-light: #e4e8f8;
+      --teal: #3a8a7a;
+      --teal-light: #e4f2ee;
+      --teal-mid: #a0c8c0;
+      --gold: #b07a20;
+      --gold-light: #fdf6e8;
+      --gold-mid: #e0c878;
+      --warm: #f8f6f2;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --correct: #3a8a5a;
+      --correct-light: #e8f5ee;
+      --correct-mid: #a0c8b0;
+      --wrong: #8a3a3a;
+      --wrong-light: #f5e8e8;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
       color: var(--text);
-      background: radial-gradient(circle at top left, #e7f1ff, #f7fbff 45%, #eef6ff);
-      line-height: 1.45;
+      line-height: 1.7;
+      font-size: 16px;
+      padding-bottom: 80px;
     }
 
-    .app { max-width: 1050px; margin: 0 auto; padding: 14px 14px 110px; }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 20px;
+    }
 
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
-    .top { display: grid; gap: 12px; }
-    .title-wrap { display: flex; gap: 10px; align-items: center; }
-
     .logo {
-      width: 46px;
-      height: 46px;
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
       object-fit: cover;
-      border: 2px solid #bfdbfe;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
     }
 
-    h1, h2, h3, p { margin: 0; }
-    h1 { font-size: 1.2rem; }
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      text-align: left;
+      line-height: 1.3;
+    }
 
-    .muted { color: var(--muted); font-size: 0.95rem; }
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
 
-    .stats {
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 14px;
+    }
+
+    /* PROGRESS / STATS */
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .stat {
-      background: #f8fbff;
-      border: 1px solid #cfe0ff;
-      border-radius: 12px;
-      padding: 10px;
+    @media (min-width: 480px) {
+      .stats-grid { grid-template-columns: repeat(5, 1fr); }
     }
 
-    .stat small { color: var(--muted); display: block; }
-    .stat strong { font-size: 1.1rem; }
+    .stat-card {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      text-align: center;
+    }
 
-    .progress-wrap {
-      margin-top: 10px;
-      background: #dbeafe;
-      border-radius: 999px;
+    .stat-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      color: var(--brand);
+      font-weight: normal;
+    }
+
+    .progress-bar-wrap {
+      height: 8px;
+      background: var(--brand-light);
+      border-radius: 99px;
       overflow: hidden;
-      height: 12px;
-      border: 1px solid #bfdbfe;
+      margin-bottom: 12px;
     }
 
-    .progress { width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #06b6d4); transition: width .4s ease; }
-
-    .focus {
-      background: linear-gradient(120deg, #eff6ff, #f0fdfa);
-      border: 1px dashed #93c5fd;
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 10px;
+    .progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.4s ease;
     }
 
-    .share-row,
-    .btn-row,
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
-    button, .action-link {
-      border: none;
-      border-radius: 12px;
-      padding: 11px 13px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 46px;
-      color: #06233f;
-      background: #bfdbfe;
-      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-      box-shadow: 0 4px 10px rgba(2, 6, 23, .08);
+    .focus-box {
+      background: var(--gold-light);
+      border: 1px solid var(--gold-mid);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 14px;
     }
 
-    button:hover, .action-link:hover { transform: translateY(-1px); filter: brightness(1.02); }
-    button:active, .action-link:active { transform: translateY(1px) scale(.99); }
-    button:focus-visible, .action-link:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+    .celebrate-box {
+      display: none;
+      background: var(--correct-light);
+      border: 1px solid var(--correct-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
 
-    .brand { background: #60a5fa; color: #082f49; }
-    .good { background: #86efac; }
-    .warn { background: #fde68a; }
-    .pink { background: #f9a8d4; }
-    .purple { background: #c4b5fd; }
-    .danger { background: #fca5a5; }
-    .teal { background: #99f6e4; }
+    .celebrate-title {
+      font-size: 1.1rem;
+      color: var(--correct);
+      margin-bottom: 6px;
+    }
 
+    .celebrate-body {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* TOOL GRID */
     .tool-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 12px;
     }
 
     .tool-card {
-      border: 1px solid #cfe0ff;
-      border-radius: 14px;
-      padding: 12px;
-      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+
+    .tool-card.done { border-color: var(--correct-mid); background: var(--correct-light); }
+
+    .tool-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .tool-name {
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .tool-points {
+      font-size: 13px;
+      color: var(--brand);
+      font-weight: bold;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      background: var(--brand-light);
+      color: var(--brand);
+      border: 1px solid var(--brand-mid);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+    }
+
+    /* MODULE SYSTEM */
+    .module { display: none; }
+    .module.active { display: block; }
+
+    /* COURSE SPRINT */
+    .question-card {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .question-number {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .answer-options {
       display: grid;
       gap: 8px;
     }
 
-    .tool-head { display: flex; justify-content: space-between; gap: 8px; }
-
-    .badge-row { display: flex; gap: 6px; flex-wrap: wrap; }
-
-    .badge {
-      background: #e2e8ff;
-      color: #1e3a8a;
-      border: 1px solid #c7d2fe;
-      font-size: .76rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .module { display: none; }
-    .module.active { display: block; }
-
-    textarea, input[type="text"] {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 10px;
-      font: inherit;
+    .answer-btn {
       background: #fff;
-      margin-top: 6px;
+      border: 1.5px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.5;
+      transition: all 0.15s;
     }
 
-    textarea { min-height: 92px; }
+    .answer-btn:hover { border-color: var(--brand); background: var(--brand-light); }
 
-    .result {
-      margin-top: 10px;
-      border: 1px solid #bae6fd;
-      background: #f0f9ff;
-      border-radius: 12px;
-      padding: 10px;
+    .answer-btn.correct {
+      background: var(--correct-light);
+      border-color: var(--correct);
+      color: var(--correct);
+    }
+
+    .answer-btn.wrong {
+      background: var(--wrong-light);
+      border-color: #e8b0b0;
+      color: var(--wrong);
+    }
+
+    .answer-feedback {
       display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
     }
 
-    .calm-visual {
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 12px;
+    .answer-feedback.correct {
+      background: var(--correct-light);
+      border: 1px solid var(--correct-mid);
+      color: var(--correct);
+      display: block;
+    }
+
+    .answer-feedback.wrong {
+      background: var(--wrong-light);
+      border: 1px solid #e8b0b0;
+      color: var(--wrong);
+      display: block;
+    }
+
+    .q-progress {
+      display: flex;
       align-items: center;
-      margin-top: 10px;
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
-      border-radius: 12px;
-      padding: 10px;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .pie {
-      width: 96px;
-      height: 96px;
-      transform: rotate(-90deg);
+    .q-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--brand-light);
+      border-radius: 99px;
+      overflow: hidden;
     }
 
-    .pie-bg { fill: none; stroke: #cbd5e1; stroke-width: 8; }
-    .pie-fg {
-      fill: none;
-      stroke: #22c55e;
-      stroke-width: 8;
-      stroke-linecap: round;
-      stroke-dasharray: 283;
-      stroke-dashoffset: 283;
-      transition: stroke-dashoffset .4s linear;
+    .q-progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.3s;
     }
 
-    .comic-breathe {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
-      border: 1px solid #bae6fd;
+    .q-progress-label {
+      font-size: 12px;
+      color: var(--hint);
+      white-space: nowrap;
+    }
+
+    /* CALM TIMER */
+    .calm-wrap {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .breath-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 6px solid var(--teal-mid);
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--teal);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s ease;
+    }
+
+    .breath-circle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: conic-gradient(var(--teal-mid) calc(var(--prog, 0) * 1%), transparent 0);
+      opacity: 0.35;
+    }
+
+    .breath-inner { position: relative; z-index: 1; text-align: center; }
+    .breath-sec { font-size: 22px; display: block; }
+    .breath-phase { font-size: 12px; color: var(--teal); }
+
+    .breath-prompt-text {
+      font-size: 15px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+      min-height: 24px;
+    }
+
+    .grounding-steps {
+      background: var(--teal-light);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .grounding-title {
+      font-size: 13px;
+      color: var(--teal);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .grounding-item {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--teal-mid);
+    }
+
+    .grounding-item:last-child { border-bottom: none; }
+
+    /* BOUNDARY BUILDER */
+    .scenario-card {
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .scenario-text {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 14px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* TRIGGER MAP */
+    .trigger-step {
+      border: 1px solid var(--brand-mid);
+      background: var(--brand-light);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .trigger-step-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
       background: #fff;
+      min-height: 80px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
     }
 
-    .celebrate {
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    /* DAILY CHALLENGE */
+    .daily-prompt-card {
+      background: var(--gold-light);
+      border: 1px solid var(--gold-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .daily-prompt-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .daily-prompt-text {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .daily-why {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* RESULT BOX */
+    .result-box {
       display: none;
-      margin-top: 10px;
-      border: 1px solid #86efac;
-      background: #f0fdf4;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      line-height: 1.65;
     }
 
+    .result-box.success {
+      background: var(--correct-light);
+      border: 1px solid var(--correct-mid);
+      color: var(--correct);
+    }
+
+    .result-box.info {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      color: var(--brand);
+    }
+
+    /* CERTIFICATE */
+    .certificate-sheet {
+      border: 4px solid var(--gold);
+      border-radius: var(--radius-lg);
+      padding: 30px 24px;
+      text-align: center;
+      background: #fffdf8;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cert-inner-border {
+      border: 1.5px solid var(--gold-mid);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .cert-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 3px solid var(--gold-mid);
+      margin: 0 auto 14px;
+      display: block;
+    }
+
+    .cert-header {
+      font-size: 11px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .cert-title {
+      font-size: 1.6rem;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .cert-presented {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .cert-name {
+      font-size: 1.8rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 14px;
+      padding: 8px 0;
+      border-bottom: 1.5px solid var(--gold-mid);
+      border-top: 1.5px solid var(--gold-mid);
+    }
+
+    .cert-description {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .cert-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .cert-skill {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--brand);
+    }
+
+    .cert-date {
+      font-size: 13px;
+      color: var(--hint);
+      margin-bottom: 12px;
+    }
+
+    .cert-seal {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--brand);
+      border: 3px solid var(--gold);
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .cert-site {
+      font-size: 13px;
+      color: var(--brand);
+      font-weight: bold;
+    }
+
+    /* CONFETTI */
     .confetti-layer {
       position: fixed;
       inset: 0;
@@ -240,7 +678,7 @@
     .confetti {
       position: absolute;
       font-size: 18px;
-      animation: drop 1400ms ease-out forwards;
+      animation: drop 1600ms ease-out forwards;
       opacity: 0;
     }
 
@@ -249,725 +687,1160 @@
       100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
     }
 
-    .certificate { display: none; }
-    .certificate.active { display: block; }
-
-    .cert-sheet {
-      border: 5px solid #1e3a8a;
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      background: #ffffff;
-      min-height: 420px;
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
     }
 
-    .cert-title { font-size: 1.8rem; color: #1e3a8a; margin-top: 10px; }
-    .cert-name { font-size: 1.9rem; margin: 14px 0; color: #1d4ed8; font-weight: 800; }
-    .cert-site { margin-top: 16px; font-weight: 800; }
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
 
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+    .btn-small { padding: 8px 16px; min-height: 36px; font-size: 13px; }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+    }
+
+    /* STICKY BAR */
     .sticky-bar {
       position: fixed;
+      bottom: 0;
       left: 0;
       right: 0;
-      bottom: 0;
-      background: #ffffffee;
-      border-top: 1px solid #cbd5e1;
-      backdrop-filter: blur(6px);
-      padding: 8px;
-      z-index: 50;
-      display: grid;
+      background: rgba(26, 30, 46, 0.95);
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
       gap: 8px;
+      justify-content: center;
+      z-index: 50;
     }
 
-    .sticky-buttons, .sticky-share { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .sticky-share button { font-size: .85rem; padding: 10px; min-height: 42px; }
-
-    .footer-note { font-size: .9rem; color: #334155; }
+    .sticky-bar .btn {
+      flex: 1;
+      max-width: 200px;
+      font-size: 13px;
+      padding: 10px 12px;
+      min-height: 42px;
+    }
 
     @media (min-width: 760px) {
-      .app { padding-bottom: 24px; }
-      .stats { grid-template-columns: repeat(5, minmax(0,1fr)); }
-      .tool-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .sticky-bar { display: none; }
     }
 
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
     @media print {
       @page { size: A4 landscape; margin: 0; }
-      html, body {
-        width: 297mm;
-        height: 210mm;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-      }
       body * { visibility: hidden !important; }
-      #certificate, #certificate * { visibility: visible !important; }
-      #certificate {
-        display: block !important;
+      #certificateSheet, #certificateSheet * { visibility: visible !important; }
+      #certificateSheet {
         position: fixed !important;
         inset: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        background: #fff !important;
-      }
-      #certificate > :not(.cert-sheet) { display: none !important; }
-      #certificate .cert-sheet {
-        width: 100vw !important;
-        height: 100vh !important;
-        margin: 0 !important;
-        min-height: 0 !important;
-        border-radius: 0 !important;
-        border-width: 6px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        page-break-inside: avoid;
-        break-inside: avoid;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #fffdf8 !important;
       }
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <section class="panel top">
-      <div class="title-wrap">
-        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Course logo" />
-        <div>
-          <h1>🌟 Emotional Intelligence Course Hub</h1>
-          <p class="muted">Playful mini-app format: track progress, finish tools, and level up.</p>
-        </div>
-      </div>
+<div class="container">
 
-      <section aria-label="Share this course">
-        <h2 style="font-size:1rem;">Share this course</h2>
-        <div class="share-row">
-          <button class="brand" id="shareNative">📲 Share</button>
-          <button class="teal" id="copyLink">🔗 Copy link</button>
-          <button class="good" id="shareWhatsApp">🟢 WhatsApp</button>
-          <button class="brand" id="shareFacebook">📘 Facebook</button>
-          <button class="warn" id="shareX">🐦 X/Twitter</button>
-          <button class="purple" id="shareLinkedIn">💼 LinkedIn</button>
-        </div>
-      </section>
-    </section>
-
-    <section class="panel">
-      <h2 style="font-size:1.05rem;">Your Progress</h2>
-      <div class="stats">
-        <div class="stat"><small>Points</small><strong id="points">0</strong></div>
-        <div class="stat"><small>Completed</small><strong id="completed">0</strong></div>
-        <div class="stat"><small>Streak</small><strong id="streak">0 days</strong></div>
-        <div class="stat"><small>Level</small><strong id="level">Beginner</strong></div>
-        <div class="stat"><small>Overall Progress</small><strong id="percent">0%</strong></div>
-      </div>
-      <div class="progress-wrap" aria-label="Overall progress"><div class="progress" id="progressBar"></div></div>
-      <div class="focus" id="todayFocus">🎯 Today’s focus: Start with one short tool to build momentum.</div>
-      <div class="actions">
-        <button class="teal" id="resumeBtn">▶️ Resume last tool</button>
-        <button class="danger" id="resetBtn">♻️ Reset progress</button>
-      </div>
-      <div class="celebrate" id="courseCelebrate">
-        <strong>🎉 Congratulations on completing the course!</strong>
-        <p class="muted" style="margin-top:4px;">You can now download your summary and print your certificate.</p>
-        <div class="actions">
-          <button class="brand" onclick="openCertificate()">🎓 Certificate Preview</button>
-          <button class="good" id="downloadPdfTop">📄 Download PDF Summary</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="hub" class="panel module active" aria-label="Choose a tool">
-      <h2 style="font-size:1.05rem;">Choose a tool</h2>
-      <p class="muted">Complete each card to earn points and grow your streak.</p>
-      <div id="toolGrid" class="tool-grid"></div>
-    </section>
-
-    <section id="course" class="panel module">
-      <h2>🎮 Course Sprint</h2>
-      <p class="muted">Quick quiz challenge.</p>
-      <div id="courseBody"></div>
-      <div class="actions"><button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button></div>
-    </section>
-
-    <section id="calm" class="panel module">
-      <h2>🫁 Calm Reset Gadget</h2>
-      <p>Follow the rhythm: inhale 4, hold 4, exhale 6.</p>
-      <div class="calm-visual" aria-label="60 second breathing timer">
-        <svg class="pie" viewBox="0 0 100 100" aria-hidden="true">
-          <circle class="pie-bg" cx="50" cy="50" r="45"></circle>
-          <circle class="pie-fg" id="pieFg" cx="50" cy="50" r="45"></circle>
-        </svg>
-        <div>
-          <svg class="comic-breathe" viewBox="0 0 80 80" role="img" aria-label="Comix breathing guide">
-            <rect x="1" y="1" width="78" height="78" rx="12" fill="#fff7ed" stroke="#fb923c"></rect>
-            <circle cx="40" cy="34" r="14" fill="#93c5fd"></circle>
-            <path d="M28 56 Q40 66 52 56" stroke="#1e3a8a" stroke-width="3" fill="none"></path>
-            <text x="9" y="16" font-size="10">IN</text>
-            <text x="52" y="16" font-size="10">OUT</text>
-          </svg>
-          <p id="phaseMsg" class="muted" style="margin-top:6px;">Breathe in and out with the timer</p>
-        </div>
-      </div>
-      <p id="timerMsg" class="muted" style="margin-top:8px;">Press start when ready.</p>
-      <div class="actions">
-        <button class="good" onclick="startCalm()">Start</button>
-        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
-      </div>
-      <div id="calmResult" class="result"></div>
-    </section>
-
-    <section id="boundary" class="panel module">
-      <h2>🧱 Boundary Builder</h2>
-      <p>Pick the strongest healthy response.</p>
-      <div id="boundaryBody"></div>
-      <div id="boundaryResult" class="result"></div>
-      <div class="actions"><button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button></div>
-    </section>
-
-    <section id="trigger" class="panel module">
-      <h2>🗺️ Trigger Map</h2>
-      <label>1) What happened?</label>
-      <textarea id="tg1" placeholder="Describe the event..."></textarea>
-      <label>2) What did you feel in body and thoughts?</label>
-      <textarea id="tg2" placeholder="Name sensations and emotions..."></textarea>
-      <label>3) What is your 24-hour action?</label>
-      <input id="tg3" type="text" placeholder="Example: pause + one honest message" />
-      <div class="actions">
-        <button class="good" onclick="saveTrigger()">Save plan</button>
-        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
-      </div>
-      <div id="triggerResult" class="result"></div>
-    </section>
-
-    <section id="daily" class="panel module">
-      <h2>⚡ Daily Challenge</h2>
-      <p id="dailyPrompt"></p>
-      <div class="actions">
-        <button class="good" onclick="completeDaily()">✅ I did it</button>
-        <button class="teal" onclick="openModule('hub')">⬅️ Back to hub</button>
-      </div>
-      <div id="dailyResult" class="result"></div>
-    </section>
-
-    <section id="certificate" class="panel certificate" aria-label="Certificate Preview">
-      <h2>🏆 Certificate Preview</h2>
-      <p class="muted">Print-ready certificate (A4 landscape).</p>
-      <div class="cert-sheet">
-        <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" style="width:88px;height:88px;object-fit:cover;border-radius:10px;border:2px solid #bfdbfe;margin:0 auto 6px;display:block;" />
-        <h3 class="cert-title">Certificate of Recognition</h3>
-        <p>This proudly recognizes</p>
-        <div id="certName" class="cert-name">Participant</div>
-        <p>for completing the Emotional Intelligence Course Hub tools.</p>
-        <p id="certDate" style="margin-top:8px;"></p>
-        <p class="cert-site">https://emotionalintelligencedeveloper.com/</p>
-      </div>
-      <div class="actions">
-        <button class="good" onclick="printCertificate()">🖨️ Print Certificate</button>
-        <button class="brand" id="downloadPdf">📄 Download PDF Summary</button>
-        <button class="teal" onclick="closeCertificate()">Close</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 style="font-size:1.05rem;">Helpful Links</h2>
-      <div class="btn-row">
-        <a class="action-link good" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">🆘 Help / Support</a>
-        <a class="action-link warn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
-        <a class="action-link pink" href="https://emotionalintelligencedeveloper.com/support-us/" target="_blank" rel="noopener">💖 Support Us</a>
-        <a class="action-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧭 Explore More Free Tools</a>
-      </div>
-    </section>
-
-    <footer class="panel footer-note">This tool supports learning and reflection and is not a replacement for professional care.</footer>
-  </main>
-
-  <div class="sticky-bar" aria-label="Mobile quick actions">
-    <div class="sticky-share">
-      <button class="brand" id="shareNativeBottom">📲 Share</button>
-      <button class="teal" id="copyBottom">🔗 Copy</button>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <div class="sticky-buttons">
-      <a class="action-link good" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">🆘 Help / Support</a>
-      <a class="action-link warn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
-      <a class="action-link pink" href="https://emotionalintelligencedeveloper.com/support-us/" target="_blank" rel="noopener">💖 Support Us</a>
-      <a class="action-link purple" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧭 Explore More Free Tools</a>
+    <h1>Emotional Intelligence Course Hub</h1>
+    <p class="tagline">Complete all five tools to earn your certificate. Learn, reflect, practise, and grow — at your own pace.</p>
+  </header>
+
+  <!-- PROGRESS CARD -->
+  <section class="card" aria-labelledby="progress-heading">
+    <p class="card-title" id="progress-heading">Your progress</p>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Points</div><div class="stat-value" id="statPoints">0</div></div>
+      <div class="stat-card"><div class="stat-label">Done</div><div class="stat-value" id="statDone">0/5</div></div>
+      <div class="stat-card"><div class="stat-label">Streak</div><div class="stat-value" id="statStreak">0d</div></div>
+      <div class="stat-card"><div class="stat-label">Level</div><div class="stat-value" id="statLevel">Beginner</div></div>
+      <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-value" id="statPercent">0%</div></div>
     </div>
-  </div>
 
-  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+    <div class="progress-bar-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-  <script>
-    const KEY = 'ei_course_hub_v4';
-    const levels = [
-      { name: 'Beginner', min: 0 },
-      { name: 'Growing', min: 40 },
-      { name: 'Skilled', min: 90 },
-      { name: 'Builder', min: 150 },
-      { name: 'Mentor', min: 230 }
-    ];
+    <div class="focus-box" id="focusBox">Start with any tool below to build your emotional intelligence.</div>
 
-    const tools = [
-      { id: 'course', name: 'Course Sprint', points: 40, desc: 'Quiz yourself on core EI skills.', badges: ['Scenario', 'Quick Win'] },
-      { id: 'calm', name: 'Calm Reset Gadget', points: 20, desc: 'Reset your nervous system in one minute.', badges: ['1-minute', 'Breath'] },
-      { id: 'boundary', name: 'Boundary Builder', points: 30, desc: 'Practice respectful no-thank-you scripts.', badges: ['Scenario', 'Communication'] },
-      { id: 'trigger', name: 'Trigger Map', points: 30, desc: 'Map reaction patterns + choose one action.', badges: ['Reflection', 'Journaling'] },
-      { id: 'daily', name: 'Daily Challenge', points: 20, desc: 'One tiny daily mission for growth.', badges: ['1-minute', 'Habit'] }
-    ];
+    <div class="celebrate-box" id="celebrateBox">
+      <div class="celebrate-title">You have completed the course.</div>
+      <div class="celebrate-body">Every tool you completed has built something real. You now have a deeper understanding of emotional intelligence — how to recognise it, practise it, and share it.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button type="button" class="btn btn-gold" id="openCertBtn">View my certificate</button>
+        <button type="button" class="btn btn-primary" id="downloadPdfTopBtn">Download PDF summary</button>
+      </div>
+    </div>
 
-    let state = loadState();
+    <div class="btn-row" style="margin-top:14px;">
+      <button type="button" class="btn btn-primary" id="resumeBtn">Resume last tool</button>
+      <button type="button" class="btn btn-danger" id="resetBtn">Reset progress</button>
+    </div>
+  </section>
 
-    function baseState() {
-      return {
-        points: 0,
-        completedTools: {},
-        completedCount: 0,
-        streak: 0,
-        level: 'Beginner',
-        lastTool: null,
-        completionHistory: [],
-        participantName: ''
-      };
+  <!-- HUB — TOOL GRID -->
+  <section class="card module active" id="moduleHub" aria-labelledby="hub-heading">
+    <p class="card-title" id="hub-heading">Choose a tool</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:14px;font-style:italic;">Complete each tool to earn points and unlock your certificate.</p>
+    <div class="tool-grid" id="toolGrid"></div>
+  </section>
+
+  <!-- COURSE SPRINT MODULE -->
+  <section class="card module" id="moduleCourse" aria-labelledby="course-heading">
+    <p class="card-title" id="course-heading">Course Sprint — Understanding Emotional Intelligence</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:14px;font-style:italic;">11 questions. Keep trying each one until you find the right answer — then move forward with the insight.</p>
+
+    <div class="q-progress">
+      <div class="q-progress-bar"><div class="q-progress-fill" id="qProgressFill" style="width:0%"></div></div>
+      <span class="q-progress-label" id="qProgressLabel">0 / 11</span>
+    </div>
+
+    <div id="courseBody"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- CALM RESET MODULE -->
+  <section class="card module" id="moduleCalm" aria-labelledby="calm-heading">
+    <p class="card-title" id="calm-heading">Calm Reset — One Minute Breathing</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;font-style:italic;">Emotional regulation begins in the body. This 60-second breathing exercise activates the parasympathetic nervous system and reduces the intensity of stress within minutes.</p>
+
+    <div class="calm-wrap">
+      <div class="breath-circle" id="breathCircle">
+        <div class="breath-inner">
+          <span class="breath-sec" id="breathSec">60</span>
+          <span class="breath-phase" id="breathPhase">Ready</span>
+        </div>
+      </div>
+      <p class="breath-prompt-text" id="breathPrompt">Press start when you are ready.</p>
+    </div>
+
+    <div class="grounding-steps">
+      <div class="grounding-title">5-4-3-2-1 grounding (use after the timer)</div>
+      <div class="grounding-item">5 things you can see</div>
+      <div class="grounding-item">4 things you can physically feel</div>
+      <div class="grounding-item">3 things you can hear</div>
+      <div class="grounding-item">2 things you can smell</div>
+      <div class="grounding-item">1 thing you can taste</div>
+    </div>
+
+    <div class="result-box success" id="calmResult">
+      Calm reset complete. You have just regulated your nervous system — that is emotional intelligence in action.
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-teal" id="startCalmBtn">Start 60 seconds</button>
+      <button type="button" class="btn btn-outline" id="stopCalmBtn">Stop</button>
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- BOUNDARY BUILDER MODULE -->
+  <section class="card module" id="moduleBoundary" aria-labelledby="boundary-heading">
+    <p class="card-title" id="boundary-heading">Boundary Builder — Practise Healthy Responses</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;font-style:italic;">Boundaries are not walls — they are clear expressions of what you need. Choose the healthiest response in each scenario.</p>
+
+    <div id="boundaryBody"></div>
+    <div class="result-box success" id="boundaryResult"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- TRIGGER MAP MODULE -->
+  <section class="card module" id="moduleTrigger" aria-labelledby="trigger-heading">
+    <p class="card-title" id="trigger-heading">Trigger Map — Understand Your Reactions</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;font-style:italic;">Understanding what triggers strong reactions — and why — is one of the most powerful emotional intelligence skills you can develop.</p>
+
+    <div class="trigger-step">
+      <div class="trigger-step-label">Step 1 — What happened?</div>
+      <textarea id="tg1" maxlength="500" placeholder="Describe the event or situation that triggered the reaction…"></textarea>
+    </div>
+
+    <div class="trigger-step">
+      <div class="trigger-step-label">Step 2 — What did you feel in your body and thoughts?</div>
+      <textarea id="tg2" maxlength="500" placeholder="Name the body sensations and emotions — tight chest, racing thoughts, anger, shame…"></textarea>
+    </div>
+
+    <div class="trigger-step">
+      <div class="trigger-step-label">Step 3 — What is one response you can choose in the next 24 hours?</div>
+      <input type="text" id="tg3" maxlength="200" placeholder="e.g. Pause before replying, send one honest message, take a walk first…" />
+    </div>
+
+    <div class="result-box success" id="triggerResult"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="saveTriggerBtn">Save my trigger map</button>
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- DAILY CHALLENGE MODULE -->
+  <section class="card module" id="moduleDaily" aria-labelledby="daily-heading">
+    <p class="card-title" id="daily-heading">Daily Challenge — One Small Action</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;font-style:italic;">Emotional intelligence is built through small, consistent actions — not one big moment. Today's challenge is designed to take under five minutes.</p>
+
+    <div class="daily-prompt-card">
+      <div class="daily-prompt-label">Today's challenge</div>
+      <div class="daily-prompt-text" id="dailyPrompt"></div>
+      <div class="daily-why" id="dailyWhy"></div>
+    </div>
+
+    <div class="result-box success" id="dailyResult">
+      Daily challenge complete. Small consistent steps are how emotional intelligence grows — you just took one.
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="completeDailyBtn">I did it</button>
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE MODULE -->
+  <section class="card module" id="moduleCertificate" aria-labelledby="cert-heading">
+    <p class="card-title" id="cert-heading">Your Certificate</p>
+
+    <div class="certificate-sheet" id="certificateSheet">
+      <div class="cert-inner-border">
+        <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" class="cert-logo" />
+        <div class="cert-header">Emotional Intelligence Developer</div>
+        <div class="cert-title">Certificate of Achievement</div>
+        <div class="cert-presented">This certificate is proudly presented to</div>
+        <div class="cert-name" id="certName">Participant</div>
+        <div class="cert-description">
+          In recognition of completing the Emotional Intelligence Course Hub — demonstrating commitment to self-awareness, emotional regulation, empathy, healthy boundaries, and personal growth. The skills practised in this course support stronger relationships, better decisions, and a more resilient life.
+        </div>
+        <div class="cert-skills">
+          <span class="cert-skill">Self-awareness</span>
+          <span class="cert-skill">Emotional regulation</span>
+          <span class="cert-skill">Empathy</span>
+          <span class="cert-skill">Healthy boundaries</span>
+          <span class="cert-skill">Resilience</span>
+          <span class="cert-skill">Communication</span>
+        </div>
+        <div class="cert-seal">&#127942;</div>
+        <div class="cert-date" id="certDate"></div>
+        <div class="cert-site">emotionalintelligencedeveloper.com</div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:16px;">
+      <button type="button" class="btn btn-gold" id="printCertBtn">Print certificate</button>
+      <button type="button" class="btn btn-primary" id="downloadPdfCertBtn">Download PDF summary</button>
+      <button type="button" class="btn btn-outline" onclick="openModule('hub')">Back to hub</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
+
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    </div>
+
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; This tool supports learning and reflection — not a replacement for professional care.
+    </p>
+  </footer>
+
+</div>
+
+<!-- STICKY BAR (mobile) -->
+<div class="sticky-bar" role="toolbar" aria-label="Quick actions">
+  <button type="button" class="btn btn-primary" id="stickyResume">Resume</button>
+  <button type="button" class="btn btn-share" id="stickyCopy">Copy link</button>
+</div>
+
+<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const KEY = 'eiCourseHubV5';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const $ = id => document.getElementById(id);
+
+  const LEVELS = [
+    { name: 'Beginner', min: 0 },
+    { name: 'Growing', min: 40 },
+    { name: 'Skilled', min: 90 },
+    { name: 'Builder', min: 150 },
+    { name: 'Mentor', min: 230 }
+  ];
+
+  const TOOLS = [
+    { id: 'Course', module: 'moduleCourse', name: 'Course Sprint', points: 40, desc: 'Learn the foundations of emotional intelligence through 11 guided questions.', badges: ['11 questions', 'Learning'] },
+    { id: 'Calm', module: 'moduleCalm', name: 'Calm Reset', points: 20, desc: 'Reset your nervous system with a 60-second guided breathing exercise.', badges: ['1 minute', 'Regulation'] },
+    { id: 'Boundary', module: 'moduleBoundary', name: 'Boundary Builder', points: 30, desc: 'Practise clear, respectful boundary responses in real scenarios.', badges: ['Scenarios', 'Communication'] },
+    { id: 'Trigger', module: 'moduleTrigger', name: 'Trigger Map', points: 30, desc: 'Map what triggers strong reactions and choose one grounded response.', badges: ['Reflection', 'Journaling'] },
+    { id: 'Daily', module: 'moduleDaily', name: 'Daily Challenge', points: 20, desc: 'One small daily action to build emotional intelligence habits over time.', badges: ['5 minutes', 'Habits'] }
+  ];
+
+  const COURSE_QUESTIONS = [
+    {
+      q: 'What is emotional intelligence (EI)?',
+      opts: [
+        'The ability to avoid feeling difficult emotions',
+        'The ability to recognise, understand, and manage emotions in yourself and others',
+        'Being calm in every situation no matter what'
+      ],
+      correct: 1,
+      insight: 'Emotional intelligence is the ability to recognise, understand, and manage emotions — both your own and those of others. It was popularised by psychologist Daniel Goleman and is now considered one of the most important skills for wellbeing, relationships, and effective communication.'
+    },
+    {
+      q: 'Why is emotional intelligence important for your wellbeing?',
+      opts: [
+        'It helps you suppress emotions so they do not cause problems',
+        'It helps you handle stress, manage conflict, and respond thoughtfully instead of reacting',
+        'It means you never feel anxious or overwhelmed'
+      ],
+      correct: 1,
+      insight: 'Emotional intelligence helps you navigate stress, conflict, and difficult conversations with more clarity and care. People with higher EI tend to have better mental health, stronger relationships, and more resilience — not because they feel less, but because they understand and work with what they feel.'
+    },
+    {
+      q: 'Self-awareness in emotional intelligence means:',
+      opts: [
+        'Always knowing why you feel the way you do',
+        'Noticing your emotions as they arise and understanding how they influence your behaviour',
+        'Being aware of other people\'s emotions more than your own'
+      ],
+      correct: 1,
+      insight: 'Self-awareness is the foundation of emotional intelligence. It means noticing what you feel, when you feel it, and how it affects your thoughts and actions — not with judgement, but with honest attention. This awareness creates a space between stimulus and response.'
+    },
+    {
+      q: 'Self-regulation in emotional intelligence means:',
+      opts: [
+        'Suppressing emotions so others are not affected by them',
+        'Managing your emotional responses in healthy ways — pausing, breathing, choosing your reaction',
+        'Always staying positive regardless of circumstances'
+      ],
+      correct: 1,
+      insight: 'Self-regulation is not about hiding emotions — it is about managing how you express them. This includes taking a breath before responding, naming what you feel, and choosing responses rather than defaulting to reactions. Neuroscience shows that even a short pause engages the prefrontal cortex and improves decision quality.'
+    },
+    {
+      q: 'Empathy in emotional intelligence means:',
+      opts: [
+        'Feeling the same emotions as the people around you',
+        'Understanding and sharing the feelings of others without losing your own perspective',
+        'Agreeing with everything others say to avoid conflict'
+      ],
+      correct: 1,
+      insight: 'Empathy means understanding how another person feels — seeing the world from their perspective — without necessarily feeling the same thing or agreeing with them. It is one of the strongest predictors of relationship quality and effective communication. Empathy does not require losing your own boundaries or perspective.'
+    },
+    {
+      q: 'Social skills as part of EI include:',
+      opts: [
+        'Being popular and well-liked by everyone',
+        'Communicating clearly, managing conflict constructively, and building trust over time',
+        'Avoiding difficult conversations to keep the peace'
+      ],
+      correct: 1,
+      insight: 'Social skills in EI are not about charm or popularity — they are about communicating with honesty and care, navigating disagreements constructively, and building relationships based on genuine trust. These skills can be learned and developed at any age.'
+    },
+    {
+      q: 'How can emotional intelligence be improved?',
+      opts: [
+        'It is mostly fixed by personality and cannot really be changed',
+        'Through self-reflection, learning from emotional experiences, practising empathy, and noticing how emotions influence behaviour',
+        'By reading about emotions without applying them in real life'
+      ],
+      correct: 1,
+      insight: 'Emotional intelligence is highly learnable. Research by psychologists including Marc Brackett at Yale shows that consistent self-reflection, mindfulness, and practising emotional skills — especially in real-world situations — measurably increases EI over time. The fact that you are here is already part of that practice.'
+    },
+    {
+      q: 'When emotions run very high, the most emotionally intelligent first step is:',
+      opts: [
+        'Immediately express everything you are feeling so nothing builds up',
+        'Pause, name the emotion, and give yourself a moment before responding',
+        'Analyse the situation logically and ignore the emotional signals'
+      ],
+      correct: 1,
+      insight: 'Pausing and naming an emotion — "I am feeling angry right now" — is one of the most evidence-based emotional regulation strategies. Research shows this simple act reduces amygdala activation and creates space for a more considered response. It is sometimes called "name it to tame it."'
+    },
+    {
+      q: 'A healthy boundary in a relationship looks like:',
+      opts: [
+        'Telling others exactly how to behave and enforcing rules about their actions',
+        'Clearly communicating what you need while remaining respectful of the other person',
+        'Avoiding any situation that might cause conflict or discomfort'
+      ],
+      correct: 1,
+      insight: 'Healthy boundaries are not about controlling others — they define what you are willing to accept and how you will respond. Boundaries communicated clearly and respectfully are one of the foundations of emotionally intelligent relationships. They protect wellbeing without creating walls.'
+    },
+    {
+      q: 'Emotional resilience means:',
+      opts: [
+        'Never being affected by difficult events or emotions',
+        'The ability to adapt to difficult situations, recover from setbacks, and continue functioning',
+        'Pushing through hard times by ignoring your emotions'
+      ],
+      correct: 1,
+      insight: 'Resilience is not toughness or invulnerability — it is the capacity to adapt and recover. Research by psychologist Ann Masten identifies resilience as an ordinary human quality that can be strengthened through connection, self-awareness, and practising coping skills. Emotional intelligence is central to building resilience.'
+    },
+    {
+      q: 'Which of these best describes emotionally intelligent communication?',
+      opts: [
+        'Saying exactly what you think without filtering, because honesty is always best',
+        'Choosing words carefully, listening actively, and considering the emotional impact of what you say',
+        'Keeping your real feelings private to avoid burdening others'
+      ],
+      correct: 1,
+      insight: 'Emotionally intelligent communication balances honesty with care. It means listening to understand rather than just respond, choosing words that are both true and considerate, and being aware of how your communication affects others. This is a skill that deepens every relationship you have.'
+    }
+  ];
+
+  const BOUNDARY_SCENARIOS = [
+    {
+      scene: 'A colleague keeps asking you to cover their work outside your agreed hours.',
+      opts: [
+        { text: 'Fine, I will do it again to avoid the awkwardness.', correct: false },
+        { text: 'I care about helping the team, and I am not able to take on more work outside my hours.', correct: true },
+        { text: 'You are always dumping your work on me — it is not fair.', correct: false }
+      ],
+      insight: 'This response is clear and respectful. It names the boundary without aggression and does not over-explain or apologise. Boundaries stated calmly and directly are more likely to be respected than either passive compliance or emotional outbursts.'
+    },
+    {
+      scene: 'A friend asks for your opinion and then becomes upset when you give an honest answer.',
+      opts: [
+        { text: 'I will apologise immediately and say what they want to hear next time.', correct: false },
+        { text: 'I hear that this landed hard. I shared it because I care about you, not to hurt you.', correct: true },
+        { text: 'You asked — do not blame me for answering honestly.', correct: false }
+      ],
+      insight: 'Acknowledging impact without abandoning your position is a mark of emotional maturity. You can hold space for someone\'s feelings while also standing by your honest intention. This is neither defensive nor submissive.'
+    },
+    {
+      scene: 'A family member regularly makes critical comments about your choices.',
+      opts: [
+        { text: 'Say nothing — it is not worth the conflict.', correct: false },
+        { text: 'When comments are made about my choices, it affects me. I would prefer we talk about other things.', correct: true },
+        { text: 'You have always been critical — I do not know why I expected anything different.', correct: false }
+      ],
+      insight: 'This response uses an "I" statement, names the impact without blame, and makes a clear request. It is firm but not hostile. Emotionally intelligent boundaries invite change without attacking the other person\'s character.'
+    }
+  ];
+
+  const DAILY_PROMPTS = [
+    { text: 'Send one honest message to someone you care about — not a update, but something real.', why: 'Authentic connection is one of the most direct ways to build emotional intelligence and wellbeing.' },
+    { text: 'Before your next task, take 60 seconds to notice how you are actually feeling right now.', why: 'Self-awareness begins with pausing long enough to notice what is happening inside you.' },
+    { text: 'When you notice a critical thought about yourself today, restate it as you would to a friend.', why: 'Self-compassion is part of emotional regulation. How you speak to yourself shapes how you feel.' },
+    { text: 'In your next conversation, listen without planning your response until the other person has finished.', why: 'Active listening is one of the highest-impact social skills in emotional intelligence.' },
+    { text: 'Name three emotions you have felt today — using specific words beyond just "good" or "bad".', why: 'Emotional granularity — having precise words for feelings — is associated with better emotional regulation.' },
+    { text: 'Choose one situation that frustrated you recently and write one sentence about what you actually needed.', why: 'Most emotional reactions contain an unmet need. Identifying it is the first step to communicating it.' },
+    { text: 'Tell one person today that you appreciate something specific about them.', why: 'Expressing genuine appreciation strengthens relationships and activates positive emotional states in both people.' }
+  ];
+
+  // STATE
+  function baseState() {
+    return { points: 0, completed: {}, streak: 0, history: [], lastModule: null, name: '', courseAnswered: 0 };
+  }
+
+  let state;
+  try {
+    const raw = localStorage.getItem(KEY);
+    state = raw ? { ...baseState(), ...JSON.parse(raw) } : baseState();
+  } catch(_) { state = baseState(); }
+
+  let toastTimer;
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(_) {}
+  }
+
+  function todayISO() { return new Date().toISOString().slice(0, 10); }
+
+  function computeStreak(history) {
+    if (!history || !history.length) return 0;
+    const unique = [...new Set(history)].sort();
+    let streak = 0;
+    let cursor = new Date(todayISO());
+    for (let i = unique.length - 1; i >= 0; i--) {
+      const d = new Date(unique[i]);
+      const key = d.toISOString().slice(0, 10);
+      const cur = cursor.toISOString().slice(0, 10);
+      if (key === cur) { streak++; cursor.setDate(cursor.getDate() - 1); }
+      else if (key < cur) break;
+    }
+    return streak;
+  }
+
+  function getLevel(pts) {
+    let level = LEVELS[0].name;
+    LEVELS.forEach(l => { if (pts >= l.min) level = l.name; });
+    return level;
+  }
+
+  function completeTool(id) {
+    if (!state.completed[id]) {
+      const tool = TOOLS.find(t => t.id === id);
+      if (tool) state.points += tool.points;
+      state.completed[id] = true;
+    }
+    state.history.push(todayISO());
+    state.streak = computeStreak(state.history);
+    save();
+    renderStats();
+    renderToolGrid();
+    if (Object.keys(state.completed).length === TOOLS.length) {
+      setTimeout(() => showCourseComplete(), 600);
+    }
+  }
+
+  function showCourseComplete() {
+    $('celebrateBox').style.display = 'block';
+    $('celebrateBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    launchConfetti();
+  }
+
+  function renderStats() {
+    const done = Object.keys(state.completed).length;
+    const pct = Math.round((done / TOOLS.length) * 100);
+    $('statPoints').textContent = state.points;
+    $('statDone').textContent = done + '/' + TOOLS.length;
+    $('statStreak').textContent = state.streak + 'd';
+    $('statLevel').textContent = getLevel(state.points);
+    $('statPercent').textContent = pct + '%';
+    $('progressFill').style.width = pct + '%';
+
+    const pending = TOOLS.find(t => !state.completed[t.id]);
+    if (pending) {
+      $('focusBox').textContent = 'Next up: ' + pending.name + ' (' + pending.points + ' points) — ' + pending.desc;
+    } else {
+      $('focusBox').textContent = 'You have completed all tools. Share the course with someone who might benefit.';
     }
 
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(KEY);
-        if (!raw) return baseState();
-        return { ...baseState(), ...JSON.parse(raw) };
-      } catch (_) {
-        return baseState();
-      }
+    if (Object.keys(state.completed).length === TOOLS.length) {
+      $('celebrateBox').style.display = 'block';
     }
+  }
 
-    function saveState() {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    }
-
-    function todayISO() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function computeStreak(history) {
-      if (!history.length) return 0;
-      const unique = [...new Set(history)].sort();
-      let streak = 0;
-      let cursor = new Date(todayISO());
-      for (let i = unique.length - 1; i >= 0; i--) {
-        const d = new Date(unique[i]);
-        const key = d.toISOString().slice(0,10);
-        const cur = cursor.toISOString().slice(0,10);
-        if (key === cur) {
-          streak++;
-          cursor.setDate(cursor.getDate() - 1);
-        } else if (key < cur) {
-          break;
-        }
-      }
-      return streak;
-    }
-
-    function getLevel(points) {
-      let current = levels[0].name;
-      levels.forEach(l => { if (points >= l.min) current = l.name; });
-      return current;
-    }
-
-    function progressPercent() {
-      return Math.round((Object.keys(state.completedTools).length / tools.length) * 100);
-    }
-
-    function updateFocus() {
-      const focus = document.getElementById('todayFocus');
-      const pending = tools.find(t => !state.completedTools[t.id]);
-      if (pending) {
-        focus.textContent = `🎯 Today’s focus: Try ${pending.name} (${pending.points} pts) to keep your momentum.`;
-      } else {
-        focus.textContent = '🎯 Today’s focus: Amazing streak! Revisit your favorite tool and share the course with someone.';
-      }
-    }
-
-    function renderStats() {
-      state.completedCount = Object.keys(state.completedTools).length;
-      state.streak = computeStreak(state.completionHistory);
-      state.level = getLevel(state.points);
-
-      document.getElementById('points').textContent = state.points;
-      document.getElementById('completed').textContent = state.completedCount;
-      document.getElementById('streak').textContent = `${state.streak} days`;
-      document.getElementById('level').textContent = state.level;
-      const pct = progressPercent();
-      document.getElementById('percent').textContent = `${pct}%`;
-      document.getElementById('progressBar').style.width = `${pct}%`;
-
-      updateFocus();
-      saveState();
-    }
-
-    function completeTool(id) {
-      const tool = tools.find(t => t.id === id);
-      if (!tool) return;
-      state.lastTool = id;
-      const already = !!state.completedTools[id];
-      if (!already) {
-        state.points += tool.points;
-        state.completedTools[id] = true;
-      }
-      state.completionHistory.push(todayISO());
-      renderStats();
-      renderTools();
-      if (Object.keys(state.completedTools).length === tools.length) {
-        showCourseComplete();
-      } else {
-        autoAdvance(id);
-      }
-    }
-
-    function autoAdvance(currentId) {
-      const pending = tools.find(t => !state.completedTools[t.id]);
-      if (!pending) return;
-      if (currentId !== 'hub') {
-        setTimeout(() => openModule(pending.id), 900);
-      }
-    }
-
-    function showCourseComplete() {
-      document.getElementById('courseCelebrate').style.display = 'block';
-      openModule('hub');
-      launchConfetti();
-    }
-
-    function openModule(id) {
-      document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
-      const target = document.getElementById(id);
-      if (target) target.classList.add('active');
-      state.lastTool = id === 'hub' ? state.lastTool : id;
-      saveState();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function renderTools() {
-      const grid = document.getElementById('toolGrid');
-      grid.innerHTML = '';
-      tools.forEach(tool => {
-        const done = !!state.completedTools[tool.id];
-        const card = document.createElement('article');
-        card.className = 'tool-card';
-        card.innerHTML = `
-          <div class="tool-head">
-            <h3>${done ? '✅' : '🎯'} ${tool.name}</h3>
-            <strong>${tool.points} pts</strong>
-          </div>
-          <p class="muted">${tool.desc}</p>
-          <div class="badge-row">${tool.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
-          <button class="brand" data-open="${tool.id}">${done ? 'Open Again' : 'Start Tool'}</button>
-        `;
-        grid.appendChild(card);
-      });
-      grid.querySelectorAll('button[data-open]').forEach(btn => {
-        btn.addEventListener('click', () => openModule(btn.dataset.open));
-      });
-    }
-
-    function setupShareButtons() {
-      const shareUrl = () => window.location.href;
-      const text = 'Try this Emotional Intelligence Course Hub:';
-      const tryNative = async () => {
-        if (navigator.share) {
-          try { await navigator.share({ title: document.title, text, url: shareUrl() }); }
-          catch (_) {}
-        } else {
-          copyLink();
-          alert('Web Share is not supported on this device. Link copied.');
-        }
-      };
-      const copyLink = async () => {
-        const url = shareUrl();
-        try {
-          await navigator.clipboard.writeText(url);
-          alert('Link copied!');
-        } catch (_) {
-          prompt('Copy this link:', url);
-        }
-      };
-      const openShare = (base) => window.open(base + encodeURIComponent(shareUrl()), '_blank', 'noopener');
-
-      document.getElementById('shareNative').addEventListener('click', tryNative);
-      document.getElementById('shareNativeBottom').addEventListener('click', tryNative);
-      document.getElementById('copyLink').addEventListener('click', copyLink);
-      document.getElementById('copyBottom').addEventListener('click', copyLink);
-      document.getElementById('shareWhatsApp').addEventListener('click', () => window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + shareUrl())}`, '_blank', 'noopener'));
-      document.getElementById('shareFacebook').addEventListener('click', () => openShare('https://www.facebook.com/sharer/sharer.php?u='));
-      document.getElementById('shareX').addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(text)}`, '_blank', 'noopener'));
-      document.getElementById('shareLinkedIn').addEventListener('click', () => openShare('https://www.linkedin.com/sharing/share-offsite/?url='));
-    }
-
-    function startCalm() {
-      const timer = document.getElementById('timerMsg');
-      const phase = document.getElementById('phaseMsg');
-      const pie = document.getElementById('pieFg');
-      const total = 60;
-      let sec = 0;
-      pie.style.strokeDashoffset = '283';
-      timer.textContent = `${total} seconds remaining`;
-      phase.textContent = 'Breathe in and out';
-
-      const iv = setInterval(() => {
-        sec++;
-        const remaining = total - sec;
-        timer.textContent = `${remaining} seconds remaining`;
-        phase.textContent = Math.floor(sec / 3) % 2 === 0 ? 'Breathe in' : 'Breathe out';
-        pie.style.strokeDashoffset = String(283 - (283 * (sec / total)));
-        if (sec >= total) {
-          clearInterval(iv);
-          timer.textContent = 'Great reset complete.';
-          phase.textContent = 'Breathe in and out complete ✅';
-          const box = document.getElementById('calmResult');
-          box.style.display = 'block';
-          box.textContent = 'Nice work. You completed Calm Reset Gadget.';
-          launchConfetti();
-          completeTool('calm');
-        }
-      }, 1000);
-    }
-
-    const courseQuestions = [
-      {
-        q: 'When emotions run high, your best first step is:',
-        opts: ['Blame someone fast', 'Pause and name your feeling', 'Ignore your body signals'],
-        a: 1
-      },
-      {
-        q: 'Healthy empathy means:',
-        opts: ['Feeling everything for others', 'Listening and understanding without losing boundaries', 'Never disagreeing'],
-        a: 1
-      }
-    ];
-
-    function renderCourse() {
-      const wrap = document.getElementById('courseBody');
-      let i = 0;
-      let score = 0;
-      const draw = () => {
-        if (i >= courseQuestions.length) {
-          wrap.innerHTML = `<div class="result" style="display:block;">✅ Score: ${score}/${courseQuestions.length}. Course Sprint complete!</div>`;
-          completeTool('course');
-          return;
-        }
-        const q = courseQuestions[i];
-        wrap.innerHTML = `<div class="panel" style="margin-top:10px;"><h3>${q.q}</h3>${q.opts.map((o,idx)=>`<button class="${idx===q.a?'good':'brand'}" data-i="${idx}" style="margin-top:8px;display:block;width:100%;text-align:left;">${o}</button>`).join('')}</div>`;
-        wrap.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => {
-          if (Number(b.dataset.i) === q.a) score++;
-          i++;
-          draw();
-        }));
-      };
-      draw();
-    }
-
-    function renderBoundary() {
-      const body = document.getElementById('boundaryBody');
-      body.innerHTML = `
-        <p style="margin-top:8px;">A friend pushes you to share personal details you are not ready to share.</p>
-        <button class="brand" data-choice="0" style="margin-top:8px;">Fine, I will say everything.</button>
-        <button class="good" data-choice="1" style="margin-top:8px;">I care about our friendship, and I’m not ready to share that yet.</button>
-        <button class="warn" data-choice="2" style="margin-top:8px;">You are always too much.</button>
+  function renderToolGrid() {
+    const grid = $('toolGrid');
+    grid.innerHTML = '';
+    TOOLS.forEach(tool => {
+      const done = !!state.completed[tool.id];
+      const card = document.createElement('div');
+      card.className = 'tool-card' + (done ? ' done' : '');
+      card.innerHTML = `
+        <div class="tool-head">
+          <span class="tool-name">${done ? '✓ ' : ''}${tool.name}</span>
+          <span class="tool-points">${tool.points} pts</span>
+        </div>
+        <div class="tool-desc">${tool.desc}</div>
+        <div class="badge-row">${tool.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
       `;
-      body.querySelectorAll('button[data-choice]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const ok = btn.dataset.choice === '1';
-          const r = document.getElementById('boundaryResult');
-          r.style.display = 'block';
-          r.textContent = ok ? 'Great boundary response. Clear + respectful.' : 'Try again with a calm, clear boundary statement.';
-          if (ok) completeTool('boundary');
-        });
-      });
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-primary btn-small';
+      btn.textContent = done ? 'Open again' : 'Start';
+      btn.addEventListener('click', () => openModule(tool.module));
+      card.appendChild(btn);
+      grid.appendChild(card);
+    });
+  }
+
+  function openModule(id) {
+    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+    const target = $(id);
+    if (target) target.classList.add('active');
+    state.lastModule = id;
+    save();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (id === 'moduleCourse') renderCourse();
+    if (id === 'moduleBoundary') renderBoundary();
+    if (id === 'moduleDaily') renderDaily();
+  }
+
+  // COURSE SPRINT
+  let courseQIndex = 0;
+  let courseAnsweredCorrect = 0;
+
+  function renderCourse() {
+    courseQIndex = 0;
+    courseAnsweredCorrect = 0;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const body = $('courseBody');
+    if (courseQIndex >= COURSE_QUESTIONS.length) {
+      body.innerHTML = `
+        <div class="result-box success" style="display:block;">
+          <div style="font-size:1rem;color:var(--correct);margin-bottom:8px;">Course Sprint complete!</div>
+          <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">You answered all 11 questions and gained real understanding of emotional intelligence. This knowledge belongs to you now — take it with you.</div>
+        </div>
+      `;
+      $('qProgressFill').style.width = '100%';
+      $('qProgressLabel').textContent = '11 / 11';
+      completeTool('Course');
+      return;
     }
 
-    function saveTrigger() {
-      const a = document.getElementById('tg1').value.trim();
-      const b = document.getElementById('tg2').value.trim();
-      const c = document.getElementById('tg3').value.trim();
-      if (!a || !b || !c) {
-        alert('Please complete all Trigger Map fields.');
-        return;
+    const q = COURSE_QUESTIONS[courseQIndex];
+    const pct = Math.round((courseQIndex / COURSE_QUESTIONS.length) * 100);
+    $('qProgressFill').style.width = pct + '%';
+    $('qProgressLabel').textContent = courseQIndex + ' / ' + COURSE_QUESTIONS.length;
+
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Question ${courseQIndex + 1} of ${COURSE_QUESTIONS.length}</div>
+        <div class="question-text">${q.q}</div>
+        <div class="answer-options" id="answerOptions">
+          ${q.opts.map((opt, i) => `<button type="button" class="answer-btn" data-idx="${i}">${opt}</button>`).join('')}
+        </div>
+        <div class="answer-feedback" id="answerFeedback"></div>
+      </div>
+    `;
+
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.idx, 10), q));
+    });
+  }
+
+  function handleAnswer(idx, q) {
+    const feedback = $('answerFeedback');
+    const buttons = document.querySelectorAll('.answer-btn');
+
+    buttons.forEach(b => b.disabled = true);
+
+    if (idx === q.correct) {
+      buttons[idx].classList.add('correct');
+      feedback.className = 'answer-feedback correct';
+      feedback.innerHTML = '<strong>Correct.</strong> ' + q.insight;
+      courseAnsweredCorrect++;
+      courseQIndex++;
+      setTimeout(() => renderQuestion(), 2800);
+    } else {
+      buttons[idx].classList.add('wrong');
+      feedback.className = 'answer-feedback wrong';
+      feedback.innerHTML = '<strong>Not quite.</strong> Take another look at the options — the answer will give you a useful insight.';
+      setTimeout(() => {
+        buttons.forEach(b => { b.disabled = false; b.classList.remove('wrong'); });
+        feedback.className = 'answer-feedback';
+        feedback.style.display = 'none';
+      }, 1800);
+    }
+  }
+
+  // CALM RESET
+  let calmInterval = null;
+
+  $('startCalmBtn').addEventListener('click', () => {
+    clearInterval(calmInterval);
+    let sec = 60;
+    const circle = $('breathCircle');
+    const secEl = $('breathSec');
+    const phaseEl = $('breathPhase');
+    const prompt = $('breathPrompt');
+    const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+    const phaseDur = [4, 4, 6, 2];
+    let elapsed = 0;
+
+    secEl.textContent = '60';
+    phaseEl.textContent = 'Inhale';
+    prompt.textContent = 'Breathe in slowly…';
+    circle.style.setProperty('--prog', 0);
+
+    calmInterval = setInterval(() => {
+      sec--;
+      elapsed++;
+      secEl.textContent = sec;
+      circle.style.setProperty('--prog', Math.round(((60 - sec) / 60) * 100));
+
+      // Phase cycling (4+4+6+2 = 16s cycle)
+      const cyclePos = elapsed % 16;
+      if (cyclePos < 4) { phaseEl.textContent = 'Inhale'; prompt.textContent = 'Breathe in slowly…'; }
+      else if (cyclePos < 8) { phaseEl.textContent = 'Hold'; prompt.textContent = 'Hold gently…'; }
+      else if (cyclePos < 14) { phaseEl.textContent = 'Exhale'; prompt.textContent = 'Breathe out slowly…'; }
+      else { phaseEl.textContent = 'Hold'; prompt.textContent = 'Hold, then begin again…'; }
+
+      if (sec <= 0) {
+        clearInterval(calmInterval);
+        secEl.textContent = '✓';
+        phaseEl.textContent = 'Done';
+        prompt.textContent = 'One minute complete. Your nervous system is calmer than it was.';
+        $('calmResult').style.display = 'block';
+        completeTool('Calm');
       }
-      const r = document.getElementById('triggerResult');
+    }, 1000);
+  });
+
+  $('stopCalmBtn').addEventListener('click', () => {
+    clearInterval(calmInterval);
+    $('breathPhase').textContent = 'Paused';
+    $('breathPrompt').textContent = 'Press start again when you are ready.';
+  });
+
+  // BOUNDARY BUILDER
+  let boundaryIdx = 0;
+  let boundaryDone = false;
+
+  function renderBoundary() {
+    boundaryIdx = 0;
+    boundaryDone = false;
+    $('boundaryResult').style.display = 'none';
+    renderBoundaryScenario();
+  }
+
+  function renderBoundaryScenario() {
+    const body = $('boundaryBody');
+    if (boundaryIdx >= BOUNDARY_SCENARIOS.length) {
+      body.innerHTML = '';
+      const r = $('boundaryResult');
+      r.innerHTML = 'All three scenarios complete. You have practised clear, respectful boundary communication — one of the most valuable emotional intelligence skills in real life.';
       r.style.display = 'block';
-      r.textContent = 'Trigger Map saved. Great reflection work.';
-      completeTool('trigger');
+      if (!boundaryDone) { completeTool('Boundary'); boundaryDone = true; }
+      return;
     }
 
-    const dailyPrompts = [
-      'Send one calm and honest text today.',
-      'Take 60 seconds to notice your breathing before your next task.',
-      'Replace one self-critical thought with a kinder phrase.',
-      'Ask one open question in your next conversation.'
+    const s = BOUNDARY_SCENARIOS[boundaryIdx];
+    body.innerHTML = `
+      <div class="scenario-card">
+        <div class="question-number">Scenario ${boundaryIdx + 1} of ${BOUNDARY_SCENARIOS.length}</div>
+        <div class="scenario-text">${s.scene}</div>
+        <div class="answer-options" id="boundaryOptions">
+          ${s.opts.map((opt, i) => `<button type="button" class="answer-btn" data-idx="${i}">${opt.text}</button>`).join('')}
+        </div>
+        <div class="answer-feedback" id="boundaryFeedback"></div>
+      </div>
+    `;
+
+    document.querySelectorAll('#boundaryOptions .answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        const feedback = $('boundaryFeedback');
+        document.querySelectorAll('#boundaryOptions .answer-btn').forEach(b => b.disabled = true);
+
+        if (s.opts[idx].correct) {
+          btn.classList.add('correct');
+          feedback.className = 'answer-feedback correct';
+          feedback.innerHTML = '<strong>Well done.</strong> ' + s.insight;
+          boundaryIdx++;
+          setTimeout(() => renderBoundaryScenario(), 2800);
+        } else {
+          btn.classList.add('wrong');
+          feedback.className = 'answer-feedback wrong';
+          feedback.innerHTML = '<strong>Try again.</strong> Think about which response is both clear and kind.';
+          setTimeout(() => {
+            document.querySelectorAll('#boundaryOptions .answer-btn').forEach(b => { b.disabled = false; b.classList.remove('wrong'); });
+            feedback.className = 'answer-feedback';
+            feedback.style.display = 'none';
+          }, 1800);
+        }
+      });
+    });
+  }
+
+  // TRIGGER MAP
+  $('saveTriggerBtn').addEventListener('click', () => {
+    const a = $('tg1').value.trim();
+    const b = $('tg2').value.trim();
+    const c = $('tg3').value.trim();
+    if (!a || !b || !c) {
+      showToast('Please complete all three steps to save your trigger map.');
+      return;
+    }
+    const r = $('triggerResult');
+    r.innerHTML = 'Trigger map saved. You have just done something most people never do — understood a reaction well enough to choose a different response next time.';
+    r.style.display = 'block';
+    completeTool('Trigger');
+    r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // DAILY CHALLENGE
+  function renderDaily() {
+    const idx = new Date().getDate() % DAILY_PROMPTS.length;
+    const prompt = DAILY_PROMPTS[idx];
+    $('dailyPrompt').textContent = prompt.text;
+    $('dailyWhy').textContent = 'Why this matters: ' + prompt.why;
+    $('dailyResult').style.display = 'none';
+  }
+
+  $('completeDailyBtn').addEventListener('click', () => {
+    $('dailyResult').style.display = 'block';
+    completeTool('Daily');
+  });
+
+  // CERTIFICATE
+  function openCertificate() {
+    if (Object.keys(state.completed).length < TOOLS.length) {
+      showToast('Complete all 5 tools to unlock your certificate.');
+      return;
+    }
+    const name = prompt('Enter your name for the certificate (optional):', state.name || '') ?? '';
+    state.name = name.trim();
+    save();
+    $('certName').textContent = state.name || 'Participant';
+    $('certDate').textContent = 'Completed ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    openModule('moduleCertificate');
+  }
+
+  $('openCertBtn').addEventListener('click', openCertificate);
+  $('printCertBtn').addEventListener('click', () => window.print());
+
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    showToast('Preparing your PDF…');
+
+    const name = state.name || prompt('Your name for the PDF (optional):', '') || '';
+    state.name = name.trim();
+    save();
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(234, 236, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(26, 30, 46);
+    doc.text('Emotional Intelligence Course Hub', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 80, 104);
+    doc.text('Course completion summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Participant summary
+    const done = Object.keys(state.completed).length;
+    const pct = Math.round((done / TOOLS.length) * 100);
+    const rows = [
+      ['Participant', state.name || 'Not provided'],
+      ['Completion date', new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })],
+      ['Points earned', String(state.points)],
+      ['Level achieved', getLevel(state.points)],
+      ['Tools completed', done + ' of ' + TOOLS.length + ' (' + pct + '%)'],
+      ['Streak', state.streak + ' day' + (state.streak !== 1 ? 's' : '')]
     ];
 
-    function loadDailyPrompt() {
-      const idx = new Date().getDate() % dailyPrompts.length;
-      document.getElementById('dailyPrompt').textContent = dailyPrompts[idx];
-    }
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(234, 236, 248);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(74, 90, 170);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 30, 46);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
 
-    function completeDaily() {
-      const r = document.getElementById('dailyResult');
-      r.style.display = 'block';
-      r.textContent = 'Daily challenge completed — tiny steps, big results.';
-      completeTool('daily');
-    }
-
-    function openCertificate() {
-      if (Object.keys(state.completedTools).length !== tools.length) {
-        alert('Complete all course tools to unlock certificate preview.');
-        return;
-      }
-      const name = prompt('Participant name (optional):', state.participantName || '') ?? '';
-      state.participantName = name.trim();
-      document.getElementById('certName').textContent = state.participantName || 'Participant';
-      document.getElementById('certDate').textContent = new Date().toLocaleDateString();
-      saveState();
-      document.getElementById('certificate').classList.add('active');
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-
-    function closeCertificate() { document.getElementById('certificate').classList.remove('active'); }
-    function printCertificate() { window.print(); }
-
-    function launchConfetti() {
-      const layer = document.getElementById('confettiLayer');
-      const bits = ['🎉','✨','🎊','💚','⭐'];
-      for (let i = 0; i < 28; i++) {
-        const el = document.createElement('span');
-        el.className = 'confetti';
-        el.textContent = bits[Math.floor(Math.random() * bits.length)];
-        el.style.left = `${Math.random() * 100}vw`;
-        el.style.animationDelay = `${Math.random() * 260}ms`;
-        layer.appendChild(el);
-        setTimeout(() => el.remove(), 1500);
-      }
-    }
-
-    async function downloadSummaryPDF() {
-      const { jsPDF } = window.jspdf || {};
-      if (!jsPDF) {
-        alert('PDF library failed to load. Please try again.');
-        return;
-      }
-      const name = prompt('Participant name (optional):', state.participantName || '') ?? '';
-      state.participantName = name.trim();
-      saveState();
-
-      const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-      const w = doc.internal.pageSize.getWidth();
-      const h = doc.internal.pageSize.getHeight();
-      const footer = 'https://emotionalintelligencedeveloper.com/';
-      const foot = () => {
-        const pages = doc.getNumberOfPages();
-        for (let p = 1; p <= pages; p++) {
-          doc.setPage(p);
-          doc.setFontSize(9);
-          doc.setTextColor(70, 70, 70);
-          doc.text(footer, w / 2, h - 18, { align: 'center' });
-        }
-      };
-
-      let y = 46;
-      doc.setFontSize(20);
-      doc.setTextColor(20, 40, 90);
-      doc.text('Emotional Intelligence Course Summary', 40, y);
-      y += 26;
-      doc.setFontSize(11);
-      doc.setTextColor(30, 30, 30);
-      doc.text(`Participant: ${state.participantName || 'Not provided'}`, 40, y); y += 16;
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 40, y); y += 22;
-      doc.text(`Points: ${state.points}`, 40, y); y += 15;
-      doc.text(`Level: ${state.level}`, 40, y); y += 15;
-      doc.text(`Completed: ${state.completedCount}/${tools.length}`, 40, y); y += 15;
-      doc.text(`Streak: ${state.streak} day(s)`, 40, y); y += 24;
-
-      doc.setFontSize(13);
-      doc.setTextColor(20, 40, 90);
-      doc.text('Completed Tools', 40, y); y += 16;
-      doc.setFontSize(11);
-      doc.setTextColor(20, 20, 20);
-      tools.forEach(t => {
-        const mark = state.completedTools[t.id] ? '[x]' : '[ ]';
-        doc.text(`${mark} ${t.name}`, 50, y);
-        y += 15;
-      });
-
+    // Tools status
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 90, 170);
+    doc.text('Tools completed', margin, y);
+    y += 14;
+    TOOLS.forEach(tool => {
+      if (y > pageH - 60) { doc.addPage(); y = margin; }
+      const mark = state.completed[tool.id] ? '[✓]' : '[ ]';
+      doc.setFont('helvetica', state.completed[tool.id] ? 'bold' : 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(state.completed[tool.id] ? 58, 138, 90 : 74, 80, 104);
+      doc.text(mark + ' ' + tool.name + ' — ' + tool.points + ' pts', margin, y);
       y += 14;
-      doc.setFontSize(13);
-      doc.setTextColor(20, 40, 90);
-      doc.text('Next steps', 40, y); y += 16;
-      doc.setFontSize(11);
-      doc.setTextColor(20, 20, 20);
-      const next = [
-        '1) Continue with one tool daily to keep your streak going.',
-        '2) Share this course with a friend for accountability.',
-        '3) Explore more free tools:',
-        'https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
-      ];
-      next.forEach(line => {
-        const lines = doc.splitTextToSize(line, w - 80);
-        doc.text(lines, 40, y);
-        y += lines.length * 14;
-        if (y > h - 70) {
-          doc.addPage();
-          y = 48;
-        }
-      });
+    });
 
-      foot();
-      doc.save('course-summary.pdf');
+    // EI summary
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    y += 8;
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 90, 170);
+    doc.text('What you have learned — emotional intelligence foundations', margin, y);
+    y += 14;
+
+    const eiFoundations = [
+      ['What emotional intelligence is',
+       'Emotional intelligence is the ability to recognise, understand, and manage emotions in yourself and others. It encompasses self-awareness, self-regulation, empathy, social skills, and motivation. Research by Daniel Goleman and others shows it is one of the strongest predictors of life satisfaction, relationship quality, and professional effectiveness.'],
+      ['Why it matters for wellbeing',
+       'People with higher emotional intelligence handle stress more effectively, navigate conflict more constructively, and recover from setbacks more quickly. EI does not mean feeling less — it means responding to feelings with more skill and intention. These are learnable skills, not fixed personality traits.'],
+      ['How it is developed',
+       'Emotional intelligence grows through self-reflection, practising empathy, noticing patterns in your emotional reactions, and building skills through real-world experience. The tools in this course — breathing for regulation, mapping triggers, practising boundaries, and completing daily challenges — are each grounded in EI research. Consistent small practice is more effective than occasional large efforts.'],
+      ['What completing this course means',
+       'By completing this course, you have engaged with the foundations of emotional intelligence through active practice, not just reading. You have regulated your nervous system, examined your triggers, practised boundary communication, and committed to daily growth. These are genuinely meaningful steps. Share what you have learned — teaching others is one of the best ways to deepen your own understanding.']
+    ];
+
+    eiFoundations.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(74, 90, 170);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 30, 46);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 90, 170);
+    doc.text('Continue your EI journey', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 30, 46);
+    [
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(176, 184, 224);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 144, 168);
+    doc.text('This tool supports learning and reflection. Not a replacement for professional care.', margin, pageH - 22);
+
+    doc.save('ei-course-summary.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  // CONFETTI
+  function launchConfetti() {
+    const layer = $('confettiLayer');
+    const bits = ['🎉', '✨', '🎊', '⭐', '🏆', '💡', '🌱'];
+    for (let i = 0; i < 35; i++) {
+      const el = document.createElement('span');
+      el.className = 'confetti';
+      el.textContent = bits[Math.floor(Math.random() * bits.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDelay = Math.random() * 400 + 'ms';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 2200);
     }
+  }
 
-    function attachActions() {
-      document.getElementById('resumeBtn').addEventListener('click', () => {
-        if (state.lastTool && document.getElementById(state.lastTool)) openModule(state.lastTool);
-        else alert('No last tool yet. Pick one from the hub.');
-      });
+  // SHARE
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('Free Emotional Intelligence Course Hub — learn, practise, and earn a certificate: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
 
-      document.getElementById('resetBtn').addEventListener('click', () => {
-        if (!confirm('Reset all course progress?')) return;
-        localStorage.removeItem(KEY);
-        state = baseState();
-        document.getElementById('tg1').value = '';
-        document.getElementById('tg2').value = '';
-        document.getElementById('tg3').value = '';
-        ['calmResult','boundaryResult','triggerResult','dailyResult'].forEach(id => {
-          const el = document.getElementById(id); el.style.display = 'none';
-        });
-        closeCertificate();
-        document.getElementById('courseCelebrate').style.display = 'none';
-        renderTools();
-        renderStats();
-        openModule('hub');
-      });
+  async function copyLink() {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  }
 
-      document.getElementById('downloadPdf').addEventListener('click', downloadSummaryPDF);
-      document.getElementById('downloadPdfTop').addEventListener('click', downloadSummaryPDF);
-    }
+  // EVENT LISTENERS
+  $('resumeBtn').addEventListener('click', () => {
+    if (state.lastModule && $(state.lastModule)) openModule(state.lastModule);
+    else showToast('No last tool yet — pick one from the hub.');
+  });
 
-    function init() {
-      renderTools();
-      renderStats();
-      renderCourse();
-      renderBoundary();
-      loadDailyPrompt();
-      setupShareButtons();
-      attachActions();
-      document.getElementById('courseCelebrate').style.display = Object.keys(state.completedTools).length === tools.length ? 'block' : 'none';
-      document.getElementById('certName').textContent = state.participantName || 'Participant';
-      document.getElementById('certDate').textContent = new Date().toLocaleDateString();
-    }
+  $('resetBtn').addEventListener('click', () => {
+    if (!confirm('Reset all course progress? This cannot be undone.')) return;
+    try { localStorage.removeItem(KEY); } catch(_) {}
+    state = baseState();
+    ['tg1','tg2','tg3'].forEach(id => { $(id).value = ''; });
+    ['calmResult','boundaryResult','triggerResult','dailyResult'].forEach(id => { $(id).style.display = 'none'; });
+    $('celebrateBox').style.display = 'none';
+    renderToolGrid();
+    renderStats();
+    openModule('moduleHub');
+    showToast('Progress reset.');
+  });
 
-    init();
-  </script>
+  $('downloadPdfTopBtn').addEventListener('click', downloadPDF);
+  $('downloadPdfCertBtn').addEventListener('click', downloadPDF);
+  $('openCertBtn').addEventListener('click', openCertificate);
+  $('copyLinkBtn').addEventListener('click', copyLink);
+  $('stickyCopy').addEventListener('click', copyLink);
+  $('stickyResume').addEventListener('click', () => {
+    if (state.lastModule && $(state.lastModule)) openModule(state.lastModule);
+    else showToast('No last tool yet.');
+  });
+
+  // INIT
+  renderToolGrid();
+  renderStats();
+  updateShareLinks();
+  $('certDate').textContent = 'Completed ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  $('certName').textContent = state.name || 'Participant';
+  if (Object.keys(state.completed).length === TOOLS.length) {
+    $('celebrateBox').style.display = 'block';
+  }
+}());
+</script>
 </body>
 </html>

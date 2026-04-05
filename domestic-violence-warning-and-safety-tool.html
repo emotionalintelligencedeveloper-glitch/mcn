@@ -1,650 +1,1080 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Domestic Violence: Safety & Gentle Support Check-In</title>
+  <title>Domestic Violence: Safety & Gentle Support Check-In | Emotional Intelligence Developer</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f4f7fb;
+      --bg: #f3f5f8;
       --card: #ffffff;
-      --ink: #142033;
-      --muted: #4f5f78;
-      --line: #d8e0ee;
-      --soft: #eef4ff;
-      --accent: #3f6ee8;
-      --accent-dark: #2f57bf;
-      --ok: #0f9c7b;
-      --warn: #fff6e8;
-      --warn-line: #f8d39a;
-      --danger: #b42318;
-      --chip: #eaf0ff;
-      --shadow: 0 10px 28px rgba(18, 39, 84, 0.1);
-      --radius: 14px;
+      --text: #1a2030;
+      --muted: #4a5568;
+      --hint: #8a98b0;
+      --border: #d0d8e8;
+      --brand: #4a6080;
+      --brand-light: #eaeff8;
+      --brand-mid: #b0c0d8;
+      --accent: #6a90b8;
+      --accent-light: #e4edf8;
+      --teal: #3a7a68;
+      --teal-light: #e4f0ec;
+      --teal-mid: #a0c8bc;
+      --warm: #f8f6f2;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --danger-bg: #fff0f0;
+      --danger-border: #f5a0a0;
+      --danger-text: #8b1a1a;
+      --warn-bg: #fff8ec;
+      --warn-border: #f0c878;
+      --warn-text: #7a4a0a;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      background: linear-gradient(180deg, #f7f9fe, #eef2fb 55%, #edf3f8);
-      color: var(--ink);
-      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      padding-bottom: 90px;
     }
 
     .container {
-      width: min(980px, 100% - 24px);
-      margin: 20px auto 100px;
-      display: grid;
-      gap: 14px;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 20px;
     }
 
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .danger-notice {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      font-size: 14px;
+      color: var(--danger-text);
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .privacy-note {
+      font-size: 12px;
+      color: var(--hint);
+      font-style: italic;
+    }
+
+    /* CARD */
     .card {
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
     }
 
-    h1, h2, h3 {
-      margin: 0 0 10px;
-      line-height: 1.25;
-      color: #0f1b2e;
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 14px;
     }
 
-    h1 { font-size: clamp(1.35rem, 2.4vw, 1.9rem); }
-    h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
-    h3 { font-size: 1rem; }
-
-    p { margin: 0 0 10px; color: var(--muted); }
-
-    .small { font-size: 0.9rem; color: var(--muted); }
-
-    .notice {
-      background: var(--warn);
-      border: 1px solid var(--warn-line);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 12px;
-      color: #5b3a0f;
-      font-size: 0.95rem;
+    .card-intro {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-style: italic;
+      line-height: 1.6;
     }
 
-    .row {
+    /* CHECKLIST */
+    .check-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr;
+      margin-bottom: 4px;
+    }
+
+    @media (min-width: 480px) {
+      .check-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    .check-item input {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      accent-color: var(--brand);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    /* CHIPS */
+    .chip-wrap {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      background: var(--brand-light);
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 7px 16px;
+      min-height: 38px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
       align-items: center;
     }
 
-    button, .btn-link {
-      border: 0;
-      border-radius: 10px;
-      min-height: 44px;
-      padding: 11px 14px;
+    .chip:hover { border-color: var(--brand); color: var(--text); }
+    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    /* INPUTS */
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 80px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    .field-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+      font-style: italic;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      margin-top: 16px;
+    }
+
+    .step-label:first-child { margin-top: 0; }
+
+    /* DRAFT BOX */
+    .draft-card {
+      background: var(--teal-light);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .draft-templates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .draft-template-btn {
+      background: #fff;
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--teal);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: 0.2s ease;
-      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .draft-template-btn:hover { border-color: var(--teal); background: var(--teal-light); }
+
+    /* SAFETY TOGGLES */
+    .toggle-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .toggle-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+
+    .toggle-title {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: normal;
+    }
+
+    .toggle-arrow {
+      font-size: 12px;
+      color: var(--hint);
+      transition: transform 0.2s;
+    }
+
+    .toggle-item.open .toggle-arrow { transform: rotate(180deg); }
+
+    .toggle-body {
+      display: none;
+      padding: 0 16px 14px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      border-top: 1px solid var(--border);
+    }
+
+    .toggle-item.open .toggle-body { display: block; padding-top: 12px; }
+
+    /* RESULT / SUMMARY */
+    .result-box {
+      display: none;
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .result-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .result-row {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--brand-mid);
+    }
+
+    .result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .result-row-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+
+    .result-row-value {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
 
-    button:focus-visible, .btn-link:focus-visible, input:focus-visible, textarea:focus-visible {
-      outline: 3px solid rgba(63, 110, 232, 0.25);
-      outline-offset: 1px;
-    }
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
 
-    .btn-primary {
-      background: var(--accent);
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-exit { background: var(--danger-text); color: #fff; border-color: var(--danger-text); }
+    .btn-reset { background: #fff; color: var(--muted); border-color: var(--border); }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
       color: #fff;
-    }
-    .btn-primary:hover { background: var(--accent-dark); }
-
-    .btn-soft {
-      background: var(--soft);
-      color: #203762;
-      border: 1px solid #cad8fa;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
     }
 
-    .btn-ghost {
-      background: #f6f8fc;
-      border: 1px solid var(--line);
-      color: #22304a;
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
     }
 
-    .btn-danger {
-      background: #fef0ef;
-      border: 1px solid #f7c3bf;
-      color: var(--danger);
-    }
-
-    .grid-2 { display: grid; gap: 10px; grid-template-columns: 1fr; }
-
-    @media (min-width: 760px) {
-      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .card { padding: 22px; }
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .chip {
-      background: var(--chip);
-      border: 1px solid #c7d7fb;
-      color: #1f3768;
-    }
-
-    .chip.active {
-      background: #d8e5ff;
-      border-color: #9ab7ff;
-      color: #102a57;
-    }
-
-    textarea, input[type="text"] {
-      width: 100%;
-      border: 1px solid #cfd7e5;
-      border-radius: 10px;
-      padding: 11px 12px;
-      color: #1b2740;
-      background: #fff;
-      font: inherit;
-    }
-
-    textarea { min-height: 95px; resize: vertical; }
-
-    .checklist {
-      margin: 8px 0 0;
-      padding-left: 0;
-      list-style: none;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    .checklist label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 9px 10px;
-      background: #fbfdff;
-      color: #21324f;
-    }
-
-    .toggle-item {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px;
-      margin-bottom: 8px;
-      background: #fbfdff;
-    }
-
-    .toggle-item .toggle-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .toggle-content {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed #d7deeb;
-      display: none;
-      color: #2d4166;
-      font-size: 0.95rem;
-    }
-
-    .toggle-item.active .toggle-content { display: block; }
-
-    .draft-box {
-      background: #f7f9ff;
-      border: 1px solid #d5e0fa;
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .output {
-      white-space: pre-wrap;
-      min-height: 85px;
-      border: 1px dashed #bcccf0;
-      border-radius: 10px;
-      background: #fff;
-      padding: 10px;
-      margin-top: 8px;
-      color: #1b2b4c;
-    }
-
+    /* STICKY BAR */
     .sticky-bar {
       position: fixed;
+      bottom: 0;
       left: 0;
       right: 0;
-      bottom: 0;
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-      background: rgba(245, 248, 255, 0.96);
-      backdrop-filter: blur(6px);
-      border-top: 1px solid #d0daee;
-      z-index: 30;
-    }
-
-    .sticky-inner {
-      width: min(980px, 100%);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: rgba(26, 32, 48, 0.96);
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
       gap: 8px;
+      justify-content: center;
+      z-index: 50;
     }
 
-    @media (min-width: 640px) {
-      .sticky-inner { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .sticky-bar .btn {
+      flex: 1;
+      max-width: 180px;
+      font-size: 13px;
+      padding: 10px 12px;
+      min-height: 42px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
     }
 
     .footer-links {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
 
-    .privacy-note {
-      background: #f8fafc;
-      border-left: 3px solid #8ba3d8;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.92rem;
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
+    /* PRIVACY NOTE */
+    .privacy-card {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--warn-text);
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <main class="container" id="toolRoot">
-    <section class="card">
-      <h1>Domestic Violence: Safety &amp; Gentle Support Check-In</h1>
-      <p>You&rsquo;re not alone. You deserve safety. If you&rsquo;re hurting, scared to talk, or unsure how to explain what&rsquo;s happening, this is a calm place to take one small step. You don&rsquo;t have to explain everything today.</p>
-      <div class="notice"><strong>If you&rsquo;re in immediate danger, call your local emergency number.</strong></div>
-      <div class="row" style="margin-top:10px;">
-        <button class="btn-danger" id="quickExitBtn" type="button" aria-label="Quick Exit">🚪 Quick Exit</button>
-        <button class="btn-ghost" id="hideResetBtn" type="button">🧹 Hide / Reset</button>
-        <label class="btn-soft" style="gap:8px; cursor:pointer;">
-          <input type="checkbox" id="saveToggle" style="width:18px;height:18px;" />
-          Save on this device
-        </label>
-      </div>
-      <p class="small" style="margin-top:8px;">Save option uses local storage in this browser only. Not recommended on shared devices.</p>
-    </section>
+<div class="container">
 
-    <section class="card">
-      <h2>1) I&rsquo;m not sure if it&rsquo;s abuse</h2>
-      <p>If any of these feel familiar, your feelings matter. You are not overreacting for wanting safety and respect.</p>
-      <div class="grid-2">
-        <ul class="checklist">
-          <li><label><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour (who you see, where you go)</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="isolation" /> Isolation from friends, family, or support</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="threats" /> Threats, intimidation, or fear tactics</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="financial control" /> Financial control (money, work, access)</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="sexual coercion" /> Sexual pressure or coercion</label></li>
-        </ul>
-        <ul class="checklist">
-          <li><label><input type="checkbox" class="abuse-check" value="verbal degradation" /> Verbal degradation, insults, humiliation</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="stalking" /> Stalking or repeated unwanted contact</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="digital monitoring" /> Digital monitoring (phone, social, location)</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="physical harm" /> Physical harm or threats of harm</label></li>
-          <li><label><input type="checkbox" class="abuse-check" value="walking on eggshells" /> Constantly walking on eggshells</label></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>2) Guided reflection flow</h2>
-
-      <h3>Step 1: How are you feeling right now?</h3>
-      <div class="chips" id="feelingChips">
-        <button class="chip" type="button" data-value="scared">Scared</button>
-        <button class="chip" type="button" data-value="numb">Numb</button>
-        <button class="chip" type="button" data-value="confused">Confused</button>
-        <button class="chip" type="button" data-value="ashamed">Ashamed</button>
-        <button class="chip" type="button" data-value="anxious">Anxious</button>
-        <button class="chip" type="button" data-value="angry">Angry</button>
-        <button class="chip" type="button" data-value="hopeful">Hopeful</button>
-        <button class="chip" type="button" data-value="exhausted">Exhausted</button>
-      </div>
-      <input type="text" id="feelingOther" placeholder="Other feeling (optional)" style="margin-top:8px;" />
-
-      <h3 style="margin-top:14px;">Step 2: What&rsquo;s been happening?</h3>
-      <label class="small" for="recentEvent">What happened most recently that made you come here?</label>
-      <textarea id="recentEvent" placeholder="Write as little or as much as feels safe."></textarea>
-      <label class="small" for="wishUnderstood" style="margin-top:8px; display:block;">What do you wish someone understood?</label>
-      <textarea id="wishUnderstood" placeholder="You can keep this short."></textarea>
-
-      <h3 style="margin-top:14px;">Step 3: What feels hardest about reaching out?</h3>
-      <div class="chips" id="barrierChips">
-        <button class="chip" type="button" data-value="fear of not being believed">Fear of not being believed</button>
-        <button class="chip" type="button" data-value="fear of consequences">Fear of consequences</button>
-        <button class="chip" type="button" data-value="embarrassment">Embarrassment</button>
-        <button class="chip" type="button" data-value="children">Children</button>
-        <button class="chip" type="button" data-value="money">Money</button>
-        <button class="chip" type="button" data-value="nowhere to go">Nowhere to go</button>
-        <button class="chip" type="button" data-value="still love them">Still love them</button>
-        <button class="chip" type="button" data-value="not sure it is bad enough">Unsure it&rsquo;s &ldquo;bad enough&rdquo;</button>
-      </div>
-
-      <h3 style="margin-top:14px;">Step 4: One small safe step (today)</h3>
-      <div class="chips" id="smallStepChips">
-        <button class="chip" type="button" data-value="save a helpline">Save a helpline</button>
-        <button class="chip" type="button" data-value="talk to one trusted person">Talk to one trusted person</button>
-        <button class="chip" type="button" data-value="make a quiet plan">Make a quiet plan</button>
-        <button class="chip" type="button" data-value="learn warning signs">Learn warning signs</button>
-        <button class="chip" type="button" data-value="write a message draft">Write a message draft</button>
-        <button class="chip" type="button" data-value="just breathe and ground">Just breathe and ground</button>
-      </div>
-    </section>
-
-    <section class="card draft-box">
-      <h2>3) Create a Reach-Out Draft</h2>
-      <p>You can choose a template, edit it, and copy it. No pressure.</p>
-      <div class="row">
-        <button class="btn-soft draft-template" type="button" data-template="Hey, can I talk? Something at home doesn’t feel safe.">Template 1</button>
-        <button class="btn-soft draft-template" type="button" data-template="I’m scared to explain it all, but I need support.">Template 2</button>
-        <button class="btn-soft draft-template" type="button" data-template="Can I stay with you / can you help me find resources?">Template 3</button>
-        <button class="btn-soft draft-template" type="button" data-template="Please don’t confront them. I’m just asking for help.">Template 4</button>
-      </div>
-      <textarea id="reachOutDraft" placeholder="Your message draft appears here."></textarea>
-      <div class="row" style="margin-top:8px;">
-        <button id="copyDraftBtn" class="btn-primary" type="button">📋 Copy Draft</button>
-        <span class="small" id="copyStatus" role="status" aria-live="polite"></span>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>4) Quiet Safety Planning (only what feels safe)</h2>
-      <p>Only do what is safe in your situation.</p>
-
-      <div class="toggle-item" data-toggle>
-        <div class="toggle-head">
-          <strong>Identify a safe contact</strong>
-          <button type="button" class="btn-ghost toggle-btn">Show</button>
-        </div>
-        <div class="toggle-content">
-          One person who is calm and trustworthy. You can keep contact details in a place only you can access.
-        </div>
-      </div>
-
-      <div class="toggle-item" data-toggle>
-        <div class="toggle-head">
-          <strong>Pack essentials list (only if safe)</strong>
-          <button type="button" class="btn-ghost toggle-btn">Show</button>
-        </div>
-        <div class="toggle-content">
-          If safe, think about: ID, keys, medications, essential documents, and emergency contacts.
-        </div>
-      </div>
-
-      <div class="toggle-item" data-toggle>
-        <div class="toggle-head">
-          <strong>Choose a code word with a trusted person</strong>
-          <button type="button" class="btn-ghost toggle-btn">Show</button>
-        </div>
-        <div class="toggle-content">
-          A neutral word or phrase can signal "I need help now" without details.
-        </div>
-      </div>
-
-      <div class="toggle-item" data-toggle>
-        <div class="toggle-head">
-          <strong>Consider device safety</strong>
-          <button type="button" class="btn-ghost toggle-btn">Show</button>
-        </div>
-        <div class="toggle-content">
-          If needed, clear browser history, use private mode, and sign out of shared devices.
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>5) Help</h2>
-      <p>You can search by country and type of support.</p>
-      <a class="btn-link btn-primary" target="_blank" rel="noopener noreferrer" href="https://findahelpline.com/">🌍 Find a helpline in your country (findahelpline.com)</a>
-    </section>
-
-    <section class="card">
-      <h2>6) Build Emotional Strength &amp; Boundaries (Free course + certificate)</h2>
-      <p>Completing the course earns a certificate and supports emotional intelligence skills like boundaries, self-trust, safer decision-making, and communication.</p>
-      <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html">🎓 Start the free course</a>
-    </section>
-
-    <section class="card">
-      <h2>7) Share</h2>
-      <p>If this helped, you can share the tool with someone who may need a private starting point.</p>
-      <div class="row">
-        <button id="copyLinkBtn" class="btn-ghost" type="button">🔗 Copy Link</button>
-        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="waShare" href="#">WhatsApp</a>
-        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="fbShare" href="#">Facebook</a>
-        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="xShare" href="#">X</a>
-        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="liShare" href="#">LinkedIn</a>
-        <a class="btn-link btn-soft" target="_blank" rel="noopener noreferrer" id="emailShare" href="#">Email</a>
-      </div>
-      <div class="output" id="summaryOutput">Your gentle summary can appear here.</div>
-      <div class="row" style="margin-top:8px;">
-        <button class="btn-primary" id="buildSummaryBtn" type="button">Create My Gentle Summary</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>8) Privacy</h2>
-      <div class="privacy-note">
-        This tool can store your reflections only in this browser if you turn on save. On shared devices, it is safer to keep save off and use Quick Exit + Hide/Reset.
-      </div>
-    </section>
-
-    <section class="card">
-      <h3 style="margin-bottom:8px;">You can take one small step.</h3>
-      <p>You deserve safety and support. Reaching out in your own time is valid.</p>
-      <div class="footer-links">
-        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Help Page</a>
-        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended Books</a>
-        <a class="btn-link btn-soft" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener noreferrer">Support Us</a>
-      </div>
-    </section>
-  </main>
-
-  <div class="sticky-bar" aria-label="Quick actions">
-    <div class="sticky-inner">
-      <button class="btn-danger" id="quickExitBtn2" type="button">Quick Exit</button>
-      <button class="btn-ghost" id="hideResetBtn2" type="button">Hide / Reset</button>
-      <a class="btn-link btn-soft" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Find Helpline</a>
-      <button class="btn-primary" id="copyDraftBtn2" type="button">Copy Draft</button>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-  </div>
+    <h1>Domestic Violence: Safety &amp; Gentle Support Check-In</h1>
+    <p class="tagline">You are not alone. You deserve safety. This is a calm, private space to take one small step — in your own time, at your own pace.</p>
 
-  <script>
-    (function () {
-      const STORAGE_KEY = "dvSafetyToolDataV2";
+    <div class="danger-notice" role="alert">
+      If you are in immediate danger, call your local emergency number now.
+    </div>
 
-      const saveToggle = document.getElementById("saveToggle");
-      const copyStatus = document.getElementById("copyStatus");
-      const summaryOutput = document.getElementById("summaryOutput");
+    <div class="quick-actions">
+      <button type="button" class="btn btn-exit" id="quickExitBtn" aria-label="Quick Exit — leave this page immediately">Quick Exit</button>
+      <button type="button" class="btn btn-reset" id="hideResetBtn">Hide and reset</button>
+      <label class="save-row">
+        <input type="checkbox" id="saveToggle" />
+        Save on this device
+      </label>
+    </div>
+    <p class="privacy-note">Save uses local storage in this browser only. Not recommended on shared or monitored devices.</p>
+  </header>
 
-      const textFields = [
-        "feelingOther",
-        "recentEvent",
-        "wishUnderstood",
-        "reachOutDraft"
-      ];
+  <!-- SECTION 1: AM I EXPERIENCING ABUSE -->
+  <section class="card" aria-labelledby="abuse-heading">
+    <p class="card-title" id="abuse-heading">I am not sure if it is abuse</p>
+    <p class="card-intro">If any of these feel familiar, your feelings are valid. You are not overreacting for wanting safety and respect.</p>
+    <div class="check-grid" id="abuseChecklist" role="group" aria-label="Abuse recognition checklist">
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour — who you see, where you go</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="isolation" /> Isolation from friends, family, or support</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="threats" /> Threats, intimidation, or fear tactics</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="financial control" /> Financial control — money, work, access</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="sexual coercion" /> Sexual pressure or coercion</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="verbal degradation" /> Verbal degradation, insults, or humiliation</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="stalking" /> Stalking or repeated unwanted contact</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="digital monitoring" /> Digital monitoring — phone, social media, location</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="physical harm" /> Physical harm or threats of harm</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="walking on eggshells" /> Constantly walking on eggshells</label>
+    </div>
+  </section>
 
-      const chipGroups = ["feelingChips", "barrierChips", "smallStepChips"];
+  <!-- SECTION 2: GUIDED REFLECTION -->
+  <section class="card" aria-labelledby="reflect-heading">
+    <p class="card-title" id="reflect-heading">Guided reflection</p>
 
-      function getPageUrl() {
-        return window.location.href;
-      }
+    <div class="step-label">Step 1 — How are you feeling right now?</div>
+    <div class="chip-wrap" id="feelingChips" role="group" aria-label="Feeling options"></div>
+    <label class="field-label" for="feelingOther">Other feeling (optional)</label>
+    <input type="text" id="feelingOther" maxlength="100" placeholder="Describe in your own words…" />
 
-      function buildShareLinks() {
-        const url = encodeURIComponent(getPageUrl());
-        const text = encodeURIComponent("A gentle private starting point for safety and support.");
-        document.getElementById("waShare").href = `https://wa.me/?text=${text}%20${url}`;
-        document.getElementById("fbShare").href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        document.getElementById("xShare").href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-        document.getElementById("liShare").href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        document.getElementById("emailShare").href = `mailto:?subject=${encodeURIComponent("Gentle safety support tool")}&body=${text}%0A%0A${url}`;
-      }
+    <div class="step-label">Step 2 — What has been happening?</div>
+    <label class="field-label" for="recentEvent">What happened most recently that brought you here?</label>
+    <textarea id="recentEvent" maxlength="800" placeholder="Write as little or as much as feels safe…"></textarea>
+    <label class="field-label" for="wishUnderstood" style="margin-top:10px;">What do you wish someone understood?</label>
+    <textarea id="wishUnderstood" maxlength="600" placeholder="You can keep this short…"></textarea>
 
-      function selectedValuesFrom(groupId) {
-        return [...document.querySelectorAll(`#${groupId} .chip.active`)].map((b) => b.dataset.value);
-      }
+    <div class="step-label">Step 3 — What feels hardest about reaching out?</div>
+    <div class="chip-wrap" id="barrierChips" role="group" aria-label="Barrier options"></div>
 
-      function gatherState() {
-        const state = {
-          saveEnabled: !!saveToggle.checked,
-          text: {},
-          checks: [...document.querySelectorAll(".abuse-check")].filter((c) => c.checked).map((c) => c.value),
-          feelings: selectedValuesFrom("feelingChips"),
-          barriers: selectedValuesFrom("barrierChips"),
-          steps: selectedValuesFrom("smallStepChips")
-        };
-        textFields.forEach((id) => {
-          state.text[id] = document.getElementById(id).value;
-        });
-        return state;
-      }
+    <div class="step-label">Step 4 — One small safe step today</div>
+    <div class="chip-wrap" id="smallStepChips" role="group" aria-label="Small step options"></div>
 
-      function applyState(state) {
-        if (!state) return;
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox" aria-live="polite"></div>
 
-        if (state.text) {
-          textFields.forEach((id) => {
-            if (typeof state.text[id] === "string") {
-              document.getElementById(id).value = state.text[id];
-            }
-          });
-        }
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="buildSummaryBtn">Create my gentle summary</button>
+      <button type="button" class="btn btn-teal" id="pdfBtn">Download PDF</button>
+    </div>
+  </section>
 
-        document.querySelectorAll(".abuse-check").forEach((c) => {
-          c.checked = !!state.checks?.includes(c.value);
-        });
+  <!-- SECTION 3: REACH-OUT DRAFT -->
+  <section class="card" aria-labelledby="draft-heading">
+    <p class="card-title" id="draft-heading">Create a reach-out message</p>
+    <p class="card-intro">Choose a template, edit it freely, and copy it when you are ready. No pressure.</p>
+    <div class="draft-card">
+      <div class="draft-templates">
+        <button type="button" class="draft-template-btn" data-template="Hey, can I talk? Something at home doesn't feel safe.">Template 1</button>
+        <button type="button" class="draft-template-btn" data-template="I'm scared to explain it all, but I need support.">Template 2</button>
+        <button type="button" class="draft-template-btn" data-template="Can I stay with you, or can you help me find resources?">Template 3</button>
+        <button type="button" class="draft-template-btn" data-template="Please don't confront them. I'm just asking for help.">Template 4</button>
+      </div>
+      <textarea id="reachOutDraft" maxlength="800" placeholder="Your message draft appears here — edit freely…"></textarea>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="copyDraftBtn">Copy draft</button>
+    </div>
+  </section>
 
-        chipGroups.forEach((groupId) => {
-          const targetList = groupId === "feelingChips" ? state.feelings : groupId === "barrierChips" ? state.barriers : state.steps;
-          document.querySelectorAll(`#${groupId} .chip`).forEach((chip) => {
-            chip.classList.toggle("active", !!targetList?.includes(chip.dataset.value));
-          });
-        });
+  <!-- SECTION 4: SAFETY PLANNING -->
+  <section class="card" aria-labelledby="safety-heading">
+    <p class="card-title" id="safety-heading">Quiet safety planning</p>
+    <p class="card-intro">Only do what feels safe in your situation. These are options, not requirements.</p>
 
-        saveToggle.checked = !!state.saveEnabled;
-      }
+    <div class="toggle-item" id="toggle1">
+      <div class="toggle-head" data-toggle="toggle1">
+        <span class="toggle-title">Identify a safe contact</span>
+        <span class="toggle-arrow">&#9660;</span>
+      </div>
+      <div class="toggle-body">One person who is calm and trustworthy. Keep their contact details somewhere only you can access — a note app with a neutral title, a friend's address in your phone under a different name.</div>
+    </div>
 
-      function persistIfEnabled() {
-        const state = gatherState();
-        if (!state.saveEnabled) {
-          localStorage.removeItem(STORAGE_KEY);
-          return;
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }
+    <div class="toggle-item" id="toggle2">
+      <div class="toggle-head" data-toggle="toggle2">
+        <span class="toggle-title">Pack essentials (only if safe to do so)</span>
+        <span class="toggle-arrow">&#9660;</span>
+      </div>
+      <div class="toggle-body">If it is safe, think about: ID documents, keys, medications, essential paperwork, emergency contacts, and any items that cannot be replaced. A small bag kept somewhere accessible can make leaving faster if needed.</div>
+    </div>
 
-      function clearState() {
-        localStorage.removeItem(STORAGE_KEY);
-        saveToggle.checked = false;
-        document.querySelectorAll("textarea, input[type='text']").forEach((el) => {
-          el.value = "";
-        });
-        document.querySelectorAll(".abuse-check").forEach((c) => c.checked = false);
-        document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
-        summaryOutput.textContent = "Your gentle summary can appear here.";
-        copyStatus.textContent = "";
-      }
+    <div class="toggle-item" id="toggle3">
+      <div class="toggle-head" data-toggle="toggle3">
+        <span class="toggle-title">Choose a code word with a trusted person</span>
+        <span class="toggle-arrow">&#9660;</span>
+      </div>
+      <div class="toggle-body">A neutral word or phrase agreed in advance can signal "I need help now" without giving details — useful if you cannot speak freely. For example: "Can you bring the book you borrowed?" could mean "please come."</div>
+    </div>
 
-      function quickExit() {
-        clearState();
-        window.location.replace("https://www.google.com");
-      }
+    <div class="toggle-item" id="toggle4">
+      <div class="toggle-head" data-toggle="toggle4">
+        <span class="toggle-title">Device and browser safety</span>
+        <span class="toggle-arrow">&#9660;</span>
+      </div>
+      <div class="toggle-body">If your device may be monitored: use private browsing mode, clear browser history after use, sign out of shared accounts, and consider using a device or connection the other person does not have access to — a library computer, a trusted friend's phone.</div>
+    </div>
+  </section>
 
-      function toggleChip(btn) {
-        btn.classList.toggle("active");
+  <!-- SECTION 5: FIND HELP -->
+  <section class="card" aria-labelledby="help-heading">
+    <p class="card-title" id="help-heading">Find support in your country</p>
+    <p class="card-intro">Free, confidential helplines are available in most countries. You do not need to be ready to leave — you can just call to talk.</p>
+    <div class="btn-row">
+      <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline in your country</a>
+    </div>
+  </section>
+
+  <!-- SECTION 6: FREE COURSE -->
+  <section class="card" aria-labelledby="course-heading">
+    <p class="card-title" id="course-heading">Build emotional strength and boundaries — free course</p>
+    <p class="card-intro">This free course supports emotional intelligence skills including boundaries, self-trust, safer decision-making, and communication. A certificate is available on completion.</p>
+    <a class="btn btn-primary" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html" target="_blank" rel="noopener">Start the free course</a>
+  </section>
+
+  <!-- SECTION 7: SHARE -->
+  <section class="card" aria-labelledby="share-heading">
+    <p class="card-title" id="share-heading">Share this tool</p>
+    <p class="card-intro">If this helped you, you can share it with someone who may need a private starting point.</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+      <a class="btn btn-share" id="emailShare" target="_blank" rel="noopener">Email</a>
+    </div>
+  </section>
+
+  <!-- SECTION 8: PRIVACY -->
+  <section class="card" aria-labelledby="privacy-heading">
+    <p class="card-title" id="privacy-heading">Privacy</p>
+    <div class="privacy-card">
+      This tool can store your reflections only in this browser if you turn on save above. On shared or monitored devices, it is safer to keep save off and use Quick Exit and Hide/Reset to clear everything immediately. Private browsing mode leaves no local history.
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
+
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only. If you are in danger, please seek urgent help now.
+    </p>
+  </footer>
+
+</div>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" role="toolbar" aria-label="Quick safety actions">
+  <button type="button" class="btn btn-exit" id="quickExitBtn2" aria-label="Quick Exit">Quick Exit</button>
+  <button type="button" class="btn btn-reset" id="hideResetBtn2">Hide / Reset</button>
+  <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener">Find helpline</a>
+  <button type="button" class="btn btn-primary" id="copyDraftBtn2">Copy draft</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'dvSupportV4';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const $ = id => document.getElementById(id);
+
+  const feelings = ['Scared','Numb','Confused','Ashamed','Anxious','Angry','Hopeful','Exhausted'];
+  const barriers = ['Fear of not being believed','Fear of consequences','Embarrassment','Children','Money','Nowhere to go','Still love them','Unsure it is bad enough'];
+  const smallSteps = ['Save a helpline','Talk to one trusted person','Make a quiet plan','Learn warning signs','Write a message draft','Just breathe and ground'];
+
+  let toastTimer;
+
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  function buildChips(containerId, options, cssClass) {
+    const wrap = $(containerId);
+    options.forEach(label => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = label;
+      btn.dataset.value = label;
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
         persistIfEnabled();
-      }
-
-      function buildSummary() {
-        const state = gatherState();
-        const lines = [];
-        lines.push("You’re not alone. You deserve safety.");
-        if (state.feelings.length || state.text.feelingOther) {
-          lines.push(`Right now I feel: ${[...state.feelings, state.text.feelingOther].filter(Boolean).join(", ")}.`);
-        }
-        if (state.text.recentEvent) lines.push(`Recent situation: ${state.text.recentEvent}`);
-        if (state.text.wishUnderstood) lines.push(`What I wish people understood: ${state.text.wishUnderstood}`);
-        if (state.barriers.length) lines.push(`Hardest part of reaching out: ${state.barriers.join(", ")}.`);
-        if (state.steps.length) lines.push(`One small step today: ${state.steps.join(", ")}.`);
-        if (state.checks.length) lines.push(`Possible warning signs I noticed: ${state.checks.join(", ")}.`);
-        lines.push("I can take one small step. I don’t have to explain everything today.");
-        summaryOutput.textContent = lines.join("\n\n");
-        persistIfEnabled();
-      }
-
-      function copyText(text, successMessage) {
-        navigator.clipboard.writeText(text).then(() => {
-          copyStatus.textContent = successMessage;
-        }).catch(() => {
-          copyStatus.textContent = "Could not copy automatically. You can select and copy manually.";
-        });
-      }
-
-      document.querySelectorAll(".chip").forEach((btn) => {
-        btn.addEventListener("click", () => toggleChip(btn));
       });
+      wrap.appendChild(btn);
+    });
+  }
 
-      document.querySelectorAll(".draft-template").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document.getElementById("reachOutDraft").value = btn.dataset.template;
-          persistIfEnabled();
-        });
+  function selectedChips(containerId) {
+    return Array.from(document.querySelectorAll('#' + containerId + ' .chip.active')).map(c => c.dataset.value);
+  }
+
+  function gatherState() {
+    return {
+      saveEnabled: $('saveToggle').checked,
+      checks: Array.from(document.querySelectorAll('.abuse-check:checked')).map(c => c.value),
+      feelings: selectedChips('feelingChips'),
+      feelingOther: $('feelingOther').value.trim(),
+      barriers: selectedChips('barrierChips'),
+      smallSteps: selectedChips('smallStepChips'),
+      recentEvent: $('recentEvent').value.trim(),
+      wishUnderstood: $('wishUnderstood').value.trim(),
+      reachOutDraft: $('reachOutDraft').value.trim()
+    };
+  }
+
+  function applyState(d) {
+    if (!d) return;
+    $('saveToggle').checked = Boolean(d.saveEnabled);
+    $('feelingOther').value = d.feelingOther || '';
+    $('recentEvent').value = d.recentEvent || '';
+    $('wishUnderstood').value = d.wishUnderstood || '';
+    $('reachOutDraft').value = d.reachOutDraft || '';
+
+    document.querySelectorAll('.abuse-check').forEach(c => {
+      c.checked = (d.checks || []).includes(c.value);
+    });
+    ['feelingChips','barrierChips','smallStepChips'].forEach((id, i) => {
+      const list = [d.feelings, d.barriers, d.smallSteps][i] || [];
+      document.querySelectorAll('#' + id + ' .chip').forEach(c => {
+        c.classList.toggle('active', list.includes(c.dataset.value));
       });
+    });
+  }
 
-      document.querySelectorAll("[data-toggle]").forEach((item) => {
-        const button = item.querySelector(".toggle-btn");
-        button.addEventListener("click", () => {
-          item.classList.toggle("active");
-          button.textContent = item.classList.contains("active") ? "Hide" : "Show";
-        });
-      });
+  function persistIfEnabled() {
+    const d = gatherState();
+    if (!d.saveEnabled) { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} return; }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(_) {}
+  }
 
-      [...document.querySelectorAll("textarea, input[type='text'], .abuse-check")].forEach((el) => {
-        el.addEventListener("input", persistIfEnabled);
-        el.addEventListener("change", persistIfEnabled);
-      });
+  function clearAll() {
+    $('saveToggle').checked = false;
+    $('feelingOther').value = '';
+    $('recentEvent').value = '';
+    $('wishUnderstood').value = '';
+    $('reachOutDraft').value = '';
+    document.querySelectorAll('.abuse-check').forEach(c => c.checked = false);
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    $('resultBox').style.display = 'none';
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  }
 
-      saveToggle.addEventListener("change", persistIfEnabled);
+  function quickExit() {
+    clearAll();
+    window.location.replace('https://www.google.com');
+  }
 
-      document.getElementById("buildSummaryBtn").addEventListener("click", buildSummary);
-      document.getElementById("copyDraftBtn").addEventListener("click", () => copyText(document.getElementById("reachOutDraft").value || "", "Draft copied."));
-      document.getElementById("copyDraftBtn2").addEventListener("click", () => copyText(document.getElementById("reachOutDraft").value || "", "Draft copied."));
+  // Toggles
+  document.querySelectorAll('.toggle-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const item = $(head.dataset.toggle);
+      if (item) item.classList.toggle('open');
+    });
+  });
 
-      document.getElementById("copyLinkBtn").addEventListener("click", () => copyText(getPageUrl(), "Link copied."));
+  // Draft templates
+  document.querySelectorAll('.draft-template-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $('reachOutDraft').value = btn.dataset.template;
+      persistIfEnabled();
+    });
+  });
 
-      ["quickExitBtn", "quickExitBtn2"].forEach((id) => {
-        document.getElementById(id).addEventListener("click", quickExit);
-      });
-      ["hideResetBtn", "hideResetBtn2"].forEach((id) => {
-        document.getElementById(id).addEventListener("click", clearState);
-      });
+  // Summary builder
+  function buildResultHTML(d) {
+    const feelingsList = [...d.feelings, d.feelingOther].filter(Boolean).join(', ') || 'Not selected';
+    const rows = [
+      ['How you are feeling', feelingsList],
+      ['What has been happening', d.recentEvent || '—'],
+      ['What you wish was understood', d.wishUnderstood || '—'],
+      ['Hardest part of reaching out', d.barriers.join(', ') || 'Not selected'],
+      ['One small step today', d.smallSteps.join(', ') || 'Not selected'],
+      ['Warning signs noticed', d.checks.join(', ') || 'None selected']
+    ];
 
-      buildShareLinks();
+    let html = '<div class="result-title">Your gentle summary</div>';
+    rows.forEach(([label, value]) => {
+      html += '<div class="result-row">';
+      html += '<div class="result-row-label">' + label + '</div>';
+      html += '<div class="result-row-value">' + value + '</div>';
+      html += '</div>';
+    });
+    html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">You can take one small step. You do not have to explain everything today. You deserve safety and support.</div>';
+    return html;
+  }
 
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) applyState(JSON.parse(raw));
-      } catch (_) {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    })();
-  </script>
+  function showSummary() {
+    const d = gatherState();
+    const box = $('resultBox');
+    box.innerHTML = buildResultHTML(d);
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    persistIfEnabled();
+  }
+
+  // Share links
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('A gentle private starting point for safety and support: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+    $('emailShare').href = 'mailto:?subject=' + encodeURIComponent('Gentle safety support tool') + '&body=' + msg + url;
+  }
+
+  // Copy
+  async function copyText(text, successMsg) {
+    try { await navigator.clipboard.writeText(text); showToast(successMsg); }
+    catch(_) { showToast('Could not copy. Please copy manually.'); }
+  }
+
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo fetch failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    const d = gatherState();
+    showToast('Preparing your PDF…');
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(234, 239, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(26, 32, 48);
+    doc.text('Domestic Violence Safety & Support', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 85, 104);
+    doc.text('Gentle personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Reflection rows
+    const feelingsList = [...d.feelings, d.feelingOther].filter(Boolean).join(', ') || 'Not selected';
+    const rows = [
+      ['How you are feeling', feelingsList],
+      ['What has been happening', d.recentEvent || 'Not provided'],
+      ['What you wish was understood', d.wishUnderstood || 'Not provided'],
+      ['Hardest part of reaching out', d.barriers.join(', ') || 'Not selected'],
+      ['One small step today', d.smallSteps.join(', ') || 'Not selected'],
+      ['Warning signs noticed', d.checks.join(', ') || 'None selected'],
+      ['Message draft', d.reachOutDraft || 'Not written']
+    ];
+
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(234, 239, 248);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(74, 96, 128);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 48);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Closing note
+    if (y > pageH - 60) { doc.addPage(); y = margin; }
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.5);
+    doc.setTextColor(74, 96, 128);
+    const closingLines = doc.splitTextToSize('You can take one small step. You do not have to explain everything today. You deserve safety and support.', pageW - margin * 2);
+    doc.text(closingLines, margin, y);
+    y += closingLines.length * 12 + 16;
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 192, 216);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 96, 128);
+    doc.text('Understanding domestic violence — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['What domestic violence actually is',
+       'Domestic violence is not limited to physical harm. Research from the World Health Organization and the National Domestic Violence Hotline identifies a pattern of coercive control that can include emotional, financial, digital, sexual, and psychological abuse. The defining feature is not a single incident but a repeated pattern of behaviour used to maintain power and control. Many people do not recognise their experience as abuse because it does not match narrow definitions — but coercion, fear, and control are the core indicators.'],
+      ['Why leaving is not simple',
+       'Research by sociologist Evan Stark, who developed the theory of coercive control, and studies from the Domestic Violence Evidence Project consistently show that leaving an abusive relationship is statistically the most dangerous period for a survivor. Perpetrators often escalate when they perceive loss of control. This is why safety planning, timing, and support networks matter more than simply leaving. The question "why didn\'t they just leave?" fundamentally misunderstands the dynamics of abuse and danger.'],
+      ['The role of trauma bonding',
+       'Trauma bonding — sometimes called Stockholm syndrome in popular culture — is a psychological response to cycles of abuse and intermittent reinforcement. Research by Patrick Carnes and others in trauma psychology shows that the cycle of tension, incident, reconciliation, and calm creates neurochemical bonding similar to addiction. This is not weakness or stupidity. It is a neurological response to an environment of unpredictable threat and reward that makes separation genuinely difficult.'],
+      ['Coercive control and its long-term effects',
+       'A landmark 2012 study in the American Journal of Public Health found that psychological and emotional abuse — including isolation, monitoring, degradation, and financial control — produced mental health effects as severe as physical violence. Survivors of coercive control often report feeling disoriented, unable to trust their own perceptions, and uncertain whether their experience "counts." These are predictable responses to sustained psychological manipulation, not character flaws.'],
+      ['How connection and support change outcomes',
+       'Research from the University of Pennsylvania and the National Center for Domestic Violence consistently identifies social support as the single strongest predictor of survivor safety and recovery. This does not always mean formal services — one trusted person who believes the survivor and does not pressure them can be transformative. Calling a helpline even once, without any plan to leave, significantly increases the likelihood of eventual safety. You do not need to be ready. You just need to reach.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(74, 96, 128);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 32, 48);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 192, 216);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 96, 128);
+    doc.text('Support resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 32, 48);
+    [
+      'Find a helpline in your country: findahelpline.com',
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(176, 192, 216);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 152, 176);
+    doc.text('This tool supports reflection and awareness. If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
+
+    doc.save('domestic-violence-safety-support.pdf');
+    showToast('PDF downloaded.');
+  }
+
+  // Input listeners for auto-save
+  ['feelingOther','recentEvent','wishUnderstood','reachOutDraft'].forEach(id => {
+    $(id).addEventListener('input', persistIfEnabled);
+  });
+  document.querySelectorAll('.abuse-check').forEach(c => c.addEventListener('change', persistIfEnabled));
+  $('saveToggle').addEventListener('change', persistIfEnabled);
+
+  // Button listeners
+  $('buildSummaryBtn').addEventListener('click', showSummary);
+  $('pdfBtn').addEventListener('click', downloadPDF);
+  $('copyDraftBtn').addEventListener('click', () => copyText($('reachOutDraft').value || '', 'Draft copied.'));
+  $('copyDraftBtn2').addEventListener('click', () => copyText($('reachOutDraft').value || '', 'Draft copied.'));
+  $('copyLinkBtn').addEventListener('click', () => copyText(window.location.href, 'Link copied.'));
+  ['quickExitBtn','quickExitBtn2'].forEach(id => $(id).addEventListener('click', quickExit));
+  ['hideResetBtn','hideResetBtn2'].forEach(id => $(id).addEventListener('click', () => { clearAll(); showToast('Tool cleared.'); }));
+
+  // Init
+  buildChips('feelingChips', feelings);
+  buildChips('barrierChips', barriers);
+  buildChips('smallStepChips', smallSteps);
+  updateShareLinks();
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) applyState(JSON.parse(raw));
+  } catch(_) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  }
+}());
+</script>
 </body>
 </html>

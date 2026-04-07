@@ -1,591 +1,1145 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Grief After Violence Support Tool | Emotional Intelligence Developer</title>
-  <meta name="description" content="A gentle, reflective support space for grief after violence. Grounding, reflection, and a simple support plan for today." />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    :root{
-      --bg:#eef2f7;
-      --card:#ffffff;
-      --ink:#1f2937;
-      --muted:#475569;
-      --line:#dbe3ef;
-      --primary:#5b4ce0;
-      --primary-dark:#493cc0;
-      --soft:#f3f0ff;
-      --ok:#0f766e;
-      --warn:#92400e;
-      --focus:#0b5fff;
-      --chip:#e7eafe;
+    :root {
+      --bg: #f2f4f0;
+      --card: #ffffff;
+      --text: #1a2018;
+      --muted: #4a5848;
+      --hint: #8aa088;
+      --border: #ccd8c0;
+      --brand: #5a7a50;
+      --brand-light: #eaf2e8;
+      --brand-mid: #b0c8a8;
+      --accent: #7aaa68;
+      --accent-light: #e4f0e0;
+      --slate: #4a6070;
+      --slate-light: #e8ecf0;
+      --slate-mid: #b0c0cc;
+      --warm: #f8f6f2;
+      --gold: #7a6a30;
+      --gold-light: #f7f2e4;
+      --gold-mid: #d8c878;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --danger-bg: #fff0f0;
+      --danger-border: #f5a0a0;
+      --danger-text: #8b1a1a;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:linear-gradient(180deg,#edf2ff 0%,#f8fafc 40%,#eef2f7 100%);
-      color:var(--ink);
-      line-height:1.5;
-    }
-    a{color:#1e3a8a}
-    .skip-link{
-      position:absolute;left:12px;top:-44px;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;z-index:99
-    }
-    .skip-link:focus{top:10px}
-    .shell{max-width:920px;margin:0 auto;padding:16px}
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:20px;
-      box-shadow:0 8px 30px rgba(15,23,42,.08);
-      margin-bottom:14px;
-    }
-    h1{font-size:1.6rem;line-height:1.2;margin:0 0 8px}
-    h2{font-size:1.2rem;margin:0 0 10px}
-    p{margin:0 0 10px}
-    .lead{color:var(--muted)}
-    .note{
-      background:#fff8ed;border:1px solid #f6d9af;border-radius:12px;padding:12px;color:#5b3b0f;font-size:.97rem
-    }
-    .privacy{
-      background:#ecfeff;border:1px solid #bae6fd;border-radius:12px;padding:12px;font-size:.95rem
-    }
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:0;border-radius:12px;padding:12px 15px;font-weight:700;cursor:pointer;
-      background:var(--primary);color:white;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
-      min-height:46px;
-    }
-    .btn:hover{background:var(--primary-dark)}
-    .btn.secondary{background:#e2e8f0;color:#0f172a}
-    .btn.secondary:hover{background:#cfd8e3}
-    .btn.ghost{background:#fff;border:1px solid var(--line);color:#0f172a}
-    .btn:focus,.chip:focus,input:focus,textarea:focus,select:focus{
-      outline:3px solid var(--focus);outline-offset:2px
-    }
-    .share-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .share-wrap .btn{padding:10px 12px;font-size:.95rem}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      border:1px solid #c7d2fe;background:var(--chip);color:#1e1b4b;padding:10px 12px;border-radius:999px;cursor:pointer;
-      font-weight:600;min-height:44px
-    }
-    .chip.active{background:#dbe2ff;border-color:#7b8cff}
-    .progress-shell{margin-top:10px}
-    .progress-bar{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden}
-    .progress-bar > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#0ea5e9,#4f46e5)}
-    .small{font-size:.92rem;color:var(--muted)}
-    .hidden{display:none}
-    .stepper{border:1px solid var(--line);padding:14px;border-radius:14px;background:#fafcff}
-    .step-count{font-size:.9rem;color:var(--muted);margin-bottom:8px}
-    .question{font-weight:700;margin-bottom:10px}
-    .option{display:block;padding:10px 12px;border:1px solid #d8deea;border-radius:10px;margin-bottom:8px;background:#fff;cursor:pointer}
-    .option input{margin-right:8px}
-    textarea{
-      width:100%;min-height:92px;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit
-    }
-    .result-card{
-      border:1px solid #cbd5ff;background:var(--soft);border-radius:14px;padding:14px;margin-top:12px
-    }
-    ul{margin:8px 0 10px 20px;padding:0}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#eef2ff;padding:1px 6px;border-radius:6px}
-    .footer-nav{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
-    .footer-nav .btn{width:100%}
-    footer{color:var(--muted);font-size:.82rem;text-align:center;padding:8px 0 12px}
 
-    @media (min-width:700px){
-      .shell{padding:24px}
-      .card{padding:24px}
-      h1{font-size:2rem}
-      .footer-nav{grid-template-columns:repeat(4,minmax(0,1fr))}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
     }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .safety-note {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--danger-text);
+      font-weight: bold;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 8px;
+    }
+
+    .card-intro {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* NEEDS CHIPS */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: #fff;
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 8px 16px;
+      min-height: 40px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip:hover { border-color: var(--brand); color: var(--text); }
+    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    /* GROUNDING TIMER */
+    .grounding-card {
+      background: var(--slate-light);
+      border: 1px solid var(--slate-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .grounding-status {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 10px;
+      min-height: 22px;
+    }
+
+    .grounding-progress-wrap {
+      height: 6px;
+      background: var(--slate-mid);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .grounding-progress-fill {
+      height: 100%;
+      background: var(--slate);
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.5s linear;
+    }
+
+    /* STEPPER */
+    .stepper-card {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .stepper-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stepper-progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--brand-mid);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .stepper-progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.3s;
+    }
+
+    .stepper-count {
+      font-size: 12px;
+      color: var(--hint);
+      white-space: nowrap;
+    }
+
+    .stepper-prompt {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    /* CHOICE OPTIONS */
+    .choice-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: pointer;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      transition: border-color 0.15s;
+    }
+
+    .choice-option:hover { border-color: var(--brand); }
+    .choice-option input[type="radio"] { accent-color: var(--brand); cursor: pointer; }
+    .choice-option.selected { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
+
+    /* TEXT INPUT */
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    /* SUPPORT PLAN */
+    .plan-card {
+      background: var(--accent-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .plan-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    .plan-row {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--brand-mid);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .plan-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .plan-row-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+
+    .plan-row-value { color: var(--text); }
+
+    .plan-row-list {
+      padding-left: 18px;
+      margin: 4px 0;
+    }
+
+    .plan-row-list li { margin-bottom: 6px; color: var(--text); }
+
+    .safety-flag {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--danger-text);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .plan-closing {
+      font-size: 14px;
+      color: var(--brand);
+      font-style: italic;
+      text-align: center;
+      padding: 12px 16px;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      margin-top: 4px;
+    }
+
+    /* SAVE ROW */
+    .save-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .save-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      accent-color: var(--brand);
+      cursor: pointer;
+      margin-top: 3px;
+    }
+
+    /* PRIVACY NOTE */
+    .privacy-note {
+      font-size: 13px;
+      color: var(--hint);
+      margin-top: 8px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-slate { background: var(--slate); color: #fff; border-color: var(--slate); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .chip { width: 100%; justify-content: center; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link">Skip to content</a>
-<div class="shell">
-  <header class="card" aria-labelledby="title">
-    <h1 id="title">Grief After Violence Support</h1>
-    <p class="lead">A calm reflection space for moments when grief feels heavy, confusing, or lonely. You can move at your own pace and skip anything that does not feel right.</p>
-    <p class="note"><strong>This tool is informational and reflective.</strong> If you are in immediate danger, contact local emergency services.</p>
+<div class="container">
 
-    <div class="share-wrap" aria-label="Share this tool">
-      <button class="btn" id="shareNativeTop" type="button">Share</button>
-      <button class="btn secondary" id="copyLinkTop" type="button">Copy link</button>
-      <a class="btn ghost" id="waTop" target="_blank" rel="noopener noreferrer" href="#">WhatsApp</a>
-      <a class="btn ghost" id="fbTop" target="_blank" rel="noopener noreferrer" href="#">Facebook</a>
-      <a class="btn ghost" id="xTop" target="_blank" rel="noopener noreferrer" href="#">X</a>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Grief After Violence Support Tool</h1>
+    <p class="tagline">A calm reflection space for moments when grief feels heavy, confusing, or lonely. Move at your own pace — everything here is optional.</p>
+    <div class="safety-note" role="alert">
+      If you are in immediate danger, contact local emergency services now.
     </div>
   </header>
 
-  <main id="main-content" tabindex="-1">
-    <section class="card" aria-labelledby="needs-title">
-      <h2 id="needs-title">Right now, I need…</h2>
-      <p class="small">Choose any that fit. You can pick more than one.</p>
-      <div class="chips" id="needsChips"></div>
-    </section>
+  <!-- NEEDS CHIPS -->
+  <section class="card" aria-labelledby="needs-heading">
+    <p class="card-title" id="needs-heading">Right now, I need…</p>
+    <p class="card-intro">Choose any that feel true. You can pick more than one. These will shape your support plan.</p>
+    <div class="chip-wrap" id="needsChips" role="group" aria-label="What I need right now"></div>
+  </section>
 
-    <section class="card" aria-labelledby="grounding-title">
-      <h2 id="grounding-title">30–60 second grounding pause</h2>
-      <p class="small">If you want, you might place both feet on the floor, gently unclench your jaw, and take slower breaths.</p>
-      <div class="row">
-        <button class="btn" type="button" id="startGrounding">Start 45-second pause</button>
-        <button class="btn secondary" type="button" id="skipGrounding">Skip</button>
+  <!-- GROUNDING TIMER -->
+  <section class="card" aria-labelledby="grounding-heading">
+    <p class="card-title" id="grounding-heading">A 45-second grounding pause</p>
+    <p class="card-intro">If it feels right, place both feet on the floor, soften your jaw, and breathe a little slower. This is entirely optional.</p>
+
+    <div class="grounding-card">
+      <div class="grounding-status" id="groundingStatus">Press start when you are ready.</div>
+      <div class="grounding-progress-wrap" aria-hidden="true">
+        <div class="grounding-progress-fill" id="groundingFill"></div>
       </div>
-      <div class="progress-shell" aria-live="polite" id="groundingStatus">Not started yet.</div>
-      <div class="progress-bar" aria-hidden="true"><span id="groundingFill"></span></div>
-    </section>
-
-    <section class="card" aria-labelledby="reflection-title">
-      <h2 id="reflection-title">Gentle reflection</h2>
-      <p class="small">Short steps, one at a time. Everything is optional.</p>
-      <div class="stepper" id="stepper"></div>
-      <div class="row" style="margin-top:10px;">
-        <button class="btn secondary" type="button" id="prevBtn">Back</button>
-        <button class="btn ghost" type="button" id="skipBtn">Skip question</button>
-        <button class="btn ghost" type="button" id="dontBtn">I don’t want to answer</button>
-        <button class="btn" type="button" id="nextBtn">Next</button>
+      <div class="btn-row">
+        <button type="button" class="btn btn-slate" id="startGroundingBtn">Start 45 seconds</button>
+        <button type="button" class="btn btn-outline" id="skipGroundingBtn">Skip for now</button>
       </div>
-    </section>
+    </div>
 
-    <section class="card hidden" id="resultSection" aria-live="polite" aria-atomic="true">
-      <h2>My Support Plan for Today</h2>
-      <div id="resultCard" class="result-card"></div>
-      <div class="row" style="margin-top:12px;">
-        <button class="btn" type="button" id="pdfBtn">Save as PDF</button>
-        <button class="btn secondary" type="button" id="resetBtn">Reset / Start Over</button>
+    <div style="background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:14px 16px;font-size:14px;color:var(--muted);">
+      <strong style="color:var(--brand);">Breathing guide:</strong> Inhale gently for 4 counts… hold for 2… exhale slowly for 6. Notice one thing you can see and one thing you can feel.
+    </div>
+  </section>
+
+  <!-- REFLECTION STEPPER -->
+  <section class="card" aria-labelledby="reflection-heading">
+    <p class="card-title" id="reflection-heading">Gentle reflection</p>
+    <p class="card-intro">Eight short questions, one at a time. Every question can be skipped. There are no right or wrong answers here.</p>
+
+    <div class="stepper-card">
+      <div class="stepper-progress">
+        <div class="stepper-progress-bar">
+          <div class="stepper-progress-fill" id="stepperFill" style="width:0%"></div>
+        </div>
+        <span class="stepper-count" id="stepperCount">1 / 8</span>
       </div>
+      <div class="stepper-prompt" id="stepperPrompt"></div>
+      <div id="stepperOptions"></div>
+    </div>
 
-      <div class="share-wrap" aria-label="Share your reflection tool">
-        <button class="btn" id="shareNativeBottom" type="button">Share</button>
-        <button class="btn secondary" id="copyLinkBottom" type="button">Copy link</button>
-        <a class="btn ghost" id="waBottom" target="_blank" rel="noopener noreferrer" href="#">WhatsApp</a>
-        <a class="btn ghost" id="fbBottom" target="_blank" rel="noopener noreferrer" href="#">Facebook</a>
-        <a class="btn ghost" id="xBottom" target="_blank" rel="noopener noreferrer" href="#">X</a>
-      </div>
-    </section>
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" id="prevBtn">Back</button>
+      <button type="button" class="btn btn-outline" id="skipBtn">Skip this question</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Continue later (optional)</h2>
-      <div class="privacy">
-        <label>
-          <input id="saveToggle" type="checkbox" /> Save my progress on this device with local storage.
-        </label>
-        <p style="margin-top:8px">Privacy note: this tool does not ask for identifying details and does not send your answers anywhere. If this toggle is on, your draft is stored only in this browser.</p>
-      </div>
-    </section>
+  <!-- SUPPORT PLAN (hidden until generated) -->
+  <section class="card hidden" id="planSection" aria-live="polite">
+    <p class="card-title">My support plan for today</p>
+    <div id="planContent"></div>
 
-    <section class="card" id="help-now">
-      <h2>Get Help Now</h2>
-      <p>If you need urgent help or local support, you can find resources here.</p>
-      <p><a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">findahelpline.com</a></p>
-      <p><strong>If you are in immediate danger, contact local emergency services.</strong></p>
-    </section>
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn">Reset and start over</button>
+    </div>
 
-    <section class="card" aria-label="More resources">
-      <div class="footer-nav">
-        <a class="btn ghost" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener noreferrer">More Free Wellbeing Tools</a>
-        <a class="btn ghost" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener noreferrer">Help page</a>
-        <a class="btn ghost" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener noreferrer">Recommended books</a>
-        <a class="btn ghost" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener noreferrer">Support us</a>
-      </div>
-    </section>
-  </main>
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    </div>
+  </section>
 
-  <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
+  <!-- SAVE TOGGLE -->
+  <section class="card" aria-labelledby="save-heading">
+    <p class="card-title" id="save-heading">Continue later</p>
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save my progress on this device
+    </label>
+    <p class="privacy-note">This tool does not ask for identifying details and does not send your answers anywhere. If save is on, your draft is stored only in this browser.</p>
+  </section>
+
+  <!-- GET HELP NOW -->
+  <section class="card" aria-labelledby="help-heading">
+    <p class="card-title" id="help-heading">Get help now</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">If you need urgent help or local support, these resources are free and available in most countries.</p>
+    <div class="btn-row">
+      <a class="btn btn-slate" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline in your country</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
+
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not a diagnosis or substitute for professional care.
+    </p>
+  </footer>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-(() => {
-  const needs = [
-    "to breathe",
-    "to feel less alone",
-    "to make sense of my feelings",
-    "to sleep",
-    "to talk to someone",
-    "to honor what happened"
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'griefAfterViolenceV4';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const $ = id => document.getElementById(id);
+
+  const NEEDS = [
+    'to breathe',
+    'to feel less alone',
+    'to make sense of my feelings',
+    'to sleep',
+    'to talk to someone',
+    'to honour what happened'
   ];
 
-  const questions = [
-    { id:"q1", type:"choice", prompt:"What feels strongest right now?", options:["sadness","numbness","anger","fear","mixed feelings","I’m not sure"] },
-    { id:"q2", type:"text", prompt:"If you want, what has felt hardest today?" },
-    { id:"q3", type:"choice", prompt:"How has your body felt recently?", options:["very tense","tired","restless","shaky","a little calmer at moments"] },
-    { id:"q4", type:"choice", prompt:"How safe do you feel right now?", options:["I feel mostly safe","I feel unsure","I feel unsafe right now"] },
-    { id:"q5", type:"text", prompt:"Is there one small thing that gives even 1% comfort?" },
-    { id:"q6", type:"choice", prompt:"What kind of support might help today?", options:["quiet rest","a check-in with someone I trust","professional support","gentle movement","I’m not ready yet"] },
-    { id:"q7", type:"text", prompt:"What would you like to remember about your strength right now?" },
-    { id:"q8", type:"choice", prompt:"Would reaching out feel possible today?", options:["yes, likely","maybe later","not today"] }
+  const QUESTIONS = [
+    { id: 'q1', type: 'choice', prompt: 'What feels strongest right now?',
+      options: ['Sadness', 'Numbness', 'Anger', 'Fear', 'Mixed feelings', 'I am not sure'] },
+    { id: 'q2', type: 'text', prompt: 'If you want, what has felt hardest today?' },
+    { id: 'q3', type: 'choice', prompt: 'How has your body felt recently?',
+      options: ['Very tense', 'Tired', 'Restless', 'Shaky', 'A little calmer at moments'] },
+    { id: 'q4', type: 'choice', prompt: 'How safe do you feel right now?',
+      options: ['I feel mostly safe', 'I feel unsure', 'I feel unsafe right now'] },
+    { id: 'q5', type: 'text', prompt: 'Is there one small thing that gives even 1% comfort?' },
+    { id: 'q6', type: 'choice', prompt: 'What kind of support might help today?',
+      options: ['Quiet rest', 'A check-in with someone I trust', 'Professional support', 'Gentle movement', 'I am not ready yet'] },
+    { id: 'q7', type: 'text', prompt: 'What would you like to remember about your strength right now?' },
+    { id: 'q8', type: 'choice', prompt: 'Would reaching out feel possible today?',
+      options: ['Yes, likely', 'Maybe later', 'Not today'] }
   ];
 
-  const state = {
+  const NEEDS_MAP = {
+    'to breathe': 'Try 4 slow breaths: in for 4, hold for 2, out for 6, with a gentle hand on your chest.',
+    'to feel less alone': 'Send one short message to someone you trust: "Could you check in with me today?"',
+    'to make sense of my feelings': 'Name three feelings without judging them. Mixed and contradictory feelings are completely welcome.',
+    'to sleep': 'Create a 10-minute wind-down: dim lights, less screen brightness, and slow breathing before lying down.',
+    'to talk to someone': 'Choose one person you might contact today. You do not need to explain everything — just reaching out is enough.',
+    'to honour what happened': 'Light a candle, write a few words, or hold a quiet moment of remembrance — whatever feels true to you.'
+  };
+
+  let state = {
     needs: [],
     answers: {},
     step: 0,
     grounded: false,
-    saveOn: false,
-    planHtml: ""
+    saveOn: false
   };
 
-  const shareText = "A supportive reflection tool for grief after violence. You’re not alone.";
-  const saveKey = "griefAfterViolenceSupportState";
+  let groundingTimer = null;
+  let toastTimer;
 
-  const els = {
-    needsChips: document.getElementById("needsChips"),
-    stepper: document.getElementById("stepper"),
-    prevBtn: document.getElementById("prevBtn"),
-    nextBtn: document.getElementById("nextBtn"),
-    skipBtn: document.getElementById("skipBtn"),
-    dontBtn: document.getElementById("dontBtn"),
-    resultSection: document.getElementById("resultSection"),
-    resultCard: document.getElementById("resultCard"),
-    pdfBtn: document.getElementById("pdfBtn"),
-    resetBtn: document.getElementById("resetBtn"),
-    saveToggle: document.getElementById("saveToggle"),
-    startGrounding: document.getElementById("startGrounding"),
-    skipGrounding: document.getElementById("skipGrounding"),
-    groundingStatus: document.getElementById("groundingStatus"),
-    groundingFill: document.getElementById("groundingFill")
-  };
-
-  function setupShareLinks() {
-    const url = window.location.href;
-    const wa = `https://wa.me/?text=${encodeURIComponent(shareText + " " + url)}`;
-    const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    const x = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
-
-    ["waTop","waBottom"].forEach(id => document.getElementById(id).href = wa);
-    ["fbTop","fbBottom"].forEach(id => document.getElementById(id).href = fb);
-    ["xTop","xBottom"].forEach(id => document.getElementById(id).href = x);
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
   }
 
-  async function doNativeShare() {
-    const data = { title: "Grief After Violence Support Tool", text: shareText, url: window.location.href };
-    if (navigator.share) {
-      try { await navigator.share(data); } catch (_) {}
-      return;
-    }
-    copyLink();
-    alert("Sharing is not available on this browser yet. The link has been copied instead.");
-  }
-
-  async function copyLink() {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch (_) {
-      const t = document.createElement("textarea");
-      t.value = url;
-      document.body.appendChild(t);
-      t.select();
-      document.execCommand("copy");
-      t.remove();
-    }
-  }
-
+  // NEEDS CHIPS
   function renderNeeds() {
-    els.needsChips.innerHTML = "";
-    needs.forEach(label => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "chip" + (state.needs.includes(label) ? " active" : "");
-      b.textContent = label;
-      b.setAttribute("aria-pressed", state.needs.includes(label) ? "true" : "false");
-      b.addEventListener("click", () => {
+    const wrap = $('needsChips');
+    wrap.innerHTML = '';
+    NEEDS.forEach(label => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip' + (state.needs.includes(label) ? ' active' : '');
+      btn.textContent = label;
+      btn.setAttribute('aria-pressed', state.needs.includes(label) ? 'true' : 'false');
+      btn.addEventListener('click', () => {
         if (state.needs.includes(label)) {
           state.needs = state.needs.filter(v => v !== label);
         } else {
           state.needs.push(label);
         }
         renderNeeds();
-        persistIfOn();
+        persist();
       });
-      els.needsChips.appendChild(b);
+      wrap.appendChild(btn);
     });
   }
 
-  function currentQ() { return questions[state.step]; }
+  // STEPPER
+  function renderStep() {
+    const q = QUESTIONS[state.step];
+    const pct = Math.round((state.step / QUESTIONS.length) * 100);
+    $('stepperFill').style.width = pct + '%';
+    $('stepperCount').textContent = (state.step + 1) + ' / ' + QUESTIONS.length;
+    $('stepperPrompt').textContent = q.prompt;
 
-  function renderStepper() {
-    const q = currentQ();
-    const saved = state.answers[q.id] || "";
-    let html = `<div class="step-count">Question ${state.step + 1} of ${questions.length}</div><div class="question">${q.prompt}</div>`;
-    if (q.type === "choice") {
+    const container = $('stepperOptions');
+    container.innerHTML = '';
+    $('prevBtn').disabled = state.step === 0;
+    $('nextBtn').textContent = state.step === QUESTIONS.length - 1 ? 'Generate my support plan' : 'Next';
+
+    if (q.type === 'choice') {
+      const saved = state.answers[q.id] || '';
       q.options.forEach(opt => {
-        const checked = saved === opt ? "checked" : "";
-        html += `<label class="option"><input type="radio" name="choice" value="${escapeHtml(opt)}" ${checked}/> ${escapeHtml(opt)}</label>`;
+        const label = document.createElement('label');
+        label.className = 'choice-option' + (saved === opt ? ' selected' : '');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'stepChoice';
+        radio.value = opt;
+        radio.checked = saved === opt;
+        radio.addEventListener('change', () => {
+          container.querySelectorAll('.choice-option').forEach(l => l.classList.remove('selected'));
+          label.classList.add('selected');
+        });
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(' ' + opt));
+        container.appendChild(label);
       });
     } else {
-      html += `<textarea id="textInput" maxlength="500" placeholder="Write a short note if you want...">${escapeHtml(saved)}</textarea>`;
+      const ta = document.createElement('textarea');
+      ta.maxLength = 500;
+      ta.placeholder = 'Write a short note if you want — or leave it blank…';
+      ta.value = state.answers[q.id] || '';
+      container.appendChild(ta);
     }
-    els.stepper.innerHTML = html;
-    els.prevBtn.disabled = state.step === 0;
-    els.nextBtn.textContent = state.step === questions.length - 1 ? "Generate my support plan" : "Next";
   }
 
-  function recordCurrentAnswer(valOverride) {
-    const q = currentQ();
-    let value = "";
-    if (typeof valOverride === "string") {
-      value = valOverride;
-    } else if (q.type === "choice") {
-      const selected = document.querySelector("input[name='choice']:checked");
-      value = selected ? selected.value : "";
+  function readCurrentAnswer() {
+    const q = QUESTIONS[state.step];
+    if (q.type === 'choice') {
+      const checked = document.querySelector('input[name="stepChoice"]:checked');
+      state.answers[q.id] = checked ? checked.value : (state.answers[q.id] || '');
     } else {
-      const txt = document.getElementById("textInput");
-      value = txt ? txt.value.trim() : "";
+      const ta = $('stepperOptions').querySelector('textarea');
+      state.answers[q.id] = ta ? ta.value.trim() : '';
     }
-    state.answers[q.id] = value;
-    persistIfOn();
   }
 
-  function gentleStepsFromNeeds() {
-    const map = {
-      "to breathe":"Try 4 slow breaths: in for 4, out for 6, with a gentle hand on your chest.",
-      "to feel less alone":"Send one short message: “Could you check in with me today?”",
-      "to make sense of my feelings":"Name three feelings without judging them. Mixed feelings are welcome.",
-      "to sleep":"Create a 10-minute wind-down: dim lights, less phone brightness, and slow breathing.",
-      "to talk to someone":"Choose one person you might contact when you feel ready.",
-      "to honor what happened":"Light a candle, write a few words, or hold a quiet minute of remembrance."
-    };
-    const picks = state.needs.length ? state.needs : ["to breathe","to feel less alone","to make sense of my feelings"];
-    return picks.slice(0,3).map(n => map[n]);
-  }
-
-  function buildPlan() {
-    const steps = gentleStepsFromNeeds();
-    const kindness = [
-      "My grief is real, and my pace matters.",
-      "Small steps still count, especially today."
-    ];
-    const reachOutBase = state.answers.q8 === "yes, likely"
-      ? "If you want, you might reach out to someone you trust today and share one line about how you’re feeling."
-      : "If it feels possible later, you might keep one name ready for support (friend, family member, or professional).";
-
-    const unsafe = state.answers.q4 === "I feel unsafe right now";
-    const safety = unsafe
-      ? `<p><strong>Safety check:</strong> You noted feeling unsafe. If you want urgent local support, use <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">findahelpline.com</a>. If you are in immediate danger, contact local emergency services.</p>`
-      : "";
-
-    const highlight = [state.answers.q1,state.answers.q2,state.answers.q6].filter(Boolean).slice(0,3).map(v => `<li>${escapeHtml(v)}</li>`).join("");
-
-    const html = `
-      <p><strong>Selected needs:</strong> ${state.needs.length ? state.needs.map(escapeHtml).join(", ") : "Not selected"}</p>
-      <p><strong>Key reflection highlights:</strong></p>
-      <ul>${highlight || "<li>No highlights added — that is completely okay.</li>"}</ul>
-      <p><strong>3 gentle next steps</strong></p>
-      <ul>${steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>
-      <p><strong>2 self-kindness statements</strong></p>
-      <ul>${kindness.map(k => `<li>${escapeHtml(k)}</li>`).join("")}</ul>
-      <p><strong>Reach out suggestion</strong><br>${escapeHtml(reachOutBase)}</p>
-      ${safety}
-    `;
-
-    state.planHtml = html;
-    els.resultCard.innerHTML = html;
-    els.resultSection.classList.remove("hidden");
-    els.resultSection.scrollIntoView({behavior:"smooth", block:"start"});
-    persistIfOn();
-  }
-
-  function nextStep() {
-    recordCurrentAnswer();
-    if (state.step < questions.length - 1) {
+  function goNext() {
+    readCurrentAnswer();
+    if (state.step < QUESTIONS.length - 1) {
       state.step++;
-      renderStepper();
-      return;
+      renderStep();
+      persist();
+    } else {
+      buildPlan();
     }
-    buildPlan();
   }
 
-  function prevStep() {
-    recordCurrentAnswer();
-    if (state.step > 0) state.step--;
-    renderStepper();
+  function goPrev() {
+    readCurrentAnswer();
+    if (state.step > 0) {
+      state.step--;
+      renderStep();
+      persist();
+    }
   }
 
-  function skipQ() {
-    recordCurrentAnswer("");
-    nextStep();
+  function skipStep() {
+    state.answers[QUESTIONS[state.step].id] = '';
+    if (state.step < QUESTIONS.length - 1) {
+      state.step++;
+      renderStep();
+      persist();
+    } else {
+      buildPlan();
+    }
   }
 
-  function dontAnswer() {
-    recordCurrentAnswer("I don't want to answer");
-    nextStep();
+  // PLAN BUILDER
+  function buildPlan() {
+    const picks = state.needs.length ? state.needs : ['to breathe', 'to feel less alone', 'to make sense of my feelings'];
+    const steps = picks.slice(0, 3).map(n => NEEDS_MAP[n]).filter(Boolean);
+
+    const highlights = [state.answers.q1, state.answers.q2, state.answers.q7].filter(Boolean);
+    const reachOut = state.answers.q8 === 'Yes, likely'
+      ? 'You mentioned reaching out feels possible today. You might send one brief, honest message to someone you trust — you do not need to explain everything.'
+      : 'If reaching out does not feel possible yet, that is okay. When you are ready, keep one trusted name in mind.';
+
+    const unsafe = state.answers.q4 === 'I feel unsafe right now';
+
+    let html = '<div class="plan-title">Your support plan for today</div>';
+
+    html += '<div class="plan-row"><div class="plan-row-label">What I need right now</div><div class="plan-row-value">' +
+      (state.needs.length ? state.needs.join(', ') : 'Not selected — and that is okay.') + '</div></div>';
+
+    if (highlights.length) {
+      html += '<div class="plan-row"><div class="plan-row-label">What I noticed</div><div class="plan-row-value"><ul class="plan-row-list">' +
+        highlights.map(h => '<li>' + h + '</li>').join('') + '</ul></div></div>';
+    }
+
+    html += '<div class="plan-row"><div class="plan-row-label">Three gentle next steps</div><div class="plan-row-value"><ul class="plan-row-list">' +
+      steps.map(s => '<li>' + s + '</li>').join('') + '</ul></div></div>';
+
+    html += '<div class="plan-row"><div class="plan-row-label">Two self-kindness reminders</div><div class="plan-row-value"><ul class="plan-row-list">' +
+      '<li>My grief is real, and my pace matters.</li>' +
+      '<li>Small steps still count, especially today.</li>' +
+      '</ul></div></div>';
+
+    html += '<div class="plan-row"><div class="plan-row-label">Reaching out</div><div class="plan-row-value">' + reachOut + '</div></div>';
+
+    if (unsafe) {
+      html += '<div class="safety-flag">You noted feeling unsafe right now. If you need urgent local support, <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> can help. If you are in immediate danger, please contact emergency services now.</div>';
+    }
+
+    html += '<div class="plan-closing">You reached out for support today. That matters.</div>';
+
+    $('planContent').innerHTML = html;
+    $('planSection').classList.remove('hidden');
+    $('planSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    persist();
+  }
+
+  // GROUNDING
+  $('startGroundingBtn').addEventListener('click', () => {
+    clearInterval(groundingTimer);
+    let elapsed = 0;
+    const total = 45;
+    $('groundingFill').style.width = '0%';
+    $('groundingStatus').textContent = 'Grounding in progress. Breathe gently. ' + total + ' seconds.';
+
+    groundingTimer = setInterval(() => {
+      elapsed++;
+      const pct = Math.min((elapsed / total) * 100, 100);
+      $('groundingFill').style.width = pct + '%';
+      if (elapsed >= total) {
+        clearInterval(groundingTimer);
+        $('groundingStatus').textContent = 'Grounding pause complete. You might notice one thing you can see and one thing you can feel.';
+        state.grounded = true;
+        persist();
+      } else {
+        $('groundingStatus').textContent = 'Grounding in progress — ' + (total - elapsed) + ' seconds remaining.';
+      }
+    }, 1000);
+  });
+
+  $('skipGroundingBtn').addEventListener('click', () => {
+    clearInterval(groundingTimer);
+    $('groundingStatus').textContent = 'Skipped for now — you can return to this pause anytime.';
+    $('groundingFill').style.width = '0%';
+    state.grounded = false;
+    persist();
+  });
+
+  // SAVE / LOAD
+  function persist() {
+    if (!state.saveOn) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        needs: state.needs,
+        answers: state.answers,
+        step: state.step,
+        grounded: state.grounded,
+        saveOn: state.saveOn
+      }));
+    } catch(_) {}
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d || !d.saveOn) return;
+      state.saveOn = true;
+      state.needs = Array.isArray(d.needs) ? d.needs : [];
+      state.answers = d.answers || {};
+      state.step = typeof d.step === 'number' ? Math.max(0, Math.min(d.step, QUESTIONS.length - 1)) : 0;
+      state.grounded = Boolean(d.grounded);
+      $('saveToggle').checked = true;
+      if (state.grounded) {
+        $('groundingFill').style.width = '100%';
+        $('groundingStatus').textContent = 'Grounding pause previously completed.';
+      }
+    } catch(_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    }
   }
 
   function resetAll() {
-    state.needs = [];
-    state.answers = {};
-    state.step = 0;
-    state.grounded = false;
-    state.planHtml = "";
-    els.resultSection.classList.add("hidden");
-    els.groundingStatus.textContent = "Not started yet.";
-    els.groundingFill.style.width = "0%";
+    if (!confirm('Reset all your answers and start over?')) return;
+    state = { needs: [], answers: {}, step: 0, grounded: false, saveOn: false };
+    $('saveToggle').checked = false;
+    $('groundingFill').style.width = '0%';
+    $('groundingStatus').textContent = 'Press start when you are ready.';
+    $('planSection').classList.add('hidden');
+    clearInterval(groundingTimer);
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
     renderNeeds();
-    renderStepper();
-    if (state.saveOn) persistIfOn();
-    else localStorage.removeItem(saveKey);
-    window.scrollTo({top:0,behavior:"smooth"});
+    renderStep();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Reset complete.');
   }
 
-  let groundingTimer = null;
-  function startGrounding() {
-    const total = 45;
-    let elapsed = 0;
-    clearInterval(groundingTimer);
-    els.groundingStatus.textContent = "Grounding in progress. Breathe gently. 45 seconds.";
-    els.groundingFill.style.width = "0%";
-    groundingTimer = setInterval(() => {
-      elapsed += 1;
-      const pct = Math.min((elapsed / total) * 100, 100);
-      els.groundingFill.style.width = pct + "%";
-      els.groundingStatus.textContent = elapsed >= total
-        ? "Grounding pause complete. You might notice one thing you can see and one thing you can feel."
-        : `Grounding in progress: ${total - elapsed} seconds left.`;
-      if (elapsed >= total) {
-        clearInterval(groundingTimer);
-        state.grounded = true;
-        persistIfOn();
-      }
-    }, 1000);
-  }
-
-  function skipGrounding() {
-    clearInterval(groundingTimer);
-    els.groundingStatus.textContent = "Grounding skipped. You can return to this pause anytime.";
-    els.groundingFill.style.width = "0%";
-    state.grounded = false;
-    persistIfOn();
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  function persistIfOn() {
-    if (!state.saveOn) return;
-    const toSave = {
-      needs: state.needs,
-      answers: state.answers,
-      step: state.step,
-      grounded: state.grounded,
-      planHtml: state.planHtml,
-      saveOn: state.saveOn
-    };
-    localStorage.setItem(saveKey, JSON.stringify(toSave));
-  }
-
-  function restoreState() {
-    const raw = localStorage.getItem(saveKey);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw);
-      if (!parsed || !parsed.saveOn) return;
-      state.saveOn = true;
-      state.needs = Array.isArray(parsed.needs) ? parsed.needs : [];
-      state.answers = parsed.answers || {};
-      state.step = Number.isInteger(parsed.step) ? Math.min(Math.max(parsed.step,0),questions.length-1) : 0;
-      state.grounded = !!parsed.grounded;
-      state.planHtml = parsed.planHtml || "";
-      els.saveToggle.checked = true;
-      if (state.grounded) {
-        els.groundingStatus.textContent = "Grounding pause previously completed.";
-        els.groundingFill.style.width = "100%";
-      }
-      if (state.planHtml) {
-        els.resultCard.innerHTML = state.planHtml;
-        els.resultSection.classList.remove("hidden");
-      }
-    } catch (_) {}
-  }
-
-  function savePdf() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit:"pt", format:"a4" });
-    const left = 40;
-    const width = 515;
-    let y = 32;
-
-    const addWrap = (text, size=11, gap=14) => {
-      doc.setFontSize(size);
-      const lines = doc.splitTextToSize(text, width);
-      doc.text(lines, left, y);
-      y += lines.length * gap + 2;
-    };
-
-    doc.setFont("helvetica","bold");
-    addWrap("https://emotionalintelligencedeveloper.com/", 11, 13);
-    y += 2;
-    addWrap("Grief After Violence — My Support Plan for Today", 16, 18);
-    doc.setFont("helvetica","normal");
-    addWrap(`Date: ${new Date().toLocaleDateString()}`, 11, 14);
-
-    addWrap(`Selected needs: ${state.needs.length ? state.needs.join(", ") : "Not selected"}`);
-
-    const highlights = [state.answers.q1, state.answers.q2, state.answers.q6, state.answers.q7]
-      .filter(Boolean)
-      .slice(0, 3)
-      .map((h, i) => `${i+1}. ${h}`)
-      .join("  ");
-    addWrap(`Key reflection highlights: ${highlights || "None added"}`);
-
-    const steps = gentleStepsFromNeeds();
-    addWrap("Today’s Support Plan:", 12, 14);
-    steps.forEach((s, i) => addWrap(`- Step ${i+1}: ${s}`));
-    addWrap("- Self-kindness: My grief is real, and my pace matters.");
-    addWrap("- Self-kindness: Small steps still count, especially today.");
-
-    const reachOut = state.answers.q8 === "yes, likely"
-      ? "Reach out (optional): You might send one brief check-in message to someone you trust."
-      : "Reach out (optional): If you want, keep one trusted contact name ready for later.";
-    addWrap(reachOut);
-
-    if (state.answers.q4 === "I feel unsafe right now") {
-      addWrap("Safety check: You marked that you feel unsafe right now. If you need urgent help or local support, you can find resources here: https://findahelpline.com/");
-    }
-
-    addWrap("Help links: https://findahelpline.com/");
-    addWrap("If you are in immediate danger, contact local emergency services.");
-
-    doc.save("grief-after-violence-support-plan.pdf");
-  }
-
-  // Bindings
-  document.getElementById("shareNativeTop").addEventListener("click", doNativeShare);
-  document.getElementById("shareNativeBottom").addEventListener("click", doNativeShare);
-  document.getElementById("copyLinkTop").addEventListener("click", copyLink);
-  document.getElementById("copyLinkBottom").addEventListener("click", copyLink);
-
-  els.prevBtn.addEventListener("click", prevStep);
-  els.nextBtn.addEventListener("click", nextStep);
-  els.skipBtn.addEventListener("click", skipQ);
-  els.dontBtn.addEventListener("click", dontAnswer);
-  els.pdfBtn.addEventListener("click", savePdf);
-  els.resetBtn.addEventListener("click", resetAll);
-  els.startGrounding.addEventListener("click", startGrounding);
-  els.skipGrounding.addEventListener("click", skipGrounding);
-
-  els.saveToggle.addEventListener("change", (e) => {
-    state.saveOn = !!e.target.checked;
-    if (!state.saveOn) localStorage.removeItem(saveKey);
-    else persistIfOn();
+  $('saveToggle').addEventListener('change', () => {
+    state.saveOn = $('saveToggle').checked;
+    if (!state.saveOn) { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} }
+    else persist();
+    showToast(state.saveOn ? 'Progress will be saved.' : 'Save disabled.');
   });
 
-  // Init
-  setupShareLinks();
-  restoreState();
+  // SHARE
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('A gentle support tool for grief after violence — you are not alone: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    showToast('Preparing your PDF…');
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(234, 242, 232);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(26, 32, 24);
+    doc.text('Grief After Violence — Support Plan for Today', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 88, 72);
+    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Support plan rows
+    const picks = state.needs.length ? state.needs : ['to breathe', 'to feel less alone', 'to make sense of my feelings'];
+    const steps = picks.slice(0, 3).map(n => NEEDS_MAP[n]).filter(Boolean);
+    const highlights = [state.answers.q1, state.answers.q2, state.answers.q7].filter(Boolean);
+    const reachOut = state.answers.q8 === 'Yes, likely'
+      ? 'Reaching out feels possible today. Send one honest, brief message to someone you trust.'
+      : 'Keep one trusted name in mind for when you feel ready.';
+
+    const rows = [
+      ['What I need right now', state.needs.length ? state.needs.join(', ') : 'Not selected'],
+      ['What I noticed', highlights.length ? highlights.join(' | ') : 'Not provided'],
+      ['Body feeling', state.answers.q3 || 'Not answered'],
+      ['Safety check', state.answers.q4 || 'Not answered'],
+      ['Something that helps', state.answers.q5 || 'Not answered'],
+      ['Support that might help', state.answers.q6 || 'Not answered']
+    ];
+
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(234, 242, 232);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(90, 122, 80);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 24);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Gentle steps
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(176, 200, 168);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(90, 122, 80);
+    doc.text('Three gentle next steps', margin, y);
+    y += 14;
+    steps.forEach((s, i) => {
+      if (y > pageH - 60) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 24);
+      const lines = doc.splitTextToSize((i + 1) + '. ' + s, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 12 + 6;
+    });
+
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(90, 122, 80);
+    doc.text('Self-kindness reminders', margin, y);
+    y += 14;
+    ['My grief is real, and my pace matters.', 'Small steps still count, especially today.'].forEach(k => {
+      if (y > pageH - 60) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 24);
+      doc.text('• ' + k, margin, y);
+      y += 14;
+    });
+
+    y += 4;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(26, 32, 24);
+    const reachLines = doc.splitTextToSize('Reaching out: ' + reachOut, pageW - margin * 2);
+    doc.text(reachLines, margin, y);
+    y += reachLines.length * 12 + 12;
+
+    if (state.answers.q4 === 'I feel unsafe right now') {
+      if (y > pageH - 60) { doc.addPage(); y = margin; }
+      doc.setFillColor(255, 240, 240);
+      const safetyLines = doc.splitTextToSize('Safety: You noted feeling unsafe. If you need urgent support, use findahelpline.com. If in immediate danger, contact emergency services now.', pageW - margin * 2 - 20);
+      const sh = safetyLines.length * 12 + 20;
+      doc.roundedRect(margin, y, pageW - margin * 2, sh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(139, 26, 26);
+      doc.text('SAFETY', margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.3);
+      doc.text(safetyLines, margin + 10, y + 26);
+      y += sh + 10;
+    }
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 200, 168);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(90, 122, 80);
+    doc.text('Understanding grief after violence — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['What grief after violence looks like',
+       'Grief following violence — whether direct harm, the loss of someone to violence, or witnessing it — does not follow a predictable path. Research by psychologist George Bonanno at Columbia University shows that grief trajectories vary enormously. Some people experience delayed grief; others oscillate between acute distress and apparent stability. Both are normal. There is no correct way to grieve, and no correct timeline.'],
+      ['Why numbness and anger are part of grief',
+       'It is common for grief after violent events to include emotions that do not feel like "grief" — anger, numbness, fear, hypervigilance, and guilt. Research in trauma psychology, including work from Bessel van der Kolk documented in "The Body Keeps the Score," confirms that violent loss activates the nervous system\'s threat-response, producing emotional and physical symptoms that differ from non-violent grief. These are not signs of weakness or wrong feeling — they are physiological responses to an overwhelming event.'],
+      ['The role of safety in processing grief',
+       'Processing grief after violence requires a baseline sense of safety. Research in trauma-informed care identifies the inability to feel safe — in one\'s body, environment, or relationships — as the primary barrier to grief integration. This is why grounding exercises and small steps matter: they are not distractions from grief but conditions that make working through grief possible. Safety first; processing second.'],
+      ['What actually helps — evidence-based approaches',
+       'Research across multiple studies of trauma and grief identifies several consistently helpful approaches: connection with others (even brief contact), maintaining small routines, physical grounding (slow breathing, movement), and naming emotions rather than suppressing them. Therapies including Prolonged Grief Disorder treatment, Trauma-Focused CBT, and EMDR have shown measurable benefit for complicated grief following violent loss. Professional support is not a sign of weakness — for many people it is the most effective path.'],
+      ['You are not alone — even when it feels that way',
+       'Research on social support and grief consistently shows that perceived isolation worsens grief outcomes, while even limited connection — a message, a brief conversation, being seen — significantly improves them. If reaching out feels impossible, research supports taking even the smallest step: sending one line, saying one honest thing. The research is clear that humans recover better together than alone, even when togetherness is only partial and imperfect.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(90, 122, 80);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 32, 24);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 200, 168);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(90, 122, 80);
+    doc.text('Support resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 32, 24);
+    [
+      'Find a helpline: findahelpline.com',
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(176, 200, 168);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 160, 136);
+    doc.text('This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.', margin, pageH - 22);
+
+    doc.save('grief-after-violence-support.pdf');
+    showToast('PDF downloaded.');
+  }
+
+  // WIRE UP
+  $('prevBtn').addEventListener('click', goPrev);
+  $('nextBtn').addEventListener('click', goNext);
+  $('skipBtn').addEventListener('click', skipStep);
+  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+  $('resetBtn').addEventListener('click', resetAll);
+
+  // INIT
+  loadState();
   renderNeeds();
-  renderStepper();
-})();
+  renderStep();
+  updateShareLinks();
+}());
 </script>
 </body>
 </html>

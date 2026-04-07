@@ -4,660 +4,1171 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Distress Tolerance Coping Tool | Emotional Intelligence Developer</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #eef6ff;
+      --bg: #f0f4f8;
       --card: #ffffff;
-      --ink: #1f2937;
-      --muted: #5f6c80;
-      --primary: #2563eb;
-      --pink: #ec4899;
-      --orange: #f59e0b;
-      --green: #10b981;
-      --purple: #8b5cf6;
-      --red: #ef4444;
-      --ring: 0 0 0 3px rgba(37, 99, 235, 0.25);
-      --radius: 18px;
-      --shadow: 0 10px 30px rgba(31, 41, 55, 0.12);
+      --text: #1a2030;
+      --muted: #4a5568;
+      --hint: #8a98b0;
+      --border: #d0d8e8;
+      --brand: #3a6a98;
+      --brand-light: #e8eff8;
+      --brand-mid: #a8c0d8;
+      --accent: #5a90c8;
+      --accent-light: #e4eef8;
+      --teal: #3a7a7a;
+      --teal-light: #e4f0f0;
+      --teal-mid: #a0c8c8;
+      --rose: #8a4a60;
+      --rose-light: #f7eaee;
+      --rose-mid: #d0a0b0;
+      --gold: #7a6a30;
+      --gold-light: #f7f2e4;
+      --gold-mid: #d8c878;
+      --warm: #f8f6f2;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --danger-bg: #fff0f0;
+      --danger-border: #f5a0a0;
+      --danger-text: #8b1a1a;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--ink);
-      background: radial-gradient(circle at 10% 10%, #e0ecff 0, #eef6ff 45%, #f8fbff 100%);
-      line-height: 1.5;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
     }
 
     .container {
-      max-width: 980px;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 14px 12px 38px;
+      padding: 20px 16px 40px;
     }
 
-    .hero, .panel, .summary-panel, .help-panel {
+    /* HEADER */
+    .header {
       background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 2px solid #dbeafe;
-      padding: 16px;
-      margin: 12px 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
     }
 
-    h1, h2, h3 { margin: 0 0 10px; line-height: 1.2; }
-    h1 { font-size: clamp(1.55rem, 4vw, 2.1rem); }
-    h2 { font-size: clamp(1.15rem, 3vw, 1.45rem); }
-    p { margin: 0 0 10px; }
-
-    .lead { color: var(--muted); }
-
-    .button-row, .share-row {
+    .logo-wrap {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .comic-btn {
-      appearance: none;
-      border: none;
-      cursor: pointer;
-      border-radius: 999px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      padding: 11px 16px;
-      color: white;
-      text-decoration: none;
-      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 46px;
-      transform: translateY(0);
-      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18), 0 8px 16px rgba(0, 0, 0, 0.14);
-      transition: transform .14s ease, filter .2s ease;
+      gap: 14px;
+      margin-bottom: 16px;
     }
 
-    .comic-btn:hover { transform: translateY(-2px) scale(1.02); filter: saturate(1.08); }
-    .comic-btn:active { transform: translateY(2px) scale(0.98); }
-    .comic-btn:focus-visible { outline: none; box-shadow: var(--ring), 0 4px 0 rgba(0, 0, 0, .2); }
-
-    .btn-help { background: linear-gradient(135deg, #ef4444, #f97316); }
-    .btn-books { background: linear-gradient(135deg, #7c3aed, #ec4899); }
-    .btn-support { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
-    .btn-tools { background: linear-gradient(135deg, #10b981, #059669); }
-
-    .step {
-      border: 1px dashed #bfdbfe;
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
-      background: #f8fbff;
-    }
-
-    .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    .chip {
-      border: 2px solid #cbd5e1;
-      border-radius: 999px;
-      background: #fff;
-      padding: 9px 12px;
-      font-weight: 700;
-      cursor: pointer;
-      min-height: 42px;
-    }
-
-    .chip.active { border-color: var(--primary); background: #dbeafe; }
-    .chip:focus-visible { outline: none; box-shadow: var(--ring); }
-
-    .time-option {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 6px 8px 6px 0;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
+    .logo {
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
-      background: #fff;
-      min-height: 42px;
-      cursor: pointer;
-      font-weight: 700;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
     }
 
-    .time-option input { accent-color: var(--primary); }
-
-    .slider-row { display: flex; gap: 12px; align-items: center; }
-    #distressValue {
-      min-width: 42px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 900;
-      background: #e0ecff;
-      border-radius: 10px;
-      padding: 4px;
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      line-height: 1.3;
     }
 
-    input[type="range"] { width: 100%; accent-color: var(--primary); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .skill {
-      border: 1px solid #c7d2fe;
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-    }
-
-    .skill-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
+    h1 {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
       margin-bottom: 8px;
     }
 
-    .skill label {
-      font-weight: 800;
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .disclaimer {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* HELP PANEL */
+    .help-panel {
+      display: none;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .help-panel.open { display: block; }
+
+    .help-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--danger-text);
+      margin-bottom: 8px;
+    }
+
+    .help-body {
+      font-size: 14px;
+      color: var(--danger-text);
+      line-height: 1.65;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 8px;
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .card-intro {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    /* SLIDER */
+    .slider-card {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .slider-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--brand);
+      height: 6px;
+    }
+
+    .slider-value {
+      min-width: 44px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--brand);
+      background: #fff;
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
+    }
+
+    /* SITUATION CHIPS */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      background: #fff;
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 7px 16px;
+      min-height: 38px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip:hover { border-color: var(--brand); color: var(--text); }
+    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    /* TIME RADIOS */
+    .time-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .time-option {
+      background: #fff;
+      border: 1.5px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-    }
-
-    .skill .done {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: .95rem;
-      color: #334155;
-      font-weight: 600;
-    }
-
-    .small {
+      font-family: "Georgia", serif;
+      font-size: 14px;
       color: var(--muted);
-      font-size: .93rem;
+      transition: all 0.15s;
     }
 
-    .timer {
-      margin-top: 8px;
+    .time-option:has(input:checked) {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .time-option input[type="radio"] { accent-color: #fff; cursor: pointer; }
+
+    /* FIELDS */
+    .field { margin-bottom: 14px; }
+
+    .field-label {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      min-height: 72px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a98b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* SKILL CARDS */
+    .skills-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 540px) {
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .skill-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 14px 16px;
+      transition: border-color 0.15s;
+    }
+
+    .skill-card.selected { border-color: var(--brand); background: var(--brand-light); }
+
+    .skill-head {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .timer button {
-      border: 0;
-      border-radius: 10px;
-      padding: 8px 10px;
-      font-weight: 700;
-      cursor: pointer;
-      min-height: 40px;
-    }
-
-    .start { background: #2563eb; color: #fff; }
-    .stop { background: #e2e8f0; color: #111827; }
-    .timeleft {
-      font-weight: 800;
-      background: #f1f5f9;
-      border-radius: 10px;
-      padding: 6px 10px;
-      min-width: 65px;
-      text-align: center;
-    }
-
-    .box-breath {
-      margin-top: 8px;
-      border: 2px solid #c7d2fe;
-      border-radius: 12px;
-      padding: 10px;
-      background: #eef2ff;
-      display: none;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      margin-bottom: 8px;
     }
+
+    .skill-pick {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .skill-pick input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    .skill-done {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--hint);
+      cursor: pointer;
+    }
+
+    .skill-done input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+
+    .skill-instructions {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    /* SKILL TIMER */
+    .skill-timer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .timer-display {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-sm);
+      padding: 4px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--brand);
+      min-width: 52px;
+      text-align: center;
+    }
+
+    /* BOX BREATHING GUIDE */
+    .box-guide {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    .box-guide.active { display: flex; }
 
     .breath-square {
-      width: 58px;
-      height: 58px;
+      width: 52px;
+      height: 52px;
       border-radius: 8px;
-      border: 3px solid #6366f1;
-      animation: pulse 4s infinite;
-      flex: 0 0 auto;
+      border: 3px solid var(--brand);
+      flex-shrink: 0;
+      animation: boxpulse 4s infinite paused;
     }
 
-    @keyframes pulse {
+    .box-guide.active .breath-square { animation-play-state: running; }
+
+    @keyframes boxpulse {
       0%, 100% { transform: scale(1); border-radius: 8px; }
-      25% { transform: scale(1.2); border-radius: 14px; }
+      25% { transform: scale(1.18); border-radius: 14px; }
       50% { transform: scale(1); border-radius: 20px; }
-      75% { transform: scale(.85); border-radius: 12px; }
+      75% { transform: scale(0.88); border-radius: 10px; }
     }
 
-    .summary-panel { display: none; border-color: #86efac; background: #f0fdf4; }
-
-    textarea, select {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 10px;
-      font: inherit;
-      background: #fff;
-      color: #111;
+    .box-phase {
+      font-size: 14px;
+      color: var(--brand);
+      font-weight: bold;
     }
 
-    textarea:focus-visible, select:focus-visible, input:focus-visible {
-      outline: none;
-      box-shadow: var(--ring);
-      border-color: var(--primary);
+    /* LIMIT WARNING */
+    .limit-warning {
+      display: none;
+      background: var(--rose-light);
+      border: 1px solid var(--rose-mid);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--rose);
+      margin-top: 10px;
     }
 
-    .warning {
-      background: #fff1f2;
-      border: 1px solid #fda4af;
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 8px;
-      color: #7f1d1d;
+    /* SUMMARY */
+    .summary-card {
+      display: none;
+      background: var(--teal-light);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
     }
 
-    .help-panel { display: none; border-color: #fca5a5; }
+    .summary-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
 
-    footer {
-      margin-top: 16px;
+    .summary-row {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--teal-mid);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .summary-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .summary-row-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .safety-flag {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--danger-text);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn-danger { background: var(--danger-text); color: #fff; border-color: var(--danger-text); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+    .btn-small { padding: 8px 14px; min-height: 36px; font-size: 13px; }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .chip { width: 100%; justify-content: center; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
       text-align: center;
-      color: #334155;
-      font-size: .92rem;
-      padding-bottom: 8px;
     }
 
-    .tiny { font-size: .82rem; color: #64748b; }
-
-    @media (min-width: 768px) {
-      .container { padding: 24px; }
-      .skills-grid { grid-template-columns: 1fr 1fr; }
-      .hero { padding: 18px 20px; }
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
     }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
   </style>
 </head>
 <body>
-  <main class="container">
-    <section class="hero" aria-labelledby="title">
-      <h1 id="title">🌤️ Distress Tolerance Coping Tool</h1>
-      <p class="lead">A quick, practical check-in to help you get through intense moments safely. This is a reflection + coping support tool, not diagnosis or therapy.</p>
+<div class="container">
 
-      <nav class="button-row" aria-label="Quick links">
-        <button class="comic-btn btn-help" id="openHelpBtn" type="button" aria-controls="helpPanel" aria-expanded="false">🆘 Get Help Now (Helplines)</button>
-        <a class="comic-btn btn-books" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">🎧 Recommended Audio Books</a>
-        <a class="comic-btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">💙 Support Us</a>
-        <a class="comic-btn btn-tools" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">🧰 More Free Tools</a>
-      </nav>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Distress Tolerance Coping Tool</h1>
+    <p class="tagline">A quick, practical check-in to help you get through intense moments safely. Choose what feels most doable right now.</p>
+    <div class="disclaimer">This is a reflection and coping support tool — not diagnosis or therapy. If you feel unsafe or in immediate danger, contact local emergency services.</div>
 
-      <div class="share-row" aria-label="Share this tool">
-        <button class="comic-btn btn-support" type="button" data-share="whatsapp">🟢 Share to WhatsApp</button>
-        <button class="comic-btn btn-books" type="button" data-share="facebook">📘 Share to Facebook</button>
-        <button class="comic-btn btn-help" type="button" data-share="x">🐦 Share to X</button>
-        <button class="comic-btn btn-tools" type="button" data-share="copy">🔗 Copy Link</button>
+    <div class="btn-row" style="margin-top:14px;">
+      <button type="button" class="btn btn-danger" id="openHelpBtn">Get help now</button>
+    </div>
+  </header>
+
+  <!-- HELP PANEL (toggle) -->
+  <div class="help-panel" id="helpPanel" role="alert">
+    <div class="help-title">Get help now</div>
+    <div class="help-body">
+      If you feel unsafe or in immediate danger, please contact your local emergency services now.<br><br>
+      To find emotional support helplines in your country, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener" style="color:var(--danger-text);font-weight:bold;">findahelpline.com</a>.
+    </div>
+  </div>
+
+  <!-- STEP A: CHECK-IN -->
+  <section class="card" aria-labelledby="stepA-heading">
+    <div class="step-label">Section A</div>
+    <p class="card-title" id="stepA-heading">Right now check-in</p>
+
+    <!-- DISTRESS SLIDER -->
+    <div class="slider-card">
+      <p class="slider-label">Distress level right now (0 = calm, 10 = overwhelming)</p>
+      <div class="slider-row">
+        <input type="range" id="distressSlider" min="0" max="10" value="5" aria-label="Distress level from 0 to 10" />
+        <output class="slider-value" id="distressValue" aria-live="polite">5</output>
       </div>
-    </section>
+    </div>
 
-    <section class="help-panel" id="helpPanel" aria-live="polite">
-      <h2>🆘 Get Help Now</h2>
-      <p>If you feel unsafe or in immediate danger, contact local emergency services right now.</p>
-      <p>To find emotional support helplines in your country, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener"><strong>findahelpline.com</strong></a>.</p>
-    </section>
+    <!-- SITUATION CHIPS -->
+    <p class="card-intro">What is happening right now? Choose any that apply.</p>
+    <div class="chip-wrap" id="situationChips" role="group" aria-label="Situation options"></div>
 
-    <section class="panel" aria-labelledby="stepA">
-      <h2 id="stepA">A) Right now check-in</h2>
+    <div class="field">
+      <label class="field-label" for="otherText">If you selected "other" — add a few words</label>
+      <input type="text" id="otherText" maxlength="150" placeholder="e.g. work stress and no sleep" />
+    </div>
 
-      <div class="step">
-        <h3>Distress level (0–10)</h3>
-        <div class="slider-row">
-          <input id="distress" type="range" min="0" max="10" value="5" aria-label="Distress level from zero to ten" />
-          <output id="distressValue" aria-live="polite">5</output>
-        </div>
-      </div>
+    <!-- TIME AVAILABLE -->
+    <p class="card-intro" style="margin-top:4px;">How much time do you have right now?</p>
+    <div class="time-wrap" role="group" aria-label="Time available options">
+      <label class="time-option"><input type="radio" name="timeAvail" value="1 minute" checked /> 1 minute</label>
+      <label class="time-option"><input type="radio" name="timeAvail" value="3 minutes" /> 3 minutes</label>
+      <label class="time-option"><input type="radio" name="timeAvail" value="5 minutes" /> 5 minutes</label>
+      <label class="time-option"><input type="radio" name="timeAvail" value="10 minutes" /> 10 minutes</label>
+    </div>
+  </section>
 
-      <div class="step">
-        <h3>What’s happening right now?</h3>
-        <div class="chip-wrap" id="situationChips" role="group" aria-label="Situation options"></div>
-        <label for="otherText" class="small">If you selected “other”, add a few words:</label>
-        <input id="otherText" type="text" placeholder="e.g., work stress + no sleep" aria-label="Other situation details" style="width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:10px;" />
-      </div>
+  <!-- STEP B: COPING SKILLS -->
+  <section class="card" aria-labelledby="stepB-heading">
+    <div class="step-label">Section B</div>
+    <p class="card-title" id="stepB-heading">Pick 1–3 coping skills</p>
+    <p class="card-intro">Choose what feels most doable right now. Each skill has its own timer. Check "done" when you finish.</p>
 
-      <div class="step">
-        <h3>Time available</h3>
-        <label class="time-option"><input type="radio" name="time" value="1 min" checked />1 min</label>
-        <label class="time-option"><input type="radio" name="time" value="3 min" />3 min</label>
-        <label class="time-option"><input type="radio" name="time" value="5 min" />5 min</label>
-        <label class="time-option"><input type="radio" name="time" value="10 min" />10 min</label>
-      </div>
-    </section>
+    <div class="skills-grid" id="skillsGrid"></div>
+    <div class="limit-warning" id="limitWarning">You can choose up to 3 skills at a time.</div>
 
-    <section class="panel" aria-labelledby="stepB">
-      <h2 id="stepB">B) Pick 1–3 coping skills</h2>
-      <p class="small">Tip: choose the ones that feel most doable right now.</p>
-      <div class="skills-grid" id="skillsGrid"></div>
-      <p id="skillLimitMsg" class="warning" style="display:none;">Please choose up to 3 skills.</p>
-      <div class="button-row">
-        <button class="comic-btn btn-support" type="button" id="buildSummaryBtn">✅ Build Coping Plan Summary</button>
-        <button class="comic-btn btn-books" type="button" id="downloadPdfBtn">📄 Download 1-Page PDF</button>
-      </div>
-    </section>
+    <div class="btn-row" style="margin-top:16px;">
+      <button type="button" class="btn btn-primary" id="buildSummaryBtn">Build my coping plan summary</button>
+      <button type="button" class="btn btn-teal" id="downloadPdfBtn">Download PDF</button>
+    </div>
+  </section>
 
-    <section class="summary-panel" id="summaryPanel" aria-live="polite">
-      <h2>🧾 Coping Plan Summary</h2>
+  <!-- SUMMARY SECTION -->
+  <section class="card" id="summarySection" aria-live="polite" style="display:none;">
+    <p class="card-title">My coping plan summary</p>
+
+    <div class="summary-card" id="summaryCard" style="display:block;">
+      <div class="summary-title">Your check-in summary</div>
       <div id="summaryContent"></div>
-      <label for="helpRating"><strong>What helped (mini rating):</strong></label>
-      <select id="helpRating" aria-label="How much did this help?">
-        <option value="">Choose one</option>
-        <option>1 - Not much yet</option>
-        <option>2 - A little</option>
-        <option>3 - Somewhat</option>
-        <option>4 - Helpful</option>
-        <option>5 - Very helpful</option>
+    </div>
+
+    <div class="field" style="margin-top:14px;">
+      <label class="field-label" for="helpRating">What helped — mini rating</label>
+      <select id="helpRating">
+        <option value="">Choose one…</option>
+        <option>1 — Not much yet</option>
+        <option>2 — A little</option>
+        <option>3 — Somewhat</option>
+        <option>4 — Helpful</option>
+        <option>5 — Very helpful</option>
       </select>
+    </div>
 
-      <label for="nextStep" style="margin-top:10px;display:block;"><strong>One kind next step</strong></label>
-      <textarea id="nextStep" rows="2" placeholder="e.g., drink water, message a friend, rest for 10 minutes"></textarea>
+    <div class="field">
+      <label class="field-label" for="nextStep">One kind next step</label>
+      <textarea id="nextStep" rows="2" maxlength="300" placeholder="e.g. drink water, message a friend, rest for 10 minutes"></textarea>
+    </div>
 
-      <div class="warning">If you feel unsafe, get help now, visit https://emotionalintelligencedeveloper.com/ or use this link: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. If there is immediate danger, contact local emergency services.</div>
+    <div class="safety-flag">
+      If you feel unsafe, please seek urgent help now. Visit <a href="https://findahelpline.com/" target="_blank" rel="noopener" style="color:var(--danger-text);font-weight:bold;">findahelpline.com</a> or contact local emergency services immediately.
+    </div>
+  </section>
 
-      <div class="share-row" aria-label="Share your plan">
-        <button class="comic-btn btn-support" type="button" data-share="whatsapp">🟢 Share to WhatsApp</button>
-        <button class="comic-btn btn-books" type="button" data-share="facebook">📘 Share to Facebook</button>
-        <button class="comic-btn btn-help" type="button" data-share="x">🐦 Share to X</button>
-        <button class="comic-btn btn-tools" type="button" data-share="copy">🔗 Copy Link</button>
-      </div>
-    </section>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
 
-    <footer>
-      Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a>
-      <div class="tiny">Made for calm, practical support in difficult moments.</div>
-    </footer>
-  </main>
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const situationOptions = ["panic", "anger", "sadness", "shame", "numb", "overwhelmed", "cravings", "conflict", "other"];
-    const skills = [
-      { id: "grounding", name: "5-4-3-2-1 Grounding", icon: "👀", instructions: "Name 5 things you see, 4 feel, 3 hear, 2 smell, 1 taste.", seconds: 90 },
-      { id: "box", name: "Box Breathing", icon: "🫁", instructions: "Inhale 4, hold 4, exhale 4, hold 4. Repeat slowly.", seconds: 120 },
-      { id: "cold", name: "Cold Water / Temperature Shift", icon: "🧊", instructions: "Use cool water on face/hands or hold a cool cloth. Stop if dizzy/unwell.", seconds: 60 },
-      { id: "name", name: "Name it to Tame it", icon: "📝", instructions: "Say: “I notice ___ is here.” Label emotion without judging.", seconds: 60 },
-      { id: "compassion", name: "Self-Compassion Script", icon: "💛", instructions: "“This is hard. I’m not alone. I can be kind to myself in this moment.”", seconds: 75 },
-      { id: "urge", name: "Urge Surfing", icon: "🌊", instructions: "Notice urge rise/fall like a wave. Breathe and delay acting 1–2 minutes.", seconds: 120 },
-      { id: "body", name: "Quick Body Reset", icon: "🧘", instructions: "Drop shoulders, unclench jaw, relax hands, lengthen exhale.", seconds: 60 }
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    </div>
+
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Coping support only — not a replacement for professional care.
+    </p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const $ = id => document.getElementById(id);
+
+  const SITUATIONS = ['panic','anger','sadness','shame','numb','overwhelmed','cravings','conflict','other'];
+
+  const SKILLS = [
+    { id: 'grounding', name: '5-4-3-2-1 Grounding', instructions: 'Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.', seconds: 90 },
+    { id: 'box', name: 'Box Breathing', instructions: 'Inhale 4, hold 4, exhale 4, hold 4. Repeat slowly and gently.', seconds: 120 },
+    { id: 'cold', name: 'Temperature Shift', instructions: 'Cool water on face and hands, or hold a cool cloth. Stop if dizzy.', seconds: 60 },
+    { id: 'name', name: 'Name It to Tame It', instructions: 'Say quietly: "I notice ___ is here." Label the emotion without judging it.', seconds: 60 },
+    { id: 'compassion', name: 'Self-Compassion Script', instructions: '"This is hard. I am not alone. I can be kind to myself in this moment."', seconds: 75 },
+    { id: 'urge', name: 'Urge Surfing', instructions: 'Notice the urge rise and fall like a wave. Breathe and delay acting for 1–2 minutes.', seconds: 120 },
+    { id: 'body', name: 'Quick Body Reset', instructions: 'Drop shoulders, unclench jaw, relax hands, lengthen your exhale gently.', seconds: 60 }
+  ];
+
+  const timers = {};
+  let boxCycle = null;
+  let toastTimer;
+
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  // SITUATION CHIPS
+  function buildSituationChips() {
+    const wrap = $('situationChips');
+    SITUATIONS.forEach(label => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = label;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // SKILLS GRID
+  function buildSkillsGrid() {
+    const grid = $('skillsGrid');
+    SKILLS.forEach(skill => {
+      const card = document.createElement('div');
+      card.className = 'skill-card';
+      card.id = 'skill-' + skill.id;
+
+      card.innerHTML = `
+        <div class="skill-head">
+          <label class="skill-pick">
+            <input type="checkbox" class="pick-skill" value="${skill.id}" aria-label="Select ${skill.name}" />
+            ${skill.name}
+          </label>
+          <label class="skill-done">
+            <input type="checkbox" class="done-check" data-skill="${skill.id}" aria-label="Mark ${skill.name} as done" />
+            Done
+          </label>
+        </div>
+        <p class="skill-instructions">${skill.instructions}</p>
+        <div class="skill-timer">
+          <button type="button" class="btn btn-primary btn-small start-timer" data-id="${skill.id}">Start ${skill.seconds}s</button>
+          <button type="button" class="btn btn-outline btn-small stop-timer" data-id="${skill.id}">Stop</button>
+          <span class="timer-display" id="time-${skill.id}">${skill.seconds}s</span>
+        </div>
+        ${skill.id === 'box' ? `
+          <div class="box-guide" id="boxGuide">
+            <div class="breath-square" aria-hidden="true"></div>
+            <span class="box-phase" id="boxPhase">Inhale</span>
+          </div>
+        ` : ''}
+      `;
+
+      // Select chip styling
+      const checkbox = card.querySelector('.pick-skill');
+      checkbox.addEventListener('change', () => {
+        const selected = document.querySelectorAll('.pick-skill:checked');
+        if (selected.length > 3) {
+          checkbox.checked = false;
+          $('limitWarning').style.display = 'block';
+          setTimeout(() => { $('limitWarning').style.display = 'none'; }, 2000);
+          return;
+        }
+        card.classList.toggle('selected', checkbox.checked);
+      });
+
+      grid.appendChild(card);
+    });
+
+    // Timer buttons
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('start-timer')) startTimer(e.target.dataset.id);
+      if (e.target.classList.contains('stop-timer')) stopTimer(e.target.dataset.id);
+    });
+  }
+
+  function startTimer(id) {
+    const skill = SKILLS.find(s => s.id === id);
+    const timeEl = $('time-' + id);
+    let remaining = skill.seconds;
+
+    clearInterval(timers[id]);
+    timeEl.textContent = remaining + 's';
+
+    if (id === 'box') startBoxGuide();
+
+    timers[id] = setInterval(() => {
+      remaining--;
+      timeEl.textContent = Math.max(remaining, 0) + 's';
+      if (remaining <= 0) {
+        clearInterval(timers[id]);
+        timeEl.textContent = 'Done!';
+        if (id === 'box') stopBoxGuide();
+        showToast(skill.name + ' complete.');
+      }
+    }, 1000);
+  }
+
+  function stopTimer(id) {
+    clearInterval(timers[id]);
+    if (id === 'box') stopBoxGuide();
+  }
+
+  function startBoxGuide() {
+    const guide = $('boxGuide');
+    const phaseEl = $('boxPhase');
+    if (!guide) return;
+    guide.classList.add('active');
+    const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+    let i = 0;
+    phaseEl.textContent = phases[i];
+    clearInterval(boxCycle);
+    boxCycle = setInterval(() => {
+      i = (i + 1) % phases.length;
+      phaseEl.textContent = phases[i];
+    }, 4000);
+  }
+
+  function stopBoxGuide() {
+    const guide = $('boxGuide');
+    clearInterval(boxCycle);
+    if (guide) guide.classList.remove('active');
+  }
+
+  // DISTRESS SLIDER
+  $('distressSlider').addEventListener('input', () => {
+    $('distressValue').textContent = $('distressSlider').value;
+  });
+
+  // HELP PANEL TOGGLE
+  let helpOpen = false;
+  $('openHelpBtn').addEventListener('click', () => {
+    helpOpen = !helpOpen;
+    $('helpPanel').classList.toggle('open', helpOpen);
+    $('openHelpBtn').setAttribute('aria-expanded', String(helpOpen));
+    if (helpOpen) $('helpPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  // GET SELECTED DATA
+  function getSelectedSituations() {
+    const active = Array.from(document.querySelectorAll('.chip.active')).map(c => c.textContent);
+    const other = $('otherText').value.trim();
+    if (active.includes('other') && other) active.push('other: ' + other);
+    return active;
+  }
+
+  function getSelectedSkillIds() {
+    return Array.from(document.querySelectorAll('.pick-skill:checked')).map(el => el.value);
+  }
+
+  function getDoneSkillIds() {
+    return Array.from(document.querySelectorAll('.done-check:checked')).map(el => el.dataset.skill);
+  }
+
+  // BUILD SUMMARY
+  $('buildSummaryBtn').addEventListener('click', () => {
+    const situations = getSelectedSituations();
+    const selectedIds = getSelectedSkillIds();
+
+    if (!situations.length || !selectedIds.length) {
+      showToast('Please choose at least one situation and one coping skill.');
+      return;
+    }
+
+    const selectedNames = selectedIds.map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
+    const doneNames = getDoneSkillIds().map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
+    const time = document.querySelector('input[name="timeAvail"]:checked')?.value || 'Not selected';
+
+    const rows = [
+      ['Distress level', $('distressSlider').value + ' / 10'],
+      ['What is happening', situations.join(', ')],
+      ['Time available', time],
+      ['Skills I chose', selectedNames.join(', ')],
+      ['Completed so far', doneNames.length ? doneNames.join(', ') : 'Not marked yet']
     ];
 
-    const chipContainer = document.getElementById("situationChips");
-    const skillsGrid = document.getElementById("skillsGrid");
-    const distressSlider = document.getElementById("distress");
-    const distressValue = document.getElementById("distressValue");
-    const summaryPanel = document.getElementById("summaryPanel");
-    const summaryContent = document.getElementById("summaryContent");
-    const skillLimitMsg = document.getElementById("skillLimitMsg");
-    const helpPanel = document.getElementById("helpPanel");
-    const openHelpBtn = document.getElementById("openHelpBtn");
+    const content = $('summaryContent');
+    content.innerHTML = rows.map(([label, value]) => `
+      <div class="summary-row">
+        <div class="summary-row-label">${label}</div>
+        <div>${value}</div>
+      </div>
+    `).join('');
 
-    const timers = {};
+    $('summarySection').style.display = 'block';
+    $('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
-    distressSlider.addEventListener("input", () => distressValue.textContent = distressSlider.value);
+  // SHARE
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('A practical distress tolerance coping tool for intense moments: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
 
-    function createChips() {
-      situationOptions.forEach(opt => {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "chip";
-        b.textContent = opt;
-        b.setAttribute("aria-pressed", "false");
-        b.addEventListener("click", () => {
-          b.classList.toggle("active");
-          b.setAttribute("aria-pressed", b.classList.contains("active") ? "true" : "false");
-        });
-        chipContainer.appendChild(b);
-      });
-    }
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
 
-    function createSkills() {
-      skills.forEach(skill => {
-        const card = document.createElement("article");
-        card.className = "skill";
-        card.innerHTML = `
-          <div class="skill-head">
-            <label>
-              <input type="checkbox" class="pick-skill" value="${skill.id}" aria-label="Select ${skill.name}" />
-              <span>${skill.icon} ${skill.name}</span>
-            </label>
-            <span class="done"><input type="checkbox" class="done-check" aria-label="Mark ${skill.name} done" /> done</span>
-          </div>
-          <p class="small">${skill.instructions}</p>
-          <div class="timer">
-            <button class="start" type="button" data-id="${skill.id}">Start ${skill.seconds}s</button>
-            <button class="stop" type="button" data-id="${skill.id}">Stop</button>
-            <span class="timeleft" id="time-${skill.id}">${skill.seconds}s</span>
-          </div>
-          ${skill.id === "box" ? `<div class="box-breath" id="boxGuide"><div class="breath-square" aria-hidden="true"></div><strong id="boxText">Inhale</strong></div>` : ""}
-        `;
-        skillsGrid.appendChild(card);
-      });
-    }
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
 
-    function selectedSkillIds() {
-      return Array.from(document.querySelectorAll(".pick-skill:checked")).map(el => el.value);
-    }
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    showToast('Preparing your PDF…');
 
-    document.addEventListener("change", (e) => {
-      if (e.target.classList.contains("pick-skill")) {
-        const selected = selectedSkillIds();
-        if (selected.length > 3) {
-          e.target.checked = false;
-          skillLimitMsg.style.display = "block";
-          setTimeout(() => skillLimitMsg.style.display = "none", 1700);
-        }
-      }
+    const situations = getSelectedSituations();
+    const selectedIds = getSelectedSkillIds();
+    const selectedSkillObjects = selectedIds.map(id => SKILLS.find(s => s.id === id)).filter(Boolean);
+    const selectedNames = selectedSkillObjects.map(s => s.name);
+    const doneNames = getDoneSkillIds().map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
+    const time = document.querySelector('input[name="timeAvail"]:checked')?.value || 'Not selected';
+    const nextStep = $('nextStep').value.trim() || 'Not entered';
+    const helpRating = $('helpRating').value || 'Not rated yet';
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(232, 239, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(26, 32, 48);
+    doc.text('Distress Tolerance Coping Plan', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 85, 104);
+    doc.text('Personal coping summary — ' + new Date().toLocaleString(), margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Summary rows
+    const rows = [
+      ['Distress level', $('distressSlider').value + ' / 10'],
+      ['What is happening', situations.length ? situations.join(', ') : 'Not selected'],
+      ['Time available', time],
+      ['Skills chosen', selectedNames.length ? selectedNames.join(', ') : 'Not selected'],
+      ['Completed', doneNames.length ? doneNames.join(', ') : 'Not marked'],
+      ['What helped', helpRating],
+      ['One kind next step', nextStep]
+    ];
+
+    rows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(232, 239, 248);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(58, 106, 152);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 48);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
     });
 
-    function startTimer(id) {
-      const skill = skills.find(s => s.id === id);
-      const timeEl = document.getElementById(`time-${id}`);
-      let remaining = skill.seconds;
+    // Skill guidance
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(168, 192, 216);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(58, 106, 152);
+    doc.text('Coping skill guidance', margin, y);
+    y += 14;
 
-      clearInterval(timers[id]);
-      timeEl.textContent = `${remaining}s`;
-
-      if (id === "box") startBoxGuide();
-
-      timers[id] = setInterval(() => {
-        remaining -= 1;
-        timeEl.textContent = `${Math.max(remaining, 0)}s`;
-        if (remaining <= 0) {
-          clearInterval(timers[id]);
-          if (id === "box") stopBoxGuide();
-          timeEl.textContent = "Done!";
-        }
-      }, 1000);
-    }
-
-    function stopTimer(id) {
-      clearInterval(timers[id]);
-      if (id === "box") stopBoxGuide();
-    }
-
-    let boxCycle;
-    function startBoxGuide() {
-      const guide = document.getElementById("boxGuide");
-      const boxText = document.getElementById("boxText");
-      if (!guide) return;
-      guide.style.display = "flex";
-      const phases = ["Inhale", "Hold", "Exhale", "Hold"];
-      let i = 0;
-      boxText.textContent = phases[i];
-      clearInterval(boxCycle);
-      boxCycle = setInterval(() => {
-        i = (i + 1) % phases.length;
-        boxText.textContent = phases[i];
-      }, 4000);
-    }
-
-    function stopBoxGuide() {
-      const guide = document.getElementById("boxGuide");
-      clearInterval(boxCycle);
-      if (guide) guide.style.display = "none";
-    }
-
-    document.addEventListener("click", (e) => {
-      if (e.target.matches(".start")) startTimer(e.target.dataset.id);
-      if (e.target.matches(".stop")) stopTimer(e.target.dataset.id);
+    const guidanceSkills = selectedSkillObjects.length ? selectedSkillObjects : SKILLS.slice(0, 3);
+    guidanceSkills.forEach((skill, i) => {
+      if (y > pageH - 60) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(58, 106, 152);
+      doc.text((i + 1) + '. ' + skill.name + ' (' + skill.seconds + 's)', margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 32, 48);
+      const lines = doc.splitTextToSize(skill.instructions, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 12 + 10;
     });
 
-    function getSelectedSituations() {
-      const active = Array.from(document.querySelectorAll(".chip.active")).map(c => c.textContent);
-      const otherText = document.getElementById("otherText").value.trim();
-      if (active.includes("other") && otherText) active.push(`other: ${otherText}`);
-      return active;
-    }
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(168, 192, 216);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(58, 106, 152);
+    doc.text('Understanding distress tolerance — what research tells us', margin, y);
+    y += 14;
 
-    function buildSummary() {
-      const situations = getSelectedSituations();
-      const selectedIds = selectedSkillIds();
-      const selectedNames = selectedIds.map(id => skills.find(s => s.id === id)?.name).filter(Boolean);
-      const doneSkills = Array.from(document.querySelectorAll(".done-check:checked")).map((el, idx) => el.closest('.skill').querySelector('.pick-skill').value);
-      const doneNames = doneSkills.map(id => skills.find(s => s.id === id)?.name).filter(Boolean);
+    const educational = [
+      ['What distress tolerance is and why it matters',
+       'Distress tolerance refers to the ability to withstand intense emotional pain without making a situation worse through impulsive or avoidant behaviour. Developed as a core component of Dialectical Behaviour Therapy (DBT) by Marsha Linehan, distress tolerance skills were designed for moments when emotions are too intense to solve problems or regulate through standard techniques. The goal is not to eliminate the distress but to survive it without escalation.'],
+      ['Why intense emotions feel unbearable — the neuroscience',
+       'During intense emotional activation, the prefrontal cortex — responsible for reasoning, planning, and behaviour inhibition — has significantly reduced access compared to the amygdala and limbic system. This is why calm, rational thinking feels impossible when distress peaks. Distress tolerance strategies work by engaging the body and senses rather than requiring reasoning, which means they remain effective even when cognitive function is impaired by emotional intensity.'],
+      ['The science behind temperature-based regulation',
+       'Research in DBT and physiological psychology supports the use of cold temperature as a rapid distress intervention. Cold water or a cold cloth on the face activates the dive reflex — a parasympathetic response that measurably reduces heart rate within seconds. This is one of the fastest physiological regulation techniques available and is particularly effective for acute panic, rage, or overwhelming urges.'],
+      ['Urge surfing and the wave model of craving',
+       'Urge surfing — observing an urge without acting on it — is based on research showing that urges, cravings, and intense emotional states are time-limited and will peak and then naturally decrease if not acted upon. Studies on urge surfing in addiction treatment show that practising observation without action measurably reduces urge intensity over time. The wave metaphor is physiologically accurate: urges do not escalate indefinitely but reach a peak and pass.'],
+      ['Self-compassion as a regulation strategy',
+       'Research by Kristin Neff at the University of Texas shows that self-compassion — treating yourself with the same kindness you would offer a friend — is more effective at reducing distress, shame, and rumination than self-criticism or distraction. People who respond to their own pain with compassion show lower cortisol responses, faster physiological recovery, and greater resilience after difficult events. Self-compassion is not self-indulgence; it is an evidence-based physiological regulation strategy.']
+    ];
 
-      if (!situations.length || !selectedNames.length) {
-        alert("Please choose at least one situation and one coping skill.");
-        return;
-      }
-
-      summaryContent.innerHTML = `
-        <p><strong>Distress level:</strong> ${distressSlider.value}/10</p>
-        <p><strong>What’s happening:</strong> ${situations.join(', ')}</p>
-        <p><strong>Time available:</strong> ${document.querySelector('input[name="time"]:checked').value}</p>
-        <p><strong>What I chose:</strong> ${selectedNames.join(', ')}</p>
-        <p><strong>Completed so far:</strong> ${doneNames.length ? doneNames.join(', ') : 'Not marked yet'}</p>
-      `;
-      summaryPanel.style.display = "block";
-      summaryPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    document.getElementById("buildSummaryBtn").addEventListener("click", buildSummary);
-
-    openHelpBtn.addEventListener("click", () => {
-      const isOpen = helpPanel.style.display === "block";
-      helpPanel.style.display = isOpen ? "none" : "block";
-      openHelpBtn.setAttribute("aria-expanded", String(!isOpen));
-      if (!isOpen) helpPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(58, 106, 152);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(26, 32, 48);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
     });
 
-    function shareText() {
-      return "Distress Tolerance Coping Tool by Emotional Intelligence Developer: " + window.location.href;
-    }
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(168, 192, 216);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(58, 106, 152);
+    doc.text('Support resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 32, 48);
+    [
+      'Find a helpline: findahelpline.com',
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
 
-    function shareLink(type) {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("Try this Distress Tolerance Coping Tool");
+    // Footer
+    doc.setDrawColor(168, 192, 216);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(138, 152, 176);
+    doc.text('This tool supports coping and reflection. If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
 
-      if (type === "copy") {
-        navigator.clipboard?.writeText(window.location.href).then(() => alert("Link copied."), () => alert("Could not copy link."));
-        return;
-      }
+    doc.save('distress-tolerance-coping-plan.pdf');
+    showToast('PDF downloaded!');
+  }
 
-      if (navigator.share) {
-        navigator.share({ title: "Distress Tolerance Coping Tool", text: shareText(), url: window.location.href }).catch(() => {});
-        return;
-      }
+  $('downloadPdfBtn').addEventListener('click', downloadPDF);
 
-      const map = {
-        whatsapp: `https://wa.me/?text=${text}%20${url}`,
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-        x: `https://twitter.com/intent/tweet?text=${text}&url=${url}`
-      };
-      if (map[type]) window.open(map[type], "_blank", "noopener");
-    }
-
-    document.querySelectorAll("[data-share]").forEach(btn => {
-      btn.addEventListener("click", () => shareLink(btn.dataset.share));
-    });
-
-    document.getElementById("downloadPdfBtn").addEventListener("click", () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const dt = new Date().toLocaleString();
-      const situations = getSelectedSituations();
-      const selectedIds = selectedSkillIds();
-      const selectedSkillObjects = selectedIds.map(id => skills.find(s => s.id === id)).filter(Boolean);
-      const selectedNames = selectedSkillObjects.map(s => s.name);
-      const nextStep = (document.getElementById("nextStep").value || "Not entered").trim();
-      const helpRating = document.getElementById("helpRating").value || "Not rated yet";
-      const selectedTime = document.querySelector('input[name="time"]:checked').value;
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.text("Distress Tolerance Coping Plan", 40, 52);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(11);
-      let y = 80;
-
-      const lines = [
-        `Date/time: ${dt}`,
-        `Distress level: ${distressSlider.value}/10`,
-        `Time available: ${selectedTime}`,
-        `Selected situation: ${situations.length ? situations.join(', ') : 'None selected'}`,
-        `Chosen skills: ${selectedNames.length ? selectedNames.join(', ') : 'None selected'}`,
-        `What helped (mini rating): ${helpRating}`,
-        `One kind next step: ${nextStep}`
-      ];
-
-      lines.forEach(line => {
-        const wrapped = doc.splitTextToSize(line, 510);
-        doc.text(wrapped, 40, y);
-        y += (wrapped.length * 15) + 4;
-      });
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(12);
-      doc.text("Quick coping guidance:", 40, y + 8);
-      y += 26;
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10.5);
-
-      const defaultGuidance = [
-        "Ground feet on floor and slowly look around the room.",
-        "Lengthen your exhale: in for 4, out for 6.",
-        "Remind yourself: this feeling is intense, but it will pass."
-      ];
-
-      const guidanceLines = selectedSkillObjects.length
-        ? selectedSkillObjects.map(skill => `${skill.name}: ${skill.instructions}`)
-        : defaultGuidance;
-
-      guidanceLines.forEach((tip, index) => {
-        const wrappedTip = doc.splitTextToSize(`${index + 1}. ${tip}`, 510);
-        doc.text(wrappedTip, 40, y);
-        y += (wrappedTip.length * 13) + 4;
-      });
-
-      const safetyLine = "If you feel unsafe, visit https://emotionalintelligencedeveloper.com/ or use this link: findahelpline.com. In immediate danger, contact local emergency services.";
-      const wrappedSafety = doc.splitTextToSize(safetyLine, 510);
-      doc.setFont("helvetica", "bold");
-      doc.text(wrappedSafety, 40, Math.min(y + 10, 770));
-
-      doc.setFontSize(10);
-      doc.text("https://emotionalintelligencedeveloper.com/", 40, 800);
-      doc.save("distress-tolerance-coping-plan.pdf");
-    });
-
-    createChips();
-    createSkills();
-  </script>
+  // INIT
+  buildSituationChips();
+  buildSkillsGrid();
+  updateShareLinks();
+}());
+</script>
 </body>
 </html>

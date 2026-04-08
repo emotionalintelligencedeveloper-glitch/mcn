@@ -1,721 +1,1223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Visual Grounding + Emotional Reset Tool</title>
+  <title>Visual Grounding + Emotional Reset Tool | Emotional Intelligence Developer</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f4f7ff;
-      --panel: #ffffff;
-      --ink: #0f172a;
-      --muted: #475569;
-      --line: #cbd5e1;
-      --primary1: #7c3aed;
-      --primary2: #2563eb;
-      --accent1: #f97316;
-      --accent2: #ec4899;
-      --good: #10b981;
-      --warn: #f59e0b;
-      --danger: #ef4444;
-      --shadow: 0 12px 30px rgba(37, 99, 235, 0.14);
-      --radius: 18px;
+      --bg: #f3f0f8;
+      --card: #ffffff;
+      --text: #1e1a2e;
+      --muted: #4a4868;
+      --hint: #9890b0;
+      --border: #d4cce8;
+      --brand: #6a5aaa;
+      --brand-light: #f0ecf8;
+      --brand-mid: #c0b0e0;
+      --accent: #8a7acc;
+      --accent-light: #e8e4f8;
+      --teal: #3a7a78;
+      --teal-light: #e4f0f0;
+      --teal-mid: #a0c8c8;
+      --gold: #7a6a30;
+      --gold-light: #f7f2e4;
+      --gold-mid: #d8c878;
+      --warm: #f8f6f2;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --support: #e8702a;
+      --danger-bg: #fff0f0;
+      --danger-border: #f5a0a0;
+      --danger-text: #8b1a1a;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      font-family: "Inter", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 10% 10%, #dbeafe 0 20%, transparent 40%),
-        radial-gradient(circle at 90% 20%, #fce7f3 0 18%, transparent 35%),
-        linear-gradient(180deg, #eff6ff, #f8fafc 45%, #f1f5f9);
-      min-height: 100vh;
-      line-height: 1.4;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
     }
 
-    .wrap {
-      width: min(980px, 100% - 1.25rem);
+    .container {
+      max-width: 680px;
       margin: 0 auto;
-      padding: 1rem 0 5.5rem;
+      padding: 20px 16px 40px;
     }
 
-    .hero, .panel {
-      background: linear-gradient(180deg, #ffffff, #f9fbff);
-      border: 3px solid #0f172a;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1rem;
-      margin: 0.75rem 0;
+    /* HEADER */
+    .header {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px 20px 20px;
+      margin-bottom: 16px;
     }
 
-    .hero h1 { margin: 0.2rem 0 0.4rem; font-size: clamp(1.35rem, 3vw, 2rem); }
-    .hero p { margin: 0.4rem 0; color: var(--muted); }
-    .disclaimer { font-size: 0.9rem; background: #fffbeb; border: 2px dashed #f59e0b; border-radius: 12px; padding: .65rem; }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
 
-    .comic-row { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .75rem; }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--brand-mid);
+      flex-shrink: 0;
+    }
 
-    .btn {
-      appearance: none;
-      border: 3px solid #0f172a;
-      border-radius: 14px;
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: .1px;
-      padding: .7rem .9rem;
+    .brand-name {
+      font-size: 13px;
+      color: var(--brand);
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.65;
+    }
+
+    .disclaimer {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* PROGRESS */
+    .progress-wrap {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-step-label {
+      font-size: 13px;
+      color: var(--brand);
+      font-weight: bold;
+    }
+
+    .progress-pct {
+      font-size: 12px;
+      color: var(--hint);
+    }
+
+    .progress-bar-wrap {
+      height: 6px;
+      background: var(--brand-light);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: normal;
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .card-intro {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    /* GROUNDING STEPS */
+    .step-card {
+      display: none;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .step-card.active { display: block; }
+
+    .step-heading {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .step-hint {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    /* SUGGESTION + CHOSEN CHIPS */
+    .suggestion-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .suggestion-chip {
+      background: #fff;
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 5px 13px;
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .suggestion-chip:hover { border-color: var(--brand); color: var(--text); }
+    .suggestion-chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    .chosen-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+      min-height: 14px;
+    }
+
+    .chosen-chip {
+      background: var(--accent-light);
+      border: 1.5px solid var(--brand-mid);
+      border-radius: 99px;
+      padding: 5px 11px;
+      font-family: "Georgia", serif;
+      font-size: 13px;
+      color: var(--brand);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: .55rem;
-      text-decoration: none;
-      box-shadow: 0 6px 0 rgba(15, 23, 42, 0.45);
-      transform: translateY(0);
-      transition: transform .12s ease, box-shadow .12s ease, filter .2s ease;
-      min-height: 48px;
-    }
-    .btn:hover { filter: saturate(1.1); }
-    .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(15, 23, 42, 0.45); }
-    .btn:focus-visible { outline: 4px solid #fde047; outline-offset: 2px; }
-
-    .btn-primary { background: linear-gradient(135deg, var(--primary1), var(--primary2)); }
-    .btn-orange { background: linear-gradient(135deg, #f59e0b, #f97316); }
-    .btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
-    .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
-    .btn-sky { background: linear-gradient(135deg, #06b6d4, #0ea5e9); }
-    .btn-slate { background: linear-gradient(135deg, #64748b, #334155); }
-    .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-
-    .sticker {
-      width: 22px;
-      height: 22px;
-      background: rgba(255,255,255,.95);
-      border: 2px solid #0f172a;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
+      gap: 5px;
+      transition: all 0.12s;
     }
 
-    .progress-wrap { margin-top: .9rem; }
-    .progress-meta { display: flex; justify-content: space-between; font-size: .95rem; font-weight: 700; }
-    .progress {
-      height: 16px;
-      border-radius: 999px;
-      background: #e2e8f0;
-      border: 2px solid #0f172a;
-      overflow: hidden;
-      margin-top: .3rem;
-    }
-    .fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
-      transition: width .35s ease;
+    .chosen-chip:hover { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
+
+    /* ADD INPUT */
+    .add-row {
+      display: flex;
+      gap: 8px;
     }
 
-    .step-card {
-      display: none;
+    input[type="text"] {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 13px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--text);
       background: #fff;
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      padding: .85rem;
-      margin-top: .8rem;
+      transition: border-color 0.2s;
     }
-    .step-card.active { display: block; }
 
-    .suggestions, .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .5rem; }
-    .chip {
-      background: #eef2ff;
-      color: #1e293b;
-      border: 2px solid #6366f1;
-      border-radius: 999px;
-      padding: .38rem .7rem;
-      font-size: .92rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    .chip[aria-pressed="true"] { background: #ddd6fe; border-color: #4f46e5; }
+    input[type="text"]:focus { outline: none; border-color: var(--brand); }
 
-    .input-row { display: flex; gap: .5rem; margin-top: .55rem; }
-    .input-row input, .panel textarea, .panel select {
+    textarea {
       width: 100%;
-      border: 2px solid #94a3b8;
-      border-radius: 10px;
-      padding: .6rem .65rem;
-      font-size: .95rem;
-      color: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
       background: #fff;
+      min-height: 80px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
     }
-    .panel textarea { min-height: 84px; resize: vertical; }
 
-    .anchors { display: grid; gap: .55rem; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-    .anchor {
-      border: 2px solid #334155;
-      border-radius: 12px;
-      background: linear-gradient(145deg, #ecfeff, #dbeafe);
-      padding: .75rem;
-      font-weight: 700;
-      cursor: pointer;
-      min-height: 88px;
+    textarea:focus { outline: none; border-color: var(--brand); }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 13px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239890b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
     }
-    .anchor.active { background: linear-gradient(145deg, #d1fae5, #a7f3d0); }
+
+    select:focus { outline: none; border-color: var(--brand); }
+
+    /* ANCHOR BUTTONS */
+    .anchor-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 480px) {
+      .anchor-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .anchor-btn {
+      background: var(--brand-light);
+      border: 1.5px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 14px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      color: var(--brand);
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.5;
+      transition: all 0.15s;
+      min-height: 60px;
+    }
+
+    .anchor-btn:hover { border-color: var(--brand); background: var(--accent-light); }
+    .anchor-btn.active { background: var(--teal-light); border-color: var(--teal-mid); color: var(--teal); }
+
+    /* TRACE PAD */
+    .trace-pad-wrap {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .trace-pad-wrap.visible { display: block; }
 
     canvas {
       width: 100%;
-      height: 180px;
-      border: 2px dashed #334155;
-      border-radius: 12px;
-      background: repeating-linear-gradient(45deg, #fff 0 10px, #f1f5f9 10px 20px);
+      height: 160px;
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      background: repeating-linear-gradient(45deg, #fff 0 10px, #f7f5fd 10px 20px);
       touch-action: none;
-      display: none;
-      margin-top: .5rem;
+      display: block;
+      margin-bottom: 10px;
     }
 
-    .ring-wrap { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
-    .ring {
-      width: 120px;
-      height: 120px;
+    /* BREATHING RING */
+    .breath-wrap {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .breath-ring {
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      border: 8px solid #cbd5e1;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      background: conic-gradient(#8b5cf6 0deg, #cbd5e1 0deg);
-      transition: background .25s linear;
-    }
-
-    .summary {
-      background: #f0fdf4;
-      border: 2px solid #34d399;
-      border-radius: 14px;
-      padding: .8rem;
-      white-space: pre-wrap;
-      color: #134e4a;
-      min-height: 98px;
-    }
-
-    .help {
-      background: #f0f9ff;
-      border: 2px solid #38bdf8;
-      border-radius: 12px;
-      padding: .65rem;
-    }
-
-    .notice { font-size: .88rem; color: #334155; }
-
-    .sticky {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, .95);
-      backdrop-filter: blur(6px);
-      padding: .45rem;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: .35rem;
-      z-index: 99;
-    }
-
-    .sticky .btn {
-      font-size: .78rem;
-      border-width: 2px;
-      border-radius: 10px;
+      border: 6px solid var(--brand-mid);
+      display: flex;
+      align-items: center;
       justify-content: center;
-      padding: .52rem .3rem;
-      min-height: 44px;
-      box-shadow: 0 3px 0 rgba(15, 23, 42, 0.5);
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--brand);
+      position: relative;
+      background: conic-gradient(var(--brand-mid) 0deg, var(--brand-light) 0deg);
+      transition: background 0.25s linear;
+      flex-shrink: 0;
     }
 
-    .sr-only {
-      position: absolute !important;
-      width: 1px; height: 1px;
-      margin: -1px; padding: 0;
-      overflow: hidden; clip: rect(0,0,0,0);
-      border: 0;
+    .breath-ring-inner { position: relative; z-index: 1; text-align: center; }
+
+    .breath-controls { flex: 1; min-width: 180px; }
+
+    .breath-prompt {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 12px;
+      min-height: 22px;
     }
 
-    @media (min-width: 760px) {
-      .sticky { display: none; }
-      .wrap { padding-bottom: 1rem; }
+    .field-label {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: block;
     }
 
-    .pulse { animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
+    /* SUMMARY BOX */
+    .summary-box {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      min-height: 80px;
+      margin-bottom: 14px;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
     }
 
-    @media print {
-      body { background: #fff; }
-      .wrap > *:not(#printSheet) { display: none !important; }
-      #printSheet { display: block !important; border: none; box-shadow: none; }
+    .field { margin-bottom: 14px; }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
     }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      font-family: "Georgia", serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+    .btn-small { padding: 8px 14px; min-height: 36px; font-size: 13px; }
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      border-color: var(--support);
+      font-size: 15px;
+      padding: 14px 24px;
+    }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; }
+      .btn-row { flex-direction: column; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-family: "Georgia", serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .footer-support-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="hero" aria-labelledby="title">
-      <h1 id="title">Visual Grounding + Emotional Reset</h1>
-      <p>Small, calm steps. No pressure. You can pause any time.</p>
-      <p class="disclaimer">This tool supports reflection. It doesn’t diagnose or replace professional help.</p>
-      <div class="comic-row">
-        <button id="startBtn" class="btn btn-primary pulse" type="button">
-          <span class="sticker" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#7c3aed" d="M12 1l2.8 6.4L22 8l-5 4.7 1.3 7.2L12 16.4 5.7 20l1.3-7.2L2 8l7.2-.6z"/></svg></span>
-          I need a reset
-        </button>
-      </div>
-      <div class="progress-wrap" aria-label="Grounding progress">
-        <div class="progress-meta"><span id="stepLabel">Ready</span><span id="progressText">0%</span></div>
-        <div class="progress"><div class="fill" id="progressFill"></div></div>
-      </div>
-      <p id="liveRegion" class="sr-only" aria-live="polite"></p>
-    </section>
+<div class="container">
 
-    <section id="grounding" class="panel" aria-labelledby="groundingLabel">
-      <h2 id="groundingLabel">B) 5-4-3-2-1 visual grounding</h2>
-      <p class="notice">Tap suggestion chips or add your own words. Each step is a mini-level.</p>
-      <div id="steps"></div>
-      <div class="comic-row">
-        <button id="prevBtn" class="btn btn-slate" type="button"><span class="sticker" aria-hidden="true">◀</span>Previous</button>
-        <button id="nextBtn" class="btn btn-green" type="button"><span class="sticker" aria-hidden="true">▶</span>Next step</button>
-      </div>
-    </section>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    </div>
+    <h1>Visual Grounding + Emotional Reset Tool</h1>
+    <p class="tagline">Small, calm steps. No pressure. You can pause any time.</p>
+    <div class="disclaimer">This tool supports reflection. It does not diagnose or replace professional help. If you are in danger, contact local emergency services.</div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button type="button" class="btn btn-primary" id="startBtn">I need a reset — start here</button>
+    </div>
+  </header>
 
-    <section class="panel" aria-labelledby="anchorLabel">
-      <h2 id="anchorLabel">C) Fast visual anchors</h2>
-      <div class="anchors">
-        <button class="anchor" data-anchor="circles" type="button">🔵 Find 3 circles around you</button>
-        <button class="anchor" data-anchor="blue" type="button">💙 Find something blue</button>
-        <button class="anchor" data-anchor="trace" type="button">✍️ Trace a shape with your finger</button>
-      </div>
-      <canvas id="tracePad" width="800" height="360" aria-label="Trace pad for grounding"></canvas>
-      <div class="comic-row"><button id="clearTrace" class="btn btn-orange" type="button"><span class="sticker">🧽</span>Clear trace</button></div>
-    </section>
+  <!-- PROGRESS -->
+  <div class="progress-wrap" aria-label="Grounding progress">
+    <div class="progress-top">
+      <span class="progress-step-label" id="progressStepLabel">Ready to begin</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <p id="liveRegion" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></p>
+  </div>
 
-    <section class="panel" aria-labelledby="breathingLabel">
-      <h2 id="breathingLabel">D) Breathing micro-reset (30–60s)</h2>
-      <div class="ring-wrap">
-        <div class="ring" id="ring">45s</div>
-        <div>
-          <label for="breathLength">Timer length</label>
+  <!-- SECTION B: 5-4-3-2-1 GROUNDING -->
+  <section class="card" id="groundingSection" aria-labelledby="grounding-heading">
+    <div class="section-tag">Section B</div>
+    <p class="card-title" id="grounding-heading">5-4-3-2-1 visual grounding</p>
+    <p class="card-intro">Tap suggestion chips or add your own words. Each step is a mini-level. Use prev and next to move through the steps.</p>
+
+    <div id="stepsContainer"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" id="prevBtn">Previous step</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Next step</button>
+    </div>
+  </section>
+
+  <!-- SECTION C: VISUAL ANCHORS + TRACE PAD -->
+  <section class="card" aria-labelledby="anchors-heading">
+    <div class="section-tag">Section C</div>
+    <p class="card-title" id="anchors-heading">Fast visual anchors</p>
+    <p class="card-intro">Choose any anchor activity. The trace pad appears when you select the tracing option.</p>
+
+    <div class="anchor-grid" id="anchorGrid">
+      <button type="button" class="anchor-btn" data-anchor="circles">Find 3 circles somewhere around you</button>
+      <button type="button" class="anchor-btn" data-anchor="blue">Find something blue in the room</button>
+      <button type="button" class="anchor-btn" data-anchor="trace">Trace a shape slowly with your finger</button>
+    </div>
+
+    <div class="trace-pad-wrap" id="tracePadWrap">
+      <canvas id="tracePad" width="800" height="320" aria-label="Trace pad for grounding — draw freely here"></canvas>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline btn-small" id="clearTraceBtn">Clear trace</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION D: BREATHING TIMER -->
+  <section class="card" aria-labelledby="breathing-heading">
+    <div class="section-tag">Section D</div>
+    <p class="card-title" id="breathing-heading">Breathing micro-reset</p>
+    <p class="card-intro">Choose your timer length, then breathe gently along with the prompts.</p>
+
+    <div class="breath-wrap">
+      <div class="breath-ring" id="breathRing">
+        <div class="breath-ring-inner">
+          <span id="breathSec">45s</span>
+        </div>
+      </div>
+      <div class="breath-controls">
+        <div class="field">
+          <label class="field-label" for="breathLength">Timer length</label>
           <select id="breathLength">
             <option value="30">30 seconds</option>
             <option value="45" selected>45 seconds</option>
             <option value="60">60 seconds</option>
           </select>
-          <p id="breathPrompt" class="notice">Inhale softly · exhale slowly</p>
-          <div class="comic-row">
-            <button id="startBreath" class="btn btn-sky" type="button"><span class="sticker">🌬️</span>Start breathing</button>
-            <button id="stopBreath" class="btn btn-slate" type="button"><span class="sticker">⏹</span>Stop</button>
-          </div>
+        </div>
+        <p class="breath-prompt" id="breathPrompt">Inhale softly · exhale slowly</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary btn-small" id="startBreathBtn">Start breathing</button>
+          <button type="button" class="btn btn-outline btn-small" id="stopBreathBtn">Stop</button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="panel" aria-labelledby="reflectLabel">
-      <h2 id="reflectLabel">E) Reality check</h2>
-      <label for="smallStep">What’s the smallest safe next step?</label>
-      <textarea id="smallStep" placeholder="Example: drink water, sit by a window, text one trusted person."></textarea>
+  <!-- SECTION E: REALITY CHECK -->
+  <section class="card" aria-labelledby="reality-heading">
+    <div class="section-tag">Section E</div>
+    <p class="card-title" id="reality-heading">Reality check</p>
+    <p class="card-intro">These three questions help ground you in what is real and available right now.</p>
 
-      <label for="needNow">What do I need right now: space, support, water, food, rest, fresh air?</label>
-      <input id="needNow" type="text" placeholder="You can list one or two." />
+    <div class="field">
+      <label class="field-label" for="smallStep">What is the smallest safe next step?</label>
+      <textarea id="smallStep" maxlength="400" placeholder="Example: drink water, sit by a window, text one trusted person."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label" for="needNow">What do I need right now — space, support, water, food, rest, fresh air?</label>
+      <input type="text" id="needNow" maxlength="200" placeholder="You can list one or two." />
+    </div>
+    <div class="field">
+      <label class="field-label" for="feelingMsg">If this feeling had a message, what would it be asking for?</label>
+      <textarea id="feelingMsg" maxlength="400" placeholder="A kind sentence to yourself is enough."></textarea>
+    </div>
+  </section>
 
-      <label for="feelingMsg">If this feeling had a message, what would it be asking for?</label>
-      <textarea id="feelingMsg" placeholder="A kind sentence to yourself is enough."></textarea>
-    </section>
+  <!-- SECTION F: SUMMARY -->
+  <section class="card" aria-labelledby="summary-heading">
+    <div class="section-tag">Section F</div>
+    <p class="card-title" id="summary-heading">Your plan</p>
+    <p class="card-intro">This updates as you fill in the tool above.</p>
 
-    <section class="panel" aria-labelledby="summaryLabel">
-      <h2 id="summaryLabel">F) Your plan</h2>
-      <div id="summaryBox" class="summary">Your summary will appear here as you go.</div>
-      <div class="comic-row">
-        <button id="downloadBtn" class="btn btn-orange" type="button"><span class="sticker" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#f97316" d="M12 3v10m0 0l-4-4m4 4l4-4M4 15v4h16v-4" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Download PDF</button>
-        <button id="shareBtn" class="btn btn-pink" type="button"><span class="sticker">💬</span>Share</button>
-        <button id="copyLinkBtn" class="btn btn-sky" type="button"><span class="sticker">🔗</span>Copy Link</button>
-        <button id="copySummaryBtn" class="btn btn-green" type="button"><span class="sticker">📝</span>Copy My Summary</button>
-      </div>
-    </section>
+    <div class="summary-box" id="summaryBox">Your summary will appear here as you go.</div>
 
-    <section class="panel" aria-labelledby="linksLabel">
-      <h2 id="linksLabel">Helpful links</h2>
-      <div class="comic-row">
-        <a class="btn btn-sky" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener"><span class="sticker">🛟</span>Help page</a>
-        <a class="btn btn-primary" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener"><span class="sticker">📘</span>Recommended Audio Books</a>
-        <a class="btn btn-green" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener"><span class="sticker">🛡️</span>Support us</a>
-        <a class="btn btn-orange" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener"><span class="sticker">🧭</span>Explore more free tools</a>
-      </div>
-      <div class="help" style="margin-top:.75rem;">
-        <p><strong>If you’re in danger or feel unsafe, contact local emergency services.</strong></p>
-        <p>Additional help option: <a href="https://findahelpline.com/" target="_blank" rel="noopener">https://findahelpline.com/</a></p>
-      </div>
-      <div class="comic-row" style="margin-top:.8rem;">
-        <button id="resetAll" class="btn btn-red" type="button"><span class="sticker">♻️</span>Reset tool</button>
-        <button id="clearSaved" class="btn btn-slate" type="button"><span class="sticker">🗑️</span>Clear saved data</button>
-      </div>
-      <p class="notice">Created by Emotional Intelligence Developer — <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a></p>
-    </section>
+    <div class="section-label">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
+      <button type="button" class="btn btn-outline" id="copySummaryBtn">Copy my summary</button>
+      <button type="button" class="btn btn-danger" id="resetAllBtn">Reset tool</button>
+      <button type="button" class="btn btn-danger" id="clearSavedBtn">Clear saved data</button>
+    </div>
 
-    <section id="printSheet" class="panel" style="display:none;"></section>
-  </main>
+    <div class="section-label">Share this tool</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    </div>
+  </section>
 
-  <nav class="sticky" aria-label="Quick actions">
-    <button class="btn btn-primary" id="stickStart" type="button">Start</button>
-    <button class="btn btn-green" id="stickNext" type="button">Next</button>
-    <button class="btn btn-orange" id="stickDownload" type="button">Download</button>
-    <button class="btn btn-pink" id="stickShare" type="button">Share</button>
-  </nav>
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
 
-  <script>
-    (function () {
-      const STORAGE_KEY = 'vg_reset_tool_v2';
-      const stepsData = [
-        { key: 'see', count: 5, title: 'Name 5 things you can see', suggestions: ['window', 'lamp', 'plant', 'book', 'your hands', 'ceiling', 'cup', 'floor pattern'] },
-        { key: 'feel', count: 4, title: 'Name 4 things you can feel', suggestions: ['feet on ground', 'shirt texture', 'air on skin', 'chair support', 'warmth', 'coolness'] },
-        { key: 'hear', count: 3, title: 'Name 3 things you can hear', suggestions: ['fan', 'birds', 'distant traffic', 'your breath', 'room tone'] },
-        { key: 'smell', count: 2, title: 'Name 2 things you can smell', suggestions: ['tea', 'soap', 'fresh air', 'clean laundry'] },
-        { key: 'taste', count: 1, title: 'Name 1 thing you can taste', suggestions: ['water', 'mint', 'coffee', 'gum', 'neutral taste'] }
-      ];
+    <div class="footer-links">
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
 
-      const state = {
-        currentStep: 0,
-        chips: { see: [], feel: [], hear: [], smell: [], taste: [] },
-        anchors: { circles: false, blue: false, trace: false },
-        reflections: { smallStep: '', needNow: '', feelingMsg: '' },
-        breathing: { running: false, seconds: 45, left: 45, timer: null }
-      };
+    <p class="footer-credit">
+      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;·&nbsp; Reflection support only — not a replacement for professional care.
+    </p>
+  </footer>
 
-      const $ = (id) => document.getElementById(id);
-      const stepWrap = $('steps');
-      const live = $('liveRegion');
+</div>
 
-      function icon(name) {
-        const map = {
-          add: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#1d4ed8" d="M11 4h2v16h-2zM4 11h16v2H4z"/></svg>',
-          heart: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#db2777" d="M12 21s-7.2-4.4-9.4-8C.5 10.1 2 6.5 5.5 5.5c2.1-.6 4 .3 5.1 1.8 1.1-1.5 3-2.4 5.1-1.8 3.5 1 5 4.6 2.9 7.5C19.2 16.6 12 21 12 21z"/></svg>',
-          shield: '<svg viewBox="0 0 24 24" width="14" height="14"><path fill="#0f766e" d="M12 2l8 3v6c0 5.5-3.5 9.8-8 11-4.5-1.2-8-5.5-8-11V5l8-3z"/></svg>'
-        };
-        return map[name] || map.add;
-      }
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      function renderSteps() {
-        stepWrap.innerHTML = '';
-        stepsData.forEach((s, idx) => {
-          const card = document.createElement('article');
-          card.className = 'step-card' + (idx === state.currentStep ? ' active' : '');
-          card.dataset.step = String(idx);
-          card.innerHTML = `
-            <h3>${idx + 1}. ${s.title}</h3>
-            <p class="notice">Pick up to ${s.count}. You can add your own.</p>
-            <div class="suggestions" role="group" aria-label="Suggestions for ${s.title}">
-              ${s.suggestions.map(text => `<button type="button" class="chip" data-chip="${text}" aria-pressed="${state.chips[s.key].includes(text)}">${text}</button>`).join('')}
-            </div>
-            <div class="input-row">
-              <input id="input-${s.key}" type="text" placeholder="Type and tap Add" maxlength="48" />
-              <button class="btn btn-sky" type="button" data-add="${s.key}"><span class="sticker">${icon('add')}</span>Add</button>
-            </div>
-            <div class="chips" id="chips-${s.key}" aria-live="polite"></div>
-          `;
-          stepWrap.appendChild(card);
-          drawChosen(s.key);
-        });
-        bindStepButtons();
-        updateProgress();
-      }
+<script>
+(function () {
+  'use strict';
 
-      function drawChosen(key) {
-        const target = $('chips-' + key);
-        if (!target) return;
-        target.innerHTML = '';
-        state.chips[key].forEach((v, i) => {
-          const chip = document.createElement('button');
-          chip.type = 'button';
-          chip.className = 'chip';
-          chip.setAttribute('aria-label', `Remove ${v}`);
-          chip.innerHTML = `${v} ✕`;
-          chip.addEventListener('click', () => {
-            state.chips[key].splice(i, 1);
-            save();
-            renderSteps();
-          });
-          target.appendChild(chip);
-        });
-      }
+  const STORAGE_KEY = 'visualGroundingV4';
+  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const $ = id => document.getElementById(id);
 
-      function bindStepButtons() {
-        stepWrap.querySelectorAll('[data-chip]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const text = btn.dataset.chip;
-            const step = stepsData[state.currentStep];
-            const list = state.chips[step.key];
-            if (list.includes(text)) {
-              state.chips[step.key] = list.filter(v => v !== text);
-            } else if (list.length < step.count) {
-              list.push(text);
-            }
-            save();
-            renderSteps();
-            updateSummary();
-          });
-        });
+  const STEPS_DATA = [
+    { key: 'see', count: 5, title: '5 things I can see', suggestions: ['window', 'lamp', 'plant', 'book', 'my hands', 'ceiling', 'cup', 'floor pattern'] },
+    { key: 'feel', count: 4, title: '4 things I can feel', suggestions: ['feet on ground', 'shirt texture', 'air on skin', 'chair support', 'warmth', 'coolness'] },
+    { key: 'hear', count: 3, title: '3 things I can hear', suggestions: ['fan', 'birds', 'distant traffic', 'my breath', 'room tone'] },
+    { key: 'smell', count: 2, title: '2 things I can smell', suggestions: ['tea', 'soap', 'fresh air', 'clean laundry'] },
+    { key: 'taste', count: 1, title: '1 thing I can taste', suggestions: ['water', 'mint', 'coffee', 'neutral taste'] }
+  ];
 
-        stepWrap.querySelectorAll('[data-add]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const key = btn.dataset.add;
-            const input = $('input-' + key);
-            const value = (input.value || '').trim();
-            if (!value) return;
-            const cfg = stepsData.find(x => x.key === key);
-            if (!state.chips[key].includes(value) && state.chips[key].length < cfg.count) {
-              state.chips[key].push(value);
-              input.value = '';
-              save();
-              renderSteps();
-              updateSummary();
-            }
-          });
-        });
-      }
+  let state = {
+    currentStep: 0,
+    chips: { see: [], feel: [], hear: [], smell: [], taste: [] },
+    anchors: { circles: false, blue: false, trace: false },
+    reflections: { smallStep: '', needNow: '', feelingMsg: '' }
+  };
 
-      function updateProgress() {
-        const totals = stepsData.reduce((acc, s) => acc + s.count, 0);
-        const done = stepsData.reduce((acc, s) => acc + Math.min(state.chips[s.key].length, s.count), 0);
-        const percent = Math.round((done / totals) * 100);
-        $('progressFill').style.width = percent + '%';
-        $('progressText').textContent = percent + '%';
-        $('stepLabel').textContent = `Step ${state.currentStep + 1} of ${stepsData.length}`;
-        live.textContent = `Progress ${percent} percent. ${stepsData[state.currentStep].title}.`;
-      }
+  let breathTimer = null;
+  let boxCycle = null;
+  let toastTimer;
 
-      function moveStep(dir) {
-        state.currentStep = Math.max(0, Math.min(stepsData.length - 1, state.currentStep + dir));
+  function showToast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  // STATE PERSISTENCE
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(_) {}
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.chips) state.chips = d.chips;
+      if (d.anchors) state.anchors = d.anchors;
+      if (d.reflections) state.reflections = d.reflections;
+      if (typeof d.currentStep === 'number') state.currentStep = d.currentStep;
+      $('smallStep').value = state.reflections.smallStep || '';
+      $('needNow').value = state.reflections.needNow || '';
+      $('feelingMsg').value = state.reflections.feelingMsg || '';
+    } catch(_) {}
+  }
+
+  // PROGRESS
+  function updateProgress() {
+    const total = STEPS_DATA.reduce((a, s) => a + s.count, 0);
+    const done = STEPS_DATA.reduce((a, s) => a + Math.min(state.chips[s.key].length, s.count), 0);
+    const pct = Math.round((done / total) * 100);
+    $('progressFill').style.width = pct + '%';
+    $('progressPct').textContent = pct + '%';
+    $('progressStepLabel').textContent = 'Step ' + (state.currentStep + 1) + ' of ' + STEPS_DATA.length + ' — ' + STEPS_DATA[state.currentStep].title;
+    $('liveRegion').textContent = 'Progress ' + pct + '%. ' + STEPS_DATA[state.currentStep].title + '.';
+  }
+
+  // RENDER STEPS
+  function renderSteps() {
+    const container = $('stepsContainer');
+    container.innerHTML = '';
+
+    STEPS_DATA.forEach((step, idx) => {
+      const card = document.createElement('div');
+      card.className = 'step-card' + (idx === state.currentStep ? ' active' : '');
+      card.dataset.step = idx;
+
+      const chosen = state.chips[step.key];
+
+      card.innerHTML = `
+        <p class="step-heading">Step ${idx + 1} of ${STEPS_DATA.length} — ${step.title}</p>
+        <p class="step-hint">Choose up to ${step.count}. You can also add your own words.</p>
+        <div class="suggestion-wrap" id="suggestions-${step.key}" role="group" aria-label="Suggestions for ${step.title}">
+          ${step.suggestions.map(s => `
+            <button type="button" class="suggestion-chip" data-chip="${s}" data-key="${step.key}" aria-pressed="${chosen.includes(s) ? 'true' : 'false'}">${s}</button>
+          `).join('')}
+        </div>
+        <div class="chosen-wrap" id="chosen-${step.key}"></div>
+        <div class="add-row">
+          <input type="text" id="input-${step.key}" maxlength="48" placeholder="Type and press Add…" />
+          <button type="button" class="btn btn-primary btn-small add-btn" data-key="${step.key}">Add</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+      renderChosenChips(step.key);
+    });
+
+    bindStepEvents();
+    updateProgress();
+  }
+
+  function renderChosenChips(key) {
+    const wrap = $('chosen-' + key);
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    state.chips[key].forEach((val, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chosen-chip';
+      btn.innerHTML = val + ' &times;';
+      btn.setAttribute('aria-label', 'Remove ' + val);
+      btn.addEventListener('click', () => {
+        state.chips[key].splice(i, 1);
         save();
         renderSteps();
-      }
+        updateSummary();
+      });
+      wrap.appendChild(btn);
+    });
+  }
 
-      function updateSummary() {
-        state.reflections.smallStep = $('smallStep').value.trim();
-        state.reflections.needNow = $('needNow').value.trim();
-        state.reflections.feelingMsg = $('feelingMsg').value.trim();
-
-        const top = stepsData.map(s => `${s.title}: ${state.chips[s.key].join(', ') || '—'}`).join('\n');
-        const anchors = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'none yet';
-        const text = `What helped most:\n${top}\n\nVisual anchors used: ${anchors}\n\nNext small step: ${state.reflections.smallStep || '—'}\nNeed right now: ${state.reflections.needNow || '—'}\nFeeling message: ${state.reflections.feelingMsg || '—'}`;
-        $('summaryBox').textContent = text;
-        save();
-        updateProgress();
-      }
-
-      function save() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }
-
-      function load() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return;
-          const parsed = JSON.parse(raw);
-          Object.assign(state, parsed);
-          state.breathing.timer = null;
-          $('smallStep').value = state.reflections.smallStep || '';
-          $('needNow').value = state.reflections.needNow || '';
-          $('feelingMsg').value = state.reflections.feelingMsg || '';
-        } catch (_) {}
-      }
-
-      function attachReflectionListeners() {
-        ['smallStep','needNow','feelingMsg'].forEach(id => $(id).addEventListener('input', updateSummary));
-      }
-
-      function setupAnchors() {
-        document.querySelectorAll('.anchor').forEach(btn => {
-          const key = btn.dataset.anchor;
-          if (state.anchors[key]) btn.classList.add('active');
-          btn.addEventListener('click', () => {
-            state.anchors[key] = !state.anchors[key];
-            btn.classList.toggle('active', state.anchors[key]);
-            if (key === 'trace') {
-              $('tracePad').style.display = state.anchors.trace ? 'block' : 'none';
-            }
-            updateSummary();
-          });
-        });
-        $('tracePad').style.display = state.anchors.trace ? 'block' : 'none';
-      }
-
-      function setupTracePad() {
-        const canvas = $('tracePad');
-        const ctx = canvas.getContext('2d');
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#2563eb';
-        let drawing = false;
-
-        function pos(ev) {
-          const rect = canvas.getBoundingClientRect();
-          const p = ev.touches ? ev.touches[0] : ev;
-          return { x: (p.clientX - rect.left) * (canvas.width / rect.width), y: (p.clientY - rect.top) * (canvas.height / rect.height) };
-        }
-
-        function start(ev) { drawing = true; const p = pos(ev); ctx.beginPath(); ctx.moveTo(p.x, p.y); ev.preventDefault(); }
-        function draw(ev) { if (!drawing) return; const p = pos(ev); ctx.lineTo(p.x, p.y); ctx.stroke(); ev.preventDefault(); }
-        function end() { drawing = false; }
-
-        canvas.addEventListener('mousedown', start);
-        canvas.addEventListener('mousemove', draw);
-        window.addEventListener('mouseup', end);
-        canvas.addEventListener('touchstart', start, { passive: false });
-        canvas.addEventListener('touchmove', draw, { passive: false });
-        canvas.addEventListener('touchend', end);
-
-        $('clearTrace').addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-      }
-
-      function setupBreathing() {
-        const ring = $('ring');
-        const prompt = $('breathPrompt');
-
-        function renderRing() {
-          const total = Number($('breathLength').value);
-          const left = state.breathing.left;
-          const deg = Math.round(((total - left) / total) * 360);
-          ring.style.background = `conic-gradient(#8b5cf6 ${deg}deg, #cbd5e1 ${deg}deg)`;
-          ring.textContent = `${left}s`;
-          prompt.textContent = left % 8 < 4 ? 'Inhale softly' : 'Exhale slowly';
-        }
-
-        $('startBreath').addEventListener('click', () => {
-          clearInterval(state.breathing.timer);
-          state.breathing.seconds = Number($('breathLength').value);
-          state.breathing.left = state.breathing.seconds;
-          renderRing();
-          state.breathing.timer = setInterval(() => {
-            state.breathing.left -= 1;
-            renderRing();
-            if (state.breathing.left <= 0) {
-              clearInterval(state.breathing.timer);
-              prompt.textContent = 'Nice work. Notice one small shift in your body.';
-              ring.textContent = '✓';
-            }
-          }, 1000);
-        });
-
-        $('stopBreath').addEventListener('click', () => {
-          clearInterval(state.breathing.timer);
-          prompt.textContent = 'Paused. You can restart any time.';
-        });
-
-        $('breathLength').addEventListener('change', () => {
-          state.breathing.left = Number($('breathLength').value);
-          renderRing();
-        });
-        renderRing();
-      }
-
-      async function copyText(text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          alert('Copied.');
-        } catch (_) {
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          ta.remove();
-          alert('Copied.');
-        }
-      }
-
-      function buildPrintableHTML() {
-        const now = new Date().toLocaleString();
-        const item = (label, val) => `<p><strong>${label}</strong> ${val || '—'}</p>`;
-        return `<!doctype html><html><head><meta charset="utf-8"><title>Visual Grounding Plan</title><style>
-          body{font-family:Arial,sans-serif;color:#0f172a;margin:24px;}
-          h1{font-size:20px;margin:0 0 8px;} h2{font-size:16px;margin:14px 0 6px;}
-          p{margin:4px 0;font-size:12px;line-height:1.4;} .box{border:1px solid #94a3b8;border-radius:8px;padding:10px;}
-          .site-link{font-size:12px;font-weight:700;margin:8px 0 10px;} .footer{margin-top:14px;border-top:1px solid #94a3b8;padding-top:6px;font-size:11px;}
-          @page{size:A4;margin:18mm;}
-        </style></head><body>
-          <h1>Visual Grounding + Emotional Reset</h1>
-          <p class="site-link"><strong>Website:</strong> https://emotionalintelligencedeveloper.com/</p>
-          <p><strong>Date/time:</strong> ${now}</p>
-          <div class="box">
-            <h2>Your entries</h2>
-            ${stepsData.map(s => item(s.title + ':', state.chips[s.key].join(', '))).join('')}
-            ${item('Smallest safe next step:', state.reflections.smallStep)}
-            ${item('Need right now:', state.reflections.needNow)}
-            ${item('Feeling message:', state.reflections.feelingMsg)}
-            ${item('What helped most:', stepsData.map(s=>state.chips[s.key][0]).filter(Boolean).join(', '))}
-            ${item('Next small step:', state.reflections.smallStep)}
-          </div>
-          <p class="footer"><strong>Website:</strong> https://emotionalintelligencedeveloper.com/</p>
-        </body></html>`;
-      }
-
-      function printOnePagePDF() {
-        const html = buildPrintableHTML();
-        const w = window.open('', '_blank', 'width=900,height=700');
-        if (!w) {
-          alert('Pop-up blocked. Please allow pop-ups to print/download your PDF.');
+  function bindStepEvents() {
+    // Suggestion chip toggles
+    document.querySelectorAll('.suggestion-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.key;
+        const text = btn.dataset.chip;
+        const list = state.chips[key];
+        const step = STEPS_DATA.find(s => s.key === key);
+        if (list.includes(text)) {
+          state.chips[key] = list.filter(v => v !== text);
+          btn.setAttribute('aria-pressed', 'false');
+        } else if (list.length < step.count) {
+          list.push(text);
+          btn.setAttribute('aria-pressed', 'true');
+        } else {
+          showToast('You can choose up to ' + step.count + ' for this step.');
           return;
         }
-        w.document.open();
-        w.document.write(html);
-        w.document.close();
-        w.focus();
-        setTimeout(() => w.print(), 300);
-      }
+        save();
+        renderChosenChips(key);
+        updateProgress();
+        updateSummary();
+      });
+    });
 
-      async function doShare() {
-        const text = `Visual Grounding + Emotional Reset\n${$('summaryBox').textContent.slice(0, 260)}\nhttps://emotionalintelligencedeveloper.com/`;
-        const url = window.location.href;
-        if (navigator.share) {
-          try { await navigator.share({ title: 'Visual Grounding + Emotional Reset', text, url }); return; } catch (_) {}
+    // Add custom chips
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.key;
+        const input = $('input-' + key);
+        const val = (input.value || '').trim();
+        if (!val) return;
+        const step = STEPS_DATA.find(s => s.key === key);
+        const list = state.chips[key];
+        if (list.includes(val)) { showToast('Already added.'); return; }
+        if (list.length >= step.count) { showToast('You can choose up to ' + step.count + ' for this step.'); return; }
+        list.push(val);
+        input.value = '';
+        save();
+        renderChosenChips(key);
+        updateProgress();
+        updateSummary();
+      });
+    });
+
+    // Enter key for add inputs
+    STEPS_DATA.forEach(step => {
+      const input = $('input-' + step.key);
+      if (input) {
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            document.querySelector('.add-btn[data-key="' + step.key + '"]')?.click();
+          }
+        });
+      }
+    });
+  }
+
+  // STEP NAVIGATION
+  $('prevBtn').addEventListener('click', () => {
+    state.currentStep = Math.max(0, state.currentStep - 1);
+    save();
+    renderSteps();
+  });
+
+  $('nextBtn').addEventListener('click', () => {
+    state.currentStep = Math.min(STEPS_DATA.length - 1, state.currentStep + 1);
+    save();
+    renderSteps();
+  });
+
+  $('startBtn').addEventListener('click', () => {
+    $('groundingSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('liveRegion').textContent = 'Grounding started.';
+  });
+
+  // ANCHORS
+  function setupAnchors() {
+    document.querySelectorAll('.anchor-btn').forEach(btn => {
+      const key = btn.dataset.anchor;
+      if (state.anchors[key]) btn.classList.add('active');
+      btn.addEventListener('click', () => {
+        state.anchors[key] = !state.anchors[key];
+        btn.classList.toggle('active', state.anchors[key]);
+        if (key === 'trace') {
+          $('tracePadWrap').classList.toggle('visible', state.anchors.trace);
         }
-        copyText(url);
-      }
-
-      function resetAll(confirmMsg) {
-        if (!confirm(confirmMsg)) return;
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-
-      // Bind global controls
-      $('startBtn').addEventListener('click', () => {
-        document.getElementById('grounding').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        live.textContent = 'Grounding started.';
+        save();
+        updateSummary();
       });
-      $('prevBtn').addEventListener('click', () => moveStep(-1));
-      $('nextBtn').addEventListener('click', () => moveStep(1));
-      $('downloadBtn').addEventListener('click', printOnePagePDF);
-      $('shareBtn').addEventListener('click', doShare);
-      $('copyLinkBtn').addEventListener('click', () => copyText(window.location.href));
-      $('copySummaryBtn').addEventListener('click', () => copyText($('summaryBox').textContent));
-      $('resetAll').addEventListener('click', () => resetAll('Reset this tool and remove all entries?'));
-      $('clearSaved').addEventListener('click', () => {
-        localStorage.removeItem(STORAGE_KEY);
-        alert('Saved data cleared.');
-      });
+    });
 
-      $('stickStart').addEventListener('click', () => $('startBtn').click());
-      $('stickNext').addEventListener('click', () => $('nextBtn').click());
-      $('stickDownload').addEventListener('click', () => $('downloadBtn').click());
-      $('stickShare').addEventListener('click', () => $('shareBtn').click());
+    if (state.anchors.trace) $('tracePadWrap').classList.add('visible');
+  }
 
-      // Init
-      load();
-      renderSteps();
-      attachReflectionListeners();
-      setupAnchors();
-      setupTracePad();
-      setupBreathing();
-      updateSummary();
-    })();
-  </script>
+  // TRACE PAD
+  function setupTracePad() {
+    const canvas = $('tracePad');
+    const ctx = canvas.getContext('2d');
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#6a5aaa';
+    let drawing = false;
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const p = e.touches ? e.touches[0] : e;
+      return {
+        x: (p.clientX - rect.left) * (canvas.width / rect.width),
+        y: (p.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    function startDraw(e) { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+    function continueDraw(e) { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+    function endDraw() { drawing = false; }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', continueDraw);
+    window.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', continueDraw, { passive: false });
+    canvas.addEventListener('touchend', endDraw);
+
+    $('clearTraceBtn').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      showToast('Trace cleared.');
+    });
+  }
+
+  // BREATHING
+  function setupBreathing() {
+    const ring = $('breathRing');
+    const secEl = $('breathSec');
+    const prompt = $('breathPrompt');
+
+    function updateRing(left, total) {
+      const deg = Math.round(((total - left) / total) * 360);
+      ring.style.background = 'conic-gradient(var(--brand) ' + deg + 'deg, var(--brand-light) ' + deg + 'deg)';
+      secEl.textContent = left + 's';
+      prompt.textContent = left % 8 < 4 ? 'Inhale softly…' : 'Exhale slowly…';
+    }
+
+    $('breathLength').addEventListener('change', () => {
+      const total = parseInt($('breathLength').value, 10);
+      updateRing(total, total);
+    });
+
+    $('startBreathBtn').addEventListener('click', () => {
+      clearInterval(breathTimer);
+      const total = parseInt($('breathLength').value, 10);
+      let left = total;
+      updateRing(left, total);
+
+      breathTimer = setInterval(() => {
+        left--;
+        updateRing(Math.max(left, 0), total);
+        if (left <= 0) {
+          clearInterval(breathTimer);
+          secEl.textContent = '✓';
+          prompt.textContent = 'Done. Notice one small shift in your body.';
+          ring.style.background = 'conic-gradient(var(--teal) 360deg, var(--teal-light) 360deg)';
+          showToast('Breathing reset complete.');
+        }
+      }, 1000);
+    });
+
+    $('stopBreathBtn').addEventListener('click', () => {
+      clearInterval(breathTimer);
+      prompt.textContent = 'Paused. You can restart any time.';
+    });
+  }
+
+  // SUMMARY
+  function updateSummary() {
+    state.reflections.smallStep = $('smallStep').value.trim();
+    state.reflections.needNow = $('needNow').value.trim();
+    state.reflections.feelingMsg = $('feelingMsg').value.trim();
+
+    const groundingLines = STEPS_DATA.map(s =>
+      s.title + ': ' + (state.chips[s.key].join(', ') || '—')
+    ).join('\n');
+
+    const anchorsUsed = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'none yet';
+
+    const text = [
+      'Visual grounding:',
+      groundingLines,
+      '',
+      'Visual anchors used: ' + anchorsUsed,
+      '',
+      'Smallest safe next step: ' + (state.reflections.smallStep || '—'),
+      'Need right now: ' + (state.reflections.needNow || '—'),
+      'Feeling message: ' + (state.reflections.feelingMsg || '—')
+    ].join('\n');
+
+    $('summaryBox').textContent = text;
+    save();
+  }
+
+  // REFLECTION LISTENERS
+  ['smallStep', 'needNow', 'feelingMsg'].forEach(id => {
+    $(id).addEventListener('input', updateSummary);
+  });
+
+  // SHARE
+  function updateShareLinks() {
+    const url = encodeURIComponent(window.location.href);
+    const msg = encodeURIComponent('A gentle visual grounding and emotional reset tool: ');
+    $('waShare').href = 'https://wa.me/?text=' + msg + url;
+    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  }
+
+  $('copyLinkBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
+    catch(_) { showToast('Copy from your address bar.'); }
+  });
+
+  $('copySummaryBtn').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('summaryBox').textContent); showToast('Summary copied!'); }
+    catch(_) { showToast('Could not copy — please try again.'); }
+  });
+
+  // RESET
+  $('resetAllBtn').addEventListener('click', () => {
+    if (!confirm('Reset the tool and remove all entries?')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    location.reload();
+  });
+
+  $('clearSavedBtn').addEventListener('click', () => {
+    if (!confirm('Clear all saved data from this device?')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    showToast('Saved data cleared.');
+  });
+
+  // PDF
+  async function imageToDataUrl(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Logo failed');
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function downloadPDF() {
+    const PDF = jsPDF();
+    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    showToast('Preparing your PDF…');
+
+    const doc = new PDF({ unit: 'pt', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let y = margin;
+
+    // Header
+    doc.setFillColor(240, 236, 248);
+    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    try {
+      const logoData = await imageToDataUrl(LOGO_URL);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    } catch(_) {}
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(30, 26, 46);
+    doc.text('Visual Grounding + Emotional Reset', margin + 76, y + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(74, 72, 104);
+    doc.text('Personal grounding summary — ' + new Date().toLocaleString(), margin + 76, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    y += 86;
+
+    // Grounding rows
+    STEPS_DATA.forEach(step => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      const value = state.chips[step.key].join(', ') || 'Not entered';
+      doc.setFillColor(240, 236, 248);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(106, 90, 170);
+      doc.text(step.title.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 26, 46);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Anchors + reflections
+    const anchorsUsed = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'None';
+    const refRows = [
+      ['Visual anchors used', anchorsUsed],
+      ['Smallest safe next step', state.reflections.smallStep || 'Not entered'],
+      ['Need right now', state.reflections.needNow || 'Not entered'],
+      ['Feeling message', state.reflections.feelingMsg || 'Not entered']
+    ];
+
+    refRows.forEach(([label, value]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFillColor(240, 236, 248);
+      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+      const bh = lines.length * 12 + 28;
+      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(106, 90, 170);
+      doc.text(label.toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 26, 46);
+      doc.text(lines, margin + 10, y + 26);
+      y += bh + 8;
+    });
+
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    y += 4;
+    doc.setDrawColor(192, 176, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(106, 90, 170);
+    doc.text('Understanding visual grounding and emotional reset — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['Why the 5-4-3-2-1 technique works',
+       'The 5-4-3-2-1 grounding technique is rooted in sensory-based attention redirection — a core component of both Cognitive Behavioural Therapy and trauma-informed practice. By deliberately directing attention to present-moment sensory experience, the technique interrupts ruminative or anxious thought patterns that amplify distress. Research shows that engaging multiple sensory channels simultaneously reduces the subjective intensity of overwhelming emotion more effectively than cognitive reframing alone, because it activates different neural pathways.'],
+      ['The neuroscience of grounding',
+       'During acute emotional distress, the limbic system — particularly the amygdala — dominates processing and suppresses prefrontal cortex activity. Grounding techniques work by providing concrete sensory input that the somatosensory and perceptual cortices must process, which naturally reduces limbic dominance and partially restores prefrontal access. This is why grounding feels stabilising: it is not distraction but a neurological shift from threat-processing to present-moment processing.'],
+      ['Visual anchoring as an emotional regulation strategy',
+       'Visual anchoring — deliberately directing visual attention to neutral or calming objects — is an evidence-based technique used in EMDR therapy and trauma-informed stabilisation protocols. The visual cortex is the largest sensory processing region in the human brain. Deliberately engaging it with specific, intentional visual tasks (finding shapes, colours, or objects) commands significant neural resources that would otherwise be allocated to emotional amplification, producing measurable calming effects.'],
+      ['Why drawing and tracing calm the nervous system',
+       'Research in art therapy and occupational therapy consistently shows that repetitive fine motor activities — including drawing, tracing, and colouring — activate the parasympathetic nervous system and produce measurable reductions in cortisol and heart rate. These activities engage the motor cortex, the cerebellum, and the visual cortex simultaneously, creating a state of focused engagement that is incompatible with sustained anxiety. Even 2 to 3 minutes of slow, deliberate tracing has measurable calming effects.'],
+      ['The role of small steps in emotional recovery',
+       'Research in positive psychology and behaviour activation — including work by Peter Lewinsohn and Aaron Beck — shows that the ability to identify and take one small, concrete, achievable next step is a significant predictor of recovery from depressive and anxious states. The act of identifying a specific small step activates the prefrontal cortex\'s planning and agency systems, which are suppressed during acute distress. Even naming a single tiny action restores a sense of control, which directly reduces emotional intensity.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(106, 90, 170);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 26, 46);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
+    // Resources
+    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    doc.setDrawColor(192, 176, 224);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(106, 90, 170);
+    doc.text('More free wellbeing resources', margin, y);
+    y += 13;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 26, 46);
+    [
+      'Find a helpline: findahelpline.com',
+      'Main site: emotionalintelligencedeveloper.com',
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+
+    // Footer
+    doc.setDrawColor(192, 176, 224);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(152, 144, 176);
+    doc.text('This tool supports reflection. Not a replacement for professional care. If you are in danger, please seek urgent help now.', margin, pageH - 22);
+
+    doc.save('visual-grounding-reset.pdf');
+    showToast('PDF downloaded!');
+  }
+
+  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+
+  // INIT
+  load();
+  renderSteps();
+  setupAnchors();
+  setupTracePad();
+  setupBreathing();
+  updateSummary();
+  updateShareLinks();
+}());
+</script>
 </body>
 </html>

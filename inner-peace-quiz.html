@@ -928,13 +928,14 @@
     doc.text('Your 5-minute plan for today', margin, y);
     y += 14;
     data.today.forEach((item, i) => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9.5);
       doc.setTextColor(30, 26, 46);
       const lines = doc.splitTextToSize((i + 1) + '. ' + item, pageW - margin * 2);
+      const itemH = lines.length * 14 + 6;
+      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
       doc.text(lines, margin, y);
-      y += lines.length * 12 + 6;
+      y += itemH;
     });
 
     // Week
@@ -944,15 +945,19 @@
     doc.setFontSize(11);
     doc.setTextColor(106, 90, 170);
     doc.text('Your 7-day mini plan', margin, y);
-    y += 14;
-    data.week.forEach(item => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
+    y += 16;
+    data.week.forEach((item, i) => {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9.5);
       doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize('→ ' + item, pageW - margin * 2);
+      // Use safe ASCII prefix instead of Unicode arrow
+      const prefix = 'Day ' + (i + 1) + ': ';
+      const lines = doc.splitTextToSize(prefix + item, pageW - margin * 2);
+      const itemH = lines.length * 14 + 6;
+      // Check AFTER calculating height so multi-line items don't overflow
+      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
       doc.text(lines, margin, y);
-      y += lines.length * 12 + 5;
+      y += itemH;
     });
 
     // Prompts
@@ -962,15 +967,16 @@
     doc.setFontSize(11);
     doc.setTextColor(106, 90, 170);
     doc.text('Reflection prompts', margin, y);
-    y += 14;
+    y += 16;
     data.prompts.forEach(prompt => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(9.5);
       doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize('• ' + prompt, pageW - margin * 2);
+      const lines = doc.splitTextToSize('- ' + prompt, pageW - margin * 2);
+      const itemH = lines.length * 14 + 6;
+      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
       doc.text(lines, margin, y);
-      y += lines.length * 12 + 6;
+      y += itemH;
     });
 
     // Educational section

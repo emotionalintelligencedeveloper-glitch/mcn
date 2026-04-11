@@ -1051,6 +1051,45 @@
     doc.text(closingLines, margin + 10, y + 14);
     y += closingH + 12;
 
+    // Educational section
+    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    doc.setDrawColor(200, 220, 230);
+    doc.line(margin, y, pageW - margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(91, 143, 168);
+    doc.text('Understanding AI and work anxiety — what research tells us', margin, y);
+    y += 14;
+
+    const educational = [
+      ['Why AI anxiety is a legitimate psychological response',
+       'Fear of AI and technological change is not irrational — it is a predictable psychological response to genuine uncertainty. Research in occupational psychology and threat appraisal theory, including work by Richard Lazarus at UC Berkeley, shows that when people perceive a potential threat to livelihood or identity, the stress response activates regardless of whether the threat is immediate. The fact that the future of work is genuinely uncertain means there is no false alarm happening — the nervous system is correctly detecting ambiguity. What it cannot do accurately is assess probability or timescale, which is where anxiety tends to amplify beyond what the evidence supports.'],
+      ['The neuroscience of uncertainty and future threat',
+       'Neuroimaging research confirms that uncertainty activates the same threat-processing circuits as known danger — in some studies, more so. Research by Robb Rutledge at University College London shows the brain processes uncertain outcomes with greater arousal than negative outcomes of equal magnitude. This means imagining possible job loss can produce more distress than an actual setback of similar weight. Understanding this is not about dismissing the fear — it is about recognising that the intensity of anxiety about AI is partly a feature of how the brain processes the unknown, not an accurate signal about how bad the outcome will actually be.'],
+      ['What research actually says about AI and job displacement',
+       'The relationship between automation and employment is more complex than most media coverage suggests. Research by David Autor at MIT, one of the leading economists on labour and technology, shows that while automation consistently eliminates specific tasks, it simultaneously creates demand for new roles and increases the overall value of human capabilities that complement technology. Historical analysis of previous waves of technological change — from the industrial revolution to the rise of computing — shows that net employment has increased through each transition, though the distribution of work changes substantially. The most vulnerable workers in transitions are those with fewer resources to retrain, which is why addressing economic anxiety around AI has both an individual and a structural dimension.'],
+      ['Building adaptability — what the research supports',
+       'Research on career resilience and adaptability by Mark Savickas at Northeast Ohio Medical University identifies three core capacities that protect workers through major transitions: career concern (active engagement with one\'s professional future), career curiosity (willingness to explore new possibilities), and career confidence (belief in one\'s capacity to adapt). None of these is a fixed trait — all three can be deliberately developed. The evidence consistently shows that small regular actions — exploring one new skill, one conversation with someone in a different field, one honest look at transferable strengths — produce significantly better outcomes over time than either anxious hypervigilance or avoidance.'],
+      ['The psychology of information boundaries',
+       'Research on media consumption and anxiety by Graham Davey at the University of Sussex shows a clear relationship between habitual negative news consumption and heightened anxiety, low mood, and catastrophic thinking — a pattern he calls "news-induced stress." The mechanism is not that the news is false but that repeated exposure to uncertain threat narratives without resolution keeps the threat-processing system activated without providing closure. Setting deliberate limits on AI and tech news is not avoidance — it is a physiologically sound intervention that breaks the activation loop. Research on attention restoration theory by Rachel and Stephen Kaplan confirms that the brain requires periods of low-demand input to restore the executive function capacity needed for effective problem-solving and decision-making.']
+    ];
+
+    educational.forEach(([title, body]) => {
+      if (y > pageH - 80) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(91, 143, 168);
+      doc.text(title, margin, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.2);
+      doc.setTextColor(30, 42, 53);
+      const lines = doc.splitTextToSize(body, pageW - margin * 2);
+      doc.text(lines, margin, y);
+      y += lines.length * 11.5 + 12;
+    });
+
     // Resources
     if (y > pageH - 80) { doc.addPage(); y = margin; }
     doc.setDrawColor(200, 220, 230);

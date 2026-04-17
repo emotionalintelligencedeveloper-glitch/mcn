@@ -1,6 +1,6 @@
 # Emotional Intelligence Developer
 
-<img width="1097" height="867" alt="free wellbeing tools" src="https://github.com" />
+<img width="1097" height="867" alt="free wellbeing tools" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" />
 
 🚀 Contributions Welcome — [Join here](https://github.com/emotionalintelligencedeveloper-glitch/mcn)
 

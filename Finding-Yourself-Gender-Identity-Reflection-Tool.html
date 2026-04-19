@@ -1,0 +1,836 @@
+<!-- Finding Yourself Tool — Emotional Intelligence Developer -->
+<!-- WordPress HTML Block Embed — paste this entire block into an HTML block in the editor -->
+
+<!-- Load jsPDF FIRST before any other script runs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div id="findself-root" style="font-family:'Georgia','Times New Roman',serif;background:#f2f4f8;color:#1a1e2a;line-height:1.7;font-size:16px;max-width:680px;margin:0 auto;padding:16px 14px 40px;">
+
+<style>
+#findself-root *{box-sizing:border-box;margin:0;padding:0;}
+#findself-root .fs-card{background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:22px 20px;margin-bottom:16px;}
+#findself-root .fs-logo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+#findself-root .fs-logo{width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid #b8c8e8;flex-shrink:0;}
+#findself-root .fs-brand{font-size:13px;color:#4a5a8a;letter-spacing:.04em;line-height:1.3;}
+#findself-root h1{font-size:clamp(1.25rem,4vw,1.65rem);font-weight:normal;color:#1a1e2a;line-height:1.3;margin-bottom:8px;}
+#findself-root .fs-tagline{font-size:15px;color:#4a5870;line-height:1.7;margin-bottom:12px;}
+#findself-root .fs-affirm-banner{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:14px;padding:12px 16px;font-size:14px;color:#4a3a6a;line-height:1.65;font-style:italic;margin-bottom:10px;}
+#findself-root .fs-disclaimer{background:#e8eef8;border:1px solid #b8c8e8;border-radius:12px;padding:10px 13px;font-size:13px;color:#4a5870;}
+#findself-root .fs-safety{background:#fff0f4;border:1px solid #f0b8c8;border-radius:12px;padding:10px 13px;font-size:13px;color:#7a2a48;margin-top:8px;}
+#findself-root .fs-safety a{color:#7a2a48;font-weight:bold;}
+#findself-root .fs-progress-wrap{background:#e8eef8;border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px;}
+#findself-root .fs-progress-fill{height:100%;background:linear-gradient(90deg,#6a7acc,#a878c8);border-radius:99px;transition:width .3s ease;width:0%;}
+#findself-root .fs-progress-label{font-size:12px;color:#8090b8;font-style:italic;text-align:center;}
+#findself-root .fs-step{font-size:11px;font-weight:bold;color:#a0b0c8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+#findself-root .fs-field{margin-bottom:14px;}
+#findself-root .fs-field-label{font-size:15px;color:#1a1e2a;margin-bottom:7px;display:block;line-height:1.5;}
+#findself-root .fs-field-hint{font-size:13px;color:#8090b8;font-style:italic;margin-bottom:8px;display:block;}
+#findself-root .fs-input{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:11px 13px;font-family:'Georgia',serif;font-size:15px;color:#1a1e2a;background:#fff;transition:border-color .2s;outline:none;-webkit-appearance:none;appearance:none;}
+#findself-root .fs-input:focus{border-color:#6a7acc;}
+#findself-root .fs-textarea{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:15px;color:#1a1e2a;background:#fff;min-height:88px;resize:vertical;line-height:1.65;transition:border-color .2s;outline:none;}
+#findself-root .fs-textarea:focus{border-color:#6a7acc;}
+#findself-root select.fs-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238090b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+#findself-root .fs-inline-affirm{display:none;margin-top:8px;padding:11px 14px;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:12px;font-size:13px;color:#4a3a6a;line-height:1.65;font-style:italic;}
+#findself-root .fs-inline-affirm.show{display:block;}
+#findself-root .fs-affirm-label{font-size:11px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-style:normal;}
+#findself-root .fs-breathe-card{display:none;text-align:center;background:#f8f4fe;border:1px solid #c8b8e0;border-radius:20px;padding:28px 24px;margin-bottom:16px;}
+#findself-root .fs-breathe-ring{width:90px;height:90px;border-radius:50%;border:4px solid #c8b8e0;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:transform .4s ease,border-color .4s ease;}
+#findself-root .fs-breathe-ring.expand{transform:scale(1.22);border-color:#a878c8;}
+#findself-root .fs-breathe-ring.contract{transform:scale(0.88);border-color:#6a7acc;}
+#findself-root .fs-breathe-text{font-size:14px;color:#6a5088;font-style:italic;margin-bottom:14px;min-height:22px;}
+#findself-root .fs-breathe-title{font-size:1.05rem;color:#4a3a6a;margin-bottom:8px;}
+#findself-root .fs-breathe-note{font-size:13px;color:#8070a0;margin-bottom:14px;line-height:1.6;}
+#findself-root .fs-results{display:none;background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:22px 20px;margin-bottom:16px;}
+#findself-root .fs-results-header{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:14px;padding:16px 18px;text-align:center;margin-bottom:18px;}
+#findself-root .fs-results-title{font-size:1.15rem;color:#4a3a6a;font-weight:normal;margin-bottom:6px;}
+#findself-root .fs-results-sub{font-size:13px;color:#8070a0;font-style:italic;}
+#findself-root .fs-result-section{margin-bottom:16px;}
+#findself-root .fs-result-section-title{font-size:12px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+#findself-root .fs-result-insight{background:#f8f4fe;border:1px solid #d0c8e8;border-radius:12px;padding:13px 15px;font-size:14px;color:#1a1e2a;line-height:1.7;margin-bottom:10px;}
+#findself-root .fs-next-steps{list-style:none;padding:0;}
+#findself-root .fs-next-steps li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e8eef8;font-size:14px;color:#4a5870;line-height:1.55;}
+#findself-root .fs-next-steps li:last-child{border-bottom:none;}
+#findself-root .fs-next-dot{min-width:8px;height:8px;border-radius:50%;background:#a878c8;flex-shrink:0;margin-top:6px;}
+#findself-root .fs-prompt-item{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;padding:10px 14px;font-size:14px;color:#4a3a6a;font-style:italic;margin-bottom:8px;line-height:1.6;}
+#findself-root .fs-answers-summary{background:#f8f8fc;border:1px solid #d0d8e8;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+#findself-root .fs-answer-row{padding:7px 0;border-bottom:1px solid #e8eef8;font-size:13px;line-height:1.55;}
+#findself-root .fs-answer-row:last-child{border-bottom:none;}
+#findself-root .fs-answer-label{font-size:11px;font-weight:bold;color:#8090b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+#findself-root .fs-answer-val{font-size:14px;color:#1a1e2a;}
+#findself-root .fs-section-label{font-size:11px;color:#a0b0c8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+#findself-root .fs-btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
+#findself-root .fs-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:99px;font-family:'Georgia',serif;font-size:14px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:46px;transition:opacity .15s,transform .1s;white-space:nowrap;}
+#findself-root .fs-btn:active{transform:scale(.97);}
+#findself-root .fs-btn:hover{opacity:.88;}
+#findself-root .fs-btn-primary{background:#6a7acc;color:#fff;border-color:#6a7acc;}
+#findself-root .fs-btn-purple{background:#a878c8;color:#fff;border-color:#a878c8;}
+#findself-root .fs-btn-outline{background:#fff;color:#1a1e2a;border-color:#d0d8e8;}
+#findself-root .fs-btn-danger{background:#fff;color:#b94040;border-color:#e8c0c0;}
+#findself-root .fs-btn-share{background:#f0ecf8;color:#4a3a6a;border-color:#c8b8e0;}
+#findself-root .fs-btn-support{background:#e8702a;color:#fff;border-color:#e8702a;font-size:15px;padding:14px 24px;}
+@media(max-width:480px){#findself-root .fs-btn{width:100%;}#findself-root .fs-btn-row{flex-direction:column;}}
+#findself-root .fs-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:#1a1e2a;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-family:'Georgia',serif;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap;}
+#findself-root .fs-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#findself-root .fs-footer{background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:20px;text-align:center;}
+#findself-root .fs-footer-support-text{font-size:14px;color:#4a5870;margin-bottom:12px;font-style:italic;}
+#findself-root .fs-footer-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;padding-top:14px;border-top:1px solid #d0d8e8;}
+#findself-root .fs-footer-link{font-size:13px;color:#4a5a8a;text-decoration:none;}
+#findself-root .fs-footer-link:hover{text-decoration:underline;}
+#findself-root .fs-footer-credit{font-size:12px;color:#a0b0c8;margin-top:10px;}
+</style>
+
+<!-- HEADER -->
+<div class="fs-card">
+  <div class="fs-logo-wrap">
+    <img class="fs-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer" loading="lazy" />
+    <div class="fs-brand">Emotional Intelligence<br>Developer</div>
+  </div>
+  <h1>Finding Yourself</h1>
+  <p class="fs-tagline">A gentle reflection space to explore who you are, how you feel, and what you need right now. There are no right answers here — only yours.</p>
+  <div class="fs-affirm-banner">You are allowed to exist exactly as you are. You are allowed to question, to pause, and to take up space. This tool is a private space for you.</div>
+  <div class="fs-disclaimer">Everything you write stays on this page only. Nothing is saved, sent, or stored anywhere.</div>
+  <div class="fs-safety">If you feel unsafe or overwhelmed, please reach out for support. <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> — find a helpline near you.</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="fs-card" style="padding:16px 20px;">
+  <div class="fs-progress-wrap"><div class="fs-progress-fill" id="fsProgressFill"></div></div>
+  <p class="fs-progress-label" id="fsProgressLabel">Begin when you are ready — there is no rush.</p>
+</div>
+
+<!-- NAME FIELD -->
+<div class="fs-card">
+  <div class="fs-step">Before you begin</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsName">Your name or a name you feel comfortable with (optional — used in your PDF)</label>
+    <input type="text" id="fsName" class="fs-input" maxlength="80" placeholder="Any name, nickname, or leave blank…" />
+  </div>
+</div>
+
+<!-- QUESTION 1 -->
+<div class="fs-card">
+  <div class="fs-step">Question 1 of 5</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsFeelingNow">How are you feeling right now?</label>
+    <span class="fs-field-hint">Choose what feels closest — or the one you least want to admit.</span>
+    <select id="fsFeelingNow" class="fs-input">
+      <option value="">Choose one…</option>
+      <option value="Confused">Confused</option>
+      <option value="Sad">Sad</option>
+      <option value="Numb">Numb</option>
+      <option value="Calm">Calm</option>
+      <option value="Hopeful">Hopeful</option>
+      <option value="Overwhelmed">Overwhelmed</option>
+      <option value="Curious">Curious</option>
+      <option value="Anxious">Anxious</option>
+      <option value="Tired">Tired</option>
+      <option value="Relieved">Relieved</option>
+    </select>
+    <div class="fs-inline-affirm" id="fsAffirm1"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm1Text"></span></div>
+  </div>
+</div>
+
+<!-- QUESTION 2 -->
+<div class="fs-card">
+  <div class="fs-step">Question 2 of 5</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsStartExploring">When did you first start exploring your sense of self or identity?</label>
+    <span class="fs-field-hint">This could mean gender, sexuality, values, belonging — whatever feels true for you.</span>
+    <select id="fsStartExploring" class="fs-input">
+      <option value="">Choose one…</option>
+      <option value="As a child">As a child</option>
+      <option value="During puberty">During puberty</option>
+      <option value="In my teens or early twenties">In my teens or early twenties</option>
+      <option value="Recently, as an adult">Recently, as an adult</option>
+      <option value="Still figuring it out">Still figuring it out</option>
+      <option value="I don't think in those terms">I don't think in those terms</option>
+    </select>
+    <div class="fs-inline-affirm" id="fsAffirm2"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm2Text"></span></div>
+  </div>
+</div>
+
+<!-- QUESTION 3 -->
+<div class="fs-card">
+  <div class="fs-step">Question 3 of 5</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsMeaning">What does your sense of identity mean to you right now?</label>
+    <span class="fs-field-hint">Use your own words. You do not need labels. Just write what is true for you today.</span>
+    <textarea id="fsMeaning" class="fs-textarea" maxlength="700" placeholder="There is no right answer — only your experience and language…"></textarea>
+    <div class="fs-inline-affirm" id="fsAffirm3"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm3Text"></span></div>
+  </div>
+</div>
+
+<!-- QUESTION 4 -->
+<div class="fs-card">
+  <div class="fs-step">Question 4 of 5</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsWhatNeed">What do you need most right now?</label>
+    <span class="fs-field-hint">Safety, space, understanding, rest, connection, time — anything that comes up.</span>
+    <textarea id="fsWhatNeed" class="fs-textarea" maxlength="500" placeholder="What would help you feel even a little more okay right now…"></textarea>
+    <div class="fs-inline-affirm" id="fsAffirm4"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm4Text"></span></div>
+  </div>
+</div>
+
+<!-- QUESTION 5 -->
+<div class="fs-card">
+  <div class="fs-step">Question 5 of 5</div>
+  <div class="fs-field">
+    <label class="fs-field-label" for="fsSelfKindness">Write one kind sentence to yourself.</label>
+    <span class="fs-field-hint">Say it the way you would say it to a friend you love — someone who deserves patience and care.</span>
+    <textarea id="fsSelfKindness" class="fs-textarea" maxlength="400" placeholder="For example: You are enough exactly as you are."></textarea>
+    <div class="fs-inline-affirm" id="fsAffirm5"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm5Text"></span></div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="fs-card" id="fsActionCard">
+  <div class="fs-btn-row">
+    <button type="button" class="fs-btn fs-btn-primary" id="fsSubmitBtn">Complete my reflection</button>
+    <button type="button" class="fs-btn fs-btn-danger" id="fsResetBtn">Start again</button>
+  </div>
+</div>
+
+<!-- BREATHING MOMENT -->
+<div class="fs-breathe-card" id="fsBreathCard">
+  <div class="fs-breathe-title">Take a breath before your results</div>
+  <div class="fs-breathe-note">You just shared something real. Take a moment with your breath before reading your reflection.</div>
+  <div class="fs-breathe-ring" id="fsBreathRing"></div>
+  <div class="fs-breathe-text" id="fsBreathText">Breathe in slowly…</div>
+  <div class="fs-btn-row" style="justify-content:center;margin-top:14px;">
+    <button type="button" class="fs-btn fs-btn-outline" id="fsSkipBreathBtn">Skip to my results</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="fs-results" id="fsResults">
+  <div class="fs-results-header">
+    <div class="fs-results-title" id="fsResultsTitle">Thank you for sharing this with yourself.</div>
+    <div class="fs-results-sub">This was an act of courage, even if it did not feel like one.</div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">What this reflection says about you</div>
+    <div id="fsInsightBox"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Gentle next steps — for right now</div>
+    <ul class="fs-next-steps" id="fsNextSteps"></ul>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Reflection prompts to go deeper — when you are ready</div>
+    <div id="fsPrompts"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Your reflection — what you wrote</div>
+    <div class="fs-answers-summary" id="fsAnswersSummary"></div>
+  </div>
+
+  <div class="fs-section-label">Actions</div>
+  <div class="fs-btn-row" style="margin-bottom:18px;">
+    <button type="button" class="fs-btn fs-btn-purple" id="fsPdfBtn">Download my reflection (PDF)</button>
+    <button type="button" class="fs-btn fs-btn-outline" id="fsEditBtn">Go back and edit</button>
+  </div>
+
+  <div class="fs-section-label">Share this tool with someone who might need it</div>
+  <div class="fs-btn-row">
+    <button type="button" class="fs-btn fs-btn-share" id="fsCopyLink">Copy link</button>
+    <a class="fs-btn fs-btn-share" id="fsWaShare" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="fs-btn fs-btn-share" id="fsFbShare" href="#" target="_blank" rel="noopener">Facebook</a>
+    <a class="fs-btn fs-btn-share" id="fsXShare" href="#" target="_blank" rel="noopener">X</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="fs-footer">
+  <p class="fs-footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+  <a class="fs-btn fs-btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+  <div class="fs-footer-links">
+    <a class="fs-footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+    <a class="fs-footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended books</a>
+    <a class="fs-footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+    <a class="fs-footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+  </div>
+  <p class="fs-footer-credit">
+    Created by <a class="fs-footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+    &nbsp;·&nbsp; General wellbeing support only — not professional care.
+  </p>
+</div>
+
+<div class="fs-toast" id="fsToast"></div>
+
+<script>
+/* Finding Yourself Tool — all logic inline, no external dependencies after jsPDF above */
+(function(){
+
+var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+
+/* Safe getElementById — works even if WP wraps the block */
+function ge(id){ return document.getElementById(id); }
+
+var toastTimer;
+function showToast(msg){
+  var el = ge('fsToast');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+
+/* ── DATA ── */
+var FEELING_AFFIRMS = {
+  'Confused':'Confusion is not a sign that something is wrong with you. It is often a sign that you are paying honest attention to something complex and real.',
+  'Sad':'Sadness is a signal worth listening to, not a problem to fix immediately. You are allowed to feel this fully without rushing to the other side of it.',
+  'Numb':'Numbness can be the mind\'s way of protecting you from too much at once. You do not have to feel everything right now — just a little bit, at your own pace.',
+  'Calm':'Calm is a resource. Whatever brought you here today, you are meeting it from a grounded place — even if that place feels fragile.',
+  'Hopeful':'Hope is brave, especially when it arrives during uncertainty. Hold it gently.',
+  'Overwhelmed':'Overwhelmed means there is more coming in than you can currently process. That is not your fault. It is a signal that you need more space and less demand for now.',
+  'Curious':'Curiosity is one of the most honest and courageous things a person can bring to their own inner life.',
+  'Anxious':'Anxiety often means something matters to you. Whatever you are exploring here clearly does. That matters.',
+  'Tired':'Being tired does not mean you are weak. It often means you have been carrying a lot, for a long time, without enough rest or recognition.',
+  'Relieved':'Relief is worth noticing — something that was held tight has loosened a little. Let that be real.'
+};
+
+var EXPLORING_AFFIRMS = {
+  'As a child':'Knowing something from childhood does not make it more or less real than knowing it now. What matters is that you know it — and that you are here.',
+  'During puberty':'Puberty is one of the most complex periods anyone navigates. What you felt then was real, even if it was hard to name or hold.',
+  'In my teens or early twenties':'The early years of adulthood are when many people begin to find language for things they have long felt. Wherever you are now in that journey is exactly where you are supposed to be.',
+  'Recently, as an adult':'There is no expiry date on self-discovery. Arriving at something later in life does not make it less valid — it often makes it braver.',
+  'Still figuring it out':'Still figuring it out is a completely whole and honest answer. You do not need to have arrived to be worthy of reflection and care.',
+  'I don\'t think in those terms':'You are allowed to hold your experience in your own way, without the frameworks others use. Your language for yourself is the only one that has to fit.'
+};
+
+var NEXT_STEPS = {
+  'Confused':['Give yourself permission not to have an answer today. Confusion is a valid resting place, not a failure to understand yourself.','Try naming one thing you do know — even something small and partial. Write it down if that helps.','Avoid the pressure to categorise or label anything right now. Your experience can exist without a name for it.'],
+  'Sad':['Let the sadness be present without trying to argue with it. Naming it — as you just did — is enough for now.','Do one small physical act of care: drink water, breathe slowly, rest your hands somewhere warm.','If the sadness feels heavy or persistent, consider speaking to one trusted person — even a brief message can help.'],
+  'Numb':['Gentleness first. Do not try to force feeling. Numbness is the mind protecting itself — it will ease when you feel safe enough.','Try small sensory grounding: name 5 things you can see, feel your feet on the floor, hold something warm.','Keep this moment simple. You do not need to process everything today.'],
+  'Calm':['Use this steadiness to go a little deeper if you want — calm is a good moment to look honestly at something.','Note what created this calm, so you can return to it when things feel harder.','You might be ready to take one small step toward something you have been considering.'],
+  'Hopeful':['Let hope be a direction, not a pressure. Use it to take one small action — however modest.','Write down what the hope is pointing toward. That direction is information about what genuinely matters to you.','Protect this feeling by not demanding too much of it too soon.'],
+  'Overwhelmed':['Do less. Reduce one demand on yourself right now — even a small one.','You do not have to process everything at once. One thing at a time. One breath at a time.','Consider who or what gives you rest — not advice, just rest — and move toward that today.'],
+  'Curious':['Follow the curiosity gently. Read, explore, ask questions without needing them answered right away.','Note what you are curious about and let that be interesting rather than urgent.','Curiosity is one of the most generative states there is. It does not need to be resolved.'],
+  'Anxious':['Slow your exhale: breathe in for 4, hold for 2, out for 6. Do this three times before anything else.','Name what specifically feels uncertain — anxiety often becomes smaller when the exact worry is spoken.','Avoid making major decisions or reaching firm conclusions right now. Let the body settle first.'],
+  'Tired':['Rest is not optional today. Prioritise one act of genuine rest — not distraction, but actual downtime.','Lower your expectations for yourself in the next few hours. You are running on reduced resources and that is okay.','If tiredness is persistent, it is worth asking whether you have been carrying something without enough support.'],
+  'Relieved':['Savour this. Something loosened — notice what that was, so you understand what you were holding.','This is a good moment to be gentle rather than immediately productive with the relief.','Consider what made this feel relieving — that is information about what you actually need more of.']
+};
+
+var PROMPTS = {
+  'Confused':['What is the question I am most afraid to answer honestly?','If confusion is a message, what might it be asking me to slow down and look at?','What would it feel like to sit with not-knowing for a little longer, without trying to fix it?'],
+  'Sad':['What am I grieving or missing right now — named or unnamed?','What would I say to a friend who felt exactly as I feel today?','What has this sadness been trying to tell me that I keep moving past?'],
+  'Numb':['When did I last feel something deeply — and what was it?','What am I protecting myself from by feeling less?','What would the first small step back toward feeling look like, if I took it very gently?'],
+  'Calm':['What does this calm feel like in my body, and where does it live?','What do I know from here that is harder to know when things are loud?','What has this stillness been trying to show me?'],
+  'Hopeful':['What specifically am I hoping for — can I name it clearly?','What would it mean for this hope to come true, and what would I need to do or allow?','What has kept this hope alive in me, even through hard times?'],
+  'Overwhelmed':['What is taking up the most space in me right now?','What am I responsible for that I actually do not need to carry alone?','If I could remove one thing from my life right now, what would it be — and why haven\'t I?'],
+  'Curious':['What is the question underneath the curiosity — what am I really asking?','What would I explore if there were no consequences to the answer?','Who do I know whose experience I am curious about, and what might I learn by asking?'],
+  'Anxious':['What is the specific thing I am most afraid of right now?','What is the worst realistic outcome, and how would I handle it if it happened?','What would I need to feel even 10% less anxious right now?'],
+  'Tired':['What have I been carrying that no one knows about?','What am I not allowing myself to rest from?','If my tiredness could speak, what would it ask of me?'],
+  'Relieved':['What was I holding that just loosened — and for how long had I been holding it?','What does this relief tell me about what I actually need?','What can I do to make more room for this feeling in my daily life?']
+};
+
+var DEFAULT_STEPS = ['Give yourself a few minutes of quiet after this reflection.','Notice how your body feels now compared to when you started.','You do not need to resolve anything. Reflecting was enough.'];
+var DEFAULT_PROMPTS = ['What part of today\'s reflection surprised me?','What do I want to remember from this — one sentence I could carry?','What would I tell myself to come back to in one month?'];
+
+/* ── PROGRESS ── */
+function updateProgress(){
+  var fields = [
+    ge('fsFeelingNow') ? ge('fsFeelingNow').value : '',
+    ge('fsStartExploring') ? ge('fsStartExploring').value : '',
+    ge('fsMeaning') ? ge('fsMeaning').value.trim() : '',
+    ge('fsWhatNeed') ? ge('fsWhatNeed').value.trim() : '',
+    ge('fsSelfKindness') ? ge('fsSelfKindness').value.trim() : ''
+  ];
+  var done = fields.filter(function(v){ return v && v.length > 0; }).length;
+  var pct = Math.round((done / 5) * 100);
+  if(ge('fsProgressFill')) ge('fsProgressFill').style.width = pct + '%';
+  if(ge('fsProgressLabel')){
+    if(pct === 0) ge('fsProgressLabel').textContent = 'Begin when you are ready — there is no rush.';
+    else if(pct < 100) ge('fsProgressLabel').textContent = done + ' of 5 questions answered';
+    else ge('fsProgressLabel').textContent = 'All 5 questions answered — ready when you are.';
+  }
+}
+
+/* ── FIELD AFFIRMATIONS ── */
+function bindAffirm(selectId, affirmId, textId, lookup){
+  var el = ge(selectId);
+  if(!el) return;
+  el.addEventListener('change', function(){
+    var val = el.value;
+    var aff = ge(affirmId);
+    var txt = ge(textId);
+    if(val && lookup[val] && aff && txt){
+      txt.textContent = lookup[val];
+      aff.classList.add('show');
+    } else if(aff){
+      aff.classList.remove('show');
+    }
+    updateProgress();
+  });
+}
+
+function bindTextAffirm(textareaId, affirmId, textId, msg, minLen){
+  var el = ge(textareaId);
+  if(!el) return;
+  el.addEventListener('input', function(){
+    var aff = ge(affirmId);
+    var txt = ge(textId);
+    if(el.value.trim().length >= minLen && aff && txt){
+      txt.textContent = msg;
+      aff.classList.add('show');
+    } else if(aff){
+      aff.classList.remove('show');
+    }
+    updateProgress();
+  });
+}
+
+bindAffirm('fsFeelingNow', 'fsAffirm1', 'fsAffirm1Text', FEELING_AFFIRMS);
+bindAffirm('fsStartExploring', 'fsAffirm2', 'fsAffirm2Text', EXPLORING_AFFIRMS);
+bindTextAffirm('fsMeaning', 'fsAffirm3', 'fsAffirm3Text', 'Thank you for putting that into your own words. Whatever you wrote — tentative or certain, brief or long — it is yours. That is enough.', 10);
+bindTextAffirm('fsWhatNeed', 'fsAffirm4', 'fsAffirm4Text', 'Naming what you need is one of the most honest acts of self-care there is. Whatever you wrote, it counts as something worth listening to.', 6);
+bindTextAffirm('fsSelfKindness', 'fsAffirm5', 'fsAffirm5Text', 'Keep that sentence. Read it again slowly before you close this page. You wrote it — which means part of you already knows it is true.', 6);
+
+/* ── BREATHING ── */
+var breathTimer = null;
+
+function startBreathing(onComplete){
+  var ring = ge('fsBreathRing');
+  var text = ge('fsBreathText');
+  var phases = [
+    {label:'Breathe in slowly…', cls:'expand', ms:4000},
+    {label:'Hold gently…', cls:'', ms:2000},
+    {label:'Breathe out slowly…', cls:'contract', ms:6000},
+    {label:'Rest…', cls:'', ms:2000}
+  ];
+  var phaseIdx = 0;
+  var cycleCount = 0;
+  var totalCycles = 2;
+
+  function nextPhase(){
+    var p = phases[phaseIdx];
+    if(ring) ring.className = 'fs-breathe-ring' + (p.cls ? ' ' + p.cls : '');
+    if(text) text.textContent = p.label;
+    breathTimer = setTimeout(function(){
+      phaseIdx = (phaseIdx + 1) % phases.length;
+      if(phaseIdx === 0){ cycleCount++; }
+      if(cycleCount >= totalCycles){ onComplete(); return; }
+      nextPhase();
+    }, p.ms);
+  }
+  nextPhase();
+}
+
+/* ── SHOW RESULTS ── */
+function showResults(){
+  var feeling  = ge('fsFeelingNow').value  || '';
+  var exploring= ge('fsStartExploring').value || '';
+  var meaning  = ge('fsMeaning').value.trim() || '';
+  var need     = ge('fsWhatNeed').value.trim() || '';
+  var kindness = ge('fsSelfKindness').value.trim() || '';
+  var name     = ge('fsName').value.trim() || '';
+
+  /* Hide breathing card */
+  var bc = ge('fsBreathCard');
+  if(bc) { bc.classList.remove('show'); bc.style.display = ''; }
+
+  /* Results title */
+  var rt = ge('fsResultsTitle');
+  if(rt) rt.textContent = name
+    ? 'Thank you, ' + name + '. Thank you for sharing this with yourself.'
+    : 'Thank you for sharing this with yourself.';
+
+  /* Insight paragraphs */
+  var ib = ge('fsInsightBox');
+  if(ib){
+    var p1 = 'You just took time to pause and look honestly at your inner world. That is not a small thing — many people go through entire days without doing it once.';
+    var p2 = feeling
+      ? 'You chose the word "' + feeling + '" to describe how you feel right now. That choice matters. The fact that you can name it — even if imperfectly — means you are listening to yourself. That is the beginning of everything.'
+      : 'The fact that you are here, asking these questions, is already a form of courage.';
+    var p3 = 'You are at a moment of reflection, not a moment of conclusion. You do not need to resolve what you are exploring. You do not need to arrive anywhere today. Being here is already enough.';
+    if(exploring && exploring !== "I don't think in those terms" && exploring !== 'Still figuring it out'){
+      p3 += ' You mentioned that your journey of self-exploration began ' + exploring.toLowerCase() + '. Wherever the beginning was, you are still with yourself now — and that continuity matters.';
+    }
+    ib.innerHTML =
+      '<div class="fs-result-insight">' + p1 + '</div>' +
+      '<div class="fs-result-insight" style="margin-top:8px;">' + p2 + '</div>' +
+      '<div class="fs-result-insight" style="margin-top:8px;">' + p3 + '</div>';
+  }
+
+  /* Next steps */
+  var ns = ge('fsNextSteps');
+  if(ns){
+    ns.innerHTML = '';
+    var steps = NEXT_STEPS[feeling] || DEFAULT_STEPS;
+    steps.forEach(function(s){
+      ns.innerHTML += '<li><span class="fs-next-dot"></span><span>' + s + '</span></li>';
+    });
+  }
+
+  /* Prompts */
+  var pc = ge('fsPrompts');
+  if(pc){
+    pc.innerHTML = '';
+    var prompts = PROMPTS[feeling] || DEFAULT_PROMPTS;
+    prompts.forEach(function(p){
+      pc.innerHTML += '<div class="fs-prompt-item">' + p + '</div>';
+    });
+  }
+
+  /* Answers summary */
+  var as = ge('fsAnswersSummary');
+  if(as){
+    var rows = [
+      ['How you are feeling now',      feeling   || 'Not answered'],
+      ['When you started exploring',   exploring || 'Not answered'],
+      ['What identity means to you',   meaning   || 'Not written'],
+      ['What you need right now',      need      || 'Not written'],
+      ['A kindness to yourself',       kindness  || 'Not written']
+    ];
+    as.innerHTML = rows.map(function(r){
+      return '<div class="fs-answer-row">' +
+        '<div class="fs-answer-label">' + r[0] + '</div>' +
+        '<div class="fs-answer-val">'   + r[1] + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  /* Show results panel */
+  var rp = ge('fsResults');
+  if(rp){
+    rp.classList.add('show');
+    rp.style.display = '';
+    setTimeout(function(){
+      rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+/* ── SUBMIT BUTTON ── */
+var submitBtn = ge('fsSubmitBtn');
+if(submitBtn){
+  submitBtn.addEventListener('click', function(){
+    var feeling = ge('fsFeelingNow').value;
+    if(!feeling){
+      showToast('Please choose how you are feeling right now.');
+      return;
+    }
+
+    /* Hide action card */
+    var ac = ge('fsActionCard');
+    if(ac) ac.style.display = 'none';
+
+    /* Show breathing card using classList so CSS show rule applies */
+    var bc = ge('fsBreathCard');
+    if(bc){
+      bc.classList.add('show');
+      setTimeout(function(){ bc.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+      startBreathing(showResults);
+    } else {
+      showResults();
+    }
+  });
+}
+
+/* ── SKIP BREATH ── */
+var skipBtn = ge('fsSkipBreathBtn');
+if(skipBtn){
+  skipBtn.addEventListener('click', function(){
+    clearTimeout(breathTimer);
+    showResults();
+  });
+}
+
+/* ── EDIT ── */
+var editBtn = ge('fsEditBtn');
+if(editBtn){
+  editBtn.addEventListener('click', function(){
+    var rp = ge('fsResults');
+    if(rp){ rp.classList.remove('show'); rp.style.display = ''; }
+    var ac = ge('fsActionCard');
+    if(ac){
+      ac.style.display = 'block';
+      setTimeout(function(){ ac.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+    }
+  });
+}
+
+/* ── RESET ── */
+var resetBtn = ge('fsResetBtn');
+if(resetBtn){
+  resetBtn.addEventListener('click', function(){
+    ['fsFeelingNow','fsStartExploring'].forEach(function(id){ if(ge(id)) ge(id).value = ''; });
+    ['fsMeaning','fsWhatNeed','fsSelfKindness','fsName'].forEach(function(id){ if(ge(id)) ge(id).value = ''; });
+    document.querySelectorAll('#findself-root .fs-inline-affirm').forEach(function(el){ el.classList.remove('show'); });
+    var rp = ge('fsResults');
+    if(rp){ rp.classList.remove('show'); rp.style.display = ''; }
+    var bc = ge('fsBreathCard');
+    if(bc){ bc.classList.remove('show'); bc.style.display = ''; }
+    var ac = ge('fsActionCard');
+    if(ac) ac.style.display = 'block';
+    clearTimeout(breathTimer);
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Reset — begin again when you are ready.');
+  });
+}
+
+/* ── SHARE ── */
+function updateShareLinks(){
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('A gentle identity and self-reflection tool — free and private: ');
+  var ids = {
+    fsWaShare: 'https://wa.me/?text=' + msg + url,
+    fsFbShare: 'https://www.facebook.com/sharer/sharer.php?u=' + url,
+    fsXShare:  'https://twitter.com/intent/tweet?text=' + msg + url
+  };
+  Object.keys(ids).forEach(function(id){ if(ge(id)) ge(id).href = ids[id]; });
+}
+updateShareLinks();
+
+var copyBtn = ge('fsCopyLink');
+if(copyBtn){
+  copyBtn.addEventListener('click', function(){
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(window.location.href)
+        .then(function(){ showToast('Link copied!'); })
+        .catch(function(){ showToast('Copy from your address bar.'); });
+    } else { showToast('Copy from your address bar.'); }
+  });
+}
+
+/* ── PDF ── */
+function imgToDataUrl(url){
+  return fetch(url, { mode: 'cors' })
+    .then(function(r){ if(!r.ok) throw new Error('logo'); return r.blob(); })
+    .then(function(blob){
+      return new Promise(function(resolve, reject){
+        var reader = new FileReader();
+        reader.onloadend = function(){ resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    });
+}
+
+var pdfBtn = ge('fsPdfBtn');
+if(pdfBtn){
+  pdfBtn.addEventListener('click', function(){
+    if(!window.jspdf || !window.jspdf.jsPDF){
+      showToast('PDF library not ready — please wait a moment and try again.');
+      return;
+    }
+    showToast('Building your reflection PDF…');
+    generatePDF();
+  });
+}
+
+async function generatePDF(){
+  var name     = (ge('fsName')         ? ge('fsName').value.trim()         : '') || '';
+  var feeling  = (ge('fsFeelingNow')   ? ge('fsFeelingNow').value          : '') || 'Not answered';
+  var exploring= (ge('fsStartExploring')? ge('fsStartExploring').value     : '') || 'Not answered';
+  var meaning  = (ge('fsMeaning')      ? ge('fsMeaning').value.trim()      : '') || 'Not written';
+  var need     = (ge('fsWhatNeed')     ? ge('fsWhatNeed').value.trim()      : '') || 'Not written';
+  var kindness = (ge('fsSelfKindness') ? ge('fsSelfKindness').value.trim() : '') || 'Not written';
+
+  var logoData = null;
+  try { logoData = await imgToDataUrl(LOGO_URL); } catch(e){}
+
+  var jsPDF = window.jspdf.jsPDF;
+  var doc   = new jsPDF({ unit: 'pt', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin= 42;
+  var width = pageW - margin * 2;
+  var lineH = 14;
+  var pgNum = 1;
+  var LOGY  = 14;
+  var LOGW  = 36;
+  var LOGH  = 36;
+  var TXT_X = margin + LOGW + 10;
+  var y     = margin;
+
+  function drawHeader(){
+    if(logoData) doc.addImage(logoData, 'JPEG', margin, LOGY, LOGW, LOGH);
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(26,30,42);
+    doc.text('Emotional Intelligence Developer', TXT_X, 26);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(74,88,112);
+    doc.text('emotionalintelligencedeveloper.com', TXT_X, 38);
+    doc.setDrawColor(208,216,232); doc.line(margin, 54, pageW - margin, 54);
+  }
+
+  function drawFooter(){
+    doc.setDrawColor(208,216,232); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(130);
+    doc.text('General wellbeing support only — not professional care', margin, pageH - 20);
+    doc.text('Page ' + pgNum, pageW - margin - 36, pageH - 20);
+  }
+
+  function ensureSpace(h){
+    if(y + h > pageH - 54){
+      drawFooter();
+      doc.addPage();
+      pgNum++;
+      drawHeader();
+      y = 72;
+    }
+  }
+
+  function addTitle(t){
+    ensureSpace(30);
+    doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.setTextColor(26,30,42);
+    doc.text(t, margin, y); y += 26;
+  }
+
+  function addMeta(t){
+    ensureSpace(18);
+    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(74,88,112);
+    doc.text(t, margin, y); y += 18;
+  }
+
+  function addSectionTitle(t){
+    ensureSpace(30);
+    doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(26,30,42);
+    doc.text(t, margin, y); y += 10;
+    doc.setDrawColor(220,226,240); doc.line(margin, y, pageW - margin, y); y += 13;
+  }
+
+  function addBlock(label, value){
+    var sv = value && String(value).trim() ? String(value).trim() : '—';
+    ensureSpace(24);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(106,90,168);
+    doc.text(label.toUpperCase(), margin, y); y += 11;
+    var lines = doc.splitTextToSize(sv, width);
+    var bh = lines.length * lineH + 16;
+    ensureSpace(bh);
+    var top = y;
+    doc.setFillColor(248,246,254); doc.setDrawColor(210,200,232);
+    doc.roundedRect(margin, top, width, bh, 4, 4, 'FD');
+    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(26,30,42);
+    doc.text(lines, margin + 10, top + 12);
+    y = top + bh + 10;
+  }
+
+  function addPara(t){
+    var s = t && String(t).trim() ? String(t).trim() : '—';
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(26,30,42);
+    var ls = doc.splitTextToSize(s, width);
+    var bh = ls.length * lineH + 4;
+    ensureSpace(bh);
+    doc.text(ls, margin, y); y += bh + 2;
+  }
+
+  /* Build PDF */
+  drawHeader();
+  y = 72;
+
+  addTitle('Finding Yourself — Personal Reflection');
+  if(name) addMeta('Name: ' + name);
+  addMeta('Date: ' + new Date().toLocaleDateString('en-GB',{ weekday:'long', day:'numeric', month:'long', year:'numeric' }));
+  addMeta('Time: ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }));
+  addMeta('emotionalintelligencedeveloper.com');
+  y += 6;
+
+  /* Affirmation banner */
+  ensureSpace(44);
+  doc.setFillColor(242,240,252); doc.setDrawColor(200,188,224);
+  doc.roundedRect(margin, y, width, 36, 6, 6, 'FD');
+  doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(74,58,106);
+  doc.text('You are allowed to exist exactly as you are.', margin + 12, y + 23);
+  y += 48;
+
+  addSectionTitle('Your reflection');
+  addBlock('How you are feeling now',               feeling);
+  addBlock('When you started exploring your identity', exploring);
+  addBlock('What identity means to you',            meaning);
+  addBlock('What you need right now',               need);
+  addBlock('A kindness you wrote to yourself',      kindness);
+
+  /* Gentle next steps */
+  ensureSpace(40);
+  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(106,90,168);
+  doc.text('Gentle next steps for right now', margin, y); y += 14;
+  var steps = NEXT_STEPS[feeling] || DEFAULT_STEPS;
+  steps.forEach(function(s){ addPara('- ' + s); });
+
+  /* Reflection prompts */
+  ensureSpace(40);
+  y += 6;
+  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(106,90,168);
+  doc.text('Reflection prompts — when you are ready', margin, y); y += 14;
+  var prompts = PROMPTS[feeling] || DEFAULT_PROMPTS;
+  prompts.forEach(function(p){
+    doc.setFont('helvetica','italic');
+    addPara('- ' + p);
+  });
+
+  /* Closing */
+  ensureSpace(80);
+  y += 8;
+  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
+  var closingTxt = 'This page is for you. You are allowed to explore, to question, and to grow at your own pace. If you revisit this reflection later, notice what has shifted and what has stayed the same. You are not required to have answers. You are only required to be honest with yourself — and you already did that today.';
+  var cl = doc.splitTextToSize(closingTxt, width - 20);
+  var ch = cl.length * lineH + 24;
+  ensureSpace(ch + 8);
+  doc.setFillColor(248,246,254); doc.setDrawColor(200,188,224);
+  doc.roundedRect(margin, y, width, ch, 6, 6, 'FD');
+  doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(74,58,106);
+  doc.text(cl, margin + 10, y + 14);
+  y += ch + 14;
+
+  /* Educational section */
+  ensureSpace(160);
+  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
+  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(106,90,168);
+  doc.text('Understanding identity exploration — what research tells us', margin, y); y += 14;
+
+  var edu = [
+    ['Why identity exploration is a healthy and necessary process',
+     'Developmental psychologist Erik Erikson\'s foundational research on identity formation identified the process of questioning and exploring one\'s sense of self as a core developmental task — not a crisis or pathology. People who engage in active identity exploration consistently show higher levels of wellbeing, clearer values, and greater psychological resilience. Reflection itself is protective.'],
+    ['The neuroscience of self-compassion',
+     'Research by Kristin Neff at the University of Texas demonstrates that self-compassion — treating oneself with the same care one would offer a struggling friend — produces measurably lower anxiety, reduced shame, and significantly higher wellbeing compared to self-criticism. The kindness statement you wrote in this reflection is a direct practice of this.'],
+    ['Why naming feelings reduces their intensity',
+     'Research by Matthew Lieberman at UCLA shows that labelling an emotional state activates the prefrontal cortex and reduces amygdala activation — measurably reducing the intensity of the emotion being experienced. The simple act of choosing a word for how you feel is not passive description; it is active regulation.'],
+    ['The psychological safety of private reflection',
+     'Research on expressive writing by James Pennebaker at the University of Texas confirms that private, unshared reflection produces significant psychological benefits — including reduced rumination, improved mood, and greater clarity. Being able to express honestly what you think and feel, without social consequence, creates the conditions for genuine self-understanding.'],
+    ['Identity and belonging — a note for anyone on this journey',
+     'Research on minority stress by Ilan Meyer and others in social psychology shows that the psychological distress often experienced during identity exploration is not caused by the identity itself, but by the social environment. What you are exploring has inherent value. Support, community, and connection are the evidence-based responses to that difficulty.']
+  ];
+
+  edu.forEach(function(item){
+    ensureSpace(80);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
+    doc.text(item[0], margin, y); y += 12;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.2); doc.setTextColor(26,30,42);
+    var ls = doc.splitTextToSize(item[1], width);
+    doc.text(ls, margin, y); y += ls.length * 11.5 + 12;
+  });
+
+  /* Resources */
+  ensureSpace(70);
+  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 12;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
+  doc.text('More free wellbeing resources', margin, y); y += 12;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(26,30,42);
+  ['emotionalintelligencedeveloper.com',
+   'emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+   'findahelpline.com — find a helpline near you'
+  ].forEach(function(l){ doc.text(l, margin, y); y += 13; });
+
+  drawFooter();
+
+  var safeName = name ? name.replace(/[^a-zA-Z0-9\-_]/g, '-') + '-' : '';
+  doc.save('Finding-Yourself-' + safeName + new Date().toISOString().slice(0,10) + '.pdf');
+  showToast('PDF downloaded!');
+}
+
+/* ── INIT ── */
+updateProgress();
+
+})();
+</script>
+
+</div>
+<!-- End Finding Yourself Tool -->

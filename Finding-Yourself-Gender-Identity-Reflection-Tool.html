@@ -4,79 +4,165 @@
 <!-- Load jsPDF FIRST before any other script runs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<div id="findself-root" style="font-family:'Georgia','Times New Roman',serif;background:#f2f4f8;color:#1a1e2a;line-height:1.7;font-size:16px;max-width:680px;margin:0 auto;padding:16px 14px 40px;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<div id="findself-root" style="font-family:'Georgia','Times New Roman',serif;background:#f2f4f8;color:#1a1e2a;line-height:1.7;font-size:16px;max-width:680px;margin:0 auto;padding:12px 10px 40px;">
 
 <style>
 #findself-root *{box-sizing:border-box;margin:0;padding:0;}
-#findself-root .fs-card{background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:22px 20px;margin-bottom:16px;}
-#findself-root .fs-logo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-#findself-root .fs-logo{width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid #b8c8e8;flex-shrink:0;}
+#findself-root .fs-card{background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;margin-bottom:14px;}
+#findself-root .fs-logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+#findself-root .fs-logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:2px solid #b8c8e8;flex-shrink:0;}
 #findself-root .fs-brand{font-size:13px;color:#4a5a8a;letter-spacing:.04em;line-height:1.3;}
-#findself-root h1{font-size:clamp(1.25rem,4vw,1.65rem);font-weight:normal;color:#1a1e2a;line-height:1.3;margin-bottom:8px;}
+#findself-root h1{font-size:clamp(1.3rem,6vw,1.65rem);font-weight:normal;color:#1a1e2a;line-height:1.3;margin-bottom:8px;}
 #findself-root .fs-tagline{font-size:15px;color:#4a5870;line-height:1.7;margin-bottom:12px;}
-#findself-root .fs-affirm-banner{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:14px;padding:12px 16px;font-size:14px;color:#4a3a6a;line-height:1.65;font-style:italic;margin-bottom:10px;}
-#findself-root .fs-disclaimer{background:#e8eef8;border:1px solid #b8c8e8;border-radius:12px;padding:10px 13px;font-size:13px;color:#4a5870;}
-#findself-root .fs-safety{background:#fff0f4;border:1px solid #f0b8c8;border-radius:12px;padding:10px 13px;font-size:13px;color:#7a2a48;margin-top:8px;}
+#findself-root .fs-affirm-banner{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:12px;padding:12px 14px;font-size:14px;color:#4a3a6a;line-height:1.65;font-style:italic;margin-bottom:10px;}
+#findself-root .fs-disclaimer{background:#e8eef8;border:1px solid #b8c8e8;border-radius:10px;padding:10px 12px;font-size:13px;color:#4a5870;}
+#findself-root .fs-safety{background:#fff0f4;border:1px solid #f0b8c8;border-radius:10px;padding:10px 12px;font-size:13px;color:#7a2a48;margin-top:8px;}
 #findself-root .fs-safety a{color:#7a2a48;font-weight:bold;}
-#findself-root .fs-progress-wrap{background:#e8eef8;border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px;}
+
+/* Progress */
+#findself-root .fs-progress-wrap{background:#e8eef8;border-radius:99px;height:7px;overflow:hidden;margin-bottom:6px;}
 #findself-root .fs-progress-fill{height:100%;background:linear-gradient(90deg,#6a7acc,#a878c8);border-radius:99px;transition:width .3s ease;width:0%;}
 #findself-root .fs-progress-label{font-size:12px;color:#8090b8;font-style:italic;text-align:center;}
+
+/* Step label */
 #findself-root .fs-step{font-size:11px;font-weight:bold;color:#a0b0c8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+
+/* Fields */
 #findself-root .fs-field{margin-bottom:14px;}
 #findself-root .fs-field-label{font-size:15px;color:#1a1e2a;margin-bottom:7px;display:block;line-height:1.5;}
 #findself-root .fs-field-hint{font-size:13px;color:#8090b8;font-style:italic;margin-bottom:8px;display:block;}
-#findself-root .fs-input{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:11px 13px;font-family:'Georgia',serif;font-size:15px;color:#1a1e2a;background:#fff;transition:border-color .2s;outline:none;-webkit-appearance:none;appearance:none;}
+
+/* Inputs — larger tap targets on mobile */
+#findself-root .fs-input{
+  width:100%;
+  border:1px solid #d0d8e8;
+  border-radius:10px;
+  padding:13px 14px;
+  font-family:'Georgia',serif;
+  font-size:16px; /* 16px prevents iOS zoom on focus */
+  color:#1a1e2a;
+  background:#fff;
+  transition:border-color .2s;
+  outline:none;
+  -webkit-appearance:none;
+  appearance:none;
+  min-height:50px;
+}
 #findself-root .fs-input:focus{border-color:#6a7acc;}
-#findself-root .fs-textarea{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:15px;color:#1a1e2a;background:#fff;min-height:88px;resize:vertical;line-height:1.65;transition:border-color .2s;outline:none;}
+#findself-root .fs-textarea{
+  width:100%;
+  border:1px solid #d0d8e8;
+  border-radius:10px;
+  padding:13px 14px;
+  font-family:'Georgia',serif;
+  font-size:16px; /* 16px prevents iOS zoom */
+  color:#1a1e2a;
+  background:#fff;
+  min-height:96px;
+  resize:vertical;
+  line-height:1.65;
+  transition:border-color .2s;
+  outline:none;
+}
 #findself-root .fs-textarea:focus{border-color:#6a7acc;}
-#findself-root select.fs-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238090b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
-#findself-root .fs-inline-affirm{display:none;margin-top:8px;padding:11px 14px;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:12px;font-size:13px;color:#4a3a6a;line-height:1.65;font-style:italic;}
+#findself-root select.fs-input{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238090b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:38px;
+  cursor:pointer;
+}
+
+/* Inline affirmations */
+#findself-root .fs-inline-affirm{display:none;margin-top:8px;padding:11px 13px;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;font-size:13px;color:#4a3a6a;line-height:1.65;font-style:italic;}
 #findself-root .fs-inline-affirm.show{display:block;}
 #findself-root .fs-affirm-label{font-size:11px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-style:normal;}
-#findself-root .fs-breathe-card{display:none;text-align:center;background:#f8f4fe;border:1px solid #c8b8e0;border-radius:20px;padding:28px 24px;margin-bottom:16px;}
+
+/* Breathing */
+#findself-root .fs-breathe-card{display:none;text-align:center;background:#f8f4fe;border:1px solid #c8b8e0;border-radius:16px;padding:28px 20px;margin-bottom:14px;}
 #findself-root .fs-breathe-ring{width:90px;height:90px;border-radius:50%;border:4px solid #c8b8e0;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:transform .4s ease,border-color .4s ease;}
 #findself-root .fs-breathe-ring.expand{transform:scale(1.22);border-color:#a878c8;}
 #findself-root .fs-breathe-ring.contract{transform:scale(0.88);border-color:#6a7acc;}
 #findself-root .fs-breathe-text{font-size:14px;color:#6a5088;font-style:italic;margin-bottom:14px;min-height:22px;}
 #findself-root .fs-breathe-title{font-size:1.05rem;color:#4a3a6a;margin-bottom:8px;}
 #findself-root .fs-breathe-note{font-size:13px;color:#8070a0;margin-bottom:14px;line-height:1.6;}
-#findself-root .fs-results{display:none;background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:22px 20px;margin-bottom:16px;}
-#findself-root .fs-results-header{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:14px;padding:16px 18px;text-align:center;margin-bottom:18px;}
-#findself-root .fs-results-title{font-size:1.15rem;color:#4a3a6a;font-weight:normal;margin-bottom:6px;}
+
+/* Results */
+#findself-root .fs-results{display:none;background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;margin-bottom:14px;}
+#findself-root .fs-results-header{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:12px;padding:14px 16px;text-align:center;margin-bottom:16px;}
+#findself-root .fs-results-title{font-size:1.1rem;color:#4a3a6a;font-weight:normal;margin-bottom:6px;}
 #findself-root .fs-results-sub{font-size:13px;color:#8070a0;font-style:italic;}
 #findself-root .fs-result-section{margin-bottom:16px;}
 #findself-root .fs-result-section-title{font-size:12px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
-#findself-root .fs-result-insight{background:#f8f4fe;border:1px solid #d0c8e8;border-radius:12px;padding:13px 15px;font-size:14px;color:#1a1e2a;line-height:1.7;margin-bottom:10px;}
+#findself-root .fs-result-insight{background:#f8f4fe;border:1px solid #d0c8e8;border-radius:10px;padding:13px 14px;font-size:14px;color:#1a1e2a;line-height:1.7;margin-bottom:10px;}
 #findself-root .fs-next-steps{list-style:none;padding:0;}
-#findself-root .fs-next-steps li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e8eef8;font-size:14px;color:#4a5870;line-height:1.55;}
+#findself-root .fs-next-steps li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #e8eef8;font-size:14px;color:#4a5870;line-height:1.6;}
 #findself-root .fs-next-steps li:last-child{border-bottom:none;}
-#findself-root .fs-next-dot{min-width:8px;height:8px;border-radius:50%;background:#a878c8;flex-shrink:0;margin-top:6px;}
-#findself-root .fs-prompt-item{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;padding:10px 14px;font-size:14px;color:#4a3a6a;font-style:italic;margin-bottom:8px;line-height:1.6;}
-#findself-root .fs-answers-summary{background:#f8f8fc;border:1px solid #d0d8e8;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
-#findself-root .fs-answer-row{padding:7px 0;border-bottom:1px solid #e8eef8;font-size:13px;line-height:1.55;}
+#findself-root .fs-next-dot{min-width:8px;height:8px;border-radius:50%;background:#a878c8;flex-shrink:0;margin-top:7px;}
+#findself-root .fs-prompt-item{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;padding:10px 13px;font-size:14px;color:#4a3a6a;font-style:italic;margin-bottom:8px;line-height:1.6;}
+#findself-root .fs-answers-summary{background:#f8f8fc;border:1px solid #d0d8e8;border-radius:10px;padding:13px 14px;margin-bottom:14px;}
+#findself-root .fs-answer-row{padding:8px 0;border-bottom:1px solid #e8eef8;font-size:13px;line-height:1.55;}
 #findself-root .fs-answer-row:last-child{border-bottom:none;}
 #findself-root .fs-answer-label{font-size:11px;font-weight:bold;color:#8090b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
 #findself-root .fs-answer-val{font-size:14px;color:#1a1e2a;}
 #findself-root .fs-section-label{font-size:11px;color:#a0b0c8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
-#findself-root .fs-btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
-#findself-root .fs-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:99px;font-family:'Georgia',serif;font-size:14px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:46px;transition:opacity .15s,transform .1s;white-space:nowrap;}
-#findself-root .fs-btn:active{transform:scale(.97);}
+
+/* Buttons — full width on mobile, side by side on larger screens */
+#findself-root .fs-btn-row{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+#findself-root .fs-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:15px 20px;
+  border-radius:99px;
+  font-family:'Georgia',serif;
+  font-size:15px;
+  cursor:pointer;
+  text-decoration:none;
+  border:1.5px solid transparent;
+  min-height:52px;
+  transition:opacity .15s,transform .1s;
+  white-space:nowrap;
+  width:100%;
+  text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+#findself-root .fs-btn:active{transform:scale(.97);opacity:.85;}
 #findself-root .fs-btn:hover{opacity:.88;}
 #findself-root .fs-btn-primary{background:#6a7acc;color:#fff;border-color:#6a7acc;}
 #findself-root .fs-btn-purple{background:#a878c8;color:#fff;border-color:#a878c8;}
 #findself-root .fs-btn-outline{background:#fff;color:#1a1e2a;border-color:#d0d8e8;}
 #findself-root .fs-btn-danger{background:#fff;color:#b94040;border-color:#e8c0c0;}
 #findself-root .fs-btn-share{background:#f0ecf8;color:#4a3a6a;border-color:#c8b8e0;}
-#findself-root .fs-btn-support{background:#e8702a;color:#fff;border-color:#e8702a;font-size:15px;padding:14px 24px;}
-@media(max-width:480px){#findself-root .fs-btn{width:100%;}#findself-root .fs-btn-row{flex-direction:column;}}
-#findself-root .fs-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:#1a1e2a;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-family:'Georgia',serif;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap;}
+#findself-root .fs-btn-support{background:#e8702a;color:#fff;border-color:#e8702a;font-size:16px;padding:16px 24px;}
+
+/* On wider screens, allow buttons to sit side-by-side */
+@media(min-width:480px){
+  #findself-root .fs-btn-row{flex-direction:row;flex-wrap:wrap;}
+  #findself-root .fs-btn{width:auto;flex:1 1 auto;}
+}
+
+/* Toast */
+#findself-root .fs-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:#1a1e2a;color:#fff;padding:12px 20px;border-radius:99px;font-size:14px;font-family:'Georgia',serif;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap;max-width:90vw;text-align:center;}
 #findself-root .fs-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-#findself-root .fs-footer{background:#fff;border-radius:20px;border:1px solid #d0d8e8;padding:20px;text-align:center;}
+
+/* Footer */
+#findself-root .fs-footer{background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;text-align:center;}
 #findself-root .fs-footer-support-text{font-size:14px;color:#4a5870;margin-bottom:12px;font-style:italic;}
 #findself-root .fs-footer-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;padding-top:14px;border-top:1px solid #d0d8e8;}
 #findself-root .fs-footer-link{font-size:13px;color:#4a5a8a;text-decoration:none;}
 #findself-root .fs-footer-link:hover{text-decoration:underline;}
-#findself-root .fs-footer-credit{font-size:12px;color:#a0b0c8;margin-top:10px;}
+#findself-root .fs-footer-credit{font-size:12px;color:#a0b0c8;margin-top:10px;line-height:1.6;}
+
+/* Extra small phones */
+@media(max-width:360px){
+  #findself-root{padding:10px 8px 40px;}
+  #findself-root .fs-card{padding:16px 13px;}
+  #findself-root h1{font-size:1.2rem;}
+}
 </style>
 
 <!-- HEADER -->
@@ -93,7 +179,7 @@
 </div>
 
 <!-- PROGRESS -->
-<div class="fs-card" style="padding:16px 20px;">
+<div class="fs-card" style="padding:16px;">
   <div class="fs-progress-wrap"><div class="fs-progress-fill" id="fsProgressFill"></div></div>
   <p class="fs-progress-label" id="fsProgressLabel">Begin when you are ready — there is no rush.</p>
 </div>
@@ -103,7 +189,7 @@
   <div class="fs-step">Before you begin</div>
   <div class="fs-field">
     <label class="fs-field-label" for="fsName">Your name or a name you feel comfortable with (optional — used in your PDF)</label>
-    <input type="text" id="fsName" class="fs-input" maxlength="80" placeholder="Any name, nickname, or leave blank…" />
+    <input type="text" id="fsName" class="fs-input" maxlength="80" placeholder="Any name, nickname, or leave blank…" autocomplete="off" />
   </div>
 </div>
 
@@ -520,10 +606,10 @@ if(submitBtn){
     var ac = ge('fsActionCard');
     if(ac) ac.style.display = 'none';
 
-    /* Show breathing card using classList so CSS show rule applies */
+    /* Show breathing card */
     var bc = ge('fsBreathCard');
     if(bc){
-      bc.classList.add('show');
+      bc.style.display = 'block';
       setTimeout(function(){ bc.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
       startBreathing(showResults);
     } else {
@@ -565,7 +651,7 @@ if(resetBtn){
     var rp = ge('fsResults');
     if(rp){ rp.classList.remove('show'); rp.style.display = ''; }
     var bc = ge('fsBreathCard');
-    if(bc){ bc.classList.remove('show'); bc.style.display = ''; }
+    if(bc){ bc.style.display = ''; }
     var ac = ge('fsActionCard');
     if(ac) ac.style.display = 'block';
     clearTimeout(breathTimer);
@@ -731,7 +817,6 @@ async function generatePDF(){
   addMeta('emotionalintelligencedeveloper.com');
   y += 6;
 
-  /* Affirmation banner */
   ensureSpace(44);
   doc.setFillColor(242,240,252); doc.setDrawColor(200,188,224);
   doc.roundedRect(margin, y, width, 36, 6, 6, 'FD');
@@ -746,7 +831,6 @@ async function generatePDF(){
   addBlock('What you need right now',               need);
   addBlock('A kindness you wrote to yourself',      kindness);
 
-  /* Gentle next steps */
   ensureSpace(40);
   doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
   doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(106,90,168);
@@ -754,7 +838,6 @@ async function generatePDF(){
   var steps = NEXT_STEPS[feeling] || DEFAULT_STEPS;
   steps.forEach(function(s){ addPara('- ' + s); });
 
-  /* Reflection prompts */
   ensureSpace(40);
   y += 6;
   doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
@@ -766,7 +849,6 @@ async function generatePDF(){
     addPara('- ' + p);
   });
 
-  /* Closing */
   ensureSpace(80);
   y += 8;
   doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
@@ -780,7 +862,6 @@ async function generatePDF(){
   doc.text(cl, margin + 10, y + 14);
   y += ch + 14;
 
-  /* Educational section */
   ensureSpace(160);
   doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
   doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(106,90,168);
@@ -808,7 +889,6 @@ async function generatePDF(){
     doc.text(ls, margin, y); y += ls.length * 11.5 + 12;
   });
 
-  /* Resources */
   ensureSpace(70);
   doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 12;
   doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);

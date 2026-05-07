@@ -1,4 +1,5 @@
-# Emotional Intelligence Developer
+```md
+# Emotional Intelligence Developer 
 
 <img width="1097" height="867" alt="free wellbeing tools" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" />
 
@@ -13,6 +14,8 @@ Every day, people visit our platform looking for clarity, calm, and emotional st
 
 🌍 **Website:** [emotionalintelligencedeveloper.com](https://emotionalintelligencedeveloper.com)
 
+🤝 **Community Support:** [members.emotionalintelligencedeveloper.com](https://members.emotionalintelligencedeveloper.com)
+
 ---
 
 ### 📜 License
@@ -25,11 +28,17 @@ The world is changing fast, and pressure is increasing. We believe emotional sup
 - Provide practical, open-access self-help tools
 
 ### Support The Mission
-This project is free and open-source. If these tools help you or your business, please consider **Sponsoring** the project. Your support helps us:
+This project is free and open-source. Community supporters help us keep these tools available to people who need them most.
+
+Support helps us:
 - Maintain and improve existing tools
 - Create new resources
 - Keep everything accessible to those in need
+- Build a stronger emotional wellbeing community
+
+💡 **Support the mission:** [members.emotionalintelligencedeveloper.com](https://members.emotionalintelligencedeveloper.com)
 
 ⭐ **If this project supports you, please star the repository to help others discover it.**
 
 Together, we can help people navigate life with more clarity, resilience, and emotional strength.
+```

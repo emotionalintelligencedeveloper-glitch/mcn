@@ -1,143 +1,88 @@
-# 🤝 Contributing to EID Community Story Game
+🤝 Contributing to EID Community Story Game
 
-Thank you for contributing to the EID Community Story Game.
+Thank you for your interest in contributing to the EID Community Story Game.
 
-This project is part of Emotional Intelligence Developer — an open-source emotional wellbeing platform focused on collaborative storytelling, emotional reflection, and human connection through interactive tools.
+This project is part of Emotional Intelligence Developer — an open-source wellbeing platform focused on emotional intelligence, collaborative writing, and community growth.
 
-We welcome developers, designers, writers, accessibility contributors, moderators, and thoughtful builders.
+🎮 Live Project:
+https://emotionalintelligencedeveloper-glitch.github.io/mcn/eid-community-story-game.html
 
----
+We welcome developers, designers, writers, and thoughtful contributors.
 
-# 🎯 What This Project Is
+🎯 Project Purpose
 
-The EID Community Story Game is a real-time collaborative writing experience where the community builds stories together through voting and participation.
+The EID Community Story Game is a real-time collaborative storytelling tool where:
 
-The flow is simple:
+• Users submit headlines  
+• The community votes  
+• Paragraphs unlock through voting  
+• A final story is published and downloadable as a PDF  
 
-- Users submit headlines
-- The community votes
-- Story sections unlock progressively
-- A final story is generated and downloadable
+The goal is to blend emotional intelligence with interactive writing while maintaining security, stability, and accessibility.
 
-The goal is not just entertainment.
+🛠 How You Can Contribute
 
-The project explores:
-- emotional expression
-- collaborative creativity
-- online participation
-- shared storytelling
-- community-driven writing experiences
+You can help by:
 
----
+• Improving UI / mobile responsiveness  
+• Enhancing accessibility (ARIA, keyboard support)  
+• Refining voting logic  
+• Improving Firebase realtime stability  
+• Strengthening security rules  
+• Optimizing performance  
+• Improving PDF generation reliability  
+• Fixing bugs  
+• Suggesting feature improvements  
 
-# 🛠 Ways You Can Contribute
+📌 How to Contribute
 
-You can contribute by improving:
+Fork the repository
 
-### Frontend & UI
-- Mobile responsiveness
-- Accessibility
-- Layout consistency
-- Animation polish
-- User flow clarity
+Create a new branch
 
-### Realtime Systems
-- Firebase stability
-- Voting synchronization
-- Reconnection handling
-- Rate limiting
-- Abuse prevention
+Make your improvements
 
-### Security
-- Firestore rules
-- Validation safeguards
-- Anti-spam protection
-- Input sanitization
+Submit a pull request with a clear explanation of what you changed and why
 
-### Features
-- Story archive improvements
-- Moderation tools
-- PDF generation reliability
-- Story sharing systems
-- Community voting enhancements
+Please keep code clean, readable, and well-commented.
 
-### Community Experience
-- UX improvements
-- Contributor documentation
-- Bug reporting
-- Feature suggestions
-- Accessibility feedback
-
----
-
-# 📌 Contribution Process
-
-1. Fork the repository
-2. Create a new branch
-3. Make your improvements
-4. Submit a pull request clearly explaining:
-   - what you changed
-   - why you changed it
-   - any tradeoffs or concerns
-
-Please keep code:
-- readable
-- maintainable
-- secure
-- well-commented
-
----
-
-# 🔐 Security Guidelines
+🔐 Important Security Guidelines
 
 This project uses Firebase (Firestore + Authentication).
 
 For security reasons, contributors must NOT:
 
-- Remove validation safeguards
-- Add unrestricted database writes
-- Expose secrets or tokens
-- Remove abuse protections
-- Change Firebase project configuration without discussion
-- Add unsafe third-party scripts
+• Change Firebase API keys  
+• Change project IDs  
+• Remove domain restrictions  
+• Expose secrets  
+• Add unrestricted write access  
+• Remove validation safeguards  
+• Add unsafe third-party scripts  
 
-Security and platform stability are critical because this is a public community project.
+All database interactions must remain secure and abuse-resistant.
 
----
+💬 Before Starting
 
-# 💬 Before Major Changes
+If you plan to make major changes (such as modifying Firestore structure, authentication flow, or game logic), open an Issue first to discuss your idea.
 
-If you plan to change:
-- Firestore structure
-- Authentication flow
-- Voting systems
-- Core game logic
-- Moderation systems
+We aim to keep the project:
 
-please open an Issue first so the direction can be discussed before implementation.
+• Simple  
+• Secure  
+• Accessible  
+• Mobile-friendly  
+• Community-focused  
 
----
+🌍 Community Guidelines
 
-# 🌍 Community Principles
+Be respectful.  
+Be constructive.  
+Be collaborative.  
 
-We want this project to remain:
+This is a wellbeing-driven project. Emotional intelligence applies here too.
 
-- Accessible
-- Secure
-- Mobile-friendly
-- Emotionally aware
-- Community-driven
-- Constructive
+Thank you for helping build open-source wellbeing technology.
 
-Respect matters here.
-
-This is a collaborative wellbeing project, not just a code repository.
-
----
-
-Built by Emotional Intelligence Developer
-
-🌍 https://emotionalintelligencedeveloper.com
-
-🤝 Community Support:
-https://members.emotionalintelligencedeveloper.com
+Built by Emotional Intelligence Developer  
+https://emotionalintelligencedeveloper.com/

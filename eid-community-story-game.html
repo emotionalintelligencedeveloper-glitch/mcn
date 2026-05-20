@@ -553,6 +553,39 @@
 
     .mod-body { margin-top: 16px; }
 
+    /* ── Moderator locked state ── */
+    .mod-locked-hint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .mod-locked-hint .lock-icon { font-size: 16px; }
+
+    .mod-credentials {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mod-actions { margin-top: 14px; }
+
+    /* ── Share Game card ── */
+    .share-game-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
     /* ── Footer links ── */
     .footer-links {
       display: grid;
@@ -563,11 +596,12 @@
 
     /* ── Responsive ── */
     @media (max-width: 700px) {
-      .grid-2, .grid-3, .grid-share, .identity-fields, .footer-links { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-share, .identity-fields, .footer-links, .share-game-grid { grid-template-columns: 1fr; }
       .how-steps { grid-template-columns: 1fr 1fr; }
       .register-section { grid-template-columns: 1fr; }
       .header-inner { align-items: flex-start; }
       .phase-step { font-size: 10px; padding: 0 2px; }
+      .mod-credentials { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 420px) {
@@ -625,7 +659,7 @@
     <div class="win-sub" id="winBannerSub"></div>
   </div>
 
-  <!-- ── HOW TO PLAY (moved above register) ── -->
+  <!-- ── HOW TO PLAY ── -->
   <section class="card">
     <h3>How to Play</h3>
     <p class="sub">This game works best when players share their entry to get votes from friends.</p>
@@ -782,7 +816,23 @@
   <section class="card">
     <h3>Past Games</h3>
     <p class="sub">Finished stories stay here while a new game is running.</p>
+    <div style="margin-bottom: 14px;">
+      <a href="https://emotionalintelligencedeveloper.com/community-stories-written-by-visitors/" target="_blank" rel="noopener" class="btn-purple" style="width:auto; display:inline-flex; padding:10px 18px; text-decoration:none; border-radius:var(--radius-sm); font-size:14px; font-weight:600;">📖 View All Community Stories</a>
+    </div>
     <div id="pastGamesList"></div>
+  </section>
+
+  <!-- ── SHARE THIS GAME ── -->
+  <section class="card">
+    <h3>Share This Game</h3>
+    <p class="sub">Invite friends and colleagues to play — the more players, the better the stories.</p>
+    <div class="share-game-grid">
+      <button id="gameShareWhatsAppBtn" class="btn-green" type="button">Share on WhatsApp</button>
+      <button id="gameShareXBtn" class="btn-dark" type="button">Share on X</button>
+      <button id="gameShareFacebookBtn" class="btn-muted" type="button">Share on Facebook</button>
+      <button id="gameCopyLinkBtn" class="btn-muted" type="button">Copy Game Link</button>
+      <button id="gameNativeShareBtn" class="btn-main" type="button">Share</button>
+    </div>
   </section>
 
   <!-- ── MODERATOR CONTROLS (collapsible) ── -->
@@ -793,19 +843,32 @@
         <span class="mod-chevron">▼</span>
       </summary>
       <div class="mod-body">
-        <p class="sub">Use your moderator code to remove submissions, copy story text, finalize stages, and reset after publish.</p>
-        <div class="grid-3">
+        <p class="sub">Enter your moderator credentials to access controls.</p>
+
+        <!-- Credentials always visible inside the open panel -->
+        <div class="mod-credentials">
           <label>Moderator User ID <input id="adminUserId" /></label>
           <label>Moderator Password <input id="adminPassword" type="password" /></label>
-          <div>
+        </div>
+
+        <!-- Locked hint — shown when credentials are empty -->
+        <div id="modLockedHint" class="mod-locked-hint" style="margin-top:12px;">
+          <span class="lock-icon">🔒</span>
+          <span>Enter your moderator credentials above to unlock controls.</span>
+        </div>
+
+        <!-- Actions — shown only when credentials are filled -->
+        <div id="modActions" class="mod-actions hidden">
+          <div style="margin-bottom:10px;">
             <button id="finalizeRoundBtn" class="btn-main" type="button">Finalize Current Stage</button>
           </div>
+          <div class="small-actions">
+            <button id="copyModeratorStoryBtn" class="btn-muted" type="button">Copy Story Text</button>
+            <button id="resetGameBtn" class="btn-danger" type="button">Reset Game</button>
+          </div>
+          <p class="sub" style="margin-top:10px;">Delete buttons appear next to submissions when moderator credentials are filled in.</p>
         </div>
-        <div class="small-actions">
-          <button id="copyModeratorStoryBtn" class="btn-muted" type="button">Copy Story Text</button>
-          <button id="resetGameBtn" class="btn-danger" type="button">Reset Game</button>
-        </div>
-        <p class="sub" style="margin-top:10px;">Delete buttons appear next to submissions when moderator credentials are filled in.</p>
+
       </div>
     </details>
   </section>
@@ -922,6 +985,8 @@
     finalizeRoundBtn: document.getElementById("finalizeRoundBtn"),
     copyModeratorStoryBtn: document.getElementById("copyModeratorStoryBtn"),
     resetGameBtn: document.getElementById("resetGameBtn"),
+    modLockedHint: document.getElementById("modLockedHint"),
+    modActions: document.getElementById("modActions"),
 
     downloadPdfBtn: document.getElementById("downloadPdfBtn"),
     copyVoteLinkBtn: document.getElementById("copyVoteLinkBtn"),
@@ -931,7 +996,13 @@
     shareFacebookBtn: document.getElementById("shareFacebookBtn"),
     nativeShareBtn: document.getElementById("nativeShareBtn"),
 
-    pastGamesList: document.getElementById("pastGamesList")
+    pastGamesList: document.getElementById("pastGamesList"),
+
+    gameShareWhatsAppBtn: document.getElementById("gameShareWhatsAppBtn"),
+    gameShareXBtn: document.getElementById("gameShareXBtn"),
+    gameShareFacebookBtn: document.getElementById("gameShareFacebookBtn"),
+    gameCopyLinkBtn: document.getElementById("gameCopyLinkBtn"),
+    gameNativeShareBtn: document.getElementById("gameNativeShareBtn")
   };
 
   let socket;
@@ -1098,10 +1169,6 @@
   }
 
   /* ── Rendering helpers ── */
-  function phaseText(phase) {
-    return ({headline:"Headline Voting",message:"Message Voting",conclusion:"Conclusion Voting",published:"Published"}[phase] || "Headline Voting");
-  }
-
   function formatIdentity(item) {
     const name = safe(item.name || item.username || "Anonymous");
     const social = safe(item.social || "");
@@ -1160,6 +1227,13 @@
   function isAdminReady() { return safe(el.adminUserId.value).length > 0 && safe(el.adminPassword.value).length > 0; }
   function isRegisteredUser() { return safe(state.myUsername).length > 0; }
 
+  /* ── Moderator visibility toggle ── */
+  function updateModVisibility() {
+    const ready = isAdminReady();
+    el.modLockedHint.classList.toggle("hidden", ready);
+    el.modActions.classList.toggle("hidden", !ready);
+  }
+
   function getEntryShareText(item, phase) {
     const link = window.location.href;
     const roundName = phase === "headline" ? "headline round" : phase === "message" ? "paragraph round" : phase === "conclusion" ? "conclusion round" : "story round";
@@ -1180,6 +1254,10 @@
       try { await navigator.share({ title: "10-to-Write: The Community Story Game", text, url: window.location.href }); flashOk("Shared."); }
       catch { flashOk("Share cancelled."); }
     } else { copyToClipboard(text, "Share text copied."); }
+  }
+
+  function getGameShareText() {
+    return `Join the 10-to-Write Community Story Game — build stories together with the Emotional Intelligence Developer community!\n\nPlay here:\n${window.location.href}`;
   }
 
   /* ── Render list with vote progress bars ── */
@@ -1246,6 +1324,7 @@
     updatePhaseBar(state.phase);
     updateIdentityStrip();
     prefillIdentityFields();
+    updateModVisibility();
 
     const bodyWords = wordCount((state.storyPieces || []).map((p) => p.text).join(" "));
     const wordPct = Math.min(100, Math.round((bodyWords / state.wordTarget) * 100));
@@ -1446,7 +1525,6 @@
       state.hasVoted = true;
       saveCachedState();
       render();
-      // Update vote bar live without full re-render
       const badge = document.getElementById(`vote-${id}`);
       const bar = document.getElementById(`vbar-${id}`);
       if (badge) badge.textContent = `${votes} / ${state.voteTarget}`;
@@ -1476,7 +1554,6 @@
     socket.on("roundFinalized", ({ winner, finalStory } = {}) => {
       state.hasVoted = false;
       if (finalStory) state.finalStory = finalStory;
-      // Show win banner if this player's last submission won
       if (winner && winner.text && state.lastSubmittedText && winner.text === state.lastSubmittedText) {
         showWinBanner(winner.text);
       } else if (winner && winner.text) {
@@ -1677,6 +1754,10 @@
     socket.emit("adminDeletePublishedStory", { adminId: safe(el.adminUserId.value), adminPw: safe(el.adminPassword.value) });
   });
 
+  /* ── Admin inputs — update mod visibility and re-render on change ── */
+  el.adminUserId.addEventListener("input", () => { updateModVisibility(); render(); });
+  el.adminPassword.addEventListener("input", () => { updateModVisibility(); render(); });
+
   /* ── Published story actions ── */
   el.downloadPdfBtn.addEventListener("click", downloadPdf);
   el.copyVoteLinkBtn.addEventListener("click", () => copyToClipboard(window.location.href, "Vote link copied."));
@@ -1689,9 +1770,12 @@
   el.shareFacebookBtn.addEventListener("click", shareToFacebook);
   el.nativeShareBtn.addEventListener("click", () => nativeShareText(getStoryShareText()));
 
-  /* ── Admin input triggers re-render (show/hide delete buttons) ── */
-  el.adminUserId.addEventListener("input", render);
-  el.adminPassword.addEventListener("input", render);
+  /* ── Share Game buttons ── */
+  el.gameShareWhatsAppBtn.addEventListener("click", () => shareToWhatsApp(getGameShareText()));
+  el.gameShareXBtn.addEventListener("click", () => shareToX(getGameShareText()));
+  el.gameShareFacebookBtn.addEventListener("click", shareToFacebook);
+  el.gameCopyLinkBtn.addEventListener("click", () => copyToClipboard(window.location.href, "Game link copied."));
+  el.gameNativeShareBtn.addEventListener("click", () => nativeShareText(getGameShareText()));
 
   /* ── Boot ── */
   loadUsername();

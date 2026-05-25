@@ -742,13 +742,13 @@
           img.crossOrigin = "anonymous";
           img.onload = function () {
             const canvas = document.createElement("canvas");
-            canvas.width = 420;
-            canvas.height = Math.round(420 * (img.height / img.width));
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            resolve(canvas.toDataURL("image/jpeg", 0.92));
+            resolve({ dataUrl: canvas.toDataURL("image/jpeg", 0.92), aspectRatio: img.naturalWidth / img.naturalHeight });
           };
           img.onerror = reject;
           img.src = imageUrl;
@@ -762,26 +762,32 @@
         const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4", compress: true });
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
-        const margin = 32;
+        const margin = 40;
         const contentW = pageW - margin * 2;
         let y = margin;
 
         try {
-          const logoData = await drawLogoToCanvas("https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg");
-          const logoW = 132;
-          const logoH = 52;
-          doc.addImage(logoData, "JPEG", margin, y, logoW, logoH);
+          const logo = await drawLogoToCanvas("https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg");
+          const logoW = 160;
+          const logoH = Math.round(logoW / logo.aspectRatio);
+          doc.addImage(logo.dataUrl, "JPEG", margin, y, logoW, logoH);
+          y += logoH + 16;
         } catch (_error) {
           doc.setFontSize(10);
           doc.text("Emotional Intelligence Developer", margin, y + 14);
+          y += 30;
         }
 
-        y += 66;
         doc.setTextColor(23, 50, 77);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
         doc.text("Wellbeing & Emotional Intelligence Word Puzzle", margin, y);
-        y += 20;
+        y += 22;
+
+        doc.setDrawColor(210, 224, 240);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageW - margin, y);
+        y += 16;
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
@@ -791,58 +797,64 @@
         const reflection = el.reflectionInput.value.trim() || "No reflection entered.";
         const foundWords = Object.keys(state.found);
 
-        const leftX = margin;
-        const rightX = margin + contentW * 0.58;
-        const leftW = contentW * 0.54;
-        const rightW = contentW * 0.42;
-
         if (nameValue) {
-          doc.text(`Name: ${nameValue}`, leftX, y);
-          y += 16;
+          doc.setFont("helvetica", "bold");
+          doc.text("Name:", margin, y);
+          doc.setFont("helvetica", "normal");
+          doc.text(nameValue, margin + 42, y);
+          y += 18;
         }
 
-        doc.text(`Words found: ${found}/40`, leftX, y);
-        y += 16;
+        doc.setFont("helvetica", "bold");
+        doc.text("Words found:", margin, y);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${found}/40`, margin + 82, y);
+        y += 22;
 
         doc.setFont("helvetica", "bold");
-        doc.text("Reflection:", leftX, y);
+        doc.text("Reflection:", margin, y);
+        y += 16;
         doc.setFont("helvetica", "normal");
-        y += 14;
+        const reflectionLines = doc.splitTextToSize(reflection, contentW);
+        doc.text(reflectionLines, margin, y);
+        y += reflectionLines.length * 14 + 16;
 
-        const reflectionLines = doc.splitTextToSize(reflection, leftW);
-        doc.text(reflectionLines, leftX, y);
-
-        let yLeftEnd = y + (reflectionLines.length * 13);
-
-        const wordsLine = foundWords.length ? foundWords.join(", ") : "No words marked yet.";
-        const wordsLines = doc.splitTextToSize(`Found words: ${wordsLine}`, leftW);
-        yLeftEnd += 12;
-        doc.text(wordsLines, leftX, yLeftEnd);
-        yLeftEnd += wordsLines.length * 13;
+        if (foundWords.length > 0) {
+          doc.setFont("helvetica", "bold");
+          doc.text("Words found:", margin, y);
+          y += 16;
+          doc.setFont("helvetica", "normal");
+          const wordsLine = foundWords.join(", ");
+          const wordsLines = doc.splitTextToSize(wordsLine, contentW);
+          doc.text(wordsLines, margin, y);
+          y += wordsLines.length * 14 + 20;
+        }
 
         doc.setDrawColor(210, 224, 240);
-        doc.roundedRect(rightX - 8, margin + 72, rightW + 10, 200, 8, 8);
+        doc.line(margin, y, pageW - margin, y);
+        y += 14;
+
         doc.setFont("helvetica", "bold");
-        doc.text("Resources", rightX, margin + 92);
+        doc.setFontSize(11);
+        doc.text("Resources", margin, y);
+        y += 14;
         doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
         const resources = [
           "https://emotionalintelligencedeveloper.com/",
           "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
           RECOMMENDED_AUDIO_BOOKS_LINK,
           "https://emotionalintelligencedeveloper.com/support-this-website/"
         ];
-
-        let yRes = margin + 112;
         resources.forEach((url) => {
-          const lines = doc.splitTextToSize(url, rightW - 8);
-          doc.text(lines, rightX, yRes);
-          yRes += lines.length * 12 + 8;
+          doc.setTextColor(30, 100, 160);
+          doc.text(url, margin, y);
+          y += 14;
         });
 
-        const footer = "https://emotionalintelligencedeveloper.com/";
         doc.setFontSize(10);
         doc.setTextColor(38, 84, 120);
-        doc.text(footer, margin, pageH - 22);
+        doc.text("https://emotionalintelligencedeveloper.com/", margin, pageH - 22);
 
         doc.save("wellbeing-word-puzzle-summary.pdf");
         showMessage("PDF downloaded successfully.");

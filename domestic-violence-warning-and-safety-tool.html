@@ -3,602 +3,181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Domestic Violence: Safety & Gentle Support Check-In | Emotional Intelligence Developer</title>
+  <meta name="referrer" content="no-referrer" />
+  <title>Domestic Violence: Safety &amp; Gentle Support Check-In | Emotional Intelligence Developer</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f3f5f8;
-      --card: #ffffff;
-      --text: #1a2030;
-      --muted: #4a5568;
-      --hint: #8a98b0;
-      --border: #d0d8e8;
-      --brand: #4a6080;
-      --brand-light: #eaeff8;
-      --brand-mid: #b0c0d8;
-      --accent: #6a90b8;
-      --accent-light: #e4edf8;
-      --teal: #3a7a68;
-      --teal-light: #e4f0ec;
-      --teal-mid: #a0c8bc;
-      --warm: #f8f6f2;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
-      --danger-bg: #fff0f0;
-      --danger-border: #f5a0a0;
-      --danger-text: #8b1a1a;
-      --warn-bg: #fff8ec;
-      --warn-border: #f0c878;
-      --warn-text: #7a4a0a;
+      --bg: #f3f5f8; --card: #ffffff; --text: #1a2030; --muted: #4a5568; --hint: #6b7a94;
+      --border: #d0d8e8; --brand: #4a6080; --brand-light: #eaeff8; --brand-mid: #b0c0d8;
+      --accent-light: #e4edf8; --teal: #3a7a68; --teal-light: #e4f0ec; --teal-mid: #a0c8bc;
+      --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --support: #c85a1a;
+      --danger-bg: #fff0f0; --danger-border: #f5a0a0; --danger-text: #8b1a1a;
+      --warn-bg: #fff8ec; --warn-border: #f0c878; --warn-text: #7a4a0a;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+    body { font-family: Georgia, "Times New Roman", serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; padding-bottom: 90px; }
+    :focus-visible { outline: 3px solid #2f6fd0; outline-offset: 2px; }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
 
-    body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-      padding-bottom: 90px;
-    }
+    .header, .card, .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 16px; }
+    .header { padding: 24px 20px 20px; }
+    .card { padding: 22px 20px; }
+    .footer { padding: 22px 20px; text-align: center; margin-bottom: 0; }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 20px;
-    }
+    .logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .logo { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 2px solid var(--brand-mid); flex-shrink: 0; }
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
+    h1 { font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: normal; line-height: 1.35; margin-bottom: 10px; }
+    .tagline { font-size: 15px; color: var(--muted); margin-bottom: 14px; }
+    .danger-notice { background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-md); padding: 13px 16px; font-size: 14px; color: var(--danger-text); font-weight: bold; margin-bottom: 12px; }
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; align-items: center; }
+    .privacy-note { font-size: 12px; color: var(--hint); font-style: italic; }
+    .shortcut-note { font-size: 12px; color: var(--hint); margin-top: 6px; }
 
-    /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
+    .card-title { font-size: 1.05rem; color: var(--brand); margin-bottom: 14px; }
+    .card-intro { font-size: 14px; color: var(--muted); margin-bottom: 14px; font-style: italic; line-height: 1.6; }
 
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
+    .check-grid { display: grid; gap: 8px; grid-template-columns: 1fr; }
+    @media (min-width: 480px) { .check-grid { grid-template-columns: 1fr 1fr; } }
+    .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; font-size: 14px; color: var(--muted); cursor: pointer; line-height: 1.5; }
+    .check-item input { width: 16px; height: 16px; min-width: 16px; accent-color: var(--brand); margin-top: 2px; cursor: pointer; }
 
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.35;
-      margin-bottom: 10px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 14px;
-    }
-
-    .danger-notice {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      border-radius: var(--radius-md);
-      padding: 13px 16px;
-      font-size: 14px;
-      color: var(--danger-text);
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .privacy-note {
-      font-size: 12px;
-      color: var(--hint);
-      font-style: italic;
-    }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 14px;
-    }
-
-    .card-intro {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 14px;
-      font-style: italic;
-      line-height: 1.6;
-    }
-
-    /* CHECKLIST */
-    .check-grid {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: 1fr;
-      margin-bottom: 4px;
-    }
-
-    @media (min-width: 480px) {
-      .check-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 13px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      line-height: 1.5;
-    }
-
-    .check-item input {
-      width: 16px;
-      height: 16px;
-      min-width: 16px;
-      accent-color: var(--brand);
-      margin-top: 2px;
-      cursor: pointer;
-    }
-
-    /* CHIPS */
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .chip {
-      background: var(--brand-light);
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 7px 16px;
-      min-height: 38px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-    }
-
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .chip { background: var(--brand-light); border: 1.5px solid var(--brand-mid); border-radius: 99px; padding: 7px 16px; min-height: 40px; font-family: Georgia, serif; font-size: 14px; color: var(--muted); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; }
     .chip:hover { border-color: var(--brand); color: var(--text); }
     .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
 
-    /* INPUTS */
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 80px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { outline: none; border-color: var(--brand); }
-
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
-
-    .field-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      display: block;
-      font-style: italic;
-    }
-
-    .step-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-      margin-top: 16px;
-    }
-
+    textarea, input[type="text"] { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; font-family: Georgia, serif; font-size: 16px; color: var(--text); background: #fff; line-height: 1.6; }
+    textarea { min-height: 80px; resize: vertical; }
+    textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-mid); }
+    .field-label { font-size: 13px; color: var(--muted); margin-bottom: 6px; display: block; font-style: italic; }
+    .step-label { font-size: 12px; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; margin-top: 16px; }
     .step-label:first-child { margin-top: 0; }
 
-    /* DRAFT BOX */
-    .draft-card {
-      background: var(--teal-light);
-      border: 1px solid var(--teal-mid);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .draft-templates {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .draft-template-btn {
-      background: #fff;
-      border: 1px solid var(--teal-mid);
-      border-radius: var(--radius-sm);
-      padding: 8px 14px;
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--teal);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
+    .draft-card { background: var(--teal-light); border: 1px solid var(--teal-mid); border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px; }
+    .draft-templates { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .draft-template-btn { background: #fff; border: 1px solid var(--teal-mid); border-radius: var(--radius-sm); padding: 8px 14px; font-family: Georgia, serif; font-size: 13px; color: var(--teal); cursor: pointer; min-height: 40px; }
     .draft-template-btn:hover { border-color: var(--teal); background: var(--teal-light); }
 
-    /* SAFETY TOGGLES */
-    .toggle-item {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: #fff;
-      margin-bottom: 10px;
-      overflow: hidden;
-    }
-
-    .toggle-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      cursor: pointer;
-    }
-
-    .toggle-title {
-      font-size: 14px;
-      color: var(--text);
-      font-weight: normal;
-    }
-
-    .toggle-arrow {
-      font-size: 12px;
-      color: var(--hint);
-      transition: transform 0.2s;
-    }
-
+    .toggle-item { border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff; margin-bottom: 10px; overflow: hidden; }
+    .toggle-head { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; background: none; border: 0; font-family: Georgia, serif; font-size: 14px; color: var(--text); text-align: left; min-height: 48px; }
+    .toggle-arrow { font-size: 12px; color: var(--hint); transition: transform 0.2s; }
     .toggle-item.open .toggle-arrow { transform: rotate(180deg); }
-
-    .toggle-body {
-      display: none;
-      padding: 0 16px 14px;
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.65;
-      border-top: 1px solid var(--border);
-    }
-
+    .toggle-body { display: none; padding: 0 16px 14px; font-size: 14px; color: var(--muted); line-height: 1.65; border-top: 1px solid var(--border); }
     .toggle-item.open .toggle-body { display: block; padding-top: 12px; }
+    .toggle-body ul { margin: 8px 0 0 18px; }
+    .toggle-body li { margin-bottom: 6px; }
 
-    /* RESULT / SUMMARY */
-    .result-box {
-      display: none;
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
-
-    .result-title {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-
-    .result-row {
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--brand-mid);
-    }
-
+    .result-box { display: none; background: var(--accent-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 14px; }
+    .result-title { font-size: 12px; font-weight: bold; color: var(--brand); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .result-row { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--brand-mid); }
     .result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .result-row-label { font-size: 12px; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .result-row-value { font-size: 15px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 
-    .result-row-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 3px;
-    }
+    .save-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .save-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--brand); cursor: pointer; }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
-    .result-row-value {
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* SAVE ROW */
-    .save-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .save-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--brand);
-      cursor: pointer;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 99px; font-family: Georgia, serif; font-size: 14px; cursor: pointer; text-decoration: none; border: 1.5px solid transparent; min-height: 46px; transition: opacity 0.15s, transform 0.1s; }
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
-
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
     .btn-exit { background: var(--danger-text); color: #fff; border-color: var(--danger-text); }
     .btn-reset { background: #fff; color: var(--muted); border-color: var(--border); }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
+    .btn-support { background: var(--support); color: #fff; border-color: var(--support); font-size: 15px; padding: 14px 24px; }
+    @media (max-width: 480px) { .btn-row .btn { width: 100%; } }
 
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-    }
+    .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26, 32, 48, 0.96); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); display: flex; gap: 8px; justify-content: center; z-index: 50; }
+    .sticky-bar .btn { flex: 1; max-width: 180px; font-size: 13px; padding: 10px 12px; min-height: 44px; }
 
-    /* STICKY BAR */
-    .sticky-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(26, 32, 48, 0.96);
-      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .sticky-bar .btn {
-      flex: 1;
-      max-width: 180px;
-      font-size: 13px;
-      padding: 10px 12px;
-      min-height: 42px;
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 16px; font-size: 14px; max-width: 90vw; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 100; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
+    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 16px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: underline; }
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
 
-    /* PRIVACY NOTE */
-    .privacy-card {
-      background: var(--warn-bg);
-      border: 1px solid var(--warn-border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      font-size: 13px;
-      color: var(--warn-text);
-      line-height: 1.6;
-    }
+    .privacy-card { background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-md); padding: 14px 16px; font-size: 13px; color: var(--warn-text); line-height: 1.6; }
+
+    /* COVER SCREEN */
+    .cover { display: none; position: fixed; inset: 0; background: #fff; z-index: 1000; padding: 40px 24px; color: #333; font-family: Arial, sans-serif; cursor: pointer; }
+    .cover.on { display: block; }
+    .cover h2 { font-size: 1.4rem; font-weight: normal; margin-bottom: 14px; }
+    .cover p { font-size: 15px; color: #666; margin-bottom: 8px; }
+    .cover .tiny { position: absolute; bottom: 20px; left: 24px; font-size: 12px; color: #aaa; }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- HEADER -->
   <header class="header">
     <div class="logo-wrap">
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
     <h1>Domestic Violence: Safety &amp; Gentle Support Check-In</h1>
-    <p class="tagline">You are not alone. You deserve safety. This is a calm, private space to take one small step — in your own time, at your own pace.</p>
+    <p class="tagline">You are not alone. You deserve safety. This is a calm, private space to take one small step, in your own time, at your own pace.</p>
 
-    <div class="danger-notice" role="alert">
-      If you are in immediate danger, call your local emergency number now.
-    </div>
+    <div class="danger-notice" role="alert">If you are in immediate danger, call your local emergency number now.</div>
 
     <div class="quick-actions">
-      <button type="button" class="btn btn-exit" id="quickExitBtn" aria-label="Quick Exit — leave this page immediately">Quick Exit</button>
-      <button type="button" class="btn btn-reset" id="hideResetBtn">Hide and reset</button>
-      <label class="save-row">
-        <input type="checkbox" id="saveToggle" />
-        Save on this device
-      </label>
+      <button type="button" class="btn btn-exit" id="quickExitBtn" aria-label="Quick Exit. Leave this page immediately">Quick Exit</button>
+      <button type="button" class="btn btn-reset" id="coverBtn">Cover screen</button>
+      <button type="button" class="btn btn-reset" id="hideResetBtn">Clear everything</button>
     </div>
-    <p class="privacy-note">Save uses local storage in this browser only. Not recommended on shared or monitored devices.</p>
+    <label class="save-row">
+      <input type="checkbox" id="saveToggle" />
+      Save on this device
+    </label>
+    <p class="privacy-note">Save uses this browser only. Not recommended on shared or monitored devices.</p>
+    <p class="shortcut-note">Shortcut: press the Escape key 3 times to exit fast.</p>
   </header>
 
-  <!-- SECTION 1: AM I EXPERIENCING ABUSE -->
   <section class="card" aria-labelledby="abuse-heading">
     <p class="card-title" id="abuse-heading">I am not sure if it is abuse</p>
     <p class="card-intro">If any of these feel familiar, your feelings are valid. You are not overreacting for wanting safety and respect.</p>
-    <div class="check-grid" id="abuseChecklist" role="group" aria-label="Abuse recognition checklist">
-      <label class="check-item"><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour — who you see, where you go</label>
+    <div class="check-grid" role="group" aria-label="Abuse recognition checklist">
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour: who you see, where you go</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="isolation" /> Isolation from friends, family, or support</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="threats" /> Threats, intimidation, or fear tactics</label>
-      <label class="check-item"><input type="checkbox" class="abuse-check" value="financial control" /> Financial control — money, work, access</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="financial control" /> Financial control: money, work, access</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="sexual coercion" /> Sexual pressure or coercion</label>
-      <label class="check-item"><input type="checkbox" class="abuse-check" value="verbal degradation" /> Verbal degradation, insults, or humiliation</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="verbal degradation" /> Insults, name calling, or humiliation</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="stalking" /> Stalking or repeated unwanted contact</label>
-      <label class="check-item"><input type="checkbox" class="abuse-check" value="digital monitoring" /> Digital monitoring — phone, social media, location</label>
+      <label class="check-item"><input type="checkbox" class="abuse-check" value="digital monitoring" /> Digital monitoring: phone, social media, location</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="physical harm" /> Physical harm or threats of harm</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="walking on eggshells" /> Constantly walking on eggshells</label>
     </div>
   </section>
 
-  <!-- SECTION 2: GUIDED REFLECTION -->
   <section class="card" aria-labelledby="reflect-heading">
     <p class="card-title" id="reflect-heading">Guided reflection</p>
 
-    <div class="step-label">Step 1 — How are you feeling right now?</div>
+    <div class="step-label">Step 1: How are you feeling right now?</div>
     <div class="chip-wrap" id="feelingChips" role="group" aria-label="Feeling options"></div>
     <label class="field-label" for="feelingOther">Other feeling (optional)</label>
-    <input type="text" id="feelingOther" maxlength="100" placeholder="Describe in your own words…" />
+    <input type="text" id="feelingOther" maxlength="100" placeholder="Describe in your own words" />
 
-    <div class="step-label">Step 2 — What has been happening?</div>
+    <div class="step-label">Step 2: What has been happening?</div>
     <label class="field-label" for="recentEvent">What happened most recently that brought you here?</label>
-    <textarea id="recentEvent" maxlength="800" placeholder="Write as little or as much as feels safe…"></textarea>
+    <textarea id="recentEvent" maxlength="800" placeholder="Write as little or as much as feels safe"></textarea>
     <label class="field-label" for="wishUnderstood" style="margin-top:10px;">What do you wish someone understood?</label>
-    <textarea id="wishUnderstood" maxlength="600" placeholder="You can keep this short…"></textarea>
+    <textarea id="wishUnderstood" maxlength="600" placeholder="You can keep this short"></textarea>
 
-    <div class="step-label">Step 3 — What feels hardest about reaching out?</div>
+    <div class="step-label">Step 3: What feels hardest about reaching out?</div>
     <div class="chip-wrap" id="barrierChips" role="group" aria-label="Barrier options"></div>
 
-    <div class="step-label">Step 4 — One small safe step today</div>
+    <div class="step-label">Step 4: One small safe step today</div>
     <div class="chip-wrap" id="smallStepChips" role="group" aria-label="Small step options"></div>
 
-    <!-- RESULT -->
     <div class="result-box" id="resultBox" aria-live="polite"></div>
 
     <div class="section-label" style="margin-top:18px;">Actions</div>
@@ -606,9 +185,9 @@
       <button type="button" class="btn btn-primary" id="buildSummaryBtn">Create my gentle summary</button>
       <button type="button" class="btn btn-teal" id="pdfBtn">Download PDF</button>
     </div>
+    <p class="privacy-note" style="margin-top:10px;">The PDF downloads with a neutral file name. If your device is shared, delete it from your downloads after you use it.</p>
   </section>
 
-  <!-- SECTION 3: REACH-OUT DRAFT -->
   <section class="card" aria-labelledby="draft-heading">
     <p class="card-title" id="draft-heading">Create a reach-out message</p>
     <p class="card-intro">Choose a template, edit it freely, and copy it when you are ready. No pressure.</p>
@@ -619,114 +198,127 @@
         <button type="button" class="draft-template-btn" data-template="Can I stay with you, or can you help me find resources?">Template 3</button>
         <button type="button" class="draft-template-btn" data-template="Please don't confront them. I'm just asking for help.">Template 4</button>
       </div>
-      <textarea id="reachOutDraft" maxlength="800" placeholder="Your message draft appears here — edit freely…"></textarea>
+      <label class="field-label" for="reachOutDraft">Your message</label>
+      <textarea id="reachOutDraft" maxlength="800" placeholder="Your message draft appears here. Edit freely."></textarea>
     </div>
     <div class="btn-row">
       <button type="button" class="btn btn-primary" id="copyDraftBtn">Copy draft</button>
     </div>
   </section>
 
-  <!-- SECTION 4: SAFETY PLANNING -->
   <section class="card" aria-labelledby="safety-heading">
     <p class="card-title" id="safety-heading">Quiet safety planning</p>
     <p class="card-intro">Only do what feels safe in your situation. These are options, not requirements.</p>
 
-    <div class="toggle-item" id="toggle1">
-      <div class="toggle-head" data-toggle="toggle1">
-        <span class="toggle-title">Identify a safe contact</span>
-        <span class="toggle-arrow">&#9660;</span>
-      </div>
-      <div class="toggle-body">One person who is calm and trustworthy. Keep their contact details somewhere only you can access — a note app with a neutral title, a friend's address in your phone under a different name.</div>
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Identify a safe contact</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">One person who is calm and trustworthy. Keep their contact details somewhere only you can access, such as a note with a neutral title, or saved in your phone under a different name.</div>
     </div>
 
-    <div class="toggle-item" id="toggle2">
-      <div class="toggle-head" data-toggle="toggle2">
-        <span class="toggle-title">Pack essentials (only if safe to do so)</span>
-        <span class="toggle-arrow">&#9660;</span>
-      </div>
-      <div class="toggle-body">If it is safe, think about: ID documents, keys, medications, essential paperwork, emergency contacts, and any items that cannot be replaced. A small bag kept somewhere accessible can make leaving faster if needed.</div>
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Pack essentials (only if safe to do so)</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">If it is safe, think about ID documents, keys, medications, essential paperwork, some cash, emergency contacts, and items that cannot be replaced. A small bag kept with a trusted person, or somewhere hard to find, can make leaving faster if needed.</div>
     </div>
 
-    <div class="toggle-item" id="toggle3">
-      <div class="toggle-head" data-toggle="toggle3">
-        <span class="toggle-title">Choose a code word with a trusted person</span>
-        <span class="toggle-arrow">&#9660;</span>
-      </div>
-      <div class="toggle-body">A neutral word or phrase agreed in advance can signal "I need help now" without giving details — useful if you cannot speak freely. For example: "Can you bring the book you borrowed?" could mean "please come."</div>
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Choose a code word with a trusted person</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">A neutral word or phrase agreed in advance can mean "I need help now" without giving details. Pick something that would not stand out to anyone listening, and agree in advance what the person should do when they hear it.</div>
     </div>
 
-    <div class="toggle-item" id="toggle4">
-      <div class="toggle-head" data-toggle="toggle4">
-        <span class="toggle-title">Device and browser safety</span>
-        <span class="toggle-arrow">&#9660;</span>
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Device and browser safety</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">If your device may be monitored, use private browsing, clear your history after use, and sign out of shared accounts. Where you can, use a device the other person cannot access, such as a library computer or a trusted friend's phone. Be aware that private browsing does not hide activity from spyware or a shared account.</div>
+    </div>
+
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>If things are escalating</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">
+        <ul>
+          <li>Try to move to a room with an exit and avoid the kitchen, bathroom, or anywhere with hard surfaces or weapons.</li>
+          <li>Keep your phone charged and within reach.</li>
+          <li>Your safety comes first. Doing what keeps you calm and safe in the moment is not weakness.</li>
+          <li>If you can leave safely, go to a place the other person does not know about.</li>
+        </ul>
       </div>
-      <div class="toggle-body">If your device may be monitored: use private browsing mode, clear browser history after use, sign out of shared accounts, and consider using a device or connection the other person does not have access to — a library computer, a trusted friend's phone.</div>
     </div>
   </section>
 
-  <!-- SECTION 5: FIND HELP -->
   <section class="card" aria-labelledby="help-heading">
     <p class="card-title" id="help-heading">Find support in your country</p>
-    <p class="card-intro">Free, confidential helplines are available in most countries. You do not need to be ready to leave — you can just call to talk.</p>
+    <p class="card-intro">Free, confidential helplines are available in most countries. You do not need to be ready to leave. You can just call to talk.</p>
+
+    <div class="toggle-item">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Some helplines (please check they are current)</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">
+        <ul>
+          <li>South Africa: GBV Command Centre, 0800 428 428 (free, 24 hours)</li>
+          <li>Zimbabwe: national GBV hotline, 575</li>
+          <li>United Kingdom: National Domestic Abuse Helpline, 0808 2000 247</li>
+          <li>United States: National Domestic Violence Hotline, 1-800-799-7233</li>
+        </ul>
+        <p style="margin-top:8px;">Numbers can change. Use the button below to confirm the right one for your country.</p>
+      </div>
+    </div>
+
     <div class="btn-row">
-      <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline in your country</a>
+      <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Find a helpline in your country</a>
     </div>
   </section>
 
-  <!-- SECTION 6: FREE COURSE -->
   <section class="card" aria-labelledby="course-heading">
-    <p class="card-title" id="course-heading">Build emotional strength and boundaries — free course</p>
+    <p class="card-title" id="course-heading">Build emotional strength and boundaries: free course</p>
     <p class="card-intro">This free course supports emotional intelligence skills including boundaries, self-trust, safer decision-making, and communication. A certificate is available on completion.</p>
-    <a class="btn btn-primary" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html" target="_blank" rel="noopener">Start the free course</a>
+    <a class="btn btn-primary" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html" target="_blank" rel="noopener noreferrer">Start the free course</a>
   </section>
 
-  <!-- SECTION 7: SHARE -->
   <section class="card" aria-labelledby="share-heading">
     <p class="card-title" id="share-heading">Share this tool</p>
     <p class="card-intro">If this helped you, you can share it with someone who may need a private starting point.</p>
     <div class="btn-row">
       <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
-      <a class="btn btn-share" id="emailShare" target="_blank" rel="noopener">Email</a>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener noreferrer">X</a>
+      <a class="btn btn-share" id="emailShare" target="_blank" rel="noopener noreferrer">Email</a>
     </div>
   </section>
 
-  <!-- SECTION 8: PRIVACY -->
   <section class="card" aria-labelledby="privacy-heading">
     <p class="card-title" id="privacy-heading">Privacy</p>
     <div class="privacy-card">
-      This tool can store your reflections only in this browser if you turn on save above. On shared or monitored devices, it is safer to keep save off and use Quick Exit and Hide/Reset to clear everything immediately. Private browsing mode leaves no local history.
+      This tool stores your reflections only in this browser, and only if you turn on save. On shared or monitored devices, keep save off and use Quick Exit, Cover screen, or Clear everything. The screen also covers itself after a few minutes of no activity. Nothing you type here is sent to any server.
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
-
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Find a helpline</a>
     </div>
-
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
       &nbsp;·&nbsp; Reflection support only. If you are in danger, please seek urgent help now.
     </p>
   </footer>
-
 </div>
 
-<!-- STICKY BAR -->
 <div class="sticky-bar" role="toolbar" aria-label="Quick safety actions">
   <button type="button" class="btn btn-exit" id="quickExitBtn2" aria-label="Quick Exit">Quick Exit</button>
-  <button type="button" class="btn btn-reset" id="hideResetBtn2">Hide / Reset</button>
-  <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener">Find helpline</a>
+  <button type="button" class="btn btn-reset" id="coverBtn2">Cover</button>
+  <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Helpline</a>
   <button type="button" class="btn btn-primary" id="copyDraftBtn2">Copy draft</button>
+</div>
+
+<div class="cover" id="cover" role="button" tabindex="0" aria-label="Screen covered. Tap to return">
+  <h2>Notes</h2>
+  <p>Shopping list</p>
+  <p>Milk, bread, eggs, rice</p>
+  <p>Call about the appointment on Monday</p>
+  <div class="tiny">Tap anywhere to return</div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -735,26 +327,31 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'dvSupportV4';
+  const STORAGE_KEY = 'dvSupportV5';
   const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const IDLE_MS = 5 * 60 * 1000;
   const $ = id => document.getElementById(id);
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
 
   const feelings = ['Scared','Numb','Confused','Ashamed','Anxious','Angry','Hopeful','Exhausted'];
   const barriers = ['Fear of not being believed','Fear of consequences','Embarrassment','Children','Money','Nowhere to go','Still love them','Unsure it is bad enough'];
   const smallSteps = ['Save a helpline','Talk to one trusted person','Make a quiet plan','Learn warning signs','Write a message draft','Just breathe and ground'];
 
-  let toastTimer;
+  let toastTimer, idleTimer;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
 
   function showToast(msg) {
     const el = $('toast');
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
   }
 
-  function buildChips(containerId, options, cssClass) {
+  function buildChips(containerId, options) {
     const wrap = $(containerId);
     options.forEach(label => {
       const btn = document.createElement('button');
@@ -762,8 +359,10 @@
       btn.className = 'chip';
       btn.textContent = label;
       btn.dataset.value = label;
+      btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
+        const on = btn.classList.toggle('active');
+        btn.setAttribute('aria-pressed', String(on));
         persistIfEnabled();
       });
       wrap.appendChild(btn);
@@ -795,106 +394,111 @@
     $('recentEvent').value = d.recentEvent || '';
     $('wishUnderstood').value = d.wishUnderstood || '';
     $('reachOutDraft').value = d.reachOutDraft || '';
-
-    document.querySelectorAll('.abuse-check').forEach(c => {
-      c.checked = (d.checks || []).includes(c.value);
-    });
-    ['feelingChips','barrierChips','smallStepChips'].forEach((id, i) => {
-      const list = [d.feelings, d.barriers, d.smallSteps][i] || [];
+    document.querySelectorAll('.abuse-check').forEach(c => { c.checked = (d.checks || []).includes(c.value); });
+    [['feelingChips', d.feelings], ['barrierChips', d.barriers], ['smallStepChips', d.smallSteps]].forEach(([id, list]) => {
       document.querySelectorAll('#' + id + ' .chip').forEach(c => {
-        c.classList.toggle('active', list.includes(c.dataset.value));
+        const on = (list || []).includes(c.dataset.value);
+        c.classList.toggle('active', on);
+        c.setAttribute('aria-pressed', String(on));
       });
     });
   }
 
   function persistIfEnabled() {
     const d = gatherState();
-    if (!d.saveEnabled) { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} return; }
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(_) {}
+    if (!d.saveEnabled) { try { localStorage.removeItem(STORAGE_KEY); } catch (_) {} return; }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch (_) {}
   }
 
   function clearAll() {
     $('saveToggle').checked = false;
-    $('feelingOther').value = '';
-    $('recentEvent').value = '';
-    $('wishUnderstood').value = '';
-    $('reachOutDraft').value = '';
-    document.querySelectorAll('.abuse-check').forEach(c => c.checked = false);
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    ['feelingOther','recentEvent','wishUnderstood','reachOutDraft'].forEach(id => { $(id).value = ''; });
+    document.querySelectorAll('.abuse-check').forEach(c => { c.checked = false; });
+    document.querySelectorAll('.chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
     $('resultBox').style.display = 'none';
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    $('resultBox').innerHTML = '';
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
   }
 
   function quickExit() {
     clearAll();
+    // Replace this page in history so Back does not return here, then leave.
     window.location.replace('https://www.google.com');
   }
 
-  // Toggles
+  // Cover screen
+  function coverOn() { $('cover').classList.add('on'); }
+  function coverOff() { $('cover').classList.remove('on'); resetIdle(); }
+  function resetIdle() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(coverOn, IDLE_MS);
+  }
+
+  // Triple Escape to exit
+  let escCount = 0, escTimer;
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    escCount++;
+    clearTimeout(escTimer);
+    escTimer = setTimeout(() => { escCount = 0; }, 1500);
+    if (escCount >= 3) quickExit();
+  });
+
+  // Accordion toggles
   document.querySelectorAll('.toggle-head').forEach(head => {
     head.addEventListener('click', () => {
-      const item = $(head.dataset.toggle);
-      if (item) item.classList.toggle('open');
+      const item = head.parentElement;
+      const open = item.classList.toggle('open');
+      head.setAttribute('aria-expanded', String(open));
     });
   });
 
   // Draft templates
   document.querySelectorAll('.draft-template-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      $('reachOutDraft').value = btn.dataset.template;
-      persistIfEnabled();
-    });
+    btn.addEventListener('click', () => { $('reachOutDraft').value = btn.dataset.template; persistIfEnabled(); });
   });
 
-  // Summary builder
-  function buildResultHTML(d) {
+  function summaryRows(d, empty) {
     const feelingsList = [...d.feelings, d.feelingOther].filter(Boolean).join(', ') || 'Not selected';
-    const rows = [
+    return [
       ['How you are feeling', feelingsList],
-      ['What has been happening', d.recentEvent || '—'],
-      ['What you wish was understood', d.wishUnderstood || '—'],
+      ['What has been happening', d.recentEvent || empty],
+      ['What you wish was understood', d.wishUnderstood || empty],
       ['Hardest part of reaching out', d.barriers.join(', ') || 'Not selected'],
       ['One small step today', d.smallSteps.join(', ') || 'Not selected'],
       ['Warning signs noticed', d.checks.join(', ') || 'None selected']
     ];
-
-    let html = '<div class="result-title">Your gentle summary</div>';
-    rows.forEach(([label, value]) => {
-      html += '<div class="result-row">';
-      html += '<div class="result-row-label">' + label + '</div>';
-      html += '<div class="result-row-value">' + value + '</div>';
-      html += '</div>';
-    });
-    html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">You can take one small step. You do not have to explain everything today. You deserve safety and support.</div>';
-    return html;
   }
 
   function showSummary() {
     const d = gatherState();
+    let html = '<div class="result-title">Your gentle summary</div>';
+    summaryRows(d, 'Not provided').forEach(([label, value]) => {
+      html += '<div class="result-row"><div class="result-row-label">' + esc(label) + '</div><div class="result-row-value">' + esc(value) + '</div></div>';
+    });
+    html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">You can take one small step. You do not have to explain everything today. You deserve safety and support.</div>';
     const box = $('resultBox');
-    box.innerHTML = buildResultHTML(d);
+    box.innerHTML = html;
     box.style.display = 'block';
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     persistIfEnabled();
   }
 
-  // Share links
   function updateShareLinks() {
     const url = encodeURIComponent(window.location.href);
     const msg = encodeURIComponent('A gentle private starting point for safety and support: ');
     $('waShare').href = 'https://wa.me/?text=' + msg + url;
     $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
     $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-    $('emailShare').href = 'mailto:?subject=' + encodeURIComponent('Gentle safety support tool') + '&body=' + msg + url;
+    $('emailShare').href = 'mailto:?subject=' + encodeURIComponent('A gentle support tool') + '&body=' + msg + url;
   }
 
-  // Copy
-  async function copyText(text, successMsg) {
-    try { await navigator.clipboard.writeText(text); showToast(successMsg); }
-    catch(_) { showToast('Could not copy. Please copy manually.'); }
+  async function copyText(text, okMsg) {
+    if (!text) { showToast('There is nothing to copy yet.'); return; }
+    try { await navigator.clipboard.writeText(text); showToast(okMsg); }
+    catch (_) { showToast('Could not copy. Please copy it by hand.'); }
   }
 
-  // PDF
   async function imageToDataUrl(url) {
     const res = await fetch(url, { mode: 'cors' });
     if (!res.ok) throw new Error('Logo fetch failed');
@@ -902,16 +506,16 @@
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
+      reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
   }
 
   async function downloadPDF() {
     const PDF = jsPDF();
-    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
+    if (!PDF) { showToast('PDF tool did not load. Please try again.'); return; }
     const d = gatherState();
-    showToast('Preparing your PDF…');
+    showToast('Preparing your PDF');
 
     const doc = new PDF({ unit: 'pt', format: 'a4' });
     const pageW = doc.internal.pageSize.getWidth();
@@ -919,160 +523,128 @@
     const margin = 40;
     let y = margin;
 
-    // Header
     doc.setFillColor(234, 239, 248);
     doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    let textX = margin + 14;
     try {
       const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(26, 32, 48);
-    doc.text('Domestic Violence Safety & Support', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 85, 104);
-    doc.text('Gentle personal reflection summary', margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
+      textX = margin + 76;
+    } catch (_) {}
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(26, 32, 48);
+    doc.text('Safety and Support Notes', textX, y + 28);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 85, 104);
+    doc.text('Gentle personal reflection summary', textX, y + 43);
+    doc.text('emotionalintelligencedeveloper.com', textX, y + 57);
     y += 86;
 
-    // Reflection rows
-    const feelingsList = [...d.feelings, d.feelingOther].filter(Boolean).join(', ') || 'Not selected';
-    const rows = [
-      ['How you are feeling', feelingsList],
-      ['What has been happening', d.recentEvent || 'Not provided'],
-      ['What you wish was understood', d.wishUnderstood || 'Not provided'],
-      ['Hardest part of reaching out', d.barriers.join(', ') || 'Not selected'],
-      ['One small step today', d.smallSteps.join(', ') || 'Not selected'],
-      ['Warning signs noticed', d.checks.join(', ') || 'None selected'],
-      ['Message draft', d.reachOutDraft || 'Not written']
-    ];
+    const rows = summaryRows(d, 'Not provided');
+    rows.push(['Message draft', d.reachOutDraft || 'Not written']);
 
     rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(234, 239, 248);
       const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
       const bh = lines.length * 12 + 28;
+      if (y + bh > pageH - 60) { doc.addPage(); y = margin; }
+      doc.setFillColor(234, 239, 248);
       doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(74, 96, 128);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(74, 96, 128);
       doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 48);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(26, 32, 48);
       doc.text(lines, margin + 10, y + 26);
       y += bh + 8;
     });
 
-    // Closing note
-    if (y > pageH - 60) { doc.addPage(); y = margin; }
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9.5);
-    doc.setTextColor(74, 96, 128);
-    const closingLines = doc.splitTextToSize('You can take one small step. You do not have to explain everything today. You deserve safety and support.', pageW - margin * 2);
-    doc.text(closingLines, margin, y);
-    y += closingLines.length * 12 + 16;
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(176, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(74, 96, 128);
-    doc.text('Understanding domestic violence — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['What domestic violence actually is',
-       'Domestic violence is not limited to physical harm. Research from the World Health Organization and the National Domestic Violence Hotline identifies a pattern of coercive control that can include emotional, financial, digital, sexual, and psychological abuse. The defining feature is not a single incident but a repeated pattern of behaviour used to maintain power and control. Many people do not recognise their experience as abuse because it does not match narrow definitions — but coercion, fear, and control are the core indicators.'],
-      ['Why leaving is not simple',
-       'Research by sociologist Evan Stark, who developed the theory of coercive control, and studies from the Domestic Violence Evidence Project consistently show that leaving an abusive relationship is statistically the most dangerous period for a survivor. Perpetrators often escalate when they perceive loss of control. This is why safety planning, timing, and support networks matter more than simply leaving. The question "why didn\'t they just leave?" fundamentally misunderstands the dynamics of abuse and danger.'],
-      ['The role of trauma bonding',
-       'Trauma bonding — sometimes called Stockholm syndrome in popular culture — is a psychological response to cycles of abuse and intermittent reinforcement. Research by Patrick Carnes and others in trauma psychology shows that the cycle of tension, incident, reconciliation, and calm creates neurochemical bonding similar to addiction. This is not weakness or stupidity. It is a neurological response to an environment of unpredictable threat and reward that makes separation genuinely difficult.'],
-      ['Coercive control and its long-term effects',
-       'A landmark 2012 study in the American Journal of Public Health found that psychological and emotional abuse — including isolation, monitoring, degradation, and financial control — produced mental health effects as severe as physical violence. Survivors of coercive control often report feeling disoriented, unable to trust their own perceptions, and uncertain whether their experience "counts." These are predictable responses to sustained psychological manipulation, not character flaws.'],
-      ['How connection and support change outcomes',
-       'Research from the University of Pennsylvania and the National Center for Domestic Violence consistently identifies social support as the single strongest predictor of survivor safety and recovery. This does not always mean formal services — one trusted person who believes the survivor and does not pressure them can be transformative. Calling a helpline even once, without any plan to leave, significantly increases the likelihood of eventual safety. You do not need to be ready. You just need to reach.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(74, 96, 128);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 32, 48);
+    function block(title, body) {
       const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
+      if (y + lines.length * 11.5 + 30 > pageH - 50) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(74, 96, 128);
+      doc.text(title, margin, y); y += 12;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(26, 32, 48);
+      doc.text(lines, margin, y); y += lines.length * 11.5 + 12;
+    }
 
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(176, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 96, 128);
-    doc.text('Support resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 32, 48);
+    if (y > pageH - 120) { doc.addPage(); y = margin; }
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(9.5); doc.setTextColor(74, 96, 128);
+    const closing = doc.splitTextToSize('You can take one small step. You do not have to explain everything today. You deserve safety and support.', pageW - margin * 2);
+    doc.text(closing, margin, y); y += closing.length * 12 + 16;
+
+    doc.setDrawColor(176, 192, 216); doc.line(margin, y, pageW - margin, y); y += 16;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(74, 96, 128);
+    doc.text('Understanding domestic violence', margin, y); y += 16;
+
+    block('What it is',
+      'Domestic violence is not only physical. It can include emotional, financial, digital, sexual and psychological abuse. What defines it is a pattern of behaviour used to gain power and control over another person, not a single bad moment. Many people do not recognise their own experience as abuse because it does not look like what they expected. Fear, control and coercion are the main signs.');
+    block('Why leaving is not simple',
+      'People stay for many real reasons: fear of what the other person might do, money, children, housing, love, shame, or not being believed. Many support services note that the time around leaving can carry extra risk, which is why planning and support matter. Asking "why do they not just leave" misses how hard and how dangerous the situation can be.');
+    block('Why it can feel confusing',
+      'Abuse often comes with kind or calm periods. The mix of fear and relief can make it hard to see clearly and can create a strong emotional bond. This is a common human response to an unpredictable situation. It is not a weakness and it is not your fault.');
+    block('Words and control can hurt too',
+      'Constant criticism, isolation, monitoring and control over money can wear down your confidence and your trust in your own judgement, even when there is no physical harm. If you feel afraid, small or on edge in your own home, that matters.');
+    block('Support helps',
+      'Having one person who believes you and does not pressure you can make a big difference. Calling a helpline does not commit you to anything. You do not need to be ready to leave. You can simply talk.');
+
+    if (y > pageH - 110) { doc.addPage(); y = margin; }
+    doc.setDrawColor(176, 192, 216); doc.line(margin, y, pageW - margin, y); y += 14;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(74, 96, 128);
+    doc.text('Support resources', margin, y); y += 13;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(26, 32, 48);
     [
       'Find a helpline in your country: findahelpline.com',
       'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
     ].forEach(line => { doc.text(line, margin, y); y += 13; });
 
-    // Footer
-    doc.setDrawColor(176, 192, 216);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 152, 176);
-    doc.text('This tool supports reflection and awareness. If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
+    const total = doc.getNumberOfPages();
+    for (let i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(176, 192, 216); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(106, 122, 148);
+      doc.text('If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
+    }
 
-    doc.save('domestic-violence-safety-support.pdf');
-    showToast('PDF downloaded.');
+    doc.save('my-notes.pdf');
+    showToast('Saved as my-notes.pdf. Delete it from downloads if your device is shared.');
   }
 
-  // Input listeners for auto-save
-  ['feelingOther','recentEvent','wishUnderstood','reachOutDraft'].forEach(id => {
-    $(id).addEventListener('input', persistIfEnabled);
-  });
+  // Auto save listeners
+  ['feelingOther','recentEvent','wishUnderstood','reachOutDraft'].forEach(id => $(id).addEventListener('input', persistIfEnabled));
   document.querySelectorAll('.abuse-check').forEach(c => c.addEventListener('change', persistIfEnabled));
-  $('saveToggle').addEventListener('change', persistIfEnabled);
+  $('saveToggle').addEventListener('change', () => {
+    if ($('saveToggle').checked) {
+      const ok = window.confirm('Saving keeps what you type on this device. Only turn this on if no one else can use it. Continue?');
+      if (!ok) { $('saveToggle').checked = false; return; }
+    }
+    persistIfEnabled();
+  });
 
-  // Button listeners
+  // Buttons
   $('buildSummaryBtn').addEventListener('click', showSummary);
   $('pdfBtn').addEventListener('click', downloadPDF);
-  $('copyDraftBtn').addEventListener('click', () => copyText($('reachOutDraft').value || '', 'Draft copied.'));
-  $('copyDraftBtn2').addEventListener('click', () => copyText($('reachOutDraft').value || '', 'Draft copied.'));
+  ['copyDraftBtn','copyDraftBtn2'].forEach(id => $(id).addEventListener('click', () => copyText($('reachOutDraft').value, 'Draft copied.')));
   $('copyLinkBtn').addEventListener('click', () => copyText(window.location.href, 'Link copied.'));
   ['quickExitBtn','quickExitBtn2'].forEach(id => $(id).addEventListener('click', quickExit));
-  ['hideResetBtn','hideResetBtn2'].forEach(id => $(id).addEventListener('click', () => { clearAll(); showToast('Tool cleared.'); }));
+  ['hideResetBtn'].forEach(id => $(id).addEventListener('click', () => { clearAll(); showToast('Everything cleared.'); }));
+  ['coverBtn','coverBtn2'].forEach(id => $(id).addEventListener('click', coverOn));
+  $('cover').addEventListener('click', coverOff);
+  $('cover').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') coverOff(); });
+
+  // Idle cover
+  ['mousemove','keydown','touchstart','scroll','click'].forEach(ev => document.addEventListener(ev, () => {
+    if (!$('cover').classList.contains('on')) resetIdle();
+  }, { passive: true }));
 
   // Init
   buildChips('feelingChips', feelings);
   buildChips('barrierChips', barriers);
   buildChips('smallStepChips', smallSteps);
   updateShareLinks();
+  resetIdle();
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) applyState(JSON.parse(raw));
-  } catch(_) {
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  } catch (_) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (__) {}
   }
 }());
 </script>

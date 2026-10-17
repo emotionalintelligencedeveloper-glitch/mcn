@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>I'm Stuck — Decision Support Tool | Emotional Intelligence Developer</title>
+  <title>I'm Stuck: Decision Support Tool | Emotional Intelligence Developer</title>
   <style>
     :root {
       --bg: #f4f7f2;
       --card: #ffffff;
       --text: #1e2d1f;
       --muted: #4a5e4b;
-      --hint: #7a9a7b;
+      --hint: #6b8a6c;
       --border: #ccdece;
       --brand: #4a7c59;
       --brand-light: #eaf3ec;
       --brand-mid: #b8d9be;
-      --accent: #7ab893;
+      --accent: #5f9f78;
       --accent-light: #e4f2e8;
-      --warm-gold: #7a6a3a;
+      --warm-gold: #6e5f30;
       --warm-gold-light: #f7f3e8;
       --warm-gold-mid: #ddd0a0;
       --soft-sage: #5a7a5e;
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --support: #e8702a;
+      --support: #c85a18;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,11 +38,7 @@
       font-size: 16px;
     }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
 
     /* HEADER */
     .header {
@@ -53,435 +49,154 @@
       margin-bottom: 16px;
       text-align: center;
     }
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
+    .logo { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 2px solid var(--brand-mid); flex-shrink: 0; }
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; text-align: left; line-height: 1.3; }
 
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
+    .tool-title { font-size: clamp(1.4rem, 4vw, 1.85rem); font-weight: normal; color: var(--text); line-height: 1.3; margin-bottom: 10px; }
+    .tagline { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
 
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      text-align: left;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.4rem, 4vw, 1.85rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .disclaimer {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--hint);
-      background: var(--bg);
-      border-radius: 20px;
-      padding: 4px 12px;
-    }
+    .disclaimer { display: inline-block; margin-top: 12px; font-size: 12px; color: var(--hint); background: var(--bg); border-radius: 20px; padding: 4px 12px; }
 
     .tool-note {
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: var(--warm-gold-light);
-      border: 1px solid var(--warm-gold-mid);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      color: var(--warm-gold);
-      font-style: italic;
+      margin-top: 16px; padding: 12px 16px; background: var(--warm-gold-light);
+      border: 1px solid var(--warm-gold-mid); border-radius: var(--radius-md);
+      font-size: 14px; color: var(--warm-gold); font-style: italic;
     }
+
+    /* PROGRESS */
+    .progress-wrap { margin-top: 16px; }
+    .progress-label { font-size: 12px; color: var(--hint); margin-bottom: 6px; text-align: left; }
+    .progress-track { height: 8px; background: var(--brand-light); border-radius: 99px; overflow: hidden; border: 1px solid var(--brand-mid); }
+    .progress-fill { height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width 0.3s; }
 
     /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
+    .card { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; margin-bottom: 16px; }
+    .card-title { font-size: 1.1rem; font-weight: normal; color: var(--brand); margin-bottom: 16px; }
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 16px;
-    }
+    .question { border: 1px solid var(--brand-mid); background: var(--brand-light); border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px; }
+    .question-label { font-size: 15px; color: var(--text); margin-bottom: 5px; display: block; }
+    .question-hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
 
-    /* INPUTS */
-    .question {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
+    .decision-card { border: 1px solid var(--warm-gold-mid); background: var(--warm-gold-light); border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px; }
+    .decision-label { font-size: 15px; color: var(--text); margin-bottom: 5px; display: block; }
+    .decision-hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
 
-    .question-label {
-      font-size: 15px;
-      font-weight: normal;
-      color: var(--text);
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .question-hint {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-style: italic;
-    }
-
-    /* DECISION TYPE SELECT */
-    .decision-card {
-      border: 1px solid var(--warm-gold-mid);
-      background: var(--warm-gold-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .decision-label {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .decision-hint {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-style: italic;
-    }
-
-    /* DYNAMIC PROMPTS */
-    .prompts-card {
-      border: 1px solid var(--brand-mid);
-      background: var(--accent-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .prompts-intro {
-      font-size: 14px;
-      color: var(--soft-sage);
-      font-style: italic;
-      margin-bottom: 14px;
-      padding: 10px 12px;
-      background: #fff;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--brand-mid);
-    }
-
-    .prompt-field {
-      margin-bottom: 12px;
-    }
-
+    .prompts-card { border: 1px solid var(--brand-mid); background: var(--accent-light); border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px; }
+    .prompts-intro { font-size: 14px; color: var(--soft-sage); font-style: italic; margin-bottom: 14px; padding: 10px 12px; background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--brand-mid); }
+    .prompt-field { margin-bottom: 12px; }
     .prompt-field:last-child { margin-bottom: 0; }
-
-    .prompt-field-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      font-style: italic;
-      display: block;
-    }
+    .prompt-field-label { font-size: 13px; color: var(--muted); margin-bottom: 6px; font-style: italic; display: block; }
 
     textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 88px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px;
+      font-family: "Georgia", serif; font-size: 15px; color: var(--text); background: #fff;
+      min-height: 88px; resize: vertical; line-height: 1.6; transition: border-color 0.2s;
     }
+    textarea:focus, input:focus, select:focus { outline: 2px solid var(--brand-mid); outline-offset: 1px; border-color: var(--brand); }
 
-    textarea:focus { outline: none; border-color: var(--brand); }
+    .counter { text-align: right; font-size: 11px; color: var(--hint); margin-top: 4px; }
 
     input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 13px;
+      font-family: "Georgia", serif; font-size: 15px; color: var(--text); background: #fff;
     }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
 
     select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 36px 11px 13px;
+      font-family: "Georgia", serif; font-size: 15px; color: var(--text); background-color: #fff;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9a7b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
+      background-repeat: no-repeat; background-position: right 14px center;
     }
 
-    select:focus { outline: none; border-color: var(--brand); }
+    .name-field { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px; }
+    .name-field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-style: italic; }
 
-    /* NAME FIELD */
-    .name-field {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 14px;
-    }
+    /* SLIDER */
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+    .slider-row input[type="range"] { flex: 1; accent-color: var(--brand); height: 28px; }
+    .slider-value { min-width: 56px; text-align: center; font-size: 15px; color: var(--brand); background: #fff; border: 1px solid var(--brand-mid); border-radius: 99px; padding: 2px 10px; }
+    .slider-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-top: 2px; }
 
-    .name-field label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-style: italic;
+    /* STEP IDEAS */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .chip {
+      font-family: "Georgia", serif; font-size: 13px; color: var(--brand); background: #fff;
+      border: 1px solid var(--brand-mid); border-radius: 99px; padding: 8px 14px; cursor: pointer; min-height: 38px;
+      text-align: left; line-height: 1.4;
     }
+    .chip:hover { background: var(--brand-light); }
 
-    /* SAVE ROW */
-    .save-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-    }
+    .save-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .save-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 
-    .save-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
+    .error-msg { display: none; background: #fdf0f0; border: 1px solid #e8c0c0; border-radius: var(--radius-sm); padding: 11px 14px; font-size: 14px; color: #a83838; margin-bottom: 14px; font-style: italic; }
 
-    /* ERROR */
-    .error-msg {
-      display: none;
-      background: #fdf0f0;
-      border: 1px solid #e8c0c0;
-      border-radius: var(--radius-sm);
-      padding: 11px 14px;
-      font-size: 14px;
-      color: #b94040;
-      margin-bottom: 14px;
-      font-style: italic;
+    /* CARE NOTE */
+    .care-note {
+      display: none; background: #fff6ee; border: 1px solid #f0c9a6; border-radius: var(--radius-md);
+      padding: 16px 18px; margin-bottom: 16px; font-size: 15px; color: #6b3a12;
     }
+    .care-note a { color: #9a3f06; }
 
     /* RESULT */
-    .result-box {
-      display: none;
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      margin-bottom: 16px;
-    }
+    .result-box { display: none; background: var(--accent-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md); padding: 18px 20px; margin-bottom: 16px; }
+    .result-title { font-size: 13px; font-weight: bold; color: var(--brand); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+    .result-row { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--brand-mid); }
+    .result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .result-row-label { font-size: 12px; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .result-row-value { font-size: 15px; color: var(--text); line-height: 1.65; white-space: pre-wrap; word-wrap: break-word; }
+    .result-sub { font-size: 12px; color: var(--hint); display: block; margin-bottom: 2px; }
+    .result-advice { margin-top: 14px; padding: 13px 15px; background: var(--warm-gold-light); border: 1px solid var(--warm-gold-mid); border-radius: var(--radius-sm); font-size: 14px; color: var(--warm-gold); font-style: italic; }
+    .result-closing { font-size: 14px; color: var(--muted); font-style: italic; margin-top: 12px; }
 
-    .result-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 14px;
-    }
+    .followup { margin-top: 16px; padding: 14px 16px; background: #fff; border: 1px solid var(--brand-mid); border-radius: var(--radius-md); }
+    .followup-title { font-size: 14px; color: var(--brand); margin-bottom: 10px; }
+    .followup-msg { margin-top: 10px; font-size: 14px; color: var(--soft-sage); font-style: italic; }
 
-    .result-row {
-      margin-bottom: 14px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--brand-mid);
-    }
-
-    .result-row:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .result-row-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .result-row-value {
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.65;
-    }
-
-    .result-advice {
-      margin-top: 14px;
-      padding: 13px 15px;
-      background: var(--warm-gold-light);
-      border: 1px solid var(--warm-gold-mid);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      color: var(--warm-gold);
-      font-style: italic;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
     /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px;
+      border-radius: 99px; font-family: "Georgia", serif; font-size: 14px; cursor: pointer; text-decoration: none;
+      border: 1.5px solid transparent; min-height: 46px; transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
     }
-
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
-
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
+    .btn-danger { background: #fff; color: #a83838; border-color: #e8c0c0; }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
+    .btn-support { background: var(--support); color: #fff; border-color: var(--support); font-size: 15px; padding: 14px 24px; }
 
     @media (max-width: 480px) {
       .btn { width: 100%; }
       .btn-row { flex-direction: column; }
     }
 
-    /* TOAST */
     .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
+      background: var(--text); color: #fff; padding: 10px 18px; border-radius: 99px; font-size: 14px;
+      font-family: "Georgia", serif; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 100; white-space: nowrap;
     }
-
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link {
-      font-size: 13px;
-      color: var(--brand);
-      text-decoration: none;
-    }
-
+    .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; text-align: center; }
+    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 16px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
 
-    .footer-credit {
-      font-size: 12px;
-      color: var(--hint);
-      margin-top: 12px;
+    @media print {
+      body { background: #fff; }
+      .header .tool-note, .progress-wrap, .btn-row, .section-label, .footer, .chips, .toast, .followup .btn-row { display: none !important; }
+      .card { border: none; padding: 0; }
+      .result-box { display: block !important; }
     }
   </style>
 </head>
@@ -494,10 +209,14 @@
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>I'm Stuck — Decision Support Tool</h1>
+    <h2 class="tool-title">I'm Stuck: Decision Support Tool</h2>
     <p class="tagline">A gentle reflection space to help you untangle what feels difficult and find one small, clear step forward.</p>
-    <span class="disclaimer">Supportive reflection only — not medical or professional advice</span>
+    <span class="disclaimer">Supportive reflection only. Not medical or professional advice.</span>
     <p class="tool-note">Being stuck is not a failure. It usually means you care about getting it right. Let's slow it down together.</p>
+    <div class="progress-wrap">
+      <div class="progress-label" id="progressLabel">0 of 4 key questions answered</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
   </header>
 
   <!-- MAIN CARD -->
@@ -505,23 +224,21 @@
     <p class="card-title" id="reflect-heading">Your reflection</p>
 
     <label class="save-row">
-      <input type="checkbox" id="saveToggle" />
+      <input type="checkbox" id="saveToggle" onchange="onSaveToggle()" />
       Save my reflection on this device
     </label>
-    <p style="font-size:13px;color:var(--hint);margin-bottom:18px;font-style:italic;">Stored only on this device using localStorage — nothing is sent anywhere.</p>
+    <p style="font-size:13px;color:var(--hint);margin-bottom:18px;font-style:italic;">Stored only on this device. Nothing is sent anywhere.</p>
 
-    <!-- NAME -->
     <div class="name-field">
-      <label for="userName">Your name (optional — shown in PDF)</label>
-      <input type="text" id="userName" maxlength="60" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+      <label for="userName">Your name (optional, shown in PDF)</label>
+      <input type="text" id="userName" maxlength="60" placeholder="e.g. Alex" oninput="onFieldChange()" />
     </div>
 
-    <!-- DECISION TYPE -->
     <div class="decision-card">
       <label class="decision-label" for="decisionType">What feels most stuck right now?</label>
-      <p class="decision-hint">Choosing a theme loads questions tailored to your situation.</p>
-      <select id="decisionType" aria-label="What feels most stuck right now">
-        <option value="">Choose one…</option>
+      <p class="decision-hint">Choosing a theme loads questions and step ideas tailored to your situation.</p>
+      <select id="decisionType" onchange="onThemeChange()">
+        <option value="">Choose one...</option>
         <option value="Work or study decision">Work or study decision</option>
         <option value="Relationship or family choice">Relationship or family choice</option>
         <option value="Personal wellbeing routine">Personal wellbeing routine</option>
@@ -530,90 +247,102 @@
       </select>
     </div>
 
-    <!-- DYNAMIC PROMPTS -->
     <div class="prompts-card" id="promptsCard">
       <div class="prompts-intro" id="promptsIntro">Choose a theme above to load questions tailored to your situation.</div>
       <div class="prompt-field">
-        <label class="prompt-field-label" for="topicQ1">Your response</label>
-        <textarea id="topicQ1" aria-label="Tailored prompt one" placeholder="Choose a theme above to see your first question…"></textarea>
+        <label class="prompt-field-label" for="topicQ1" id="topicLabel1">Question one</label>
+        <textarea id="topicQ1" oninput="onFieldChange()" placeholder="Choose a theme above to see your first question..."></textarea>
       </div>
       <div class="prompt-field">
-        <label class="prompt-field-label" for="topicQ2">Your response</label>
-        <textarea id="topicQ2" aria-label="Tailored prompt two" placeholder="Choose a theme above to see your second question…"></textarea>
+        <label class="prompt-field-label" for="topicQ2" id="topicLabel2">Question two</label>
+        <textarea id="topicQ2" oninput="onFieldChange()" placeholder="Choose a theme above to see your second question..."></textarea>
       </div>
       <div class="prompt-field">
-        <label class="prompt-field-label" for="topicQ3">Your response</label>
-        <textarea id="topicQ3" aria-label="Tailored prompt three" placeholder="Choose a theme above to see your third question…"></textarea>
+        <label class="prompt-field-label" for="topicQ3" id="topicLabel3">Question three</label>
+        <textarea id="topicQ3" oninput="onFieldChange()" placeholder="Choose a theme above to see your third question..."></textarea>
       </div>
     </div>
 
-    <!-- SITUATION -->
     <div class="question">
       <label class="question-label" for="situation">What is happening?</label>
-      <p class="question-hint">Describe the situation briefly — just enough to give it shape.</p>
-      <textarea id="situation" maxlength="700" placeholder="Briefly describe what is going on…" aria-label="Describe the situation"></textarea>
+      <p class="question-hint">Describe the situation briefly. Just enough to give it shape.</p>
+      <textarea id="situation" maxlength="700" oninput="onFieldChange()" placeholder="Briefly describe what is going on..."></textarea>
+      <div class="counter" id="count-situation">0 / 700</div>
     </div>
 
-    <!-- WORRY -->
     <div class="question">
       <label class="question-label" for="worry">What are you most worried about?</label>
       <p class="question-hint">Name the fear underneath the stuckness if you can.</p>
-      <textarea id="worry" maxlength="600" placeholder="What is the worry underneath all of this?" aria-label="Main worry"></textarea>
+      <textarea id="worry" maxlength="600" oninput="onFieldChange()" placeholder="What is the worry underneath all of this?"></textarea>
+      <div class="counter" id="count-worry">0 / 600</div>
     </div>
 
-    <!-- BEST OUTCOME -->
+    <div class="question">
+      <label class="question-label" for="heaviness">How heavy does this feel right now?</label>
+      <p class="question-hint">There is no right answer. This just gives you something to compare against later.</p>
+      <div class="slider-row">
+        <input type="range" id="heaviness" min="1" max="10" value="5" oninput="onFieldChange()" aria-label="How heavy this feels, 1 to 10" />
+        <span class="slider-value" id="heavinessValue">5 / 10</span>
+      </div>
+      <div class="slider-ends"><span>Light</span><span>Very heavy</span></div>
+    </div>
+
     <div class="question">
       <label class="question-label" for="bestOutcome">What would a good-enough outcome look like?</label>
-      <p class="question-hint">Not perfect — just good enough. Realistic and liveable.</p>
-      <textarea id="bestOutcome" maxlength="500" placeholder="It does not have to be perfect — what would feel okay?" aria-label="Best realistic outcome"></textarea>
+      <p class="question-hint">Not perfect, just good enough. Realistic and liveable.</p>
+      <textarea id="bestOutcome" maxlength="500" oninput="onFieldChange()" placeholder="It does not have to be perfect. What would feel okay?"></textarea>
+      <div class="counter" id="count-bestOutcome">0 / 500</div>
     </div>
 
-    <!-- NEXT STEP -->
     <div class="question">
       <label class="question-label" for="nextStep">What is one small next step you could take in under 15 minutes?</label>
-      <p class="question-hint">Something concrete, kind, and achievable today.</p>
-      <textarea id="nextStep" maxlength="400" placeholder="e.g. Write 3 bullet points and message one trusted person…" aria-label="One tiny next step"></textarea>
+      <p class="question-hint">Something concrete, kind, and achievable today. Tap an idea below or write your own.</p>
+      <div class="chips" id="stepChips"></div>
+      <textarea id="nextStep" maxlength="400" oninput="onFieldChange()" placeholder="e.g. Write 3 bullet points and message one trusted person"></textarea>
+      <div class="counter" id="count-nextStep">0 / 400</div>
     </div>
 
-    <!-- ERROR -->
     <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
 
-    <!-- RESULT -->
-    <div class="result-box" id="resultBox" aria-live="polite"></div>
-
-    <!-- ACTIONS -->
-    <div class="section-label" style="margin-top:18px;">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="createBtn" aria-label="Create reflection">Create my reflection</button>
-      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF">Download PDF</button>
-      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    <div class="care-note" id="careNote" role="note">
+      <strong>You matter, and you do not have to carry this alone.</strong><br>
+      If you are thinking about harming yourself or feel unsafe, please contact your local emergency number or someone you trust right now. You can also find a free helpline in your country at
+      <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
 
-    <!-- SHARE -->
+    <div class="result-box" id="resultBox" aria-live="polite"></div>
+
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" onclick="createReflection()">Create my reflection</button>
+      <button type="button" class="btn btn-secondary" onclick="downloadPDF()">Download PDF</button>
+      <button type="button" class="btn btn-outline" onclick="copySummary()">Copy as text</button>
+      <button type="button" class="btn btn-outline" onclick="window.print()">Print</button>
+      <button type="button" class="btn btn-danger" onclick="resetTool()">Reset</button>
+    </div>
+
     <div class="section-label">Share this tool</div>
     <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyBtn" aria-label="Copy link">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+      <button type="button" class="btn btn-share" onclick="copyLink()">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer" aria-label="Footer">
+  <footer class="footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
-
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional advice.
+      &nbsp;&middot;&nbsp; Reflection support only. Not professional advice.
     </p>
   </footer>
 
@@ -623,429 +352,614 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-(function () {
-  'use strict';
+var STORAGE_KEY = 'decisionSupportV6';
+var OLD_STORAGE_KEY = 'decisionSupportV5';
+var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var FIELD_IDS = ['userName', 'situation', 'worry', 'bestOutcome', 'nextStep', 'topicQ1', 'topicQ2', 'topicQ3'];
+var COUNTERS = { situation: 700, worry: 600, bestOutcome: 500, nextStep: 400 };
+var CRISIS_REGEX = /(kill myself|end my life|ending my life|suicid|want to die|wanna die|hurt myself|harm myself|self[\s-]?harm|no reason to live|better off dead|can'?t go on)/i;
 
-  const STORAGE_KEY = 'decisionSupportV5';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = window.jspdf && window.jspdf.jsPDF;
+// follow-up state (after taking the step)
+var followUp = { after: null, done: false };
 
-  const $ = id => document.getElementById(id);
+var GUIDES = {
+  'Work or study decision': {
+    intro: 'Work and study choices often become clearer when you separate short-term pressure from longer-term priorities.',
+    prompts: [
+      'Which option best matches your current energy, time, and priorities right now?',
+      'What short-term pressure is loudest, and what longer-term goal matters more to you?',
+      'Who could offer honest, practical feedback before you take your next step?'
+    ],
+    steps: [
+      'Write down my two or three options on one page',
+      'Message one person whose opinion I trust',
+      'List one thing I would lose and one thing I would gain with each option'
+    ],
+    advice: 'Shortlist two or three options, compare their realistic benefits and risks, then commit to one small trial action this week. You do not need to decide everything at once.'
+  },
+  'Relationship or family choice': {
+    intro: 'Relationship decisions tend to feel clearer when you focus on what you need, not on finding the perfect words.',
+    prompts: [
+      'What boundary or need do you most want to protect in this situation?',
+      'What conversation outcome feels realistic this week? Not perfect, just progress.',
+      'What could you say in one or two sentences that is both honest and respectful?'
+    ],
+    steps: [
+      'Write the one sentence I most want them to hear',
+      'Pick a calm time this week to talk and put it in my phone',
+      'Write down the one thing I need, in a single line'
+    ],
+    advice: 'Choose a calm moment, use "I" statements, and make one clear request. Progress in communication matters more than winning an argument.'
+  },
+  'Personal wellbeing routine': {
+    intro: 'Wellbeing routines tend to stick when they are tiny, repeatable, and easy to start, especially on hard days.',
+    prompts: [
+      'What one 5 to 10 minute habit would help you feel steadier each day?',
+      'What usually disrupts your routine, and what is a simple backup plan?',
+      'What would tell you after one week that this routine is actually helping?'
+    ],
+    steps: [
+      'Take five slow breaths right now',
+      'Choose the exact time and place for my habit tomorrow',
+      'Put my shoes, journal, or water bottle where I will see it'
+    ],
+    advice: 'Start with one daily anchor: sleep, movement, breathing, or journaling. Consistency matters more than intensity. Even two minutes done daily is real progress.'
+  },
+  'Money or practical planning': {
+    intro: 'Practical and financial decisions become much less overwhelming when broken into immediate, short-term, and later steps.',
+    prompts: [
+      'What is the single most urgent practical task in the next 24 to 72 hours?',
+      'What is the minimum safe plan that would reduce pressure this month?',
+      'What information or support would make this decision feel less stressful?'
+    ],
+    steps: [
+      'List my three must-pay items for this month',
+      'Write down the one number I am avoiding looking at',
+      'Ask one person or office a single clear question'
+    ],
+    advice: 'Separate essentials from optional decisions, then prioritise one stabilising action before making any larger changes. Small financial clarity compounds over time.'
+  },
+  'Something else': {
+    intro: 'When the situation feels complex or hard to name, start by reducing overwhelm, then find one thing you can actually control.',
+    prompts: [
+      'What part of this situation can you genuinely influence right now?',
+      'What would "good enough for today" look like? Not perfect, just liveable.',
+      'What support, tool, or person would make your next step feel more possible?'
+    ],
+    steps: [
+      'Write everything on my mind for two minutes, then stop',
+      'Circle the one thing on that list I can influence',
+      'Tell one trusted person I am feeling stuck'
+    ],
+    advice: 'Write a simple pros and considerations list, choose one step, and review how it feels before making any larger decisions. Clarity usually comes through action, not just thinking.'
+  }
+};
 
-  const GUIDES = {
-    'Work or study decision': {
-      intro: 'Work and study choices often become clearer when you separate short-term pressure from longer-term priorities.',
-      prompts: [
-        'Which option best matches your current energy, time, and priorities right now?',
-        'What short-term pressure is loudest, and what longer-term goal matters more to you?',
-        'Who could offer honest, practical feedback before you take your next step?'
-      ],
-      advice: 'Shortlist two or three options, compare their realistic benefits and risks, then commit to one small trial action this week. You do not need to decide everything at once.'
-    },
-    'Relationship or family choice': {
-      intro: 'Relationship decisions tend to feel clearer when you focus on what you need — not on finding the perfect words.',
-      prompts: [
-        'What boundary or need do you most want to protect in this situation?',
-        'What conversation outcome feels realistic this week — not perfect, just progress?',
-        'What could you say in one or two sentences that is both honest and respectful?'
-      ],
-      advice: 'Choose a calm moment, use "I" statements, and make one clear request. Progress in communication matters more than winning an argument.'
-    },
-    'Personal wellbeing routine': {
-      intro: 'Wellbeing routines tend to stick when they are tiny, repeatable, and easy to start — especially on hard days.',
-      prompts: [
-        'What one 5-to-10 minute habit would help you feel steadier each day?',
-        'What usually disrupts your routine, and what is a simple backup plan?',
-        'What would tell you after one week that this routine is actually helping?'
-      ],
-      advice: 'Start with one daily anchor — sleep, movement, breathing, or journaling. Consistency matters more than intensity. Even two minutes done daily is real progress.'
-    },
-    'Money or practical planning': {
-      intro: 'Practical and financial decisions become much less overwhelming when broken into immediate, short-term, and later steps.',
-      prompts: [
-        'What is the single most urgent practical task in the next 24 to 72 hours?',
-        'What is the minimum safe plan that would reduce pressure this month?',
-        'What information or support would make this decision feel less stressful?'
-      ],
-      advice: 'Separate essentials from optional decisions, then prioritise one stabilising action before making any larger changes. Small financial clarity compounds over time.'
-    },
-    'Something else': {
-      intro: 'When the situation feels complex or hard to name, start by reducing overwhelm — then find one thing you can actually control.',
-      prompts: [
-        'What part of this situation can you genuinely influence right now?',
-        'What would "good enough for today" look like — not perfect, just liveable?',
-        'What support, tool, or person would make your next step feel more possible?'
-      ],
-      advice: 'Write a simple pros and considerations list, choose one step, and review how it feels before making any larger decisions. Clarity usually comes through action, not just thinking.'
+var DEFAULT_ADVICE = 'Pick one small step you can complete today, then review how you feel afterward.';
+
+function $(id) { return document.getElementById(id); }
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+var toastTimer;
+function showToast(msg) {
+  var el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2200);
+}
+
+/* ---------- THEME ---------- */
+function updatePromptSet() {
+  var selected = $('decisionType').value;
+  var guide = GUIDES[selected];
+  var chips = $('stepChips');
+  chips.innerHTML = '';
+
+  if (!guide) {
+    $('promptsIntro').textContent = 'Choose a theme above to load questions tailored to your situation.';
+    var words = ['first', 'second', 'third'];
+    for (var i = 1; i <= 3; i++) {
+      $('topicLabel' + i).textContent = 'Question ' + (i === 1 ? 'one' : i === 2 ? 'two' : 'three');
+      $('topicQ' + i).placeholder = 'Choose a theme above to see your ' + words[i - 1] + ' question...';
     }
-  };
-
-  let toastTimer;
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+    return;
   }
 
-  function updatePromptSet() {
-    const selected = $('decisionType').value;
-    const guide = GUIDES[selected];
-    const intro = $('promptsIntro');
-    const q1 = $('topicQ1');
-    const q2 = $('topicQ2');
-    const q3 = $('topicQ3');
-
-    if (!guide) {
-      intro.textContent = 'Choose a theme above to load questions tailored to your situation.';
-      q1.placeholder = 'Choose a theme above to see your first question…';
-      q2.placeholder = 'Choose a theme above to see your second question…';
-      q3.placeholder = 'Choose a theme above to see your third question…';
-      return;
-    }
-
-    intro.textContent = guide.intro;
-    q1.placeholder = guide.prompts[0];
-    q2.placeholder = guide.prompts[1];
-    q3.placeholder = guide.prompts[2];
+  $('promptsIntro').textContent = guide.intro;
+  for (var j = 1; j <= 3; j++) {
+    $('topicLabel' + j).textContent = guide.prompts[j - 1];
+    $('topicQ' + j).placeholder = 'Type your thoughts here';
   }
 
-  function getData() {
-    const selected = $('decisionType').value;
-    const guide = GUIDES[selected];
-    return {
-      name: $('userName').value.trim(),
-      decisionType: selected,
-      situation: $('situation').value.trim(),
-      worry: $('worry').value.trim(),
-      bestOutcome: $('bestOutcome').value.trim(),
-      nextStep: $('nextStep').value.trim(),
-      topicQ1: $('topicQ1').value.trim(),
-      topicQ2: $('topicQ2').value.trim(),
-      topicQ3: $('topicQ3').value.trim(),
-      tailoredAdvice: guide ? guide.advice : 'Pick one small step you can complete today, then review how you feel afterward.',
-      promptLabels: guide ? guide.prompts : ['Question 1', 'Question 2', 'Question 3'],
-      autoSave: $('saveToggle').checked
+  guide.steps.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = s;
+    b.onclick = function () {
+      $('nextStep').value = s;
+      onFieldChange();
+      $('nextStep').focus();
     };
+    chips.appendChild(b);
+  });
+}
+
+function onThemeChange() {
+  updatePromptSet();
+  onFieldChange();
+}
+
+/* ---------- DATA ---------- */
+function getData() {
+  var selected = $('decisionType').value;
+  var guide = GUIDES[selected];
+  return {
+    name: $('userName').value.trim(),
+    decisionType: selected,
+    situation: $('situation').value.trim(),
+    worry: $('worry').value.trim(),
+    heaviness: parseInt($('heaviness').value, 10) || 5,
+    bestOutcome: $('bestOutcome').value.trim(),
+    nextStep: $('nextStep').value.trim(),
+    topicQ1: $('topicQ1').value.trim(),
+    topicQ2: $('topicQ2').value.trim(),
+    topicQ3: $('topicQ3').value.trim(),
+    tailoredAdvice: guide ? guide.advice : DEFAULT_ADVICE,
+    promptLabels: guide ? guide.prompts : [],
+    after: followUp.after,
+    done: followUp.done,
+    autoSave: $('saveToggle').checked
+  };
+}
+
+function validate() {
+  var d = getData();
+  var errEl = $('errorMsg');
+  var missing = [];
+  if (!d.situation) missing.push('what is happening');
+  if (!d.worry) missing.push('your main worry');
+  if (!d.nextStep) missing.push('one small next step');
+  if (missing.length) {
+    errEl.textContent = 'Please complete ' + missing.join(', ') + ' before continuing.';
+    errEl.style.display = 'block';
+    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return null;
+  }
+  errEl.style.display = 'none';
+  return d;
+}
+
+/* ---------- LIVE UI ---------- */
+function updateCounters() {
+  Object.keys(COUNTERS).forEach(function (id) {
+    $('count-' + id).textContent = $(id).value.length + ' / ' + COUNTERS[id];
+  });
+  $('heavinessValue').textContent = $('heaviness').value + ' / 10';
+}
+
+function updateProgress() {
+  var done = 0;
+  if ($('decisionType').value) done++;
+  if ($('situation').value.trim()) done++;
+  if ($('worry').value.trim()) done++;
+  if ($('nextStep').value.trim()) done++;
+  $('progressLabel').textContent = done + ' of 4 key questions answered';
+  $('progressFill').style.width = (done * 25) + '%';
+}
+
+function checkCareNote() {
+  var text = $('situation').value + ' ' + $('worry').value + ' ' + $('topicQ1').value + ' ' + $('topicQ2').value + ' ' + $('topicQ3').value;
+  $('careNote').style.display = CRISIS_REGEX.test(text) ? 'block' : 'none';
+}
+
+function onFieldChange() {
+  updateCounters();
+  updateProgress();
+  checkCareNote();
+  if ($('saveToggle').checked) saveLocal();
+}
+
+/* ---------- RESULT ---------- */
+function buildResultHTML(d) {
+  var html = '<div class="result-title">Your reflection summary</div>';
+
+  if (d.decisionType) {
+    html += '<div class="result-row"><div class="result-row-label">Focus area</div><div class="result-row-value">' + esc(d.decisionType) + '</div></div>';
+  }
+  html += '<div class="result-row"><div class="result-row-label">What is happening</div><div class="result-row-value">' + esc(d.situation) + '</div></div>';
+  html += '<div class="result-row"><div class="result-row-label">Main worry</div><div class="result-row-value">' + esc(d.worry) + '</div></div>';
+
+  var guide = GUIDES[d.decisionType];
+  if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
+    html += '<div class="result-row"><div class="result-row-label">Guided responses</div><div class="result-row-value">';
+    var answers = [d.topicQ1, d.topicQ2, d.topicQ3];
+    answers.forEach(function (a, i) {
+      if (a) html += '<div style="margin-bottom:8px;"><span class="result-sub">' + esc(guide.prompts[i]) + '</span>' + esc(a) + '</div>';
+    });
+    html += '</div></div>';
   }
 
-  function validate() {
-    const d = getData();
-    const errEl = $('errorMsg');
-    const missing = [];
-    if (!d.situation) missing.push('what is happening');
-    if (!d.worry) missing.push('your main worry');
-    if (!d.nextStep) missing.push('one small next step');
-    if (missing.length) {
-      errEl.textContent = 'Please complete ' + missing.join(', ') + ' before creating your reflection.';
-      errEl.style.display = 'block';
-      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return null;
-    }
-    errEl.style.display = 'none';
-    return d;
+  html += '<div class="result-row"><div class="result-row-label">How heavy it feels now</div><div class="result-row-value">' + esc(d.heaviness) + ' out of 10</div></div>';
+
+  if (d.bestOutcome) {
+    html += '<div class="result-row"><div class="result-row-label">Good-enough outcome</div><div class="result-row-value">' + esc(d.bestOutcome) + '</div></div>';
   }
+  html += '<div class="result-row"><div class="result-row-label">Your next step</div><div class="result-row-value">' + esc(d.nextStep) + '</div></div>';
+  html += '<div class="result-advice">' + esc(d.tailoredAdvice) + '</div>';
+  html += '<div class="result-closing">A small step done calmly is still meaningful progress. You do not have to solve everything today.</div>';
 
-  function buildResultHTML(d) {
-    const guide = GUIDES[d.decisionType];
-    let html = '<div class="result-title">Your reflection summary</div>';
+  // follow-up
+  html += '<div class="followup">';
+  html += '<div class="followup-title">After you take your step, come back and check in</div>';
+  html += '<label class="save-row" style="margin-bottom:10px;"><input type="checkbox" id="stepDone" onchange="onStepDone()" ' + (d.done ? 'checked' : '') + ' /> I took my step</label>';
+  html += '<div class="slider-row"><input type="range" id="afterScore" min="1" max="10" value="' + (d.after || d.heaviness) + '" oninput="onAfterChange()" aria-label="How heavy it feels after the step, 1 to 10" />';
+  html += '<span class="slider-value" id="afterValue">' + (d.after || d.heaviness) + ' / 10</span></div>';
+  html += '<div class="slider-ends"><span>Light</span><span>Very heavy</span></div>';
+  html += '<div class="followup-msg" id="followupMsg">' + esc(followUpMessage(d)) + '</div>';
+  html += '</div>';
 
-    if (d.decisionType) {
-      html += '<div class="result-row"><div class="result-row-label">Focus area</div><div class="result-row-value">' + d.decisionType + '</div></div>';
-    }
+  return html;
+}
 
-    html += '<div class="result-row"><div class="result-row-label">What is happening</div><div class="result-row-value">' + d.situation + '</div></div>';
-    html += '<div class="result-row"><div class="result-row-label">Main worry</div><div class="result-row-value">' + d.worry + '</div></div>';
+function followUpMessage(d) {
+  if (!d.done || !d.after) return 'Move the slider after your step to see how things have shifted.';
+  var diff = d.heaviness - d.after;
+  if (diff > 0) return 'It feels ' + diff + ' point' + (diff === 1 ? '' : 's') + ' lighter than before. That is real progress. Notice what helped.';
+  if (diff === 0) return 'It feels about the same, and that is okay. Taking the step still counts. Try another small one when you are ready.';
+  return 'It feels heavier right now. That can happen when we start facing things. Be gentle with yourself, and consider talking it through with someone you trust.';
+}
 
-    if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
-      html += '<div class="result-row"><div class="result-row-label">Guided responses</div><div class="result-row-value">';
-      if (d.topicQ1) html += '<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--hint);">' + guide.prompts[0] + '</span><br>' + d.topicQ1 + '</div>';
-      if (d.topicQ2) html += '<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--hint);">' + guide.prompts[1] + '</span><br>' + d.topicQ2 + '</div>';
-      if (d.topicQ3) html += '<div><span style="font-size:12px;color:var(--hint);">' + guide.prompts[2] + '</span><br>' + d.topicQ3 + '</div>';
-      html += '</div></div>';
-    }
+function onStepDone() {
+  followUp.done = $('stepDone').checked;
+  if (followUp.done && followUp.after === null) followUp.after = parseInt($('afterScore').value, 10);
+  refreshFollowUp();
+}
 
-    if (d.bestOutcome) {
-      html += '<div class="result-row"><div class="result-row-label">Good-enough outcome</div><div class="result-row-value">' + d.bestOutcome + '</div></div>';
-    }
+function onAfterChange() {
+  followUp.after = parseInt($('afterScore').value, 10);
+  $('afterValue').textContent = followUp.after + ' / 10';
+  refreshFollowUp();
+}
 
-    html += '<div class="result-row"><div class="result-row-label">Your next step</div><div class="result-row-value">' + d.nextStep + '</div></div>';
-    html += '<div class="result-advice">' + d.tailoredAdvice + '</div>';
-    html += '<div style="font-size:14px;color:var(--muted);font-style:italic;margin-top:12px;">A small step done calmly is still meaningful progress. You do not have to solve everything today.</div>';
+function refreshFollowUp() {
+  var d = getData();
+  var el = $('followupMsg');
+  if (el) el.textContent = followUpMessage(d);
+  if ($('saveToggle').checked) saveLocal();
+}
 
-    return html;
-  }
+function createReflection() {
+  var d = validate();
+  if (!d) return;
+  var box = $('resultBox');
+  box.innerHTML = buildResultHTML(d);
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (d.autoSave) saveLocal(d);
+}
 
-  function createReflection() {
-    const d = validate();
-    if (!d) return;
-    const box = $('resultBox');
-    box.innerHTML = buildResultHTML(d);
-    box.style.display = 'block';
-    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (d.autoSave) saveLocal(d);
-  }
-
-  function saveLocal(d) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch(_) {}
-  }
-
-  function saveIfEnabled() {
-    if ($('saveToggle').checked) saveLocal();
-  }
-
-  function loadLocal() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const d = JSON.parse(raw);
-      if (!d) return;
-      $('userName').value = d.name || '';
-      $('decisionType').value = d.decisionType || '';
-      $('situation').value = d.situation || '';
-      $('worry').value = d.worry || '';
-      $('bestOutcome').value = d.bestOutcome || '';
-      $('nextStep').value = d.nextStep || '';
-      $('topicQ1').value = d.topicQ1 || '';
-      $('topicQ2').value = d.topicQ2 || '';
-      $('topicQ3').value = d.topicQ3 || '';
-      $('saveToggle').checked = Boolean(d.autoSave);
-      updatePromptSet();
-      if (d.situation && d.worry && d.nextStep) {
-        const box = $('resultBox');
-        box.innerHTML = buildResultHTML(d);
-        box.style.display = 'block';
-      }
-    } catch(_) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    }
-  }
-
-  function resetTool() {
-    ['userName','situation','worry','bestOutcome','nextStep','topicQ1','topicQ2','topicQ3'].forEach(id => { $(id).value = ''; });
-    $('decisionType').value = '';
-    $('saveToggle').checked = false;
-    $('errorMsg').style.display = 'none';
-    $('resultBox').style.display = 'none';
-    updatePromptSet();
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Tool reset.');
-  }
-
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('This free decision support tool helped me find clarity and a next step: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-  }
-
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo fetch failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
+/* ---------- COPY AS TEXT ---------- */
+function buildPlainText(d) {
+  var lines = [];
+  lines.push('DECISION SUPPORT REFLECTION');
+  if (d.name) lines.push('Name: ' + d.name);
+  lines.push('');
+  if (d.decisionType) lines.push('Focus area: ' + d.decisionType);
+  lines.push('What is happening: ' + d.situation);
+  lines.push('Main worry: ' + d.worry);
+  var guide = GUIDES[d.decisionType];
+  if (guide) {
+    [d.topicQ1, d.topicQ2, d.topicQ3].forEach(function (a, i) {
+      if (a) lines.push(guide.prompts[i] + ' ' + a);
     });
   }
+  lines.push('How heavy it feels now: ' + d.heaviness + '/10');
+  if (d.bestOutcome) lines.push('Good-enough outcome: ' + d.bestOutcome);
+  lines.push('My next step: ' + d.nextStep);
+  if (d.done && d.after) lines.push('After my step, it feels like: ' + d.after + '/10');
+  lines.push('');
+  lines.push('Made with the free tools at emotionalintelligencedeveloper.com');
+  return lines.join('\n');
+}
 
-  async function downloadPDF() {
-    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    const d = validate();
+function copySummary() {
+  var d = validate();
+  if (!d) return;
+  var text = buildPlainText(d);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(
+      function () { showToast('Reflection copied!'); },
+      function () { showToast('Could not copy. Try the PDF instead.'); }
+    );
+  } else {
+    showToast('Copy is not supported here. Try the PDF.');
+  }
+}
+
+/* ---------- STORAGE ---------- */
+function saveLocal(d) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch (e) {}
+}
+
+function onSaveToggle() {
+  if ($('saveToggle').checked) { saveLocal(); showToast('Saving on this device.'); }
+  else { try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(OLD_STORAGE_KEY); } catch (e) {} showToast('Saving turned off.'); }
+}
+
+function loadLocal() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
     if (!d) return;
+    FIELD_IDS.forEach(function (id) { $(id).value = d[id === 'userName' ? 'name' : id] || ''; });
+    $('decisionType').value = d.decisionType || '';
+    $('heaviness').value = d.heaviness || 5;
+    $('saveToggle').checked = Boolean(d.autoSave);
+    followUp.after = d.after || null;
+    followUp.done = Boolean(d.done);
+    updatePromptSet();
+    onFieldChange();
+    if (d.situation && d.worry && d.nextStep) {
+      var box = $('resultBox');
+      box.innerHTML = buildResultHTML(getData());
+      box.style.display = 'block';
+    }
+  } catch (e) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e2) {}
+  }
+}
 
-    showToast('Preparing your PDF…');
-    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
+function resetTool() {
+  FIELD_IDS.forEach(function (id) { $(id).value = ''; });
+  $('decisionType').value = '';
+  $('heaviness').value = 5;
+  $('saveToggle').checked = false;
+  followUp = { after: null, done: false };
+  $('errorMsg').style.display = 'none';
+  $('careNote').style.display = 'none';
+  $('resultBox').style.display = 'none';
+  $('resultBox').innerHTML = '';
+  updatePromptSet();
+  updateCounters();
+  updateProgress();
+  try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(OLD_STORAGE_KEY); } catch (e) {}
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Tool reset.');
+}
 
-    // Header band
-    doc.setFillColor(234, 243, 236);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+/* ---------- SHARE ---------- */
+function updateShareLinks() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('This free decision support tool helped me find clarity and a next step: ');
+  $('waShare').href = 'https://wa.me/?text=' + msg + url;
+  $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+}
 
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
+function copyLink() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(window.location.href).then(
+      function () { showToast('Link copied!'); },
+      function () { showToast('Copy from your address bar.'); }
+    );
+  } else {
+    showToast('Copy from your address bar.');
+  }
+}
 
+/* ---------- PDF ---------- */
+function pdfSafe(s) {
+  // jsPDF's built-in fonts only cover Latin characters, so tidy anything else
+  return String(s == null ? '' : s)
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/\u2026/g, '...')
+    .replace(/[^\u0009\u000A\u0020-\u007E\u00A0-\u00FF]/g, '');
+}
+
+function loadLogo() {
+  return fetch(LOGO_URL, { mode: 'cors' })
+    .then(function (res) { if (!res.ok) throw new Error('logo'); return res.blob(); })
+    .then(function (blob) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onloadend = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    });
+}
+
+async function downloadPDF() {
+  var jsPDFLib = window.jspdf && window.jspdf.jsPDF;
+  if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
+  var d = validate();
+  if (!d) return;
+
+  showToast('Preparing your PDF...');
+  var doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin = 40;
+  var contentW = pageW - margin * 2;
+  var bottom = pageH - 56;
+  var y = margin;
+
+  function newPageIfNeeded(need) {
+    if (y + need > bottom) { doc.addPage(); y = margin; }
+  }
+
+  // Writes wrapped text, flowing across pages when long
+  function writeText(text, x, width, lineH) {
+    var lines = doc.splitTextToSize(pdfSafe(text), width);
+    for (var i = 0; i < lines.length; i++) {
+      if (y + lineH > bottom) { doc.addPage(); y = margin; }
+      doc.text(lines[i], x, y);
+      y += lineH;
+    }
+  }
+
+  function block(label, value) {
+    newPageIfNeeded(50);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(15);
-    doc.setTextColor(30, 45, 31);
-    doc.text('Decision Support Reflection', margin + 76, y + 26);
+    doc.setFontSize(8.5);
+    doc.setTextColor(74, 122, 89);
+    writeText(label.toUpperCase(), margin, contentW, 11);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.setTextColor(74, 94, 75);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    doc.setTextColor(30, 45, 31);
+    writeText(value, margin, contentW, 13);
+    y += 8;
+    doc.setDrawColor(204, 222, 206);
+    doc.line(margin, y - 4, pageW - margin, y - 4);
+    y += 6;
+  }
 
-    y += 86;
+  // Header band
+  doc.setFillColor(234, 243, 236);
+  doc.roundedRect(margin, y, contentW, 70, 6, 6, 'F');
+  try {
+    var logoData = await loadLogo();
+    doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
+  } catch (e) {}
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(15);
+  doc.setTextColor(30, 45, 31);
+  doc.text('Decision Support Reflection', margin + 76, y + 27);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(74, 94, 75);
+  doc.text('Personal reflection summary', margin + 76, y + 42);
+  doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 57);
+  y += 90;
 
-    if (d.name) {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(30, 45, 31);
-      doc.text('Name: ' + d.name, margin, y);
-      y += 18;
-    }
-
-    // Reflection rows
-    const guide = GUIDES[d.decisionType];
-    const rows = [
-      ['Focus area', d.decisionType || 'Not selected'],
-      ['What is happening', d.situation],
-      ['Main worry', d.worry],
-      ['Good-enough outcome', d.bestOutcome || 'Not provided'],
-      ['Your next step', d.nextStep]
-    ];
-
-    if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
-      if (d.topicQ1) rows.splice(2, 0, [guide.prompts[0].slice(0, 60) + '…', d.topicQ1]);
-      if (d.topicQ2) rows.splice(3, 0, [guide.prompts[1].slice(0, 60) + '…', d.topicQ2]);
-      if (d.topicQ3) rows.splice(4, 0, [guide.prompts[2].slice(0, 60) + '…', d.topicQ3]);
-    }
-
-    doc.setFontSize(9.5);
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(234, 243, 236);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(74, 122, 89);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 45, 31);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Tailored advice
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setFillColor(247, 243, 232);
-    const advLines = doc.splitTextToSize(d.tailoredAdvice, pageW - margin * 2 - 20);
-    const advH = advLines.length * 12 + 20;
-    doc.roundedRect(margin, y, pageW - margin * 2, advH, 4, 4, 'F');
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9.3);
-    doc.setTextColor(122, 106, 58);
-    doc.text(advLines, margin + 10, y + 14);
-    y += advH + 14;
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(184, 217, 190);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
+  if (d.name) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
-    doc.setTextColor(74, 122, 89);
-    doc.text('Understanding why we get stuck — and how to move forward', margin, y);
-    y += 14;
-
-    const educational = [
-      [
-        'Why decisions feel so hard',
-        'Research in decision science, including work by psychologist Barry Schwartz in "The Paradox of Choice," shows that having too many options — or caring too much about the outcome — actually increases anxiety and reduces the quality of our decisions. The brain experiences uncertainty similarly to physical threat, which is why being stuck can feel so exhausting. Naming the decision clearly and reducing options to two or three is one of the most evidence-based ways to reduce this cognitive load.'
-      ],
-      [
-        'The role of values in feeling stuck',
-        'We most often feel stuck when a decision touches something we deeply value — our relationships, our security, our sense of identity. Psychologist Russ Harris, whose work underpins Acceptance and Commitment Therapy (ACT), suggests that clarifying your values before making a decision can act as a compass. Asking "what kind of person do I want to be in this situation?" is often more helpful than asking "what is the right answer?"'
-      ],
-      [
-        'Why small steps work',
-        'Behavioural activation — a technique from Cognitive Behavioural Therapy — shows that action comes before motivation, not after. We often wait to feel ready before acting. But research consistently shows that taking one small concrete step creates the momentum and emotional shift needed to continue. You do not need to feel certain to begin. You only need to begin.'
-      ],
-      [
-        'The cost of postponing decisions',
-        'Studies from the Journal of Consumer Research found that decision postponement — also called "status quo bias" — often increases anxiety over time rather than reducing it. The mental energy of carrying an unresolved decision drains emotional resources that could go toward other things. Even a provisional decision ("I will try this for two weeks") reduces the cognitive and emotional burden significantly.'
-      ],
-      [
-        'Who to talk to — and why it helps',
-        'Research on social support and decision-making consistently shows that verbalising a problem to a trusted, calm person — even without receiving advice — helps the brain reorganise and prioritise information. This is sometimes called the "external processing" effect. You do not need someone who has all the answers. You need someone who can listen without judgment while you find your own.'
-      ]
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(74, 122, 89);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 45, 31);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(184, 217, 190);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 122, 89);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
     doc.setTextColor(30, 45, 31);
-    [
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+    doc.text('Name: ' + pdfSafe(d.name), margin, y);
+    y += 22;
+  }
 
-    // Footer
+  var guide = GUIDES[d.decisionType];
+  block('Focus area', d.decisionType || 'Not selected');
+  block('What is happening', d.situation);
+  block('Main worry', d.worry);
+  if (guide) {
+    [d.topicQ1, d.topicQ2, d.topicQ3].forEach(function (a, i) {
+      if (a) block(guide.prompts[i], a);
+    });
+  }
+  block('How heavy it feels now', d.heaviness + ' out of 10');
+  if (d.bestOutcome) block('Good-enough outcome', d.bestOutcome);
+  block('Your next step', d.nextStep);
+  if (d.done && d.after) {
+    block('After taking the step', 'I took my step. It now feels like ' + d.after + ' out of 10 (it was ' + d.heaviness + ').');
+  }
+
+  // Tailored advice
+  var advLines = doc.splitTextToSize(pdfSafe(d.tailoredAdvice), contentW - 20);
+  var advH = advLines.length * 12 + 18;
+  newPageIfNeeded(advH + 10);
+  doc.setFillColor(247, 243, 232);
+  doc.roundedRect(margin, y, contentW, advH, 4, 4, 'F');
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(9.5);
+  doc.setTextColor(110, 95, 48);
+  doc.text(advLines, margin + 10, y + 15);
+  y += advH + 18;
+
+  // Educational section
+  newPageIfNeeded(60);
+  doc.setDrawColor(184, 217, 190);
+  doc.line(margin, y, pageW - margin, y);
+  y += 16;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(74, 122, 89);
+  writeText('Understanding why we get stuck, and how to move forward', margin, contentW, 14);
+  y += 4;
+
+  var educational = [
+    ['Why decisions feel so hard',
+     'Research in decision science, including the work of psychologist Barry Schwartz in "The Paradox of Choice," suggests that having too many options, or caring a great deal about the outcome, can increase anxiety and lower the quality of our decisions. Uncertainty can feel like a threat, which is why being stuck is so tiring. Naming the decision clearly and narrowing your options to two or three is a simple way to reduce that load.'],
+    ['The role of values in feeling stuck',
+     'We often feel stuck when a decision touches something we deeply value, such as our relationships, our security, or our sense of who we are. Russ Harris, whose work supports Acceptance and Commitment Therapy (ACT), suggests that clarifying your values can act as a compass. Asking "what kind of person do I want to be here?" can be more useful than asking "what is the right answer?"'],
+    ['Why small steps work',
+     'Behavioural activation, a technique used in Cognitive Behavioural Therapy, is built on the idea that action often comes before motivation. We tend to wait until we feel ready, but a small, concrete step can create the momentum and the shift in mood that help us keep going. You do not need to feel certain to begin. You only need to begin.'],
+    ['The cost of postponing decisions',
+     'Putting a decision off can feel like relief in the moment, but an unresolved decision often keeps drawing on our mental energy in the background. Even a provisional decision, such as "I will try this for two weeks and then review it," can lighten that load and give you real information to work with.'],
+    ['Who to talk to, and why it helps',
+     'Saying a problem out loud to a calm, trusted person, even if they offer no advice, can help us sort and prioritise what we are thinking. You do not need someone who has all the answers. You need someone who can listen without judgment while you find your own.']
+  ];
+
+  educational.forEach(function (item) {
+    newPageIfNeeded(50);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(74, 122, 89);
+    writeText(item[0], margin, contentW, 12);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.2);
+    doc.setTextColor(30, 45, 31);
+    writeText(item[1], margin, contentW, 11.5);
+    y += 10;
+  });
+
+  // Resources
+  newPageIfNeeded(90);
+  doc.setDrawColor(184, 217, 190);
+  doc.line(margin, y, pageW - margin, y);
+  y += 16;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(74, 122, 89);
+  doc.text('More free wellbeing resources', margin, y);
+  y += 14;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(30, 45, 31);
+  [
+    'Main site: emotionalintelligencedeveloper.com',
+    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+    'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+    'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
+    'Need to talk to someone? Find a free helpline: findahelpline.com'
+  ].forEach(function (line) { doc.text(line, margin, y); y += 13; });
+
+  // Footer on every page
+  var total = doc.internal.getNumberOfPages();
+  for (var p = 1; p <= total; p++) {
+    doc.setPage(p);
     doc.setDrawColor(184, 217, 190);
     doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8.5);
-    doc.setTextColor(122, 154, 123);
-    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
-
-    const cleanName = (d.name || 'reflection').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'reflection';
-    doc.save('decision-support-' + cleanName + '.pdf');
-    showToast('PDF downloaded!');
+    doc.setTextColor(107, 138, 108);
+    doc.text('This tool supports reflection and self-awareness. It is not a substitute for professional advice.', margin, pageH - 22);
+    doc.text('Page ' + p + ' of ' + total, pageW - margin, pageH - 22, { align: 'right' });
   }
 
-  // Event listeners
-  $('decisionType').addEventListener('change', () => { updatePromptSet(); saveIfEnabled(); });
-  ['userName','situation','worry','bestOutcome','nextStep','topicQ1','topicQ2','topicQ3'].forEach(id => {
-    $(id).addEventListener('input', saveIfEnabled);
-  });
+  var cleanName = (d.name || 'reflection').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'reflection';
+  doc.save('decision-support-' + cleanName + '.pdf');
+  showToast('PDF downloaded!');
+}
 
-  $('saveToggle').addEventListener('change', () => {
-    if ($('saveToggle').checked) { saveLocal(); showToast('Auto-save enabled.'); }
-    else { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} showToast('Auto-save off.'); }
-  });
-
-  $('createBtn').addEventListener('click', createReflection);
-  $('pdfBtn').addEventListener('click', downloadPDF);
-  $('resetBtn').addEventListener('click', resetTool);
-  $('copyBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
-  });
-
-  updateShareLinks();
-  updatePromptSet();
-  loadLocal();
-}());
+/* ---------- INIT ---------- */
+updateShareLinks();
+updatePromptSet();
+updateCounters();
+updateProgress();
+loadLocal();
 </script>
 </body>
 </html>

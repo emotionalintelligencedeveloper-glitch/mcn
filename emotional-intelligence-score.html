@@ -208,7 +208,7 @@
     <div class="card" id="questionBox">
       <div class="cat-tag" id="catTag"></div>
       <div class="q-text" id="qText"></div>
-      <div class="q-hint">Tap the answer that feels most true for you lately.</div>
+      <div class="q-hint">Read each option and tap the one that feels most true for you lately. The order changes every time.</div>
       <div id="optBox" role="radiogroup" aria-label="Answer choices"></div>
       <div class="btn-row" style="margin-top:14px;">
         <button type="button" class="btn btn-outline" id="backBtn" onclick="eqBack()">Back</button>
@@ -522,6 +522,19 @@ var EQ_STEPS = [];
 
 var eqStep = 0;
 var eqAnswers = new Array(EQ_QUESTIONS.length).fill(null);
+var eqOrders = [];
+
+/* Give every question its own random answer order, kept fixed so Back shows the same order */
+function eqShuffleOrders() {
+  eqOrders = EQ_QUESTIONS.map(function () {
+    var a = EQ_SCALE.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  });
+}
 var eqToastTimer = null;
 var eqAdvanceTimer = null;
 
@@ -543,6 +556,7 @@ function eqShow(id) {
 
 function eqStart() {
   eqStep = 0;
+  eqShuffleOrders();
   eqShow('quizScreen');
   eqRender();
 }
@@ -568,7 +582,7 @@ function eqRender() {
 
     var box = eqEl('optBox');
     box.innerHTML = '';
-    EQ_SCALE.forEach(function (o) {
+    eqOrders[s.i].forEach(function (o) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'opt' + (eqAnswers[s.i] === o.v ? ' selected' : '');

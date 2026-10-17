@@ -11,7 +11,7 @@
       --card: #ffffff;
       --text: #1e1a2e;
       --muted: #5a5070;
-      --hint: #9a90aa;
+      --hint: #8a809a;
       --border: #ddd0e8;
       --brand: #7a5c9a;
       --brand-light: #f0eaf7;
@@ -22,17 +22,23 @@
       --rose-light: #f7eaef;
       --rose-mid: #e0b0c8;
       --warm: #f9f6fb;
+      --green: #4a8a6a;
+      --green-light: #eaf5ef;
+      --green-mid: #b5d9c5;
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
       --support: #e8702a;
       --chip-bg: #ede5f5;
-      --chip-active-bg: #c8b0e0;
-      --chip-active-border: #7a5c9a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
 
     body {
       font-family: "Georgia", "Times New Roman", serif;
@@ -42,11 +48,12 @@
       font-size: 16px;
     }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid var(--brand);
+      outline-offset: 2px;
     }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
 
     /* HEADER */
     .header {
@@ -58,32 +65,16 @@
       text-align: center;
     }
 
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
 
     .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
+      width: 56px; height: 56px; border-radius: 12px; object-fit: cover;
+      border: 2px solid var(--brand-mid); flex-shrink: 0;
     }
 
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      text-align: left;
-      line-height: 1.3;
-    }
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; text-align: left; line-height: 1.3; }
 
-    h1 {
+    .tool-title {
       font-size: clamp(1.4rem, 4vw, 1.85rem);
       font-weight: normal;
       color: var(--text);
@@ -91,546 +82,257 @@
       margin-bottom: 10px;
     }
 
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto;
-    }
+    .tagline { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
 
     .disclaimer {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--hint);
-      background: var(--warm);
-      border-radius: 20px;
-      padding: 4px 12px;
+      display: inline-block; margin-top: 12px; font-size: 12px; color: var(--hint);
+      background: var(--warm); border-radius: 20px; padding: 4px 12px;
     }
 
     .tool-note {
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: var(--rose-light);
-      border: 1px solid var(--rose-mid);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      color: var(--rose);
-      font-style: italic;
+      margin-top: 16px; padding: 12px 16px; background: var(--rose-light);
+      border: 1px solid var(--rose-mid); border-radius: var(--radius-md);
+      font-size: 14px; color: var(--rose); font-style: italic;
+    }
+
+    /* PROGRESS */
+    .steps {
+      display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px;
+    }
+    .step-pill {
+      font-size: 12px; color: var(--muted); background: var(--warm);
+      border: 1px solid var(--border); border-radius: 99px; padding: 3px 11px;
     }
 
     /* CARD */
     .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
+      background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border);
+      padding: 22px 20px; margin-bottom: 16px;
     }
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 16px;
+    .card-title { font-size: 1.1rem; font-weight: normal; color: var(--brand); margin-bottom: 16px; }
+
+    /* SAFETY NOTE */
+    .safety-note {
+      display: none; margin-bottom: 14px; padding: 14px 16px; border-radius: var(--radius-md);
+      background: #fff6ec; border: 1px solid #f0c9a0; color: #7a4a1a; font-size: 14px; line-height: 1.6;
     }
+    .safety-note.show { display: block; }
+    .safety-note a { color: #7a4a1a; font-weight: bold; }
 
     /* QUESTION BLOCKS */
     .question {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--brand-mid); background: var(--brand-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
 
-    .question-label {
-      font-size: 15px;
-      font-weight: normal;
-      color: var(--text);
-      margin-bottom: 5px;
-      display: block;
-    }
+    .question-label { font-size: 15px; font-weight: normal; color: var(--text); margin-bottom: 5px; display: block; }
+    .question-hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
 
-    .question-hint {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-style: italic;
-    }
+    .char-count { font-size: 11px; color: var(--hint); text-align: right; margin-top: 4px; }
 
     textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 88px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px;
+      font-family: "Georgia", serif; font-size: 16px; color: var(--text); background: #fff;
+      min-height: 88px; resize: vertical; line-height: 1.6; transition: border-color 0.2s;
     }
-
     textarea:focus { outline: none; border-color: var(--brand); }
 
     input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 13px;
+      font-family: "Georgia", serif; font-size: 16px; color: var(--text); background: #fff; transition: border-color 0.2s;
     }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
 
     select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      appearance: none;
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 13px;
+      font-family: "Georgia", serif; font-size: 16px; color: var(--text); background: #fff; appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a90aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      transition: border-color 0.2s;
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
     }
 
-    select:focus { outline: none; border-color: var(--brand); }
+    /* STATEMENT CHECK */
+    .statement-check {
+      display: none; margin-top: 10px; padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 13.5px; line-height: 1.6; background: #fff; border: 1px solid var(--brand-mid); color: var(--muted);
+    }
+    .statement-check.show { display: block; }
+    .statement-check.good { background: var(--green-light); border-color: var(--green-mid); color: #2f6048; }
+    .statement-check ul { margin: 4px 0 0 18px; }
 
     /* CHIPS */
     .chips-card {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--brand-mid); background: var(--brand-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
-
-    .chips-label {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .chips-hint {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .chips-label { font-size: 15px; color: var(--text); margin-bottom: 5px; display: block; }
+    .chips-hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .chip {
-      background: var(--chip-bg);
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 7px 14px;
-      min-height: 38px;
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
+      background: var(--chip-bg); border: 1.5px solid var(--brand-mid); border-radius: 99px;
+      padding: 7px 14px; min-height: 40px; font-family: "Georgia", serif; font-size: 14px;
+      color: var(--muted); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center;
     }
-
     .chip:hover { border-color: var(--brand); color: var(--text); }
-
-    .chip[aria-pressed="true"] {
-      background: var(--brand);
-      border-color: var(--brand);
-      color: #fff;
-    }
+    .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
 
     /* CLARITY SCORE */
     .score-card {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--brand-mid); background: var(--brand-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
-
-    .score-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .score-label {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .score-number {
-      font-size: 24px;
-      font-weight: normal;
-      color: var(--brand);
-    }
-
-    .score-bar-wrap {
-      height: 8px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .score-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--brand);
-      border-radius: 99px;
-      transition: width 0.3s ease;
-    }
-
+    .score-top { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
+    .score-label { font-size: 14px; color: var(--muted); }
+    .score-spacer { flex: 1; }
+    .score-number { font-size: 24px; color: var(--brand); }
+    .score-bar-wrap { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+    .score-bar { height: 100%; width: 0%; background: var(--brand); border-radius: 99px; transition: width 0.3s ease; }
     .score-badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 99px;
-      background: var(--brand);
-      color: #fff;
-      font-size: 13px;
-      font-family: "Georgia", serif;
+      display: inline-block; padding: 4px 14px; border-radius: 99px; background: var(--brand);
+      color: #fff; font-size: 13px;
     }
+    .score-tip { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 10px; }
 
-    /* TONE SELECTOR */
+    /* TONE */
     .tone-card {
-      border: 1px solid var(--rose-mid);
-      background: var(--rose-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--rose-mid); background: var(--rose-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
-
-    .tone-label {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .tone-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
+    .tone-label { font-size: 15px; color: var(--text); margin-bottom: 10px; display: block; }
+    .tone-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
     .tone-btn {
-      padding: 10px 8px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--rose-mid);
-      background: #fff;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s;
+      padding: 10px 8px; border-radius: var(--radius-sm); border: 1.5px solid var(--rose-mid); background: #fff;
+      font-family: "Georgia", serif; font-size: 14px; color: var(--muted); cursor: pointer; text-align: center; transition: all 0.15s;
     }
-
     .tone-btn:hover { border-color: var(--rose); }
+    .tone-btn.active { background: var(--rose); border-color: var(--rose); color: #fff; }
 
-    .tone-btn.active {
-      background: var(--rose);
-      border-color: var(--rose);
-      color: #fff;
-    }
-
-    .tone-slider-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .tone-slider-label {
-      font-size: 12px;
-      color: var(--hint);
-      white-space: nowrap;
-    }
+    .tone-slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .tone-slider-label { font-size: 12px; color: var(--hint); white-space: nowrap; }
 
     input[type="range"] {
-      flex: 1;
-      -webkit-appearance: none;
-      height: 4px;
-      background: var(--rose-mid);
-      border-radius: 99px;
-      outline: none;
+      flex: 1; -webkit-appearance: none; appearance: none; height: 4px; background: var(--rose-mid);
+      border-radius: 99px; outline: none;
     }
-
     input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--rose);
-      cursor: pointer;
-      border: 2px solid #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--rose);
+      cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px; height: 20px; border-radius: 50%; background: var(--rose); cursor: pointer; border: 2px solid #fff;
     }
 
-    .tone-val {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--rose);
-      min-width: 32px;
-      text-align: center;
-    }
+    .tone-val { font-size: 13px; font-weight: bold; color: var(--rose); min-width: 32px; text-align: center; }
 
     .tone-preview {
-      background: #fff;
-      border: 1px solid var(--rose-mid);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 14px;
-      color: var(--text);
-      font-style: italic;
-      line-height: 1.6;
-      margin-top: 10px;
+      background: #fff; border: 1px solid var(--rose-mid); border-radius: var(--radius-sm);
+      padding: 12px 14px; font-size: 14px; color: var(--text); font-style: italic; line-height: 1.6; margin-top: 10px;
     }
+    .tone-preview-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
 
-    .tone-preview-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
+    .mini-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .mini-btn {
+      background: #fff; border: 1.5px solid var(--rose-mid); color: var(--rose); border-radius: 99px;
+      padding: 8px 16px; min-height: 40px; font-family: "Georgia", serif; font-size: 13px; cursor: pointer;
     }
+    .mini-btn:hover { opacity: 0.85; }
+    .mini-btn.brand { border-color: var(--brand-mid); color: var(--brand); }
 
-    /* PRACTICE MODE */
+    /* PRACTICE */
     .practice-card {
-      border: 1px solid var(--brand-mid);
-      background: var(--accent-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--brand-mid); background: var(--accent-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
-
     .reply-list { display: grid; gap: 10px; margin-top: 12px; }
-
     .reply-card {
-      background: #fff;
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-sm);
-      padding: 13px 15px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
+      background: #fff; border: 1px solid var(--brand-mid); border-radius: var(--radius-sm);
+      padding: 13px 15px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
     }
-
-    .reply-text {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.6;
-      flex: 1;
-    }
-
+    .reply-text { font-size: 14px; color: var(--text); line-height: 1.6; flex: 1; }
     .reply-copy {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 6px 14px;
-      font-family: "Georgia", serif;
-      font-size: 12px;
-      color: var(--brand);
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: opacity 0.15s;
+      background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: 99px;
+      padding: 8px 14px; min-height: 36px; font-family: "Georgia", serif; font-size: 12px; color: var(--brand);
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }
 
-    .reply-copy:hover { opacity: 0.8; }
+    /* CHECK-IN */
+    .checkin-card {
+      border: 1px solid var(--green-mid); background: var(--green-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
+    }
+    .checkin-card .question-hint { color: #4a6a5a; }
+    .checkin-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    .checkin-btn {
+      background: #fff; border: 1.5px solid var(--green-mid); color: #2f6048; border-radius: 99px;
+      padding: 8px 16px; min-height: 40px; font-family: "Georgia", serif; font-size: 13px; cursor: pointer;
+    }
+    .checkin-btn:hover { border-color: var(--green); }
+    .checkin-log { margin-top: 12px; font-size: 13.5px; color: #2f6048; line-height: 1.7; }
+    .checkin-dots { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .dot {
+      width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; color: #fff; font-family: Arial, sans-serif;
+    }
+    .dot.held { background: var(--green); }
+    .dot.partly { background: #d9a441; }
+    .dot.missed { background: #b08a9a; }
 
     /* RESULT */
     .result-box {
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text);
-      min-height: 80px;
+      background: var(--accent-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md);
+      padding: 18px 20px; margin-bottom: 16px; white-space: pre-wrap; font-size: 14px; line-height: 1.7;
+      color: var(--text); min-height: 80px;
     }
 
-    /* SAVE ROW */
-    .save-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-    }
+    .save-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .save-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+    .save-hint { font-size: 12px; color: var(--hint); margin: 0 0 14px 26px; font-style: italic; }
 
-    .save-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
+    .name-field { background: var(--warm); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px; }
+    .name-field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-style: italic; }
 
-    /* NAME FIELD */
-    .name-field {
-      background: var(--warm);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 14px;
-    }
-
-    .name-field label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-style: italic;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
     /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px;
+      border-radius: 99px; font-family: "Georgia", serif; font-size: 14px; cursor: pointer; text-decoration: none;
+      border: 1.5px solid transparent; min-height: 46px; transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
     }
-
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
-
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-secondary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .btn-rose { background: var(--rose); color: #fff; border-color: var(--rose); }
+    .btn-secondary { background: #6a4c8a; color: #fff; border-color: #6a4c8a; }
     .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
     .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
+    .btn-support { background: #c85a1a; color: #fff; border-color: #c85a1a; font-size: 15px; padding: 14px 24px; }
 
     @media (max-width: 480px) {
       .btn { width: 100%; }
       .btn-row { flex-direction: column; }
       .tone-buttons { grid-template-columns: 1fr; }
+      .reply-card { flex-direction: column; }
+      .reply-copy { align-self: flex-start; }
     }
 
     /* TOAST */
     .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
+      background: var(--text); color: #fff; padding: 10px 18px; border-radius: 99px; font-size: 14px;
+      font-family: "Georgia", serif; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+      z-index: 100; max-width: 92vw; text-align: center;
     }
-
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link {
-      font-size: 13px;
-      color: var(--brand);
-      text-decoration: none;
-    }
-
+    .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; text-align: center; }
+    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
-
-    .footer-credit {
-      font-size: 12px;
-      color: var(--hint);
-      margin-top: 12px;
-    }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
   </style>
 </head>
 <body>
@@ -642,9 +344,15 @@
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Boundary Builder Tool</h1>
+    <h2 class="tool-title">Boundary Builder Tool</h2>
     <p class="tagline">A gentle space to name what you need, find your words, and practise setting boundaries with confidence.</p>
-    <span class="disclaimer">Reflection and wellbeing support only — not professional advice</span>
+    <div class="steps" aria-hidden="true">
+      <span class="step-pill">1. Name it</span>
+      <span class="step-pill">2. Find your words</span>
+      <span class="step-pill">3. Practise</span>
+      <span class="step-pill">4. Follow through</span>
+    </div>
+    <span class="disclaimer">Reflection and wellbeing support only. Not professional advice.</span>
     <p class="tool-note">Setting a boundary is an act of self-respect. You are allowed to protect your energy.</p>
   </header>
 
@@ -652,60 +360,64 @@
   <section class="card" aria-labelledby="reflect-heading">
     <p class="card-title" id="reflect-heading">Your reflection</p>
 
+    <div class="safety-note" id="safetyNote" role="note">
+      <strong>A quick, caring note.</strong> If you feel unsafe, or someone is hurting or threatening you, setting a boundary directly may not be the safest step. Please reach out to local emergency services or a trusted person, or find a helpline in your country at
+      <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
+    </div>
+
     <label class="save-row">
       <input type="checkbox" id="saveToggle" />
       Save my reflection on this device
     </label>
+    <p class="save-hint">Stays in this browser only. Nothing is sent anywhere.</p>
     <label class="save-row">
       <input type="checkbox" id="autoSaveToggle" checked />
       Auto-save while I type
     </label>
+    <p class="save-hint">Works when saving is switched on above.</p>
 
-    <!-- NAME -->
     <div class="name-field">
-      <label for="nameInput">Your name (optional — shown in PDF)</label>
-      <input type="text" id="nameInput" maxlength="60" placeholder="e.g. Alex" aria-label="Your name for PDF" />
+      <label for="nameInput">Your first name (optional, shown in the PDF)</label>
+      <input type="text" id="nameInput" maxlength="60" placeholder="e.g. Alex" />
     </div>
 
-    <!-- SITUATION -->
     <div class="question">
       <label class="question-label" for="situation">What situation is draining your energy?</label>
-      <p class="question-hint">Describe what is happening — no need to justify it.</p>
-      <textarea id="situation" maxlength="700" placeholder="e.g. I feel pressured to answer messages late at night…" aria-label="Situation description"></textarea>
+      <p class="question-hint">Describe what is happening. No need to justify it.</p>
+      <textarea id="situation" maxlength="700" placeholder="e.g. I feel pressured to answer messages late at night..."></textarea>
+      <div class="char-count" id="situationCount">0 / 700</div>
     </div>
 
-    <!-- NEED -->
     <div class="question">
       <label class="question-label" for="need">What boundary do you need right now?</label>
       <p class="question-hint">Try to name it simply and directly.</p>
-      <textarea id="need" maxlength="500" placeholder="e.g. I need to reply only during daytime hours…" aria-label="Boundary needed"></textarea>
+      <textarea id="need" maxlength="500" placeholder="e.g. I need to reply only during daytime hours..."></textarea>
+      <div class="char-count" id="needCount">0 / 500</div>
     </div>
 
-    <!-- CATEGORY CHIPS -->
     <div class="chips-card">
-      <label class="chips-label">What type of boundary is this?</label>
+      <label class="chips-label" id="catLabel">What type of boundary is this?</label>
       <p class="chips-hint">Select all that apply.</p>
-      <div id="categoryChips" class="chip-wrap" role="group" aria-label="Boundary categories"></div>
+      <div id="categoryChips" class="chip-wrap" role="group" aria-labelledby="catLabel"></div>
     </div>
 
-    <!-- FEELING CHIPS -->
     <div class="chips-card">
-      <label class="chips-label">What are you feeling right now?</label>
+      <label class="chips-label" id="feelLabel">What are you feeling right now?</label>
       <p class="chips-hint">Naming feelings helps clarify the boundary.</p>
-      <div id="feelingChips" class="chip-wrap" role="group" aria-label="Feelings"></div>
+      <div id="feelingChips" class="chip-wrap" role="group" aria-labelledby="feelLabel"></div>
     </div>
 
-    <!-- CLARITY SCORE -->
     <div class="score-card">
       <div class="score-top">
         <span class="score-label">Boundary clarity score</span>
+        <span class="score-spacer"></span>
         <span class="score-number" id="clarityScore">0</span><span class="score-label">/100</span>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="clarityBar"></div></div>
-      <div style="margin-top:8px;"><span class="score-badge" id="clarityBadge">Starting</span></div>
+      <span class="score-badge" id="clarityBadge">Starting</span>
+      <p class="score-tip" id="clarityTip">Start with the situation that is draining you.</p>
     </div>
 
-    <!-- TONE -->
     <div class="tone-card">
       <label class="tone-label">Choose your boundary tone</label>
       <div class="tone-buttons" role="group" aria-label="Boundary tone">
@@ -720,87 +432,97 @@
         <span class="tone-val" id="toneVal">3/5</span>
       </div>
       <div class="tone-preview-label">Live preview</div>
-      <div class="tone-preview" id="tonePreview">I value this connection, and I need this boundary to feel safe and respected.</div>
+      <div class="tone-preview" id="tonePreview"></div>
+      <div class="mini-row">
+        <button type="button" class="mini-btn" id="usePreview">Use this as my statement</button>
+        <button type="button" class="mini-btn brand" id="buildStatement">Build from my answers</button>
+      </div>
     </div>
 
-    <!-- BOUNDARY STATEMENT -->
     <div class="question">
       <label class="question-label" for="script">Write or edit your boundary statement</label>
-      <p class="question-hint">Use the live preview above as a starting point, or write your own.</p>
-      <textarea id="script" maxlength="600" placeholder="e.g. I care about this relationship, and I need to stop calls after 9pm so I can rest…" aria-label="Boundary statement"></textarea>
+      <p class="question-hint">Use the preview or the build button above as a starting point, or write your own.</p>
+      <textarea id="script" maxlength="600" placeholder="e.g. I care about this relationship, and I need to stop calls after 9pm so I can rest..."></textarea>
+      <div class="char-count" id="scriptCount">0 / 600</div>
+      <div class="statement-check" id="statementCheck" aria-live="polite"></div>
     </div>
 
-    <!-- CONSEQUENCE + SUPPORT -->
     <div class="question">
       <label class="question-label" for="consequence">If this boundary is ignored, what will you do?</label>
-      <p class="question-hint">A calm, clear consequence — not a threat. Something you can actually follow through on.</p>
-      <textarea id="consequence" maxlength="500" placeholder="e.g. If this continues, I will pause responding until daytime…" aria-label="Consequence if boundary ignored"></textarea>
+      <p class="question-hint">A calm, clear consequence, not a threat. Something you can actually follow through on.</p>
+      <textarea id="consequence" maxlength="500" placeholder="e.g. If this continues, I will pause responding until daytime..."></textarea>
     </div>
 
     <div class="question">
       <label class="question-label" for="supportNeeded">What support do you need to follow through?</label>
-      <p class="question-hint">A friend check-in, a reminder, a quiet space — anything that helps you stay consistent.</p>
-      <textarea id="supportNeeded" maxlength="500" placeholder="e.g. I need a friend to check in with me…" aria-label="Support needed"></textarea>
+      <p class="question-hint">A friend check-in, a reminder, a quiet space. Anything that helps you stay consistent.</p>
+      <textarea id="supportNeeded" maxlength="500" placeholder="e.g. I need a friend to check in with me..."></textarea>
     </div>
 
-    <!-- SELF-CARE CHIPS -->
     <div class="chips-card">
-      <label class="chips-label">Self-care after setting this boundary</label>
+      <label class="chips-label" id="careLabel">Self-care after setting this boundary</label>
       <p class="chips-hint">Choose what you will do to look after yourself.</p>
-      <div id="selfCareChips" class="chip-wrap" role="group" aria-label="Self-care options"></div>
+      <div id="selfCareChips" class="chip-wrap" role="group" aria-labelledby="careLabel"></div>
     </div>
 
-    <!-- PRACTICE MODE -->
     <div class="practice-card">
-      <label class="question-label" for="practiceScenario">Practice mode — how do they respond?</label>
+      <label class="question-label" for="practiceScenario">Practice mode: how do they respond?</label>
       <p class="question-hint">Choose a scenario and get three suggested replies based on your tone and boundary.</p>
-      <select id="practiceScenario" aria-label="Practice scenario">
+      <select id="practiceScenario">
         <option value="guilt">They guilt trip me</option>
         <option value="angry">They get angry</option>
+        <option value="sensitive">They say I am too sensitive</option>
         <option value="ignore">They ignore it</option>
+        <option value="again">They test it again later</option>
         <option value="agree">They agree</option>
       </select>
       <div id="practiceReplies" class="reply-list"></div>
     </div>
 
-    <!-- RESULT -->
-    <div class="section-label" style="margin-top:18px;">Your reflection summary</div>
-    <div class="result-box" id="result" aria-live="polite">Your summary will appear here after you click Generate Reflection.</div>
-
-    <!-- PRIMARY ACTIONS — simplified -->
-    <div class="section-label" style="margin-top:18px;">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="generateBtn" aria-label="Generate reflection">Generate reflection</button>
-      <button type="button" class="btn btn-secondary" id="downloadPdf" aria-label="Download PDF">Download PDF</button>
-      <button type="button" class="btn btn-outline" id="copyOutput" aria-label="Copy summary text">Copy summary</button>
-      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
+    <div class="checkin-card">
+      <label class="question-label">Follow-through check-in</label>
+      <p class="question-hint">After you set the boundary, come back and log how it went. Small, honest check-ins build trust in yourself.</p>
+      <div class="checkin-btns">
+        <button type="button" class="checkin-btn" data-status="held">I held it</button>
+        <button type="button" class="checkin-btn" data-status="partly">Partly</button>
+        <button type="button" class="checkin-btn" data-status="missed">Not this time</button>
+        <button type="button" class="checkin-btn" id="clearCheckins" style="border-color:var(--border);color:var(--muted);">Clear log</button>
+      </div>
+      <div class="checkin-log" id="checkinLog"></div>
     </div>
 
-    <!-- SHARE -->
+    <div class="section-label" style="margin-top:18px;">Your reflection summary</div>
+    <div class="result-box" id="result" aria-live="polite"></div>
+
+    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="btn-row" style="margin-bottom:18px;">
+      <button type="button" class="btn btn-primary" id="generateBtn">Update summary</button>
+      <button type="button" class="btn btn-secondary" id="downloadPdf">Download PDF</button>
+      <button type="button" class="btn btn-outline" id="copyOutput">Copy summary</button>
+      <button type="button" class="btn btn-danger" id="resetBtn">Reset</button>
+    </div>
+
     <div class="section-label">Share this tool</div>
     <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLink" aria-label="Copy link">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+      <button type="button" class="btn btn-share" id="copyLink">Copy link</button>
+      <a class="btn btn-share" id="waShare" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" href="#" target="_blank" rel="noopener">X</a>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
-
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional advice.
+      &nbsp;&middot;&nbsp; Reflection support only. Not professional advice.
     </p>
   </footer>
 
@@ -809,464 +531,583 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(function () {
-  'use strict';
+var STORAGE_KEY = 'boundaryBuilderV6';
+var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
 
-  const STORAGE_KEY = 'boundaryBuilderV5';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var categoryOptions = ['Time','Emotional','Physical','Digital','Money','Work','Family','Relationships','Personal space'];
+var feelingOptions = ['Overwhelmed','Resentful','Guilty','Anxious','Drained','Disrespected','Pressured','Unseen'];
+var selfCareOptions = ['Take a walk','Deep breathing','Journal','Message a trusted person','Drink water and rest','Repeat an affirmation'];
 
-  const categoryOptions = ['Time','Emotional','Physical','Digital','Money','Work','Family','Relationships','Personal space'];
-  const feelingOptions = ['Overwhelmed','Resentful','Guilty','Anxious','Drained','Disrespected','Pressured','Unseen'];
-  const selfCareOptions = ['Take a walk','Deep breathing','Journal','Message a trusted person','Drink water and rest','Repeat an affirmation'];
+var currentTone = 'warm';
+var toastTimer = null;
+var checkins = [];
 
-  const $ = id => document.getElementById(id);
+function $(id) { return document.getElementById(id); }
 
-  let currentTone = 'warm';
-  let toastTimer;
+function showToast(msg) {
+  var el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+}
 
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
-  }
+function cleanEnd(s) { return (s || '').replace(/[\s.!?,;:]+$/, ''); }
 
-  // Build chips
-  function buildChips(containerId, options, group) {
-    const wrap = $(containerId);
-    options.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip';
-      btn.textContent = opt;
-      btn.dataset.group = group;
-      btn.dataset.value = opt;
-      btn.setAttribute('aria-pressed', 'false');
-      wrap.appendChild(btn);
-    });
-  }
-
-  buildChips('categoryChips', categoryOptions, 'category');
-  buildChips('feelingChips', feelingOptions, 'feeling');
-  buildChips('selfCareChips', selfCareOptions, 'selfcare');
-
-  function selectedValues(group) {
-    return Array.from(document.querySelectorAll(`.chip[data-group="${group}"][aria-pressed="true"]`)).map(n => n.dataset.value);
-  }
-
-  function setChipSelection(group, values) {
-    const set = new Set(values || []);
-    document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(chip => {
-      chip.setAttribute('aria-pressed', set.has(chip.dataset.value) ? 'true' : 'false');
-    });
-  }
-
-  // Chip click
-  document.addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    const pressed = chip.getAttribute('aria-pressed') === 'true';
-    chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-    updateAll();
-    maybeAutoSave();
+/* ---------- CHIPS ---------- */
+function buildChips(containerId, options, group) {
+  var wrap = $(containerId);
+  options.forEach(function (opt) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.textContent = opt;
+    btn.dataset.group = group;
+    btn.dataset.value = opt;
+    btn.setAttribute('aria-pressed', 'false');
+    wrap.appendChild(btn);
   });
+}
 
-  // Tone buttons
-  document.querySelectorAll('.tone-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentTone = btn.dataset.tone;
-      document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === currentTone));
-      updateAll();
-      maybeAutoSave();
-    });
+function selectedValues(group) {
+  return Array.prototype.slice.call(document.querySelectorAll('.chip[data-group="' + group + '"][aria-pressed="true"]'))
+    .map(function (n) { return n.dataset.value; });
+}
+
+function setChipSelection(group, values) {
+  var list = values || [];
+  document.querySelectorAll('.chip[data-group="' + group + '"]').forEach(function (chip) {
+    chip.setAttribute('aria-pressed', list.indexOf(chip.dataset.value) > -1 ? 'true' : 'false');
   });
+}
 
-  // Tone slider
-  $('toneSlider').addEventListener('input', () => { updateAll(); maybeAutoSave(); });
+/* ---------- TONE ---------- */
+function getToneLabel() {
+  if (currentTone === 'firm') return 'Firm and clear';
+  if (currentTone === 'very firm') return 'Very firm';
+  return 'Warm and kind';
+}
 
-  function getToneLabel() {
-    if (currentTone === 'firm') return 'Firm and clear';
-    if (currentTone === 'very firm') return 'Very firm';
-    return 'Warm and kind';
+function toneWording() {
+  var level = parseInt($('toneSlider').value, 10);
+  var need = cleanEnd($('need').value.trim()) || 'I need this boundary';
+  var intros = {
+    'warm': ['I really value our connection','I care about this relationship','I appreciate you and want this to work','I want to stay connected','I need this to be clear'],
+    'firm': ['I respect you and I need this honoured','I need this to be clear','This boundary is important to me','I expect this boundary to be respected','I am being direct about this'],
+    'very firm': ['This is non-negotiable for me','I am setting a clear limit','This boundary must be respected','I will not continue if this is crossed','I am stating this clearly']
+  };
+  var ends = [
+    'so I can feel safe and balanced.',
+    'so I can protect my wellbeing.',
+    'so I can keep showing up with respect.',
+    'and I need consistency on this.',
+    'and I will follow through if it is ignored.'
+  ];
+  var idx = Math.max(0, Math.min(4, level - 1));
+  return intros[currentTone][idx] + ', ' + need + ' ' + ends[idx];
+}
+
+function buildStatementText() {
+  var d = getData();
+  var need = cleanEnd(d.need);
+  if (!need) return '';
+  var parts = [];
+  var feel = d.feelings.slice(0, 2).map(function (f) { return f.toLowerCase(); }).join(' and ');
+  if (d.situation && feel) parts.push('When this happens, I feel ' + feel + '.');
+  else if (feel) parts.push('I feel ' + feel + '.');
+  parts.push(need + '.');
+  if (d.consequence) parts.push(cleanEnd(d.consequence) + '.');
+  var closers = {
+    'warm': 'I value you, and I want this to work for both of us.',
+    'firm': 'I need this to be respected.',
+    'very firm': 'This is not up for debate.'
+  };
+  parts.push(closers[currentTone]);
+  return parts.join(' ');
+}
+
+/* ---------- STATEMENT CHECK ---------- */
+function checkStatement() {
+  var box = $('statementCheck');
+  var text = $('script').value.trim();
+  if (text.length < 8) { box.className = 'statement-check'; box.innerHTML = ''; return; }
+  var tips = [];
+  var lower = text.toLowerCase();
+  if (/\byou (must|have to|need to|should|always|never|better)\b/.test(lower)) {
+    tips.push('This sounds like a demand. A boundary describes what <em>you</em> will do, such as "I will reply during the day."');
   }
-
-  function toneWording() {
-    const level = parseInt($('toneSlider').value, 10);
-    const need = $('need').value.trim() || 'I need this boundary';
-    const intros = {
-      warm: ['I really value our connection','I care about this relationship','I appreciate you and want this to work','I want to stay connected','I need this to be clear'],
-      firm: ['I respect you and I need this honoured','I need this to be clear','This boundary is important to me','I expect this boundary to be respected','I am being direct about this'],
-      'very firm': ['This is non-negotiable for me','I am setting a clear limit','This boundary must be respected','I will not continue if this is crossed','I am stating this clearly']
-    };
-    const ends = [
-      'so I can feel safe and balanced.',
-      'so I can protect my wellbeing.',
-      'so I can keep showing up with respect.',
-      'and I need consistency on this.',
-      'and I will follow through if it is ignored.'
-    ];
-    const idx = Math.max(0, Math.min(4, level - 1));
-    return `${intros[currentTone][idx]}, ${need} ${ends[idx]}`;
+  if (!/\b(i|i'm|i am|i will|i need|my)\b/.test(lower)) {
+    tips.push('Try starting with "I" so the focus stays on your needs and actions.');
   }
-
-  function getPracticeReplies() {
-    const scenario = $('practiceScenario').value;
-    const need = $('need').value.trim() || 'I need this boundary respected';
-    const consequence = $('consequence').value.trim() || 'I will take space and revisit later';
-
-    const map = {
-      guilt: {
-        warm: [`I hear you, and ${need}.`, `I care about you, and I still need this respected.`, `I understand this is hard. I am keeping this boundary.`],
-        firm: [`I understand your feelings, and ${need}.`, `I am not changing this boundary.`, `If this continues, ${consequence}.`],
-        'very firm': [`Guilt will not change my boundary. ${need}.`, `This boundary stands.`, `If you push this again, ${consequence}.`]
-      },
-      angry: {
-        warm: [`I want to talk when we are calmer. ${need}.`, `I hear that you are upset. I still need this boundary.`, `Let us pause now and continue respectfully later.`],
-        firm: [`I will not continue while being shouted at. ${need}.`, `We can continue when the tone is respectful.`, `If anger continues, ${consequence}.`],
-        'very firm': [`I am ending this conversation now.`, `This boundary is not up for debate.`, `Continue this and ${consequence}.`]
-      },
-      ignore: {
-        warm: [`I notice my request was missed. ${need}.`, `I am repeating my boundary so we are clear.`, `Please acknowledge this boundary.`],
-        firm: [`My boundary has not been respected. ${need}.`, `I need a clear response to move forward.`, `If ignored again, ${consequence}.`],
-        'very firm': [`Ignoring this boundary is not acceptable.`, `I am acting on my boundary now.`, `${consequence}.`]
-      },
-      agree: {
-        warm: [`Thank you for understanding — this helps me feel safe.`, `I appreciate you respecting this boundary.`, `Thanks for working with me on this.`],
-        firm: [`Thank you for agreeing. I need this to stay consistent.`, `Let us keep this boundary in place.`, `I appreciate your cooperation.`],
-        'very firm': [`Good. I expect this boundary to be maintained.`, `Thank you for confirming this clearly.`, `We will proceed with this boundary in place.`]
-      }
-    };
-
-    return map[scenario][currentTone] || [];
+  if (/\b(sorry|just|maybe|i guess|kind of|sort of)\b/.test(lower)) {
+    tips.push('Words like "sorry", "just" or "maybe" can soften the message more than you intend. Keep them only if they feel right.');
   }
-
-  function renderPracticeReplies() {
-    const replies = getPracticeReplies();
-    const container = $('practiceReplies');
-    container.innerHTML = '';
-    replies.forEach((text, i) => {
-      const card = document.createElement('div');
-      card.className = 'reply-card';
-      const p = document.createElement('div');
-      p.className = 'reply-text';
-      p.textContent = (i + 1) + '. ' + text;
-      const btn = document.createElement('button');
-      btn.className = 'reply-copy';
-      btn.type = 'button';
-      btn.textContent = 'Copy';
-      btn.addEventListener('click', () => copyText(text, 'Reply copied.'));
-      card.appendChild(p);
-      card.appendChild(btn);
-      container.appendChild(card);
-    });
+  if (text.length > 380) {
+    tips.push('This is quite long. A shorter statement is often easier to say and to repeat calmly.');
   }
-
-  function scoreData(data) {
-    let score = 0;
-    if (data.situation) score += 20;
-    if (data.need) score += 20;
-    if (data.categories.length) score += 15;
-    if (data.feelings.length) score += 15;
-    if (data.consequence) score += 15;
-    if (data.script) score += 15;
-    return Math.min(100, score);
+  if (tips.length) {
+    box.className = 'statement-check show';
+    box.innerHTML = '<strong>Gentle suggestions</strong><ul>' + tips.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+  } else {
+    box.className = 'statement-check show good';
+    box.innerHTML = 'This reads as clear and within your control. Well done.';
   }
+}
 
-  function scoreBadge(score) {
-    if (score >= 86) return 'Unshakeable';
-    if (score >= 61) return 'Strong';
-    if (score >= 31) return 'Building';
-    return 'Starting';
-  }
+/* ---------- SAFETY NOTE ---------- */
+function checkSafety() {
+  var all = ($('situation').value + ' ' + $('need').value + ' ' + $('script').value).toLowerCase();
+  var risky = /(abus|hits me|hit me|hurt me|hurts me|violen|threaten|stalk|unsafe|afraid for my|scared for my|forces me|forced me|controls me|controlling)/.test(all);
+  $('safetyNote').classList.toggle('show', risky);
+}
 
-  function getData() {
-    return {
-      name: $('nameInput').value.trim(),
-      situation: $('situation').value.trim(),
-      need: $('need').value.trim(),
-      tone: currentTone,
-      toneSlider: parseInt($('toneSlider').value, 10),
-      script: $('script').value.trim(),
-      consequence: $('consequence').value.trim(),
-      supportNeeded: $('supportNeeded').value.trim(),
-      categories: selectedValues('category'),
-      feelings: selectedValues('feeling'),
-      selfCare: selectedValues('selfcare'),
-      practiceScenario: $('practiceScenario').value,
-      autoSave: $('autoSaveToggle').checked,
-      saveOn: $('saveToggle').checked
-    };
-  }
+/* ---------- PRACTICE ---------- */
+function getPracticeReplies() {
+  var scenario = $('practiceScenario').value;
+  var need = cleanEnd($('need').value.trim()) || 'I need this boundary respected';
+  var consequence = cleanEnd($('consequence').value.trim()) || 'I will take space and revisit later';
 
-  function buildSummary(data) {
-    const score = scoreData(data);
-    const badge = scoreBadge(score);
-    const preview = toneWording();
-    const replies = getPracticeReplies().map((r, i) => `  ${i+1}. ${r}`).join('\n');
-    const scenarioLabel = $('practiceScenario').options[$('practiceScenario').selectedIndex].text;
-
-    return [
-      data.name ? `Boundary reflection for ${data.name}` : 'Boundary reflection',
-      '',
-      `Situation: ${data.situation || 'Not provided'}`,
-      `Boundary needed: ${data.need || 'Not provided'}`,
-      `Category: ${data.categories.length ? data.categories.join(', ') : 'Not selected'}`,
-      `Feelings: ${data.feelings.length ? data.feelings.join(', ') : 'Not selected'}`,
-      '',
-      `Tone: ${getToneLabel()} — Level ${data.toneSlider}/5`,
-      `Tone preview: ${preview}`,
-      `Boundary statement: ${data.script || 'Not written yet'}`,
-      '',
-      `If boundary is ignored: ${data.consequence || 'Not provided'}`,
-      `Support needed: ${data.supportNeeded || 'Not provided'}`,
-      `Self-care plan: ${data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'}`,
-      '',
-      `Practice scenario: ${scenarioLabel}`,
-      `Suggested replies:\n${replies}`,
-      '',
-      `Boundary clarity score: ${score}/100 — ${badge}`
-    ].join('\n');
-  }
-
-  function updateAll() {
-    $('toneVal').textContent = $('toneSlider').value + '/5';
-    $('tonePreview').textContent = toneWording();
-    renderPracticeReplies();
-    const data = getData();
-    const score = scoreData(data);
-    $('clarityScore').textContent = score;
-    $('clarityBar').style.width = score + '%';
-    $('clarityBadge').textContent = scoreBadge(score);
-    $('result').textContent = buildSummary(data);
-  }
-
-  function saveLocal(d) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d || getData())); } catch(_) {}
-  }
-
-  function maybeAutoSave() {
-    if ($('autoSaveToggle').checked && $('saveToggle').checked) saveLocal();
-  }
-
-  function loadLocal() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const d = JSON.parse(raw);
-      if (!d) return;
-      $('nameInput').value = d.name || '';
-      $('situation').value = d.situation || '';
-      $('need').value = d.need || '';
-      $('script').value = d.script || '';
-      $('consequence').value = d.consequence || '';
-      $('supportNeeded').value = d.supportNeeded || '';
-      $('saveToggle').checked = Boolean(d.saveOn);
-      $('autoSaveToggle').checked = d.autoSave !== false;
-      if (d.toneSlider) $('toneSlider').value = d.toneSlider;
-      if (d.tone) {
-        currentTone = d.tone;
-        document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === currentTone));
-      }
-      if (d.practiceScenario) $('practiceScenario').value = d.practiceScenario;
-      setChipSelection('category', d.categories || []);
-      setChipSelection('feeling', d.feelings || []);
-      setChipSelection('selfcare', d.selfCare || []);
-      updateAll();
-    } catch(_) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  var map = {
+    guilt: {
+      'warm': ['I hear you, and ' + need + '.', 'I care about you, and I still need this respected.', 'I understand this is hard. I am keeping this boundary.'],
+      'firm': ['I understand your feelings, and ' + need + '.', 'I am not changing this boundary.', 'If this continues, ' + consequence + '.'],
+      'very firm': ['Guilt will not change my boundary. ' + need + '.', 'This boundary stands.', 'If you push this again, ' + consequence + '.']
+    },
+    angry: {
+      'warm': ['I want to talk when we are calmer. ' + need + '.', 'I hear that you are upset. I still need this boundary.', 'Let us pause now and continue respectfully later.'],
+      'firm': ['I will not continue while being shouted at. ' + need + '.', 'We can continue when the tone is respectful.', 'If anger continues, ' + consequence + '.'],
+      'very firm': ['I am ending this conversation now.', 'This boundary is not up for debate.', 'Continue this and ' + consequence + '.']
+    },
+    sensitive: {
+      'warm': ['You are entitled to your view, and ' + need + '.', 'This matters to me, even if it looks small to you.', 'I would still like you to respect it.'],
+      'firm': ['My feelings are valid. ' + need + '.', 'I am not asking you to agree, only to respect it.', 'I am keeping this boundary.'],
+      'very firm': ['Calling me sensitive does not change this. ' + need + '.', 'I am not discussing whether my needs are valid.', 'If this continues, ' + consequence + '.']
+    },
+    ignore: {
+      'warm': ['I notice my request was missed. ' + need + '.', 'I am repeating my boundary so we are clear.', 'Please acknowledge this boundary.'],
+      'firm': ['My boundary has not been respected. ' + need + '.', 'I need a clear response to move forward.', 'If ignored again, ' + consequence + '.'],
+      'very firm': ['Ignoring this boundary is not acceptable.', 'I am acting on my boundary now.', consequence + '.']
+    },
+    again: {
+      'warm': ['A gentle reminder: ' + need + '.', 'We talked about this and I am keeping to it.', 'Thank you for helping me hold this.'],
+      'firm': ['This is the boundary we spoke about. ' + need + '.', 'I need it respected every time, not just once.', 'If it happens again, ' + consequence + '.'],
+      'very firm': ['I have already been clear. ' + need + '.', 'This has happened before, so I am acting now.', consequence + '.']
+    },
+    agree: {
+      'warm': ['Thank you for understanding. This helps me feel safe.', 'I appreciate you respecting this boundary.', 'Thanks for working with me on this.'],
+      'firm': ['Thank you for agreeing. I need this to stay consistent.', 'Let us keep this boundary in place.', 'I appreciate your cooperation.'],
+      'very firm': ['Good. I expect this boundary to be maintained.', 'Thank you for confirming this clearly.', 'We will proceed with this boundary in place.']
     }
-  }
+  };
+  return (map[scenario] && map[scenario][currentTone]) || [];
+}
 
-  function resetTool() {
-    ['nameInput','situation','need','script','consequence','supportNeeded'].forEach(id => { $(id).value = ''; });
-    currentTone = 'warm';
-    document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === 'warm'));
-    $('toneSlider').value = 3;
-    $('saveToggle').checked = false;
-    $('autoSaveToggle').checked = true;
-    $('practiceScenario').value = 'guilt';
-    setChipSelection('category', []);
-    setChipSelection('feeling', []);
-    setChipSelection('selfcare', []);
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    updateAll();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Tool reset.');
-  }
+function renderPracticeReplies() {
+  var replies = getPracticeReplies();
+  var container = $('practiceReplies');
+  container.innerHTML = '';
+  replies.forEach(function (text, i) {
+    var card = document.createElement('div');
+    card.className = 'reply-card';
+    var p = document.createElement('div');
+    p.className = 'reply-text';
+    p.textContent = (i + 1) + '. ' + text;
+    var btn = document.createElement('button');
+    btn.className = 'reply-copy';
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', function () { copyText(text, 'Reply copied.'); });
+    card.appendChild(p);
+    card.appendChild(btn);
+    container.appendChild(card);
+  });
+}
 
-  async function copyText(text, msg) {
-    try { await navigator.clipboard.writeText(text); showToast(msg); }
-    catch(_) { showToast('Could not copy. Please copy manually.'); }
-  }
+/* ---------- CHECK-INS ---------- */
+function addCheckin(status) {
+  var label = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  checkins.push({ date: label, status: status });
+  if (checkins.length > 14) checkins = checkins.slice(-14);
+  updateAll();
+  maybeAutoSave();
+  var msgs = {
+    held: 'Well done for holding it.',
+    partly: 'Partly is progress. Be kind to yourself.',
+    missed: 'It is okay. You can try again.'
+  };
+  showToast(msgs[status] || 'Logged.');
+}
 
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('This free Boundary Builder tool helped me find my words: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-  }
+function checkinSummary() {
+  if (!checkins.length) return '';
+  var held = checkins.filter(function (c) { return c.status === 'held'; }).length;
+  var partly = checkins.filter(function (c) { return c.status === 'partly'; }).length;
+  return 'Held ' + held + ', partly ' + partly + ' of ' + checkins.length + ' check-ins';
+}
 
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
+function renderCheckins() {
+  var log = $('checkinLog');
+  if (!checkins.length) { log.textContent = 'No check-ins yet.'; return; }
+  var recent = checkins.slice(-7);
+  var symbols = { held: '&#10003;', partly: '~', missed: '&middot;' };
+  var dots = recent.map(function (c) {
+    return '<span class="dot ' + c.status + '" title="' + c.date + '">' + symbols[c.status] + '</span>';
+  }).join('');
+  log.innerHTML = checkinSummary() + '.<div class="checkin-dots" aria-label="Recent check-ins">' + dots + '</div>';
+}
+
+/* ---------- DATA ---------- */
+function scoreData(data) {
+  var score = 0;
+  if (data.situation) score += 20;
+  if (data.need) score += 20;
+  if (data.categories.length) score += 15;
+  if (data.feelings.length) score += 15;
+  if (data.consequence) score += 15;
+  if (data.script) score += 15;
+  return Math.min(100, score);
+}
+
+function scoreBadge(score) {
+  if (score >= 86) return 'Unshakeable';
+  if (score >= 61) return 'Strong';
+  if (score >= 31) return 'Building';
+  return 'Starting';
+}
+
+function scoreTip(data) {
+  if (!data.situation) return 'Start with the situation that is draining you.';
+  if (!data.need) return 'Next, name the boundary you need in a simple sentence.';
+  if (!data.categories.length) return 'Choose the type of boundary this is.';
+  if (!data.feelings.length) return 'Name what you are feeling. It sharpens the boundary.';
+  if (!data.script) return 'Write your boundary statement, or use the build button.';
+  if (!data.consequence) return 'Add a calm consequence you can follow through on.';
+  return 'Your boundary is clear. Practise saying it out loud.';
+}
+
+function getData() {
+  return {
+    name: $('nameInput').value.trim(),
+    situation: $('situation').value.trim(),
+    need: $('need').value.trim(),
+    tone: currentTone,
+    toneSlider: parseInt($('toneSlider').value, 10),
+    script: $('script').value.trim(),
+    consequence: $('consequence').value.trim(),
+    supportNeeded: $('supportNeeded').value.trim(),
+    categories: selectedValues('category'),
+    feelings: selectedValues('feeling'),
+    selfCare: selectedValues('selfcare'),
+    practiceScenario: $('practiceScenario').value,
+    checkins: checkins,
+    autoSave: $('autoSaveToggle').checked,
+    saveOn: $('saveToggle').checked
+  };
+}
+
+function scenarioLabel() {
+  var sel = $('practiceScenario');
+  return sel.options[sel.selectedIndex].text;
+}
+
+function buildSummary(data) {
+  var score = scoreData(data);
+  var replies = getPracticeReplies().map(function (r, i) { return '  ' + (i + 1) + '. ' + r; }).join('\n');
+  var lines = [
+    data.name ? 'Boundary reflection for ' + data.name : 'Boundary reflection',
+    '',
+    'Situation: ' + (data.situation || 'Not provided'),
+    'Boundary needed: ' + (data.need || 'Not provided'),
+    'Category: ' + (data.categories.length ? data.categories.join(', ') : 'Not selected'),
+    'Feelings: ' + (data.feelings.length ? data.feelings.join(', ') : 'Not selected'),
+    '',
+    'Tone: ' + getToneLabel() + ', level ' + data.toneSlider + '/5',
+    'Boundary statement: ' + (data.script || 'Not written yet'),
+    '',
+    'If boundary is ignored: ' + (data.consequence || 'Not provided'),
+    'Support needed: ' + (data.supportNeeded || 'Not provided'),
+    'Self-care plan: ' + (data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'),
+    '',
+    'Practice scenario: ' + scenarioLabel(),
+    'Suggested replies:\n' + replies
+  ];
+  if (checkins.length) lines.push('', 'Follow-through: ' + checkinSummary());
+  lines.push('', 'Boundary clarity score: ' + score + '/100, ' + scoreBadge(score));
+  return lines.join('\n');
+}
+
+function updateCounts() {
+  [['situation', 700], ['need', 500], ['script', 600]].forEach(function (p) {
+    $(p[0] + 'Count').textContent = $(p[0]).value.length + ' / ' + p[1];
+  });
+}
+
+function updateAll() {
+  $('toneVal').textContent = $('toneSlider').value + '/5';
+  $('tonePreview').textContent = toneWording();
+  renderPracticeReplies();
+  renderCheckins();
+  updateCounts();
+  checkSafety();
+  var data = getData();
+  var score = scoreData(data);
+  $('clarityScore').textContent = score;
+  $('clarityBar').style.width = score + '%';
+  $('clarityBadge').textContent = scoreBadge(score);
+  $('clarityTip').textContent = scoreTip(data);
+  $('result').textContent = buildSummary(data);
+}
+
+/* ---------- STORAGE ---------- */
+function saveLocal() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(getData())); } catch (e) {}
+}
+
+function maybeAutoSave() {
+  if ($('autoSaveToggle').checked && $('saveToggle').checked) saveLocal();
+}
+
+function loadLocal() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (!d) return;
+    $('nameInput').value = d.name || '';
+    $('situation').value = d.situation || '';
+    $('need').value = d.need || '';
+    $('script').value = d.script || '';
+    $('consequence').value = d.consequence || '';
+    $('supportNeeded').value = d.supportNeeded || '';
+    $('saveToggle').checked = Boolean(d.saveOn);
+    $('autoSaveToggle').checked = d.autoSave !== false;
+    if (d.toneSlider) $('toneSlider').value = d.toneSlider;
+    if (d.tone) {
+      currentTone = d.tone;
+      document.querySelectorAll('.tone-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.tone === currentTone); });
+    }
+    if (d.practiceScenario) $('practiceScenario').value = d.practiceScenario;
+    checkins = Array.isArray(d.checkins) ? d.checkins : [];
+    setChipSelection('category', d.categories || []);
+    setChipSelection('feeling', d.feelings || []);
+    setChipSelection('selfcare', d.selfCare || []);
+  } catch (e) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e2) {}
+  }
+}
+
+function resetTool() {
+  ['nameInput','situation','need','script','consequence','supportNeeded'].forEach(function (id) { $(id).value = ''; });
+  currentTone = 'warm';
+  document.querySelectorAll('.tone-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.tone === 'warm'); });
+  $('toneSlider').value = 3;
+  $('saveToggle').checked = false;
+  $('autoSaveToggle').checked = true;
+  $('practiceScenario').value = 'guilt';
+  checkins = [];
+  setChipSelection('category', []);
+  setChipSelection('feeling', []);
+  setChipSelection('selfcare', []);
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  checkStatement();
+  updateAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Tool reset.');
+}
+
+/* ---------- CLIPBOARD + SHARE ---------- */
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  return ok;
+}
+
+function copyText(text, msg) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(
+      function () { showToast(msg); },
+      function () { showToast(fallbackCopy(text) ? msg : 'Could not copy. Please copy manually.'); }
+    );
+  } else {
+    showToast(fallbackCopy(text) ? msg : 'Could not copy. Please copy manually.');
+  }
+}
+
+function updateShareLinks() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('This free Boundary Builder tool helped me find my words: ');
+  $('waShare').href = 'https://wa.me/?text=' + msg + url;
+  $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+}
+
+/* ---------- PDF ---------- */
+function imageToDataUrl(url) {
+  return fetch(url, { mode: 'cors' }).then(function (res) {
     if (!res.ok) throw new Error('Logo fetch failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () { resolve(reader.result); };
+      reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-  }
+  });
+}
 
-  async function downloadPDF() {
-    const jsPDF = window.jspdf && window.jspdf.jsPDF;
-    if (!jsPDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    const data = getData();
-    if (!data.situation && !data.need && !data.script) {
-      showToast('Please add some reflection before downloading.');
-      return;
-    }
+function pdfSafe(s) {
+  return String(s == null ? '' : s)
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/\u2026/g, '...')
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '');
+}
 
-    showToast('Preparing your PDF…');
-    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header
+function pdfCard(doc, st, label, value) {
+  var lines = doc.splitTextToSize(pdfSafe(value), st.pageW - st.margin * 2 - 22);
+  var first = true;
+  while (lines.length) {
+    var room = st.pageH - 60 - st.y - 28;
+    var maxLines = Math.floor(room / 12);
+    if (maxLines < 2) { doc.addPage(); st.y = st.margin; continue; }
+    var chunk = lines.splice(0, maxLines);
+    var bh = chunk.length * 12 + 28;
     doc.setFillColor(240, 234, 247);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    doc.roundedRect(st.margin, st.y, st.pageW - st.margin * 2, bh, 4, 4, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(122, 92, 154);
+    doc.text(label.toUpperCase() + (first ? '' : ' (CONTINUED)'), st.margin + 10, st.y + 14);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(30, 26, 46);
+    doc.text(chunk, st.margin + 10, st.y + 26);
+    st.y += bh + 8;
+    first = false;
+  }
+}
 
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
+function pdfPara(doc, st, title, body) {
+  if (st.y > st.pageH - 110) { doc.addPage(); st.y = st.margin; }
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9.5);
+  doc.setTextColor(122, 92, 154);
+  doc.text(pdfSafe(title), st.margin, st.y);
+  st.y += 12;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9.2);
+  doc.setTextColor(30, 26, 46);
+  var lines = doc.splitTextToSize(pdfSafe(body), st.pageW - st.margin * 2);
+  lines.forEach(function (ln) {
+    if (st.y > st.pageH - 60) { doc.addPage(); st.y = st.margin; doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(30, 26, 46); }
+    doc.text(ln, st.margin, st.y);
+    st.y += 11.5;
+  });
+  st.y += 10;
+}
 
+function downloadPDF() {
+  var jsPDF = window.jspdf && window.jspdf.jsPDF;
+  if (!jsPDF) { showToast('PDF library is still loading. Please try again in a moment.'); return; }
+  var data = getData();
+  if (!data.situation && !data.need && !data.script) {
+    showToast('Please add some reflection before downloading.');
+    return;
+  }
+  showToast('Preparing your PDF...');
+
+  imageToDataUrl(LOGO_URL).catch(function () { return null; }).then(function (logoData) {
+    var doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    var st = { margin: 40, y: 40, pageW: doc.internal.pageSize.getWidth(), pageH: doc.internal.pageSize.getHeight() };
+
+    doc.setFillColor(240, 234, 247);
+    doc.roundedRect(st.margin, st.y, st.pageW - st.margin * 2, 70, 6, 6, 'F');
+    if (logoData) {
+      try { doc.addImage(logoData, 'JPEG', st.margin + 10, st.y + 8, 54, 54); } catch (e) {}
+    }
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(30, 26, 46);
-    doc.text('Boundary Builder Reflection', margin + 76, y + 26);
+    doc.text('Boundary Builder Reflection', st.margin + 76, st.y + 26);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(90, 80, 112);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
+    doc.text('Personal reflection summary', st.margin + 76, st.y + 41);
+    doc.text('emotionalintelligencedeveloper.com', st.margin + 76, st.y + 56);
+    st.y += 86;
 
     if (data.name) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(30, 26, 46);
-      doc.text('Name: ' + data.name, margin, y);
-      y += 18;
+      doc.text(pdfSafe('Name: ' + data.name), st.margin, st.y);
+      st.y += 18;
     }
 
-    // Summary rows
-    const score = scoreData(data);
-    const rows = [
+    var score = scoreData(data);
+    var rows = [
       ['Situation', data.situation || 'Not provided'],
       ['Boundary needed', data.need || 'Not provided'],
       ['Type of boundary', data.categories.length ? data.categories.join(', ') : 'Not selected'],
       ['Feelings identified', data.feelings.length ? data.feelings.join(', ') : 'Not selected'],
-      ['Tone', getToneLabel() + ' — Level ' + data.toneSlider + '/5'],
-      ['Tone preview', toneWording()],
+      ['Tone', getToneLabel() + ', level ' + data.toneSlider + '/5'],
       ['Boundary statement', data.script || 'Not written'],
       ['If boundary is ignored', data.consequence || 'Not provided'],
       ['Support needed', data.supportNeeded || 'Not provided'],
-      ['Self-care plan', data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'],
-      ['Clarity score', score + '/100 — ' + scoreBadge(score)]
+      ['Self-care plan', data.selfCare.length ? data.selfCare.join(', ') : 'Not selected']
     ];
+    if (checkins.length) rows.push(['Follow-through', checkinSummary()]);
+    rows.push(['Clarity score', score + '/100, ' + scoreBadge(score)]);
+    rows.forEach(function (r) { pdfCard(doc, st, r[0], r[1]); });
 
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(240, 234, 247);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(122, 92, 154);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Practice replies
-    const replies = getPracticeReplies();
+    var replies = getPracticeReplies();
     if (replies.length) {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      const scenarioLabel = $('practiceScenario').options[$('practiceScenario').selectedIndex].text;
-      doc.setFillColor(237, 229, 245);
-      const replyText = replies.map((r, i) => `${i+1}. ${r}`).join('\n');
-      const lines = doc.splitTextToSize('Scenario: ' + scenarioLabel + '\n' + replyText, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(122, 92, 154);
-      doc.text('PRACTICE REPLIES', margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 12;
+      pdfCard(doc, st, 'Practice replies', 'Scenario: ' + scenarioLabel() + '\n' + replies.map(function (r, i) { return (i + 1) + '. ' + r; }).join('\n'));
     }
 
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
+    if (st.y > st.pageH - 160) { doc.addPage(); st.y = st.margin; }
+    st.y += 4;
     doc.setDrawColor(200, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
+    doc.line(st.margin, st.y, st.pageW - st.margin, st.y);
+    st.y += 16;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(122, 92, 154);
-    doc.text('Understanding boundaries — what research tells us', margin, y);
-    y += 14;
+    doc.text('Understanding boundaries', st.margin, st.y);
+    st.y += 15;
 
-    const educational = [
-      ['What a boundary actually is',
-       'A boundary is not a wall — it is a definition of what you are willing to accept in a relationship or situation. Psychologist Nedra Tawwab, author of Set Boundaries, Find Peace, describes boundaries as "expectations and needs that help you feel safe and comfortable in your relationships." They are an act of self-respect and clarity, not rejection.'],
-      ['Why boundaries feel so hard to set',
-       'Research in relational psychology consistently shows that people struggle most with boundaries when they fear conflict, abandonment, or being seen as difficult. This is particularly common for people raised in environments where needs were dismissed. The discomfort of setting a boundary is temporary. The cost of not setting one accumulates over time.'],
-      ['The difference between a boundary and a demand',
-       'A boundary defines what you will do — not what the other person must do. "I will not answer calls after 9pm" is a boundary. "You must stop calling me after 9pm" is a demand. This distinction, from the work of therapist Sharon Martin, is important because boundaries are within your control regardless of the other person\'s response.'],
-      ['What happens in the body when boundaries are crossed',
-       'When a personal boundary is repeatedly violated, the nervous system registers this as a form of threat. Chronic boundary violations are associated with elevated cortisol levels, increased anxiety, and reduced sense of personal agency — findings supported by research in psychoneuroimmunology. Naming and holding boundaries is therefore not just emotional work — it is physiological self-care.'],
-      ['How to hold a boundary when it is challenged',
-       'Research from Dialectical Behaviour Therapy (DBT), developed by Marsha Linehan, identifies the DEAR MAN skill — Describe, Express, Assert, Reinforce, Mindfully, Appear confident, Negotiate — as an evidence-based approach to communicating needs clearly while maintaining relationships. The key finding: calm, consistent repetition of a boundary is more effective than emotional escalation.']
+    var educational = [
+      ['What a boundary is',
+       'A boundary is a limit you set around what you will accept, do or allow in a relationship or situation. It protects your time, energy and wellbeing. Setting one is an act of self-respect, not rejection.'],
+      ['Why boundaries can feel hard',
+       'Many people find boundaries difficult because they worry about conflict, disappointing others or being seen as difficult. Feeling uncomfortable at first is common and does not mean you are doing something wrong.'],
+      ['A boundary is not a demand',
+       'A boundary describes what you will do, such as "I will not answer calls after 9pm." A demand tries to control what someone else does, such as "You must stop calling me after 9pm." Boundaries stay within your control, whatever the other person decides.'],
+      ['Holding a boundary when it is challenged',
+       'The DEAR MAN skill from Dialectical Behaviour Therapy, developed by Marsha Linehan, is a well-known way to ask for what you need. It stands for Describe, Express, Assert, Reinforce, stay Mindful, Appear confident and Negotiate. Calmly repeating your point without over-explaining is a core part of it.'],
+      ['Following through',
+       'A boundary works best when the consequence is something you can realistically do. Small, consistent follow-through, and kindness to yourself on the days it is hard, helps you trust your own words.']
     ];
+    educational.forEach(function (e) { pdfPara(doc, st, e[0], e[1]); });
 
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(122, 92, 154);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
+    if (st.y > st.pageH - 110) { doc.addPage(); st.y = st.margin; }
     doc.setDrawColor(200, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
+    doc.line(st.margin, st.y, st.pageW - st.margin, st.y);
+    st.y += 14;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(122, 92, 154);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
+    doc.text('More free wellbeing resources', st.margin, st.y);
+    st.y += 13;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(30, 26, 46);
@@ -1274,52 +1115,113 @@
       'Main site: emotionalintelligencedeveloper.com',
       'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
       'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+      'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
+      'Need urgent help? Find a helpline: findahelpline.com'
+    ].forEach(function (line) { doc.text(line, st.margin, st.y); st.y += 13; });
 
-    // Footer
-    doc.setDrawColor(200, 176, 224);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(154, 144, 170);
-    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
+    var total = doc.getNumberOfPages();
+    for (var i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(200, 176, 224);
+      doc.line(st.margin, st.pageH - 36, st.pageW - st.margin, st.pageH - 36);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8.5);
+      doc.setTextColor(120, 110, 140);
+      doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', st.margin, st.pageH - 22);
+      doc.text('Page ' + i + ' of ' + total, st.pageW - st.margin, st.pageH - 22, { align: 'right' });
+    }
 
     doc.save('boundary-builder-reflection.pdf');
-    showToast('PDF downloaded!');
-  }
-
-  // Event listeners
-  ['situation','need','script','consequence','supportNeeded','nameInput'].forEach(id => {
-    $(id).addEventListener('input', () => { updateAll(); maybeAutoSave(); });
+    showToast('PDF downloaded.');
   });
+}
 
-  $('practiceScenario').addEventListener('change', () => { updateAll(); maybeAutoSave(); });
+/* ---------- EVENTS ---------- */
+buildChips('categoryChips', categoryOptions, 'category');
+buildChips('feelingChips', feelingOptions, 'feeling');
+buildChips('selfCareChips', selfCareOptions, 'selfcare');
 
-  $('saveToggle').addEventListener('change', () => {
-    if ($('saveToggle').checked) { saveLocal(); showToast('Save enabled.'); }
-    else { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} showToast('Save off.'); }
-  });
-
-  $('autoSaveToggle').addEventListener('change', () => {
-    showToast($('autoSaveToggle').checked ? 'Auto-save on.' : 'Auto-save off.');
-  });
-
-  $('generateBtn').addEventListener('click', () => {
-    updateAll();
-    saveLocal();
-    showToast('Reflection updated.');
-  });
-
-  $('downloadPdf').addEventListener('click', downloadPDF);
-  $('resetBtn').addEventListener('click', resetTool);
-  $('copyOutput').addEventListener('click', () => copyText($('result').textContent, 'Summary copied.'));
-  $('copyLink').addEventListener('click', () => copyText(window.location.href, 'Link copied.'));
-
-  updateShareLinks();
-  loadLocal();
+document.addEventListener('click', function (e) {
+  var chip = e.target.closest ? e.target.closest('.chip') : null;
+  if (!chip) return;
+  chip.setAttribute('aria-pressed', chip.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
   updateAll();
-}());
+  maybeAutoSave();
+});
+
+document.querySelectorAll('.tone-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    currentTone = btn.dataset.tone;
+    document.querySelectorAll('.tone-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.tone === currentTone); });
+    updateAll();
+    maybeAutoSave();
+  });
+});
+
+$('toneSlider').addEventListener('input', function () { updateAll(); maybeAutoSave(); });
+
+['situation','need','consequence','supportNeeded','nameInput'].forEach(function (id) {
+  $(id).addEventListener('input', function () { updateAll(); maybeAutoSave(); });
+});
+
+$('script').addEventListener('input', function () { checkStatement(); updateAll(); maybeAutoSave(); });
+
+$('practiceScenario').addEventListener('change', function () { updateAll(); maybeAutoSave(); });
+
+$('usePreview').addEventListener('click', function () {
+  if (!$('need').value.trim()) { showToast('Add the boundary you need first.'); return; }
+  $('script').value = toneWording().slice(0, 600);
+  checkStatement();
+  updateAll();
+  maybeAutoSave();
+  showToast('Added to your statement. Edit it to sound like you.');
+});
+
+$('buildStatement').addEventListener('click', function () {
+  var text = buildStatementText();
+  if (!text) { showToast('Add the boundary you need first.'); return; }
+  $('script').value = text.slice(0, 600);
+  checkStatement();
+  updateAll();
+  maybeAutoSave();
+  showToast('Built from your answers. Edit it to sound like you.');
+});
+
+document.querySelectorAll('.checkin-btn[data-status]').forEach(function (btn) {
+  btn.addEventListener('click', function () { addCheckin(btn.dataset.status); });
+});
+
+$('clearCheckins').addEventListener('click', function () {
+  checkins = [];
+  updateAll();
+  maybeAutoSave();
+  showToast('Check-in log cleared.');
+});
+
+$('saveToggle').addEventListener('change', function () {
+  if ($('saveToggle').checked) { saveLocal(); showToast('Saving on this device.'); }
+  else { try { localStorage.removeItem(STORAGE_KEY); } catch (e) {} showToast('Saved data removed from this device.'); }
+});
+
+$('autoSaveToggle').addEventListener('change', function () {
+  showToast($('autoSaveToggle').checked ? 'Auto-save on.' : 'Auto-save off.');
+});
+
+$('generateBtn').addEventListener('click', function () {
+  updateAll();
+  if ($('saveToggle').checked) saveLocal();
+  showToast('Summary updated.');
+});
+
+$('downloadPdf').addEventListener('click', downloadPDF);
+$('resetBtn').addEventListener('click', resetTool);
+$('copyOutput').addEventListener('click', function () { copyText($('result').textContent, 'Summary copied.'); });
+$('copyLink').addEventListener('click', function () { copyText(window.location.href, 'Link copied.'); });
+
+updateShareLinks();
+loadLocal();
+checkStatement();
+updateAll();
 </script>
 </body>
 </html>

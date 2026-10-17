@@ -1,1174 +1,1134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Distress Tolerance Coping Tool | Emotional Intelligence Developer</title>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #f0f4f8;
-      --card: #ffffff;
-      --text: #1a2030;
-      --muted: #4a5568;
-      --hint: #8a98b0;
-      --border: #d0d8e8;
-      --brand: #3a6a98;
-      --brand-light: #e8eff8;
-      --brand-mid: #a8c0d8;
-      --accent: #5a90c8;
-      --accent-light: #e4eef8;
-      --teal: #3a7a7a;
-      --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
-      --rose: #8a4a60;
-      --rose-light: #f7eaee;
-      --rose-mid: #d0a0b0;
-      --gold: #7a6a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --warm: #f8f6f2;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
-      --danger-bg: #fff0f0;
-      --danger-border: #f5a0a0;
-      --danger-text: #8b1a1a;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
-
-    /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 12px;
-    }
-
-    .disclaimer {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    /* HELP PANEL */
-    .help-panel {
-      display: none;
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      margin-bottom: 16px;
-    }
-
-    .help-panel.open { display: block; }
-
-    .help-title {
-      font-size: 15px;
-      font-weight: bold;
-      color: var(--danger-text);
-      margin-bottom: 8px;
-    }
-
-    .help-body {
-      font-size: 14px;
-      color: var(--danger-text);
-      line-height: 1.65;
-    }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 8px;
-    }
-
-    .step-label {
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 14px;
-    }
-
-    .card-intro {
-      font-size: 14px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-
-    /* SLIDER */
-    .slider-card {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
-
-    .slider-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .slider-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      accent-color: var(--brand);
-      height: 6px;
-    }
-
-    .slider-value {
-      min-width: 44px;
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: var(--brand);
-      background: #fff;
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-sm);
-      padding: 4px 8px;
-    }
-
-    /* SITUATION CHIPS */
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .chip {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 7px 16px;
-      min-height: 38px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .chip:hover { border-color: var(--brand); color: var(--text); }
-    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-    /* TIME RADIOS */
-    .time-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .time-option {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: var(--radius-sm);
-      padding: 9px 16px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      transition: all 0.15s;
-    }
-
-    .time-option:has(input:checked) {
-      background: var(--brand);
-      border-color: var(--brand);
-      color: #fff;
-    }
-
-    .time-option input[type="radio"] { accent-color: #fff; cursor: pointer; }
-
-    /* FIELDS */
-    .field { margin-bottom: 14px; }
-
-    .field-label {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
-
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 72px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { outline: none; border-color: var(--brand); }
-
-    select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a98b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-    }
-
-    select:focus { outline: none; border-color: var(--brand); }
-
-    /* SKILL CARDS */
-    .skills-grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 540px) {
-      .skills-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .skill-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: #fff;
-      padding: 14px 16px;
-      transition: border-color 0.15s;
-    }
-
-    .skill-card.selected { border-color: var(--brand); background: var(--brand-light); }
-
-    .skill-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .skill-pick {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      color: var(--text);
-    }
-
-    .skill-pick input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--brand);
-      cursor: pointer;
-    }
-
-    .skill-done {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--hint);
-      cursor: pointer;
-    }
-
-    .skill-done input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      accent-color: var(--teal);
-      cursor: pointer;
-    }
-
-    .skill-instructions {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      line-height: 1.55;
-      font-style: italic;
-    }
-
-    /* SKILL TIMER */
-    .skill-timer {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .timer-display {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-sm);
-      padding: 4px 12px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--brand);
-      min-width: 52px;
-      text-align: center;
-    }
-
-    /* BOX BREATHING GUIDE */
-    .box-guide {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      margin-top: 10px;
-    }
-
-    .box-guide.active { display: flex; }
-
-    .breath-square {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      border: 3px solid var(--brand);
-      flex-shrink: 0;
-      animation: boxpulse 4s infinite paused;
-    }
-
-    .box-guide.active .breath-square { animation-play-state: running; }
-
-    @keyframes boxpulse {
-      0%, 100% { transform: scale(1); border-radius: 8px; }
-      25% { transform: scale(1.18); border-radius: 14px; }
-      50% { transform: scale(1); border-radius: 20px; }
-      75% { transform: scale(0.88); border-radius: 10px; }
-    }
-
-    .box-phase {
-      font-size: 14px;
-      color: var(--brand);
-      font-weight: bold;
-    }
-
-    /* LIMIT WARNING */
-    .limit-warning {
-      display: none;
-      background: var(--rose-light);
-      border: 1px solid var(--rose-mid);
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      font-size: 14px;
-      color: var(--rose);
-      margin-top: 10px;
-    }
-
-    /* SUMMARY */
-    .summary-card {
-      display: none;
-      background: var(--teal-light);
-      border: 1px solid var(--teal-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
-
-    .summary-title {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-
-    .summary-row {
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--teal-mid);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .summary-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-    .summary-row-label {
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 3px;
-    }
-
-    .safety-flag {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 14px;
-      color: var(--danger-text);
-      margin-top: 10px;
-      line-height: 1.6;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
-
-    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .btn-danger { background: var(--danger-text); color: #fff; border-color: var(--danger-text); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
-    .btn-small { padding: 8px 14px; min-height: 36px; font-size: 13px; }
-
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-      .chip { width: 100%; justify-content: center; }
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Distress Tolerance Coping Tool | Emotional Intelligence Developer</title>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+.dtc-root{
+  --bg:#f0f4f8;--card:#ffffff;--text:#1a2030;--muted:#4a5568;--hint:#6b7a94;--border:#d0d8e8;
+  --brand:#3a6a98;--brand-light:#e8eff8;--brand-mid:#a8c0d8;
+  --teal:#3a7a7a;--teal-light:#e4f0f0;--teal-mid:#a0c8c8;
+  --rose:#8a4a60;--rose-light:#f7eaee;--rose-mid:#d0a0b0;
+  --gold:#7a6a30;--gold-light:#f7f2e4;--gold-mid:#d8c878;
+  --radius-sm:10px;--radius-md:14px;--radius-lg:20px;
+  --support:#e8702a;--danger-bg:#fff0f0;--danger-border:#f5a0a0;--danger-text:#8b1a1a;
+  font-family:Georgia,"Times New Roman",serif;color:var(--text);line-height:1.7;font-size:16px;
+  background:var(--bg);padding:20px 16px 40px;border-radius:var(--radius-lg);
+}
+.dtc-root *,.dtc-root *::before,.dtc-root *::after{box-sizing:border-box}
+.dtc-root p,.dtc-root h2,.dtc-root h3,.dtc-root ul,.dtc-root li{margin:0;padding:0}
+.dtc-root ul{list-style:none}
+.dtc-wrap{max-width:680px;margin:0 auto}
+
+.dtc-header{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px 20px 20px;margin-bottom:16px}
+.dtc-logo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.dtc-logo{width:56px;height:56px;border-radius:12px;object-fit:cover;border:2px solid var(--brand-mid);flex-shrink:0}
+.dtc-brand{font-size:13px;color:var(--brand);letter-spacing:.04em;line-height:1.3}
+.dtc-root .dtc-title{font-size:clamp(1.3rem,4vw,1.7rem);font-weight:normal;color:var(--text);line-height:1.3;margin-bottom:8px}
+.dtc-tagline{font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.dtc-disclaimer{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:12px 16px;font-size:13px;color:var(--muted)}
+
+.dtc-help{display:none;background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px}
+.dtc-help.open{display:block}
+.dtc-help-title{font-size:15px;font-weight:bold;color:var(--danger-text);margin-bottom:8px}
+.dtc-help-body{font-size:14px;color:var(--danger-text);line-height:1.65}
+.dtc-help-body a{color:var(--danger-text);font-weight:bold}
+
+.dtc-card{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px 20px;margin-bottom:16px}
+.dtc-root .dtc-card-title{font-size:1.05rem;font-weight:normal;color:var(--brand);margin-bottom:8px}
+.dtc-step{font-size:11px;font-weight:bold;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.dtc-intro{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:16px;line-height:1.6}
+
+.dtc-slider-card{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:14px}
+.dtc-slider-label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.dtc-slider-row{display:flex;align-items:center;gap:14px}
+.dtc-root input[type=range]{flex:1;accent-color:var(--brand);height:6px;margin:0}
+.dtc-slider-value{min-width:44px;text-align:center;font-size:1.3rem;font-weight:bold;color:var(--brand);background:#fff;border:1px solid var(--brand-mid);border-radius:var(--radius-sm);padding:4px 8px}
+.dtc-level{font-size:13px;color:var(--brand);margin-top:8px;font-style:italic}
+.dtc-high-note{display:none;background:var(--rose-light);border:1px solid var(--rose-mid);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;color:var(--rose);margin-bottom:14px;line-height:1.6}
+.dtc-high-note.show{display:block}
+
+.dtc-chip-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.dtc-chip{background:#fff;border:1.5px solid var(--brand-mid);border-radius:99px;padding:7px 16px;min-height:38px;font-family:Georgia,serif;font-size:14px;color:var(--muted);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;line-height:1.3}
+.dtc-chip:hover{border-color:var(--brand);color:var(--text)}
+.dtc-chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.dtc-time-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.dtc-time{background:#fff;border:1.5px solid var(--brand-mid);border-radius:var(--radius-sm);padding:9px 16px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:var(--muted);transition:all .15s}
+.dtc-time:has(input:checked){background:var(--brand);border-color:var(--brand);color:#fff}
+.dtc-time input{accent-color:#fff;cursor:pointer;margin:0}
+
+.dtc-field{margin-bottom:14px}
+.dtc-label{font-size:14px;color:var(--text);margin-bottom:6px;display:block}
+.dtc-root input[type=text],.dtc-root textarea,.dtc-root select{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;font-family:Georgia,serif;font-size:15px;color:var(--text);background:#fff;transition:border-color .2s;line-height:1.6}
+.dtc-root textarea{min-height:72px;resize:vertical}
+.dtc-root input[type=text]:focus,.dtc-root textarea:focus,.dtc-root select:focus{outline:none;border-color:var(--brand)}
+.dtc-root select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a98b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+.dtc-skills{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:540px){.dtc-skills{grid-template-columns:1fr 1fr}}
+.dtc-skill{border:1px solid var(--border);border-radius:var(--radius-md);background:#fff;padding:14px 16px;transition:border-color .15s,background .15s;display:flex;flex-direction:column}
+.dtc-skill.selected{border-color:var(--brand);background:var(--brand-light)}
+.dtc-skill-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.dtc-pick{display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:15px;color:var(--text);line-height:1.4}
+.dtc-pick input,.dtc-done input{margin:3px 0 0;cursor:pointer}
+.dtc-pick input{width:16px;height:16px;accent-color:var(--brand)}
+.dtc-done{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--hint);cursor:pointer;white-space:nowrap}
+.dtc-done input{width:14px;height:14px;accent-color:var(--teal);margin:0}
+.dtc-fit{display:inline-block;font-size:11px;border-radius:99px;padding:2px 10px;margin-bottom:8px;align-self:flex-start;background:#eef1f6;color:var(--hint);letter-spacing:.02em}
+.dtc-fit.yes{background:var(--teal-light);color:var(--teal)}
+.dtc-skill-text{font-size:13px;color:var(--muted);margin-bottom:8px;line-height:1.55;font-style:italic}
+.dtc-caution{font-size:12px;color:var(--gold);background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:8px;padding:6px 10px;margin-bottom:8px;line-height:1.5}
+.dtc-timer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.dtc-time-display{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-sm);padding:4px 12px;font-size:14px;font-weight:bold;color:var(--brand);min-width:56px;text-align:center}
+.dtc-bar{height:5px;background:#e3e9f2;border-radius:99px;overflow:hidden;margin-top:10px}
+.dtc-bar-fill{height:100%;width:0;background:var(--brand);border-radius:99px;transition:width 1s linear}
+
+.dtc-guide{display:none;align-items:center;gap:14px;background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:12px 14px;margin-top:10px}
+.dtc-guide.active{display:flex}
+.dtc-circle{width:52px;height:52px;border-radius:50%;border:3px solid var(--brand);background:#fff;flex-shrink:0;transform:scale(.85);transition:transform 4s ease-in-out}
+.dtc-phase{font-size:15px;color:var(--brand);font-weight:bold}
+
+.dtc-limit{display:none;background:var(--rose-light);border:1px solid var(--rose-mid);border-radius:var(--radius-md);padding:10px 14px;font-size:14px;color:var(--rose);margin-top:10px}
+
+.dtc-summary{background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:14px}
+.dtc-summary-title{font-size:12px;font-weight:bold;color:var(--teal);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.dtc-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-mid);font-size:14px;line-height:1.6}
+.dtc-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.dtc-row-label{font-size:11px;font-weight:bold;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.dtc-change{background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;color:var(--text);margin:10px 0 14px;line-height:1.6}
+.dtc-change .dtc-btn{margin-top:10px}
+.dtc-safety{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;color:var(--danger-text);margin-top:14px;line-height:1.6}
+.dtc-safety a{color:var(--danger-text);font-weight:bold}
+
+.dtc-history-item{border-bottom:1px solid var(--border);padding:10px 0;font-size:14px;line-height:1.55}
+.dtc-history-item:last-child{border-bottom:none}
+.dtc-history-date{font-size:12px;color:var(--hint)}
+.dtc-helped{background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;margin-bottom:12px;line-height:1.6}
+.dtc-privacy{font-size:12px;color:var(--hint);margin:10px 0 12px;line-height:1.55}
+
+.dtc-btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.dtc-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:99px;font-family:Georgia,serif;font-size:14px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:46px;transition:opacity .15s,transform .1s;white-space:nowrap;line-height:1.3}
+.dtc-btn:active{transform:scale(.97)}
+.dtc-btn:hover{opacity:.88}
+.dtc-btn:focus-visible,.dtc-chip:focus-visible{outline:3px solid var(--accent,#5a90c8);outline-offset:2px}
+.dtc-btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.dtc-btn-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+.dtc-btn-danger{background:var(--danger-text);color:#fff;border-color:var(--danger-text)}
+.dtc-btn-outline{background:#fff;color:var(--text);border-color:var(--border)}
+.dtc-btn-share{background:var(--brand-light);color:var(--brand);border-color:var(--brand-mid)}
+.dtc-btn-support{background:var(--support);color:#fff;border-color:var(--support);font-size:15px;padding:14px 24px}
+.dtc-btn-small{padding:8px 14px;min-height:36px;font-size:13px}
+@media(max-width:480px){
+  .dtc-btn-row .dtc-btn{width:100%}
+  .dtc-btn-row{flex-direction:column}
+  .dtc-chip{width:100%;justify-content:center}
+  .dtc-timer .dtc-btn{width:auto}
+}
+
+.dtc-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-family:Georgia,serif;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;max-width:90vw;text-align:center}
+.dtc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.dtc-footer{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px 20px;text-align:center}
+.dtc-footer-text{font-size:14px;color:var(--muted);margin-bottom:12px;font-style:italic}
+.dtc-footer-links{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.dtc-link{font-size:13px;color:var(--brand);text-decoration:none}
+.dtc-link:hover{text-decoration:underline}
+.dtc-credit{font-size:12px;color:var(--hint);margin-top:12px}
+
+@media(prefers-reduced-motion:reduce){
+  .dtc-circle,.dtc-bar-fill,.dtc-toast,.dtc-btn{transition:none}
+}
+</style>
 </head>
 <body>
-<div class="container">
+<div class="dtc-root" id="dtcRoot">
+<div class="dtc-wrap">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+  <header class="dtc-header">
+    <div class="dtc-logo-wrap">
+      <img class="dtc-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="dtc-brand">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Distress Tolerance Coping Tool</h1>
-    <p class="tagline">A quick, practical check-in to help you get through intense moments safely. Choose what feels most doable right now.</p>
-    <div class="disclaimer">This is a reflection and coping support tool — not diagnosis or therapy. If you feel unsafe or in immediate danger, contact local emergency services.</div>
-
-    <div class="btn-row" style="margin-top:14px;">
-      <button type="button" class="btn btn-danger" id="openHelpBtn">Get help now</button>
+    <h2 class="dtc-title">Distress Tolerance Coping Tool</h2>
+    <p class="dtc-tagline">A quick, practical check-in to help you get through intense moments safely. Choose what feels most doable right now.</p>
+    <div class="dtc-disclaimer">This is a reflection and coping support tool. It is not diagnosis or therapy. If you feel unsafe or in immediate danger, contact local emergency services.</div>
+    <div class="dtc-btn-row" style="margin-top:14px;">
+      <button type="button" class="dtc-btn dtc-btn-danger" id="dtcOpenHelp" aria-expanded="false" aria-controls="dtcHelpPanel">Get help now</button>
     </div>
   </header>
 
-  <!-- HELP PANEL (toggle) -->
-  <div class="help-panel" id="helpPanel" role="alert">
-    <div class="help-title">Get help now</div>
-    <div class="help-body">
-      If you feel unsafe or in immediate danger, please contact your local emergency services now.<br><br>
-      To find emotional support helplines in your country, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener" style="color:var(--danger-text);font-weight:bold;">findahelpline.com</a>.
+  <div class="dtc-help" id="dtcHelpPanel" role="region" aria-label="Get help now">
+    <div class="dtc-help-title">Get help now</div>
+    <div class="dtc-help-body">
+      If you feel unsafe or in immediate danger, please contact your local emergency services now. If you can, tell someone near you what is happening.<br><br>
+      To find emotional support helplines in your country, visit <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
   </div>
 
-  <!-- STEP A: CHECK-IN -->
-  <section class="card" aria-labelledby="stepA-heading">
-    <div class="step-label">Section A</div>
-    <p class="card-title" id="stepA-heading">Right now check-in</p>
+  <!-- SECTION A -->
+  <section class="dtc-card" aria-labelledby="dtcHeadA">
+    <div class="dtc-step">Section A</div>
+    <h3 class="dtc-card-title" id="dtcHeadA">Right now check-in</h3>
 
-    <!-- DISTRESS SLIDER -->
-    <div class="slider-card">
-      <p class="slider-label">Distress level right now (0 = calm, 10 = overwhelming)</p>
-      <div class="slider-row">
-        <input type="range" id="distressSlider" min="0" max="10" value="5" aria-label="Distress level from 0 to 10" />
-        <output class="slider-value" id="distressValue" aria-live="polite">5</output>
+    <div class="dtc-slider-card">
+      <p class="dtc-slider-label">Distress level right now (0 = calm, 10 = overwhelming)</p>
+      <div class="dtc-slider-row">
+        <input type="range" id="dtcSlider" min="0" max="10" value="5" aria-label="Distress level from 0 to 10" />
+        <output class="dtc-slider-value" id="dtcValue" aria-live="polite">5</output>
+      </div>
+      <p class="dtc-level" id="dtcLevel">Strong. Take it one small step at a time.</p>
+    </div>
+
+    <div class="dtc-high-note" id="dtcHighNote" role="status">
+      Your distress is very high right now. You do not have to handle this alone. Reaching out to someone you trust can help. The skills below can still be used one step at a time.
+      <div class="dtc-btn-row"><button type="button" class="dtc-btn dtc-btn-danger dtc-btn-small" onclick="dtcOpenHelp(true)">Get help now</button></div>
+    </div>
+
+    <p class="dtc-intro">What is happening right now? Choose any that apply.</p>
+    <div class="dtc-chip-wrap" id="dtcChips" role="group" aria-label="Situation options"></div>
+
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcOther">If you chose "other", add a few words</label>
+      <input type="text" id="dtcOther" maxlength="150" placeholder="e.g. work stress and no sleep" />
+    </div>
+
+    <p class="dtc-intro" style="margin-top:4px;">How much time do you have right now?</p>
+    <div class="dtc-time-wrap" role="group" aria-label="Time available options">
+      <label class="dtc-time"><input type="radio" name="dtcTime" value="1 minute" data-sec="60" checked /> 1 minute</label>
+      <label class="dtc-time"><input type="radio" name="dtcTime" value="3 minutes" data-sec="180" /> 3 minutes</label>
+      <label class="dtc-time"><input type="radio" name="dtcTime" value="5 minutes" data-sec="300" /> 5 minutes</label>
+      <label class="dtc-time"><input type="radio" name="dtcTime" value="10 minutes" data-sec="600" /> 10 minutes</label>
+    </div>
+  </section>
+
+  <!-- SECTION B -->
+  <section class="dtc-card" aria-labelledby="dtcHeadB">
+    <div class="dtc-step">Section B</div>
+    <h3 class="dtc-card-title" id="dtcHeadB">Pick 1 to 3 coping skills</h3>
+    <p class="dtc-intro">Not sure where to start? Choose your situation above, then tap "Suggest skills for me". Each skill has its own timer. It ticks "done" for you when the timer ends.</p>
+
+    <div class="dtc-btn-row" style="margin-bottom:16px;">
+      <button type="button" class="dtc-btn dtc-btn-teal" id="dtcSuggestBtn">Suggest skills for me</button>
+    </div>
+
+    <div class="dtc-skills" id="dtcSkills"></div>
+    <div class="dtc-limit" id="dtcLimit" role="alert">You can choose up to 3 skills at a time.</div>
+
+    <div class="dtc-btn-row" style="margin-top:16px;">
+      <button type="button" class="dtc-btn dtc-btn-primary" id="dtcBuildBtn">Build my coping plan summary</button>
+      <button type="button" class="dtc-btn dtc-btn-teal" id="dtcPdfBtn">Download PDF</button>
+    </div>
+  </section>
+
+  <!-- SECTION C -->
+  <section class="dtc-card" id="dtcSummarySection" aria-live="polite" style="display:none;">
+    <div class="dtc-step">Section C</div>
+    <h3 class="dtc-card-title">My coping plan summary</h3>
+
+    <div class="dtc-summary">
+      <div class="dtc-summary-title">Your check-in summary</div>
+      <div id="dtcSummary"></div>
+    </div>
+
+    <div class="dtc-slider-card">
+      <p class="dtc-slider-label">After your skills, how is your distress now? (0 = calm, 10 = overwhelming)</p>
+      <div class="dtc-slider-row">
+        <input type="range" id="dtcAfter" min="0" max="10" value="5" aria-label="Distress level after skills, from 0 to 10" />
+        <output class="dtc-slider-value" id="dtcAfterVal">?</output>
       </div>
     </div>
+    <div class="dtc-change" id="dtcChange" role="status">Move the slider above to rate how you feel now.</div>
 
-    <!-- SITUATION CHIPS -->
-    <p class="card-intro">What is happening right now? Choose any that apply.</p>
-    <div class="chip-wrap" id="situationChips" role="group" aria-label="Situation options"></div>
-
-    <div class="field">
-      <label class="field-label" for="otherText">If you selected "other" — add a few words</label>
-      <input type="text" id="otherText" maxlength="150" placeholder="e.g. work stress and no sleep" />
-    </div>
-
-    <!-- TIME AVAILABLE -->
-    <p class="card-intro" style="margin-top:4px;">How much time do you have right now?</p>
-    <div class="time-wrap" role="group" aria-label="Time available options">
-      <label class="time-option"><input type="radio" name="timeAvail" value="1 minute" checked /> 1 minute</label>
-      <label class="time-option"><input type="radio" name="timeAvail" value="3 minutes" /> 3 minutes</label>
-      <label class="time-option"><input type="radio" name="timeAvail" value="5 minutes" /> 5 minutes</label>
-      <label class="time-option"><input type="radio" name="timeAvail" value="10 minutes" /> 10 minutes</label>
-    </div>
-  </section>
-
-  <!-- STEP B: COPING SKILLS -->
-  <section class="card" aria-labelledby="stepB-heading">
-    <div class="step-label">Section B</div>
-    <p class="card-title" id="stepB-heading">Pick 1–3 coping skills</p>
-    <p class="card-intro">Choose what feels most doable right now. Each skill has its own timer. Check "done" when you finish.</p>
-
-    <div class="skills-grid" id="skillsGrid"></div>
-    <div class="limit-warning" id="limitWarning">You can choose up to 3 skills at a time.</div>
-
-    <div class="btn-row" style="margin-top:16px;">
-      <button type="button" class="btn btn-primary" id="buildSummaryBtn">Build my coping plan summary</button>
-      <button type="button" class="btn btn-teal" id="downloadPdfBtn">Download PDF</button>
-    </div>
-  </section>
-
-  <!-- SUMMARY SECTION -->
-  <section class="card" id="summarySection" aria-live="polite" style="display:none;">
-    <p class="card-title">My coping plan summary</p>
-
-    <div class="summary-card" id="summaryCard" style="display:block;">
-      <div class="summary-title">Your check-in summary</div>
-      <div id="summaryContent"></div>
-    </div>
-
-    <div class="field" style="margin-top:14px;">
-      <label class="field-label" for="helpRating">What helped — mini rating</label>
-      <select id="helpRating">
-        <option value="">Choose one…</option>
-        <option>1 — Not much yet</option>
-        <option>2 — A little</option>
-        <option>3 — Somewhat</option>
-        <option>4 — Helpful</option>
-        <option>5 — Very helpful</option>
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcRating">What helped, mini rating</label>
+      <select id="dtcRating">
+        <option value="">Choose one...</option>
+        <option>1. Not much yet</option>
+        <option>2. A little</option>
+        <option>3. Somewhat</option>
+        <option>4. Helpful</option>
+        <option>5. Very helpful</option>
       </select>
     </div>
 
-    <div class="field">
-      <label class="field-label" for="nextStep">One kind next step</label>
-      <textarea id="nextStep" rows="2" maxlength="300" placeholder="e.g. drink water, message a friend, rest for 10 minutes"></textarea>
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcNext">One kind next step</label>
+      <textarea id="dtcNext" rows="2" maxlength="300" placeholder="e.g. drink water, message a friend, rest for 10 minutes"></textarea>
     </div>
 
-    <div class="safety-flag">
-      If you feel unsafe, please seek urgent help now. Visit <a href="https://findahelpline.com/" target="_blank" rel="noopener" style="color:var(--danger-text);font-weight:bold;">findahelpline.com</a> or contact local emergency services immediately.
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcPlan">If distress rises again, I will...</label>
+      <textarea id="dtcPlan" rows="2" maxlength="300" placeholder="e.g. do the long exhale breathing, then step outside for fresh air"></textarea>
+    </div>
+
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcContact">One person I can reach out to</label>
+      <input type="text" id="dtcContact" maxlength="120" placeholder="e.g. my sister, a close friend, my counsellor" />
+    </div>
+
+    <div class="dtc-btn-row">
+      <button type="button" class="dtc-btn dtc-btn-primary" id="dtcSaveBtn">Save this check-in</button>
+      <button type="button" class="dtc-btn dtc-btn-teal" id="dtcPdfBtn2">Download PDF</button>
+      <button type="button" class="dtc-btn dtc-btn-outline" id="dtcNewBtn">Start a new check-in</button>
+    </div>
+    <p class="dtc-privacy">Saving keeps a short note on this device only. It is not sent anywhere. Your typed words are never saved, only your ratings and the skills you chose.</p>
+
+    <div class="dtc-safety">
+      If you feel unsafe, please seek urgent help now. Visit <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> or contact local emergency services immediately.
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer" aria-label="Footer">
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+  <!-- HISTORY -->
+  <section class="dtc-card" id="dtcHistoryCard" style="display:none;" aria-labelledby="dtcHeadH">
+    <h3 class="dtc-card-title" id="dtcHeadH">Your recent check-ins</h3>
+    <div class="dtc-helped" id="dtcHelped" style="display:none;"></div>
+    <div id="dtcHistoryList"></div>
+    <div class="dtc-btn-row" style="margin-top:12px;">
+      <button type="button" class="dtc-btn dtc-btn-outline dtc-btn-small" id="dtcClearBtn">Clear saved check-ins</button>
+    </div>
+  </section>
 
-    <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+  <footer class="dtc-footer" aria-label="Footer">
+    <p class="dtc-footer-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="dtc-btn dtc-btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+
+    <div class="dtc-footer-links">
+      <a class="dtc-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="dtc-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="dtc-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="dtc-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
 
-    <div class="btn-row" style="justify-content:center;margin-top:16px;">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    <div class="dtc-btn-row" style="justify-content:center;margin-top:16px;">
+      <button type="button" class="dtc-btn dtc-btn-share" id="dtcCopyBtn">Copy link</button>
+      <a class="dtc-btn dtc-btn-share" id="dtcWa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="dtc-btn dtc-btn-share" id="dtcFb" target="_blank" rel="noopener">Facebook</a>
+      <a class="dtc-btn dtc-btn-share" id="dtcX" target="_blank" rel="noopener">X</a>
     </div>
 
-    <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Coping support only — not a replacement for professional care.
+    <p class="dtc-credit">
+      Created by <a class="dtc-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;&middot;&nbsp; Coping support only. Not a replacement for professional care.
     </p>
   </footer>
 
 </div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="dtc-toast" id="dtcToast" role="status" aria-live="polite"></div>
+</div>
 
 <script>
-(function () {
-  'use strict';
+var DTC_LOGO = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var DTC_PDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+var DTC_STORE = 'eid_dtc_history_v1';
 
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
-  const $ = id => document.getElementById(id);
+var DTC_SITUATIONS = ['panic', 'anger', 'sadness', 'shame', 'numb', 'overwhelmed', 'cravings', 'conflict', 'other'];
 
-  const SITUATIONS = ['panic','anger','sadness','shame','numb','overwhelmed','cravings','conflict','other'];
+var DTC_BOX = [
+  { l: 'Breathe in', s: 4, scale: 1.25 },
+  { l: 'Hold', s: 4, scale: 1.25 },
+  { l: 'Breathe out', s: 4, scale: 0.85 },
+  { l: 'Hold', s: 4, scale: 0.85 }
+];
+var DTC_EXHALE = [
+  { l: 'Breathe in', s: 4, scale: 1.25 },
+  { l: 'Breathe out slowly', s: 6, scale: 0.85 }
+];
 
-  const SKILLS = [
-    { id: 'grounding', name: '5-4-3-2-1 Grounding', instructions: 'Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.', seconds: 90 },
-    { id: 'box', name: 'Box Breathing', instructions: 'Inhale 4, hold 4, exhale 4, hold 4. Repeat slowly and gently.', seconds: 120 },
-    { id: 'cold', name: 'Temperature Shift', instructions: 'Cool water on face and hands, or hold a cool cloth. Stop if dizzy.', seconds: 60 },
-    { id: 'name', name: 'Name It to Tame It', instructions: 'Say quietly: "I notice ___ is here." Label the emotion without judging it.', seconds: 60 },
-    { id: 'compassion', name: 'Self-Compassion Script', instructions: '"This is hard. I am not alone. I can be kind to myself in this moment."', seconds: 75 },
-    { id: 'urge', name: 'Urge Surfing', instructions: 'Notice the urge rise and fall like a wave. Breathe and delay acting for 1–2 minutes.', seconds: 120 },
-    { id: 'body', name: 'Quick Body Reset', instructions: 'Drop shoulders, unclench jaw, relax hands, lengthen your exhale gently.', seconds: 60 }
-  ];
+var DTC_SKILLS = [
+  { id: 'grounding', name: '5-4-3-2-1 Grounding', seconds: 90, body: true,
+    tags: ['panic', 'overwhelmed', 'numb', 'anger'],
+    text: 'Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.' },
+  { id: 'box', name: 'Box Breathing', seconds: 120, body: true, breath: DTC_BOX,
+    tags: ['panic', 'anger', 'overwhelmed', 'conflict'],
+    text: 'Breathe in for 4, hold for 4, breathe out for 4, hold for 4. Repeat slowly and gently.' },
+  { id: 'exhale', name: 'Long Exhale Breathing', seconds: 90, body: true, breath: DTC_EXHALE,
+    tags: ['panic', 'anger', 'overwhelmed', 'conflict', 'shame'],
+    text: 'Breathe in for 4, then breathe out slowly for 6. A longer out-breath helps your body settle.' },
+  { id: 'cold', name: 'Temperature Shift', seconds: 60, body: true,
+    tags: ['panic', 'anger', 'overwhelmed', 'cravings'],
+    text: 'Cool water on your face and hands, or hold a cool cloth. Stop if you feel dizzy.',
+    caution: 'Skip this one if you have a heart condition or a doctor has told you to avoid cold exposure.' },
+  { id: 'tense', name: 'Tense and Release', seconds: 90, body: true,
+    tags: ['anger', 'panic', 'overwhelmed', 'conflict'],
+    text: 'Squeeze your fists for 5 seconds, then let go. Do the same with shoulders, then legs. Notice the difference.' },
+  { id: 'body', name: 'Quick Body Reset', seconds: 60, body: true,
+    tags: ['anger', 'overwhelmed', 'conflict', 'panic'],
+    text: 'Drop your shoulders, unclench your jaw, relax your hands, lengthen your exhale gently.' },
+  { id: 'move', name: 'Move Your Body', seconds: 120, body: true,
+    tags: ['anger', 'panic', 'cravings', 'overwhelmed'],
+    text: 'Walk briskly, do slow jumping jacks, or push against a wall. Let the energy leave your body.',
+    caution: 'Go gently. Skip this if you feel physically unwell.' },
+  { id: 'name', name: 'Name It to Tame It', seconds: 60, body: false,
+    tags: ['sadness', 'shame', 'numb', 'conflict', 'overwhelmed'],
+    text: 'Say quietly: "I notice ___ is here." Label the feeling without judging it.' },
+  { id: 'compassion', name: 'Self-Compassion Script', seconds: 75, body: false,
+    tags: ['shame', 'sadness', 'overwhelmed'],
+    text: '"This is hard. I am not alone. I can be kind to myself in this moment."' },
+  { id: 'accept', name: 'Let It Be Here', seconds: 90, body: false,
+    tags: ['anger', 'sadness', 'conflict', 'shame'],
+    text: 'Say: "This is happening. I do not have to like it. I can get through this moment." Soften your body as you say it.' },
+  { id: 'urge', name: 'Urge Surfing', seconds: 120, body: false,
+    tags: ['cravings', 'anger'],
+    text: 'Notice the urge rise and fall like a wave. Breathe and delay acting for 1 to 2 minutes.' },
+  { id: 'distract', name: 'Distract with Purpose', seconds: 180, body: false,
+    tags: ['cravings', 'numb', 'sadness', 'overwhelmed'],
+    text: 'Count backward from 100 by 7s, name an animal for every letter of the alphabet, or tidy one small spot.' },
+  { id: 'safeplace', name: 'Safe Place Imagery', seconds: 180, body: false,
+    tags: ['panic', 'sadness', 'overwhelmed', 'shame'],
+    text: 'Picture a place where you feel calm. See the colours, hear the sounds, feel the air. Stay there for a few breaths.' }
+];
 
-  const timers = {};
-  let boxCycle = null;
-  let toastTimer;
+var dtcTimers = {};
+var dtcRemaining = {};
+var dtcBreathTimer = null;
+var dtcToastTimer = null;
+var dtcBefore = null;
+var dtcAfterTouched = false;
 
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
-  }
+function dtcEl(id) { return document.getElementById(id); }
 
-  // SITUATION CHIPS
-  function buildSituationChips() {
-    const wrap = $('situationChips');
-    SITUATIONS.forEach(label => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip';
-      btn.textContent = label;
-      btn.setAttribute('aria-pressed', 'false');
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
-        btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  // SKILLS GRID
-  function buildSkillsGrid() {
-    const grid = $('skillsGrid');
-    SKILLS.forEach(skill => {
-      const card = document.createElement('div');
-      card.className = 'skill-card';
-      card.id = 'skill-' + skill.id;
-
-      card.innerHTML = `
-        <div class="skill-head">
-          <label class="skill-pick">
-            <input type="checkbox" class="pick-skill" value="${skill.id}" aria-label="Select ${skill.name}" />
-            ${skill.name}
-          </label>
-          <label class="skill-done">
-            <input type="checkbox" class="done-check" data-skill="${skill.id}" aria-label="Mark ${skill.name} as done" />
-            Done
-          </label>
-        </div>
-        <p class="skill-instructions">${skill.instructions}</p>
-        <div class="skill-timer">
-          <button type="button" class="btn btn-primary btn-small start-timer" data-id="${skill.id}">Start ${skill.seconds}s</button>
-          <button type="button" class="btn btn-outline btn-small stop-timer" data-id="${skill.id}">Stop</button>
-          <span class="timer-display" id="time-${skill.id}">${skill.seconds}s</span>
-        </div>
-        ${skill.id === 'box' ? `
-          <div class="box-guide" id="boxGuide">
-            <div class="breath-square" aria-hidden="true"></div>
-            <span class="box-phase" id="boxPhase">Inhale</span>
-          </div>
-        ` : ''}
-      `;
-
-      // Select chip styling
-      const checkbox = card.querySelector('.pick-skill');
-      checkbox.addEventListener('change', () => {
-        const selected = document.querySelectorAll('.pick-skill:checked');
-        if (selected.length > 3) {
-          checkbox.checked = false;
-          $('limitWarning').style.display = 'block';
-          setTimeout(() => { $('limitWarning').style.display = 'none'; }, 2000);
-          return;
-        }
-        card.classList.toggle('selected', checkbox.checked);
-      });
-
-      grid.appendChild(card);
-    });
-
-    // Timer buttons
-    document.addEventListener('click', e => {
-      if (e.target.classList.contains('start-timer')) startTimer(e.target.dataset.id);
-      if (e.target.classList.contains('stop-timer')) stopTimer(e.target.dataset.id);
-    });
-  }
-
-  function startTimer(id) {
-    const skill = SKILLS.find(s => s.id === id);
-    const timeEl = $('time-' + id);
-    let remaining = skill.seconds;
-
-    clearInterval(timers[id]);
-    timeEl.textContent = remaining + 's';
-
-    if (id === 'box') startBoxGuide();
-
-    timers[id] = setInterval(() => {
-      remaining--;
-      timeEl.textContent = Math.max(remaining, 0) + 's';
-      if (remaining <= 0) {
-        clearInterval(timers[id]);
-        timeEl.textContent = 'Done!';
-        if (id === 'box') stopBoxGuide();
-        showToast(skill.name + ' complete.');
-      }
-    }, 1000);
-  }
-
-  function stopTimer(id) {
-    clearInterval(timers[id]);
-    if (id === 'box') stopBoxGuide();
-  }
-
-  function startBoxGuide() {
-    const guide = $('boxGuide');
-    const phaseEl = $('boxPhase');
-    if (!guide) return;
-    guide.classList.add('active');
-    const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
-    let i = 0;
-    phaseEl.textContent = phases[i];
-    clearInterval(boxCycle);
-    boxCycle = setInterval(() => {
-      i = (i + 1) % phases.length;
-      phaseEl.textContent = phases[i];
-    }, 4000);
-  }
-
-  function stopBoxGuide() {
-    const guide = $('boxGuide');
-    clearInterval(boxCycle);
-    if (guide) guide.classList.remove('active');
-  }
-
-  // DISTRESS SLIDER
-  $('distressSlider').addEventListener('input', () => {
-    $('distressValue').textContent = $('distressSlider').value;
+function dtcEsc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
   });
+}
 
-  // HELP PANEL TOGGLE
-  let helpOpen = false;
-  $('openHelpBtn').addEventListener('click', () => {
-    helpOpen = !helpOpen;
-    $('helpPanel').classList.toggle('open', helpOpen);
-    $('openHelpBtn').setAttribute('aria-expanded', String(helpOpen));
-    if (helpOpen) $('helpPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function dtcSkill(id) {
+  for (var i = 0; i < DTC_SKILLS.length; i++) { if (DTC_SKILLS[i].id === id) return DTC_SKILLS[i]; }
+  return null;
+}
+
+function dtcToast(msg) {
+  var el = dtcEl('dtcToast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(dtcToastTimer);
+  dtcToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+}
+
+/* ---------- HELP PANEL ---------- */
+function dtcOpenHelp(forceOpen) {
+  var panel = dtcEl('dtcHelpPanel');
+  var open = (forceOpen === true) ? true : !panel.classList.contains('open');
+  panel.classList.toggle('open', open);
+  dtcEl('dtcOpenHelp').setAttribute('aria-expanded', String(open));
+  if (open) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ---------- CHECK-IN ---------- */
+function dtcLevelWord(v) {
+  if (v <= 2) return 'Calm. A good time to build your skills.';
+  if (v <= 4) return 'A little tense. Small steps can help.';
+  if (v <= 6) return 'Strong. Take it one small step at a time.';
+  if (v <= 8) return 'Very strong. Choose the simplest skill and go slowly.';
+  return 'Overwhelming. Your body needs to settle first. Try a breathing or body skill.';
+}
+
+function dtcSliderVal() { return parseInt(dtcEl('dtcSlider').value, 10); }
+
+function dtcOnSlider() {
+  var v = dtcSliderVal();
+  dtcEl('dtcValue').textContent = v;
+  dtcEl('dtcLevel').textContent = dtcLevelWord(v);
+  dtcEl('dtcHighNote').classList.toggle('show', v >= 9);
+}
+
+function dtcBuildChips() {
+  var wrap = dtcEl('dtcChips');
+  DTC_SITUATIONS.forEach(function (label) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dtc-chip';
+    btn.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    btn.setAttribute('data-key', label);
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', function () {
+      btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+    });
+    wrap.appendChild(btn);
   });
+}
 
-  // GET SELECTED DATA
-  function getSelectedSituations() {
-    const active = Array.from(document.querySelectorAll('.chip.active')).map(c => c.textContent);
-    const other = $('otherText').value.trim();
-    if (active.includes('other') && other) active.push('other: ' + other);
-    return active;
-  }
+function dtcGetSituationKeys() {
+  var out = [];
+  var chips = document.querySelectorAll('#dtcChips .dtc-chip.active');
+  for (var i = 0; i < chips.length; i++) out.push(chips[i].getAttribute('data-key'));
+  return out;
+}
 
-  function getSelectedSkillIds() {
-    return Array.from(document.querySelectorAll('.pick-skill:checked')).map(el => el.value);
-  }
+function dtcGetSituations() {
+  var keys = dtcGetSituationKeys();
+  var other = dtcEl('dtcOther').value.trim();
+  var out = keys.map(function (k) { return k.charAt(0).toUpperCase() + k.slice(1); });
+  if (keys.indexOf('other') !== -1 && other) out.push('Other: ' + other);
+  return out;
+}
 
-  function getDoneSkillIds() {
-    return Array.from(document.querySelectorAll('.done-check:checked')).map(el => el.dataset.skill);
-  }
+function dtcTimeSeconds() {
+  var r = document.querySelector('input[name="dtcTime"]:checked');
+  return r ? parseInt(r.getAttribute('data-sec'), 10) : 60;
+}
 
-  // BUILD SUMMARY
-  $('buildSummaryBtn').addEventListener('click', () => {
-    const situations = getSelectedSituations();
-    const selectedIds = getSelectedSkillIds();
+function dtcTimeLabel() {
+  var r = document.querySelector('input[name="dtcTime"]:checked');
+  return r ? r.value : 'Not selected';
+}
 
-    if (!situations.length || !selectedIds.length) {
-      showToast('Please choose at least one situation and one coping skill.');
-      return;
+/* ---------- SKILLS ---------- */
+function dtcBuildSkills() {
+  var grid = dtcEl('dtcSkills');
+  DTC_SKILLS.forEach(function (skill) {
+    var card = document.createElement('div');
+    card.className = 'dtc-skill';
+    card.id = 'dtcSkill-' + skill.id;
+
+    var html = '';
+    html += '<div class="dtc-skill-head">';
+    html += '<label class="dtc-pick"><input type="checkbox" class="dtc-pick-input" value="' + skill.id + '" aria-label="Select ' + dtcEsc(skill.name) + '" /> ' + dtcEsc(skill.name) + '</label>';
+    html += '<label class="dtc-done"><input type="checkbox" class="dtc-done-input" data-skill="' + skill.id + '" aria-label="Mark ' + dtcEsc(skill.name) + ' as done" /> Done</label>';
+    html += '</div>';
+    html += '<span class="dtc-fit" id="dtcFit-' + skill.id + '"></span>';
+    html += '<p class="dtc-skill-text">' + dtcEsc(skill.text) + '</p>';
+    if (skill.caution) html += '<p class="dtc-caution">' + dtcEsc(skill.caution) + '</p>';
+    html += '<div class="dtc-timer">';
+    html += '<button type="button" class="dtc-btn dtc-btn-primary dtc-btn-small" id="dtcGo-' + skill.id + '">Start</button>';
+    html += '<button type="button" class="dtc-btn dtc-btn-outline dtc-btn-small" id="dtcReset-' + skill.id + '">Reset</button>';
+    html += '<span class="dtc-time-display" id="dtcTime-' + skill.id + '">' + skill.seconds + 's</span>';
+    html += '</div>';
+    html += '<div class="dtc-bar" aria-hidden="true"><div class="dtc-bar-fill" id="dtcBar-' + skill.id + '"></div></div>';
+    if (skill.breath) {
+      html += '<div class="dtc-guide" id="dtcGuide-' + skill.id + '">';
+      html += '<div class="dtc-circle" id="dtcCircle-' + skill.id + '" aria-hidden="true"></div>';
+      html += '<span class="dtc-phase" id="dtcPhase-' + skill.id + '" aria-live="polite">Get ready</span>';
+      html += '</div>';
     }
+    card.innerHTML = html;
 
-    const selectedNames = selectedIds.map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
-    const doneNames = getDoneSkillIds().map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
-    const time = document.querySelector('input[name="timeAvail"]:checked')?.value || 'Not selected';
+    var pick = card.querySelector('.dtc-pick-input');
+    pick.addEventListener('change', function () {
+      var chosen = document.querySelectorAll('.dtc-pick-input:checked');
+      if (chosen.length > 3) {
+        pick.checked = false;
+        var lim = dtcEl('dtcLimit');
+        lim.style.display = 'block';
+        setTimeout(function () { lim.style.display = 'none'; }, 2200);
+        return;
+      }
+      card.classList.toggle('selected', pick.checked);
+    });
 
-    const rows = [
-      ['Distress level', $('distressSlider').value + ' / 10'],
-      ['What is happening', situations.join(', ')],
-      ['Time available', time],
-      ['Skills I chose', selectedNames.join(', ')],
-      ['Completed so far', doneNames.length ? doneNames.join(', ') : 'Not marked yet']
-    ];
+    card.querySelector('#dtcGo-' + skill.id).addEventListener('click', function () { dtcToggleTimer(skill.id); });
+    card.querySelector('#dtcReset-' + skill.id).addEventListener('click', function () { dtcResetTimer(skill.id); });
 
-    const content = $('summaryContent');
-    content.innerHTML = rows.map(([label, value]) => `
-      <div class="summary-row">
-        <div class="summary-row-label">${label}</div>
-        <div>${value}</div>
-      </div>
-    `).join('');
-
-    $('summarySection').style.display = 'block';
-    $('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    grid.appendChild(card);
   });
+}
 
-  // SHARE
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A practical distress tolerance coping tool for intense moments: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+function dtcUpdateFit() {
+  var t = dtcTimeSeconds();
+  DTC_SKILLS.forEach(function (s) {
+    var el = dtcEl('dtcFit-' + s.id);
+    if (!el) return;
+    if (s.seconds <= t) {
+      el.textContent = 'Fits your time';
+      el.className = 'dtc-fit yes';
+    } else {
+      el.textContent = 'About ' + Math.ceil(s.seconds / 60) + ' min';
+      el.className = 'dtc-fit';
+    }
+  });
+}
+
+function dtcGetSelectedIds() {
+  var out = [];
+  var els = document.querySelectorAll('.dtc-pick-input:checked');
+  for (var i = 0; i < els.length; i++) out.push(els[i].value);
+  return out;
+}
+
+function dtcGetDoneIds() {
+  var out = [];
+  var els = document.querySelectorAll('.dtc-done-input:checked');
+  for (var i = 0; i < els.length; i++) out.push(els[i].getAttribute('data-skill'));
+  return out;
+}
+
+function dtcNames(ids) {
+  return ids.map(function (id) { var s = dtcSkill(id); return s ? s.name : null; }).filter(Boolean);
+}
+
+function dtcSetSelected(ids) {
+  var picks = document.querySelectorAll('.dtc-pick-input');
+  for (var i = 0; i < picks.length; i++) {
+    var on = ids.indexOf(picks[i].value) !== -1;
+    picks[i].checked = on;
+    var card = dtcEl('dtcSkill-' + picks[i].value);
+    if (card) card.classList.toggle('selected', on);
   }
+}
 
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
+function dtcSuggest() {
+  var keys = dtcGetSituationKeys();
+  if (!keys.length) { dtcToast('Choose at least one situation first.'); return; }
+  var high = dtcSliderVal() >= 7;
+  var t = dtcTimeSeconds();
+  var scored = DTC_SKILLS.map(function (s, idx) {
+    var m = 0;
+    keys.forEach(function (k) { if (s.tags.indexOf(k) !== -1) m++; });
+    var score = m * 2 + (s.seconds <= t ? 1 : 0) + (high && s.body ? 1 : 0);
+    return { id: s.id, score: score, idx: idx };
+  });
+  scored.sort(function (a, b) { return b.score - a.score || a.idx - b.idx; });
+  var top = scored.slice(0, 3).map(function (x) { return x.id; });
+  dtcSetSelected(top);
+  dtcToast('Suggested 3 skills. You can change them.');
+  var first = dtcEl('dtcSkill-' + top[0]);
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ---------- TIMERS ---------- */
+function dtcUpdateTimerUI(id) {
+  var s = dtcSkill(id);
+  var rem = dtcRemaining[id];
+  var disp = dtcEl('dtcTime-' + id);
+  var bar = dtcEl('dtcBar-' + id);
+  if (rem === undefined) {
+    disp.textContent = s.seconds + 's';
+    bar.style.width = '0%';
+  } else if (rem <= 0) {
+    disp.textContent = 'Done';
+    bar.style.width = '100%';
+  } else {
+    disp.textContent = rem + 's';
+    bar.style.width = Math.round((1 - rem / s.seconds) * 100) + '%';
+  }
+}
+
+function dtcToggleTimer(id) {
+  if (dtcTimers[id]) { dtcPauseTimer(id); } else { dtcStartTimer(id); }
+}
+
+function dtcPauseAll(exceptId) {
+  DTC_SKILLS.forEach(function (s) {
+    if (s.id !== exceptId && dtcTimers[s.id]) dtcPauseTimer(s.id);
+  });
+}
+
+function dtcStartTimer(id) {
+  var s = dtcSkill(id);
+  dtcPauseAll(id);
+  if (dtcBefore === null) dtcBefore = dtcSliderVal();
+  if (dtcRemaining[id] === undefined || dtcRemaining[id] <= 0) dtcRemaining[id] = s.seconds;
+  dtcUpdateTimerUI(id);
+  dtcEl('dtcGo-' + id).textContent = 'Pause';
+  if (s.breath) dtcRunBreath(id);
+  dtcTimers[id] = setInterval(function () {
+    dtcRemaining[id]--;
+    dtcUpdateTimerUI(id);
+    if (dtcRemaining[id] <= 0) {
+      clearInterval(dtcTimers[id]);
+      dtcTimers[id] = null;
+      if (s.breath) dtcStopBreath(id);
+      dtcEl('dtcGo-' + id).textContent = 'Start again';
+      var chk = document.querySelector('.dtc-done-input[data-skill="' + id + '"]');
+      if (chk) chk.checked = true;
+      dtcToast(s.name + ' complete. Well done.');
+    }
+  }, 1000);
+}
+
+function dtcPauseTimer(id) {
+  var s = dtcSkill(id);
+  clearInterval(dtcTimers[id]);
+  dtcTimers[id] = null;
+  if (s.breath) dtcStopBreath(id);
+  dtcEl('dtcGo-' + id).textContent = 'Resume';
+}
+
+function dtcResetTimer(id) {
+  var s = dtcSkill(id);
+  clearInterval(dtcTimers[id]);
+  dtcTimers[id] = null;
+  if (s.breath) dtcStopBreath(id);
+  delete dtcRemaining[id];
+  dtcUpdateTimerUI(id);
+  dtcEl('dtcGo-' + id).textContent = 'Start';
+}
+
+function dtcRunBreath(id) {
+  var s = dtcSkill(id);
+  var guide = dtcEl('dtcGuide-' + id);
+  var circle = dtcEl('dtcCircle-' + id);
+  var label = dtcEl('dtcPhase-' + id);
+  var i = 0;
+  clearTimeout(dtcBreathTimer);
+  guide.classList.add('active');
+  function step() {
+    var p = s.breath[i];
+    label.textContent = p.l;
+    circle.style.transitionDuration = p.s + 's';
+    circle.style.transform = 'scale(' + p.scale + ')';
+    dtcBreathTimer = setTimeout(function () {
+      i = (i + 1) % s.breath.length;
+      step();
+    }, p.s * 1000);
+  }
+  step();
+}
+
+function dtcStopBreath(id) {
+  clearTimeout(dtcBreathTimer);
+  dtcBreathTimer = null;
+  var guide = dtcEl('dtcGuide-' + id);
+  var circle = dtcEl('dtcCircle-' + id);
+  if (guide) guide.classList.remove('active');
+  if (circle) { circle.style.transitionDuration = '0s'; circle.style.transform = 'scale(0.85)'; }
+}
+
+/* ---------- SUMMARY ---------- */
+function dtcBuildSummary() {
+  var situations = dtcGetSituations();
+  var ids = dtcGetSelectedIds();
+  if (!situations.length || !ids.length) {
+    dtcToast('Please choose at least one situation and one coping skill.');
+    return;
+  }
+  if (dtcBefore === null) dtcBefore = dtcSliderVal();
+  var done = dtcNames(dtcGetDoneIds());
+  var rows = [
+    ['Distress before', dtcBefore + ' / 10'],
+    ['What is happening', situations.join(', ')],
+    ['Time available', dtcTimeLabel()],
+    ['Skills I chose', dtcNames(ids).join(', ')],
+    ['Completed so far', done.length ? done.join(', ') : 'Not marked yet']
+  ];
+  dtcEl('dtcSummary').innerHTML = rows.map(function (r) {
+    return '<div class="dtc-row"><div class="dtc-row-label">' + dtcEsc(r[0]) + '</div><div>' + dtcEsc(r[1]) + '</div></div>';
+  }).join('');
+  var sec = dtcEl('dtcSummarySection');
+  sec.style.display = 'block';
+  dtcUpdateChange();
+  sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function dtcAfterVal() { return parseInt(dtcEl('dtcAfter').value, 10); }
+
+function dtcChangeText() {
+  if (!dtcAfterTouched) return 'Not rated yet';
+  var b = (dtcBefore === null) ? dtcSliderVal() : dtcBefore;
+  var a = dtcAfterVal();
+  if (a < b) return 'Went from ' + b + ' to ' + a + ' (down by ' + (b - a) + ')';
+  if (a === b) return 'Stayed at ' + a;
+  return 'Went from ' + b + ' to ' + a + ' (up by ' + (a - b) + ')';
+}
+
+function dtcUpdateChange() {
+  var box = dtcEl('dtcChange');
+  if (!dtcAfterTouched) {
+    box.textContent = 'Move the slider above to rate how you feel now.';
+    return;
+  }
+  var b = (dtcBefore === null) ? dtcSliderVal() : dtcBefore;
+  var a = dtcAfterVal();
+  var msg;
+  if (a < b) {
+    msg = 'Your distress went from ' + b + ' to ' + a + '. That is a drop of ' + (b - a) + '. What you did helped, even if it feels small.';
+    box.textContent = msg;
+  } else if (a === b) {
+    msg = 'No change yet, and that is okay. Some moments need more time. Try another skill, or reach out to someone you trust.';
+    box.textContent = msg;
+  } else {
+    msg = 'It feels higher right now. Be gentle with yourself. Try a different skill, or contact someone you trust. If you feel unsafe, get help now.';
+    box.textContent = msg;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dtc-btn dtc-btn-danger dtc-btn-small';
+    btn.textContent = 'Get help now';
+    btn.addEventListener('click', function () { dtcOpenHelp(true); });
+    box.appendChild(document.createElement('br'));
+    box.appendChild(btn);
+  }
+  if (a >= 9) dtcOpenHelp(true);
+}
+
+function dtcOnAfter() {
+  dtcAfterTouched = true;
+  dtcEl('dtcAfterVal').textContent = dtcAfterVal();
+  dtcUpdateChange();
+}
+
+function dtcNewCheckin() {
+  DTC_SKILLS.forEach(function (s) { dtcResetTimer(s.id); });
+  dtcSetSelected([]);
+  var dones = document.querySelectorAll('.dtc-done-input');
+  for (var i = 0; i < dones.length; i++) dones[i].checked = false;
+  var chips = document.querySelectorAll('#dtcChips .dtc-chip');
+  for (var j = 0; j < chips.length; j++) { chips[j].classList.remove('active'); chips[j].setAttribute('aria-pressed', 'false'); }
+  dtcEl('dtcOther').value = '';
+  dtcEl('dtcSlider').value = 5;
+  dtcOnSlider();
+  dtcEl('dtcAfter').value = 5;
+  dtcEl('dtcAfterVal').textContent = '?';
+  dtcAfterTouched = false;
+  dtcBefore = null;
+  dtcEl('dtcRating').value = '';
+  dtcEl('dtcNext').value = '';
+  dtcEl('dtcPlan').value = '';
+  dtcEl('dtcContact').value = '';
+  dtcEl('dtcSummarySection').style.display = 'none';
+  dtcEl('dtcRoot').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- HISTORY (this device only) ---------- */
+function dtcLoadHistory() {
+  try {
+    var raw = window.localStorage.getItem(DTC_STORE);
+    var arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+
+function dtcSaveHistory(arr) {
+  try { window.localStorage.setItem(DTC_STORE, JSON.stringify(arr)); return true; }
+  catch (e) { return false; }
+}
+
+function dtcSaveCheckin() {
+  if (dtcEl('dtcSummarySection').style.display === 'none') {
+    dtcToast('Build your summary first.');
+    return;
+  }
+  var keys = dtcGetSituationKeys();
+  var entry = {
+    t: new Date().toISOString(),
+    b: (dtcBefore === null) ? dtcSliderVal() : dtcBefore,
+    a: dtcAfterTouched ? dtcAfterVal() : null,
+    sk: dtcGetSelectedIds(),
+    sit: keys.filter(function (k) { return k !== 'other'; })
+  };
+  var hist = dtcLoadHistory();
+  hist.push(entry);
+  if (hist.length > 30) hist = hist.slice(hist.length - 30);
+  if (dtcSaveHistory(hist)) {
+    dtcRenderHistory();
+    dtcToast('Saved on this device.');
+  } else {
+    dtcToast('Could not save on this device.');
+  }
+}
+
+function dtcRenderHistory() {
+  var hist = dtcLoadHistory();
+  var card = dtcEl('dtcHistoryCard');
+  if (!hist.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  var list = dtcEl('dtcHistoryList');
+  list.innerHTML = '';
+  hist.slice(-5).reverse().forEach(function (h) {
+    var item = document.createElement('div');
+    item.className = 'dtc-history-item';
+    var d = new Date(h.t);
+    var dateEl = document.createElement('div');
+    dateEl.className = 'dtc-history-date';
+    dateEl.textContent = isNaN(d.getTime()) ? '' : d.toLocaleString();
+    var line = document.createElement('div');
+    var change = (h.a === null || h.a === undefined) ? ('Distress ' + h.b + '/10') : ('Distress ' + h.b + ' to ' + h.a);
+    var names = dtcNames(h.sk || []);
+    line.textContent = change + (names.length ? '. Skills: ' + names.join(', ') : '');
+    item.appendChild(dateEl);
+    item.appendChild(line);
+    list.appendChild(item);
   });
 
-  // PDF
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
+  var counts = {};
+  hist.forEach(function (h) {
+    if (h.a !== null && h.a !== undefined && h.a < h.b) {
+      (h.sk || []).forEach(function (id) { counts[id] = (counts[id] || 0) + 1; });
+    }
+  });
+  var ids = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 3);
+  var helped = dtcEl('dtcHelped');
+  if (ids.length) {
+    helped.style.display = 'block';
+    helped.textContent = 'Skills that have helped you most: ' + dtcNames(ids).join(', ') + '.';
+  } else {
+    helped.style.display = 'none';
+  }
+}
+
+function dtcClearHistory() {
+  if (!window.confirm('Clear all saved check-ins from this device?')) return;
+  try { window.localStorage.removeItem(DTC_STORE); } catch (e) {}
+  dtcRenderHistory();
+  dtcToast('Saved check-ins cleared.');
+}
+
+/* ---------- SHARE ---------- */
+function dtcUpdateShare() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('A practical distress tolerance coping tool for intense moments: ');
+  dtcEl('dtcWa').href = 'https://wa.me/?text=' + msg + url;
+  dtcEl('dtcFb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  dtcEl('dtcX').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+}
+
+function dtcCopyLink() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(window.location.href).then(
+      function () { dtcToast('Link copied!'); },
+      function () { dtcToast('Copy from your address bar.'); }
+    );
+  } else {
+    dtcToast('Copy from your address bar.');
+  }
+}
+
+/* ---------- PDF ---------- */
+function dtcPdfSafe(s) {
+  return String(s)
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/\u2026/g, '...');
+}
+
+function dtcLoadPdfLib() {
+  return new Promise(function (resolve, reject) {
+    if (window.jspdf && window.jspdf.jsPDF) { resolve(window.jspdf.jsPDF); return; }
+    var s = document.createElement('script');
+    s.src = DTC_PDF_URL;
+    s.onload = function () {
+      if (window.jspdf && window.jspdf.jsPDF) resolve(window.jspdf.jsPDF); else reject(new Error('no lib'));
+    };
+    s.onerror = function () { reject(new Error('load failed')); };
+    document.head.appendChild(s);
+  });
+}
+
+function dtcImageToDataUrl(url) {
+  return fetch(url, { mode: 'cors' }).then(function (res) {
     if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(new Error('read failed')); };
       reader.readAsDataURL(blob);
     });
-  }
+  });
+}
 
-  async function downloadPDF() {
-    const PDF = jsPDF();
-    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
+var DTC_EDU = [
+  ['What distress tolerance is and why it matters',
+   'Distress tolerance is the ability to get through intense emotional pain without making things worse through impulsive or avoiding behaviour. It was developed as a core part of Dialectical Behaviour Therapy (DBT) by Marsha Linehan for moments when emotions are too strong to solve problems or think things through. The goal is not to make the distress disappear. The goal is to get through it safely.'],
+  ['Why intense emotions feel unbearable',
+   'When emotions peak, the thinking part of the brain (the prefrontal cortex, which helps with reasoning, planning and holding back impulses) has less influence than the brain\'s alarm system (the amygdala and limbic system). This is why calm, clear thinking feels almost impossible at the height of distress. Distress tolerance skills work through the body and senses instead of through reasoning, so they can still work when thinking is hard.'],
+  ['Why a longer out-breath helps',
+   'Breathing out for longer than you breathe in is widely used in breathing practices to help the body shift toward its calming response. Slow breathing can lower heart rate and ease the feeling of panic. This is why skills like Long Exhale Breathing and Box Breathing are often the first thing to try.'],
+  ['Temperature and the body',
+   'Cool water or a cool cloth on the face can trigger the dive reflex, a natural body response that slows the heart rate within seconds. DBT uses this as a fast tool for panic, rage and overwhelming urges. People with heart conditions or a medical reason to avoid cold should skip it.'],
+  ['Urge surfing and the wave idea',
+   'Urge surfing means noticing an urge without acting on it. Research on urges and cravings shows they tend to rise, peak and then fall if they are not fed. Practising observing the urge, rather than obeying it or fighting it, can reduce how strong it feels over time. The wave picture is a good one: urges do not climb forever. They pass.'],
+  ['Self-compassion as a calming skill',
+   'Research by Kristin Neff and others shows that treating yourself with the kindness you would offer a friend can reduce distress, shame and harsh self-criticism, and can help people recover faster after hard events. Self-compassion is not self-indulgence. It is a practical way to calm the body and mind.']
+];
 
-    const situations = getSelectedSituations();
-    const selectedIds = getSelectedSkillIds();
-    const selectedSkillObjects = selectedIds.map(id => SKILLS.find(s => s.id === id)).filter(Boolean);
-    const selectedNames = selectedSkillObjects.map(s => s.name);
-    const doneNames = getDoneSkillIds().map(id => SKILLS.find(s => s.id === id)?.name).filter(Boolean);
-    const time = document.querySelector('input[name="timeAvail"]:checked')?.value || 'Not selected';
-    const nextStep = $('nextStep').value.trim() || 'Not entered';
-    const helpRating = $('helpRating').value || 'Not rated yet';
+async function dtcDownloadPDF() {
+  var PDF;
+  try { PDF = await dtcLoadPdfLib(); }
+  catch (e) { dtcToast('PDF library unavailable. Please retry.'); return; }
+  dtcToast('Preparing your PDF...');
 
-    const doc = new PDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
+  var situations = dtcGetSituations();
+  var ids = dtcGetSelectedIds();
+  var skillObjs = ids.map(dtcSkill).filter(Boolean);
+  var done = dtcNames(dtcGetDoneIds());
+  var before = (dtcBefore === null) ? dtcSliderVal() : dtcBefore;
+  var nextStep = dtcEl('dtcNext').value.trim() || 'Not entered';
+  var plan = dtcEl('dtcPlan').value.trim() || 'Not entered';
+  var contact = dtcEl('dtcContact').value.trim() || 'Not entered';
+  var rating = dtcEl('dtcRating').value || 'Not rated yet';
 
-    // Header
+  var doc = new PDF({ unit: 'pt', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin = 40;
+  var y = margin;
+
+  function ensure(need) { if (y > pageH - need) { doc.addPage(); y = margin; } }
+
+  // Header
+  doc.setFillColor(232, 239, 248);
+  doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+  try {
+    var logoData = await dtcImageToDataUrl(DTC_LOGO);
+    doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+  } catch (e) {}
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(26, 32, 48);
+  doc.text('Distress Tolerance Coping Plan', margin + 76, y + 26);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(74, 85, 104);
+  doc.text('Personal coping summary - ' + new Date().toLocaleString(), margin + 76, y + 41);
+  doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+  y += 86;
+
+  var rows = [
+    ['Distress before', before + ' / 10'],
+    ['Distress after', dtcAfterTouched ? (dtcAfterVal() + ' / 10') : 'Not rated yet'],
+    ['Change', dtcChangeText()],
+    ['What is happening', situations.length ? situations.join(', ') : 'Not selected'],
+    ['Time available', dtcTimeLabel()],
+    ['Skills chosen', skillObjs.length ? skillObjs.map(function (s) { return s.name; }).join(', ') : 'Not selected'],
+    ['Completed', done.length ? done.join(', ') : 'Not marked'],
+    ['What helped', rating],
+    ['One kind next step', nextStep],
+    ['If distress rises again, I will', plan],
+    ['One person I can reach out to', contact]
+  ];
+
+  rows.forEach(function (r) {
+    ensure(80);
+    var lines = doc.splitTextToSize(dtcPdfSafe(r[1]), pageW - margin * 2 - 22);
+    var bh = lines.length * 12 + 28;
     doc.setFillColor(232, 239, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
+    doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(26, 32, 48);
-    doc.text('Distress Tolerance Coping Plan', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 85, 104);
-    doc.text('Personal coping summary — ' + new Date().toLocaleString(), margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
-
-    // Summary rows
-    const rows = [
-      ['Distress level', $('distressSlider').value + ' / 10'],
-      ['What is happening', situations.length ? situations.join(', ') : 'Not selected'],
-      ['Time available', time],
-      ['Skills chosen', selectedNames.length ? selectedNames.join(', ') : 'Not selected'],
-      ['Completed', doneNames.length ? doneNames.join(', ') : 'Not marked'],
-      ['What helped', helpRating],
-      ['One kind next step', nextStep]
-    ];
-
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(232, 239, 248);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(58, 106, 152);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 48);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Skill guidance
-    if (y > pageH - 100) { doc.addPage(); y = margin; }
-    y += 4;
-    doc.setDrawColor(168, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 106, 152);
-    doc.text('Coping skill guidance', margin, y);
-    y += 14;
-
-    const guidanceSkills = selectedSkillObjects.length ? selectedSkillObjects : SKILLS.slice(0, 3);
-    guidanceSkills.forEach((skill, i) => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(58, 106, 152);
-      doc.text((i + 1) + '. ' + skill.name + ' (' + skill.seconds + 's)', margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 32, 48);
-      const lines = doc.splitTextToSize(skill.instructions, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 12 + 10;
-    });
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 106, 152);
-    doc.text('Understanding distress tolerance — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['What distress tolerance is and why it matters',
-       'Distress tolerance refers to the ability to withstand intense emotional pain without making a situation worse through impulsive or avoidant behaviour. Developed as a core component of Dialectical Behaviour Therapy (DBT) by Marsha Linehan, distress tolerance skills were designed for moments when emotions are too intense to solve problems or regulate through standard techniques. The goal is not to eliminate the distress but to survive it without escalation.'],
-      ['Why intense emotions feel unbearable — the neuroscience',
-       'During intense emotional activation, the prefrontal cortex — responsible for reasoning, planning, and behaviour inhibition — has significantly reduced access compared to the amygdala and limbic system. This is why calm, rational thinking feels impossible when distress peaks. Distress tolerance strategies work by engaging the body and senses rather than requiring reasoning, which means they remain effective even when cognitive function is impaired by emotional intensity.'],
-      ['The science behind temperature-based regulation',
-       'Research in DBT and physiological psychology supports the use of cold temperature as a rapid distress intervention. Cold water or a cold cloth on the face activates the dive reflex — a parasympathetic response that measurably reduces heart rate within seconds. This is one of the fastest physiological regulation techniques available and is particularly effective for acute panic, rage, or overwhelming urges.'],
-      ['Urge surfing and the wave model of craving',
-       'Urge surfing — observing an urge without acting on it — is based on research showing that urges, cravings, and intense emotional states are time-limited and will peak and then naturally decrease if not acted upon. Studies on urge surfing in addiction treatment show that practising observation without action measurably reduces urge intensity over time. The wave metaphor is physiologically accurate: urges do not escalate indefinitely but reach a peak and pass.'],
-      ['Self-compassion as a regulation strategy',
-       'Research by Kristin Neff at the University of Texas shows that self-compassion — treating yourself with the same kindness you would offer a friend — is more effective at reducing distress, shame, and rumination than self-criticism or distraction. People who respond to their own pain with compassion show lower cortisol responses, faster physiological recovery, and greater resilience after difficult events. Self-compassion is not self-indulgence; it is an evidence-based physiological regulation strategy.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(58, 106, 152);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 32, 48);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(58, 106, 152);
-    doc.text('Support resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
+    doc.setTextColor(58, 106, 152);
+    doc.text(dtcPdfSafe(r[0]).toUpperCase(), margin + 10, y + 14);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
     doc.setTextColor(26, 32, 48);
-    [
-      'Find a helpline: findahelpline.com',
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+    doc.text(lines, margin + 10, y + 26);
+    y += bh + 8;
+  });
 
-    // Footer
+  // Skill guidance
+  ensure(100);
+  y += 4;
+  doc.setDrawColor(168, 192, 216);
+  doc.line(margin, y, pageW - margin, y);
+  y += 14;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(58, 106, 152);
+  doc.text('Coping skill guidance', margin, y);
+  y += 14;
+
+  var guide = skillObjs.length ? skillObjs : DTC_SKILLS.slice(0, 3);
+  guide.forEach(function (s, i) {
+    ensure(70);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(58, 106, 152);
+    doc.text((i + 1) + '. ' + dtcPdfSafe(s.name) + ' (' + s.seconds + 's)', margin, y);
+    y += 12;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.2);
+    doc.setTextColor(26, 32, 48);
+    var txt = s.text + (s.caution ? ' Note: ' + s.caution : '');
+    var lines = doc.splitTextToSize(dtcPdfSafe(txt), pageW - margin * 2);
+    doc.text(lines, margin, y);
+    y += lines.length * 12 + 10;
+  });
+
+  // Education
+  ensure(160);
+  doc.setDrawColor(168, 192, 216);
+  doc.line(margin, y, pageW - margin, y);
+  y += 14;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(58, 106, 152);
+  doc.text('Understanding distress tolerance', margin, y);
+  y += 14;
+
+  DTC_EDU.forEach(function (e) {
+    ensure(80);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(58, 106, 152);
+    doc.text(dtcPdfSafe(e[0]), margin, y);
+    y += 12;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.2);
+    doc.setTextColor(26, 32, 48);
+    var lines = doc.splitTextToSize(dtcPdfSafe(e[1]), pageW - margin * 2);
+    doc.text(lines, margin, y);
+    y += lines.length * 11.5 + 12;
+  });
+
+  // Resources
+  ensure(100);
+  doc.setDrawColor(168, 192, 216);
+  doc.line(margin, y, pageW - margin, y);
+  y += 14;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(58, 106, 152);
+  doc.text('Support resources', margin, y);
+  y += 13;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 32, 48);
+  [
+    'Find a helpline: findahelpline.com',
+    'Main site: emotionalintelligencedeveloper.com',
+    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+    'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
+  ].forEach(function (line) { doc.text(line, margin, y); y += 13; });
+
+  // Footer on every page
+  var total = doc.getNumberOfPages();
+  for (var p = 1; p <= total; p++) {
+    doc.setPage(p);
     doc.setDrawColor(168, 192, 216);
     doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8.5);
-    doc.setTextColor(138, 152, 176);
+    doc.setTextColor(107, 122, 148);
     doc.text('This tool supports coping and reflection. If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
-
-    doc.save('distress-tolerance-coping-plan.pdf');
-    showToast('PDF downloaded!');
+    doc.text('Page ' + p + ' of ' + total, pageW - margin - 50, pageH - 10);
   }
 
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+  doc.save('distress-tolerance-coping-plan.pdf');
+  dtcToast('PDF downloaded!');
+}
 
-  // INIT
-  buildSituationChips();
-  buildSkillsGrid();
-  updateShareLinks();
-}());
+/* ---------- INIT ---------- */
+function dtcInit() {
+  dtcBuildChips();
+  dtcBuildSkills();
+  dtcUpdateFit();
+  dtcOnSlider();
+  dtcRenderHistory();
+  dtcUpdateShare();
+
+  dtcEl('dtcSlider').addEventListener('input', dtcOnSlider);
+  dtcEl('dtcAfter').addEventListener('input', dtcOnAfter);
+  dtcEl('dtcOpenHelp').addEventListener('click', function () { dtcOpenHelp(); });
+  dtcEl('dtcSuggestBtn').addEventListener('click', dtcSuggest);
+  dtcEl('dtcBuildBtn').addEventListener('click', dtcBuildSummary);
+  dtcEl('dtcPdfBtn').addEventListener('click', dtcDownloadPDF);
+  dtcEl('dtcPdfBtn2').addEventListener('click', dtcDownloadPDF);
+  dtcEl('dtcSaveBtn').addEventListener('click', dtcSaveCheckin);
+  dtcEl('dtcNewBtn').addEventListener('click', dtcNewCheckin);
+  dtcEl('dtcClearBtn').addEventListener('click', dtcClearHistory);
+  dtcEl('dtcCopyBtn').addEventListener('click', dtcCopyLink);
+  var radios = document.querySelectorAll('input[name="dtcTime"]');
+  for (var i = 0; i < radios.length; i++) radios[i].addEventListener('change', dtcUpdateFit);
+}
+
+dtcInit();
 </script>
 </body>
 </html>

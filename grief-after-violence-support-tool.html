@@ -11,7 +11,7 @@
       --card: #ffffff;
       --text: #1a2018;
       --muted: #4a5848;
-      --hint: #8aa088;
+      --hint: #6f8a6c;
       --border: #ccd8c0;
       --brand: #5a7a50;
       --brand-light: #eaf2e8;
@@ -51,6 +51,11 @@
       padding: 20px 16px 40px;
     }
 
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-within {
+      outline: 3px solid var(--slate);
+      outline-offset: 2px;
+    }
+
     /* HEADER */
     .header {
       background: var(--card);
@@ -83,7 +88,7 @@
       line-height: 1.3;
     }
 
-    h1 {
+    .tool-title {
       font-size: clamp(1.3rem, 4vw, 1.7rem);
       font-weight: normal;
       color: var(--text);
@@ -105,8 +110,11 @@
       padding: 12px 16px;
       font-size: 14px;
       color: var(--danger-text);
-      font-weight: bold;
+      line-height: 1.6;
     }
+
+    .safety-note strong { display: block; margin-bottom: 2px; }
+    .safety-note a { color: var(--danger-text); }
 
     /* CARD */
     .card {
@@ -144,7 +152,7 @@
       border: 1.5px solid var(--brand-mid);
       border-radius: 99px;
       padding: 8px 16px;
-      min-height: 40px;
+      min-height: 44px;
       font-family: "Georgia", serif;
       font-size: 14px;
       color: var(--muted);
@@ -190,6 +198,17 @@
       transition: width 0.5s linear;
     }
 
+    .breathing-guide {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .breathing-guide strong { color: var(--brand); }
+
     /* STEPPER */
     .stepper-card {
       background: var(--brand-light);
@@ -223,7 +242,7 @@
 
     .stepper-count {
       font-size: 12px;
-      color: var(--hint);
+      color: var(--muted);
       white-space: nowrap;
     }
 
@@ -234,12 +253,15 @@
       margin-bottom: 14px;
     }
 
+    .stepper-prompt:focus { outline: none; }
+
     /* CHOICE OPTIONS */
     .choice-option {
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 11px 14px;
+      min-height: 44px;
       border: 1.5px solid var(--border);
       border-radius: var(--radius-sm);
       background: #fff;
@@ -252,7 +274,7 @@
 
     .choice-option:hover { border-color: var(--brand); }
     .choice-option input[type="radio"] { accent-color: var(--brand); cursor: pointer; }
-    .choice-option.selected { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
+    .choice-option.selected { border-color: var(--brand); background: #fff; color: var(--text); }
 
     /* TEXT INPUT */
     textarea {
@@ -270,7 +292,21 @@
       transition: border-color 0.2s;
     }
 
-    textarea:focus { outline: none; border-color: var(--brand); }
+    textarea:focus { border-color: var(--brand); }
+
+    /* LIVE SAFETY MESSAGE */
+    .live-safety {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--danger-text);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .live-safety a { color: var(--danger-text); font-weight: bold; }
 
     /* SUPPORT PLAN */
     .plan-card {
@@ -278,15 +314,6 @@
       border: 1px solid var(--brand-mid);
       border-radius: var(--radius-md);
       padding: 18px 20px;
-      margin-bottom: 14px;
-    }
-
-    .plan-title {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
       margin-bottom: 14px;
     }
 
@@ -325,9 +352,11 @@
       padding: 12px 14px;
       font-size: 14px;
       color: var(--danger-text);
-      margin-top: 8px;
+      margin-bottom: 14px;
       line-height: 1.6;
     }
+
+    .safety-flag a { color: var(--danger-text); font-weight: bold; }
 
     .plan-closing {
       font-size: 14px;
@@ -352,12 +381,12 @@
     }
 
     .save-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      min-width: 16px;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
       accent-color: var(--brand);
       cursor: pointer;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     /* PRIVACY NOTE */
@@ -405,6 +434,7 @@
 
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
+    .btn[disabled] { opacity: 0.45; cursor: default; }
 
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-slate { background: var(--slate); color: #fff; border-color: var(--slate); }
@@ -423,6 +453,11 @@
       .btn { width: 100%; }
       .btn-row { flex-direction: column; }
       .chip { width: 100%; justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .grounding-progress-fill, .stepper-progress-fill, .btn, .toast { transition: none; }
     }
 
     /* TOAST */
@@ -462,10 +497,24 @@
       font-style: italic;
     }
 
+    .footer-share {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-share-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .footer-share-row { justify-content: center; }
+
     .footer-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 10px 16px;
       justify-content: center;
       margin-top: 16px;
       padding-top: 16px;
@@ -488,16 +537,17 @@
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Grief After Violence Support Tool</h1>
-    <p class="tagline">A calm reflection space for moments when grief feels heavy, confusing, or lonely. Move at your own pace — everything here is optional.</p>
-    <div class="safety-note" role="alert">
-      If you are in immediate danger, contact local emergency services now.
+    <h2 class="tool-title">Grief After Violence Support Tool</h2>
+    <p class="tagline">A calm reflection space for moments when grief feels heavy, confusing, or lonely. Move at your own pace. Everything here is optional.</p>
+    <div class="safety-note" role="note">
+      <strong>If you are in immediate danger, contact local emergency services now.</strong>
+      If you are having thoughts of ending your life or hurting yourself, please reach out to a crisis line or someone near you right away. You can find one for your country at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
   </header>
 
   <!-- NEEDS CHIPS -->
   <section class="card" aria-labelledby="needs-heading">
-    <p class="card-title" id="needs-heading">Right now, I need…</p>
+    <p class="card-title" id="needs-heading">Right now, I need...</p>
     <p class="card-intro">Choose any that feel true. You can pick more than one. These will shape your support plan.</p>
     <div class="chip-wrap" id="needsChips" role="group" aria-label="What I need right now"></div>
   </section>
@@ -508,7 +558,7 @@
     <p class="card-intro">If it feels right, place both feet on the floor, soften your jaw, and breathe a little slower. This is entirely optional.</p>
 
     <div class="grounding-card">
-      <div class="grounding-status" id="groundingStatus">Press start when you are ready.</div>
+      <div class="grounding-status" id="groundingStatus" role="status" aria-live="polite">Press start when you are ready.</div>
       <div class="grounding-progress-wrap" aria-hidden="true">
         <div class="grounding-progress-fill" id="groundingFill"></div>
       </div>
@@ -518,8 +568,8 @@
       </div>
     </div>
 
-    <div style="background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:14px 16px;font-size:14px;color:var(--muted);">
-      <strong style="color:var(--brand);">Breathing guide:</strong> Inhale gently for 4 counts… hold for 2… exhale slowly for 6. Notice one thing you can see and one thing you can feel.
+    <div class="breathing-guide">
+      <strong>Breathing guide:</strong> Breathe in gently for 4 counts, hold for 2, then breathe out slowly for 6. Notice one thing you can see and one thing you can feel.
     </div>
   </section>
 
@@ -530,13 +580,17 @@
 
     <div class="stepper-card">
       <div class="stepper-progress">
-        <div class="stepper-progress-bar">
+        <div class="stepper-progress-bar" aria-hidden="true">
           <div class="stepper-progress-fill" id="stepperFill" style="width:0%"></div>
         </div>
         <span class="stepper-count" id="stepperCount">1 / 8</span>
       </div>
-      <div class="stepper-prompt" id="stepperPrompt"></div>
+      <div class="stepper-prompt" id="stepperPrompt" tabindex="-1" aria-live="polite"></div>
       <div id="stepperOptions"></div>
+    </div>
+
+    <div class="live-safety hidden" id="liveSafety" role="alert">
+      Thank you for telling us. Your safety matters most. If you are in immediate danger, please contact local emergency services now. If you can, move to a safer place or be near someone you trust. You can also find a helpline for your country at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. You can carry on with the questions whenever you feel able to.
     </div>
 
     <div class="btn-row">
@@ -547,22 +601,14 @@
   </section>
 
   <!-- SUPPORT PLAN (hidden until generated) -->
-  <section class="card hidden" id="planSection" aria-live="polite">
-    <p class="card-title">My support plan for today</p>
-    <div id="planContent"></div>
+  <section class="card hidden" id="planSection" aria-labelledby="plan-heading" aria-live="polite">
+    <p class="card-title" id="plan-heading">My support plan for today</p>
+    <div class="plan-card" id="planContent"></div>
 
     <div class="section-label" style="margin-top:18px;">Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
       <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
       <button type="button" class="btn btn-danger" id="resetBtn">Reset and start over</button>
-    </div>
-
-    <div class="section-label">Share this tool</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
     </div>
   </section>
 
@@ -573,13 +619,13 @@
       <input type="checkbox" id="saveToggle" />
       Save my progress on this device
     </label>
-    <p class="privacy-note">This tool does not ask for identifying details and does not send your answers anywhere. If save is on, your draft is stored only in this browser.</p>
+    <p class="privacy-note">This tool does not ask for identifying details and does not send your answers anywhere. If save is on, your draft is stored only in this browser. If you are using a shared or public device, leave save off. The PDF you download will contain what you wrote, so keep it somewhere private.</p>
   </section>
 
   <!-- GET HELP NOW -->
   <section class="card" aria-labelledby="help-heading">
     <p class="card-title" id="help-heading">Get help now</p>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">If you need urgent help or local support, these resources are free and available in most countries.</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">If you need urgent help or local support, these resources are free and available in most countries. If you are in immediate danger, contact emergency services first.</p>
     <div class="btn-row">
       <a class="btn btn-slate" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline in your country</a>
     </div>
@@ -590,6 +636,16 @@
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
 
+    <div class="footer-share">
+      <p class="footer-share-label">Know someone who might need this? Share it.</p>
+      <div class="btn-row footer-share-row">
+        <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+        <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
@@ -599,7 +655,7 @@
 
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not a diagnosis or substitute for professional care.
+      &nbsp;&middot;&nbsp; Reflection support only. Not a diagnosis or a substitute for professional care.
     </p>
   </footer>
 
@@ -611,12 +667,23 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'griefAfterViolenceV4';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
-  const $ = id => document.getElementById(id);
+  var STORAGE_KEY = 'griefAfterViolenceV5';
+  var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  var SHARE_URL = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/grief-after-violence-support-tool.html';
+  var UNSAFE = 'I feel unsafe right now';
+  var jsPDF = function () { return window.jspdf && window.jspdf.jsPDF; };
+  var $ = function (id) { return document.getElementById(id); };
 
-  const NEEDS = [
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  var NEEDS = [
     'to breathe',
     'to feel less alone',
     'to make sense of my feelings',
@@ -625,14 +692,14 @@
     'to honour what happened'
   ];
 
-  const QUESTIONS = [
+  var QUESTIONS = [
     { id: 'q1', type: 'choice', prompt: 'What feels strongest right now?',
       options: ['Sadness', 'Numbness', 'Anger', 'Fear', 'Mixed feelings', 'I am not sure'] },
     { id: 'q2', type: 'text', prompt: 'If you want, what has felt hardest today?' },
     { id: 'q3', type: 'choice', prompt: 'How has your body felt recently?',
       options: ['Very tense', 'Tired', 'Restless', 'Shaky', 'A little calmer at moments'] },
     { id: 'q4', type: 'choice', prompt: 'How safe do you feel right now?',
-      options: ['I feel mostly safe', 'I feel unsure', 'I feel unsafe right now'] },
+      options: ['I feel mostly safe', 'I feel unsure', UNSAFE] },
     { id: 'q5', type: 'text', prompt: 'Is there one small thing that gives even 1% comfort?' },
     { id: 'q6', type: 'choice', prompt: 'What kind of support might help today?',
       options: ['Quiet rest', 'A check-in with someone I trust', 'Professional support', 'Gentle movement', 'I am not ready yet'] },
@@ -641,16 +708,39 @@
       options: ['Yes, likely', 'Maybe later', 'Not today'] }
   ];
 
-  const NEEDS_MAP = {
+  var NEEDS_MAP = {
     'to breathe': 'Try 4 slow breaths: in for 4, hold for 2, out for 6, with a gentle hand on your chest.',
     'to feel less alone': 'Send one short message to someone you trust: "Could you check in with me today?"',
     'to make sense of my feelings': 'Name three feelings without judging them. Mixed and contradictory feelings are completely welcome.',
-    'to sleep': 'Create a 10-minute wind-down: dim lights, less screen brightness, and slow breathing before lying down.',
-    'to talk to someone': 'Choose one person you might contact today. You do not need to explain everything — just reaching out is enough.',
-    'to honour what happened': 'Light a candle, write a few words, or hold a quiet moment of remembrance — whatever feels true to you.'
+    'to sleep': 'Create a 10-minute wind-down: dim lights, lower your screen brightness, and breathe slowly before lying down.',
+    'to talk to someone': 'Choose one person you might contact today. You do not need to explain everything. Just reaching out is enough.',
+    'to honour what happened': 'Light a candle, write a few words, or hold a quiet moment of remembrance. Do whatever feels true to you.'
   };
 
-  let state = {
+  var BODY_MAP = {
+    'Very tense': 'Press your palms together for 10 seconds, then let go. Roll your shoulders back slowly and unclench your jaw.',
+    'Tired': 'Rest is allowed. A short lie-down, some water, and something simple to eat can be enough for now.',
+    'Restless': 'A slow walk, even around your home, can help your body settle. Keep it gentle, not a workout.',
+    'Shaky': 'Sit somewhere supported, feel your feet on the floor, and breathe out slowly. A warm drink can help if you have one.',
+    'A little calmer at moments': 'Notice what helped during those calmer moments, and try to come back to it a little today.'
+  };
+
+  var SUPPORT_MAP = {
+    'Quiet rest': 'You chose quiet rest. Protect a small window today with no demands, and let that count as doing something.',
+    'A check-in with someone I trust': 'You chose a check-in with someone you trust. Decide who it will be now, so it is easier to do later.',
+    'Professional support': 'You chose professional support. A doctor, counsellor, or local victim support service can be a good first call. findahelpline.com can help you find one.',
+    'Gentle movement': 'You chose gentle movement. Stretching, a slow walk, or five minutes in fresh air is plenty.',
+    'I am not ready yet': 'You are not ready yet, and that is okay. Nothing here has to be done today.'
+  };
+
+  var WHEN_TO_TALK = [
+    'Your grief or fear is stopping you from eating, sleeping, working, or caring for yourself for more than a few weeks.',
+    'You keep reliving what happened through nightmares, flashbacks, or intrusive memories, and it is not easing after a month or so.',
+    'You are using alcohol, drugs, or other risky ways to cope.',
+    'You feel cut off from everyone, or you have thoughts of not wanting to be alive. If so, please reach out today.'
+  ];
+
+  var state = {
     needs: [],
     answers: {},
     step: 0,
@@ -658,30 +748,37 @@
     saveOn: false
   };
 
-  let groundingTimer = null;
-  let toastTimer;
+  var groundingTimer = null;
+  var toastTimer;
 
   function showToast(msg) {
-    const el = $('toast');
+    var el = $('toast');
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+  }
+
+  // LIVE SAFETY MESSAGE
+  function refreshSafety(value) {
+    var v = value !== undefined ? value : state.answers.q4;
+    $('liveSafety').classList.toggle('hidden', v !== UNSAFE);
   }
 
   // NEEDS CHIPS
   function renderNeeds() {
-    const wrap = $('needsChips');
+    var wrap = $('needsChips');
     wrap.innerHTML = '';
-    NEEDS.forEach(label => {
-      const btn = document.createElement('button');
+    NEEDS.forEach(function (label) {
+      var btn = document.createElement('button');
+      var on = state.needs.indexOf(label) !== -1;
       btn.type = 'button';
-      btn.className = 'chip' + (state.needs.includes(label) ? ' active' : '');
+      btn.className = 'chip' + (on ? ' active' : '');
       btn.textContent = label;
-      btn.setAttribute('aria-pressed', state.needs.includes(label) ? 'true' : 'false');
-      btn.addEventListener('click', () => {
-        if (state.needs.includes(label)) {
-          state.needs = state.needs.filter(v => v !== label);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.addEventListener('click', function () {
+        if (state.needs.indexOf(label) !== -1) {
+          state.needs = state.needs.filter(function (v) { return v !== label; });
         } else {
           state.needs.push(label);
         }
@@ -693,52 +790,67 @@
   }
 
   // STEPPER
-  function renderStep() {
-    const q = QUESTIONS[state.step];
-    const pct = Math.round((state.step / QUESTIONS.length) * 100);
+  function renderStep(moveFocus) {
+    var q = QUESTIONS[state.step];
+    var pct = Math.round((state.step / QUESTIONS.length) * 100);
     $('stepperFill').style.width = pct + '%';
     $('stepperCount').textContent = (state.step + 1) + ' / ' + QUESTIONS.length;
     $('stepperPrompt').textContent = q.prompt;
 
-    const container = $('stepperOptions');
+    var container = $('stepperOptions');
     container.innerHTML = '';
     $('prevBtn').disabled = state.step === 0;
     $('nextBtn').textContent = state.step === QUESTIONS.length - 1 ? 'Generate my support plan' : 'Next';
 
     if (q.type === 'choice') {
-      const saved = state.answers[q.id] || '';
-      q.options.forEach(opt => {
-        const label = document.createElement('label');
+      var saved = state.answers[q.id] || '';
+      var group = document.createElement('div');
+      group.setAttribute('role', 'radiogroup');
+      group.setAttribute('aria-label', q.prompt);
+      q.options.forEach(function (opt) {
+        var label = document.createElement('label');
         label.className = 'choice-option' + (saved === opt ? ' selected' : '');
-        const radio = document.createElement('input');
+        var radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'stepChoice';
         radio.value = opt;
         radio.checked = saved === opt;
-        radio.addEventListener('change', () => {
-          container.querySelectorAll('.choice-option').forEach(l => l.classList.remove('selected'));
+        radio.addEventListener('change', function () {
+          group.querySelectorAll('.choice-option').forEach(function (l) { l.classList.remove('selected'); });
           label.classList.add('selected');
+          state.answers[q.id] = opt;
+          if (q.id === 'q4') refreshSafety(opt);
+          persist();
         });
         label.appendChild(radio);
         label.appendChild(document.createTextNode(' ' + opt));
-        container.appendChild(label);
+        group.appendChild(label);
       });
+      container.appendChild(group);
     } else {
-      const ta = document.createElement('textarea');
+      var ta = document.createElement('textarea');
       ta.maxLength = 500;
-      ta.placeholder = 'Write a short note if you want — or leave it blank…';
+      ta.setAttribute('aria-label', q.prompt);
+      ta.placeholder = 'Write a short note if you want, or leave it blank...';
       ta.value = state.answers[q.id] || '';
+      ta.addEventListener('input', function () {
+        state.answers[q.id] = ta.value;
+        persist();
+      });
       container.appendChild(ta);
     }
+
+    refreshSafety();
+    if (moveFocus) $('stepperPrompt').focus({ preventScroll: true });
   }
 
   function readCurrentAnswer() {
-    const q = QUESTIONS[state.step];
+    var q = QUESTIONS[state.step];
     if (q.type === 'choice') {
-      const checked = document.querySelector('input[name="stepChoice"]:checked');
+      var checked = document.querySelector('input[name="stepChoice"]:checked');
       state.answers[q.id] = checked ? checked.value : (state.answers[q.id] || '');
     } else {
-      const ta = $('stepperOptions').querySelector('textarea');
+      var ta = $('stepperOptions').querySelector('textarea');
       state.answers[q.id] = ta ? ta.value.trim() : '';
     }
   }
@@ -747,7 +859,7 @@
     readCurrentAnswer();
     if (state.step < QUESTIONS.length - 1) {
       state.step++;
-      renderStep();
+      renderStep(true);
       persist();
     } else {
       buildPlan();
@@ -758,57 +870,91 @@
     readCurrentAnswer();
     if (state.step > 0) {
       state.step--;
-      renderStep();
+      renderStep(true);
       persist();
     }
   }
 
   function skipStep() {
     state.answers[QUESTIONS[state.step].id] = '';
+    if (QUESTIONS[state.step].id === 'q4') refreshSafety('');
     if (state.step < QUESTIONS.length - 1) {
       state.step++;
-      renderStep();
+      renderStep(true);
       persist();
     } else {
       buildPlan();
     }
   }
 
+  // PLAN DATA (shared by screen and PDF)
+  function getPlanData() {
+    var a = state.answers;
+    var picks = state.needs.length ? state.needs : ['to breathe', 'to feel less alone', 'to make sense of my feelings'];
+    var steps = picks.slice(0, 3).map(function (n) { return NEEDS_MAP[n]; }).filter(Boolean);
+
+    var noticed = [];
+    if (a.q1) noticed.push('Strongest feeling: ' + a.q1);
+    if (a.q2) noticed.push('Hardest today: ' + a.q2);
+    if (a.q5) noticed.push('Small comfort: ' + a.q5);
+    if (a.q7) noticed.push('My strength: ' + a.q7);
+
+    var reachOut = a.q8 === 'Yes, likely'
+      ? 'You said reaching out feels possible today. You might send one brief, honest message to someone you trust. You do not need to explain everything.'
+      : (a.q8 === 'Maybe later'
+        ? 'You said maybe later, and that is fine. Keep one trusted name in mind so it is easier when the moment comes.'
+        : 'If reaching out does not feel possible yet, that is okay. When you are ready, keep one trusted name in mind.');
+
+    return {
+      needs: state.needs.slice(),
+      noticed: noticed,
+      steps: steps,
+      body: a.q3 ? BODY_MAP[a.q3] : '',
+      bodyFeeling: a.q3 || '',
+      support: a.q6 ? SUPPORT_MAP[a.q6] : '',
+      reachOut: reachOut,
+      unsafe: a.q4 === UNSAFE,
+      safetyAnswer: a.q4 || ''
+    };
+  }
+
+  function listHtml(items) {
+    return '<ul class="plan-row-list">' + items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>';
+  }
+
   // PLAN BUILDER
   function buildPlan() {
-    const picks = state.needs.length ? state.needs : ['to breathe', 'to feel less alone', 'to make sense of my feelings'];
-    const steps = picks.slice(0, 3).map(n => NEEDS_MAP[n]).filter(Boolean);
+    var p = getPlanData();
+    var html = '';
 
-    const highlights = [state.answers.q1, state.answers.q2, state.answers.q7].filter(Boolean);
-    const reachOut = state.answers.q8 === 'Yes, likely'
-      ? 'You mentioned reaching out feels possible today. You might send one brief, honest message to someone you trust — you do not need to explain everything.'
-      : 'If reaching out does not feel possible yet, that is okay. When you are ready, keep one trusted name in mind.';
-
-    const unsafe = state.answers.q4 === 'I feel unsafe right now';
-
-    let html = '<div class="plan-title">Your support plan for today</div>';
+    if (p.unsafe) {
+      html += '<div class="safety-flag"><strong>Your safety comes first.</strong> You said you feel unsafe right now. If you are in immediate danger, please contact local emergency services now. For support in your country, <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> can help. If you can, be near someone you trust today.</div>';
+    }
 
     html += '<div class="plan-row"><div class="plan-row-label">What I need right now</div><div class="plan-row-value">' +
-      (state.needs.length ? state.needs.join(', ') : 'Not selected — and that is okay.') + '</div></div>';
+      (p.needs.length ? esc(p.needs.join(', ')) : 'Not selected, and that is okay.') + '</div></div>';
 
-    if (highlights.length) {
-      html += '<div class="plan-row"><div class="plan-row-label">What I noticed</div><div class="plan-row-value"><ul class="plan-row-list">' +
-        highlights.map(h => '<li>' + h + '</li>').join('') + '</ul></div></div>';
+    if (p.noticed.length) {
+      html += '<div class="plan-row"><div class="plan-row-label">What I noticed</div><div class="plan-row-value">' + listHtml(p.noticed) + '</div></div>';
     }
 
-    html += '<div class="plan-row"><div class="plan-row-label">Three gentle next steps</div><div class="plan-row-value"><ul class="plan-row-list">' +
-      steps.map(s => '<li>' + s + '</li>').join('') + '</ul></div></div>';
+    html += '<div class="plan-row"><div class="plan-row-label">Three gentle next steps</div><div class="plan-row-value">' + listHtml(p.steps) + '</div></div>';
 
-    html += '<div class="plan-row"><div class="plan-row-label">Two self-kindness reminders</div><div class="plan-row-value"><ul class="plan-row-list">' +
-      '<li>My grief is real, and my pace matters.</li>' +
-      '<li>Small steps still count, especially today.</li>' +
-      '</ul></div></div>';
-
-    html += '<div class="plan-row"><div class="plan-row-label">Reaching out</div><div class="plan-row-value">' + reachOut + '</div></div>';
-
-    if (unsafe) {
-      html += '<div class="safety-flag">You noted feeling unsafe right now. If you need urgent local support, <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> can help. If you are in immediate danger, please contact emergency services now.</div>';
+    if (p.body) {
+      html += '<div class="plan-row"><div class="plan-row-label">For my body today</div><div class="plan-row-value">' + esc(p.body) + '</div></div>';
     }
+
+    if (p.support) {
+      html += '<div class="plan-row"><div class="plan-row-label">Support that might help</div><div class="plan-row-value">' + esc(p.support) + '</div></div>';
+    }
+
+    html += '<div class="plan-row"><div class="plan-row-label">Two self-kindness reminders</div><div class="plan-row-value">' +
+      listHtml(['My grief is real, and my pace matters.', 'Small steps still count, especially today.']) + '</div></div>';
+
+    html += '<div class="plan-row"><div class="plan-row-label">Reaching out</div><div class="plan-row-value">' + esc(p.reachOut) + '</div></div>';
+
+    html += '<div class="plan-row"><div class="plan-row-label">When it may help to talk to a professional</div><div class="plan-row-value">' +
+      listHtml(WHEN_TO_TALK) + '<p style="margin-top:6px;">A doctor, counsellor, or trauma-informed therapist can help. You can find support near you at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</p></div></div>';
 
     html += '<div class="plan-closing">You reached out for support today. That matters.</div>';
 
@@ -819,31 +965,31 @@
   }
 
   // GROUNDING
-  $('startGroundingBtn').addEventListener('click', () => {
+  $('startGroundingBtn').addEventListener('click', function () {
     clearInterval(groundingTimer);
-    let elapsed = 0;
-    const total = 45;
+    var elapsed = 0;
+    var total = 45;
     $('groundingFill').style.width = '0%';
     $('groundingStatus').textContent = 'Grounding in progress. Breathe gently. ' + total + ' seconds.';
 
-    groundingTimer = setInterval(() => {
+    groundingTimer = setInterval(function () {
       elapsed++;
-      const pct = Math.min((elapsed / total) * 100, 100);
+      var pct = Math.min((elapsed / total) * 100, 100);
       $('groundingFill').style.width = pct + '%';
       if (elapsed >= total) {
         clearInterval(groundingTimer);
         $('groundingStatus').textContent = 'Grounding pause complete. You might notice one thing you can see and one thing you can feel.';
         state.grounded = true;
         persist();
-      } else {
-        $('groundingStatus').textContent = 'Grounding in progress — ' + (total - elapsed) + ' seconds remaining.';
+      } else if (elapsed % 5 === 0) {
+        $('groundingStatus').textContent = 'Grounding in progress. ' + (total - elapsed) + ' seconds remaining.';
       }
     }, 1000);
   });
 
-  $('skipGroundingBtn').addEventListener('click', () => {
+  $('skipGroundingBtn').addEventListener('click', function () {
     clearInterval(groundingTimer);
-    $('groundingStatus').textContent = 'Skipped for now — you can return to this pause anytime.';
+    $('groundingStatus').textContent = 'Skipped for now. You can return to this pause anytime.';
     $('groundingFill').style.width = '0%';
     state.grounded = false;
     persist();
@@ -860,18 +1006,18 @@
         grounded: state.grounded,
         saveOn: state.saveOn
       }));
-    } catch(_) {}
+    } catch (_) {}
   }
 
   function loadState() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      var raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
-      const d = JSON.parse(raw);
+      var d = JSON.parse(raw);
       if (!d || !d.saveOn) return;
       state.saveOn = true;
-      state.needs = Array.isArray(d.needs) ? d.needs : [];
-      state.answers = d.answers || {};
+      state.needs = Array.isArray(d.needs) ? d.needs.filter(function (n) { return NEEDS.indexOf(n) !== -1; }) : [];
+      state.answers = (d.answers && typeof d.answers === 'object') ? d.answers : {};
       state.step = typeof d.step === 'number' ? Math.max(0, Math.min(d.step, QUESTIONS.length - 1)) : 0;
       state.grounded = Boolean(d.grounded);
       $('saveToggle').checked = true;
@@ -879,8 +1025,8 @@
         $('groundingFill').style.width = '100%';
         $('groundingStatus').textContent = 'Grounding pause previously completed.';
       }
-    } catch(_) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    } catch (_) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (__) {}
     }
   }
 
@@ -891,70 +1037,129 @@
     $('groundingFill').style.width = '0%';
     $('groundingStatus').textContent = 'Press start when you are ready.';
     $('planSection').classList.add('hidden');
+    $('planContent').innerHTML = '';
     clearInterval(groundingTimer);
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
     renderNeeds();
-    renderStep();
+    renderStep(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     showToast('Reset complete.');
   }
 
-  $('saveToggle').addEventListener('change', () => {
+  $('saveToggle').addEventListener('change', function () {
     state.saveOn = $('saveToggle').checked;
-    if (!state.saveOn) { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} }
+    if (!state.saveOn) { try { localStorage.removeItem(STORAGE_KEY); } catch (_) {} }
     else persist();
-    showToast(state.saveOn ? 'Progress will be saved.' : 'Save disabled.');
+    showToast(state.saveOn ? 'Progress will be saved.' : 'Save is off.');
   });
 
   // SHARE
   function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A gentle support tool for grief after violence — you are not alone: ');
+    var url = encodeURIComponent(SHARE_URL);
+    var msg = encodeURIComponent('A gentle support tool for grief after violence. You are not alone: ');
     $('waShare').href = 'https://wa.me/?text=' + msg + url;
     $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
     $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
   }
 
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
+  $('copyLinkBtn').addEventListener('click', async function () {
+    try { await navigator.clipboard.writeText(SHARE_URL); showToast('Link copied!'); }
+    catch (_) { showToast('Could not copy. The link is ' + SHARE_URL); }
   });
 
   // PDF
   async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
+    var res = await fetch(url, { mode: 'cors' });
     if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
+    var blob = await res.blob();
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(); };
       reader.readAsDataURL(blob);
     });
   }
 
-  async function downloadPDF() {
-    const PDF = jsPDF();
-    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
+  function pdfSafe(s) {
+    return String(s == null ? '' : s)
+      .replace(/[–—]/g, '-')
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[^ -~ -ÿ\n]/g, '');
+  }
 
-    const doc = new PDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
+  var EDUCATION = [
+    ['Grief has no single path',
+     'Research by George Bonanno and colleagues has found that people follow different paths after a loss. Many people show resilience and gradually return to daily life, while others go through a longer period of intense distress. Neither is wrong, and there is no standard timeline for grief.'],
+    ['Why numbness, anger and fear can show up',
+     'Grief after violence, whether you lost someone, were harmed, or witnessed it, can bring feelings that do not seem like grief at all: anger, numbness, fear, guilt, and feeling constantly on alert. Trauma clinicians and researchers, including Judith Herman and Bessel van der Kolk, describe these as common reactions of a mind and body that have been through a threat. They are understandable responses, not signs of weakness.'],
+    ['Why safety comes first',
+     'Many trauma-informed approaches, such as the staged model described by Judith Herman in "Trauma and Recovery", begin with safety and stabilisation before working directly with painful memories or loss. That is why grounding and small steps matter. They are not a way of avoiding grief. They help make room for it.'],
+    ['What can help',
+     'Staying connected to people, keeping small routines, resting, and moving gently are all linked with better coping after loss. When grief or trauma symptoms stay intense and disabling over time, structured therapies such as Prolonged Grief Disorder Therapy and trauma-focused therapies have shown benefit in research. A doctor or counsellor can help you decide what suits you.'],
+    ['You do not have to do this alone',
+     'Studies of bereavement and trauma link social support with better coping, even when the support is small, such as one message or one conversation. If reaching out feels hard, one honest line to one person is a good place to start.']
+  ];
+
+  async function downloadPDF() {
+    var PDF = jsPDF();
+    if (!PDF) { showToast('PDF library not ready. Please try again.'); return; }
+    showToast('Preparing your PDF...');
+
+    var p = getPlanData();
+    var doc = new PDF({ unit: 'pt', format: 'a4' });
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    var margin = 40;
+    var bottomLimit = pageH - 56;
+    var contentW = pageW - margin * 2;
+    var y = margin;
+
+    function ensure(h) {
+      if (y + h > bottomLimit) { doc.addPage(); y = margin; }
+    }
+
+    function heading(text) {
+      ensure(30);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(90, 122, 80);
+      doc.text(pdfSafe(text), margin, y);
+      y += 15;
+    }
+
+    function para(text, size, style) {
+      doc.setFont('helvetica', style || 'normal');
+      doc.setFontSize(size || 9.5);
+      doc.setTextColor(26, 32, 24);
+      var lines = doc.splitTextToSize(pdfSafe(text), contentW);
+      var lh = (size || 9.5) * 1.25;
+      lines.forEach(function (ln) {
+        ensure(lh);
+        doc.text(ln, margin, y);
+        y += lh;
+      });
+      y += 6;
+    }
+
+    function rule() {
+      ensure(20);
+      doc.setDrawColor(176, 200, 168);
+      doc.line(margin, y, pageW - margin, y);
+      y += 16;
+    }
 
     // Header
     doc.setFillColor(234, 242, 232);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    doc.roundedRect(margin, y, contentW, 70, 6, 6, 'F');
     try {
-      const logoData = await imageToDataUrl(LOGO_URL);
+      var logoData = await imageToDataUrl(LOGO_URL);
       doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
+    } catch (_) {}
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
     doc.setTextColor(26, 32, 24);
-    doc.text('Grief After Violence — Support Plan for Today', margin + 76, y + 26);
+    doc.text('Grief After Violence: Support Plan for Today', margin + 76, y + 26);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(74, 88, 72);
@@ -962,166 +1167,103 @@
     doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
     y += 86;
 
-    // Support plan rows
-    const picks = state.needs.length ? state.needs : ['to breathe', 'to feel less alone', 'to make sense of my feelings'];
-    const steps = picks.slice(0, 3).map(n => NEEDS_MAP[n]).filter(Boolean);
-    const highlights = [state.answers.q1, state.answers.q2, state.answers.q7].filter(Boolean);
-    const reachOut = state.answers.q8 === 'Yes, likely'
-      ? 'Reaching out feels possible today. Send one honest, brief message to someone you trust.'
-      : 'Keep one trusted name in mind for when you feel ready.';
-
-    const rows = [
-      ['What I need right now', state.needs.length ? state.needs.join(', ') : 'Not selected'],
-      ['What I noticed', highlights.length ? highlights.join(' | ') : 'Not provided'],
-      ['Body feeling', state.answers.q3 || 'Not answered'],
-      ['Safety check', state.answers.q4 || 'Not answered'],
-      ['Something that helps', state.answers.q5 || 'Not answered'],
-      ['Support that might help', state.answers.q6 || 'Not answered']
-    ];
-
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(234, 242, 232);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(90, 122, 80);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 24);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Gentle steps
-    if (y > pageH - 100) { doc.addPage(); y = margin; }
-    y += 4;
-    doc.setDrawColor(176, 200, 168);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(90, 122, 80);
-    doc.text('Three gentle next steps', margin, y);
-    y += 14;
-    steps.forEach((s, i) => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 24);
-      const lines = doc.splitTextToSize((i + 1) + '. ' + s, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 12 + 6;
-    });
-
-    y += 6;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(90, 122, 80);
-    doc.text('Self-kindness reminders', margin, y);
-    y += 14;
-    ['My grief is real, and my pace matters.', 'Small steps still count, especially today.'].forEach(k => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 24);
-      doc.text('• ' + k, margin, y);
-      y += 14;
-    });
-
-    y += 4;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(26, 32, 24);
-    const reachLines = doc.splitTextToSize('Reaching out: ' + reachOut, pageW - margin * 2);
-    doc.text(reachLines, margin, y);
-    y += reachLines.length * 12 + 12;
-
-    if (state.answers.q4 === 'I feel unsafe right now') {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
+    // Safety first, if flagged
+    if (p.unsafe) {
+      var sLines = doc.splitTextToSize('You said you feel unsafe right now. If you are in immediate danger, contact local emergency services now. For support in your country, visit findahelpline.com. If you can, be near someone you trust today.', contentW - 20);
+      var sh = sLines.length * 12 + 26;
+      ensure(sh + 8);
       doc.setFillColor(255, 240, 240);
-      const safetyLines = doc.splitTextToSize('Safety: You noted feeling unsafe. If you need urgent support, use findahelpline.com. If in immediate danger, contact emergency services now.', pageW - margin * 2 - 20);
-      const sh = safetyLines.length * 12 + 20;
-      doc.roundedRect(margin, y, pageW - margin * 2, sh, 4, 4, 'F');
+      doc.roundedRect(margin, y, contentW, sh, 4, 4, 'F');
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9);
       doc.setTextColor(139, 26, 26);
-      doc.text('SAFETY', margin + 10, y + 14);
+      doc.text('YOUR SAFETY COMES FIRST', margin + 10, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9.3);
-      doc.text(safetyLines, margin + 10, y + 26);
-      y += sh + 10;
+      doc.text(sLines, margin + 10, y + 27);
+      y += sh + 12;
     }
 
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(176, 200, 168);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(90, 122, 80);
-    doc.text('Understanding grief after violence — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['What grief after violence looks like',
-       'Grief following violence — whether direct harm, the loss of someone to violence, or witnessing it — does not follow a predictable path. Research by psychologist George Bonanno at Columbia University shows that grief trajectories vary enormously. Some people experience delayed grief; others oscillate between acute distress and apparent stability. Both are normal. There is no correct way to grieve, and no correct timeline.'],
-      ['Why numbness and anger are part of grief',
-       'It is common for grief after violent events to include emotions that do not feel like "grief" — anger, numbness, fear, hypervigilance, and guilt. Research in trauma psychology, including work from Bessel van der Kolk documented in "The Body Keeps the Score," confirms that violent loss activates the nervous system\'s threat-response, producing emotional and physical symptoms that differ from non-violent grief. These are not signs of weakness or wrong feeling — they are physiological responses to an overwhelming event.'],
-      ['The role of safety in processing grief',
-       'Processing grief after violence requires a baseline sense of safety. Research in trauma-informed care identifies the inability to feel safe — in one\'s body, environment, or relationships — as the primary barrier to grief integration. This is why grounding exercises and small steps matter: they are not distractions from grief but conditions that make working through grief possible. Safety first; processing second.'],
-      ['What actually helps — evidence-based approaches',
-       'Research across multiple studies of trauma and grief identifies several consistently helpful approaches: connection with others (even brief contact), maintaining small routines, physical grounding (slow breathing, movement), and naming emotions rather than suppressing them. Therapies including Prolonged Grief Disorder treatment, Trauma-Focused CBT, and EMDR have shown measurable benefit for complicated grief following violent loss. Professional support is not a sign of weakness — for many people it is the most effective path.'],
-      ['You are not alone — even when it feels that way',
-       'Research on social support and grief consistently shows that perceived isolation worsens grief outcomes, while even limited connection — a message, a brief conversation, being seen — significantly improves them. If reaching out feels impossible, research supports taking even the smallest step: sending one line, saying one honest thing. The research is clear that humans recover better together than alone, even when togetherness is only partial and imperfect.']
+    // Summary rows
+    var rows = [
+      ['What I need right now', p.needs.length ? p.needs.join(', ') : 'Not selected'],
+      ['What I noticed', p.noticed.length ? p.noticed.join('\n') : 'Not provided'],
+      ['Body feeling', p.bodyFeeling || 'Not answered'],
+      ['Safety check', p.safetyAnswer || 'Not answered'],
+      ['Support that might help', state.answers.q6 || 'Not answered'],
+      ['Reaching out today', state.answers.q8 || 'Not answered']
     ];
 
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
+    rows.forEach(function (r) {
+      var lines = doc.splitTextToSize(pdfSafe(r[1]), contentW - 22);
+      var bh = lines.length * 12 + 28;
+      ensure(bh + 8);
+      doc.setFillColor(234, 242, 232);
+      doc.roundedRect(margin, y, contentW, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(90, 122, 80);
+      doc.text(r[0].toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 32, 24);
+      doc.text(lines, margin + 10, y + 27);
+      y += bh + 8;
+    });
+
+    y += 4;
+    rule();
+
+    heading('Three gentle next steps');
+    p.steps.forEach(function (s, i) { para((i + 1) + '. ' + s, 9.5); });
+
+    if (p.body) { heading('For my body today'); para(p.body, 9.5); }
+    if (p.support) { heading('Support that might help'); para(p.support, 9.5); }
+
+    heading('Self-kindness reminders');
+    para('- My grief is real, and my pace matters.', 9.5, 'italic');
+    para('- Small steps still count, especially today.', 9.5, 'italic');
+
+    heading('Reaching out');
+    para(p.reachOut, 9.5);
+
+    rule();
+    heading('When it may help to talk to a professional');
+    WHEN_TO_TALK.forEach(function (w) { para('- ' + w, 9.2); });
+
+    rule();
+    heading('Understanding grief after violence: what research tells us');
+    EDUCATION.forEach(function (e) {
+      ensure(40);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9.5);
       doc.setTextColor(90, 122, 80);
-      doc.text(title, margin, y);
+      doc.text(pdfSafe(e[0]), margin, y);
       y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 32, 24);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
+      para(e[1], 9.2);
     });
 
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(176, 200, 168);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(90, 122, 80);
-    doc.text('Support resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 32, 24);
+    rule();
+    heading('Support resources');
     [
       'Find a helpline: findahelpline.com',
       'Main site: emotionalintelligencedeveloper.com',
       'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
       'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+    ].forEach(function (line) { para(line, 9); });
 
-    // Footer
-    doc.setDrawColor(176, 200, 168);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 160, 136);
-    doc.text('This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.', margin, pageH - 22);
+    // Footer and page numbers on every page
+    var total = doc.getNumberOfPages();
+    for (var i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(176, 200, 168);
+      doc.line(margin, pageH - 38, pageW - margin, pageH - 38);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.setTextColor(110, 130, 108);
+      doc.text('This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.', margin, pageH - 24);
+      doc.text('Page ' + i + ' of ' + total, pageW - margin, pageH - 24, { align: 'right' });
+    }
 
     doc.save('grief-after-violence-support.pdf');
     showToast('PDF downloaded.');
@@ -1137,7 +1279,7 @@
   // INIT
   loadState();
   renderNeeds();
-  renderStep();
+  renderStep(false);
   updateShareLinks();
 }());
 </script>

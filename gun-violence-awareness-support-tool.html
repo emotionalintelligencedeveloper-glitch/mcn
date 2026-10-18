@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gun Violence Awareness Support Tool | Emotional Intelligence Developer</title>
+  <meta name="description" content="A calm, free tool to check in with yourself, cool down, and reach out for help. Includes a teen section and guidance for worried friends and family." />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
@@ -11,17 +12,19 @@
       --card: #ffffff;
       --text: #1a2218;
       --muted: #4a5848;
-      --hint: #8aa088;
+      --hint: #6f866d;
       --border: #c8d8c0;
       --brand: #3a6a48;
       --brand-light: #e8f2ec;
       --brand-mid: #a8c8b0;
-      --accent: #5a8a68;
       --accent-light: #dceee4;
       --slate: #4a5a70;
       --slate-light: #e8ecf4;
       --slate-mid: #b0bcd0;
       --warm: #f8f6f2;
+      --teen: #3d5a99;
+      --teen-light: #eaf0fb;
+      --teen-mid: #b4c6ec;
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -42,451 +45,173 @@
       font-size: 16px;
     }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
 
-    /* HEADER */
-    .header {
+    .header, .card, .footer {
       background: var(--card);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
-      padding: 24px 20px 20px;
       margin-bottom: 16px;
-      text-align: center;
     }
+    .header { padding: 24px 20px 20px; text-align: center; }
+    .card { padding: 22px 20px; }
+    .footer { padding: 22px 20px; text-align: center; }
 
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
+    .logo { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 2px solid var(--brand-mid); flex-shrink: 0; }
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; text-align: left; line-height: 1.3; }
 
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      text-align: left;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.4rem, 4vw, 1.85rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto 14px;
-    }
+    h1 { font-size: clamp(1.4rem, 4vw, 1.85rem); font-weight: normal; line-height: 1.3; margin-bottom: 10px; }
+    .tagline { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 500px; margin: 0 auto 14px; }
 
     .disclaimer {
-      padding: 12px 16px;
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      color: var(--brand);
-      margin-bottom: 12px;
+      padding: 12px 16px; background: var(--brand-light); border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md); font-size: 14px; color: var(--brand); margin-bottom: 12px; text-align: left;
     }
 
     .unsafe-callout {
-      background: var(--urgent-bg);
-      border: 1px solid var(--urgent-border);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
+      background: var(--urgent-bg); border: 1px solid var(--urgent-border);
+      border-radius: var(--radius-md); padding: 16px 18px; text-align: left;
     }
+    .unsafe-title { font-size: 15px; color: var(--urgent-text); margin-bottom: 6px; font-weight: bold; }
+    .unsafe-body { font-size: 14px; color: var(--urgent-text); margin-bottom: 12px; }
 
-    .unsafe-title {
-      font-size: 15px;
-      color: var(--urgent-text);
-      margin-bottom: 8px;
-    }
+    .card-title { font-size: 1.1rem; font-weight: normal; color: var(--brand); margin-bottom: 8px; }
+    .card-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; font-style: italic; }
 
-    .unsafe-body {
-      font-size: 14px;
-      color: var(--urgent-text);
-      margin-bottom: 12px;
-    }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 16px;
-    }
-
-    /* STEPS */
     .step-block {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 1px solid var(--brand-mid); background: var(--brand-light);
+      border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px;
     }
-
     .step-meta {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
+      font-size: 12px; font-weight: bold; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 10px;
     }
 
-    /* CHIPS */
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .chip {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 7px 16px;
-      min-height: 38px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
+      background: #fff; border: 1.5px solid var(--brand-mid); border-radius: 99px;
+      padding: 8px 16px; min-height: 40px; font-family: "Georgia", serif; font-size: 14px;
+      color: var(--muted); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; text-align: left;
     }
-
     .chip:hover { border-color: var(--brand); color: var(--text); }
+    .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
 
-    .chip[aria-pressed="true"] {
-      background: var(--brand);
-      border-color: var(--brand);
-      color: #fff;
-    }
-
-    /* INPUTS */
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 80px;
-      resize: vertical;
-      line-height: 1.6;
+    input[type="text"], textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px;
+      font-family: "Georgia", serif; font-size: 15px; color: var(--text); background: #fff; line-height: 1.6;
       transition: border-color 0.2s;
     }
+    textarea { min-height: 80px; resize: vertical; }
+    input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--brand); }
+    .field-label { font-size: 13px; color: var(--muted); margin-bottom: 6px; display: block; font-style: italic; }
 
-    textarea:focus { outline: none; border-color: var(--brand); }
-
-    .field-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      display: block;
-      font-style: italic;
-    }
-
-    /* NEXT STEP BOX */
     .next-step-box {
-      background: #fff;
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.65;
-      font-style: italic;
-      min-height: 52px;
+      background: #fff; border: 1px solid var(--brand-mid); border-radius: var(--radius-sm);
+      padding: 14px 16px; font-size: 15px; line-height: 1.65; font-style: italic; min-height: 52px;
     }
+    .next-step-hint { font-size: 13px; color: var(--hint); margin-bottom: 8px; }
 
-    .next-step-hint {
-      font-size: 13px;
-      color: var(--hint);
-      margin-bottom: 8px;
-    }
-
-    /* RESULT */
     .result-box {
-      display: none;
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
+      display: none; background: var(--accent-light); border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 14px;
     }
-
-    .result-title {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 10px;
-    }
-
-    .result-row {
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--brand-mid);
-    }
-
+    .result-title { font-size: 12px; font-weight: bold; color: var(--brand); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .result-row { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--brand-mid); }
     .result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .result-row-label { font-size: 12px; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .result-row-value { font-size: 15px; line-height: 1.6; }
 
-    .result-row-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 3px;
+    /* PANELS */
+    .panel { display: none; border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; }
+    .panel.show { display: block; }
+    .panel h3 { font-size: 1.05rem; font-weight: normal; margin-bottom: 8px; }
+    .panel p { font-size: 15px; margin-bottom: 10px; }
+    .panel ul { margin: 0 0 12px 20px; font-size: 15px; }
+    .panel li { margin-bottom: 6px; }
+
+    .panel-pause { background: #fff8ee; border: 1.5px solid #f0c48a; }
+    .panel-pause h3 { color: #8a4b0f; }
+    .panel-worried { background: var(--slate-light); border: 1px solid var(--slate-mid); }
+    .panel-worried h3 { color: var(--slate); }
+    .panel-teen { background: var(--teen-light); border: 1.5px solid var(--teen-mid); }
+    .panel-teen h3 { color: var(--teen); }
+
+    .three-steps { display: grid; gap: 10px; margin: 12px 0 14px; }
+    .three-step { background: #fff; border-radius: var(--radius-sm); padding: 12px 14px; border: 1px solid #f0c48a; font-size: 15px; }
+    .three-step strong { display: block; color: #8a4b0f; margin-bottom: 2px; }
+
+    .insight {
+      background: #fff; border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px;
+      border-left: 4px solid var(--teen);
+    }
+    .insight strong { display: block; color: var(--teen); margin-bottom: 2px; font-size: 15px; }
+    .insight span { font-size: 14.5px; color: var(--text); }
+
+    .script-box {
+      background: #fff; border: 1px dashed var(--teen-mid); border-radius: var(--radius-sm);
+      padding: 12px 14px; font-size: 15px; font-style: italic; margin-bottom: 8px;
     }
 
-    .result-row-value {
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* GROUNDING TIMER */
-    .grounding-card {
-      background: var(--slate-light);
-      border: 1px solid var(--slate-mid);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-
+    .grounding-card { background: var(--slate-light); border: 1px solid var(--slate-mid); border-radius: var(--radius-md); padding: 18px; }
     .timer-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 6px solid var(--slate-mid);
-      margin: 10px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--slate);
-      position: relative;
-      overflow: hidden;
+      width: 100px; height: 100px; border-radius: 50%; border: 6px solid var(--slate-mid); margin: 10px auto;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;
+      color: var(--slate); position: relative; overflow: hidden;
     }
-
     .timer-circle::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: conic-gradient(var(--slate-mid) calc(var(--prog, 0) * 1%), transparent 0);
-      opacity: 0.4;
+      content: ''; position: absolute; inset: 0;
+      background: conic-gradient(var(--slate-mid) calc(var(--prog, 0) * 1%), transparent 0); opacity: 0.4;
     }
-
     .timer-num { position: relative; z-index: 1; }
+    .breath-prompt { font-size: 14px; color: var(--slate); text-align: center; font-style: italic; margin: 8px 0 12px; min-height: 22px; }
+    .grounding-tip { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 10px; }
 
-    .breath-prompt {
-      font-size: 14px;
-      color: var(--slate);
-      text-align: center;
-      font-style: italic;
-      margin: 8px 0 12px;
-      min-height: 22px;
-    }
-
-    .grounding-tip {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      margin-top: 10px;
-    }
-
-    /* HISTORY */
-    .history-item {
-      background: var(--warm);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-
-    .history-date {
-      font-size: 12px;
-      color: var(--hint);
-      margin-bottom: 8px;
-    }
-
-    .history-row {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
+    .history-item { background: var(--warm); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 10px; }
+    .history-date { font-size: 12px; color: var(--hint); margin-bottom: 8px; }
+    .history-row { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
     .history-row strong { color: var(--text); }
 
-    /* COURSE CARD */
-    .course-card {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
+    .course-card { background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md); padding: 16px 18px; }
+    .course-title { font-size: 15px; color: var(--brand); margin-bottom: 8px; }
+    .course-body { font-size: 14px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
 
-    .course-title {
-      font-size: 15px;
-      color: var(--brand);
-      margin-bottom: 8px;
-    }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
-    .course-body {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      line-height: 1.6;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px;
+      border-radius: 99px; font-family: "Georgia", serif; font-size: 14px; cursor: pointer; text-decoration: none;
+      border: 1.5px solid transparent; min-height: 46px; transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
     }
-
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
-
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-slate { background: var(--slate); color: #fff; border-color: var(--slate); }
+    .btn-teen { background: var(--teen); color: #fff; border-color: var(--teen); }
     .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
     .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-urgent {
-      background: var(--urgent-text);
-      color: #fff;
-      border-color: var(--urgent-text);
-    }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
+    .btn-urgent { background: var(--urgent-text); color: #fff; border-color: var(--urgent-text); }
+    .btn-support { background: var(--support); color: #fff; border-color: var(--support); font-size: 15px; padding: 14px 24px; }
 
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-      .chip { width: 100%; justify-content: center; }
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
+    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 16px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
     .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
+      background: var(--text); color: #fff; padding: 10px 18px; border-radius: 99px; font-size: 14px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 100; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; white-space: normal; text-align: center; }
+      .btn-row { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -499,97 +224,178 @@
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
     <h1>Gun Violence Awareness Support Tool</h1>
-    <p class="tagline">A calm, non-graphic space to reflect on how you are feeling, ground yourself, and find a supportive next step.</p>
+    <p class="tagline">A calm space to check in with yourself, cool down, and take one safe next step. Free, private, and no judgement.</p>
 
     <div class="disclaimer">
-      This tool does not replace professional help. If you are in danger or feel at risk, contact local emergency services immediately.
+      We are not medical professionals. This tool is here to help you pause and reach the right support before a bad situation gets worse. It does not replace professional help.
     </div>
 
-    <div class="unsafe-callout" style="margin-top:12px;">
-      <p class="unsafe-title">If you feel unsafe right now</p>
-      <p class="unsafe-body">Reach immediate support through a trusted directory in your region.</p>
-      <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener">Find local support now</a>
+    <div class="unsafe-callout">
+      <p class="unsafe-title">If you or someone else is in danger right now</p>
+      <p class="unsafe-body">Call your local emergency number straight away. If you need to talk to someone, find a free helpline in your country.</p>
+      <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline near me</a>
     </div>
   </header>
 
-  <!-- CHECK-IN CARD -->
-  <section class="card" aria-labelledby="checkin-heading">
-    <p class="card-title" id="checkin-heading">Guided check-in</p>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;font-style:italic;">Answer a few short prompts. You can skip anything you don't want to answer.</p>
+  <!-- ABOUT YOU -->
+  <section class="card" aria-labelledby="about-heading">
+    <p class="card-title" id="about-heading">Let's start</p>
+    <p class="card-sub">Everything here is optional. You can skip anything.</p>
 
-    <!-- STEP 1 -->
     <div class="step-block">
-      <div class="step-meta">Step 1 of 4 — How are you feeling right now?</div>
+      <label class="field-label" for="nameInput">Your name (optional)</label>
+      <input type="text" id="nameInput" maxlength="40" placeholder="First name or a nickname" autocomplete="off" />
+    </div>
+
+    <div class="step-block">
+      <div class="step-meta">Are you a teen (13 to 19)?</div>
+      <div class="chip-wrap" id="ageChips" role="group" aria-label="Age group"></div>
+      <p style="font-size:13px;color:var(--muted);font-style:italic;">If you pick yes, we will open a section made just for you.</p>
+    </div>
+
+    <div class="step-block">
+      <div class="step-meta">What brings you here today?</div>
+      <p style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:10px;">Pick all that fit.</p>
+      <div class="chip-wrap" id="pathChips" role="group" aria-label="Reasons for visiting"></div>
+    </div>
+  </section>
+
+  <!-- PAUSE PANEL -->
+  <section class="panel panel-pause" id="panelPause" aria-labelledby="pause-heading">
+    <h3 id="pause-heading">Pause. You are not alone, and you have a choice.</h3>
+    <p id="pauseGreeting">Having angry or dark thoughts does not make you a bad person. It means you are hurting and something needs to change. What matters is what you do next.</p>
+    <p>Strong anger and pain rise fast, but they do come down. Hurting someone cannot be undone. Asking for help can be. Here is a simple plan for right now:</p>
+    <div class="three-steps">
+      <div class="three-step"><strong>1. Step away</strong>Leave the room or the situation. Put distance between you and anything that could hurt someone. Do the 60 second breathing below.</div>
+      <div class="three-step"><strong>2. Tell one person</strong>A parent, relative, friend, teacher, pastor, coach or counsellor. Say: "I am in a bad place and I need help right now."</div>
+      <div class="three-step"><strong>3. Get support</strong>Talk to a helpline. They listen without judging, and it is free. If you feel you might act on a thought, call emergency services now.</div>
+    </div>
+    <p><strong>Why reaching out is the stronger choice:</strong> it protects other people, it protects your future, and it protects the people who love you. Most people who ask for help are met with care, not punishment.</p>
+    <div class="btn-row">
+      <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener">Talk to someone now</a>
+      <button type="button" class="btn btn-slate" data-scroll="groundingCard">Do the 60 second calm down</button>
+    </div>
+  </section>
+
+  <!-- WORRIED PANEL -->
+  <section class="panel panel-worried" id="panelWorried" aria-labelledby="worried-heading">
+    <h3 id="worried-heading">Worried about someone else?</h3>
+    <p>Trust your gut. You do not need to be sure to speak up. Acting early can prevent harm and help someone get support.</p>
+    <p><strong>Things worth taking seriously:</strong></p>
+    <ul>
+      <li>Talking about wanting to hurt others, or about having a weapon to do it</li>
+      <li>Sudden anger, obsession with revenge, or pulling away from everyone</li>
+      <li>Saying goodbye, giving things away, or "they will all be sorry" type comments</li>
+    </ul>
+    <p><strong>What you can do:</strong></p>
+    <ul>
+      <li>Stay calm. Listen and let them talk. Do not argue or shame them.</li>
+      <li>Say what you have noticed: "I am worried about you. I care about you."</li>
+      <li>Ask a trusted adult, school staff, faith leader or family member to help.</li>
+      <li>If there is a weapon or a threat, call emergency services right away.</li>
+    </ul>
+    <p style="font-size:14px;font-style:italic;">Telling someone is not betrayal. It can be the thing that keeps everyone safe, including the person you are worried about.</p>
+  </section>
+
+  <!-- TEEN SECTION -->
+  <section class="panel panel-teen" id="teenSection" aria-labelledby="teen-heading">
+    <h3 id="teen-heading">For teens: why asking for help beats the alternative</h3>
+    <p id="teenGreeting">Being a teenager can be really hard. Pressure, bullying, anger and feeling invisible are real. You deserve support, and you are not weak for needing it.</p>
+
+    <div class="insight"><strong>Feelings pass. Actions do not.</strong><span>The worst moment feels like it will last forever, but it does not. Hurting someone stays forever, for them, for you and for both families.</span></div>
+    <div class="insight"><strong>Asking for help is a power move.</strong><span>It takes more courage to say "I am struggling" than to act out of anger. You stay in control of your own life.</span></div>
+    <div class="insight"><strong>You protect your future.</strong><span>Your goals, your friends and your freedom are all still ahead of you. One violent act can end all of it.</span></div>
+    <div class="insight"><strong>Adults usually respond with care.</strong><span>Most people want to help once they know. You do not need the perfect words. You just need to start.</span></div>
+    <div class="insight"><strong>You are not the only one.</strong><span>Many young people carry dark thoughts and anger. Telling someone is how it gets lighter.</span></div>
+
+    <p style="margin-top:12px;"><strong>Need words? Copy one and send it:</strong></p>
+    <div class="script-box" id="script1">I am not okay and I need to talk. Can you stay with me for a bit?</div>
+    <div class="script-box" id="script2">I have been having really angry thoughts and I need help. Please do not judge me.</div>
+    <div class="script-box" id="script3">Something is going on and I am scared of what I might do. Can you help me get support?</div>
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button type="button" class="btn btn-teen" data-copy="script1">Copy message 1</button>
+      <button type="button" class="btn btn-teen" data-copy="script2">Copy message 2</button>
+      <button type="button" class="btn btn-teen" data-copy="script3">Copy message 3</button>
+    </div>
+
+    <p><strong>Who you can tell today:</strong> a parent or guardian, an older sibling or cousin, a teacher, a school counsellor, a coach, a pastor or imam, or a helpline.</p>
+    <p style="font-size:14px;">If you are in danger, or think you might hurt someone, call emergency services now. If you know someone is planning to hurt others, tell a trusted adult straight away. That could save lives.</p>
+    <div class="btn-row">
+      <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
+  </section>
+
+  <!-- CHECK-IN -->
+  <section class="card" aria-labelledby="checkin-heading">
+    <p class="card-title" id="checkin-heading">Quick check-in</p>
+    <p class="card-sub">Three short steps. Tap what fits.</p>
+
+    <div class="step-block">
+      <div class="step-meta">Step 1 of 3: How are you feeling?</div>
       <div class="chip-wrap" id="emotionChips" role="group" aria-label="Feeling options"></div>
     </div>
 
-    <!-- STEP 2 -->
     <div class="step-block">
-      <div class="step-meta">Step 2 of 4 — What is making this feel heavy?</div>
+      <div class="step-meta">Step 2 of 3: What is making this feel heavy?</div>
       <div class="chip-wrap" id="heavyChips" role="group" aria-label="Heavy factors"></div>
-      <label class="field-label" for="heavyOther">Optional — add any detail in your own words</label>
-      <textarea id="heavyOther" maxlength="600" placeholder="Write a few words about what feels hardest right now…"></textarea>
+      <label class="field-label" for="heavyOther">Optional: add anything in your own words</label>
+      <textarea id="heavyOther" maxlength="600" placeholder="Write a few words about what feels hardest right now..."></textarea>
     </div>
 
-    <!-- STEP 3 -->
     <div class="step-block">
-      <div class="step-meta">Step 3 of 4 — What do you need most right now?</div>
+      <div class="step-meta">Step 3 of 3: What do you need most?</div>
       <div class="chip-wrap" id="needChips" role="group" aria-label="Need options"></div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="step-block">
-      <div class="step-meta">Step 4 of 4 — Your suggested next step</div>
-      <p class="next-step-hint" id="nextStepHint">Choose a need above to see a suggested next step.</p>
+      <p class="next-step-hint" id="nextStepHint">Pick a need to see a suggested next step.</p>
       <div class="next-step-box" id="nextStepBox">Your suggested next step will appear here.</div>
     </div>
 
-    <!-- RESULT -->
     <div class="result-box" id="resultBox" aria-live="polite"></div>
 
-    <!-- ACTIONS -->
     <div class="section-label" style="margin-top:18px;">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="summaryBtn">Generate my support summary</button>
-      <button type="button" class="btn btn-slate" id="saveBtn">Save my reflection</button>
+    <div class="btn-row" style="margin-bottom:6px;">
+      <button type="button" class="btn btn-primary" id="summaryBtn">Show my summary</button>
+      <button type="button" class="btn btn-slate" id="saveBtn">Save on this device</button>
       <button type="button" class="btn btn-outline" id="pdfBtn">Download PDF</button>
       <button type="button" class="btn btn-danger" id="resetBtn">Reset</button>
-    </div>
-
-    <!-- SHARE -->
-    <div class="section-label">Share this tool</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
     </div>
   </section>
 
   <!-- GROUNDING -->
-  <section class="card" aria-labelledby="grounding-heading">
-    <p class="card-title" id="grounding-heading">Grounding in 60 seconds</p>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:14px;font-style:italic;">Take one calm minute. Breathe slowly and let the prompts guide you.</p>
-
+  <section class="card" aria-labelledby="grounding-heading" id="groundingCard">
+    <p class="card-title" id="grounding-heading">Calm down in 60 seconds</p>
+    <p class="card-sub">Breathe slowly and let the prompts guide you.</p>
     <div class="grounding-card">
-      <div class="timer-circle" id="timerCircle">
-        <span class="timer-num" id="timerNum">60</span>
-      </div>
+      <div class="timer-circle" id="timerCircle"><span class="timer-num" id="timerNum">60</span></div>
       <p class="breath-prompt" id="breathPrompt">Press start when you are ready.</p>
       <div class="btn-row" style="justify-content:center;">
         <button type="button" class="btn btn-slate" id="startGrounding">Start 60 seconds</button>
         <button type="button" class="btn btn-outline" id="stopGrounding">Stop</button>
       </div>
-      <p class="grounding-tip">5-4-3-2-1 prompt: name 5 things you can see, 4 you can feel, 3 you can hear, 2 you can smell, 1 you can taste.</p>
+      <p class="grounding-tip">5-4-3-2-1: name 5 things you can see, 4 you can feel, 3 you can hear, 2 you can smell, 1 you can taste.</p>
+    </div>
+  </section>
+
+  <!-- SHARE -->
+  <section class="card" aria-labelledby="share-heading">
+    <p class="card-title" id="share-heading">Share this tool</p>
+    <p class="card-sub">Someone you know might need this today. Sharing can help prevent a bad situation.</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+      <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn btn-share" id="mailShare">Email</a>
+      <button type="button" class="btn btn-share" id="nativeShare" style="display:none;">More options</button>
     </div>
   </section>
 
   <!-- COURSE -->
   <section class="card" aria-labelledby="course-heading">
-    <p class="card-title" id="course-heading">Build emotional intelligence — free course</p>
+    <p class="card-title" id="course-heading">Build emotional intelligence: free course</p>
     <div class="course-card">
       <p class="course-title">Free course with certificate</p>
-      <p class="course-body">If you want a supportive next step, this free course helps you build emotional intelligence with practical tools for awareness, regulation, and communication. You receive a certificate when you complete it.</p>
+      <p class="course-body">Learn practical tools for awareness, handling strong emotions, and communicating when things get tense. You receive a certificate when you finish.</p>
       <a class="btn btn-primary" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html" target="_blank" rel="noopener">Start the free course</a>
     </div>
   </section>
@@ -597,7 +403,7 @@
   <!-- HISTORY -->
   <section class="card" aria-labelledby="history-heading">
     <p class="card-title" id="history-heading">Your saved reflections</p>
-    <p style="font-size:13px;color:var(--hint);margin-bottom:14px;font-style:italic;">Saved only on this device using localStorage.</p>
+    <p class="card-sub" style="font-size:13px;">Saved only on this device. If you share a device, clear this after use.</p>
     <div id="historyList"></div>
     <button type="button" class="btn btn-danger" id="clearHistoryBtn">Clear all history</button>
   </section>
@@ -606,17 +412,15 @@
   <footer class="footer" aria-label="Footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
-
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; This tool supports reflection only. If you are in danger, seek urgent help now.
+      &nbsp;&middot;&nbsp; We are not medical professionals. If you are in danger, seek urgent help now.
     </p>
   </footer>
 
@@ -628,32 +432,46 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'gunViolenceSupportV3';
+  const STORAGE_KEY = 'gunViolenceSupportV4';
+  const TOOL_URL = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/gun-violence-awareness-support-tool.html';
   const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
+  const SHARE_TEXT = 'A free, calm tool to check in, cool down and find support. Includes a teen section. Please share it with someone who may need it:';
 
   const $ = id => document.getElementById(id);
+  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
 
-  const emotions = ['Anxious', 'Overwhelmed', 'Sad', 'Numb', 'Worried', 'Tense', 'Confused', 'Hopeful'];
-  const heavies = ['News exposure', 'Fear for loved ones', 'Community stress', 'Conflict nearby', 'Feeling isolated', 'Past memories'];
-  const needs = ['Calm my body', 'Talk to someone', 'Get practical support', 'Feel less alone', 'Take a safe break', 'Plan one action'];
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  const ages = [
+    { label: 'Yes, I am a teen', value: 'teen' },
+    { label: 'No', value: 'adult' },
+    { label: 'Prefer not to say', value: 'skip' }
+  ];
+
+  const paths = [
+    { label: 'I feel angry or have thoughts of hurting someone', value: 'pause' },
+    { label: 'I am worried about someone else', value: 'worried' },
+    { label: 'Violence or the news is affecting me', value: 'affected' },
+    { label: 'I just want to check in', value: 'checkin' }
+  ];
+
+  const emotions = ['Angry', 'Anxious', 'Overwhelmed', 'Sad', 'Numb', 'Scared', 'Tense', 'Confused', 'Hopeful'];
+  const heavies = ['News exposure', 'Fear for loved ones', 'Community stress', 'Conflict nearby', 'Bullying or being hurt', 'Feeling alone', 'Anger at someone', 'Past memories'];
+  const needs = ['Calm my body', 'Talk to someone', 'Get practical support', 'Feel less alone', 'Take a safe break', 'Plan one action', 'Stop and cool down'];
 
   const nextStepMap = {
-    'Calm my body': 'Take 60 seconds of slow breathing now, then drink water and relax your shoulders. Your body is responding to stress — slowing it down physically helps.',
-    'Talk to someone': 'Message one trusted person: "Can we talk for a few minutes? I need support." You do not need to explain everything — just reaching out is enough.',
-    'Get practical support': 'Use Find a Helpline to locate local emotional or crisis support options. These services are free, confidential, and available now.',
-    'Feel less alone': 'Reach out to a supportive community space, friend, or peer check-in. Connection — even one short message — can shift how alone this feels.',
-    'Take a safe break': 'Step away from stressful media for 20 minutes and do one grounding activity. Protecting your attention is an act of self-care, not avoidance.',
-    'Plan one action': 'Write one small, concrete safety or support action you can do today and set a reminder. Tiny steps forward reduce the feeling of helplessness.'
+    'Calm my body': 'Take 60 seconds of slow breathing now. Breathe out longer than you breathe in, drop your shoulders and sip some water.',
+    'Talk to someone': 'Message one trusted person: "Can we talk for a few minutes? I need support." You do not need to explain everything. Reaching out is enough.',
+    'Get practical support': 'Use Find a Helpline to find free, confidential support in your area. If anyone is in danger, call emergency services.',
+    'Feel less alone': 'Send one short message to a friend, family member or community leader. Even a simple "thinking of you" can start a real conversation.',
+    'Take a safe break': 'Step away from stressful media or from the situation for 20 minutes and do one grounding activity.',
+    'Plan one action': 'Write down one small, safe action for today, like calling someone or booking a chat with a counsellor. Set a reminder.',
+    'Stop and cool down': 'Leave the situation now. Go somewhere with other people around, put distance between you and anything that could hurt someone, then tell one trusted person how you feel.'
   };
 
-  const state = {
-    feelings: [],
-    heavy: [],
-    needs: [],
-    heavyOther: '',
-    nextStep: ''
-  };
+  const state = { name: '', age: '', paths: [], feelings: [], heavy: [], needs: [], heavyOther: '', nextStep: '' };
 
   let timerInterval = null;
   let toastTimer;
@@ -666,146 +484,180 @@
     toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
   }
 
-  function buildChips(containerId, options, stateKey) {
+  function displayName() { return state.name ? state.name : ''; }
+
+  function togglePanels() {
+    $('panelPause').classList.toggle('show', state.paths.includes('pause'));
+    $('panelWorried').classList.toggle('show', state.paths.includes('worried'));
+    $('teenSection').classList.toggle('show', state.age === 'teen');
+
+    const n = displayName();
+    $('pauseGreeting').textContent = (n ? n + ', ' : '') + (n ? 'having' : 'Having') + ' angry or dark thoughts does not make you a bad person. It means you are hurting and something needs to change. What matters is what you do next.';
+    $('teenGreeting').textContent = (n ? n + ', b' : 'B') + 'eing a teenager can be really hard. Pressure, bullying, anger and feeling invisible are real. You deserve support, and you are not weak for needing it.';
+  }
+
+  function buildSingleChips(containerId, options, onPick) {
     const wrap = $(containerId);
-    options.forEach(label => {
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = opt.label;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        const wasOn = btn.getAttribute('aria-pressed') === 'true';
+        wrap.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+        if (!wasOn) btn.setAttribute('aria-pressed', 'true');
+        onPick(wasOn ? '' : opt.value);
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function buildMultiChips(containerId, options, onChange) {
+    const wrap = $(containerId);
+    options.forEach(opt => {
+      const label = typeof opt === 'string' ? opt : opt.label;
+      const value = typeof opt === 'string' ? opt : opt.value;
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'chip';
       btn.textContent = label;
       btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', () => {
-        const active = btn.getAttribute('aria-pressed') === 'true';
-        btn.setAttribute('aria-pressed', String(!active));
-        if (!active) {
-          state[stateKey].push(label);
-        } else {
-          state[stateKey] = state[stateKey].filter(v => v !== label);
-        }
-        if (stateKey === 'needs') updateNextStep();
+        const on = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', String(on));
+        onChange(value, on, label);
       });
       wrap.appendChild(btn);
     });
   }
 
-  function updateNextStep() {
-    const firstNeed = state.needs[0];
-    const box = $('nextStepBox');
-    const hint = $('nextStepHint');
-    if (!firstNeed) {
-      state.nextStep = '';
-      hint.textContent = 'Choose a need above to see a suggested next step.';
-      box.textContent = 'Your suggested next step will appear here.';
-      return;
-    }
-    const suggestion = nextStepMap[firstNeed] || 'Take one kind, safe next step and ask for support if needed.';
-    state.nextStep = suggestion;
-    hint.textContent = 'Suggested from your selected need:';
-    box.textContent = suggestion;
+  function toggleIn(arr, val, on) {
+    const i = arr.indexOf(val);
+    if (on && i === -1) arr.push(val);
+    if (!on && i !== -1) arr.splice(i, 1);
   }
 
-  function buildResultHTML() {
+  function updateNextStep() {
+    const first = state.needs[0];
+    if (!first) {
+      state.nextStep = '';
+      $('nextStepHint').textContent = 'Pick a need to see a suggested next step.';
+      $('nextStepBox').textContent = 'Your suggested next step will appear here.';
+      return;
+    }
+    state.nextStep = nextStepMap[first] || 'Take one kind, safe next step and ask for support if you need it.';
+    $('nextStepHint').textContent = 'Suggested for you:';
+    $('nextStepBox').textContent = state.nextStep;
+  }
+
+  function pathLabels() {
+    return state.paths.map(v => (paths.find(p => p.value === v) || {}).label).filter(Boolean);
+  }
+
+  function readInputs() {
+    state.name = $('nameInput').value.trim();
     state.heavyOther = $('heavyOther').value.trim();
-    const rows = [
+  }
+
+  function summaryRows() {
+    readInputs();
+    return [
+      ['Name', state.name || 'Not given'],
+      ['What brought you here', pathLabels().join('; ') || 'Not selected'],
       ['How you are feeling', state.feelings.join(', ') || 'Not selected'],
       ['What feels heavy', state.heavy.join(', ') || 'Not selected'],
-      ['Your notes', state.heavyOther || '—'],
+      ['Your notes', state.heavyOther || 'None'],
       ['What you need most', state.needs.join(', ') || 'Not selected'],
-      ['Your next step', state.nextStep || 'Not yet generated']
+      ['Your next step', state.nextStep || 'Not chosen yet']
     ];
-
-    let html = '<div class="result-title">Your support summary</div>';
-    rows.forEach(([label, value]) => {
-      html += '<div class="result-row">';
-      html += '<div class="result-row-label">' + label + '</div>';
-      html += '<div class="result-row-value">' + value + '</div>';
-      html += '</div>';
-    });
-    html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">You do not have to carry this alone. One small step, one moment at a time.</div>';
-    return html;
   }
 
   function showSummary() {
+    const rows = summaryRows();
+    let html = '<div class="result-title">' + (state.name ? esc(state.name) + ', your' : 'Your') + ' support summary</div>';
+    rows.forEach(([label, value]) => {
+      html += '<div class="result-row"><div class="result-row-label">' + esc(label) + '</div><div class="result-row-value">' + esc(value) + '</div></div>';
+    });
+    html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">You do not have to carry this alone. One small step, one moment at a time.</div>';
     const box = $('resultBox');
-    box.innerHTML = buildResultHTML();
+    box.innerHTML = html;
     box.style.display = 'block';
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function getHistory() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(_) { return []; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (_) { return []; }
   }
 
   function saveEntry() {
-    state.heavyOther = $('heavyOther').value.trim();
+    readInputs();
     const entry = {
       id: Date.now(),
       date: new Date().toLocaleString(),
-      feelings: [...state.feelings],
-      heavy: [...state.heavy],
-      needs: [...state.needs],
+      name: state.name,
+      feelings: state.feelings.slice(),
+      heavy: state.heavy.slice(),
+      needs: state.needs.slice(),
       nextStep: state.nextStep,
       heavyOther: state.heavyOther
     };
-    const updated = [entry, ...getHistory()].slice(0, 20);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch(_) {}
+    const updated = [entry].concat(getHistory()).slice(0, 20);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch (_) {}
     renderHistory();
-    showToast('Reflection saved to this device.');
+    showToast('Saved on this device.');
   }
 
   function renderHistory() {
     const list = getHistory();
-    const container = $('historyList');
+    const c = $('historyList');
     if (!list.length) {
-      container.innerHTML = '<p style="font-size:13px;color:var(--hint);font-style:italic;margin-bottom:12px;">No saved reflections yet.</p>';
+      c.innerHTML = '<p style="font-size:13px;color:var(--hint);font-style:italic;margin-bottom:12px;">No saved reflections yet.</p>';
       return;
     }
-    container.innerHTML = list.map(item => `
-      <div class="history-item">
-        <div class="history-date">${item.date}</div>
-        <div class="history-row"><strong>Feeling:</strong> ${item.feelings.join(', ') || 'Not selected'}</div>
-        <div class="history-row"><strong>Heavy factors:</strong> ${item.heavy.join(', ') || 'Not selected'}</div>
-        <div class="history-row"><strong>Need:</strong> ${item.needs.join(', ') || 'Not selected'}</div>
-        <div class="history-row"><strong>Next step:</strong> ${item.nextStep || '—'}</div>
-        ${item.heavyOther ? `<div class="history-row"><strong>Notes:</strong> ${item.heavyOther}</div>` : ''}
-      </div>
-    `).join('');
+    c.innerHTML = list.map(item => (
+      '<div class="history-item">' +
+      '<div class="history-date">' + esc(item.date) + (item.name ? ' &middot; ' + esc(item.name) : '') + '</div>' +
+      '<div class="history-row"><strong>Feeling:</strong> ' + esc((item.feelings || []).join(', ') || 'Not selected') + '</div>' +
+      '<div class="history-row"><strong>Heavy:</strong> ' + esc((item.heavy || []).join(', ') || 'Not selected') + '</div>' +
+      '<div class="history-row"><strong>Need:</strong> ' + esc((item.needs || []).join(', ') || 'Not selected') + '</div>' +
+      '<div class="history-row"><strong>Next step:</strong> ' + esc(item.nextStep || 'None') + '</div>' +
+      (item.heavyOther ? '<div class="history-row"><strong>Notes:</strong> ' + esc(item.heavyOther) + '</div>' : '') +
+      '</div>'
+    )).join('');
   }
 
   function resetAll() {
-    state.feelings = [];
-    state.heavy = [];
-    state.needs = [];
-    state.heavyOther = '';
-    state.nextStep = '';
+    state.name = ''; state.age = ''; state.paths = []; state.feelings = []; state.heavy = []; state.needs = [];
+    state.heavyOther = ''; state.nextStep = '';
+    $('nameInput').value = '';
     $('heavyOther').value = '';
     document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
     $('resultBox').style.display = 'none';
     updateNextStep();
+    togglePanels();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     showToast('Tool reset.');
   }
 
-  // Grounding timer
+  // Grounding
   function startGrounding() {
     clearInterval(timerInterval);
     let sec = 60;
-    const circle = $('timerCircle');
-    const num = $('timerNum');
-    const prompt = $('breathPrompt');
+    const circle = $('timerCircle'), num = $('timerNum'), prompt = $('breathPrompt');
     num.textContent = '60';
     circle.style.setProperty('--prog', 0);
-    prompt.textContent = 'Inhale slowly for 4... exhale gently for 6...';
-
+    prompt.textContent = 'Breathe in slowly for 4... breathe out gently for 6...';
     timerInterval = setInterval(() => {
       sec--;
-      num.textContent = sec;
+      num.textContent = Math.max(sec, 0);
       circle.style.setProperty('--prog', Math.round(((60 - sec) / 60) * 100));
       if (sec === 40) prompt.textContent = 'Relax your jaw and drop your shoulders.';
       if (sec === 20) prompt.textContent = 'Notice 5 things you can see around you right now.';
       if (sec <= 0) {
         clearInterval(timerInterval);
-        prompt.textContent = 'One minute complete. You did something kind for yourself.';
+        prompt.textContent = 'One minute done. You did something kind for yourself.';
       }
     }, 1000);
   }
@@ -818,12 +670,26 @@
   }
 
   // Share
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('Gun Violence Awareness Support Tool — a calm reflection and support resource: ');
+  function setupShare() {
+    const url = encodeURIComponent(TOOL_URL);
+    const msg = encodeURIComponent(SHARE_TEXT + ' ');
     $('waShare').href = 'https://wa.me/?text=' + msg + url;
     $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + '&url=' + url;
+    $('tgShare').href = 'https://t.me/share/url?url=' + url + '&text=' + msg;
+    $('mailShare').href = 'mailto:?subject=' + encodeURIComponent('A free support tool you may find helpful') + '&body=' + msg + url;
+    if (navigator.share) {
+      const b = $('nativeShare');
+      b.style.display = 'inline-flex';
+      b.addEventListener('click', () => {
+        navigator.share({ title: 'Gun Violence Awareness Support Tool', text: SHARE_TEXT, url: TOOL_URL }).catch(() => {});
+      });
+    }
+  }
+
+  async function copyText(text, okMsg) {
+    try { await navigator.clipboard.writeText(text); showToast(okMsg); }
+    catch (_) { showToast('Press and hold to copy the text.'); }
   }
 
   // PDF
@@ -832,18 +698,18 @@
     if (!res.ok) throw new Error('Logo fetch failed');
     const blob = await res.blob();
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
+      const r = new FileReader();
+      r.onloadend = () => resolve(r.result);
+      r.onerror = () => reject();
+      r.readAsDataURL(blob);
     });
   }
 
   async function downloadPDF() {
     const PDF = jsPDF();
     if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    state.heavyOther = $('heavyOther').value.trim();
-    showToast('Preparing your PDF…');
+    const rows = summaryRows();
+    showToast('Preparing your PDF...');
 
     const doc = new PDF({ unit: 'pt', format: 'a4' });
     const pageW = doc.internal.pageSize.getWidth();
@@ -851,32 +717,18 @@
     const margin = 40;
     let y = margin;
 
-    // Header
     doc.setFillColor(232, 242, 236);
     doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
     try {
       const logoData = await imageToDataUrl(LOGO_URL);
       doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(15);
-    doc.setTextColor(26, 34, 24);
+    } catch (_) {}
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(26, 34, 24);
     doc.text('Gun Violence Awareness Support', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 88, 72);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 88, 72);
+    doc.text(state.name ? 'Personal reflection for ' + state.name : 'Personal reflection summary', margin + 76, y + 41);
     doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
     y += 86;
-
-    // Reflection rows
-    const rows = [
-      ['How you are feeling', state.feelings.join(', ') || 'Not selected'],
-      ['What feels heavy', state.heavy.join(', ') || 'Not selected'],
-      ['Your notes', state.heavyOther || 'Not provided'],
-      ['What you need most', state.needs.join(', ') || 'Not selected'],
-      ['Your suggested next step', state.nextStep || 'Not yet generated']
-    ];
 
     rows.forEach(([label, value]) => {
       if (y > pageH - 80) { doc.addPage(); y = margin; }
@@ -884,123 +736,96 @@
       const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
       const bh = lines.length * 12 + 28;
       doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(58, 106, 72);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(58, 106, 72);
       doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 34, 24);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(26, 34, 24);
       doc.text(lines, margin + 10, y + 26);
       y += bh + 8;
     });
 
-    // Closing note
-    if (y > pageH - 60) { doc.addPage(); y = margin; }
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9.5);
-    doc.setTextColor(58, 106, 72);
-    const closingLines = doc.splitTextToSize('You do not have to carry this alone. One small step, one moment at a time. If you feel unsafe, please seek urgent help now.', pageW - margin * 2);
-    doc.text(closingLines, margin, y);
-    y += closingLines.length * 12 + 16;
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 106, 72);
-    doc.text('Understanding the emotional impact of gun violence — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['The psychological impact of exposure to gun violence',
-       'Research published in JAMA Psychiatry and the American Journal of Public Health consistently shows that exposure to gun violence — whether direct, witnessed, or through news media — produces measurable psychological effects including acute stress responses, hypervigilance, and symptoms consistent with post-traumatic stress. These responses are not signs of weakness; they are the nervous system responding to genuine threat information. Awareness of this normalises the experience and is the first step toward self-compassionate coping.'],
-      ['Media exposure and secondary traumatic stress',
-       'Studies from the Trauma Center at Boston University found that repeated media exposure to mass violence events can produce emotional responses similar to direct exposure — including intrusive thoughts, sleep disturbance, and heightened anxiety. This is known as secondary traumatic stress or vicarious trauma. Protecting media intake and setting deliberate limits on exposure is evidence-based self-care, not avoidance.'],
-      ['Community grief and collective trauma',
-       'Gun violence affects not just direct victims but entire communities. Research by sociologist Kai Erikson on collective trauma shows that community-level events create a shared sense of disruption, loss of safety, and social fragmentation. Naming this collective dimension — recognising that others in your community are also carrying this — can reduce the isolation that often accompanies community grief. Connection and mutual support are among the most effective community-level responses.'],
-      ['The role of emotional regulation in acute stress',
-       'The polyvagal theory (Stephen Porges) explains why slow breathing and grounding exercises reduce the intensity of acute stress responses. When the nervous system perceives threat, it activates the sympathetic stress response. Deliberate slow exhalation — longer than the inhale — activates the parasympathetic system and signals safety. This is why the grounding tools in this resource produce measurable physiological relief within 60 to 90 seconds.'],
-      ['Taking action as an antidote to helplessness',
-       'Research on post-traumatic growth and community resilience — including work by Richard Tedeschi and Lawrence Calhoun — identifies purposeful action as one of the most powerful antidotes to the helplessness that violent events can produce. The action does not need to be large. Contacting one person, taking one grounding step, or planning one small supportive action activates the brain\'s agency and meaning-making systems, which are suppressed by acute stress.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(58, 106, 72);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 34, 24);
+    function block(title, body) {
+      if (y > pageH - 90) { doc.addPage(); y = margin; }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(58, 106, 72);
+      doc.text(title, margin, y); y += 13;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3); doc.setTextColor(26, 34, 24);
       const lines = doc.splitTextToSize(body, pageW - margin * 2);
       doc.text(lines, margin, y);
       y += lines.length * 11.5 + 12;
-    });
+    }
 
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(58, 106, 72);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 34, 24);
+    y += 6;
+    doc.setDrawColor(168, 200, 176); doc.line(margin, y, pageW - margin, y); y += 16;
+
+    block('A simple plan when emotions run high',
+      '1. Step away from the situation and put distance between you and anything that could hurt someone. 2. Tell one trusted person how you feel. 3. Contact a helpline or your local emergency services. Strong feelings pass. Actions cannot be undone, and asking for help can always be done.');
+    block('Why reaching out is the stronger choice',
+      'Asking for help protects other people, protects your future and protects the people who care about you. It takes courage, and most people respond with care. You do not need perfect words. You only need to start.');
+    block('If you are worried about someone else',
+      'Take talk of harming others seriously. Stay calm, listen, tell a trusted adult or authority, and call emergency services if there is a threat or a weapon. Speaking up early can keep everyone safe.');
+
+    if (y > pageH - 100) { doc.addPage(); y = margin; }
+    doc.setDrawColor(168, 200, 176); doc.line(margin, y, pageW - margin, y); y += 14;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(58, 106, 72);
+    doc.text('More free resources', margin, y); y += 13;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(26, 34, 24);
     [
+      'This tool: ' + TOOL_URL,
       'Main site: emotionalintelligencedeveloper.com',
       'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
       'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
       'Find a helpline: findahelpline.com'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+    ].forEach(line => {
+      const l = doc.splitTextToSize(line, pageW - margin * 2);
+      doc.text(l, margin, y); y += l.length * 12 + 1;
+    });
 
-    // Footer
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 160, 136);
-    doc.text('This tool supports reflection and awareness. If you are in immediate danger, please contact emergency services now.', margin, pageH - 22);
+    doc.setDrawColor(168, 200, 176); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(111, 134, 109);
+    doc.text('We are not medical professionals. If you are in immediate danger, contact emergency services now.', margin, pageH - 22);
 
     doc.save('gun-violence-awareness-support.pdf');
-    showToast('PDF downloaded!');
+    showToast('PDF downloaded.');
   }
 
-  // Event listeners
+  // Events
+  $('nameInput').addEventListener('input', () => { state.name = $('nameInput').value.trim(); togglePanels(); });
   $('summaryBtn').addEventListener('click', showSummary);
   $('saveBtn').addEventListener('click', saveEntry);
   $('pdfBtn').addEventListener('click', downloadPDF);
   $('resetBtn').addEventListener('click', resetAll);
   $('startGrounding').addEventListener('click', startGrounding);
   $('stopGrounding').addEventListener('click', stopGrounding);
+  $('copyLinkBtn').addEventListener('click', () => copyText(TOOL_URL, 'Link copied.'));
   $('clearHistoryBtn').addEventListener('click', () => {
     if (confirm('Clear all saved reflections from this device?')) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
       renderHistory();
       showToast('History cleared.');
     }
   });
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
+
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => copyText($(btn.getAttribute('data-copy')).textContent, 'Message copied.'));
+  });
+  document.querySelectorAll('[data-scroll]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $(btn.getAttribute('data-scroll')).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   });
 
   // Init
-  buildChips('emotionChips', emotions, 'feelings');
-  buildChips('heavyChips', heavies, 'heavy');
-  buildChips('needChips', needs, 'needs');
+  buildSingleChips('ageChips', ages, v => { state.age = v; togglePanels(); if (v === 'teen') { setTimeout(() => $('teenSection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 150); } });
+  buildMultiChips('pathChips', paths, (v, on) => {
+    toggleIn(state.paths, v, on);
+    togglePanels();
+    if (on && v === 'pause') setTimeout(() => $('panelPause').scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+  });
+  buildMultiChips('emotionChips', emotions, (v, on) => toggleIn(state.feelings, v, on));
+  buildMultiChips('heavyChips', heavies, (v, on) => toggleIn(state.heavy, v, on));
+  buildMultiChips('needChips', needs, (v, on) => { toggleIn(state.needs, v, on); updateNextStep(); });
   renderHistory();
-  updateShareLinks();
+  setupShare();
+  togglePanels();
 }());
 </script>
 </body>

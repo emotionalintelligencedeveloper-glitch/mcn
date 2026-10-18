@@ -294,6 +294,38 @@
 
     textarea:focus { border-color: var(--brand); }
 
+    /* NAME FIELD */
+    .name-field { margin-top: 18px; }
+
+    .name-label {
+      display: block;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .name-field input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      min-height: 46px;
+      font-family: "Georgia", serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .name-field input[type="text"]:focus { border-color: var(--brand); }
+
+    .name-note {
+      font-size: 13px;
+      color: var(--hint);
+      font-style: italic;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
     /* LIVE SAFETY MESSAGE */
     .live-safety {
       background: var(--danger-bg);
@@ -605,6 +637,12 @@
     <p class="card-title" id="plan-heading">My support plan for today</p>
     <div class="plan-card" id="planContent"></div>
 
+    <div class="name-field">
+      <label for="pdfName" class="name-label">Add your first name to the PDF (optional)</label>
+      <input type="text" id="pdfName" maxlength="40" autocomplete="given-name" placeholder="Your first name" />
+      <p class="name-note">Your name is only used on the PDF. It is not saved and not sent anywhere.</p>
+    </div>
+
     <div class="section-label" style="margin-top:18px;">Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
       <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
@@ -619,7 +657,7 @@
       <input type="checkbox" id="saveToggle" />
       Save my progress on this device
     </label>
-    <p class="privacy-note">This tool does not ask for identifying details and does not send your answers anywhere. If save is on, your draft is stored only in this browser. If you are using a shared or public device, leave save off. The PDF you download will contain what you wrote, so keep it somewhere private.</p>
+    <p class="privacy-note">This tool does not require any identifying details and does not send your answers anywhere. If you add your first name for the PDF, it is used only on the PDF and is never saved. If save is on, your draft is stored only in this browser. If you are using a shared or public device, leave save off. The PDF you download will contain what you wrote, so keep it somewhere private.</p>
   </section>
 
   <!-- GET HELP NOW -->
@@ -1038,6 +1076,7 @@
     $('groundingStatus').textContent = 'Press start when you are ready.';
     $('planSection').classList.add('hidden');
     $('planContent').innerHTML = '';
+    $('pdfName').value = '';
     clearInterval(groundingTimer);
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
     renderNeeds();
@@ -1107,6 +1146,7 @@
     showToast('Preparing your PDF...');
 
     var p = getPlanData();
+    var firstName = pdfSafe($('pdfName').value).replace(/\s+/g, ' ').trim().slice(0, 40);
     var doc = new PDF({ unit: 'pt', format: 'a4' });
     var pageW = doc.internal.pageSize.getWidth();
     var pageH = doc.internal.pageSize.getHeight();
@@ -1163,7 +1203,7 @@
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(74, 88, 72);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
+    doc.text(firstName ? 'Prepared for ' + firstName : 'Personal reflection summary', margin + 76, y + 41);
     doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
     y += 86;
 
@@ -1265,7 +1305,8 @@
       doc.text('Page ' + i + ' of ' + total, pageW - margin, pageH - 24, { align: 'right' });
     }
 
-    doc.save('grief-after-violence-support.pdf');
+    var fileTag = firstName.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    doc.save('grief-after-violence-support' + (fileTag ? '-' + fileTag : '') + '.pdf');
     showToast('PDF downloaded.');
   }
 

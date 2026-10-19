@@ -658,6 +658,8 @@
 
   function buildPlan() {
     var rows = [];
+    var myName = (S.f.name || '').trim();
+    if (myName) rows.push(['Prepared for', myName]);
     var who = (S.f.person || '').trim(), topic = (S.f.topic || '').trim();
     if (who || topic) rows.push(['The conversation', (who ? 'With ' + who : '') + (who && topic ? ' about ' + topic : (topic ? 'About ' + topic : ''))]);
     STEPS.forEach(function (st) {
@@ -710,6 +712,7 @@
       '<p class="card-intro">You will answer ' + STEPS.length + ' short questions. Each one has three answers. Pick the one closest to you and you will get helpful words, plus a short lesson on why it works. At the end you get a plan to save, print or download.</p>' +
       '<p class="card-intro">Your answers stay on this device so you can come back later.</p>' +
       fieldsHtml([
+        { id: 'name', label: 'Your name (optional, shown on your PDF and plan)', ph: 'e.g. Thandi', max: 60 },
         { id: 'person', label: 'Who is the conversation with? (optional)', ph: 'e.g. my sister, my manager', max: 80 },
         { id: 'topic', label: 'What is it about, in a few words? (optional)', ph: 'e.g. plans changing at the last minute', max: 120 }
       ]) +
@@ -886,7 +889,8 @@
       doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(26, 34, 24);
       doc.text('Hard Conversations Preparation Plan', margin + 76, y + 26);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 88, 72);
-      doc.text('Personal preparation summary', margin + 76, y + 41);
+      var pdfName = (S.f.name || '').trim();
+      doc.text(pdfName ? 'Prepared for ' + pdfSafe(pdfName) : 'Personal preparation summary', margin + 76, y + 41);
       doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
       y += 86;
 

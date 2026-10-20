@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inner vs Outer Alignment Tool — Emotional Intelligence Developer</title>
+  <title>Inner vs Outer Alignment Tool | Emotional Intelligence Developer</title>
   <style>
     :root {
       --brand: #5b8fa8;
+      --brand-dark: #3f6f87;
       --brand-light: #e8f4f9;
       --brand-mid: #c5dfe9;
       --accent: #7dbea0;
+      --accent-dark: #3a7a58;
       --accent-light: #e8f5ef;
       --warm: #f7f3ee;
       --card: #ffffff;
@@ -21,11 +23,9 @@
       --radius-md: 14px;
       --radius-lg: 20px;
       --support: #e8702a;
-      --support-light: #fdf0e8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -33,906 +33,654 @@
       background: var(--warm);
       color: var(--text);
       line-height: 1.65;
-      font-size: 16px;
+      font-size: 17px;
     }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
 
     /* HEADER */
     .header {
       background: var(--card);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
-      padding: 24px 20px 20px;
+      padding: 22px 20px 18px;
       margin-bottom: 16px;
       text-align: center;
     }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      text-align: left;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-family: "Georgia", serif;
-      font-size: clamp(1.4rem, 4vw, 1.85rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .disclaimer {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--hint);
-      background: var(--warm);
-      border-radius: 20px;
-      padding: 4px 12px;
-    }
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 12px; }
+    .logo { width: 52px; height: 52px; border-radius: 12px; object-fit: cover; border: 2px solid var(--brand-mid); flex-shrink: 0; }
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; text-align: left; line-height: 1.3; }
+    h1 { font-size: clamp(1.4rem, 4vw, 1.85rem); font-weight: normal; line-height: 1.3; margin-bottom: 8px; }
+    .tagline { font-size: 16px; color: var(--muted); max-width: 480px; margin: 0 auto; }
+    .disclaimer { display: inline-block; margin-top: 12px; font-size: 12px; color: var(--hint); background: var(--warm); border-radius: 20px; padding: 4px 12px; }
 
     /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
+    .card { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; margin-bottom: 16px; }
+    .card-title { font-size: 1.1rem; color: var(--brand-dark); margin-bottom: 8px; }
+    h2 { font-size: 1.25rem; font-weight: normal; line-height: 1.4; margin-bottom: 6px; }
 
-    .card-title {
-      font-family: "Georgia", serif;
-      font-size: 1.1rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 6px;
-    }
+    /* HOW IT WORKS */
+    .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 6px 0 20px; }
+    .how div { background: var(--brand-light); border-radius: var(--radius-md); padding: 12px 8px; text-align: center; font-size: 14px; line-height: 1.4; }
+    .how b { display: block; font-size: 20px; color: var(--brand-dark); font-weight: normal; }
 
-    /* PROGRESS */
-    .progress-wrap {
-      margin-bottom: 20px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--hint);
-      margin-bottom: 6px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: var(--brand-light);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      border-radius: 99px;
-      transition: width 0.3s ease;
-    }
-
-    /* SAVE TOGGLE */
-    .save-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .save-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    /* QUESTION */
-    .question {
-      border: 1px solid var(--brand-mid);
-      background: var(--brand-light);
+    /* SITUATION CHIPS */
+    .sit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 14px; }
+    .sit {
+      text-align: left;
+      background: #fff;
+      border: 1.5px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .question-label {
+      padding: 12px 13px;
+      font-family: inherit;
       font-size: 15px;
-      font-weight: normal;
-      font-family: "Georgia", serif;
+      line-height: 1.4;
       color: var(--text);
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .question-hint {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-family: "Georgia", serif;
-      font-style: italic;
-    }
-
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 88px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: var(--brand);
-    }
-
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: var(--brand);
-    }
-
-    /* INTENSITY SLIDER */
-    .intensity-row {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .intensity-label {
-      font-size: 12px;
-      color: var(--hint);
-      white-space: nowrap;
-      font-family: "Georgia", serif;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      -webkit-appearance: none;
-      height: 4px;
-      background: var(--brand-mid);
-      border-radius: 99px;
-      outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--brand);
       cursor: pointer;
-      border: 2px solid #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      min-height: 62px;
+      transition: border-color 0.15s, background 0.15s;
     }
+    .sit:hover { border-color: var(--brand); }
+    .sit.on { border-color: var(--brand); background: var(--brand-light); box-shadow: 0 0 0 2px var(--brand-mid); }
 
-    .intensity-val {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--brand);
-      min-width: 24px;
-      text-align: center;
-    }
-
-    /* RESULT */
-    .result-box {
-      display: none;
+    .fact {
       background: var(--accent-light);
       border: 1px solid #a8d5bc;
       border-radius: var(--radius-md);
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    .result-box h3 {
-      font-family: "Georgia", serif;
-      font-size: 1rem;
-      font-weight: normal;
-      color: #3a7a58;
-      margin-bottom: 12px;
-    }
-
-    .result-item {
-      margin-bottom: 14px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #c5e3d1;
-    }
-
-    .result-item:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .result-item-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .result-item-answer {
+      padding: 14px 16px;
       font-size: 15px;
-      color: var(--text);
-      margin-bottom: 4px;
+      margin: 6px 0 16px;
     }
+    .fact small { display: block; color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.5; }
+    .fact a { color: var(--brand-dark); }
 
-    .result-item-note {
-      font-size: 13px;
-      color: #3a7a58;
-      font-style: italic;
-    }
+    /* PROGRESS */
+    .dots { display: flex; gap: 6px; margin-bottom: 14px; }
+    .dot { flex: 1; height: 6px; border-radius: 99px; background: var(--brand-light); }
+    .dot.done { background: var(--accent); }
+    .dot.now { background: var(--brand); }
+    .qnum { font-size: 13px; color: var(--hint); margin-bottom: 4px; }
 
-    .result-closing {
-      margin-top: 14px;
-      font-size: 14px;
-      color: var(--muted);
-      font-style: italic;
-      text-align: center;
+    /* STICK FIGURES */
+    .fig { text-align: center; margin: 4px 0 8px; }
+    .fig svg { width: 100%; max-width: 250px; height: auto; }
+    .s { stroke: var(--text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .eye { fill: var(--text); stroke: none; }
+    .lbl { font-family: Georgia, serif; font-size: 11px; fill: var(--muted); }
+
+    .nudge { font-size: 14px; color: var(--brand-dark); background: var(--brand-light); border-radius: 99px; padding: 5px 14px; display: inline-block; margin: 8px 0 4px; }
+    .hint { font-size: 15px; color: var(--muted); font-style: italic; margin-bottom: 10px; }
+    .chip-label { font-size: 13px; color: var(--hint); margin: 6px 0 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .chip {
+      font-family: inherit; font-size: 14px; background: #fff; border: 1.5px solid var(--brand-mid); color: var(--brand-dark);
+      border-radius: 99px; padding: 8px 14px; cursor: pointer; min-height: 40px;
     }
+    .chip:hover { background: var(--brand-light); }
+
+    textarea {
+      width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 13px;
+      font-family: inherit; font-size: 17px; color: var(--text); background: #fff; min-height: 110px; resize: vertical; line-height: 1.6;
+    }
+    textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--brand); }
+    input[type="text"] {
+      width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 13px;
+      font-family: inherit; font-size: 16px; color: var(--text); background: #fff;
+    }
+    .count { text-align: right; font-size: 12px; color: var(--hint); margin-top: 2px; }
+
+    /* INTENSITY */
+    .scale-box { margin-top: 14px; background: var(--warm); border-radius: var(--radius-md); padding: 14px; }
+    .scale-q { font-size: 15px; margin-bottom: 10px; }
+    .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .scale button {
+      font-family: inherit; font-size: 18px; background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+      min-height: 48px; cursor: pointer; color: var(--text);
+    }
+    .scale button.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .scale-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-top: 6px; }
 
     /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      font-weight: normal;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 13px 22px; border-radius: 99px;
+      font-family: inherit; font-size: 16px; cursor: pointer; text-decoration: none; border: 1.5px solid transparent; min-height: 50px;
       transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
     }
-
     .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
+    .btn:hover { opacity: 0.9; }
+    .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-secondary { background: var(--accent-dark); color: #fff; border-color: var(--accent-dark); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
+    .btn-support { background: var(--support); color: #fff; border-color: var(--support); padding: 14px 24px; }
+    .btn-share { background: var(--brand-light); color: var(--brand-dark); border-color: var(--brand-mid); font-size: 14px; padding: 10px 16px; min-height: 44px; }
+    .grow { flex: 1; }
+    .skip { background: none; border: none; font-family: inherit; font-size: 14px; color: var(--hint); text-decoration: underline; cursor: pointer; padding: 10px 6px; }
 
-    .btn-primary {
-      background: var(--brand);
-      color: #fff;
-      border-color: var(--brand);
-    }
+    .save-row { display: flex; align-items: center; gap: 8px; margin: 14px 0 4px; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .save-row input { width: 18px; height: 18px; accent-color: var(--accent); }
 
-    .btn-secondary {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .btn-outline {
-      background: #fff;
-      color: var(--text);
-      border-color: var(--border);
-    }
-
-    .btn-danger {
-      background: #fff;
-      color: #b94040;
-      border-color: #e8c0c0;
-    }
-
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
-
-    .btn-share {
-      background: var(--brand-light);
-      color: var(--brand);
-      border-color: var(--brand-mid);
-    }
-
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-    }
-
-    /* SECTION DIVIDER */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-      font-family: "Georgia", serif;
-    }
+    /* RESULT */
+    .result-top { text-align: center; }
+    .gap-msg { background: var(--accent-light); border: 1px solid #a8d5bc; border-radius: var(--radius-md); padding: 14px 16px; margin: 8px 0 16px; font-size: 16px; }
+    .result-item { border-bottom: 1px solid var(--border); padding: 12px 0; }
+    .result-item:last-of-type { border-bottom: none; }
+    .ri-title { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .ri-answer { font-size: 16px; white-space: pre-wrap; }
+    .ri-note { font-size: 14px; color: var(--accent-dark); font-style: italic; margin-top: 3px; }
+    .tip-box { background: var(--brand-light); border-radius: var(--radius-md); padding: 14px 16px; margin: 14px 0; font-size: 15px; }
+    .closing { text-align: center; font-style: italic; color: var(--muted); font-size: 15px; margin-top: 10px; }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin: 18px 0 8px; }
 
     /* TOAST */
     .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff;
+      padding: 10px 18px; border-radius: 99px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 100;
     }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 0;
-      text-align: center;
-    }
-
-    .footer-support {
-      margin-bottom: 18px;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link {
-      font-size: 13px;
-      color: var(--brand);
-      text-decoration: none;
-    }
-
+    .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; text-align: center; }
+    .footer-support-text { font-size: 15px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .footer-link { font-size: 14px; color: var(--brand-dark); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
 
-    .footer-credit {
-      font-size: 12px;
-      color: var(--hint);
-      margin-top: 12px;
-    }
-
-    /* NAME FIELD */
-    .name-field {
-      background: var(--warm);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 14px;
-    }
-
-    .name-field label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-style: italic;
+    @media (max-width: 480px) {
+      body { font-size: 16px; }
+      .sit-grid { grid-template-columns: 1fr; }
+      .how { grid-template-columns: 1fr; }
+      .btn-row .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- HEADER -->
   <header class="header">
     <div class="logo-wrap">
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
     <h1>Inner vs Outer Alignment</h1>
-    <p class="tagline">A gentle reflection space to explore how you feel inside compared to how you show up in the world.</p>
-    <span class="disclaimer">Reflection support only — not a diagnosis or medical tool</span>
+    <p class="tagline">A gentle space to notice how you feel inside compared to how you show up with others.</p>
+    <span class="disclaimer">Reflection support only, not a diagnosis or medical tool</span>
   </header>
 
-  <!-- REFLECTION CARD -->
-  <section class="card" aria-labelledby="reflect-heading">
-    <p class="card-title" id="reflect-heading">Your reflection</p>
+  <main class="card" id="app" aria-live="polite"></main>
 
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Questions answered</span>
-        <span id="progressText">0 of 5</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    </div>
-
-    <label class="save-row">
-      <input type="checkbox" id="saveToggle" />
-      Save my reflection on this device
-    </label>
-
-    <!-- Q1 -->
-    <div class="question">
-      <label class="question-label" for="q1">How do you feel on the inside, when no one is watching?</label>
-      <p class="question-hint">Emotions, body sensations, or inner dialogue.</p>
-      <textarea id="q1" maxlength="550" aria-label="How you feel on the inside" placeholder="Write freely — this is just for you…"></textarea>
-      <div class="intensity-row">
-        <span class="intensity-label">Intensity:</span>
-        <input id="s1" type="range" min="1" max="5" step="1" value="3" aria-label="Intensity for first question" />
-        <span class="intensity-val" id="s1v">3</span><span class="intensity-label">/5</span>
-      </div>
-    </div>
-
-    <!-- Q2 -->
-    <div class="question">
-      <label class="question-label" for="q2">How do you usually present yourself to others?</label>
-      <p class="question-hint">Words, tone, or behaviour people often see.</p>
-      <textarea id="q2" maxlength="550" aria-label="How you present yourself to others" placeholder="How do others tend to see you?"></textarea>
-      <div class="intensity-row">
-        <span class="intensity-label">Intensity:</span>
-        <input id="s2" type="range" min="1" max="5" step="1" value="3" aria-label="Intensity for second question" />
-        <span class="intensity-val" id="s2v">3</span><span class="intensity-label">/5</span>
-      </div>
-    </div>
-
-    <!-- Q3 -->
-    <div class="question">
-      <label class="question-label" for="q3">Where is the biggest gap between your inner and outer self?</label>
-      <p class="question-hint">For example: confidence, sadness, boundaries, energy, or honesty.</p>
-      <textarea id="q3" maxlength="550" aria-label="Biggest gap between inner and outer self" placeholder="Where do you feel the tension most?"></textarea>
-      <div class="intensity-row">
-        <span class="intensity-label">Intensity:</span>
-        <input id="s3" type="range" min="1" max="5" step="1" value="3" aria-label="Intensity for third question" />
-        <span class="intensity-val" id="s3v">3</span><span class="intensity-label">/5</span>
-      </div>
-    </div>
-
-    <!-- Q4 -->
-    <div class="question">
-      <label class="question-label" for="q4">What part of yourself do you hide or edit most often?</label>
-      <p class="question-hint">What do you wish felt safer to express?</p>
-      <textarea id="q4" maxlength="550" aria-label="What part you hide" placeholder="What stays hidden, even when you wish it didn't?"></textarea>
-      <div class="intensity-row">
-        <span class="intensity-label">Intensity:</span>
-        <input id="s4" type="range" min="1" max="5" step="1" value="3" aria-label="Intensity for fourth question" />
-        <span class="intensity-val" id="s4v">3</span><span class="intensity-label">/5</span>
-      </div>
-    </div>
-
-    <!-- Q5 -->
-    <div class="question">
-      <label class="question-label" for="q5">What is one small step toward alignment this week?</label>
-      <p class="question-hint">Keep it practical and kind to yourself.</p>
-      <textarea id="q5" maxlength="550" aria-label="One small alignment step" placeholder="Even the smallest step counts…"></textarea>
-      <div class="intensity-row">
-        <span class="intensity-label">Intensity:</span>
-        <input id="s5" type="range" min="1" max="5" step="1" value="3" aria-label="Intensity for fifth question" />
-        <span class="intensity-val" id="s5v">3</span><span class="intensity-label">/5</span>
-      </div>
-    </div>
-
-    <!-- NAME -->
-    <div class="name-field">
-      <label for="pdfName">Your name for PDF (optional)</label>
-      <input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" aria-label="Name to include in PDF" />
-    </div>
-
-    <!-- RESULT -->
-    <div class="result-box" id="result" aria-live="polite"></div>
-
-    <!-- ACTIONS -->
-    <div class="section-label">Actions</div>
-    <div class="btn-row" style="margin-bottom: 18px;">
-      <button type="button" class="btn btn-primary" id="reflectBtn" aria-label="Show my reflection">See my reflection</button>
-      <button type="button" class="btn btn-secondary" id="pdfBtn" aria-label="Download PDF summary">Download PDF</button>
-      <button type="button" class="btn btn-danger" id="resetBtn" aria-label="Reset tool">Reset</button>
-    </div>
-
-    <!-- SHARE -->
-    <div class="section-label">Share this tool</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLink" aria-label="Copy page link">Copy link</button>
-      <a class="btn btn-share" id="whatsappShare" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-      <a class="btn btn-share" id="facebookShare" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" aria-label="Share on X">X</a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
-    <div class="footer-support">
-      <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-      <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
-    </div>
-
+    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — if you feel unsafe, please seek urgent help.
+      &nbsp;&middot;&nbsp; Reflection support only. If you feel unsafe, please seek urgent help.
     </p>
   </footer>
-
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  const { jsPDF } = window.jspdf;
-  const ids = ["q1","q2","q3","q4","q5"];
-  const sids = ["s1","s2","s3","s4","s5"];
-  const resultEl = document.getElementById("result");
-  const saveToggle = document.getElementById("saveToggle");
-  const pdfNameInput = document.getElementById("pdfName");
-  const storageKey = "innerOuterAlignmentDataV4";
-  const logoUrl = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
+(function () {
+  var storageKey = "innerOuterAlignmentDataV5";
+  var logoUrl = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
+  var SOURCE_HTML = 'Source: <a href="https://www.cpapracticeadvisor.com/2026/04/24/69-of-workers-adjust-their-behavior-at-work-to-fit-in-new-survey-finds/182204/" target="_blank" rel="noopener">MyPerfectResume survey, January 2026</a>, reported April 2026.';
+  var GENERAL_FACT = "In a 2026 survey, only 14% of workers said they can be completely themselves at work, and 69% said they change how they act depending on who they are with.";
 
-  const notes = [
-    "Your inner feelings are valid and worth listening to.",
-    "Your outer style may be a strength you built to cope and connect.",
-    "Noticing the gap is a brave first step toward alignment.",
-    "What you hide can point to where support and boundaries are needed.",
-    "Alignment can begin with one honest action this week."
+  /* Real life situations people face today */
+  var SITS = [
+    { id: "work", label: "Smiling at work when I am drained",
+      nudge: "Think about your last working day.",
+      fact: "65% of workers say putting on a professional persona drains their energy or motivation.", src: true,
+      tip: "Try telling one trusted colleague how your day is really going.",
+      steps: ["Take a real 5 minute break", "Tell one colleague the truth", "Say no to one extra task", "Write down how I feel before work"] },
+    { id: "opinions", label: "Agreeing in meetings just to fit in",
+      nudge: "Think about a time you nodded but did not agree.",
+      fact: "65% of workers say they have agreed with opinions at work that they would not agree with outside of work.", src: true,
+      tip: "You can stay respectful and still say, \"I see it a little differently.\"",
+      steps: ["Share one honest opinion kindly", "Ask a question instead of agreeing", "Pause before saying yes", "Talk it through with someone I trust"] },
+    { id: "social", label: "Posting the happy version online",
+      nudge: "Think about what you shared this week, and what you left out.",
+      fact: "59% of workers have hidden or curated parts of their social media to keep a professional image.", src: true,
+      tip: "Sharing one small real moment can feel lighter than keeping up a perfect image.",
+      steps: ["Share one honest, simple moment", "Take a day off from posting", "Unfollow one page that makes me feel small", "Message a friend the real update"] },
+    { id: "change", label: "Keeping up with fast change (new tech, job demands)",
+      nudge: "Think about something new you feel pressure to master.",
+      fact: "17% of workers say fast changing technology or job demands add to the pressure they feel.", src: true,
+      tip: "Nobody keeps up with everything. Learning at your own pace is allowed.",
+      steps: ["Learn one small thing today", "Ask for help with one tool", "Name what I am already proud of", "Take a break from the news"] },
+    { id: "strong", label: "Being the strong one for everyone",
+      nudge: "Think about who leans on you.",
+      fact: "Being strong for others is a gift, but you are allowed to need support too.", src: false,
+      tip: "Letting one person see you struggle can make you feel less alone.",
+      steps: ["Ask one person for help", "Say \"I need a moment\"", "Rest without feeling guilty", "Tell someone how I really am"] },
+    { id: "family", label: "Keeping the peace at home",
+      nudge: "Think about a recent moment with family or a partner.",
+      fact: "Keeping the peace is not wrong. It becomes heavy when your own needs never get a turn.", src: false,
+      tip: "Calm honesty and a kind tone can protect the peace and your needs at the same time.",
+      steps: ["Name one need out loud, gently", "Take a short walk before replying", "Set one small boundary", "Talk to someone outside the situation"] },
+    { id: "fine", label: "Saying \"I am fine\" when I am not",
+      nudge: "Think about the last time someone asked how you were.",
+      fact: "Many people say \"I am fine\" out of habit. Noticing the habit is the first step.", src: false,
+      tip: "Try a small upgrade like \"Today is a bit heavy\" with someone safe.",
+      steps: ["Say \"a bit heavy today\" to a safe person", "Write my feelings down for 3 minutes", "Check in with my body", "Text one friend I trust"] },
+    { id: "other", label: "Something else",
+      nudge: "Think of one moment this week when your inside and outside did not match.",
+      fact: "Everyone has moments where the inside and outside do not match. It is human.", src: false,
+      tip: "Noticing the moment is already progress.",
+      steps: ["Take 3 slow breaths before I speak", "Tell one person one honest thing", "Write down how I feel", "Rest for 10 minutes"] }
   ];
 
-  const labels = ["Inside feelings","Outside presentation","Biggest gap","Hidden or edited parts","Alignment step"];
+  /* The five questions, each with its own stick man scene */
+  var QS = [
+    { label: "Inside feelings", q: "How do you feel on the inside, when no one is watching?",
+      hint: "A few words is enough. Feelings, body sensations, or inner thoughts.",
+      ph: "Write freely. This is just for you...",
+      chips: ["Tired", "Anxious", "Sad", "Calm", "Hopeful", "Overwhelmed", "Numb", "Angry"],
+      scale: "How strong are these feelings?", ends: ["Light", "Very strong"],
+      note: "Your inner feelings are valid and worth listening to." },
+    { label: "Outside presentation", q: "How do you usually show up with other people?",
+      hint: "What do people usually see or hear from you?",
+      ph: "How do others tend to see you?",
+      chips: ["Cheerful", "Strong", "Quiet", "Helpful", "Funny", "Busy", "Calm"],
+      scale: "How much do you adjust yourself?", ends: ["A little", "A lot"],
+      note: "Your outer style may be a strength you built to cope and connect." },
+    { label: "Biggest gap", q: "Where is the biggest gap between your inside and your outside?",
+      hint: "For example: confidence, sadness, boundaries, energy, or honesty.",
+      ph: "Where do you feel the tension most?",
+      chips: ["Confidence", "Sadness", "Boundaries", "Energy", "Honesty", "Stress"],
+      scale: "How big does the gap feel?", ends: ["Small", "Very big"],
+      note: "Noticing the gap is a brave first step toward alignment." },
+    { label: "Hidden or edited parts", q: "What part of yourself do you hide or edit most often?",
+      hint: "What do you wish felt safer to share?",
+      ph: "What stays hidden, even when you wish it didn't?",
+      chips: ["My worries", "My tears", "My anger", "My needs", "My real opinion", "My fear"],
+      scale: "How hard is it to share this?", ends: ["Easy", "Very hard"],
+      note: "What you hide can point to where support and boundaries are needed." },
+    { label: "Alignment step", q: "What is one small step toward feeling more aligned this week?",
+      hint: "Keep it small, practical, and kind to yourself.",
+      ph: "Even the smallest step counts...",
+      chips: null,
+      scale: "How ready do you feel to try it?", ends: ["Not yet", "Ready"],
+      note: "Alignment can begin with one honest action this week." }
+  ];
 
-  let toastTimer;
-  function showToast(msg) {
-    const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
-  }
+  var SCALE_WORDS = ["", "Light", "Mild", "Medium", "Strong", "Very strong"];
 
-  function getData() {
-    return {
-      answers: ids.map(id => document.getElementById(id).value.trim()),
-      scores: sids.map(id => document.getElementById(id).value)
-    };
-  }
-
-  function updateProgress() {
-    const answered = getData().answers.filter(Boolean).length;
-    document.getElementById("progressText").textContent = answered + " of 5";
-    document.getElementById("progressFill").style.width = Math.round((answered / 5) * 100) + "%";
-    if (saveToggle.checked) saveLocal();
-  }
-
-  function setShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent("Try this free Inner vs Outer Alignment reflection tool:");
-    document.getElementById("whatsappShare").href = "https://wa.me/?text=" + msg + "%20" + url;
-    document.getElementById("facebookShare").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
-    document.getElementById("xShare").href = "https://x.com/intent/tweet?text=" + msg + "%20" + url;
-  }
-
-  function buildResultHTML() {
-    const { answers, scores } = getData();
-    if (!answers.some(Boolean)) return null;
-
-    let html = "<h3>Your reflection summary</h3>";
-    labels.forEach((label, i) => {
-      html += '<div class="result-item">';
-      html += '<div class="result-item-title">' + (i + 1) + '. ' + label + ' &nbsp;·&nbsp; Intensity: ' + scores[i] + '/5</div>';
-      html += '<div class="result-item-answer">' + (answers[i] || "<em>Left blank</em>") + '</div>';
-      html += '<div class="result-item-note">' + notes[i] + '</div>';
-      html += '</div>';
-    });
-    html += '<p class="result-closing">Small, honest steps can reduce pressure and increase peace.</p>';
-    return html;
-  }
-
-  function showReflection() {
-    const html = buildResultHTML();
-    if (!html) {
-      resultEl.style.display = "block";
-      resultEl.innerHTML = "<p style='color:var(--muted);font-style:italic;'>Please write at least one response first.</p>";
-      return;
+  /* ---------- Stick men ---------- */
+  function fig(x, y, o) {
+    o = o || {};
+    var m;
+    if (o.mouth === "smile") m = '<path class="s" d="M' + (x - 5) + ' ' + (y + 3) + ' Q' + x + ' ' + (y + 9) + ' ' + (x + 5) + ' ' + (y + 3) + '"/>';
+    else if (o.mouth === "sad") m = '<path class="s" style="stroke-width:2" d="M' + (x - 5) + ' ' + (y + 8) + ' Q' + x + ' ' + (y + 3) + ' ' + (x + 5) + ' ' + (y + 8) + '"/>';
+    else m = '<line class="s" style="stroke-width:2" x1="' + (x - 4) + '" y1="' + (y + 6) + '" x2="' + (x + 4) + '" y2="' + (y + 6) + '"/>';
+    var arms = o.arms || [[-16, 14], [16, 14]];
+    var sy = y + 22;
+    var g = '<circle class="s" cx="' + x + '" cy="' + y + '" r="11"/>' +
+      '<circle class="eye" cx="' + (x - 4) + '" cy="' + (y - 3) + '" r="1.6"/><circle class="eye" cx="' + (x + 4) + '" cy="' + (y - 3) + '" r="1.6"/>' + m +
+      '<line class="s" x1="' + x + '" y1="' + (y + 11) + '" x2="' + x + '" y2="' + (y + 46) + '"/>';
+    for (var i = 0; i < arms.length; i++) {
+      g += '<line class="s" x1="' + x + '" y1="' + sy + '" x2="' + (x + arms[i][0]) + '" y2="' + (sy + arms[i][1]) + '"/>';
     }
-    resultEl.innerHTML = html;
-    resultEl.style.display = "block";
-    resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (saveToggle.checked) saveLocal();
+    g += '<line class="s" x1="' + x + '" y1="' + (y + 46) + '" x2="' + (x - 12) + '" y2="' + (y + 68) + '"/>' +
+         '<line class="s" x1="' + x + '" y1="' + (y + 46) + '" x2="' + (x + 12) + '" y2="' + (y + 68) + '"/>';
+    return g;
   }
 
+  function scene(i) {
+    var open = '<svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="';
+    if (i === 0) { /* alone, thinking about feelings */
+      return open + 'A stick man alone with a cloud of feelings">' +
+        fig(55, 30, { mouth: "flat" }) +
+        '<circle class="s" cx="76" cy="24" r="2.5"/><circle class="s" cx="86" cy="16" r="4"/>' +
+        '<ellipse class="s" cx="140" cy="34" rx="46" ry="24" style="fill:var(--brand-light)"/>' +
+        '<path class="s" style="stroke:var(--brand);stroke-width:2.5" d="M112 34 q7 -12 14 0 t14 0 t14 0 t14 0"/>' +
+        '</svg>';
+    }
+    if (i === 1) { /* waving at people, I'm fine */
+      return open + 'A stick man smiling and waving at two other people">' +
+        fig(42, 30, { mouth: "smile", arms: [[-16, 14], [22, -14]] }) +
+        '<rect class="s" x="68" y="4" width="66" height="26" rx="12" style="fill:var(--brand-light)"/>' +
+        '<text class="lbl" x="101" y="21" text-anchor="middle" style="font-size:12px;fill:var(--text)">I am fine!</text>' +
+        '<g transform="translate(115,42) scale(.62)">' + fig(25, 30, { mouth: "smile" }) + fig(70, 30, { mouth: "smile" }) + '</g>' +
+        '</svg>';
+    }
+    if (i === 2) { /* the gap */
+      return open + 'Two stick men showing the gap between inside and outside">' +
+        fig(42, 18, { mouth: "sad" }) +
+        fig(158, 18, { mouth: "smile" }) +
+        '<line class="s" style="stroke:var(--support);stroke-width:2;stroke-dasharray:5 5" x1="68" y1="58" x2="132" y2="58"/>' +
+        '<path class="s" style="stroke:var(--support);stroke-width:2" d="M74 52 L66 58 L74 64 M126 52 L134 58 L126 64"/>' +
+        '<text class="lbl" x="42" y="107" text-anchor="middle">Inside</text>' +
+        '<text class="lbl" x="158" y="107" text-anchor="middle">Outside</text>' +
+        '<text class="lbl" x="100" y="48" text-anchor="middle" style="fill:var(--support)">the gap</text>' +
+        '</svg>';
+    }
+    if (i === 3) { /* hiding behind a mask */
+      return open + 'A stick man smiling while holding a mask behind his back">' +
+        fig(80, 22, { mouth: "smile", arms: [[-16, 14], [26, 8]] }) +
+        '<ellipse class="s" cx="120" cy="56" rx="13" ry="17" style="fill:var(--brand-light)"/>' +
+        '<circle class="eye" cx="115" cy="51" r="1.6"/><circle class="eye" cx="125" cy="51" r="1.6"/>' +
+        '<path class="s" style="stroke-width:2" d="M114 60 Q120 66 126 60"/>' +
+        '<path class="s" style="stroke:var(--support);stroke-width:2.5" d="M30 60 c-8 -10 -20 0 -10 10 l10 10 l10 -10 c10 -10 -2 -20 -10 -10 z"/>' +
+        '<text class="lbl" x="30" y="100" text-anchor="middle">hidden</text>' +
+        '</svg>';
+    }
+    /* 4: stepping up */
+    return open + 'A stick man stepping up a small staircase">' +
+      '<polyline class="s" style="stroke:var(--brand);stroke-width:3" points="14,100 70,100 70,82 110,82 110,64 150,64 150,46 190,46"/>' +
+      '<g transform="translate(88,82) scale(.75)">' + fig(0, -68, { mouth: "smile", arms: [[-16, 10], [18, -16]] }) + '</g>' +
+      '<line class="s" style="stroke:var(--accent-dark);stroke-width:2.5" x1="174" y1="46" x2="174" y2="22"/>' +
+      '<path class="s" style="stroke:var(--accent-dark);fill:var(--accent-light);stroke-width:2" d="M174 22 L190 28 L174 34"/>' +
+      '</svg>';
+  }
+
+  function cheerFig() {
+    return '<svg viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A happy stick man with arms up" style="max-width:150px">' +
+      fig(60, 26, { mouth: "smile", arms: [[-22, -16], [22, -16]] }) +
+      '<path class="s" style="stroke:var(--support);stroke-width:2" d="M16 24 l6 6 M104 24 l-6 6 M12 50 l8 0 M108 50 l-8 0"/></svg>';
+  }
+
+  /* ---------- State ---------- */
+  var state = { sit: null, step: -1, answers: ["", "", "", "", ""], scores: [3, 3, 3, 3, 3], name: "", save: false };
+  var saved = null;
+  var app = document.getElementById("app");
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function sitObj() {
+    for (var i = 0; i < SITS.length; i++) if (SITS[i].id === state.sit) return SITS[i];
+    return null;
+  }
+  var toastTimer;
+  function toast(msg) {
+    var el = document.getElementById("toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2200);
+  }
   function saveLocal() {
     try {
-      const payload = {
-        ...getData(),
-        save: saveToggle.checked,
-        pdfName: pdfNameInput.value.trim(),
-        resultHTML: resultEl.innerHTML,
-        resultVisible: resultEl.style.display === "block"
-      };
-      localStorage.setItem(storageKey, JSON.stringify(payload));
-    } catch(_) {}
+      if (state.save) localStorage.setItem(storageKey, JSON.stringify(state));
+      else localStorage.removeItem(storageKey);
+    } catch (_) {}
   }
-
   function loadLocal() {
     try {
-      const raw = localStorage.getItem(storageKey);
+      var raw = localStorage.getItem(storageKey);
       if (!raw) return;
-      const d = JSON.parse(raw);
-      if (!d || !Array.isArray(d.answers) || !Array.isArray(d.scores)) return;
-      ids.forEach((id, i) => { document.getElementById(id).value = d.answers[i] || ""; });
-      sids.forEach((id, i) => {
-        const val = d.scores[i] || "3";
-        document.getElementById(id).value = val;
-        document.getElementById(id + "v").textContent = val;
-      });
-      saveToggle.checked = Boolean(d.save);
-      pdfNameInput.value = typeof d.pdfName === "string" ? d.pdfName : "";
-      if (d.resultVisible && d.resultHTML) {
-        resultEl.innerHTML = d.resultHTML;
-        resultEl.style.display = "block";
-      }
-    } catch(_) {
-      try { localStorage.removeItem(storageKey); } catch(_) {}
+      var d = JSON.parse(raw);
+      if (d && Array.isArray(d.answers) && Array.isArray(d.scores) && d.answers.some(function (a) { return a; })) saved = d;
+    } catch (_) {
+      try { localStorage.removeItem(storageKey); } catch (_) {}
     }
   }
+  function top() {
+    var r = app.getBoundingClientRect();
+    if (r.top < 0) window.scrollTo({ top: window.pageYOffset + r.top - 12, behavior: "smooth" });
+  }
+  function go(step) { state.step = step; saveLocal(); render(); top(); }
 
-  function resetTool() {
-    ids.forEach(id => { document.getElementById(id).value = ""; });
-    sids.forEach(id => {
-      document.getElementById(id).value = "3";
-      document.getElementById(id + "v").textContent = "3";
+  /* ---------- Screens ---------- */
+  function renderIntro() {
+    var s = sitObj();
+    var h = '<p class="card-title">Let us begin</p>' +
+      '<div class="fig">' + scene(2) + '</div>' +
+      '<div class="how"><div><b>1</b>Pick a situation</div><div><b>2</b>Answer 5 short questions</div><div><b>3</b>Get your summary</div></div>' +
+      '<h2>Which of these feels closest to you right now?</h2>' +
+      '<p class="hint">Tap one. These are everyday moments many people face today.</p>' +
+      '<div class="sit-grid">';
+    SITS.forEach(function (x) {
+      h += '<button type="button" class="sit' + (state.sit === x.id ? " on" : "") + '" data-sit="' + x.id + '" aria-pressed="' + (state.sit === x.id) + '">' + esc(x.label) + '</button>';
     });
-    resultEl.innerHTML = "";
-    resultEl.style.display = "none";
-    pdfNameInput.value = "";
-    saveToggle.checked = false;
-    try { localStorage.removeItem(storageKey); } catch(_) {}
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    showToast("Tool reset.");
+    h += '</div>';
+    h += '<div class="fact" id="factBox">' + (s ? esc(s.fact) + (s.src ? '<small>' + SOURCE_HTML + '</small>' : '') : esc(GENERAL_FACT) + '<small>' + SOURCE_HTML + '</small>') + '</div>';
+    h += '<label class="save-row"><input type="checkbox" id="saveToggle"' + (state.save ? " checked" : "") + ' /> Save my answers on this device only</label>';
+    h += '<div class="btn-row">';
+    h += '<button type="button" class="btn btn-primary grow" id="startBtn"' + (s ? "" : " disabled") + '>Start my reflection</button>';
+    if (saved) h += '<button type="button" class="btn btn-outline grow" id="resumeBtn">Continue where I left off</button>';
+    h += '</div>';
+    app.innerHTML = h;
+
+    Array.prototype.forEach.call(app.querySelectorAll("[data-sit]"), function (b) {
+      b.addEventListener("click", function () { state.sit = b.getAttribute("data-sit"); saveLocal(); renderIntro(); });
+    });
+    document.getElementById("saveToggle").addEventListener("change", function (e) { state.save = e.target.checked; saveLocal(); });
+    document.getElementById("startBtn").addEventListener("click", function () { if (state.sit) go(0); });
+    var rb = document.getElementById("resumeBtn");
+    if (rb) rb.addEventListener("click", function () {
+      state = saved; saved = null;
+      if (state.step < 0 || state.step > 5) state.step = 0;
+      render(); top();
+    });
   }
 
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: "cors" });
-    if (!res.ok) throw new Error("Logo fetch failed");
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error("Logo read failed"));
-      reader.readAsDataURL(blob);
+  function renderQuestion(i) {
+    var q = QS[i], s = sitObj() || SITS[SITS.length - 1];
+    var chips = q.chips || s.steps;
+    var h = '<div class="dots" aria-hidden="true">';
+    for (var d = 0; d < 5; d++) h += '<div class="dot' + (d < i ? " done" : d === i ? " now" : "") + '"></div>';
+    h += '</div>';
+    h += '<div class="qnum">Question ' + (i + 1) + ' of 5</div>';
+    h += '<div class="fig">' + scene(i) + '</div>';
+    h += '<h2>' + esc(q.q) + '</h2>';
+    h += '<p class="hint">' + esc(q.hint) + '</p>';
+    h += '<span class="nudge">' + esc(s.nudge) + '</span>';
+    h += '<p class="chip-label">' + (i === 4 ? "Need an idea? Tap one:" : "Not sure what to write? Tap a word:") + '</p><div class="chips">';
+    chips.forEach(function (c, k) { h += '<button type="button" class="chip" data-chip="' + k + '">' + esc(c) + '</button>'; });
+    h += '</div>';
+    h += '<textarea id="ans" maxlength="550" placeholder="' + esc(q.ph) + '" aria-label="' + esc(q.q) + '">' + esc(state.answers[i]) + '</textarea>';
+    h += '<div class="count" id="cnt">' + state.answers[i].length + ' / 550</div>';
+    h += '<div class="scale-box"><p class="scale-q">' + esc(q.scale) + ' <span id="scWord" style="color:var(--brand-dark)">(' + SCALE_WORDS[state.scores[i]] + ')</span></p><div class="scale">';
+    for (var n = 1; n <= 5; n++) h += '<button type="button" data-sc="' + n + '" class="' + (state.scores[i] === n ? "on" : "") + '" aria-label="' + n + ' out of 5">' + n + '</button>';
+    h += '</div><div class="scale-ends"><span>' + esc(q.ends[0]) + '</span><span>' + esc(q.ends[1]) + '</span></div></div>';
+    h += '<div class="btn-row"><button type="button" class="btn btn-outline" id="backBtn">Back</button>' +
+         '<button type="button" class="btn btn-primary grow" id="nextBtn">' + (i === 4 ? "See my reflection" : "Next") + '</button></div>';
+    h += '<div style="text-align:center"><button type="button" class="skip" id="skipBtn">Skip this question</button></div>';
+    app.innerHTML = h;
+
+    var ta = document.getElementById("ans");
+    ta.addEventListener("input", function () {
+      state.answers[i] = ta.value;
+      document.getElementById("cnt").textContent = ta.value.length + " / 550";
+      saveLocal();
     });
+    Array.prototype.forEach.call(app.querySelectorAll("[data-chip]"), function (b) {
+      b.addEventListener("click", function () {
+        var t = chips[+b.getAttribute("data-chip")];
+        var cur = ta.value.trim();
+        var sep = i === 4 ? ". " : ", ";
+        var out = cur ? cur.replace(/[.,]\s*$/, "") + sep + (i === 4 ? t : t.toLowerCase()) : t;
+        ta.value = out.slice(0, 550);
+        state.answers[i] = ta.value;
+        document.getElementById("cnt").textContent = ta.value.length + " / 550";
+        saveLocal();
+        ta.focus();
+      });
+    });
+    Array.prototype.forEach.call(app.querySelectorAll("[data-sc]"), function (b) {
+      b.addEventListener("click", function () {
+        var v = +b.getAttribute("data-sc");
+        state.scores[i] = v;
+        Array.prototype.forEach.call(app.querySelectorAll("[data-sc]"), function (x) { x.classList.toggle("on", +x.getAttribute("data-sc") === v); });
+        document.getElementById("scWord").textContent = "(" + SCALE_WORDS[v] + ")";
+        saveLocal();
+      });
+    });
+    document.getElementById("backBtn").addEventListener("click", function () { go(i === 0 ? -1 : i - 1); });
+    document.getElementById("nextBtn").addEventListener("click", function () { go(i + 1); });
+    document.getElementById("skipBtn").addEventListener("click", function () { state.answers[i] = ""; go(i + 1); });
   }
 
-  async function downloadPDF() {
-    const { answers, scores } = getData();
-    if (!answers.some(Boolean)) {
-      showToast("Please add at least one response first.");
+  function gapMessage() {
+    var g = state.scores[2];
+    if (g <= 2) return "Your inside and outside feel fairly close right now. Keep noticing what helps that.";
+    if (g === 3) return "There is a gap, and that is normal. Small honest moments can help close it.";
+    return "The gap feels big right now, and that can be tiring. You do not need to fix it all at once. One small honest step is enough.";
+  }
+
+  function renderResult() {
+    var s = sitObj() || SITS[SITS.length - 1];
+    var any = state.answers.some(function (a) { return a.trim(); });
+    var h = '<div class="result-top"><div class="fig">' + cheerFig() + '</div><h2>Your reflection</h2>' +
+            '<p class="hint">Situation: ' + esc(s.label) + '</p></div>';
+    if (!any) {
+      h += '<p class="hint" style="text-align:center">You have not written anything yet. Go back and answer at least one question.</p>';
+      h += '<div class="btn-row"><button type="button" class="btn btn-primary grow" id="editBtn">Go back to the questions</button></div>';
+      app.innerHTML = h;
+      document.getElementById("editBtn").addEventListener("click", function () { go(0); });
       return;
     }
-
-    showToast("Preparing your PDF…");
-
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header band
-    doc.setFillColor(232, 244, 249);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, "F");
-
-    try {
-      const logoData = await imageToDataUrl(logoUrl);
-      doc.addImage(logoData, "JPEG", margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(15);
-    doc.setTextColor(30, 42, 53);
-    doc.text("Inner vs Outer Alignment", margin + 76, y + 26);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(90, 106, 118);
-    doc.text("Reflection Summary", margin + 76, y + 41);
-    doc.text("emotionalintelligencedeveloper.com", margin + 76, y + 56);
-
-    y += 86;
-
-    const name = pdfNameInput.value.trim();
-    if (name) {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(30, 42, 53);
-      doc.text("Name: " + name, margin, y);
-      y += 18;
-    }
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9.5);
-
-    labels.forEach((label, i) => {
-      if (y > pageH - 100) { doc.addPage(); y = margin; }
-
-      doc.setFillColor(248, 252, 255);
-      const blockLines = doc.splitTextToSize("Answer: " + (answers[i] || "(left blank)") + "\nNote: " + notes[i], pageW - margin * 2 - 20);
-      const blockH = blockLines.length * 12 + 34;
-      doc.roundedRect(margin, y, pageW - margin * 2, blockH, 4, 4, "F");
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(91, 143, 168);
-      doc.text((i + 1) + ". " + label.toUpperCase() + "   ·   Intensity: " + scores[i] + "/5", margin + 10, y + 14);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 42, 53);
-      doc.text(blockLines, margin + 10, y + 26);
-
-      y += blockH + 10;
+    h += '<div class="gap-msg">' + esc(gapMessage()) + '</div>';
+    QS.forEach(function (q, i) {
+      h += '<div class="result-item"><div class="ri-title">' + (i + 1) + '. ' + esc(q.label) + ' &nbsp;&middot;&nbsp; Intensity ' + state.scores[i] + '/5</div>' +
+           '<div class="ri-answer">' + (state.answers[i].trim() ? esc(state.answers[i]) : '<em>Left blank</em>') + '</div>' +
+           '<div class="ri-note">' + esc(q.note) + '</div></div>';
     });
+    h += '<div class="tip-box"><b>A gentle idea for this situation:</b> ' + esc(s.tip) + '</div>';
+    h += '<p class="hint" style="font-size:14px">Being aligned does not mean telling everyone everything. It means choosing what you share on purpose, and having at least one safe place to be real.</p>';
+    h += '<div class="field" style="margin-top:14px"><label for="pdfName" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">Your name for the PDF (optional)</label>' +
+         '<input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" value="' + esc(state.name) + '" /></div>';
+    h += '<div class="btn-row"><button type="button" class="btn btn-secondary grow" id="pdfBtn">Download my PDF</button>' +
+         '<button type="button" class="btn btn-outline grow" id="editBtn">Edit my answers</button>' +
+         '<button type="button" class="btn btn-outline grow" id="resetBtn">Start again</button></div>';
+    h += '<p class="closing">Small, honest steps can reduce pressure and increase peace.</p>';
+    h += '<div class="section-label">Share this tool</div><div class="btn-row" style="margin-top:0">' +
+         '<button type="button" class="btn btn-share" id="copyLink">Copy link</button>' +
+         '<a class="btn btn-share" id="wa" target="_blank" rel="noopener">WhatsApp</a>' +
+         '<a class="btn btn-share" id="fb" target="_blank" rel="noopener">Facebook</a>' +
+         '<a class="btn btn-share" id="xs" target="_blank" rel="noopener">X</a></div>';
+    app.innerHTML = h;
 
-    // Resources section
-    if (y > pageH - 120) { doc.addPage(); y = margin; }
-    y += 6;
-    doc.setDrawColor(200, 220, 230);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
+    var url = encodeURIComponent(window.location.href);
+    var msg = encodeURIComponent("Try this free Inner vs Outer Alignment reflection tool:");
+    document.getElementById("wa").href = "https://wa.me/?text=" + msg + "%20" + url;
+    document.getElementById("fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+    document.getElementById("xs").href = "https://x.com/intent/tweet?text=" + msg + "%20" + url;
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(91, 143, 168);
-    doc.text("More free wellbeing resources", margin, y);
-    y += 14;
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(30, 42, 53);
-    const resources = [
-      "Main site: emotionalintelligencedeveloper.com",
-      "Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
-      "Audio books: emotionalintelligencedeveloper.com/recommended-books/",
-      "Support this project: emotionalintelligencedeveloper.com/support-this-website/"
-    ];
-    resources.forEach(line => {
-      doc.text(line, margin, y);
-      y += 13;
+    document.getElementById("pdfName").addEventListener("input", function (e) { state.name = e.target.value; saveLocal(); });
+    document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
+    document.getElementById("editBtn").addEventListener("click", function () { go(0); });
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("copyLink").addEventListener("click", function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(window.location.href).then(function () { toast("Link copied!"); }, function () { toast("Copy from your address bar."); });
+      } else toast("Copy from your address bar.");
     });
-
-    // Footer line
-    doc.setDrawColor(200, 220, 230);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 154, 166);
-    doc.text("This tool supports reflection and self-awareness. If you feel unsafe or at risk, please seek urgent help.", margin, pageH - 22);
-
-    doc.save("inner-outer-alignment-reflection.pdf");
-    showToast("PDF downloaded!");
   }
 
-  // Event listeners
-  ids.forEach(id => document.getElementById(id).addEventListener("input", updateProgress));
+  function render() {
+    if (state.step < 0) renderIntro();
+    else if (state.step <= 4) renderQuestion(state.step);
+    else renderResult();
+  }
 
-  sids.forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener("input", () => {
-      document.getElementById(id + "v").textContent = el.value;
-      if (saveToggle.checked) saveLocal();
+  function resetAll() {
+    state = { sit: null, step: -1, answers: ["", "", "", "", ""], scores: [3, 3, 3, 3, 3], name: "", save: false };
+    saved = null;
+    try { localStorage.removeItem(storageKey); } catch (_) {}
+    render(); top();
+    toast("Tool reset.");
+  }
+
+  /* ---------- PDF ---------- */
+  function imageToDataUrl(url) {
+    return fetch(url, { mode: "cors" }).then(function (res) {
+      if (!res.ok) throw new Error("Logo fetch failed");
+      return res.blob();
+    }).then(function (blob) {
+      return new Promise(function (resolve, reject) {
+        var r = new FileReader();
+        r.onloadend = function () { resolve(r.result); };
+        r.onerror = function () { reject(new Error("Logo read failed")); };
+        r.readAsDataURL(blob);
+      });
     });
-  });
+  }
 
-  document.getElementById("reflectBtn").addEventListener("click", showReflection);
-  document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
-  document.getElementById("resetBtn").addEventListener("click", resetTool);
+  function downloadPDF() {
+    if (!window.jspdf) { toast("PDF tool did not load. Please check your connection."); return; }
+    if (!state.answers.some(function (a) { return a.trim(); })) { toast("Please add at least one response first."); return; }
+    toast("Preparing your PDF...");
+    var s = sitObj() || SITS[SITS.length - 1];
+    imageToDataUrl(logoUrl).catch(function () { return null; }).then(function (logoData) {
+      var doc = new window.jspdf.jsPDF({ unit: "pt", format: "a4" });
+      var pageW = doc.internal.pageSize.getWidth();
+      var pageH = doc.internal.pageSize.getHeight();
+      var margin = 40, y = margin;
 
-  document.getElementById("copyLink").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      showToast("Link copied!");
-    } catch(_) {
-      showToast("Copy from your address bar.");
-    }
-  });
+      doc.setFillColor(232, 244, 249);
+      doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, "F");
+      if (logoData) { try { doc.addImage(logoData, "JPEG", margin + 10, y + 8, 54, 54); } catch (_) {} }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(15); doc.setTextColor(30, 42, 53);
+      doc.text("Inner vs Outer Alignment", margin + 76, y + 26);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(90, 106, 118);
+      doc.text("Reflection Summary", margin + 76, y + 41);
+      doc.text("emotionalintelligencedeveloper.com", margin + 76, y + 56);
+      y += 86;
 
-  saveToggle.addEventListener("change", () => {
-    if (saveToggle.checked) saveLocal();
-    else { try { localStorage.removeItem(storageKey); } catch(_) {} }
-  });
+      var name = (state.name || "").trim();
+      if (name) {
+        doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(30, 42, 53);
+        doc.text("Name: " + name, margin, y); y += 18;
+      }
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(90, 106, 118);
+      var sl = doc.splitTextToSize("Situation: " + s.label, pageW - margin * 2);
+      doc.text(sl, margin, y); y += sl.length * 13 + 6;
 
-  pdfNameInput.addEventListener("input", () => {
-    if (saveToggle.checked) saveLocal();
-  });
+      QS.forEach(function (q, i) {
+        var lines = doc.splitTextToSize("Answer: " + (state.answers[i].trim() || "(left blank)"), pageW - margin * 2 - 20)
+          .concat(doc.splitTextToSize("Note: " + q.note, pageW - margin * 2 - 20));
+        var blockH = lines.length * 12 + 36;
+        if (y + blockH > pageH - 70) { doc.addPage(); y = margin; }
+        doc.setFillColor(248, 252, 255);
+        doc.roundedRect(margin, y, pageW - margin * 2, blockH, 4, 4, "F");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(91, 143, 168);
+        doc.text((i + 1) + ". " + q.label.toUpperCase() + "   |   Intensity: " + state.scores[i] + "/5", margin + 10, y + 14);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 42, 53);
+        doc.text(lines, margin + 10, y + 28);
+        y += blockH + 10;
+      });
 
-  setShareLinks();
+      if (y > pageH - 150) { doc.addPage(); y = margin; }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(58, 122, 88);
+      doc.text("A gentle idea for you", margin, y); y += 13;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 42, 53);
+      var tl = doc.splitTextToSize(s.tip, pageW - margin * 2);
+      doc.text(tl, margin, y); y += tl.length * 12 + 12;
+
+      doc.setDrawColor(200, 220, 230); doc.line(margin, y, pageW - margin, y); y += 14;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(91, 143, 168);
+      doc.text("More free wellbeing resources", margin, y); y += 14;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(30, 42, 53);
+      ["Main site: emotionalintelligencedeveloper.com",
+       "Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
+       "Audio books: emotionalintelligencedeveloper.com/recommended-books/",
+       "Support this project: emotionalintelligencedeveloper.com/support-this-website/"].forEach(function (l) { doc.text(l, margin, y); y += 13; });
+
+      doc.setDrawColor(200, 220, 230); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+      doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(138, 154, 166);
+      doc.text("This tool supports reflection and self-awareness. If you feel unsafe or at risk, please seek urgent help.", margin, pageH - 22);
+
+      doc.save("inner-outer-alignment-reflection.pdf");
+      toast("PDF downloaded!");
+    });
+  }
+
   loadLocal();
-  updateProgress();
+  render();
+})();
 </script>
 </body>
 </html>

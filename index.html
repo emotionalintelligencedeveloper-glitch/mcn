@@ -394,6 +394,7 @@ function speak(text){
 }
 
 /* ---------- FUN PDF WITH STICK FIGURES ---------- */
+const COURSE_URL='https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html';
 const SHORTS=["Anger","Nerves","Mind reading","Crying","Feeling words","Apologies","Empathy","Hiding feelings","Saying no","Always thoughts"];
 const LOGO='https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
 const FIG_COLS=[[74,90,170],[58,138,122],[232,112,42],[176,122,32],[138,58,138],[200,70,100]];
@@ -472,6 +473,11 @@ async function downloadPDF(){
   doc.text('Feelings Detective Course',112,56);
   doc.setFont('helvetica','normal'); doc.setFontSize(11);
   doc.text('Course complete! Here is your detective badge.',112,78);
+  doc.setFontSize(9.5);
+  const linkTop='Take the free course: '+COURSE_URL;
+  doc.textWithLink(linkTop,112,98,{url:COURSE_URL});
+  doc.setDrawColor(255,255,255); doc.setLineWidth(.6);
+  doc.line(112,100,112+doc.getTextWidth(linkTop),100);
 
   // name block
   doc.setFillColor(253,246,232); doc.setDrawColor(224,200,120); doc.setLineWidth(1.5);
@@ -525,9 +531,12 @@ async function downloadPDF(){
   });
 
   // footer
-  doc.setDrawColor(176,184,224); doc.line(40,H-40,W-40,H-40);
-  doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(138,144,168);
-  doc.text('Play free at emotionalintelligencedeveloper.com  |  A learning and reflection activity, not a replacement for professional care.',W/2,H-26,{align:'center'});
+  doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,H-44,W-40,H-44);
+  const linkBot='Take the free course: '+COURSE_URL;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,90,170);
+  doc.textWithLink(linkBot,(W-doc.getTextWidth(linkBot))/2,H-30,{url:COURSE_URL});
+  doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(138,144,168);
+  doc.text('Share this PDF with a friend, a class, or your family. A learning and reflection activity, not a replacement for professional care.',W/2,H-17,{align:'center'});
 
   const safe=name.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'detective';
   doc.save('feelings-detective-course-'+safe+'.pdf');

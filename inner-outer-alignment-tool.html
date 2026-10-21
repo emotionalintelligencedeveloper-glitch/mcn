@@ -173,6 +173,31 @@
     .closing { text-align: center; font-style: italic; color: var(--muted); font-size: 15px; margin-top: 10px; }
     .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin: 18px 0 8px; }
 
+    /* LEARNING SECTION */
+    .edu { margin-top: 24px; }
+    .edu-h { font-size: 1.2rem; font-weight: normal; color: var(--brand-dark); margin-bottom: 4px; }
+    .edu-sub { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 12px; }
+    .edu-card { border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff; margin-bottom: 10px; overflow: hidden; }
+    .edu-card summary { cursor: pointer; padding: 13px 16px; font-size: 16px; color: var(--text); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 50px; }
+    .edu-card summary::-webkit-details-marker { display: none; }
+    .edu-card summary::after { content: "+"; font-size: 22px; color: var(--brand); flex-shrink: 0; }
+    .edu-card[open] summary { background: var(--brand-light); }
+    .edu-card[open] summary::after { content: "\2212"; }
+    .edu-body { padding: 4px 16px 16px; font-size: 16px; }
+    .edu-body p { margin: 10px 0 0; }
+    .edu-body ul { margin: 8px 0 0 20px; }
+    .edu-body li { margin-bottom: 6px; }
+    .edu-label { margin-top: 14px !important; font-size: 12px; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 0.06em; }
+    .edu-src { font-size: 12px; color: var(--muted); margin-top: 14px; line-height: 1.7; }
+    .edu-src a { color: var(--brand-dark); }
+    .edu-more { margin-top: 12px; font-size: 14px; }
+    .edu-more a { color: var(--brand-dark); }
+
+    /* FOOTER SHARE */
+    .share-block { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .share-label { font-size: 14px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
+    .share-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
     /* TOAST */
     .toast {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff;
@@ -193,6 +218,7 @@
       .sit-grid { grid-template-columns: 1fr; }
       .how { grid-template-columns: 1fr; }
       .btn-row .btn { width: 100%; }
+      .share-row .btn { flex: 1 1 40%; }
     }
   </style>
 </head>
@@ -214,6 +240,20 @@
   <footer class="footer" aria-label="Footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+
+    <div class="share-block">
+      <p class="share-label">Know someone who might need this? Share it with them.</p>
+      <div class="share-row">
+        <button type="button" class="btn btn-share" id="sh-native" style="display:none">Share</button>
+        <button type="button" class="btn btn-share" id="sh-copy">Copy link</button>
+        <a class="btn btn-share" id="sh-wa" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-share" id="sh-fb" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-share" id="sh-xs" target="_blank" rel="noopener">X</a>
+        <a class="btn btn-share" id="sh-li" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-share" id="sh-em" target="_blank" rel="noopener">Email</a>
+      </div>
+    </div>
+
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
@@ -316,6 +356,86 @@
   ];
 
   var SCALE_WORDS = ["", "Light", "Mild", "Medium", "Strong", "Very strong"];
+
+  /* ---------- Learning content ---------- */
+  var EDU_SIT = {
+    work: {
+      why: "Many workplaces reward people who look calm, cheerful and positive, so you learn to hide tiredness or worry. In a 2026 survey, only 14% of workers said they feel completely able to be themselves at work, and 65% said a professional persona drains their energy or motivation. You are far from alone.",
+      say: ["I'm a bit stretched today. I may need a little more time.", "Can we talk about my workload? I want to do this well.", "I need five minutes, then I'll be back with you."],
+      extra: "One honest moment with one trusted colleague often helps more than a big speech to the whole team."
+    },
+    opinions: {
+      why: "Agreeing keeps the peace and protects your sense of belonging. In the 2026 survey, 65% of workers said they had agreed with opinions at work that they would not agree with outside of work. The cost often shows up later as frustration or feeling unseen.",
+      say: ["I see it a little differently. Can I share my view?", "Can you help me understand how you got there?", "I'd like to think about it before I answer."],
+      extra: "You do not need to win the point. One honest sentence, said kindly, is enough."
+    },
+    social: {
+      why: "Online, most people show their best moments. In the 2026 survey, 59% of workers said they had hidden or curated parts of their social media to look professional. Comparing your inside to everyone else's highlights can make the gap feel bigger than it is.",
+      say: ["Not my best week, but I'm getting through it.", "Today was a mixed one.", "Honest update: I'm tired, but I'm okay."],
+      extra: "Notice which accounts leave you feeling smaller, and mute or unfollow them. Your feed is allowed to be kind to you."
+    },
+    change: {
+      why: "Technology and job demands are changing fast. In the 2026 survey, 17% of workers said this adds to the pressure they feel. When you feel you must keep up and look confident at the same time, the gap between inside and outside grows.",
+      say: ["I'm still learning this. Can you show me the quick way?", "Which part should I focus on first?", "I need a little time to learn this properly."],
+      extra: "Small daily steps beat trying to master everything at once. Nobody keeps up with everything."
+    },
+    strong: {
+      why: "People who are seen as strong are often asked to carry more, so they learn to hide their own needs. Strength and needing help can exist together. Asking for support is a normal part of being human.",
+      say: ["I've been carrying a lot lately. Can I talk to you?", "I need a moment.", "I can help with this part, but not all of it."],
+      extra: "Choose one person who can hold your side too, not only the people who lean on you."
+    },
+    family: {
+      why: "Close relationships can make honesty feel risky. Keeping the peace can be loving, but when your own needs never get a turn, tiredness and resentment can build up quietly.",
+      say: ["I feel ___ when ___. What would help me is ___.", "I want to talk about this. Can we do it later, when we are both calm?", "Let me think about it and come back to you."],
+      extra: "Timing matters. Raise a hard topic when both of you are calm, not in the middle of an argument."
+    },
+    fine: {
+      why: "Saying 'I'm fine' is often a habit, a quick way to move on. It becomes a problem when it is the only answer you ever give, even to people you trust.",
+      say: ["Honestly, a bit heavy today.", "Not great, but I'm okay. Thanks for asking.", "Can I tell you later? I need to think first."],
+      extra: "You can give a true answer without telling the whole story. A few honest words are enough."
+    },
+    other: {
+      why: "Everyone has moments where the inside and the outside do not match. The first skill is simply noticing the moment, and you have just done that.",
+      say: ["Let me think about that.", "That's a lot for me right now.", "I'm not sure how I feel yet."],
+      extra: "Try writing the moment down: who was there, what you felt, and what you showed. Patterns appear quickly."
+    }
+  };
+
+  var EDU_GENERAL = [
+    { title: "What inner and outer alignment means",
+      paras: ["Your inner self is what you feel, think and need. Your outer self is what people see and hear from you. Alignment means the two are close enough that you are not working hard to keep them apart.",
+              "It does not mean sharing everything with everyone. It means you choose what to share, with whom, and when, instead of hiding things out of fear."] },
+    { title: "Why we hide parts of ourselves",
+      paras: ["Most of us learn early that some feelings are welcome and others are not. Hiding a feeling can protect you from being judged, rejected or misunderstood, and it can help you get through a hard day.",
+              "So your outer self is not fake. It is a skill you built. The trouble starts when the mask stays on all day, every day, and there is nowhere safe to take it off."] },
+    { title: "What the gap can cost",
+      paras: ["Research on emotion regulation, including the work of psychologist James Gross, suggests that hiding a feeling does not make it go away. The feeling can stay active inside while you act calm, which is one reason masking is so tiring.",
+              "Experts also note that when people feel safe to show real emotions at work, they can have a bad day without fearing a backlash, and honesty can even strengthen working relationships."] },
+    { title: "Common signs the gap is wide",
+      paras: ["These signs are common. They are not a diagnosis."],
+      lists: [{ label: "", items: ["Feeling worn out after being around people", "Finding it hard to put real feelings into words", "Saying 'I'm fine' on autopilot", "Agreeing in the moment, then feeling annoyed or sad later", "Feeling lonely even when surrounded by people", "Comparing your inside to other people's outside, especially online"] }] },
+    { title: "A simple habit: Notice, Name, Choose",
+      paras: ["You can practise this in under a minute, as often as you like."],
+      lists: [{ label: "", items: ["Notice: Pause and check your body. A tight chest, heavy shoulders or a clenched jaw often show a feeling before you have words for it.", "Name: Put one simple word on it, like 'anxious' or 'let down'. Putting words to a feeling often makes it easier to handle.", "Choose: Decide what to do with it. You can share all of it with a safe person, share a small part, or keep it private for now and come back to it later."] }] },
+    { title: "How to find a safe person",
+      paras: ["A safe person listens without rushing to fix you, judge you, or repeat what you said. Start small. Share one honest sentence and see how they respond. If they handle it well, you can share a little more next time.",
+              "If nobody feels safe right now, private writing, a journal, or a support group are good places to start."] },
+    { title: "Authenticity is not oversharing",
+      paras: ["Some professional masking is normal and can be useful. Different cultures, families and workplaces also value privacy and harmony in different ways.",
+              "The goal is choice, not total exposure. A helpful question to ask yourself: is this mask a choice I am making, or a rule I am afraid to break?"] },
+    { title: "When to reach out for more support",
+      paras: ["If the gap has felt heavy for weeks, if you feel low or hopeless much of the time, or if it is affecting your sleep, work or relationships, please talk to a doctor, a counsellor, or someone you trust. You do not have to wait until things are bad.",
+              "If you ever feel unsafe or think about harming yourself, contact your local emergency number or a helpline right away. You can find one for your country at findahelpline.com."] },
+    { title: "Your one week check-in",
+      paras: ["After a week, come back to these questions."],
+      lists: [{ label: "", items: ["Did I take my one small step? What happened?", "When did my inside and outside feel closest this week?", "What is one thing I will keep, or change, next week?"] }] }
+  ];
+
+  var EDU_SOURCES = [
+    ["MyPerfectResume workplace authenticity survey, reported April 2026", "https://www.cpapracticeadvisor.com/2026/04/24/69-of-workers-adjust-their-behavior-at-work-to-fit-in-new-survey-finds/182204/"],
+    ["NeuroLeadership Institute: Employees faking happiness at work", "https://neuroleadership.com/?p=49102"],
+    ["Pathways: Masking your feelings at work and the toll it takes", "https://www.pathways.com/pathways-at-work/blog/masking-your-feelings-at-work-and-the-toll-it-takes"]
+  ];
 
   /* ---------- Stick men ---------- */
   function fig(x, y, o) {
@@ -530,6 +650,81 @@
     return "The gap feels big right now, and that can be tiring. You do not need to fix it all at once. One small honest step is enough.";
   }
 
+  function personalNotes() {
+    var a = state.answers, sc = state.scores, n = [];
+    if (a[0].trim() && sc[0] >= 4) n.push("Your inner feelings are strong right now. Give them a few quiet minutes today. Writing, a short walk or slow breathing can all help them settle.");
+    if (a[1].trim() && sc[1] >= 4) n.push("You adjust yourself a lot around others, and that takes energy. Plan a small recovery moment after the situations that cost you the most.");
+    if (a[3].trim() && sc[3] >= 4) n.push("Sharing what you hide feels hard right now, and that is okay. Start with private writing, then share one small piece with a safe person when you are ready.");
+    if (a[3].trim() && sc[3] <= 2) n.push("Sharing feels fairly easy for you. That is a real strength. Use it to check in with someone this week.");
+    if (a[4].trim() && sc[4] <= 2) n.push("You do not feel very ready for your step yet. Make it half as big. A tiny step you actually do beats a big one you avoid.");
+    if (a[4].trim() && sc[4] >= 4) n.push("You feel ready for your step. Pick a day and a time for it so it does not slip away.");
+    if (!n.length) n.push("Your answers show a balanced picture right now. Keep noticing what helps your inside and outside feel close.");
+    return n;
+  }
+
+  function buildSections(includeGap) {
+    var s = sitObj() || SITS[SITS.length - 1], e = EDU_SIT[s.id];
+    var out = [];
+    out.push({ title: "What your answers suggest", paras: (includeGap ? [gapMessage()] : []).concat(personalNotes()), open: true });
+    out.push({ title: "About your situation: " + s.label, paras: [e.why], lists: [{ label: "Words you can try", items: e.say }], closing: e.extra, open: true });
+    EDU_GENERAL.forEach(function (g) { out.push(g); });
+    return out;
+  }
+
+  function eduHTML() {
+    var h = '<div class="edu"><h3 class="edu-h">Understand your reflection</h3>' +
+            '<p class="edu-sub">Tap a heading to open it. Your PDF includes every section.</p>';
+    buildSections(false).forEach(function (sec) {
+      h += '<details class="edu-card"' + (sec.open ? " open" : "") + '><summary>' + esc(sec.title) + '</summary><div class="edu-body">';
+      (sec.paras || []).forEach(function (p) { h += '<p>' + esc(p) + '</p>'; });
+      (sec.lists || []).forEach(function (l) {
+        if (l.label) h += '<p class="edu-label">' + esc(l.label) + '</p>';
+        h += '<ul>';
+        l.items.forEach(function (it) { h += '<li>' + esc(it) + '</li>'; });
+        h += '</ul>';
+      });
+      if (sec.closing) h += '<p>' + esc(sec.closing) + '</p>';
+      h += '</div></details>';
+    });
+    h += '<p class="edu-src"><b>Sources:</b> ' + EDU_SOURCES.map(function (x) {
+      return '<a href="' + x[1] + '" target="_blank" rel="noopener">' + esc(x[0]) + '</a>';
+    }).join(' &nbsp;|&nbsp; ') + '</p>';
+    h += '<p class="edu-more">Keep going: <a href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">more free tools</a> &nbsp;|&nbsp; <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">recommended audio books</a></p>';
+    h += '</div>';
+    return h;
+  }
+
+  function setupShare() {
+    var href = window.location.href;
+    var url = encodeURIComponent(href);
+    var text = "Try this free Inner vs Outer Alignment reflection tool:";
+    var msg = encodeURIComponent(text);
+    var map = {
+      wa: "https://wa.me/?text=" + msg + "%20" + url,
+      fb: "https://www.facebook.com/sharer/sharer.php?u=" + url,
+      xs: "https://x.com/intent/tweet?text=" + msg + "%20" + url,
+      li: "https://www.linkedin.com/sharing/share-offsite/?url=" + url,
+      em: "mailto:?subject=" + encodeURIComponent("A free reflection tool you may like") + "&body=" + msg + "%20" + url
+    };
+    Object.keys(map).forEach(function (k) {
+      var el = document.getElementById("sh-" + k);
+      if (el) el.href = map[k];
+    });
+    var c = document.getElementById("sh-copy");
+    if (c) c.addEventListener("click", function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(href).then(function () { toast("Link copied!"); }, function () { toast("Copy from your address bar."); });
+      } else toast("Copy from your address bar.");
+    });
+    var n = document.getElementById("sh-native");
+    if (n && navigator.share) {
+      n.style.display = "inline-flex";
+      n.addEventListener("click", function () {
+        navigator.share({ title: "Inner vs Outer Alignment", text: text, url: href }).catch(function () {});
+      });
+    }
+  }
+
   function renderResult() {
     var s = sitObj() || SITS[SITS.length - 1];
     var any = state.answers.some(function (a) { return a.trim(); });
@@ -550,34 +745,19 @@
     });
     h += '<div class="tip-box"><b>A gentle idea for this situation:</b> ' + esc(s.tip) + '</div>';
     h += '<p class="hint" style="font-size:14px">Being aligned does not mean telling everyone everything. It means choosing what you share on purpose, and having at least one safe place to be real.</p>';
+    h += eduHTML();
     h += '<div class="field" style="margin-top:14px"><label for="pdfName" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">Your name for the PDF (optional)</label>' +
          '<input type="text" id="pdfName" maxlength="80" placeholder="e.g. Alex" value="' + esc(state.name) + '" /></div>';
     h += '<div class="btn-row"><button type="button" class="btn btn-secondary grow" id="pdfBtn">Download my PDF</button>' +
          '<button type="button" class="btn btn-outline grow" id="editBtn">Edit my answers</button>' +
          '<button type="button" class="btn btn-outline grow" id="resetBtn">Start again</button></div>';
     h += '<p class="closing">Small, honest steps can reduce pressure and increase peace.</p>';
-    h += '<div class="section-label">Share this tool</div><div class="btn-row" style="margin-top:0">' +
-         '<button type="button" class="btn btn-share" id="copyLink">Copy link</button>' +
-         '<a class="btn btn-share" id="wa" target="_blank" rel="noopener">WhatsApp</a>' +
-         '<a class="btn btn-share" id="fb" target="_blank" rel="noopener">Facebook</a>' +
-         '<a class="btn btn-share" id="xs" target="_blank" rel="noopener">X</a></div>';
     app.innerHTML = h;
-
-    var url = encodeURIComponent(window.location.href);
-    var msg = encodeURIComponent("Try this free Inner vs Outer Alignment reflection tool:");
-    document.getElementById("wa").href = "https://wa.me/?text=" + msg + "%20" + url;
-    document.getElementById("fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
-    document.getElementById("xs").href = "https://x.com/intent/tweet?text=" + msg + "%20" + url;
 
     document.getElementById("pdfName").addEventListener("input", function (e) { state.name = e.target.value; saveLocal(); });
     document.getElementById("pdfBtn").addEventListener("click", downloadPDF);
     document.getElementById("editBtn").addEventListener("click", function () { go(0); });
     document.getElementById("resetBtn").addEventListener("click", resetAll);
-    document.getElementById("copyLink").addEventListener("click", function () {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(window.location.href).then(function () { toast("Link copied!"); }, function () { toast("Copy from your address bar."); });
-      } else toast("Copy from your address bar.");
-    });
   }
 
   function render() {
@@ -620,6 +800,34 @@
       var pageH = doc.internal.pageSize.getHeight();
       var margin = 40, y = margin;
 
+      function ensure(h) { if (y + h > pageH - 50) { doc.addPage(); y = margin; } }
+      function heading(t) {
+        ensure(44);
+        doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(63, 111, 135);
+        doc.text(t, margin, y); y += 7;
+        doc.setDrawColor(197, 223, 233); doc.line(margin, y, pageW - margin, y); y += 16;
+      }
+      function sub(t) {
+        ensure(40);
+        doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.setTextColor(58, 122, 88);
+        doc.splitTextToSize(t, pageW - margin * 2).forEach(function (l) { doc.text(l, margin, y); y += 14; });
+        y += 1;
+      }
+      function para(t, bold) {
+        doc.setFont("helvetica", bold ? "bold" : "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 42, 53);
+        doc.splitTextToSize(t, pageW - margin * 2).forEach(function (l) { ensure(14); doc.text(l, margin, y); y += 13; });
+        y += 4;
+      }
+      function bullet(t) {
+        doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 42, 53);
+        doc.splitTextToSize(t, pageW - margin * 2 - 16).forEach(function (l, i) {
+          ensure(14);
+          if (i === 0) doc.text("-", margin + 4, y);
+          doc.text(l, margin + 16, y); y += 13;
+        });
+        y += 2;
+      }
+
       doc.setFillColor(232, 244, 249);
       doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, "F");
       if (logoData) { try { doc.addImage(logoData, "JPEG", margin + 10, y + 8, 54, 54); } catch (_) {} }
@@ -660,6 +868,37 @@
       var tl = doc.splitTextToSize(s.tip, pageW - margin * 2);
       doc.text(tl, margin, y); y += tl.length * 12 + 12;
 
+      y += 4;
+      heading("Understanding your reflection");
+      buildSections(true).forEach(function (sec) {
+        sub(sec.title);
+        (sec.paras || []).forEach(function (p) { para(p); });
+        (sec.lists || []).forEach(function (l) {
+          if (l.label) para(l.label + ":", true);
+          l.items.forEach(function (it) { bullet(it); });
+        });
+        if (sec.closing) para(sec.closing);
+        y += 6;
+      });
+
+      ensure(60);
+      sub("My notes");
+      for (var k = 0; k < 5; k++) {
+        ensure(24);
+        doc.setDrawColor(200, 220, 230); doc.line(margin, y + 8, pageW - margin, y + 8); y += 24;
+      }
+      y += 6;
+
+      ensure(70);
+      sub("Sources");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(90, 106, 118);
+      EDU_SOURCES.forEach(function (x) {
+        doc.splitTextToSize(x[0] + ": " + x[1], pageW - margin * 2).forEach(function (l) { ensure(11); doc.text(l, margin, y); y += 10.5; });
+        y += 3;
+      });
+      y += 8;
+
+      ensure(90);
       doc.setDrawColor(200, 220, 230); doc.line(margin, y, pageW - margin, y); y += 14;
       doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(91, 143, 168);
       doc.text("More free wellbeing resources", margin, y); y += 14;
@@ -669,9 +908,14 @@
        "Audio books: emotionalintelligencedeveloper.com/recommended-books/",
        "Support this project: emotionalintelligencedeveloper.com/support-this-website/"].forEach(function (l) { doc.text(l, margin, y); y += 13; });
 
-      doc.setDrawColor(200, 220, 230); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-      doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(138, 154, 166);
-      doc.text("This tool supports reflection and self-awareness. If you feel unsafe or at risk, please seek urgent help.", margin, pageH - 22);
+      var total = doc.getNumberOfPages();
+      for (var pg = 1; pg <= total; pg++) {
+        doc.setPage(pg);
+        doc.setDrawColor(200, 220, 230); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+        doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(138, 154, 166);
+        doc.text("Reflection support only. If you feel unsafe, please seek urgent help.", margin, pageH - 22);
+        doc.text("Page " + pg + " of " + total, pageW - margin, pageH - 22, { align: "right" });
+      }
 
       doc.save("inner-outer-alignment-reflection.pdf");
       toast("PDF downloaded!");
@@ -680,6 +924,7 @@
 
   loadLocal();
   render();
+  setupShare();
 })();
 </script>
 </body>

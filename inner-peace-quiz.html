@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inner Peace Quiz — Interactive Reset Tool | Emotional Intelligence Developer</title>
+  <title>Inner Peace Quiz | Interactive Reset Tool | Emotional Intelligence Developer</title>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -12,7 +12,7 @@
       --card: #ffffff;
       --text: #1e1a2e;
       --muted: #4a4868;
-      --hint: #9890b0;
+      --hint: #8a82a6;
       --border: #d4cce8;
       --brand: #6a5aaa;
       --brand-light: #f0ecf8;
@@ -21,13 +21,8 @@
       --accent-light: #e8e4f8;
       --teal: #3a7a78;
       --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
       --gold: #7a6a30;
       --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --rose: #8a4a70;
-      --rose-light: #f7eaf2;
-      --rose-mid: #d0a0c0;
       --warm: #f8f6f2;
       --radius-sm: 10px;
       --radius-md: 14px;
@@ -46,7 +41,23 @@
       font-size: 16px;
     }
 
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
+    .container { max-width: 700px; margin: 0 auto; padding: 20px 16px 40px; }
+
+    /* STICK MEN */
+    .fig { display: block; overflow: visible; }
+    .fig .body { fill: none; stroke: var(--text); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+    .fig .head { fill: #fff; }
+    .fig .props { fill: none; stroke: var(--brand); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+    .fig .dot { fill: var(--brand); stroke: none; }
+
+    @keyframes ipqFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes ipqBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    .hero-fig .fig { animation: ipqBreathe 6s ease-in-out infinite; transform-origin: 50% 100%; }
+    .result-fig .fig { animation: ipqFloat 5s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-fig .fig, .result-fig .fig { animation: none; }
+      .breath-circle { transition: none !important; }
+    }
 
     /* HEADER */
     .header {
@@ -67,7 +78,10 @@
 
     .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
 
-    h1 {
+    .header-main { display: flex; align-items: center; gap: 14px; }
+    .header-main .hero-fig { flex-shrink: 0; width: 86px; }
+
+    .page-title {
       font-size: clamp(1.3rem, 4vw, 1.7rem);
       font-weight: normal; color: var(--text);
       line-height: 1.3; margin-bottom: 8px;
@@ -123,14 +137,16 @@
       border: 1px solid var(--border); padding: 22px 20px; margin-bottom: 16px;
     }
 
+    .question-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .question-fig { width: 78px; flex-shrink: 0; background: var(--brand-light); border-radius: var(--radius-md); padding: 6px; }
+
     .question-num {
       font-size: 11px; font-weight: bold; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
     }
 
-    .question-text { font-size: 17px; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+    .question-text { font-size: 17px; color: var(--text); line-height: 1.5; }
 
-    /* OPTION BUTTONS */
     .option-btn {
       display: block; width: 100%;
       text-align: left; padding: 13px 16px;
@@ -144,7 +160,6 @@
     .option-btn:hover { border-color: var(--brand); color: var(--text); background: var(--brand-light); }
     .option-btn.selected { background: var(--brand); border-color: var(--brand); color: #fff; }
 
-    /* INLINE FEEDBACK */
     .inline-feedback {
       display: none;
       background: var(--accent-light);
@@ -176,12 +191,12 @@
       text-align: center; margin-bottom: 18px;
     }
 
-    .results-name { font-size: 1.1rem; color: var(--brand); font-weight: normal; }
+    .result-fig { width: 110px; margin: 0 auto 6px; }
+    .results-name { font-size: 1.05rem; color: var(--brand); font-weight: normal; }
     .results-type { font-size: 1.3rem; color: var(--text); margin: 6px 0; line-height: 1.3; }
     .results-date { font-size: 12px; color: var(--hint); font-style: italic; }
 
-    /* RESULT SECTIONS */
-    .result-section { margin-bottom: 16px; }
+    .result-section { margin-bottom: 22px; }
 
     .result-section-title {
       font-size: 12px; font-weight: bold; color: var(--brand);
@@ -194,44 +209,67 @@
       font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 14px;
     }
 
-    .insight-row {
+    .secondary-note {
+      display: none; background: var(--gold-light); border: 1px solid #d8c878;
+      border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px;
+      color: var(--text); margin-bottom: 20px; line-height: 1.6;
+    }
+    .secondary-note.show { display: block; }
+
+    /* LEARN CARDS */
+    .learn-card {
+      display: flex; gap: 14px; align-items: flex-start;
       border: 1px solid var(--border); border-radius: var(--radius-md);
-      background: #fff; padding: 13px 16px; margin-bottom: 10px;
+      background: #fff; padding: 14px 16px; margin-bottom: 12px;
     }
-
-    .insight-row-label {
-      font-size: 11px; font-weight: bold; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+    .learn-fig { width: 72px; flex-shrink: 0; background: var(--brand-light); border-radius: var(--radius-sm); padding: 5px; }
+    .learn-title { font-size: 15px; color: var(--text); font-weight: bold; margin-bottom: 4px; line-height: 1.4; }
+    .learn-body { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .learn-try {
+      margin-top: 8px; font-size: 13px; color: var(--teal); background: var(--teal-light);
+      border-radius: var(--radius-sm); padding: 7px 11px; line-height: 1.55;
     }
+    .learn-try b { font-weight: bold; }
 
-    .insight-row-text { font-size: 14px; color: var(--text); line-height: 1.65; }
+    /* TRIAD */
+    .triad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+    .triad-item {
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: #fff; padding: 12px 10px; text-align: center;
+    }
+    .triad-item .fig { width: 64px; margin: 0 auto 6px; }
+    .triad-title { font-size: 13px; font-weight: bold; color: var(--text); margin-bottom: 4px; line-height: 1.35; }
+    .triad-text { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+    .small-note { font-size: 12.5px; color: var(--hint); font-style: italic; line-height: 1.55; }
+    @media (max-width: 520px) { .triad { grid-template-columns: 1fr; } }
+
+    /* MYTHS */
+    .myth-row { border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff; margin-bottom: 10px; overflow: hidden; }
+    .myth-myth { background: #fbeeee; padding: 10px 14px; font-size: 14px; color: #7a2a2a; line-height: 1.55; }
+    .myth-fact { background: var(--teal-light); padding: 10px 14px; font-size: 14px; color: #1f4f4d; line-height: 1.6; }
+    .myth-tag { font-size: 10.5px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 2px; }
+
+    /* HELP BOX */
+    .help-box {
+      background: #fff7f2; border: 1px solid #f0c9b0; border-radius: var(--radius-md);
+      padding: 14px 16px; font-size: 14px; color: var(--text); line-height: 1.65;
+    }
+    .help-box ul { margin: 8px 0 8px 20px; }
+    .help-box li { margin-bottom: 4px; }
+    .help-box a { color: #8b1a1a; font-weight: bold; }
 
     /* PLAN ITEMS */
-    .plan-list { list-style: none; padding: 0; }
-
-    .plan-list li {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 9px 0; border-bottom: 1px solid var(--border);
+    .plan-item {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
       font-size: 14px; color: var(--muted); line-height: 1.55;
     }
-
-    .plan-list li:last-child { border-bottom: none; }
-
-    .plan-num {
-      min-width: 22px; height: 22px; border-radius: 50%;
-      background: var(--brand); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: bold; flex-shrink: 0; margin-top: 1px;
+    .plan-item:last-child { border-bottom: none; }
+    .plan-item .plan-fig { width: 54px; flex-shrink: 0; }
+    .plan-tag {
+      display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--brand);
+      border-radius: 99px; padding: 1px 9px; margin-bottom: 3px; letter-spacing: 0.03em;
     }
-
-    .plan-week-item {
-      padding: 8px 0; border-bottom: 1px solid var(--border);
-      font-size: 14px; color: var(--muted); line-height: 1.55;
-    }
-
-    .plan-week-item:last-child { border-bottom: none; }
-
-    .plan-week-item::before { content: '→ '; color: var(--brand); font-weight: bold; }
 
     .prompt-item {
       background: var(--brand-light); border: 1px solid var(--brand-mid);
@@ -243,13 +281,27 @@
     /* CHART */
     .chart-card {
       background: var(--warm); border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 14px;
+      border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 22px;
       text-align: center;
     }
 
     .chart-caption { font-size: 12px; color: var(--hint); font-style: italic; margin-top: 8px; }
 
-    /* SECTION LABEL */
+    /* BREATH TOOL */
+    .breath-card {
+      background: var(--teal-light); border: 1px solid #a0c8c8;
+      border-radius: var(--radius-md); padding: 18px 16px; text-align: center; margin-bottom: 22px;
+    }
+    .breath-stage { height: 150px; display: flex; align-items: center; justify-content: center; position: relative; }
+    .breath-circle {
+      width: 92px; height: 92px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #cfe6e5, #3a7a78);
+      transform: scale(1); transition: transform 4s ease-in-out;
+      opacity: 0.9;
+    }
+    .breath-text { font-size: 18px; color: #1f4f4d; margin-top: 4px; min-height: 28px; }
+    .breath-count { font-size: 12px; color: var(--hint); margin-bottom: 12px; min-height: 18px; }
+
     .section-label {
       font-size: 11px; color: var(--hint);
       text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
@@ -269,11 +321,11 @@
 
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
 
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
     .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
     .btn-support {
       background: var(--support); color: #fff; border-color: var(--support);
@@ -317,8 +369,13 @@
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Inner Peace Quiz</h1>
-    <p class="tagline">Five gentle questions to reveal what kind of reset your mind and body actually need right now — and a practical plan to get there.</p>
+    <div class="header-main">
+      <div>
+        <h2 class="page-title">Inner Peace Quiz</h2>
+        <p class="tagline">Five gentle questions to find out what kind of reset your mind and body need right now, plus a simple plan and some easy science to help you get there.</p>
+      </div>
+      <div class="hero-fig" id="ipqHeroFig" aria-hidden="true"></div>
+    </div>
     <div class="notice">
       This tool offers general wellbeing suggestions and is not a substitute for professional care.
       <div class="urgent">If you feel unsafe or at risk, get immediate help: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a></div>
@@ -327,8 +384,8 @@
 
   <!-- NAME FIELD -->
   <div class="name-card">
-    <label class="field-label" for="participantName">Your name — for the results and PDF (optional)</label>
-    <input type="text" id="participantName" maxlength="80" placeholder="Enter your name here…" />
+    <label class="field-label" for="participantName">Your name, for the results and PDF (optional)</label>
+    <input type="text" id="participantName" maxlength="80" placeholder="Enter your name here..." />
   </div>
 
   <!-- PROGRESS -->
@@ -344,8 +401,13 @@
 
   <!-- QUESTION CARD -->
   <div class="question-card" aria-label="Current question">
-    <div class="question-num" id="questionNum">Question 1 of 5</div>
-    <div class="question-text" id="questionText"></div>
+    <div class="question-top">
+      <div class="question-fig" id="questionFig" aria-hidden="true"></div>
+      <div>
+        <div class="question-num" id="questionNum">Question 1 of 5</div>
+        <div class="question-text" id="questionText"></div>
+      </div>
+    </div>
     <div id="optionsContainer"></div>
     <div class="inline-feedback" id="inlineFeedback">
       <div class="feedback-title" id="feedbackTitle"></div>
@@ -358,56 +420,93 @@
   </div>
 
   <!-- RESULTS -->
-  <section class="results-card" id="resultsCard" aria-labelledby="results-heading" aria-live="polite">
+  <section class="results-card" id="resultsCard" aria-label="Your results" aria-live="polite">
 
     <div class="results-header">
+      <div class="result-fig" id="resultFig" aria-hidden="true"></div>
       <div class="results-name" id="resultsName"></div>
       <div class="results-type" id="resultsType"></div>
       <div class="results-date" id="resultsDate"></div>
     </div>
 
-    <!-- EXPLANATION -->
     <div class="result-section">
       <div class="result-section-title">What this result means for you</div>
       <div class="result-explanation" id="resultExplanation"></div>
+      <div class="secondary-note" id="secondaryNote"></div>
     </div>
 
-    <!-- INSIGHT ROWS -->
-    <div class="result-section" id="insightRows"></div>
+    <div class="result-section">
+      <div class="result-section-title">Understanding your pattern</div>
+      <div id="learnCards"></div>
+    </div>
 
-    <!-- CHART -->
     <div class="chart-card">
       <div class="section-label">Your answer pattern</div>
       <canvas id="resultChart" style="max-height:200px;"></canvas>
-      <div class="chart-caption">How your 5 answers are distributed across reset types</div>
+      <div class="chart-caption">How your 5 answers are spread across the three reset types</div>
     </div>
 
-    <!-- TODAY'S PLAN -->
     <div class="result-section">
-      <div class="result-section-title">Your 5-minute plan for today</div>
-      <ul class="plan-list" id="todayPlan"></ul>
+      <div class="result-section-title">Your 5 minute plan for today</div>
+      <div id="todayPlan"></div>
     </div>
 
-    <!-- 7-DAY PLAN -->
     <div class="result-section">
-      <div class="result-section-title">Your 7-day mini plan</div>
+      <div class="result-section-title">Try it now: one minute of calm breathing</div>
+      <div class="breath-card">
+        <div class="breath-stage"><div class="breath-circle" id="breathCircle"></div></div>
+        <div class="breath-text" id="breathText">Ready when you are</div>
+        <div class="breath-count" id="breathCount">In for 4, hold for 2, out for 6</div>
+        <button type="button" class="btn btn-teal" id="breathBtn">Start breathing guide</button>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">Your 7 day mini plan</div>
       <div id="weekPlan"></div>
     </div>
 
-    <!-- REFLECTION PROMPTS -->
     <div class="result-section">
       <div class="result-section-title">Reflection prompts to go deeper</div>
       <div id="reflectionPrompts"></div>
     </div>
 
-    <!-- ACTIONS -->
+    <div class="result-section">
+      <div class="result-section-title">The science in plain words</div>
+      <div id="generalCards"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">Three stress states: a simple map</div>
+      <div class="triad" id="triad"></div>
+      <p class="small-note">This is a simplified map based on ideas like polyvagal theory, which scientists still debate. Use it as a handy guide to notice how you feel, not as an exact diagram of your body.</p>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">Myths and facts</div>
+      <div id="mythRows"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">When self help is not enough</div>
+      <div class="help-box">
+        Tools like this are great for everyday stress. Please talk to a doctor, counsellor or someone you trust if:
+        <ul>
+          <li>Low mood, worry or exhaustion lasts more than two weeks</li>
+          <li>It is affecting your sleep, eating, work or relationships</li>
+          <li>You are leaning on alcohol or other substances to cope</li>
+          <li>You have thoughts of harming yourself</li>
+        </ul>
+        If you feel unsafe right now, get immediate help at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
+      </div>
+    </div>
+
     <div class="section-label" style="margin-top:4px;">Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
       <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF report</button>
       <button type="button" class="btn btn-outline" id="retakeBtn">Retake quiz</button>
     </div>
 
-    <!-- SHARE FROM RESULTS -->
     <div class="section-label">Share this tool</div>
     <div class="btn-row">
       <button type="button" class="btn btn-share" id="copyLinkBtnResult">Copy link</button>
@@ -435,7 +534,7 @@
     </div>
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional care.
+      &nbsp;|&nbsp; Reflection support only, not professional care.
     </p>
   </footer>
 
@@ -444,619 +543,800 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(function () {
-  'use strict';
+/* All code lives in the global scope with an ipq prefix so it works in a WordPress Custom HTML block. */
 
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const $ = id => document.getElementById(id);
+var ipqLogoUrl = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+function ipqEl(id) { return document.getElementById(id); }
 
-  // ── DATA ──────────────────────────────────────────────────────────────
+/* ================================================================
+   STICK MEN
+   Each pose: h = head [x, y, r], b = body lines, pl = prop lines, pc = prop circles
+   Drawn in a 100 x 100 box. The same data draws the on-screen SVG and the PDF.
+   ================================================================ */
+var IPQ_POSES = {
+  calm: { h: [50, 16, 8], b: [[50,24,50,56],[50,56,41,88],[50,56,59,88],[50,32,30,44],[50,32,70,44]],
+          pl: [[16,20,16,30],[11,25,21,25],[84,20,84,30],[79,25,89,25]], pc: [] },
+  stress: { h: [50, 22, 8], b: [[50,30,50,60],[50,60,42,90],[50,60,58,90],[50,38,34,34,40,20],[50,38,66,34,60,20]],
+          pl: [[22,12,28,18,21,24,27,30],[78,12,72,18,79,24,73,30]], pc: [] },
+  breathe: { h: [50, 16, 8], b: [[50,24,50,56],[50,56,41,88],[50,56,59,88],[50,32,36,22,34,10],[50,32,64,22,66,10]],
+          pl: [[90,72,90,48],[85,54,90,48,95,54],[10,48,10,72],[5,66,10,72,15,66]], pc: [[50,42,30]] },
+  journal: { h: [38, 30, 8], b: [[38,38,43,64],[43,64,66,64,66,90],[43,64,38,90],[40,46,56,52,70,57]],
+          pl: [[58,60,96,60],[92,60,92,90],[68,57,82,57]], pc: [] },
+  rest: { h: [24, 66, 8], b: [[32,68,70,70],[70,70,86,62],[86,62,90,72],[38,68,52,60]],
+          pl: [[8,80,96,80],[8,72,8,90],[96,80,96,90],[50,22,60,22,50,32,60,32],[68,10,76,10,68,18,76,18]], pc: [[80,34,9]] },
+  walk: { h: [50, 16, 8], b: [[50,24,50,56],[50,56,38,72,30,88],[50,56,62,70,70,88],[50,32,38,46,34,56],[50,32,62,44,68,52]],
+          pl: [[8,40,24,40],[6,50,20,50],[10,60,24,60]], pc: [] },
+  rush: { h: [46, 16, 8], b: [[46,24,50,56],[50,56,36,70,26,86],[50,56,66,68,74,86],[47,32,34,40,28,30],[47,32,62,38,68,46]],
+          pl: [[80,10,80,15],[80,15,84,17],[8,40,20,40],[6,50,16,50]], pc: [[80,15,9]] },
+  thinking: { h: [46, 16, 8], b: [[46,24,46,56],[46,56,38,88],[46,56,54,88],[46,32,34,46,32,58],[46,32,60,42,50,28]],
+          pl: [], pc: [[66,18,2],[73,11,3],[84,8,7]] },
+  boundary: { h: [40, 16, 8], b: [[40,24,40,56],[40,56,32,88],[40,56,48,88],[40,32,58,36,72,30],[40,32,28,46,26,58]],
+          pl: [[72,20,72,40],[90,8,90,92]], pc: [] },
+  stretch: { h: [50, 18, 8], b: [[50,26,50,58],[50,58,40,90],[50,58,60,90],[50,34,32,20,24,6],[50,34,68,20,76,6]],
+          pl: [], pc: [] },
+  morning: { h: [44, 16, 8], b: [[44,24,44,56],[44,56,35,88],[44,56,53,88],[44,32,32,46,30,58],[44,32,56,46,58,58]],
+          pl: [[82,3,82,7],[82,27,82,31],[69,17,73,17],[91,17,95,17],[72,7,75,10],[89,7,92,10]], pc: [[82,17,7]] },
+  talk: { h: [26, 18, 7], b: [[26,25,26,56],[26,56,18,88],[26,56,34,88],[26,32,12,44],[26,32,42,40]],
+          pl: [[74,25,74,56],[74,56,66,88],[74,56,82,88],[74,32,62,42],[74,32,86,44]], pc: [[74,18,7],[40,8,1.5],[46,8,1.5],[52,8,1.5]] },
+  checklist: { h: [34, 16, 8], b: [[34,24,34,56],[34,56,26,88],[34,56,42,88],[34,32,48,44,60,44],[34,32,22,46,20,58]],
+          pl: [[56,30,84,30,84,66,56,66,56,30],[62,40,78,40],[62,48,78,48],[62,56,72,56]], pc: [] },
+  ground: { h: [50, 16, 8], b: [[50,24,50,56],[50,56,41,86],[50,56,59,86],[50,32,38,50,36,64],[50,32,62,50,64,64]],
+          pl: [[30,90,70,90],[38,90,34,97],[50,90,50,98],[62,90,66,97]], pc: [] },
+  battery: { h: [42, 24, 8], b: [[44,32,50,58],[50,58,42,90],[50,58,60,90],[46,40,44,58,44,72],[48,40,58,54,56,68]],
+          pl: [[66,10,92,10,92,24,66,24,66,10],[92,14,95,14,95,20,92,20],[69,13,72,13,72,21,69,21]], pc: [] },
+  win: { h: [50, 18, 8], b: [[50,26,50,58],[50,58,40,90],[50,58,60,90],[50,34,32,20,24,6],[50,34,68,20,76,6]],
+          pl: [[10,38,10,48],[5,43,15,43],[90,38,90,48],[85,43,95,43]], pc: [] }
+};
 
-  const QUESTIONS = [
-    {
-      text: 'When stress shows up, your first reaction is:',
-      options: [
-        { key: 'A', label: 'My breath shortens and my body feels tense.' },
-        { key: 'B', label: 'My mind races and my emotions feel tangled.' },
-        { key: 'C', label: 'I keep pushing, then feel quietly drained later.' }
-      ]
-    },
-    {
-      text: 'What helps you settle the fastest right now?',
-      options: [
-        { key: 'A', label: 'Breathing, grounding, or gentle movement.' },
-        { key: 'B', label: 'Journaling, talking, or naming what I feel.' },
-        { key: 'C', label: 'A real break, a clear boundary, and genuine rest.' }
-      ]
-    },
-    {
-      text: 'How does your day usually feel lately?',
-      options: [
-        { key: 'A', label: 'Busy and physically keyed up — like I cannot switch off.' },
-        { key: 'B', label: 'Emotionally heavy or unpredictable.' },
-        { key: 'C', label: 'Quietly overloaded and not getting enough rest.' }
-      ]
-    },
-    {
-      text: 'What feels most missing right now?',
-      options: [
-        { key: 'A', label: 'A quick calm tool I can use anywhere, any time.' },
-        { key: 'B', label: 'A safe way to process what I am actually feeling.' },
-        { key: 'C', label: 'A steadier structure for sleep, rest, and limits.' }
-      ]
-    },
-    {
-      text: 'After a stressful day, what do you most need?',
-      options: [
-        { key: 'A', label: 'A fast reset for my nervous system.' },
-        { key: 'B', label: 'Space to release and make sense of my emotions.' },
-        { key: 'C', label: 'A simple routine to recover and genuinely recharge.' }
-      ]
-    }
-  ];
+function ipqPts(a) {
+  var s = [];
+  for (var i = 0; i < a.length; i += 2) s.push(a[i] + ',' + a[i + 1]);
+  return s.join(' ');
+}
 
-  // Inline feedback per answer key per question
-  const INLINE_FEEDBACK = [
-    {
-      A: { title: 'Body-based stress response', body: 'Tension in the breath and body is how the nervous system signals overload. This pattern often means your system is in sympathetic activation — your body is prepared to respond to threat even when the threat is not physical. Body-based tools work fastest here.' },
-      B: { title: 'Cognitive and emotional overload', body: 'A racing mind with tangled emotions often means thoughts and feelings are competing for attention without resolution. This pattern responds best to techniques that slow the mental loop and name what is actually happening.' },
-      C: { title: 'Chronic depletion pattern', body: 'Pushing through and crashing later is a sign of sustained overload without adequate recovery. The nervous system adapts by numbing or delaying stress signals. Structural rest and boundaries address the root.' }
-    },
-    {
-      A: { title: 'Somatic regulation works for you', body: 'The fact that breathing, grounding, or movement helps you settle means your nervous system is responsive to body-based cues. This is a significant strength — it means short, regular resets can have a real impact for you.' },
-      B: { title: 'Emotional processing is your path', body: 'When naming, writing, or talking brings relief, it tells you that emotional expression is a core regulation pathway for you. Suppressing or avoiding this tends to build pressure. Creating regular space for processing is your highest-leverage action.' },
-      C: { title: 'Recovery requires structure for you', body: 'Genuine rest and clear limits are not luxuries for this pattern — they are medicine. When rest and boundaries are your fastest route to settling, it means your system has been running beyond sustainable capacity and needs deliberate recovery windows.' }
-    },
-    {
-      A: { title: 'Physically activated state', body: 'Feeling physically keyed up throughout the day points to sustained cortisol and adrenaline, often triggered by pace, transitions, or constant low-level demands. Even brief moments of physiological downregulation — slow breath, stillness, movement — measurably shift this state.' },
-      B: { title: 'Emotional volatility pattern', body: 'Unpredictable or heavy emotional days often mean emotional input exceeds processing capacity. This is not weakness — it is a sign that meaningful things are happening that need to be acknowledged and integrated rather than pushed past.' },
-      C: { title: 'Sustained low-grade depletion', body: 'Quiet overload is one of the most common and underrecognised patterns. It does not feel dramatic, which is why it often goes unaddressed until burnout. Small consistent actions around sleep, recovery time, and saying no are the most effective antidote.' }
-    },
-    {
-      A: { title: 'Quick-access tools are your priority', body: 'Needing a tool you can use anywhere means portability and immediacy matter to you. This is practical wisdom — the best reset tool is one you will actually use in the moment you need it, not one that requires special conditions.' },
-      B: { title: 'Emotional processing space is your priority', body: 'Needing a safe way to process feelings is one of the most honest things a person can recognise about themselves. It often gets deprioritised in favour of action — but unprocessed emotion does not disappear; it redirects into tension, reactivity, or numbness.' },
-      C: { title: 'Structure and limits are your priority', body: 'Recognising that you need clearer structure is one of the most useful self-aware signals. Without structural support — consistent sleep, protected recovery time, limits on what you take on — other wellbeing efforts tend to have a short shelf life.' }
-    },
-    {
-      A: { title: 'Nervous system reset is your primary need', body: 'Wanting a fast nervous system reset points to a well-calibrated self-awareness — you know your system needs direct physiological intervention, not just mental reframing. This is the foundation of effective stress management.' },
-      B: { title: 'Emotional release is your primary need', body: 'The need to release and make sense of emotions after a hard day is deeply human and deeply important. It is one of the most effective ways to prevent emotional carry-over into the next day. Building this into your daily wind-down is high-leverage.' },
-      C: { title: 'Recovery and recharge is your primary need', body: 'Wanting a simple routine to genuinely recharge — not just collapse — shows awareness that true recovery is active, not accidental. Building even a small intentional recovery structure transforms the quality of rest and the resilience available for the next day.' }
-    }
-  ];
+function ipqFig(key, label) {
+  var p = IPQ_POSES[key] || IPQ_POSES.calm;
+  var out = '<svg class="fig" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + (label || 'Stick figure') + '">';
+  out += '<g class="props">';
+  p.pl.forEach(function (l) { out += '<polyline points="' + ipqPts(l) + '"/>'; });
+  p.pc.forEach(function (c) {
+    out += c[2] < 4 ? '<circle class="dot" cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '"/>'
+                    : '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '"/>';
+  });
+  out += '</g><g class="body">';
+  p.b.forEach(function (l) { out += '<polyline points="' + ipqPts(l) + '"/>'; });
+  out += '<circle class="head" cx="' + p.h[0] + '" cy="' + p.h[1] + '" r="' + p.h[2] + '"/>';
+  out += '</g></svg>';
+  return out;
+}
 
-  const RESET_DATA = {
-    A: {
-      title: 'Quick Calm Reset — Breath and Body',
-      explanation: 'Your answers consistently point to a nervous system that is physically activated and would respond best to body-based regulation. This is not a character flaw or weakness — it is simply how your system has learned to manage sustained demands. The good news is that body-based tools are among the fastest-acting regulation techniques available, producing measurable physiological change within 60 to 90 seconds.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'When the body is in a sustained stress state — elevated cortisol, tightened muscles, shortened breath — it tends to stay there until it receives a direct physiological signal that the demand has reduced. Cognitive strategies alone (telling yourself to relax) are often insufficient because the nervous system does not respond to instructions the way a muscle responds to exercise. It responds to direct sensory and breath input.' },
-        { label: 'How it affects your day', text: 'Left unaddressed, physical activation tends to accumulate across the day, making it progressively harder to wind down by evening. Small brief resets throughout the day — rather than one large effort at the end — are more effective for this pattern.' },
-        { label: 'What consistent practice builds', text: 'Regular brief body-based resets measurably lower baseline cortisol over time, improve sleep quality, and increase the nervous system\'s flexibility — its ability to shift between activation and rest. This is sometimes called vagal tone, and it can be genuinely improved through consistent practice.' }
-      ],
-      today: [
-        'Slow breathing: inhale for 4, hold for 2, exhale for 6. Repeat 6 times. This activates the parasympathetic response in under 90 seconds.',
-        'Physical release: unclench your jaw and drop your shoulders. Do slow neck and shoulder rolls for 2 minutes. Physical tension holds activation — releasing it directly helps.',
-        'Sensory grounding: name 5 things you can see, 4 you can feel, 3 you can hear. Then sip water slowly and feel your feet on the floor.'
-      ],
-      week: [
-        'Morning: a 90-second breathing reset before checking your phone or messages.',
-        'Midday: a 2-minute stretch or short walk — even indoors counts.',
-        'Evening: a brief body scan before sleep — notice and release tension area by area.',
-        'Identify one recurring stressor this week and reduce your exposure to it by 10%.',
-        'Set one small boundary that protects a block of time or energy.',
-        'Keep a simple daily note: "What helped me feel calmer today?"',
-        'End the week by noticing one sign of improvement, however small.'
-      ],
-      prompts: [
-        'Where in my body do I first notice stress — and can I catch it earlier?',
-        'Which 2-minute reset is the most realistic for me to build into my current routine?',
-        'What would feel 10% steadier tomorrow if I tried one of these tools today?'
-      ]
-    },
-    B: {
-      title: 'Emotion Release Reset — Processing and Expression',
-      explanation: 'Your answers consistently point to a pattern where emotional input exceeds emotional processing capacity. This is one of the most common and most underaddressed patterns in modern life — not because people lack the desire to process emotions, but because they lack consistent time, space, and permission to do so. The result is a growing backlog of unprocessed feeling that shows up as heaviness, reactivity, exhaustion, or a vague sense of being disconnected from yourself.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'When emotions are not processed — named, felt, and integrated — they do not disappear. They redirect into physical tension, mental rumination, interpersonal friction, or the quiet numbness that comes from sustained emotional suppression. The brain\'s emotional processing circuits require regular output, not just input.' },
-        { label: 'How it affects your day', text: 'Unprocessed emotion tends to make everything feel heavier than it needs to be. Decision-making becomes harder. Conversations feel more loaded. Small frustrations land bigger. This is not a personality flaw — it is the predictable result of a backlog that has not been cleared.' },
-        { label: 'What consistent practice builds', text: 'Regular emotional processing — even 5 minutes of honest writing or speaking — measurably reduces rumination, improves sleep, and increases the quality of interpersonal interactions. Research by James Pennebaker at the University of Texas shows that expressive writing for even 15 minutes over 4 days produces lasting measurable improvements in psychological and physical health.' }
-      ],
-      today: [
-        'Freewrite for 2 minutes: start with "Right now I feel…" and write without editing. Do not judge what comes out. The goal is expression, not coherence.',
-        'Inquiry: choose one feeling from what you wrote and ask it a single question — "What are you asking for?" Write one sentence of honest response.',
-        'Connection: send a short message to one trusted person — or write a private self-note — with one honest observation about how you are actually doing.'
-      ],
-      week: [
-        'Do one 5-minute emotional check-in daily — morning or evening, not both.',
-        'Use the phrase "A part of me feels…" when you notice something difficult. This reduces self-judgment and opens space for honest observation.',
-        'Identify one conversation that might bring relief — and take one small step toward it.',
-        'Replace one 10-minute doom-scroll session with 5 lines of honest journaling.',
-        'Write a "release list" — things you are ready to stop carrying this week.',
-        'Take one gentle action that aligns with what you actually value, not what feels urgent.',
-        'End each day by naming one emotion and one need. Even one line.'
-      ],
-      prompts: [
-        'What feeling have I been postponing or avoiding this week?',
-        'What is one honest truth I could say to myself — or to someone else — that would bring relief?',
-        'Who in my life can listen without immediately trying to fix or minimise what I share?'
-      ]
-    },
-    C: {
-      title: 'Routine and Rest Reset — Boundaries, Sleep, and Structure',
-      explanation: 'Your answers consistently point to a pattern of sustained low-grade depletion — the quiet kind that does not feel dramatic enough to address but accumulates steadily over time. This pattern is one of the most common precursors to burnout, and it often goes unaddressed precisely because it does not feel urgent. The most effective intervention for this pattern is not more effort — it is deliberate structural recovery: consistent sleep windows, meaningful breaks, and clear boundaries on what you take on.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'When output consistently exceeds recovery, the nervous system adapts by reducing its signals of distress — you feel less acute stress but also less clear, less motivated, and less yourself. This adaptation is protective in the short term and depleting in the long term. The system is not broken; it is compensating for an imbalance between demand and recovery.' },
-        { label: 'How it affects your day', text: 'Depletion without recovery tends to show up as decision fatigue, reduced patience, difficulty concentrating, and a growing gap between what you want to do and what you actually have energy for. Over time it erodes the sense of choice and possibility that is central to wellbeing.' },
-        { label: 'What consistent practice builds', text: 'Research on recovery and performance — including work by Peretz Lavie and others in sleep science, and Matthew Walker\'s synthesis in "Why We Sleep" — confirms that consistent sleep timing, even more than sleep duration, is one of the most powerful variables in cognitive function, emotional regulation, and physical health. Small structural improvements produce disproportionately large benefits for this pattern.' }
-      ],
-      today: [
-        'Postpone: identify one non-essential task and explicitly decide it can wait. Write it down and put it aside. The act of consciously choosing to delay something is itself a small act of recovery.',
-        'Set a wind-down anchor: choose tonight\'s wind-down start time and set a gentle reminder. Even 20 minutes of reduced stimulation before sleep meaningfully improves sleep quality.',
-        'Priority + rest: write tomorrow\'s one most important task AND one recovery action. Both are equally legitimate items on your list.'
-      ],
-      week: [
-        'Keep wake and sleep windows as consistent as possible — within 30 minutes either way.',
-        'Prepare one boundary phrase you can use this week, such as: "I can look at that tomorrow."',
-        'Schedule two short recovery breaks each day — 10 minutes minimum, phone away.',
-        'Protect a no-screen window of at least 20 minutes before sleep.',
-        'Eat and hydrate on a steadier rhythm — irregular fuel compounds cognitive depletion.',
-        'Review your commitments once midweek and remove or delay one low-value item.',
-        'Do a weekly reset on Sunday: plan the week, identify one rest priority, and prepare for a calmer start.'
-      ],
-      prompts: [
-        'What drains me most consistently — and is there one way to reduce it by just 10%?',
-        'What bedtime habit, even a very small one, helps me feel genuinely safer and calmer?',
-        'What one boundary, if I held it this week, would make everything feel slightly more sustainable?'
-      ]
-    }
-  };
+/* ================================================================
+   QUIZ DATA
+   ================================================================ */
+var IPQ_QUESTIONS = [
+  { pose: 'stress', text: 'When stress shows up, your first reaction is:',
+    options: [
+      { key: 'A', label: 'My breath shortens and my body feels tense.' },
+      { key: 'B', label: 'My mind races and my emotions feel tangled.' },
+      { key: 'C', label: 'I keep pushing, then feel quietly drained later.' } ] },
+  { pose: 'breathe', text: 'What helps you settle the fastest right now?',
+    options: [
+      { key: 'A', label: 'Breathing, grounding, or gentle movement.' },
+      { key: 'B', label: 'Journaling, talking, or naming what I feel.' },
+      { key: 'C', label: 'A real break, a clear boundary, and genuine rest.' } ] },
+  { pose: 'rush', text: 'How does your day usually feel lately?',
+    options: [
+      { key: 'A', label: 'Busy and physically keyed up, like I cannot switch off.' },
+      { key: 'B', label: 'Emotionally heavy or unpredictable.' },
+      { key: 'C', label: 'Quietly overloaded and not getting enough rest.' } ] },
+  { pose: 'thinking', text: 'What feels most missing right now?',
+    options: [
+      { key: 'A', label: 'A quick calm tool I can use anywhere, any time.' },
+      { key: 'B', label: 'A safe way to process what I am actually feeling.' },
+      { key: 'C', label: 'A steadier structure for sleep, rest, and limits.' } ] },
+  { pose: 'rest', text: 'After a stressful day, what do you most need?',
+    options: [
+      { key: 'A', label: 'A fast reset for my nervous system.' },
+      { key: 'B', label: 'Space to release and make sense of my emotions.' },
+      { key: 'C', label: 'A simple routine to recover and genuinely recharge.' } ] }
+];
 
-  const TYPE_LABELS = { A: 'Quick Calm Reset', B: 'Emotion Release Reset', C: 'Routine & Rest Reset' };
-  const TYPE_COLORS = { A: '#6a5aaa', B: '#3a7a78', C: '#8a7a30' };
-
-  // ── STATE ──────────────────────────────────────────────────────────────
-
-  let currentQ = 0;
-  const answers = Array(QUESTIONS.length).fill(null);
-  let resultChart = null;
-  let toastTimer;
-
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+var IPQ_FEEDBACK = [
+  {
+    A: { title: 'Body based stress response', body: 'Tension in the breath and body is one of the main ways stress shows up. Your body is getting ready to respond, even when nothing physical is happening. Body based tools tend to work fastest for this pattern.' },
+    B: { title: 'Mind and emotion overload', body: 'A racing mind with tangled feelings often means thoughts and emotions are competing for attention. Slowing the loop down and naming what is really going on usually helps most.' },
+    C: { title: 'Quiet depletion pattern', body: 'Pushing through and crashing later is a sign of too much output and not enough recovery. Rest and boundaries get to the root of this one.' }
+  },
+  {
+    A: { title: 'Your body responds to body tools', body: 'If breathing, grounding or movement settles you, your system listens well to physical signals. That is a real strength. It means short, regular resets can work well for you.' },
+    B: { title: 'Expressing helps you settle', body: 'When naming, writing or talking brings relief, it shows that expression is how you regulate. Holding feelings in tends to build pressure, so making regular space for them is your best move.' },
+    C: { title: 'Recovery needs structure for you', body: 'If real rest and clear limits settle you fastest, you may have been running past a sustainable pace. Planned recovery is not a luxury for you. It is the medicine.' }
+  },
+  {
+    A: { title: 'Physically switched on', body: 'Feeling keyed up all day often comes from pace, constant small demands and little downtime. Even brief moments of slow breath, stillness or movement can shift this state.' },
+    B: { title: 'Emotionally heavy days', body: 'Heavy or unpredictable days often mean more is coming in than you have had time to process. That is not weakness. It means things matter to you and need space.' },
+    C: { title: 'Low grade overload', body: 'Quiet overload is common and easy to miss because it is not dramatic. It tends to be ignored until burnout. Small steady changes to sleep, breaks and saying no work best.' }
+  },
+  {
+    A: { title: 'Quick tools matter most', body: 'Wanting a tool you can use anywhere is practical wisdom. The best reset is the one you will actually use in the moment you need it.' },
+    B: { title: 'You need space to process', body: 'Needing a safe way to process feelings is a very honest thing to notice. Unprocessed emotion does not vanish. It often shows up as tension, irritability or numbness.' },
+    C: { title: 'You need structure and limits', body: 'Seeing that you need more structure is a useful signal. Without steady sleep, protected rest and limits, other wellbeing efforts tend not to last.' }
+  },
+  {
+    A: { title: 'A quick body reset is your need', body: 'Knowing you need a fast reset for your body is good self awareness. Direct physical tools often work better than just telling yourself to relax.' },
+    B: { title: 'Emotional release is your need', body: 'Needing to release and make sense of feelings after a hard day is deeply human. Doing it daily helps stop the stress carrying over into tomorrow.' },
+    C: { title: 'Recovery and recharge is your need', body: 'Wanting a simple routine to truly recharge, not just collapse, shows you understand that good recovery is something you do on purpose.' }
   }
+];
 
-  // ── RENDER QUESTION ────────────────────────────────────────────────────
+var IPQ_RESET = {
+  A: {
+    pose: 'breathe',
+    title: 'Quick Calm Reset: Breath and Body',
+    explanation: 'Your answers point to a body that is switched on and would settle best with body based tools. This is not a flaw. It is simply how your system has learned to cope with sustained demands. The good news is that tools like slow breathing, grounding and movement are among the quickest ways to calm down, and you can use them anywhere.',
+    learn: [
+      { pose: 'stress', title: 'Your body has an alarm system',
+        body: 'When life feels demanding, your body can switch into go mode. Your heart speeds up, your muscles tighten and your breathing gets short. That is useful in real danger. The trouble starts when the alarm keeps ringing through ordinary busy days.',
+        tryIt: 'Next time you feel tense, ask: where is it in my body right now? Just noticing is step one.' },
+      { pose: 'breathe', title: 'The long breath out',
+        body: 'Breathing out slowly tells your body it is safe to slow down. Many calming breathing methods work this way, with a longer out breath than in breath. Slow breathing at about six breaths a minute has been linked in studies to calmer heart rhythm and lower stress.',
+        tryIt: 'Breathe in for 4, hold for 2, out for 6. Do it six times.' },
+      { pose: 'calm', title: 'The double sigh breath',
+        body: 'A 2023 Stanford study found that five minutes a day of cyclic sighing, over a month, improved mood and lowered breathing rate more than mindfulness meditation did. It is a deep breath in through the nose, a second small sip of air on top, then a long slow breath out through the mouth.',
+        tryIt: 'Try three rounds right now and notice what changes.' },
+      { pose: 'ground', title: 'Grounding brings you back to now',
+        body: 'When the mind races ahead, noticing what you can see, hear and feel brings your attention back to the present moment. It gives your thinking mind a simple job and lets your body settle.',
+        tryIt: 'Name 5 things you see, 4 you can feel, and 3 you can hear.' },
+      { pose: 'stretch', title: 'Move the stress out',
+        body: 'Stress is built to fuel movement, so a short walk or stretch gives that energy somewhere to go. Regular movement is also linked with better mood and better sleep.',
+        tryIt: 'Two minutes of shoulder rolls, or a slow walk around the room.' }
+    ],
+    today: [
+      { pose: 'breathe', text: 'Slow breathing: in for 4, hold for 2, out for 6. Repeat 6 times. Most people feel a shift within a couple of minutes.' },
+      { pose: 'stretch', text: 'Release your body: unclench your jaw, drop your shoulders, and do slow neck and shoulder rolls for 2 minutes.' },
+      { pose: 'ground', text: 'Ground yourself: name 5 things you see, 4 you feel and 3 you hear. Then sip water slowly and feel your feet on the floor.' }
+    ],
+    week: [
+      { pose: 'morning', text: 'Morning: a 90 second breathing reset before you check your phone.' },
+      { pose: 'walk', text: 'Midday: a 2 minute stretch or short walk. Indoors counts.' },
+      { pose: 'rest', text: 'Evening: a short body scan before sleep. Notice each area and let it soften.' },
+      { pose: 'thinking', text: 'Pick one regular stressor and reduce your contact with it by a little, even 10 percent.' },
+      { pose: 'boundary', text: 'Set one small boundary that protects a block of your time or energy.' },
+      { pose: 'journal', text: 'Keep a simple daily note: what helped me feel calmer today?' },
+      { pose: 'win', text: 'End the week by noticing one sign of progress, however small.' }
+    ],
+    prompts: [
+      'Where in my body do I first notice stress, and can I catch it earlier?',
+      'Which 2 minute reset is the most realistic for me to build into my day?',
+      'What would feel 10 percent steadier tomorrow if I tried one of these tools today?'
+    ]
+  },
+  B: {
+    pose: 'journal',
+    title: 'Emotion Release Reset: Processing and Expression',
+    explanation: 'Your answers point to more feeling coming in than you have had space to process. This is very common and often overlooked, not because people do not care, but because life rarely gives us time and permission to feel things properly. The result can be heaviness, a short fuse, tiredness, or a vague sense of being cut off from yourself. Giving your feelings a safe outlet is the key.',
+    learn: [
+      { pose: 'thinking', title: 'Name it to tame it',
+        body: 'Brain scan research led by Matthew Lieberman at UCLA found that putting a feeling into words is linked to calmer activity in the brain\'s alarm centre, the amygdala. In everyday life this means that saying "I feel anxious" can take some of the sting out of the feeling.',
+        tryIt: 'Finish the sentence "Right now I feel..." with one word. Then look for a more exact word.' },
+      { pose: 'journal', title: 'Writing it out',
+        body: 'James Pennebaker and others have found that writing about stressful experiences for about 15 to 20 minutes over a few days is linked to better wellbeing. The effect is modest but steady, and it costs nothing.',
+        tryIt: 'Write for 5 minutes without editing. Nobody has to read it.' },
+      { pose: 'talk', title: 'Talking with someone safe',
+        body: 'Feeling heard helps your body and mind settle. The best listeners do not rush to fix. They stay with you. If you are not ready to talk to a person, a voice note to yourself can work too.',
+        tryIt: 'Tell one trusted person: "I do not need advice, I just need to be heard."' },
+      { pose: 'calm', title: 'Feelings are information',
+        body: 'Emotions point to needs: rest, connection, space, safety, fairness. When we listen, they tend to rise, peak and fall. When we fight them, they often hang around longer.',
+        tryIt: 'After naming a feeling, ask: what do I need right now?' },
+      { pose: 'stress', title: 'Holding it in costs energy',
+        body: 'Studies of emotional suppression, such as work by James Gross, suggest that bottling feelings up can keep the body more stressed and make it harder to connect with others. Expressing a feeling safely tends to cost less.',
+        tryIt: 'Notice one feeling you pushed aside today and give it one honest sentence.' }
+    ],
+    today: [
+      { pose: 'journal', text: 'Freewrite for 2 minutes. Start with "Right now I feel..." and write without editing. The goal is expression, not neatness.' },
+      { pose: 'thinking', text: 'Ask one question: pick one feeling from what you wrote and ask "what do you need?" Write one honest sentence back.' },
+      { pose: 'talk', text: 'Reach out: send a short message to someone you trust, or write yourself a private note, with one honest line about how you really are.' }
+    ],
+    week: [
+      { pose: 'calm', text: 'Do one 5 minute emotional check in each day, morning or evening.' },
+      { pose: 'thinking', text: 'When something feels hard, try "a part of me feels...". It softens self judgment and makes room for honesty.' },
+      { pose: 'talk', text: 'Choose one conversation that might bring relief and take one small step toward it.' },
+      { pose: 'journal', text: 'Swap one 10 minute scroll session for 5 lines of honest journaling.' },
+      { pose: 'checklist', text: 'Write a release list: things you are ready to stop carrying this week.' },
+      { pose: 'walk', text: 'Take one gentle action that matches what you value, not just what feels urgent.' },
+      { pose: 'rest', text: 'End each day by naming one feeling and one need. One line is enough.' }
+    ],
+    prompts: [
+      'What feeling have I been putting off or avoiding this week?',
+      'What is one honest thing I could say, to myself or someone else, that would bring relief?',
+      'Who in my life can listen without trying to fix or shrink what I share?'
+    ]
+  },
+  C: {
+    pose: 'rest',
+    title: 'Routine and Rest Reset: Boundaries, Sleep and Structure',
+    explanation: 'Your answers point to a quiet, long running tiredness that does not feel dramatic enough to deal with, but builds up over time. It is one of the most common roads to burnout, and it is easy to miss because it is not loud. The most effective fix is not more effort. It is planned recovery: steady sleep, real breaks and clear limits on what you take on.',
+    learn: [
+      { pose: 'battery', title: 'Running on empty, quietly',
+        body: 'Burnout researchers such as Christina Maslach link burnout to a long mismatch between what is demanded of us and the resources we have to cope. When output keeps beating recovery, you feel less sharp, less patient and less like yourself.',
+        tryIt: 'List 3 things that drain you and 3 things that refill you. Plan one of each for this week.' },
+      { pose: 'rest', title: 'Sleep timing matters',
+        body: 'Large studies have found that going to bed and waking at regular times is linked to better health outcomes, in some analyses more strongly than the number of hours alone. Your body loves a steady rhythm.',
+        tryIt: 'Pick a wake up time you can keep for the next 7 days, weekends included.' },
+      { pose: 'walk', title: 'Short breaks really work',
+        body: 'A 2022 review of research on micro breaks found that short breaks during the day boost energy and reduce tiredness. You do not need a holiday to feel the effect. A few minutes away from your screen helps.',
+        tryIt: 'Take a 5 minute break after each work block. Phone down, eyes off the screen.' },
+      { pose: 'boundary', title: 'Boundaries protect your energy',
+        body: 'Saying "not now" is not rude. It protects the resources you need to do your best work and be kind to the people around you. Without limits, each recovery effort is undone by the next wave of demands.',
+        tryIt: 'Practise one line: "I can look at that tomorrow."' },
+      { pose: 'checklist', title: 'Less, done well',
+        body: 'A long to do list creates constant low level pressure. Choosing one top priority and one recovery action each day gives you a clear finish line and makes rest feel earned, not guilty.',
+        tryIt: 'Tonight, write tomorrow\'s one must do and one recharge action.' }
+    ],
+    today: [
+      { pose: 'boundary', text: 'Postpone one thing: choose one non essential task and decide it can wait. Write it down and put it aside.' },
+      { pose: 'rest', text: 'Set a wind down anchor: choose tonight\'s wind down time and set a gentle reminder. Even 20 minutes of low stimulation helps sleep.' },
+      { pose: 'checklist', text: 'Write tomorrow\'s one most important task and one recovery action. Both are real items on your list.' }
+    ],
+    week: [
+      { pose: 'rest', text: 'Keep your wake and sleep times as steady as you can, within 30 minutes either way.' },
+      { pose: 'boundary', text: 'Prepare one boundary phrase for this week, such as "I can look at that tomorrow."' },
+      { pose: 'walk', text: 'Schedule two short recovery breaks each day, at least 5 to 10 minutes, phone away.' },
+      { pose: 'rest', text: 'Protect a screen free window of at least 20 minutes before sleep.' },
+      { pose: 'calm', text: 'Eat and drink at steadier times. Irregular fuel adds to tiredness.' },
+      { pose: 'checklist', text: 'Midweek, review your commitments and remove or delay one low value item.' },
+      { pose: 'morning', text: 'Sunday reset: plan the week, pick one rest priority and prepare for a calmer start.' }
+    ],
+    prompts: [
+      'What drains me most often, and can I reduce it by just 10 percent?',
+      'What small bedtime habit helps me feel safer and calmer?',
+      'What one boundary, if I held it this week, would make everything feel more sustainable?'
+    ]
+  }
+};
 
-  function renderQuestion() {
-    const q = QUESTIONS[currentQ];
-    const pct = Math.round(((currentQ + 1) / QUESTIONS.length) * 100);
+var IPQ_GENERAL = [
+  { pose: 'stress', title: 'Stress is a signal, not a flaw',
+    body: 'Stress is your body telling you that something matters and you are being asked for a lot. A little stress can help you rise to a challenge. Trouble comes when it never switches off and recovery never arrives.',
+    tryIt: 'Instead of "why am I like this?", ask "what is this stress trying to tell me?"' },
+  { pose: 'win', title: 'Small and steady beats big and rare',
+    body: 'A well known University College London study on habits found it took an average of about 66 days for a new habit to feel automatic, with a wide range from 18 to 254 days. It also found that missing a single day did not ruin progress.',
+    tryIt: 'Choose one tiny practice and do it daily this week. Never mind how small. Keep it easy.' },
+  { pose: 'thinking', title: 'Mind and body talk both ways',
+    body: 'Worry can tighten your body, and a tight body can feed worry. That is good news, because you can start from either side. Calm the body with breath and movement, or calm the mind by naming and writing.',
+    tryIt: 'Next time you feel stuck, switch doors. If your mind is loud, move. If your body is tense, write.' },
+  { pose: 'rest', title: 'Sleep, mood and stress feed each other',
+    body: 'Poor sleep makes stress feel bigger, and stress makes sleep harder. Breaking the loop at any point helps the whole chain. A steady wind down is one of the easiest places to start.',
+    tryIt: 'Dim the lights and put screens away 20 minutes before bed tonight.' }
+];
 
-    $('progressLabel').textContent = 'Question ' + (currentQ + 1) + ' of ' + QUESTIONS.length;
-    $('progressPct').textContent = pct + '%';
-    $('progressFill').style.width = pct + '%';
-    $('questionNum').textContent = 'Question ' + (currentQ + 1) + ' of ' + QUESTIONS.length;
-    $('questionText').textContent = q.text;
+var IPQ_TRIAD = [
+  { pose: 'calm', title: 'Calm and connected', text: 'You feel safe, curious and able to listen. Thinking is clear and rest comes easily.' },
+  { pose: 'stress', title: 'Alert and revved up', text: 'Heart racing, tight muscles, busy mind. Your body is ready to act. Slow breath and movement help here.' },
+  { pose: 'battery', title: 'Shut down and drained', text: 'Flat, numb, foggy or hopeless. Your system has gone into low power. Gentle warmth, rest and connection help here.' }
+];
 
-    const container = $('optionsContainer');
-    container.innerHTML = '';
-    q.options.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'option-btn' + (answers[currentQ] === opt.key ? ' selected' : '');
-      btn.textContent = opt.label;
-      btn.setAttribute('role', 'radio');
-      btn.setAttribute('aria-checked', answers[currentQ] === opt.key ? 'true' : 'false');
-      btn.addEventListener('click', () => {
-        answers[currentQ] = opt.key;
-        renderQuestion();
-        showInlineFeedback(currentQ, opt.key);
-      });
-      container.appendChild(btn);
+var IPQ_MYTHS = [
+  { myth: 'Rest is just laziness.', fact: 'Rest is how your body and mind rebuild. Top performers plan it on purpose.' },
+  { myth: 'If I ignore a feeling, it will go away.', fact: 'Ignored feelings often come out as tension, a short temper or tiredness. Naming them usually helps them ease.' },
+  { myth: 'I need an hour a day to feel better.', fact: 'Short practices of 2 to 5 minutes can help. Doing them regularly matters more than doing them for long.' },
+  { myth: 'Breathing exercises are too simple to work.', fact: 'Slow breathing is one of the most studied quick tools for calming down, because it uses your body\'s own settling response.' },
+  { myth: 'Needing a reset means something is wrong with me.', fact: 'It means you are human and have been carrying a lot. Noticing it is a strength.' }
+];
+
+var IPQ_TYPE_LABELS = { A: 'Quick Calm Reset', B: 'Emotion Release Reset', C: 'Routine & Rest Reset' };
+var IPQ_TYPE_COLORS = { A: '#6a5aaa', B: '#3a7a78', C: '#8a7a30' };
+
+/* ================================================================
+   STATE
+   ================================================================ */
+var ipqCurrent = 0;
+var ipqAnswers = [null, null, null, null, null];
+var ipqChart = null;
+var ipqToastTimer = null;
+var ipqBreath = { running: false, t: 0, timer: null };
+
+function ipqToast(msg) {
+  var el = ipqEl('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(ipqToastTimer);
+  ipqToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+}
+
+/* ================================================================
+   QUESTIONS
+   ================================================================ */
+function ipqRenderQuestion() {
+  var q = IPQ_QUESTIONS[ipqCurrent];
+  var pct = Math.round(((ipqCurrent + 1) / IPQ_QUESTIONS.length) * 100);
+
+  ipqEl('progressLabel').textContent = 'Question ' + (ipqCurrent + 1) + ' of ' + IPQ_QUESTIONS.length;
+  ipqEl('progressPct').textContent = pct + '%';
+  ipqEl('progressFill').style.width = pct + '%';
+  ipqEl('questionNum').textContent = 'Question ' + (ipqCurrent + 1) + ' of ' + IPQ_QUESTIONS.length;
+  ipqEl('questionText').textContent = q.text;
+  ipqEl('questionFig').innerHTML = ipqFig(q.pose, 'Stick figure for this question');
+
+  var container = ipqEl('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach(function (opt) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option-btn' + (ipqAnswers[ipqCurrent] === opt.key ? ' selected' : '');
+    btn.textContent = opt.label;
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', ipqAnswers[ipqCurrent] === opt.key ? 'true' : 'false');
+    btn.addEventListener('click', function () {
+      ipqAnswers[ipqCurrent] = opt.key;
+      ipqRenderQuestion();
     });
-
-    $('backBtn').disabled = currentQ === 0;
-    $('nextBtn').textContent = currentQ === QUESTIONS.length - 1 ? 'See my reset plan' : 'Next';
-
-    // Restore feedback if already answered
-    if (answers[currentQ]) {
-      showInlineFeedback(currentQ, answers[currentQ]);
-    } else {
-      $('inlineFeedback').classList.remove('show');
-    }
-  }
-
-  function showInlineFeedback(qi, key) {
-    const fb = INLINE_FEEDBACK[qi]?.[key];
-    if (!fb) return;
-    $('feedbackTitle').textContent = fb.title;
-    $('feedbackBody').textContent = fb.body;
-    $('inlineFeedback').classList.add('show');
-  }
-
-  // ── NAVIGATION ─────────────────────────────────────────────────────────
-
-  $('backBtn').addEventListener('click', () => {
-    if (currentQ > 0) { currentQ--; renderQuestion(); }
+    container.appendChild(btn);
   });
 
-  $('nextBtn').addEventListener('click', () => {
-    if (!answers[currentQ]) {
-      showToast('Please choose an answer to continue.');
-      return;
-    }
-    if (currentQ < QUESTIONS.length - 1) {
-      currentQ++;
-      renderQuestion();
-    } else {
-      showResults();
-    }
-  });
+  ipqEl('backBtn').disabled = ipqCurrent === 0;
+  ipqEl('nextBtn').textContent = ipqCurrent === IPQ_QUESTIONS.length - 1 ? 'See my reset plan' : 'Next';
 
-  // ── RESULTS ────────────────────────────────────────────────────────────
+  if (ipqAnswers[ipqCurrent]) {
+    var fb = IPQ_FEEDBACK[ipqCurrent][ipqAnswers[ipqCurrent]];
+    ipqEl('feedbackTitle').textContent = fb.title;
+    ipqEl('feedbackBody').textContent = fb.body;
+    ipqEl('inlineFeedback').classList.add('show');
+  } else {
+    ipqEl('inlineFeedback').classList.remove('show');
+  }
+}
 
-  function getResultKey() {
-    const counts = { A: 0, B: 0, C: 0 };
-    answers.forEach(a => { if (a) counts[a]++; });
-    return Object.keys(counts).reduce((a, b) => counts[a] >= counts[b] ? a : b);
+function ipqCounts() {
+  var c = { A: 0, B: 0, C: 0 };
+  ipqAnswers.forEach(function (a) { if (a) c[a]++; });
+  return c;
+}
+
+function ipqResultKey() {
+  var c = ipqCounts();
+  return Object.keys(c).reduce(function (a, b) { return c[a] >= c[b] ? a : b; });
+}
+
+function ipqSecondKey(main) {
+  var c = ipqCounts();
+  var rest = Object.keys(c).filter(function (k) { return k !== main; });
+  rest.sort(function (a, b) { return c[b] - c[a]; });
+  return c[rest[0]] >= 2 ? rest[0] : null;
+}
+
+/* ================================================================
+   RESULTS
+   ================================================================ */
+function ipqLearnHtml(item) {
+  return '<div class="learn-card">' +
+    '<div class="learn-fig">' + ipqFig(item.pose, item.title) + '</div>' +
+    '<div><div class="learn-title">' + item.title + '</div>' +
+    '<div class="learn-body">' + item.body + '</div>' +
+    (item.tryIt ? '<div class="learn-try"><b>Try this:</b> ' + item.tryIt + '</div>' : '') +
+    '</div></div>';
+}
+
+function ipqShowResults() {
+  var key = ipqResultKey();
+  var data = IPQ_RESET[key];
+  var name = ipqEl('participantName').value.trim();
+  var counts = ipqCounts();
+
+  ipqEl('resultFig').innerHTML = ipqFig(data.pose, 'Stick figure for your result');
+  ipqEl('resultsName').textContent = name ? name + ', your Inner Peace Quiz results' : 'Your Inner Peace Quiz results';
+  ipqEl('resultsType').textContent = data.title;
+  ipqEl('resultsDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  ipqEl('resultExplanation').textContent = data.explanation;
+
+  var second = ipqSecondKey(key);
+  var note = ipqEl('secondaryNote');
+  if (second) {
+    note.textContent = 'You also scored strongly on the ' + IPQ_TYPE_LABELS[second] + '. Once your main reset feels easier, try one idea from that plan too. Most people need a mix.';
+    note.classList.add('show');
+  } else {
+    note.classList.remove('show');
   }
 
-  function showResults() {
-    const key = getResultKey();
-    const data = RESET_DATA[key];
-    const name = $('participantName').value.trim();
-    const counts = { A: 0, B: 0, C: 0 };
-    answers.forEach(a => { if (a) counts[a]++; });
+  ipqEl('learnCards').innerHTML = data.learn.map(ipqLearnHtml).join('');
 
-    // Header
-    $('resultsName').textContent = name ? name + ' — Inner Peace Quiz Results' : 'Inner Peace Quiz Results';
-    $('resultsType').textContent = data.title;
-    $('resultsDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
-    // Explanation
-    $('resultExplanation').textContent = data.explanation;
-
-    // Insight rows
-    const insightContainer = $('insightRows');
-    insightContainer.innerHTML = '<div class="result-section-title">Understanding your pattern</div>';
-    data.insights.forEach(ins => {
-      insightContainer.innerHTML += `
-        <div class="insight-row">
-          <div class="insight-row-label">${ins.label}</div>
-          <div class="insight-row-text">${ins.text}</div>
-        </div>
-      `;
-    });
-
-    // Chart
-    if (resultChart) resultChart.destroy();
-    resultChart = new Chart($('resultChart'), {
-      type: 'bar',
-      data: {
-        labels: [TYPE_LABELS.A, TYPE_LABELS.B, TYPE_LABELS.C],
-        datasets: [{
-          data: [counts.A, counts.B, counts.C],
-          backgroundColor: [TYPE_COLORS.A, TYPE_COLORS.B, TYPE_COLORS.C],
-          borderWidth: 0,
-          borderRadius: 6
-        }]
+  if (ipqChart) ipqChart.destroy();
+  ipqChart = new Chart(ipqEl('resultChart'), {
+    type: 'bar',
+    data: {
+      labels: [IPQ_TYPE_LABELS.A, IPQ_TYPE_LABELS.B, IPQ_TYPE_LABELS.C],
+      datasets: [{
+        data: [counts.A, counts.B, counts.C],
+        backgroundColor: [IPQ_TYPE_COLORS.A, IPQ_TYPE_COLORS.B, IPQ_TYPE_COLORS.C],
+        borderWidth: 0, borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function (ctx) { return ' ' + ctx.parsed.y + ' of 5 answers'; } } }
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + ' of 5 answers' } }
-        },
-        scales: {
-          y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 11 } } },
-          x: { ticks: { font: { size: 11, family: 'Georgia' } } }
-        }
+      scales: {
+        y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 11 } } },
+        x: { ticks: { font: { size: 11, family: 'Georgia' } } }
       }
-    });
-
-    // Today's plan
-    const todayList = $('todayPlan');
-    todayList.innerHTML = '';
-    data.today.forEach((item, i) => {
-      todayList.innerHTML += `
-        <li>
-          <span class="plan-num">${i + 1}</span>
-          <span>${item}</span>
-        </li>
-      `;
-    });
-
-    // 7-day plan
-    const weekContainer = $('weekPlan');
-    weekContainer.innerHTML = '';
-    data.week.forEach(item => {
-      weekContainer.innerHTML += `<div class="plan-week-item">${item}</div>`;
-    });
-
-    // Reflection prompts
-    const promptContainer = $('reflectionPrompts');
-    promptContainer.innerHTML = '';
-    data.prompts.forEach(prompt => {
-      promptContainer.innerHTML += `<div class="prompt-item">${prompt}</div>`;
-    });
-
-    $('resultsCard').classList.add('visible');
-    $('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  $('retakeBtn').addEventListener('click', () => {
-    currentQ = 0;
-    answers.fill(null);
-    if (resultChart) { resultChart.destroy(); resultChart = null; }
-    $('resultsCard').classList.remove('visible');
-    $('inlineFeedback').classList.remove('show');
-    renderQuestion();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Quiz reset — start fresh.');
+    }
   });
 
-  // ── SHARE ──────────────────────────────────────────────────────────────
+  ipqEl('todayPlan').innerHTML = data.today.map(function (it, i) {
+    return '<div class="plan-item"><div class="plan-fig">' + ipqFig(it.pose, 'Step ' + (i + 1)) + '</div>' +
+      '<div><span class="plan-tag">Step ' + (i + 1) + '</span><div>' + it.text + '</div></div></div>';
+  }).join('');
 
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('Find out what kind of reset you actually need with this gentle 5-question quiz: ');
-    ['waShare','waShareResult'].forEach(id => { $(id).href = 'https://wa.me/?text=' + msg + url; });
-    ['fbShare','fbShareResult'].forEach(id => { $(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
-    ['xShare','xShareResult'].forEach(id => { $(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
+  ipqEl('weekPlan').innerHTML = data.week.map(function (it, i) {
+    return '<div class="plan-item"><div class="plan-fig">' + ipqFig(it.pose, 'Day ' + (i + 1)) + '</div>' +
+      '<div><span class="plan-tag">Day ' + (i + 1) + '</span><div>' + it.text + '</div></div></div>';
+  }).join('');
+
+  ipqEl('reflectionPrompts').innerHTML = data.prompts.map(function (p) {
+    return '<div class="prompt-item">' + p + '</div>';
+  }).join('');
+
+  ipqEl('generalCards').innerHTML = IPQ_GENERAL.map(ipqLearnHtml).join('');
+
+  ipqEl('triad').innerHTML = IPQ_TRIAD.map(function (t) {
+    return '<div class="triad-item">' + ipqFig(t.pose, t.title) +
+      '<div class="triad-title">' + t.title + '</div><div class="triad-text">' + t.text + '</div></div>';
+  }).join('');
+
+  ipqEl('mythRows').innerHTML = IPQ_MYTHS.map(function (m) {
+    return '<div class="myth-row"><div class="myth-myth"><span class="myth-tag">Myth</span>' + m.myth + '</div>' +
+      '<div class="myth-fact"><span class="myth-tag">Fact</span>' + m.fact + '</div></div>';
+  }).join('');
+
+  ipqEl('resultsCard').classList.add('visible');
+  ipqEl('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ================================================================
+   BREATHING GUIDE (in 4, hold 2, out 6, five rounds)
+   ================================================================ */
+function ipqBreathStep() {
+  var total = 60;
+  if (ipqBreath.t >= total) { ipqBreathStop(true); return; }
+  var c = ipqBreath.t % 12;
+  var circle = ipqEl('breathCircle');
+  var label;
+  if (c < 4) {
+    label = 'Breathe in slowly';
+    if (c === 0) { circle.style.transitionDuration = '4s'; circle.style.transform = 'scale(1.5)'; }
+  } else if (c < 6) {
+    label = 'Hold gently';
+  } else {
+    label = 'Breathe out, long and slow';
+    if (c === 6) { circle.style.transitionDuration = '6s'; circle.style.transform = 'scale(1)'; }
   }
+  ipqEl('breathText').textContent = label;
+  ipqEl('breathCount').textContent = (total - ipqBreath.t) + ' seconds left';
+  ipqBreath.t++;
+}
 
-  async function copyLink() {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
-  }
+function ipqBreathStop(done) {
+  clearInterval(ipqBreath.timer);
+  ipqBreath.running = false;
+  ipqBreath.t = 0;
+  var circle = ipqEl('breathCircle');
+  circle.style.transitionDuration = '1s';
+  circle.style.transform = 'scale(1)';
+  ipqEl('breathBtn').textContent = done ? 'Do it again' : 'Start breathing guide';
+  ipqEl('breathText').textContent = done ? 'Well done. Notice how you feel.' : 'Ready when you are';
+  ipqEl('breathCount').textContent = 'In for 4, hold for 2, out for 6';
+  if (done) ipqToast('Nice work. One minute of calm.');
+}
 
-  $('copyLinkBtn').addEventListener('click', copyLink);
-  $('copyLinkBtnResult').addEventListener('click', copyLink);
+function ipqBreathToggle() {
+  if (ipqBreath.running) { ipqBreathStop(false); return; }
+  ipqBreath.running = true;
+  ipqBreath.t = 0;
+  ipqEl('breathBtn').textContent = 'Stop';
+  ipqBreathStep();
+  ipqBreath.timer = setInterval(ipqBreathStep, 1000);
+}
 
-  // ── PDF ────────────────────────────────────────────────────────────────
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+ipqEl('backBtn').addEventListener('click', function () {
+  if (ipqCurrent > 0) { ipqCurrent--; ipqRenderQuestion(); }
+});
 
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
+ipqEl('nextBtn').addEventListener('click', function () {
+  if (!ipqAnswers[ipqCurrent]) { ipqToast('Please choose an answer to continue.'); return; }
+  if (ipqCurrent < IPQ_QUESTIONS.length - 1) { ipqCurrent++; ipqRenderQuestion(); }
+  else { ipqShowResults(); }
+});
+
+ipqEl('retakeBtn').addEventListener('click', function () {
+  ipqCurrent = 0;
+  ipqAnswers = [null, null, null, null, null];
+  if (ipqChart) { ipqChart.destroy(); ipqChart = null; }
+  ipqBreathStop(false);
+  ipqEl('resultsCard').classList.remove('visible');
+  ipqEl('inlineFeedback').classList.remove('show');
+  ipqRenderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  ipqToast('Quiz reset. Start fresh.');
+});
+
+ipqEl('breathBtn').addEventListener('click', ipqBreathToggle);
+
+/* ================================================================
+   SHARE
+   ================================================================ */
+function ipqUpdateShareLinks() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('Find out what kind of reset you actually need with this gentle 5 question quiz: ');
+  ['waShare', 'waShareResult'].forEach(function (id) { ipqEl(id).href = 'https://wa.me/?text=' + msg + url; });
+  ['fbShare', 'fbShareResult'].forEach(function (id) { ipqEl(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
+  ['xShare', 'xShareResult'].forEach(function (id) { ipqEl(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
+}
+
+async function ipqCopyLink() {
+  try { await navigator.clipboard.writeText(window.location.href); ipqToast('Link copied!'); }
+  catch (e) { ipqToast('Copy from your address bar.'); }
+}
+
+ipqEl('copyLinkBtn').addEventListener('click', ipqCopyLink);
+ipqEl('copyLinkBtnResult').addEventListener('click', ipqCopyLink);
+
+/* ================================================================
+   PDF
+   ================================================================ */
+function ipqImageToDataUrl(url) {
+  return fetch(url, { mode: 'cors' }).then(function (res) {
     if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(); };
       reader.readAsDataURL(blob);
     });
+  });
+}
+
+/* Keep text safe for the built in PDF font */
+function ipqA(s) {
+  return String(s)
+    .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-').replace(/\u2026/g, '...').replace(/\u00b7/g, '|');
+}
+
+/* Draw a stick figure in the PDF from the same pose data */
+function ipqPdfFig(doc, key, x, y, size) {
+  var p = IPQ_POSES[key] || IPQ_POSES.calm;
+  var k = size / 100;
+  var lw = Math.max(1.1, size * 0.04);
+  doc.setLineCap('round');
+  doc.setLineJoin('round');
+
+  doc.setDrawColor(106, 90, 170);
+  doc.setLineWidth(lw * 0.8);
+  p.pl.forEach(function (l) {
+    for (var i = 0; i + 3 < l.length; i += 2) doc.line(x + l[i] * k, y + l[i + 1] * k, x + l[i + 2] * k, y + l[i + 3] * k);
+  });
+  p.pc.forEach(function (c) {
+    if (c[2] < 4) { doc.setFillColor(106, 90, 170); doc.circle(x + c[0] * k, y + c[1] * k, c[2] * k, 'F'); }
+    else { doc.circle(x + c[0] * k, y + c[1] * k, c[2] * k, 'S'); }
+  });
+
+  doc.setDrawColor(30, 26, 46);
+  doc.setLineWidth(lw);
+  p.b.forEach(function (l) {
+    for (var i = 0; i + 3 < l.length; i += 2) doc.line(x + l[i] * k, y + l[i + 1] * k, x + l[i + 2] * k, y + l[i + 3] * k);
+  });
+  doc.setFillColor(255, 255, 255);
+  doc.circle(x + p.h[0] * k, y + p.h[1] * k, p.h[2] * k, 'FD');
+}
+
+async function ipqDownloadPDF() {
+  if (!ipqEl('resultsCard').classList.contains('visible')) { ipqToast('Please complete the quiz first.'); return; }
+  var jsPDFLib = window.jspdf && window.jspdf.jsPDF;
+  if (!jsPDFLib) { ipqToast('PDF library unavailable. Please retry.'); return; }
+  ipqToast('Preparing your PDF...');
+
+  var key = ipqResultKey();
+  var data = IPQ_RESET[key];
+  var name = ipqEl('participantName').value.trim();
+  var second = ipqSecondKey(key);
+
+  var doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin = 40;
+  var contentW = pageW - margin * 2;
+  var y = margin;
+  var dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  function need(h) { if (y + h > pageH - 50) { doc.addPage(); y = margin; } }
+
+  function heading(t) {
+    need(40);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(106, 90, 170);
+    doc.text(ipqA(t), margin, y);
+    y += 7;
+    doc.setDrawColor(192, 176, 224); doc.setLineWidth(0.8);
+    doc.line(margin, y, pageW - margin, y);
+    y += 16;
   }
 
-  async function downloadPDF() {
-    if (!$('resultsCard').classList.contains('visible')) {
-      showToast('Please complete the quiz first.');
-      return;
+  function para(t, o) {
+    o = o || {};
+    var size = o.size || 9.5, lh = 1.35, w = o.w || contentW, x = o.x || margin;
+    doc.setFont('helvetica', o.font || 'normal'); doc.setFontSize(size);
+    var c = o.color || [30, 26, 46]; doc.setTextColor(c[0], c[1], c[2]);
+    var lines = doc.splitTextToSize(ipqA(t), w);
+    var h = lines.length * size * lh;
+    need(h);
+    doc.text(lines, x, y + size * 0.85, { lineHeightFactor: lh });
+    y += h + (o.gap === undefined ? 6 : o.gap);
+  }
+
+  function figCard(item, tag) {
+    var figS = 52, textX = margin + figS + 14, w = contentW - figS - 14;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+    var tLines = doc.splitTextToSize(ipqA(item.title || tag), w);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    var bLines = doc.splitTextToSize(ipqA(item.body || item.text), w);
+    var tryLines = item.tryIt ? doc.splitTextToSize('Try this: ' + ipqA(item.tryIt), w) : [];
+    var h = tLines.length * 13 + bLines.length * 12.4 + (tryLines.length ? tryLines.length * 12.4 + 6 : 0) + 4;
+    h = Math.max(h, figS + 4);
+    need(h + 10);
+    ipqPdfFig(doc, item.pose, margin, y, figS);
+    var ty = y;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(30, 26, 46);
+    doc.text(tLines, textX, ty + 9, { lineHeightFactor: 1.3 });
+    ty += tLines.length * 13;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(74, 72, 104);
+    doc.text(bLines, textX, ty + 8, { lineHeightFactor: 1.35 });
+    ty += bLines.length * 12.4;
+    if (tryLines.length) {
+      doc.setTextColor(58, 122, 120);
+      doc.text(tryLines, textX, ty + 14, { lineHeightFactor: 1.35 });
     }
-    const jsPDFLib = window.jspdf?.jsPDF;
-    if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
+    y += h + 10;
+  }
 
-    const key = getResultKey();
-    const data = RESET_DATA[key];
-    const name = $('participantName').value.trim();
+  function stepRow(item, tag) {
+    var figS = 40, textX = margin + figS + 12, w = contentW - figS - 12;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    var lines = doc.splitTextToSize(ipqA(item.text), w);
+    var h = Math.max(figS, lines.length * 12.8 + 14);
+    need(h + 8);
+    ipqPdfFig(doc, item.pose, margin, y, figS);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(106, 90, 170);
+    doc.text(tag.toUpperCase(), textX, y + 8);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 26, 46);
+    doc.text(lines, textX, y + 21, { lineHeightFactor: 1.35 });
+    y += h + 8;
+  }
 
-    const doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
+  /* Header band */
+  doc.setFillColor(240, 236, 248);
+  doc.roundedRect(margin, y, contentW, 78, 6, 6, 'F');
+  try {
+    var logoData = await ipqImageToDataUrl(ipqLogoUrl);
+    doc.addImage(logoData, 'JPEG', margin + 10, y + 12, 54, 54);
+  } catch (e) {}
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(30, 26, 46);
+  doc.text('Inner Peace Quiz: Your Reset Plan', margin + 76, y + 30);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 72, 104);
+  if (name) doc.text(ipqA(name), margin + 76, y + 46);
+  doc.text('emotionalintelligencedeveloper.com  |  ' + dateStr, margin + 76, name ? y + 61 : y + 46);
+  ipqPdfFig(doc, data.pose, pageW - margin - 70, y + 8, 62);
+  y += 96;
 
-    // Header
-    doc.setFillColor(240, 236, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+  /* Result type */
+  doc.setFillColor(240, 236, 248);
+  doc.roundedRect(margin, y, contentW, 34, 4, 4, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(106, 90, 170);
+  doc.text('Your reset type: ' + ipqA(data.title), margin + 10, y + 21);
+  y += 46;
+
+  para(data.explanation, { gap: 8 });
+  if (second) {
+    para('You also scored strongly on the ' + IPQ_TYPE_LABELS[second] + '. Once your main reset feels easier, try one idea from that plan too.', { font: 'italic', color: [122, 106, 48], gap: 10 });
+  }
+
+  /* Chart */
+  if (ipqChart) {
     try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(30, 26, 46);
-    doc.text('Inner Peace Quiz — Reset Plan', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 72, 104);
-    if (name) doc.text(name, margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com  ·  ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), margin + 76, name ? y + 56 : y + 41);
-    y += 86;
-
-    // Chart
-    if (resultChart) {
-      try {
-        const chartImg = resultChart.toBase64Image();
-        const chartW = pageW - margin * 2;
-        const chartH = 120;
-        doc.addImage(chartImg, 'PNG', margin, y, chartW, chartH);
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(8.5);
-        doc.setTextColor(138, 144, 168);
-        doc.text('Your answer pattern across the three reset types', pageW / 2, y + chartH + 12, { align: 'center' });
-        y += chartH + 24;
-      } catch(_) {}
-    }
-
-    // Result type
-    doc.setFillColor(240, 236, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 36, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Your reset type: ' + data.title, margin + 10, y + 23);
-    y += 46;
-
-    // Explanation
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(30, 26, 46);
-    const explLines = doc.splitTextToSize(data.explanation, pageW - margin * 2);
-    doc.text(explLines, margin, y);
-    y += explLines.length * 12 + 12;
-
-    // Insights
-    data.insights.forEach(ins => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(240, 236, 248);
-      const bodyLines = doc.splitTextToSize(ins.text, pageW - margin * 2 - 22);
-      const bh = bodyLines.length * 11 + 30;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(106, 90, 170);
-      doc.text(ins.label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.3);
-      doc.setTextColor(30, 26, 46);
-      doc.text(bodyLines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Today
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Your 5-minute plan for today', margin, y);
-    y += 14;
-    data.today.forEach((item, i) => {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize((i + 1) + '. ' + item, pageW - margin * 2);
-      const itemH = lines.length * 14 + 6;
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
-    });
-
-    // Week
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    y += 6;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Your 7-day mini plan', margin, y);
-    y += 16;
-    data.week.forEach((item, i) => {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      // Use safe ASCII prefix instead of Unicode arrow
-      const prefix = 'Day ' + (i + 1) + ': ';
-      const lines = doc.splitTextToSize(prefix + item, pageW - margin * 2);
-      const itemH = lines.length * 14 + 6;
-      // Check AFTER calculating height so multi-line items don't overflow
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
-    });
-
-    // Prompts
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    y += 6;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Reflection prompts', margin, y);
-    y += 16;
-    data.prompts.forEach(prompt => {
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize('- ' + prompt, pageW - margin * 2);
-      const itemH = lines.length * 14 + 6;
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
-    });
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('The science of inner peace and recovery — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why rest is not the opposite of productivity',
-       'Research by Matthew Walker at UC Berkeley and others in sleep and recovery science consistently shows that deliberate recovery — not just absence of work — is one of the strongest predictors of sustained cognitive performance, emotional regulation, and physical health. The nervous system does not restore itself passively during depletion; it requires active recovery conditions. Understanding this reframes rest from indulgence to strategic investment.'],
-      ['The polyvagal theory and nervous system states',
-       'Stephen Porges\'s polyvagal theory identifies three distinct states of the nervous system: social engagement (safe and connected), sympathetic activation (mobilised for fight or flight), and dorsal vagal shutdown (collapsed or frozen). Most stress responses are sympathetic activation — the system is mobilised. Body-based reset tools work by directly activating the ventral vagal pathway, shifting the system from mobilisation toward safety and connection. This is the physiological basis for breathing resets.'],
-      ['Why naming emotions reduces their intensity',
-       'Research by Matthew Lieberman at UCLA shows that the act of labelling an emotion — saying or writing "I feel anxious" rather than just experiencing anxiety — activates the prefrontal cortex and measurably reduces amygdala activity. This effect is consistent and reproducible. It is the neurological basis for journaling, therapy, and any practice that involves naming rather than suppressing or acting out emotional states.'],
-      ['Boundaries as a biological necessity',
-       'Research in occupational health and burnout prevention — including work by Christina Maslach, who developed the Maslach Burnout Inventory — identifies the imbalance between demands and resources as the primary driver of burnout. Boundaries are not social politeness; they are the mechanism by which the resource side of this equation is protected. Without them, recovery efforts are repeatedly undermined by the next wave of demand before the previous one has been absorbed.'],
-      ['The compound effect of small consistent practices',
-       'Research on habit formation and neuroplasticity confirms that small consistent practices produce cumulative neural changes that large irregular efforts do not. The brain reorganises itself around what it does regularly, not around what it does intensely. This is why the 7-day mini plan in this report is designed around small daily actions rather than significant one-time interventions. Consistency is the mechanism; the size of each step matters far less than the regularity.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(106, 90, 170);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(106, 90, 170);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(30, 26, 46);
-    [
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
-      'Find a helpline: findahelpline.com'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(152, 144, 176);
-    doc.text('This tool supports reflection. Not a substitute for professional care. If you feel unsafe, seek help now.', margin, pageH - 22);
-
-    doc.save('inner-peace-reset-plan.pdf');
-    showToast('PDF downloaded!');
+      var canvas = ipqEl('resultChart');
+      var ratio = canvas.height / canvas.width;
+      var cw = 340, ch = cw * ratio;
+      if (ch > 150) { ch = 150; cw = ch / ratio; }
+      need(ch + 30);
+      doc.addImage(ipqChart.toBase64Image(), 'PNG', (pageW - cw) / 2, y, cw, ch);
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(138, 130, 166);
+      doc.text('Your answer pattern across the three reset types', pageW / 2, y + ch + 12, { align: 'center' });
+      y += ch + 26;
+    } catch (e) {}
   }
 
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+  heading('Understanding your pattern');
+  data.learn.forEach(function (it) { figCard(it); });
 
-  // ── INIT ───────────────────────────────────────────────────────────────
+  heading('Your 5 minute plan for today');
+  data.today.forEach(function (it, i) { stepRow(it, 'Step ' + (i + 1)); });
 
-  renderQuestion();
-  updateShareLinks();
-}());
+  heading('Your 7 day mini plan');
+  data.week.forEach(function (it, i) { stepRow(it, 'Day ' + (i + 1)); });
+
+  heading('Reflection prompts');
+  data.prompts.forEach(function (p) { para('- ' + p, { font: 'italic', gap: 5 }); });
+  y += 6;
+
+  heading('The science in plain words');
+  IPQ_GENERAL.forEach(function (it) { figCard(it); });
+
+  /* Triad */
+  heading('Three stress states: a simple map');
+  var colW = contentW / 3, triH = 0, i;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.8);
+  var triLines = IPQ_TRIAD.map(function (t) { return doc.splitTextToSize(ipqA(t.text), colW - 16); });
+  for (i = 0; i < triLines.length; i++) triH = Math.max(triH, triLines[i].length * 11.5);
+  triH += 56 + 22;
+  need(triH + 30);
+  IPQ_TRIAD.forEach(function (t, idx) {
+    var cx = margin + idx * colW;
+    ipqPdfFig(doc, t.pose, cx + (colW - 52) / 2, y, 52);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(30, 26, 46);
+    doc.text(ipqA(t.title), cx + colW / 2, y + 66, { align: 'center' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.8); doc.setTextColor(74, 72, 104);
+    doc.text(triLines[idx], cx + 8, y + 80, { lineHeightFactor: 1.3 });
+  });
+  y += triH + 8;
+  para('A simplified map based on ideas like polyvagal theory, which scientists still debate. Use it to notice how you feel, not as an exact diagram of your body.', { font: 'italic', size: 8.5, color: [138, 130, 166], gap: 12 });
+
+  heading('Myths and facts');
+  IPQ_MYTHS.forEach(function (m) {
+    para('Myth: ' + m.myth, { font: 'bold', size: 9.3, color: [122, 42, 42], gap: 2 });
+    para('Fact: ' + m.fact, { size: 9.3, color: [31, 79, 77], gap: 8 });
+  });
+  y += 4;
+
+  heading('When self help is not enough');
+  para('Tools like this are great for everyday stress. Please talk to a doctor, counsellor or someone you trust if low mood, worry or exhaustion lasts more than two weeks, if it affects your sleep, eating, work or relationships, if you lean on alcohol or other substances to cope, or if you have thoughts of harming yourself. If you feel unsafe right now, get immediate help at findahelpline.com.', { gap: 12 });
+
+  heading('More free wellbeing resources');
+  [
+    'Main site: emotionalintelligencedeveloper.com',
+    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+    'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
+    'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
+    'Find a helpline: findahelpline.com'
+  ].forEach(function (l) { para(l, { size: 9, gap: 3 }); });
+
+  /* Footer on every page */
+  var pages = doc.getNumberOfPages();
+  for (var pg = 1; pg <= pages; pg++) {
+    doc.setPage(pg);
+    doc.setDrawColor(192, 176, 224); doc.setLineWidth(0.8);
+    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(8.2); doc.setTextColor(152, 144, 176);
+    doc.text('This tool supports reflection. Not a substitute for professional care. If you feel unsafe, seek help now.', margin, pageH - 22);
+    doc.text('Page ' + pg + ' of ' + pages, pageW - margin, pageH - 22, { align: 'right' });
+  }
+
+  doc.save('inner-peace-reset-plan.pdf');
+  ipqToast('PDF downloaded!');
+}
+
+ipqEl('downloadPdfBtn').addEventListener('click', ipqDownloadPDF);
+
+/* ================================================================
+   INIT
+   ================================================================ */
+ipqEl('ipqHeroFig').innerHTML = ipqFig('calm', 'Calm stick figure');
+ipqRenderQuestion();
+ipqUpdateShareLinks();
 </script>
 </body>
 </html>

@@ -3,82 +3,192 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Your Inner Strength Snapshot — Emotional Intelligence Developer</title>
+<title>Your Inner Strength Snapshot | Emotional Intelligence Developer</title>
 
 <style>
 :root{
   --bg:#f3f4f6;
   --card:#ffffff;
   --accent:#2563eb;
+  --accent-dark:#1d4ed8;
   --soft:#eff6ff;
+  --line:#e5e7eb;
   --muted:#6b7280;
   --safe:#10b981;
+  --ink:#111827;
 }
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:var(--bg);
-  color:#111;
+  color:var(--ink);
 }
-.wrap{max-width:900px;margin:28px auto;padding:20px}
+.wrap{max-width:820px;margin:28px auto;padding:16px}
 .card{
   background:var(--card);
-  border-radius:14px;
-  padding:26px;
+  border-radius:18px;
+  overflow:hidden;
   box-shadow:0 10px 28px rgba(16,24,40,0.08);
 }
-h1{margin-top:0;font-size:24px}
-.lead{color:var(--muted);line-height:1.6;margin-bottom:18px}
-
-.q{
-  margin:18px 0;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid #e5e7eb;
+.head{
+  padding:30px 28px 24px;
+  background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 55%,#38bdf8 100%);
+  color:#fff;
 }
-.q h3{margin:0 0 10px;font-size:15px}
-label{display:block;margin:6px 0;cursor:pointer}
+.head h2{margin:0 0 8px;font-size:28px;line-height:1.2}
+.head p{margin:0;line-height:1.6;opacity:.95;font-size:16px}
+.body{padding:26px 28px 8px}
 
-.controls{
-  margin-top:20px;
+.section-title{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 10px;
 }
-.btn{
-  padding:10px 16px;
+
+.namebox{
+  background:var(--soft);
+  border:1px solid #bfdbfe;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:22px;
+}
+.namebox label.nl{font-weight:600;display:block;margin-bottom:8px}
+.namebox input[type="text"]{
+  width:100%;
+  padding:12px 14px;
+  font-size:16px;
+  border:1px solid #bfdbfe;
   border-radius:10px;
+  background:#fff;
+  color:var(--ink);
+}
+.namebox input[type="text"]:focus{outline:2px solid var(--accent);outline-offset:1px}
+.namebox small{display:block;margin-top:8px;color:var(--muted)}
+
+.progress{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#fff;
+  padding:10px 0 12px;
+  margin-bottom:6px;
+}
+.progress-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#10b981);transition:width .25s ease}
+
+fieldset.q{
+  margin:16px 0;
+  padding:16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  transition:border-color .2s, background .2s;
+}
+fieldset.q.missing{border-color:#f59e0b;background:#fffbeb}
+fieldset.q legend{
+  padding:0 8px;
+  font-weight:700;
+  font-size:15px;
+}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.opt{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  cursor:pointer;
+  background:#fff;
+  transition:border-color .15s, background .15s, transform .1s;
+}
+.opt:hover{border-color:#93c5fd;background:#f8fbff}
+.opt:has(input:checked){border-color:var(--accent);background:var(--soft)}
+.opt input{margin:0;accent-color:var(--accent);width:18px;height:18px}
+
+.controls{margin:22px 0 8px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  padding:13px 22px;
+  border-radius:12px;
   border:0;
   background:var(--accent);
   color:#fff;
-  font-weight:600;
+  font-weight:700;
+  font-size:16px;
   cursor:pointer;
 }
+.btn:hover{background:var(--accent-dark)}
+.btn.green{background:var(--safe)}
+.btn.green:hover{background:#059669}
+.btn.ghost{background:#fff;color:var(--accent);border:1px solid #bfdbfe}
+.btn.ghost:hover{background:var(--soft)}
+#msg{color:#b45309;font-weight:600}
 
 .result{
   display:none;
-  margin-top:28px;
-  padding:18px;
-  border-radius:14px;
+  margin:26px 0 22px;
+  padding:22px;
+  border-radius:16px;
   background:var(--soft);
   border:1px solid #bfdbfe;
 }
+.result h3{margin:0 0 6px;font-size:22px}
+.lead{color:var(--muted);line-height:1.6;margin:0 0 16px}
 
-canvas{max-width:100%;margin:20px auto}
-
-.download{
-  margin-top:16px;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:10px;
-  background:var(--safe);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
+.tops{display:grid;gap:12px;margin:16px 0 20px}
+.top{
+  background:#fff;
+  border-radius:12px;
+  padding:14px 16px;
+  border-left:6px solid var(--accent);
 }
+.top b{font-size:17px}
+.top .pct{float:right;color:var(--muted);font-weight:600}
+.top p{margin:6px 0 0;line-height:1.55}
+.top .tip{color:var(--muted);font-size:14px}
+
+.chartbox{max-width:380px;margin:10px auto 4px}
+canvas{max-width:100%}
+
+.rowbtns{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
 
 footer{
-  margin-top:20px;
-  font-size:12px;
-  color:var(--muted);
+  margin-top:22px;
+  padding:22px 28px 26px;
+  background:#f9fafb;
+  border-top:1px solid var(--line);
   text-align:center;
+}
+.share-label{font-weight:700;margin:0 0 12px}
+.share{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:16px}
+.sbtn{
+  border:0;
+  cursor:pointer;
+  padding:10px 16px;
+  border-radius:10px;
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+}
+.sbtn.wa{background:#25d366}
+.sbtn.fb{background:#1877f2}
+.sbtn.x{background:#111827}
+.sbtn.li{background:#0a66c2}
+.sbtn.em{background:#6b7280}
+.sbtn.cp{background:#2563eb}
+.sbtn:hover{opacity:.9}
+.credit{font-size:13px;color:var(--muted);line-height:1.6}
+.credit a{color:var(--accent);text-decoration:none;font-weight:600}
+
+@media (max-width:600px){
+  .opts{grid-template-columns:1fr}
+  .head h2{font-size:23px}
+  .body{padding:20px 16px 6px}
+  .head{padding:24px 18px 20px}
 }
 </style>
 </head>
@@ -87,34 +197,144 @@ footer{
 <div class="wrap">
 <div class="card">
 
-<h1>Your Inner Strength Snapshot</h1>
+<div class="head">
+  <h2>Your Inner Strength Snapshot</h2>
+  <p>A positive reflection tool. There are no wrong answers, just different ways of showing up.</p>
+</div>
 
-<p class="lead">
-This is a positive reflection tool.
-There are no wrong answers — just different ways of showing up.
-</p>
+<div class="body">
 
-<form id="quiz">
+  <div class="namebox">
+    <p class="section-title">Step 1: Your name</p>
+    <label class="nl" for="userName">Add your name so your snapshot is personal to you</label>
+    <input type="text" id="userName" maxlength="40" placeholder="Type your name here" autocomplete="given-name" />
+    <small>Optional. Your name stays on your device and is only used on your results and PDF.</small>
+  </div>
+
+  <div class="progress">
+    <div class="progress-top"><span>Step 2: Answer the questions</span><span id="progText">0 of 9 answered</span></div>
+    <div class="bar"><span id="progBar"></span></div>
+  </div>
+
+  <form id="quiz" onsubmit="return false;"></form>
+
+  <div class="controls">
+    <button type="button" class="btn" onclick="showResults()">See Your Results</button>
+    <span id="msg"></span>
+  </div>
+
+  <div id="result" class="result">
+    <h3 id="resultTitle">Your Inner Strength Snapshot</h3>
+    <p class="lead">Everyone's mix is different. This reflects how you show up right now.</p>
+
+    <div class="section-title">Your top strengths</div>
+    <div id="tops" class="tops"></div>
+
+    <div class="section-title">Your full mix</div>
+    <div class="chartbox"><canvas id="pieChart" width="420" height="420"></canvas></div>
+
+    <div class="rowbtns">
+      <button type="button" class="btn green" onclick="downloadPDF()">Download My Snapshot (PDF)</button>
+      <button type="button" class="btn ghost" onclick="startAgain()">Start Again</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p class="share-label">Know someone who would enjoy this? Share it.</p>
+  <div class="share">
+    <button type="button" class="sbtn wa" onclick="shareTo('wa')">WhatsApp</button>
+    <button type="button" class="sbtn fb" onclick="shareTo('fb')">Facebook</button>
+    <button type="button" class="sbtn x" onclick="shareTo('x')">X</button>
+    <button type="button" class="sbtn li" onclick="shareTo('li')">LinkedIn</button>
+    <button type="button" class="sbtn em" onclick="shareTo('em')">Email</button>
+    <button type="button" class="sbtn cp" id="copyBtn" onclick="shareTo('cp')">Copy Link</button>
+  </div>
+  <div class="credit">
+    Created by <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Emotional Intelligence Developer</a><br>
+    https://emotionalintelligencedeveloper.com/
+  </div>
+</footer>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-const strengths = [
+var SITE_URL = "https://emotionalintelligencedeveloper.com/";
+
+var strengths = [
   "Focus","Self-Trust","Motivation","Calm Presence",
   "Resilience","Growth","Authenticity","Connection","Awareness"
 ];
 
-const questions = [
-  "When starting something important, you usually…",
-  "When challenges appear, you tend to…",
-  "Your energy is strongest when you feel…",
-  "In conversations, people often notice that you…",
-  "When plans change unexpectedly, you…",
-  "You feel most confident when you…",
-  "Your motivation comes mainly from…",
-  "You feel most connected when you…",
-  "Personal growth for you looks like…"
+var colors = {
+  "Focus":"#2563eb",
+  "Self-Trust":"#7c3aed",
+  "Motivation":"#f59e0b",
+  "Calm Presence":"#06b6d4",
+  "Resilience":"#ef4444",
+  "Growth":"#10b981",
+  "Authenticity":"#ec4899",
+  "Connection":"#f97316",
+  "Awareness":"#64748b"
+};
+
+var info = {
+  "Focus":{
+    d:"You can point your attention at what matters and keep going when distractions show up.",
+    t:"Pick one priority each morning and protect an hour for it."
+  },
+  "Self-Trust":{
+    d:"You listen to your own judgment and feel steady in the choices you make.",
+    t:"Notice one decision this week that you made well, and name why."
+  },
+  "Motivation":{
+    d:"You are moved by purpose, and you enjoy seeing real progress.",
+    t:"Write down why your next goal matters to you, in one sentence."
+  },
+  "Calm Presence":{
+    d:"You bring steadiness to a room and can slow things down when others rush.",
+    t:"Take three slow breaths before your next important conversation."
+  },
+  "Resilience":{
+    d:"You recover after setbacks and keep moving, even when things feel hard.",
+    t:"After a tough day, write down one thing you handled better than before."
+  },
+  "Growth":{
+    d:"You are curious about becoming better and treat mistakes as lessons.",
+    t:"Choose one small skill to practise for ten minutes a day."
+  },
+  "Authenticity":{
+    d:"You show up as yourself, and that helps others feel safe to do the same.",
+    t:"Say one honest thing this week that you would normally hold back."
+  },
+  "Connection":{
+    d:"You build real bonds and help people feel seen and heard.",
+    t:"Reach out to someone you have been meaning to check in on."
+  },
+  "Awareness":{
+    d:"You notice your thoughts, feelings and patterns, which helps you choose how to respond.",
+    t:"Pause once a day and ask yourself what you are feeling right now."
+  }
+};
+
+var questions = [
+  "When starting something important, you usually...",
+  "When challenges appear, you tend to...",
+  "Your energy is strongest when you feel...",
+  "In conversations, people often notice that you...",
+  "When plans change unexpectedly, you...",
+  "You feel most confident when you...",
+  "Your motivation comes mainly from...",
+  "You feel most connected when you...",
+  "Personal growth for you looks like..."
 ];
 
-const options = [
+var options = [
   ["Focus","Motivation","Growth","Awareness"],
   ["Resilience","Calm Presence","Growth","Self-Trust"],
   ["Authenticity","Motivation","Connection","Focus"],
@@ -125,95 +345,255 @@ const options = [
   ["Connection","Authenticity","Awareness","Calm Presence"],
   ["Growth","Awareness","Resilience","Self-Trust"]
 ];
-</script>
 
-</form>
+var pieChart = null;
+var lastRanked = [];
 
-<div class="controls">
-  <button class="btn" onclick="showResults()">See Your Results</button>
-</div>
-
-<div id="result" class="result">
-  <h3>Your Inner Strength Snapshot</h3>
-  <p class="lead">
-    Everyone’s mix is different. This reflects how you show up right now.
-  </p>
-  <canvas id="pieChart"></canvas>
-  <p class="lead">
-    Many people like saving or sharing their snapshot.
-  </p>
-</div>
-
-<div class="download" onclick="downloadPDF()">Download My Snapshot (PDF)</div>
-
-<footer>
-Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/
-</footer>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-const scores = {};
-strengths.forEach(s => scores[s] = 0);
-
-const form = document.getElementById("quiz");
-
-questions.forEach((q,i)=>{
-  const div = document.createElement("div");
-  div.className="q";
-  div.innerHTML = `<h3>${i+1}) ${q}</h3>`;
-  options[i].forEach(o=>{
-    div.innerHTML += `
-      <label>
-        <input type="radio" name="q${i}" value="${o}"> ${o}
-      </label>`;
+function buildQuiz(){
+  var form = document.getElementById("quiz");
+  form.innerHTML = "";
+  questions.forEach(function(q, i){
+    var fs = document.createElement("fieldset");
+    fs.className = "q";
+    fs.id = "fs" + i;
+    var html = "<legend>" + (i + 1) + ") " + q + "</legend><div class=\"opts\">";
+    options[i].forEach(function(o){
+      html += "<label class=\"opt\"><input type=\"radio\" name=\"q" + i + "\" value=\"" + o + "\" onchange=\"updateProgress()\"> " + o + "</label>";
+    });
+    html += "</div>";
+    fs.innerHTML = html;
+    form.appendChild(fs);
   });
-  form.appendChild(div);
-});
+}
 
-let pieChart;
+function updateProgress(){
+  var done = 0;
+  for (var i = 0; i < questions.length; i++){
+    if (document.querySelector("input[name=\"q" + i + "\"]:checked")){
+      done++;
+      document.getElementById("fs" + i).classList.remove("missing");
+    }
+  }
+  document.getElementById("progText").textContent = done + " of " + questions.length + " answered";
+  document.getElementById("progBar").style.width = Math.round(done / questions.length * 100) + "%";
+  if (done === questions.length){ document.getElementById("msg").textContent = ""; }
+}
+
+function getName(){
+  return document.getElementById("userName").value.trim();
+}
 
 function showResults(){
-  for(let i=0;i<questions.length;i++){
-    const sel = document.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel){ alert("Please answer all questions."); return; }
-    scores[sel.value]++;
+  var msg = document.getElementById("msg");
+  msg.textContent = "";
+
+  var firstMissing = -1;
+  for (var i = 0; i < questions.length; i++){
+    var sel = document.querySelector("input[name=\"q" + i + "\"]:checked");
+    if (!sel){
+      document.getElementById("fs" + i).classList.add("missing");
+      if (firstMissing === -1){ firstMissing = i; }
+    }
+  }
+  if (firstMissing !== -1){
+    msg.textContent = "Please answer all questions to see your results.";
+    document.getElementById("fs" + firstMissing).scrollIntoView({behavior:"smooth", block:"center"});
+    return;
   }
 
-  document.getElementById("result").style.display="block";
+  var scores = {};
+  strengths.forEach(function(s){ scores[s] = 0; });
+  for (var j = 0; j < questions.length; j++){
+    var picked = document.querySelector("input[name=\"q" + j + "\"]:checked");
+    scores[picked.value]++;
+  }
 
-  const data = {
-    labels: strengths,
-    datasets: [{
-      data: strengths.map(s=>scores[s]),
-    }]
-  };
+  lastRanked = strengths.map(function(s, idx){
+    return {name:s, n:scores[s], i:idx};
+  }).sort(function(a, b){ return (b.n - a.n) || (a.i - b.i); })
+    .filter(function(x){ return x.n > 0; });
 
-  pieChart = new Chart(document.getElementById("pieChart"),{
-    type:"pie",
-    data:data,
-    options:{plugins:{legend:{position:"bottom"}}}
+  var name = getName();
+  document.getElementById("resultTitle").textContent = name ? (name + ", here is your Inner Strength Snapshot") : "Your Inner Strength Snapshot";
+
+  var tops = lastRanked.slice(0, 3);
+  var html = "";
+  tops.forEach(function(t){
+    var pct = Math.round(t.n / questions.length * 100);
+    html += "<div class=\"top\" style=\"border-left-color:" + colors[t.name] + "\">" +
+            "<span class=\"pct\">" + pct + "%</span><b>" + t.name + "</b>" +
+            "<p>" + info[t.name].d + "</p>" +
+            "<p class=\"tip\">Try this: " + info[t.name].t + "</p></div>";
   });
+  document.getElementById("tops").innerHTML = html;
+
+  document.getElementById("result").style.display = "block";
+
+  if (pieChart){ pieChart.destroy(); }
+  pieChart = new Chart(document.getElementById("pieChart"), {
+    type: "doughnut",
+    data: {
+      labels: lastRanked.map(function(x){ return x.name; }),
+      datasets: [{
+        data: lastRanked.map(function(x){ return x.n; }),
+        backgroundColor: lastRanked.map(function(x){ return colors[x.name]; }),
+        borderColor: "#ffffff",
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1,
+      plugins: { legend: { position: "bottom" } }
+    }
+  });
+
+  document.getElementById("result").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function startAgain(){
+  document.getElementById("quiz").reset();
+  document.getElementById("result").style.display = "none";
+  if (pieChart){ pieChart.destroy(); pieChart = null; }
+  updateProgress();
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
 function downloadPDF(){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  if (!lastRanked.length || !pieChart){ return; }
 
-  doc.text("Your Inner Strength Snapshot",20,20);
-  doc.text("This reflects how you show up right now.",20,30);
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({unit:"mm", format:"a4"});
+  var left = 20;
+  var textW = 170;
+  var y = 24;
+  var name = getName();
 
-  const img = document.getElementById("pieChart").toDataURL("image/png");
-  doc.addImage(img,"PNG",20,40,160,120);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(37, 99, 235);
+  doc.text("Your Inner Strength Snapshot", left, y);
+  y += 4;
+  doc.setDrawColor(37, 99, 235);
+  doc.setLineWidth(0.8);
+  doc.line(left, y, left + textW, y);
+  y += 10;
 
-  doc.text("emotionalintelligencedeveloper.com",20,180);
+  if (name){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(17, 24, 39);
+    doc.text("Prepared for " + name, left, y);
+    y += 8;
+  }
 
-  doc.save("inner-strength-snapshot.pdf");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(107, 114, 128);
+  var intro = doc.splitTextToSize("Everyone's mix is different. This reflects how you show up right now.", textW);
+  doc.text(intro, left, y);
+  y += intro.length * 5 + 6;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(37, 99, 235);
+  doc.text("YOUR TOP STRENGTHS", left, y);
+  y += 7;
+
+  lastRanked.slice(0, 3).forEach(function(t){
+    var pct = Math.round(t.n / questions.length * 100);
+    var c = colors[t.name];
+    var r = parseInt(c.substr(1, 2), 16), g = parseInt(c.substr(3, 2), 16), b = parseInt(c.substr(5, 2), 16);
+
+    doc.setFillColor(r, g, b);
+    doc.rect(left, y - 4.5, 2.2, 5.5, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(17, 24, 39);
+    doc.text(t.name + "  (" + pct + "%)", left + 6, y);
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(55, 65, 81);
+    var dl = doc.splitTextToSize(info[t.name].d, textW - 6);
+    doc.text(dl, left + 6, y);
+    y += dl.length * 5 + 1;
+
+    doc.setTextColor(107, 114, 128);
+    var tl = doc.splitTextToSize("Try this: " + info[t.name].t, textW - 6);
+    doc.text(tl, left + 6, y);
+    y += tl.length * 5 + 7;
+  });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(37, 99, 235);
+  doc.text("YOUR FULL MIX", left, y);
+  y += 4;
+
+  var canvas = document.getElementById("pieChart");
+  var img = canvas.toDataURL("image/png");
+  var size = 88;
+  var maxBottom = 270;
+  if (y + size > maxBottom){ size = maxBottom - y; }
+  doc.addImage(img, "PNG", (210 - size) / 2, y, size, size);
+
+  doc.setDrawColor(229, 231, 235);
+  doc.setLineWidth(0.3);
+  doc.line(left, 280, left + textW, 280);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(107, 114, 128);
+  doc.text("Created by Emotional Intelligence Developer", 105, 286, {align:"center"});
+  doc.text("emotionalintelligencedeveloper.com", 105, 291, {align:"center"});
+
+  var safe = name ? name.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() : "";
+  doc.save(safe ? ("inner-strength-snapshot-" + safe + ".pdf") : "inner-strength-snapshot.pdf");
 }
+
+function getShareUrl(){
+  var h = window.location.href;
+  if (h.indexOf("http") === 0){ return h.split("#")[0]; }
+  return SITE_URL;
+}
+
+function shareTo(kind){
+  var url = getShareUrl();
+  var text = "I just took the Inner Strength Snapshot and loved it. Take yours:";
+  var eu = encodeURIComponent(url);
+  var et = encodeURIComponent(text);
+  var link = "";
+
+  if (kind === "wa"){ link = "https://wa.me/?text=" + et + "%20" + eu; }
+  else if (kind === "fb"){ link = "https://www.facebook.com/sharer/sharer.php?u=" + eu; }
+  else if (kind === "x"){ link = "https://twitter.com/intent/tweet?text=" + et + "&url=" + eu; }
+  else if (kind === "li"){ link = "https://www.linkedin.com/sharing/share-offsite/?url=" + eu; }
+  else if (kind === "em"){
+    window.location.href = "mailto:?subject=" + encodeURIComponent("Your Inner Strength Snapshot") + "&body=" + et + "%20" + eu;
+    return;
+  }
+  else if (kind === "cp"){
+    var btn = document.getElementById("copyBtn");
+    var done = function(){
+      btn.textContent = "Link Copied";
+      setTimeout(function(){ btn.textContent = "Copy Link"; }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(done, function(){ window.prompt("Copy this link:", url); });
+    } else {
+      window.prompt("Copy this link:", url);
+    }
+    return;
+  }
+
+  if (link){ window.open(link, "_blank", "noopener,noreferrer"); }
+}
+
+buildQuiz();
+updateProgress();
 </script>
 
 </body>

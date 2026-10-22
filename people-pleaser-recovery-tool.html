@@ -45,6 +45,63 @@
       padding: 20px 16px 40px;
     }
 
+    /* STICKMEN */
+    .stick { display: inline-block; color: var(--text); flex-shrink: 0; }
+    .stick svg { width: 100%; height: 100%; display: block; }
+
+    .hero-sticks {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 14px;
+      margin: 4px 0 12px;
+    }
+    .hero-sticks .stick { width: 54px; height: 65px; }
+
+    .qrow { display: flex; gap: 12px; align-items: flex-start; }
+    .qrow .qbody { flex: 1; min-width: 0; }
+    .qrow .stick { width: 50px; height: 60px; margin-top: 2px; }
+
+    .intensity-stick {
+      display: flex;
+      justify-content: center;
+      margin: 4px 0 12px;
+    }
+    .intensity-stick .stick { width: 96px; height: 116px; }
+
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 8px 10px;
+      margin-bottom: 14px;
+    }
+    .journey-title {
+      grid-column: 1 / -1;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .journey-step { text-align: center; font-size: 12px; color: var(--muted); }
+    .journey-step .stick { width: 54px; height: 66px; display: block; margin: 0 auto 4px; }
+
+    .action-item .stick { width: 38px; height: 46px; margin-left: auto; }
+
+    .footer-sticks {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .footer-sticks .stick { width: 40px; height: 48px; }
+
     /* HEADER */
     .header {
       background: var(--card);
@@ -351,6 +408,7 @@
       font-size: 15px;
       color: var(--text);
       line-height: 1.65;
+      overflow-wrap: anywhere;
     }
 
     /* ACTION PLAN */
@@ -398,6 +456,7 @@
       font-size: 14px;
       color: var(--text);
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     .result-closing {
@@ -501,6 +560,9 @@
       .btn { width: 100%; }
       .btn-row { flex-direction: column; }
       .pill { width: 100%; justify-content: center; }
+      .qrow .stick { width: 40px; height: 48px; }
+      .journey { grid-template-columns: repeat(2, 1fr); }
+      .journey-step .stick { width: 60px; height: 72px; }
     }
 
     /* TOAST */
@@ -574,9 +636,14 @@
       <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
+    <div class="hero-sticks" aria-hidden="true">
+      <span class="stick" data-pose="carry" data-mood="1" data-boxes="3"></span>
+      <span class="stick" data-pose="stop" data-mood="0" data-boxes="0"></span>
+      <span class="stick" data-pose="rest" data-mood="0" data-boxes="0"></span>
+    </div>
     <h1>People-Pleaser Recovery Tool</h1>
     <p class="tagline">A gentle reflection space to notice your patterns, protect your energy, and practise one small boundary step at a time.</p>
-    <span class="disclaimer">Reflection and wellbeing support only — not professional advice</span>
+    <span class="disclaimer">Reflection and wellbeing support only. Not professional advice.</span>
     <p class="tool-note">Your needs are not a burden. Noticing the pattern is already a courageous first step.</p>
   </header>
 
@@ -591,14 +658,15 @@
 
     <!-- NAME -->
     <div class="name-field">
-      <label for="userName">Your name (optional — shown in PDF)</label>
+      <label for="userName">Your name (optional, shown in PDF)</label>
       <input type="text" id="userName" maxlength="80" placeholder="e.g. Alex" aria-label="Your name for PDF" />
     </div>
 
     <!-- INTENSITY -->
     <div class="question">
-      <label class="question-label">How strong is the "I must keep everyone happy" feeling right now?</label>
-      <p class="question-hint">Move the slider to where you honestly are today.</p>
+      <label class="question-label" for="intensitySlider">How strong is the "I must keep everyone happy" feeling right now?</label>
+      <p class="question-hint">Move the slider to where you honestly are today. Watch your stickman change.</p>
+      <div class="intensity-stick" id="intensityStick" aria-hidden="true"></div>
       <div class="intensity-wrap">
         <div class="intensity-row">
           <span class="intensity-label">Low</span>
@@ -606,21 +674,31 @@
           <span class="intensity-label">High</span>
           <span class="intensity-val" id="intensityVal">5/10</span>
         </div>
-        <p class="intensity-meaning" id="intensityMeaning">You are balancing pressure and care for others — and your needs matter too.</p>
+        <p class="intensity-meaning" id="intensityMeaning">You are balancing pressure and care for others, and your needs matter too.</p>
       </div>
     </div>
 
     <!-- Q1 -->
     <div class="question">
-      <label class="question-label" for="q1">Where do you usually say yes when you want to say no?</label>
-      <p class="question-hint">At work, with family, with friends, with money, with your time — wherever it shows up most.</p>
+      <div class="qrow">
+        <span class="stick" data-pose="carry" data-mood="1" data-boxes="3" aria-hidden="true"></span>
+        <div class="qbody">
+          <label class="question-label" for="q1">Where do you usually say yes when you want to say no?</label>
+          <p class="question-hint">At work, with family, with friends, with money, with your time. Wherever it shows up most.</p>
+        </div>
+      </div>
       <textarea id="q1" maxlength="600" placeholder="e.g. Extra tasks at work, helping family even when exhausted…" aria-label="Where you say yes when you want to say no"></textarea>
     </div>
 
-    <!-- Q2 — FEAR PILLS -->
+    <!-- Q2 - FEAR PILLS -->
     <div class="pills-card">
-      <label class="pills-label">What do you fear most if you disappoint someone?</label>
-      <p class="pills-hint">Choose one that resonates — then add detail if you like.</p>
+      <div class="qrow">
+        <span class="stick" data-pose="stand" data-mood="1" data-boxes="0" aria-hidden="true"></span>
+        <div class="qbody">
+          <label class="pills-label">What do you fear most if you disappoint someone?</label>
+          <p class="pills-hint">Choose one that resonates, then add detail if you like.</p>
+        </div>
+      </div>
       <div class="pill-row" role="group" aria-label="Fear options">
         <button type="button" class="pill" data-fear="They might reject me" aria-pressed="false">They might reject me</button>
         <button type="button" class="pill" data-fear="They might get angry" aria-pressed="false">They might get angry</button>
@@ -632,23 +710,38 @@
 
     <!-- Q3 -->
     <div class="question">
-      <label class="question-label" for="q3">How has people-pleasing affected your mood or energy lately?</label>
-      <p class="question-hint">Tired, anxious, resentful, disconnected — name what you notice.</p>
+      <div class="qrow">
+        <span class="stick" data-pose="stand" data-mood="2" data-boxes="0" aria-hidden="true"></span>
+        <div class="qbody">
+          <label class="question-label" for="q3">How has people-pleasing affected your mood or energy lately?</label>
+          <p class="question-hint">Tired, anxious, resentful, disconnected. Name what you notice.</p>
+        </div>
+      </div>
       <textarea id="q3" maxlength="600" placeholder="e.g. I feel drained and quietly resentful…" aria-label="Mood and energy impact"></textarea>
     </div>
 
     <!-- Q4 -->
     <div class="question">
-      <label class="question-label" for="q4">What personal needs are you putting aside?</label>
-      <p class="question-hint">Rest, boundaries, hobbies, savings, goals, time alone — whatever you have been neglecting.</p>
+      <div class="qrow">
+        <span class="stick" data-pose="rest" data-mood="0" data-boxes="0" aria-hidden="true"></span>
+        <div class="qbody">
+          <label class="question-label" for="q4">What personal needs are you putting aside?</label>
+          <p class="question-hint">Rest, boundaries, hobbies, savings, goals, time alone. Whatever you have been neglecting.</p>
+        </div>
+      </div>
       <textarea id="q4" maxlength="600" placeholder="e.g. Rest, my own projects, time to just exist without performing…" aria-label="Needs being put aside"></textarea>
     </div>
 
     <!-- Q5 -->
     <div class="question">
-      <label class="question-label" for="q5">One boundary sentence you can use this week</label>
-      <p class="question-hint">Keep it short, calm, and something you can actually say. This is the most important part.</p>
-      <textarea id="q5" maxlength="400" placeholder="e.g. I can't commit to that today — I need to rest…" aria-label="Boundary sentence to practise"></textarea>
+      <div class="qrow">
+        <span class="stick" data-pose="stop" data-mood="0" data-boxes="0" aria-hidden="true"></span>
+        <div class="qbody">
+          <label class="question-label" for="q5">One boundary sentence you can use this week</label>
+          <p class="question-hint">Keep it short, calm, and something you can actually say. This is the most important part.</p>
+        </div>
+      </div>
+      <textarea id="q5" maxlength="400" placeholder="e.g. I can't commit to that today, I need to rest…" aria-label="Boundary sentence to practise"></textarea>
     </div>
 
     <!-- VALIDATION -->
@@ -657,6 +750,7 @@
     <!-- RESULT -->
     <div class="result-box" id="resultBox" aria-live="polite">
       <div class="result-summary" id="resultSummary"></div>
+      <div class="journey" id="journey"></div>
       <div class="action-plan" id="actionPlan"></div>
       <div class="result-closing" id="resultClosing"></div>
     </div>
@@ -682,6 +776,11 @@
 
   <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
+    <div class="footer-sticks" aria-hidden="true">
+      <span class="stick" data-pose="heart" data-mood="0" data-boxes="0"></span>
+      <span class="stick" data-pose="heart" data-mood="0" data-boxes="0"></span>
+      <span class="stick" data-pose="heart" data-mood="0" data-boxes="0"></span>
+    </div>
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support this website">&#9829; Support this website</a>
 
@@ -694,7 +793,7 @@
 
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional advice.
+      &nbsp;·&nbsp; Reflection support only. Not professional advice.
     </p>
   </footer>
 
@@ -709,22 +808,25 @@
   const STORAGE_KEY = 'ppRecoveryV5';
   const STORAGE_PREF = 'ppRecoveryPrefV5';
   const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  const SITE_URL = 'https://emotionalintelligencedeveloper.com';
+  const SITE_TEXT = 'emotionalintelligencedeveloper.com';
   const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
 
   const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   const intensityMeanings = [
-    'Very low — a quiet background hum right now.',
-    'Low — you are noticing it but managing well.',
-    'Mild — it surfaces in certain situations.',
-    'Moderate — starting to affect your choices.',
-    'Noticeable — showing up regularly.',
-    'You are balancing pressure and care for others — and your needs matter too.',
-    'Significant — people-pleasing is costing you real energy.',
-    'Quite strong — it is shaping most of your decisions.',
-    'Very strong — you are carrying a lot right now.',
-    'Intense — gentle steps matter most.',
-    'Overwhelming — please be very gentle with yourself today.'
+    'Very low: a quiet background hum right now.',
+    'Low: you are noticing it but managing well.',
+    'Mild: it surfaces in certain situations.',
+    'Moderate: starting to affect your choices.',
+    'Noticeable: showing up regularly.',
+    'You are balancing pressure and care for others, and your needs matter too.',
+    'Significant: people-pleasing is costing you real energy.',
+    'Quite strong: it is shaping most of your decisions.',
+    'Very strong: you are carrying a lot right now.',
+    'Intense: gentle steps matter most.',
+    'Overwhelming: please be very gentle with yourself today.'
   ];
 
   let selectedFear = '';
@@ -739,7 +841,53 @@
     toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
   }
 
-  // Intensity slider
+  /* ---------- STICKMEN (web) ---------- */
+  // pose: stand | carry | stop | heart | rest   mood: 0 calm, 1 worried, 2 overwhelmed   boxes: 0 to 4
+  function stickSVG(pose, mood, boxes) {
+    mood = Number(mood) || 0;
+    boxes = Number(boxes) || 0;
+    const c = 'currentColor';
+    let s = '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="' + c + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">';
+    s += '<circle cx="50" cy="22" r="12"/>';
+    s += '<circle cx="46" cy="20" r="1.5" fill="' + c + '" stroke="none"/><circle cx="54" cy="20" r="1.5" fill="' + c + '" stroke="none"/>';
+    if (mood === 0) s += '<path d="M45 27 Q50 32 55 27" stroke-width="2"/>';
+    if (mood === 1) s += '<path d="M45 29 L55 29" stroke-width="2"/><path d="M43 14 L48 16 M57 14 L52 16" stroke-width="2"/>';
+    if (mood === 2) s += '<path d="M45 31 Q50 25 55 31" stroke-width="2"/><path d="M43 13 L48 16 M57 13 L52 16" stroke-width="2"/><path d="M68 12 q-3.5 5 0 8 q3.5 -3 0 -8z" fill="#7fb3e0" stroke="none"/>';
+    s += '<path d="M50 34 L50 75 M50 75 L38 108 M50 75 L62 108"/>';
+    if (pose === 'carry') {
+      s += '<path d="M50 45 L33 66 M50 45 L66 58"/>';
+      for (let i = 0; i < boxes && i < 4; i++) {
+        s += '<rect x="66" y="' + (70 - 14 * i) + '" width="24" height="14" rx="2" fill="#f7efe8" stroke="#8a5a3a" stroke-width="2"/>';
+      }
+    } else if (pose === 'stop') {
+      s += '<path d="M50 45 L33 66 M50 45 L72 38 L76 28"/><circle cx="76" cy="22" r="5" fill="#fff"/>';
+    } else if (pose === 'heart') {
+      s += '<path d="M50 45 L33 66 M50 45 L72 42"/>';
+      s += '<path d="M80 42 C69 35 72 25 77 25 C79 25 80 27 80 28 C80 27 81 25 83 25 C88 25 91 35 80 42 Z" fill="#e8702a" stroke="none"/>';
+    } else if (pose === 'rest') {
+      s += '<path d="M50 45 L33 66 M50 45 L64 58 L69 54"/>';
+      s += '<rect x="69" y="50" width="11" height="10" rx="2" fill="#fff" stroke-width="2"/><path d="M80 53 q4 1 0 5" stroke-width="2"/><path d="M73 46 q-2 -3 0 -5 M77 46 q-2 -3 0 -5" stroke-width="1.6"/>';
+    } else {
+      s += '<path d="M50 45 L33 66 M50 45 L67 66"/>';
+    }
+    return s + '</svg>';
+  }
+
+  function hydrateSticks() {
+    document.querySelectorAll('.stick[data-pose]').forEach(el => {
+      el.innerHTML = stickSVG(el.dataset.pose, el.dataset.mood, el.dataset.boxes);
+    });
+  }
+
+  function moodFor(v) { return v >= 8 ? 2 : v >= 4 ? 1 : 0; }
+  function boxesFor(v) { return Math.round(v / 2.5); }
+
+  function renderIntensityStick(v) {
+    const b = boxesFor(v);
+    $('intensityStick').innerHTML = '<span class="stick">' + stickSVG(b > 0 ? 'carry' : 'stand', moodFor(v), b) + '</span>';
+  }
+
+  /* ---------- INTENSITY ---------- */
   $('intensitySlider').addEventListener('input', () => {
     updateIntensity();
     saveIfEnabled();
@@ -749,9 +897,10 @@
     const v = parseInt($('intensitySlider').value, 10);
     $('intensityVal').textContent = v + '/10';
     $('intensityMeaning').textContent = intensityMeanings[v] || '';
+    renderIntensityStick(v);
   }
 
-  // Fear pills — single select
+  // Fear pills, single select
   document.querySelectorAll('.pill[data-fear]').forEach(pill => {
     pill.addEventListener('click', () => {
       const wasPressed = pill.getAttribute('aria-pressed') === 'true';
@@ -798,58 +947,73 @@
   }
 
   function getIntensityContext(v) {
-    if (v >= 8) return 'You are carrying a lot of pressure right now. Gentle, small steps matter most — and you deserve care too.';
+    if (v >= 8) return 'You are carrying a lot of pressure right now. Gentle, small steps matter most, and you deserve care too.';
     if (v >= 5) return 'You are balancing real pressure alongside care for others. Your needs belong in that balance.';
-    return 'You have a steadier moment right now — a good time to practise and strengthen clearer boundaries.';
+    return 'You have a steadier moment right now. It is a good time to practise and strengthen clearer boundaries.';
   }
 
   function getFearResponse(fear) {
-    if (!fear) return 'You are noticing the pull toward keeping everyone comfortable — that awareness is where change begins.';
+    if (!fear) return 'You are noticing the pull toward keeping everyone comfortable. That awareness is where change begins.';
     if (fear === 'They might reject me') return 'The fear of rejection is one of the most powerful drivers of people-pleasing. Real belonging does not require you to shrink yourself.';
     if (fear === 'They might get angry') return 'When anger feels threatening, saying no can feel dangerous. But other people\'s emotional reactions are not your responsibility to manage at the cost of your own wellbeing.';
-    if (fear === 'I will feel guilty') return 'Guilt from saying no is often a sign that your values and your conditioning are in conflict — not that you have done something wrong.';
+    if (fear === 'I will feel guilty') return 'Guilt from saying no is often a sign that your values and your conditioning are in conflict, not that you have done something wrong.';
     if (fear === 'I will seem selfish') return 'Protecting your energy and time is not selfishness. It is the foundation of being able to show up genuinely for others at all.';
-    return 'That fear is worth sitting with — it is telling you something important about where your boundaries need the most support.';
+    return 'That fear is worth sitting with. It is telling you something important about where your boundaries need the most support.';
   }
 
   function buildResult(d) {
     const intensityCtx = getIntensityContext(d.intensity);
     const fearResponse = getFearResponse(d.fear);
 
-    // Summary HTML
     let summaryHtml = '<div class="result-title">Your reflection summary</div>';
 
     const rows = [
-      ['Pressure level', d.intensity + '/10 — ' + intensityCtx],
-      ['Where you say yes', d.q1 || '—'],
-      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ' — ' + d.q2 : '')],
+      ['Pressure level', d.intensity + '/10. ' + intensityCtx],
+      ['Where you say yes', d.q1 || 'Not provided'],
+      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ': ' + d.q2 : '')],
       ['What this fear means', fearResponse],
-      ['Impact on mood and energy', d.q3 || '—'],
-      ['Needs you are putting aside', d.q4 || '—'],
+      ['Impact on mood and energy', d.q3 || 'Not provided'],
+      ['Needs you are putting aside', d.q4 || 'Not provided'],
       ['Your boundary sentence', d.q5]
     ];
 
     rows.forEach(([label, value]) => {
       summaryHtml += '<div class="result-row">';
-      summaryHtml += '<div class="result-row-label">' + label + '</div>';
-      summaryHtml += '<div class="result-row-value">' + value + '</div>';
+      summaryHtml += '<div class="result-row-label">' + esc(label) + '</div>';
+      summaryHtml += '<div class="result-row-value">' + esc(value) + '</div>';
       summaryHtml += '</div>';
     });
 
     $('resultSummary').innerHTML = summaryHtml;
 
+    // Stickman journey
+    const mood = moodFor(d.intensity);
+    const boxes = Math.max(boxesFor(d.intensity), 1);
+    const steps = [
+      ['Today', 'carry', mood, boxes],
+      ['Pause', 'stand', 0, 0],
+      ['Say it', 'stop', 0, 0],
+      ['Rest', 'rest', 0, 0]
+    ];
+    let jHtml = '<div class="journey-title">Your week in four steps</div>';
+    steps.forEach(([label, pose, m, b]) => {
+      jHtml += '<div class="journey-step"><span class="stick">' + stickSVG(pose, m, b) + '</span>' + label + '</div>';
+    });
+    $('journey').innerHTML = jHtml;
+
     // Action plan
     const actions = [
-      'Pause before replying. Give yourself a breath or a moment before automatically saying yes. You are allowed to say "let me get back to you."',
-      'Use your boundary sentence once this week: "' + d.q5 + '" — say it out loud to yourself first if that helps.',
-      'After holding your boundary, do one kind thing for yourself — rest, a walk, journaling, or slow breathing. You earned it.'
+      ['stand', 'Pause before replying. Give yourself a breath or a moment before automatically saying yes. You are allowed to say "let me get back to you."'],
+      ['stop', 'Use your boundary sentence once this week: "' + d.q5 + '". Say it out loud to yourself first if that helps.'],
+      ['rest', 'After holding your boundary, do one kind thing for yourself: rest, a walk, journaling, or slow breathing. You earned it.']
     ];
 
     let actionHtml = '<div class="action-plan-title">Your 3-step action plan this week</div>';
-    actions.forEach((text, i) => {
+    actions.forEach(([pose, text], i) => {
       actionHtml += '<div class="action-item">';
       actionHtml += '<div class="action-num">' + (i + 1) + '</div>';
-      actionHtml += '<div class="action-text">' + text + '</div>';
+      actionHtml += '<div class="action-text">' + esc(text) + '</div>';
+      actionHtml += '<span class="stick" aria-hidden="true">' + stickSVG(pose, 0, 0) + '</span>';
       actionHtml += '</div>';
     });
 
@@ -861,7 +1025,7 @@
     box.style.display = 'block';
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    lastOutput = { d, intensityCtx, fearResponse, actions };
+    lastOutput = { d, intensityCtx, fearResponse, actions: actions.map(a => a[1]) };
     return lastOutput;
   }
 
@@ -903,7 +1067,10 @@
         p.setAttribute('aria-pressed', p.dataset.fear === selectedFear ? 'true' : 'false');
       });
       updateIntensity();
-      if (d.built && d.q5) buildResult(d);
+      if (d.built && d.q5) {
+        buildResult({ ...d, fear: selectedFear });
+        window.scrollTo(0, 0);
+      }
     } catch(_) {
       try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
     }
@@ -949,6 +1116,116 @@
     });
   }
 
+  /* ---------- STICKMEN (PDF) ---------- */
+  function drawStick(doc, x, y, h, pose, mood, boxes) {
+    const s = h / 120;
+    const X = a => x + a * s;
+    const Y = b => y + b * s;
+    const line = (a, b, c, d) => doc.line(X(a), Y(b), X(c), Y(d));
+    doc.setDrawColor(30, 40, 24);
+    doc.setLineWidth(Math.max(0.8, 3 * s));
+    doc.circle(X(50), Y(22), 12 * s, 'S');
+    doc.setFillColor(30, 40, 24);
+    doc.circle(X(46), Y(20), 1.5 * s, 'F');
+    doc.circle(X(54), Y(20), 1.5 * s, 'F');
+    doc.setLineWidth(Math.max(0.6, 2 * s));
+    if (mood === 0) { line(45, 27, 50, 30, 50, 30); line(50, 30, 55, 27, 55, 27); }
+    else if (mood === 1) { line(45, 29, 55, 29); line(43, 14, 48, 16); line(57, 14, 52, 16); }
+    else { line(45, 31, 50, 27); line(50, 27, 55, 31); line(43, 13, 48, 16); line(57, 13, 52, 16); doc.setFillColor(127, 179, 224); doc.circle(X(68), Y(16), 2.4 * s, 'F'); }
+    doc.setLineWidth(Math.max(0.8, 3 * s));
+    line(50, 34, 50, 75);
+    line(50, 75, 38, 108);
+    line(50, 75, 62, 108);
+    if (pose === 'carry') {
+      line(50, 45, 33, 66); line(50, 45, 66, 58);
+      doc.setFillColor(247, 239, 232);
+      doc.setDrawColor(138, 90, 58);
+      doc.setLineWidth(Math.max(0.6, 2 * s));
+      for (let i = 0; i < boxes && i < 4; i++) doc.rect(X(66), Y(70 - 14 * i), 24 * s, 14 * s, 'FD');
+    } else if (pose === 'stop') {
+      line(50, 45, 33, 66); line(50, 45, 72, 38); line(72, 38, 76, 28);
+      doc.setFillColor(255, 255, 255);
+      doc.circle(X(76), Y(22), 5 * s, 'FD');
+    } else if (pose === 'heart') {
+      line(50, 45, 33, 66); line(50, 45, 72, 42);
+      doc.setFillColor(232, 112, 42);
+      doc.circle(X(77), Y(29), 4.2 * s, 'F');
+      doc.circle(X(85), Y(29), 4.2 * s, 'F');
+      doc.triangle(X(73), Y(31), X(89), Y(31), X(81), Y(42), 'F');
+    } else if (pose === 'rest') {
+      line(50, 45, 33, 66); line(50, 45, 64, 58); line(64, 58, 69, 54);
+      doc.setFillColor(255, 255, 255);
+      doc.setLineWidth(Math.max(0.6, 2 * s));
+      doc.rect(X(69), Y(50), 11 * s, 10 * s, 'FD');
+    } else {
+      line(50, 45, 33, 66); line(50, 45, 67, 66);
+    }
+    doc.setDrawColor(30, 40, 24);
+    doc.setLineWidth(0.5);
+  }
+
+  /* ---------- PDF CONTENT ---------- */
+  const SCRIPTS_GENERAL = [
+    'Buying time: "Let me check and get back to you."',
+    'Kind no: "Thank you for thinking of me. I can\'t take that on."',
+    'No with an option: "I can\'t do all of it, but I can help with this part."',
+    'Holding firm: "I understand you are disappointed. My answer is still no."',
+    'Money: "That doesn\'t fit my budget right now."',
+    'Rest: "I need some time to myself tonight."'
+  ];
+
+  const FEAR_SCRIPTS = {
+    'They might reject me': 'Remember that one no does not end a relationship. Try: "I care about you, and I can\'t do this one."',
+    'They might get angry': 'Stay calm and short. Try: "I can see you are upset. My answer has not changed." You may step away if the conversation heats up. If anyone threatens you or you feel unsafe, your safety comes first, so reach out to someone you trust or local emergency services.',
+    'I will feel guilty': 'Let guilt sit beside a good decision. Try saying to yourself: "I feel guilty, and I am still allowed to say no."',
+    'I will seem selfish': 'Try: "Looking after my energy helps me show up well for the people I care about."'
+  };
+
+  const PRACTICE_PLAN = [
+    ['Day 1, Notice', 'Write down each time you say yes without thinking. No fixing yet, only noticing.'],
+    ['Day 2, Pause', 'Use "Let me get back to you" once. Take at least an hour before answering.'],
+    ['Day 3, Small no', 'Say no to something low stakes, like an extra errand or a second helping you do not want.'],
+    ['Day 4, Body check', 'Before you answer a request, ask yourself where you feel tension in your body. Let that guide you.'],
+    ['Day 5, Your sentence', 'Use the boundary sentence you wrote in this tool, in real life, once.'],
+    ['Day 6, Rest', 'Take 20 minutes that belong only to you, and do not apologise for it.'],
+    ['Day 7, Review', 'What did you notice? What got easier? Who respected your no? Write three lines.']
+  ];
+
+  const EDUCATION = [
+    ['What people-pleasing really is',
+     'People-pleasing is not simply being kind. It is a pattern of putting other people\'s comfort, approval, and feelings ahead of your own needs and values. Psychologist Harriet Braiker wrote about this in her book The Disease to Please (2001), describing a strong need for approval that often starts early in life as a way to stay safe or stay loved.'],
+    ['How the brain responds to approval',
+     'Brain imaging research suggests that social approval engages reward circuits, while social rejection engages areas linked to distress. This is one reason a "no" can feel physically uncomfortable. It is a very human, learned response, not a weakness.'],
+    ['The fawn response',
+     'Psychotherapist Pete Walker wrote about "fawn" as a fourth trauma response, next to fight, flight and freeze, in his book Complex PTSD: From Surviving to Thriving (2013). Fawning means keeping a threat calm by agreeing, pleasing and appeasing. It is seen more often in people with a history of complex childhood trauma, though researchers say more studies are still needed. Not all people-pleasing comes from trauma, and many people simply learned that being helpful earned love and peace.'],
+    ['Why guilt after saying no is not proof you did wrong',
+     'Guilt is often tied to the fear of how someone will react, not to anything you actually did wrong. A helpful question is: "Is this guilt about my action, or about my fear of their reaction?" Therapists often suggest practising small, low-stakes noes, reframing the thought "no means selfish", and speaking to yourself with the kindness you give others.'],
+    ['How boundaries help relationships',
+     'Studies on assertiveness link clear, respectful communication of needs with lower stress and better relationship satisfaction. Hidden resentment, on the other hand, quietly wears relationships down. Boundaries are not walls. They are information that helps people know how to love you well.'],
+    ['Culture, family and community',
+     'In cultures and families that value respect, duty and togetherness, saying no can feel especially heavy. Boundaries are not the opposite of those values. You can honour your family and community and still protect your health, your time and your peace.']
+  ];
+
+  const NEW_RESEARCH = [
+    ['A new way to measure it (2026)',
+     'Researcher Christoph Blötner published a 10-item People Pleasing Scale in 2026, tested in two German samples. It was built to measure people-pleasing as its own pattern, separate from general kindness or agreeableness, and it looks at three things: how often you set your own needs aside, how responsible you feel for other people\'s moods, and how strongly others\' expectations shape your behaviour.'],
+    ['Self-esteem matters (2026)',
+     'A 2026 correlational study of 200 young adults aged 18 to 30 in Yogyakarta, Indonesia, found that lower self-esteem went together with more people-pleasing. Insecure attachment did not show a significant link on its own in that study. Building self-worth may be as important as practising boundaries.'],
+    ['People-pleasing and support (2025)',
+     'An open-access 2025 study of emerging adults found that people who reported more people-pleasing also reported feeling less supported by others. Pleasing people can leave you giving a lot while feeling unseen. Letting a trusted person actually know what you need may help.'],
+    ['People-pleasing and impostor feelings (2025)',
+     'A small 2025 student study (45 young adults) found that people-pleasing tendencies were linked with stronger impostor feelings, the sense of "I am not good enough and will be found out". Higher general agreeableness was linked with fewer such feelings, which suggests that being warm is not the problem. Needing approval to feel worthy is.']
+  ];
+
+  const SOURCES = [
+    'Blötner, C. (2026). People Pleasing Scale, 10-item measure validated in two German samples.',
+    'Universitas Islam Negeri Sunan Kalijaga, Yogyakarta (2026). Insecure attachment, self-esteem and people-pleasing in early adulthood (N = 200).',
+    'Varshini, A. (2025). People pleasing and risk-taking in emerging adults: perceived social support as a mediator. International Journal of Indian Psychology, 13(2).',
+    'Meckley, A., Ekle, J., Thompson, E. & Smith, M. (2025). The role of people pleasing and agreeableness in impostorism. Science University Research Symposium, Belmont University.',
+    'Walker, P. (2013). Complex PTSD: From Surviving to Thriving.',
+    'Braiker, H. (2001). The Disease to Please: Curing the People-Pleasing Syndrome.'
+  ];
+
   async function downloadPDF() {
     const PDF = jsPDF();
     if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
@@ -963,156 +1240,252 @@
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     const margin = 40;
+    const W = pageW - margin * 2;
+    const bottom = pageH - 66;
     let y = margin;
 
-    // Header
-    doc.setFillColor(237, 243, 232);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+    // Keep text within the standard PDF fonts
+    const clean = t => String(t)
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/\u2026/g, '...')
+      .replace(/[^\x09\x0A\x0D\x20-\xFF]/g, '');
 
+    const need = h => { if (y + h > bottom) { doc.addPage(); y = margin + 16; } };
+
+    const heading = text => {
+      need(40);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(90, 122, 64);
+      doc.text(clean(text), margin, y);
+      y += 7;
+      doc.setDrawColor(184, 208, 160);
+      doc.setLineWidth(0.7);
+      doc.line(margin, y, pageW - margin, y);
+      y += 15;
+    };
+
+    const para = (text, size, gap, style, color, indent) => {
+      size = size || 9.5; gap = gap === undefined ? 6 : gap; indent = indent || 0;
+      doc.setFont('helvetica', style || 'normal');
+      doc.setFontSize(size);
+      const col = color || [30, 40, 24];
+      doc.setTextColor(col[0], col[1], col[2]);
+      const lines = doc.splitTextToSize(clean(text), W - indent);
+      lines.forEach(l => { need(size * 1.45); doc.text(l, margin + indent, y); y += size * 1.45; });
+      y += gap;
+    };
+
+    const subhead = text => {
+      need(30);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(90, 122, 64);
+      doc.text(clean(text), margin, y);
+      y += 13;
+    };
+
+    const bullet = text => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 40, 24);
+      const lines = doc.splitTextToSize(clean(text), W - 16);
+      lines.forEach((l, i) => {
+        need(14);
+        if (i === 0) doc.text('-', margin + 4, y);
+        doc.text(l, margin + 16, y);
+        y += 13.5;
+      });
+      y += 3;
+    };
+
+    const card = (label, text, fill, labelCol) => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      const lines = doc.splitTextToSize(clean(text), W - 22);
+      const bh = lines.length * 12.5 + 30;
+      need(bh + 6);
+      doc.setFillColor(fill[0], fill[1], fill[2]);
+      doc.roundedRect(margin, y, W, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(labelCol[0], labelCol[1], labelCol[2]);
+      doc.text(clean(label).toUpperCase(), margin + 10, y + 15);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(30, 40, 24);
+      doc.text(lines, margin + 10, y + 28);
+      y += bh + 8;
+    };
+
+    /* Header */
+    doc.setFillColor(237, 243, 232);
+    doc.roundedRect(margin, y, W, 76, 6, 6, 'F');
     try {
       const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+      doc.addImage(logoData, 'JPEG', margin + 10, y + 11, 54, 54);
     } catch(_) {}
-
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(30, 40, 24);
-    doc.text('People-Pleaser Recovery Reflection', margin + 76, y + 26);
+    doc.text('People-Pleaser Recovery Reflection', margin + 76, y + 30);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(80, 96, 80);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
+    doc.text('Personal reflection summary', margin + 76, y + 45);
+    doc.text(SITE_TEXT, margin + 76, y + 59);
+    drawStick(doc, pageW - margin - 52, y + 8, 60, 'heart', 0, 0);
+    y += 92;
 
-    if (d.name) {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(30, 40, 24);
-      doc.text('Name: ' + d.name, margin, y);
-      y += 18;
-    }
+    const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(30, 40, 24);
+    doc.text((d.name ? 'Prepared for: ' + clean(d.name) + '     ' : '') + 'Date: ' + dateStr, margin, y);
+    y += 20;
 
-    // Reflection rows
+    /* Your reflection */
+    heading('Your reflection');
     const rows = [
-      ['Pressure level', d.intensity + '/10 — ' + intensityCtx],
+      ['Pressure level', d.intensity + '/10. ' + intensityCtx],
       ['Where you say yes', d.q1 || 'Not provided'],
-      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ' — ' + d.q2 : '')],
+      ['What you fear most', (d.fear || 'Not selected') + (d.q2 ? ': ' + d.q2 : '')],
       ['What this fear means', fearResponse],
       ['Impact on mood and energy', d.q3 || 'Not provided'],
       ['Needs being put aside', d.q4 || 'Not provided'],
       ['Boundary sentence to practise', d.q5]
     ];
+    rows.forEach(([label, value]) => card(label, value, [237, 243, 232], [90, 122, 64]));
 
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(237, 243, 232);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(90, 122, 64);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 40, 24);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Action plan
-    if (y > pageH - 100) { doc.addPage(); y = margin; }
-    doc.setFillColor(247, 239, 232);
-    const actLines = actions.map((a, i) => (i+1) + '. ' + a).join('\n');
-    const allActLines = doc.splitTextToSize(actLines, pageW - margin * 2 - 22);
-    const actH = allActLines.length * 12 + 28;
-    doc.roundedRect(margin, y, pageW - margin * 2, actH, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(138, 90, 58);
-    doc.text('YOUR 3-STEP ACTION PLAN THIS WEEK', margin + 10, y + 14);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(30, 40, 24);
-    doc.text(allActLines, margin + 10, y + 26);
-    y += actH + 14;
-
-    // Closing
-    if (y > pageH - 60) { doc.addPage(); y = margin; }
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9.3);
-    doc.setTextColor(90, 122, 64);
-    const closingLines = doc.splitTextToSize('Recovery from people-pleasing is not about becoming cold or uncaring. It is about learning to include yourself in the people you care for.', pageW - margin * 2);
-    doc.text(closingLines, margin, y);
-    y += closingLines.length * 12 + 16;
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(184, 208, 160);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(90, 122, 64);
-    doc.text('Understanding people-pleasing — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['What people-pleasing really is',
-       'People-pleasing is not simply being kind — it is a pattern of prioritising others\' comfort, approval, and emotional states over your own needs, values, and wellbeing. Psychologist Harriet Braiker, who coined the term "disease to please," identified it as a compulsive need for approval that develops as a coping mechanism, often rooted in childhood experiences where love or safety felt conditional on good behaviour.'],
-      ['The neuroscience of approval-seeking',
-       'Research in social neuroscience shows that social approval activates the same reward pathways in the brain as food and money. When we receive approval, dopamine is released. When we face disapproval or conflict, the brain\'s threat-detection systems activate — which is why saying no can feel physically uncomfortable. Understanding this helps de-shame the pattern: it is not weakness, it is a learned neurological response.'],
-      ['The fawn response — trauma\'s connection to people-pleasing',
-       'Therapist Pete Walker introduced the concept of the "fawn" trauma response alongside fight, flight, and freeze. Fawning describes the tendency to manage perceived threats through appeasement — agreeing, complying, and accommodating to avoid conflict or harm. Research in trauma-informed care recognises people-pleasing as a survival strategy that often develops in environments where conflict was unsafe. Recovery involves building tolerance for discomfort, not eliminating care for others.'],
-      ['Why guilt after saying no is not evidence of wrongdoing',
-       'A consistent finding in cognitive behavioural therapy research is that guilt is not a reliable moral compass — it is a conditioned emotional response. People who have been rewarded for compliance and punished for assertiveness learn to associate boundaries with guilt. The guilt that arises when you say no is often the activation of this old conditioning, not evidence that you have done something wrong. It fades with repetition and self-compassion.'],
-      ['How boundaries actually improve relationships',
-       'Counter-intuitive research from relationship psychology, including studies by John Gottman, suggests that the ability to maintain personal boundaries is positively correlated with relationship satisfaction — not negatively. Clear, respectful boundaries increase trust, reduce resentment, and allow for more genuine connection. People-pleasing, by contrast, creates hidden resentment and erodes authenticity over time.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
+    /* Stickman journey */
+    y += 4;
+    heading('Your week in four steps');
+    need(112);
+    const colW = W / 4;
+    const mood = moodFor(d.intensity);
+    const bx = Math.max(boxesFor(d.intensity), 1);
+    [['Today', 'carry', mood, bx], ['Pause', 'stand', 0, 0], ['Say it', 'stop', 0, 0], ['Rest', 'rest', 0, 0]].forEach(([label, pose, m, b], i) => {
+      const cx = margin + colW * i + colW / 2;
+      drawStick(doc, cx - 31, y, 74, pose, m, b);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9.5);
       doc.setTextColor(90, 122, 64);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 40, 24);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
+      doc.text(label, cx, y + 90, { align: 'center' });
     });
+    y += 106;
 
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(184, 208, 160);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(90, 122, 64);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(30, 40, 24);
+    /* Action plan */
+    heading('Your 3-step action plan this week');
+    const actPoses = ['stand', 'stop', 'rest'];
+    actions.forEach((a, i) => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      const lines = doc.splitTextToSize(clean((i + 1) + '. ' + a), W - 78);
+      const bh = Math.max(lines.length * 12.5 + 16, 56);
+      need(bh + 6);
+      doc.setFillColor(247, 239, 232);
+      doc.roundedRect(margin, y, W, bh, 4, 4, 'F');
+      doc.setTextColor(30, 40, 24);
+      doc.text(lines, margin + 10, y + 16);
+      drawStick(doc, pageW - margin - 52, y + 4, Math.min(bh - 8, 52), actPoses[i], 0, 0);
+      y += bh + 7;
+    });
+    para('Recovery from people-pleasing is not about becoming cold or uncaring. It is about learning to include yourself in the people you care for.', 9.5, 10, 'italic', [90, 122, 64]);
+
+    /* Gentle note */
+    heading('A gentle note for where you are today');
+    if (d.intensity >= 8) {
+      para('Your pressure level is high today. Please begin with the smallest step: one pause before you reply. If the weight feels too heavy, tell one trusted person how you feel, or speak to a counsellor. You do not have to carry this alone.');
+    } else if (d.intensity >= 5) {
+      para('You are carrying a fair amount. Pick one situation from your list and practise your boundary sentence there first. Small wins build trust in yourself.');
+    } else {
+      para('You are in a steadier place. This is a good time to practise, because new habits are easier to build when the pressure is lower.');
+    }
+
+    /* Scripts */
+    heading('Words you can use');
+    if (d.fear && FEAR_SCRIPTS[d.fear]) {
+      subhead('For your fear: ' + d.fear.toLowerCase());
+      para(FEAR_SCRIPTS[d.fear]);
+    }
+    subhead('Everyday phrases');
+    SCRIPTS_GENERAL.forEach(bullet);
+    y += 4;
+
+    /* 7 day plan */
+    heading('Your 7-day practice plan');
+    PRACTICE_PLAN.forEach(([day, text]) => {
+      need(30);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(138, 90, 58);
+      doc.text(day, margin, y);
+      y += 13;
+      para(text, 9.5, 5);
+    });
+    y += 2;
+
+    /* Education */
+    heading('Understanding people-pleasing: what research tells us');
+    EDUCATION.forEach(([title, body]) => { subhead(title); para(body, 9.3, 8); });
+
+    /* New research */
+    heading('What is new in the research (2025 and 2026)');
+    NEW_RESEARCH.forEach(([title, body]) => { subhead(title); para(body, 9.3, 8); });
+    para('Please note: these are early studies, most of them small and correlational. A link between two things does not prove one causes the other. Treat them as helpful signposts, not final answers.', 9, 10, 'italic', [80, 96, 80]);
+
+    /* Support */
+    heading('When to reach for more support');
+    para('Consider speaking with a counsellor, psychologist or doctor if:', 9.5, 3);
     [
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+      'You feel anxious, low or exhausted most days.',
+      'You are close to burnout, or your health is suffering.',
+      'Your people-pleasing began in a frightening, controlling or abusive past.',
+      'You fear for your safety if you say no to someone.'
+    ].forEach(bullet);
+    para('Trauma-informed therapy and cognitive behavioural therapy (CBT) are commonly used for these patterns. You can find a helpline for your country at findahelpline.com. If you are in immediate danger, contact your local emergency services.', 9.5, 10);
 
-    // Footer
-    doc.setDrawColor(184, 208, 160);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 160, 138);
-    doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 22);
+    /* Sources */
+    heading('Sources and further reading');
+    SOURCES.forEach(bullet);
+    para('Research summaries on this page were checked in October 2026. Findings are summarised in plain language and may be updated as new studies appear.', 8.8, 10, 'italic', [80, 96, 80]);
+
+    /* Resources */
+    heading('More free wellbeing resources');
+    [
+      'Main site: ' + SITE_TEXT,
+      'Free tools: ' + SITE_TEXT + '/wellbeing-and-self-help-tools/',
+      'Audio books: ' + SITE_TEXT + '/recommended-books/',
+      'Support this project: ' + SITE_TEXT + '/support-this-website/'
+    ].forEach(l => para(l, 9.3, 2));
+
+    /* Footer + header on EVERY page */
+    const total = doc.getNumberOfPages();
+    for (let i = 1; i <= total; i++) {
+      doc.setPage(i);
+      if (i > 1) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(138, 160, 138);
+        doc.text('People-Pleaser Recovery Reflection', margin, 28);
+      }
+      doc.setDrawColor(184, 208, 160);
+      doc.setLineWidth(0.7);
+      doc.line(margin, pageH - 48, pageW - margin, pageH - 48);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(90, 122, 64);
+      doc.textWithLink(SITE_TEXT, margin, pageH - 33, { url: SITE_URL });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(138, 160, 138);
+      doc.text('Page ' + i + ' of ' + total, pageW - margin, pageH - 33, { align: 'right' });
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', margin, pageH - 20);
+    }
 
     doc.save('people-pleaser-recovery-reflection.pdf');
     showToast('PDF downloaded!');
@@ -1137,6 +1510,7 @@
     catch(_) { showToast('Copy from your address bar.'); }
   });
 
+  hydrateSticks();
   updateIntensity();
   updateShareLinks();
   loadLocal();

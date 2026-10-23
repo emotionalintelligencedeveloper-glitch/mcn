@@ -4,1087 +4,1090 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Your Positive Strengths Map | Emotional Intelligence Developer</title>
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f4f2f0;
-      --card: #ffffff;
-      --text: #1a1e18;
-      --muted: #4a5248;
-      --hint: #8aa088;
-      --border: #ccd8c0;
-      --brand: #4a7a58;
-      --brand-light: #eaf2ec;
-      --brand-mid: #a8c8b0;
-      --accent: #6aaa80;
-      --accent-light: #e4f0e8;
-      --teal: #3a7a78;
-      --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
-      --gold: #8a7a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --warm: #f8f6f2;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
+      --eid-bg: #f4f2f0;
+      --eid-card: #ffffff;
+      --eid-text: #1a1e18;
+      --eid-muted: #4a5248;
+      --eid-hint: #6f8570;
+      --eid-border: #ccd8c0;
+      --eid-brand: #4a7a58;
+      --eid-brand-light: #eaf2ec;
+      --eid-brand-mid: #a8c8b0;
+      --eid-teal: #3a7a78;
+      --eid-teal-light: #e4f0f0;
+      --eid-teal-mid: #a0c8c8;
+      --eid-gold: #7a6a20;
+      --eid-gold-light: #f7f2e4;
+      --eid-gold-mid: #d8c878;
+      --eid-support: #e8702a;
+      --eid-radius-sm: 10px;
+      --eid-radius-md: 14px;
+      --eid-radius-lg: 20px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--eid-bg); }
 
-    body {
+    .eid-tool {
       font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
+      color: var(--eid-text);
       line-height: 1.7;
       font-size: 16px;
+      background: var(--eid-bg);
     }
-
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
+    .eid-tool h2, .eid-tool h3, .eid-tool p { margin: 0; }
+    .eid-container { max-width: 700px; margin: 0 auto; padding: 20px 16px 40px; }
 
     /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
+    .eid-header {
+      background: var(--eid-card); border-radius: var(--eid-radius-lg);
+      border: 1px solid var(--eid-border); padding: 22px 20px 18px; margin-bottom: 16px;
     }
-
-    .logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-
-    .logo {
-      width: 56px; height: 56px;
-      border-radius: 12px; object-fit: cover;
-      border: 2px solid var(--brand-mid); flex-shrink: 0;
-    }
-
-    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal; color: var(--text);
-      line-height: 1.3; margin-bottom: 8px;
-    }
-
-    .tagline { font-size: 15px; color: var(--muted); margin-bottom: 14px; line-height: 1.65; }
-
-    /* NAME FIELD */
-    .name-card {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-    }
-
-    .name-label { font-size: 14px; color: var(--text); margin-bottom: 8px; display: block; }
-
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 14px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
+    .eid-logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .eid-logo { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 2px solid var(--eid-brand-mid); flex-shrink: 0; }
+    .eid-brand-name { font-size: 13px; color: var(--eid-brand); letter-spacing: 0.04em; line-height: 1.3; }
+    .eid-title { font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: normal; line-height: 1.3; margin-bottom: 8px; }
+    .eid-tagline { font-size: 15px; color: var(--eid-muted); line-height: 1.65; }
 
     /* PROGRESS */
-    .progress-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 16px 20px;
-      margin-bottom: 16px;
+    .eid-progress-card {
+      background: var(--eid-card); border-radius: var(--eid-radius-lg);
+      border: 1px solid var(--eid-border); padding: 14px 20px; margin-bottom: 16px; display: none;
     }
+    .eid-progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+    .eid-progress-label { font-size: 13px; color: var(--eid-brand); font-weight: bold; }
+    .eid-progress-pct { font-size: 12px; color: var(--eid-hint); }
+    .eid-bar-wrap { height: 8px; background: var(--eid-brand-light); border-radius: 99px; overflow: hidden; }
+    .eid-bar-fill { height: 100%; background: linear-gradient(90deg, var(--eid-brand), var(--eid-teal)); border-radius: 99px; transition: width 0.35s ease; width: 0%; }
 
-    .progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .progress-label { font-size: 13px; color: var(--brand); font-weight: bold; }
-    .progress-pct { font-size: 12px; color: var(--hint); }
-
-    .progress-bar-wrap { height: 6px; background: var(--brand-light); border-radius: 99px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--brand); border-radius: 99px; transition: width 0.3s ease; width: 0%; }
-
-    .live-insight {
-      display: none;
-      background: var(--teal-light);
-      border: 1px solid var(--teal-mid);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      font-size: 14px;
-      color: var(--teal);
-      font-style: italic;
-      margin-top: 10px;
+    /* PANELS */
+    .eid-panel {
+      display: none; background: var(--eid-card); border-radius: var(--eid-radius-lg);
+      border: 1px solid var(--eid-border); padding: 22px 20px; margin-bottom: 16px;
     }
+    .eid-panel.eid-on { display: block; animation: eidFade 0.3s ease; }
+    @keyframes eidFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .eid-panel:focus, .eid-rpage:focus, .eid-focus-target:focus { outline: none; }
 
-    /* PREVIEW CHARTS */
-    .preview-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 20px;
-      margin-bottom: 16px;
-      text-align: center;
+    .eid-panel-title { font-size: 1.15rem; font-weight: normal; color: var(--eid-brand); margin-bottom: 8px; }
+    .eid-lead { font-size: 15px; color: var(--eid-muted); margin-bottom: 14px; line-height: 1.65; }
+    .eid-note { font-size: 13px; color: var(--eid-hint); font-style: italic; line-height: 1.6; }
+
+    /* NAME FIELD */
+    .eid-name-card {
+      background: var(--eid-brand-light); border: 1px solid var(--eid-brand-mid);
+      border-radius: var(--eid-radius-md); padding: 16px 18px; margin: 14px 0;
     }
+    .eid-name-label { font-size: 14px; display: block; margin-bottom: 8px; }
+    .eid-input {
+      width: 100%; border: 1px solid var(--eid-border); border-radius: var(--eid-radius-sm);
+      padding: 11px 14px; font-family: "Georgia", serif; font-size: 16px; color: var(--eid-text); background: #fff;
+    }
+    .eid-input:focus { outline: none; border-color: var(--eid-brand); box-shadow: 0 0 0 3px rgba(74,122,88,0.15); }
 
-    .card-title { font-size: 1.05rem; font-weight: normal; color: var(--brand); margin-bottom: 8px; }
-    .card-intro { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 16px; line-height: 1.6; }
-
-    .chart-pair { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 480px) { .chart-pair { grid-template-columns: 1fr 1fr; } }
-
-    .chart-box { text-align: center; }
-    .chart-caption { font-size: 12px; color: var(--hint); margin-top: 6px; font-style: italic; }
+    /* CHARTS */
+    .eid-chart-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-bottom: 16px; }
+    @media (min-width: 520px) { .eid-chart-grid { grid-template-columns: 1fr 1fr; } }
+    .eid-chart-box { text-align: center; background: #fbfcfa; border: 1px solid var(--eid-border); border-radius: var(--eid-radius-md); padding: 12px 10px 10px; }
+    .eid-chart-wrap { position: relative; height: 260px; }
+    .eid-chart-wrap.eid-small { height: 200px; }
+    .eid-chart-wrap.eid-bar { height: 300px; }
+    .eid-chart-caption { font-size: 12px; color: var(--eid-hint); margin-top: 6px; font-style: italic; }
 
     /* QUESTIONS */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
+    .eid-qnum { font-size: 11px; font-weight: bold; color: var(--eid-hint); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .eid-qtext { font-size: 1.15rem; line-height: 1.5; margin-bottom: 14px; }
+    .eid-choice {
+      display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+      border: 1.5px solid var(--eid-border); border-radius: var(--eid-radius-sm); background: #fff;
+      cursor: pointer; margin-bottom: 8px; font-size: 15px; color: var(--eid-muted);
+      transition: all 0.15s; line-height: 1.5;
+    }
+    .eid-choice:hover { border-color: var(--eid-brand); color: var(--eid-text); }
+    .eid-choice.eid-selected { border-color: var(--eid-brand); background: var(--eid-brand-light); color: var(--eid-text); }
+    .eid-choice input { accent-color: var(--eid-brand); width: 18px; height: 18px; min-width: 18px; margin-top: 2px; cursor: pointer; }
+
+    .eid-feedback {
+      margin-top: 12px; padding: 12px 14px; background: var(--eid-brand-light);
+      border: 1px solid var(--eid-brand-mid); border-radius: var(--eid-radius-md);
+      font-size: 14px; color: var(--eid-muted); line-height: 1.65;
+    }
+    .eid-feedback-title { font-size: 12px; font-weight: bold; color: var(--eid-brand); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+    .eid-insight {
+      margin-top: 10px; background: var(--eid-teal-light); border: 1px solid var(--eid-teal-mid);
+      border-radius: var(--eid-radius-md); padding: 12px 14px; font-size: 14px; color: var(--eid-teal); font-style: italic;
     }
 
-    .question-num {
-      font-size: 11px; font-weight: bold; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+    /* STEP NAV */
+    .eid-nav { display: none; gap: 10px; justify-content: space-between; margin-bottom: 16px; }
+    .eid-nav.eid-on { display: flex; }
+    .eid-dots { display: flex; gap: 6px; align-items: center; justify-content: center; flex: 1; flex-wrap: wrap; }
+    .eid-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--eid-brand-mid); opacity: 0.45; }
+    .eid-dot.eid-done { opacity: 1; }
+    .eid-dot.eid-now { opacity: 1; background: var(--eid-brand); transform: scale(1.35); }
+
+    /* BUTTONS */
+    .eid-btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .eid-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 22px; border-radius: 99px; font-family: "Georgia", serif; font-size: 15px;
+      cursor: pointer; text-decoration: none; border: 1.5px solid transparent; min-height: 46px;
+      transition: opacity 0.15s, transform 0.1s; line-height: 1.2;
+    }
+    .eid-btn:active { transform: scale(0.97); }
+    .eid-btn:hover { opacity: 0.88; }
+    .eid-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+    .eid-btn-primary { background: var(--eid-brand); color: #fff; border-color: var(--eid-brand); }
+    .eid-btn-outline { background: #fff; color: var(--eid-text); border-color: var(--eid-border); }
+    .eid-btn-share { background: var(--eid-brand-light); color: var(--eid-brand); border-color: var(--eid-brand-mid); min-height: 42px; padding: 10px 18px; font-size: 14px; }
+
+    /* SUPPORT BUTTON WITH STICK PEOPLE (standard for all EID tools) */
+    .eid-btn-support {
+      background: var(--eid-support); color: #fff; border-color: var(--eid-support);
+      font-size: 16px; padding: 10px 22px; gap: 10px; flex-wrap: nowrap;
+    }
+    .eid-stick { width: 28px; height: 38px; flex-shrink: 0; overflow: visible; }
+    .eid-stick * { fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .eid-stick .eid-dress { fill: rgba(255,255,255,0.28); }
+    .eid-stick .eid-arms { transform-origin: 14px 14px; animation: eidCheer 1.6s ease-in-out infinite; }
+    .eid-stick.eid-right .eid-arms { animation-delay: 0.8s; }
+    @keyframes eidCheer { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+    .eid-heart { font-size: 18px; display: inline-block; animation: eidBeat 1.4s ease-in-out infinite; }
+    @keyframes eidBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    @media (prefers-reduced-motion: reduce) {
+      .eid-stick .eid-arms, .eid-heart, .eid-panel.eid-on { animation: none; }
     }
 
-    .question-text { font-size: 16px; color: var(--text); margin-bottom: 12px; line-height: 1.55; }
-
-    /* CHOICE LABELS */
-    .choice-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff;
-      cursor: pointer;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: var(--muted);
-      transition: all 0.15s;
-      line-height: 1.5;
-    }
-
-    .choice-label:hover { border-color: var(--brand); color: var(--text); }
-    .choice-label.selected { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
-
-    .choice-label input[type="radio"] {
-      accent-color: var(--brand);
-      width: 16px; height: 16px; min-width: 16px;
-      margin-top: 2px; cursor: pointer;
-    }
-
-    /* INLINE FEEDBACK */
-    .inline-feedback {
-      display: none;
-      margin-top: 10px;
-      padding: 12px 14px;
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .inline-feedback.show { display: block; }
-
-    .inline-feedback-title {
-      font-size: 12px; font-weight: bold;
-      color: var(--brand); text-transform: uppercase;
-      letter-spacing: 0.05em; margin-bottom: 5px;
+    @media (max-width: 480px) {
+      .eid-btn-row .eid-btn { width: 100%; }
+      .eid-nav .eid-btn { padding: 12px 16px; }
+      .eid-btn-support { width: 100%; font-size: 15px; padding: 10px 12px; }
     }
 
     /* RESULTS */
-    .results-card {
-      display: none;
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
+    .eid-rpage { display: none; }
+    .eid-rpage.eid-on { display: block; animation: eidFade 0.3s ease; }
+    .eid-results-header {
+      background: var(--eid-brand-light); border: 1px solid var(--eid-brand-mid);
+      border-radius: var(--eid-radius-md); padding: 16px 18px; margin-bottom: 16px; text-align: center;
     }
+    .eid-results-name { font-size: 1.15rem; color: var(--eid-brand); }
+    .eid-results-sub { font-size: 13px; color: var(--eid-hint); font-style: italic; margin-top: 4px; }
 
-    .results-card.visible { display: block; }
-
-    .results-header {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      text-align: center;
+    .eid-strength {
+      border: 1px solid var(--eid-brand-mid); border-left-width: 6px;
+      border-radius: var(--eid-radius-md); padding: 16px 18px; background: var(--eid-brand-light);
     }
+    .eid-strength-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .eid-ring { width: 64px; height: 64px; flex-shrink: 0; }
+    .eid-rank { font-size: 11px; font-weight: bold; color: var(--eid-hint); text-transform: uppercase; letter-spacing: 0.06em; }
+    .eid-strength-name { font-size: 1.3rem; line-height: 1.25; }
+    .eid-strength-score { font-size: 12px; color: var(--eid-hint); }
+    .eid-sec { margin-bottom: 10px; }
+    .eid-sec-label { font-size: 11px; font-weight: bold; color: var(--eid-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+    .eid-sec-text { font-size: 15px; line-height: 1.6; }
+    .eid-try { background: #fff; border: 1px dashed var(--eid-brand); border-radius: var(--eid-radius-sm); padding: 10px 12px; margin-top: 4px; }
+    .eid-fact { background: var(--eid-teal-light); border: 1px solid var(--eid-teal-mid); border-radius: var(--eid-radius-sm); padding: 10px 12px; margin-top: 10px; font-size: 13.5px; color: var(--eid-muted); line-height: 1.6; }
+    .eid-fact b { color: var(--eid-teal); }
 
-    .results-name { font-size: 1.1rem; color: var(--brand); font-weight: normal; }
-    .results-subtitle { font-size: 13px; color: var(--hint); font-style: italic; margin-top: 4px; }
+    .eid-growth { background: var(--eid-gold-light); border: 1px solid var(--eid-gold-mid); border-left-width: 6px; border-radius: var(--eid-radius-md); padding: 16px 18px; }
+    .eid-growth .eid-rank, .eid-growth .eid-strength-name { color: var(--eid-gold); }
+    .eid-growth .eid-sec-label { color: var(--eid-gold); }
 
-    /* TOP STRENGTHS GRID */
-    .top-strengths { display: grid; gap: 12px; margin-bottom: 16px; }
+    .eid-sci { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--eid-border); }
+    .eid-sci:last-of-type { border-bottom: none; }
+    .eid-sci h3 { font-size: 15px; color: var(--eid-brand); font-weight: bold; margin-bottom: 4px; }
+    .eid-sci p { font-size: 14.5px; color: var(--eid-text); line-height: 1.65; }
+    .eid-sources { font-size: 12.5px; color: var(--eid-muted); line-height: 1.6; padding-left: 18px; margin: 6px 0 0; }
+    .eid-sources li { margin-bottom: 4px; }
 
-    .strength-card {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-    }
-
-    .strength-rank { font-size: 11px; font-weight: bold; color: var(--hint); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .strength-name { font-size: 1.05rem; color: var(--brand); margin-bottom: 8px; }
-    .strength-score { font-size: 12px; color: var(--hint); margin-bottom: 8px; }
-
-    .strength-section { margin-bottom: 8px; }
-    .strength-section-label {
-      font-size: 11px; font-weight: bold; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;
-    }
-    .strength-section-text { font-size: 14px; color: var(--text); line-height: 1.6; }
-
-    /* GROWTH CARD */
-    .growth-card {
-      background: var(--gold-light);
-      border: 1px solid var(--gold-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-    }
-
-    .growth-label { font-size: 11px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .growth-name { font-size: 1rem; color: var(--gold); margin-bottom: 8px; }
-    .growth-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-    /* RESULTS CHARTS */
-    .results-charts { display: grid; gap: 16px; margin-bottom: 16px; }
-    @media (min-width: 480px) { .results-charts { grid-template-columns: 1fr 1fr; } }
-
-    /* SECTION LABEL */
-    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
-
-    /* BUTTONS */
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 12px 20px; border-radius: 99px;
-      font-family: "Georgia", serif; font-size: 14px;
-      cursor: pointer; text-decoration: none;
-      border: 1.5px solid transparent; min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
-
-    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
-    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support); color: #fff; border-color: var(--support);
-      font-size: 15px; padding: 14px 24px;
-    }
-
-    @media (max-width: 480px) { .btn { width: 100%; } .btn-row { flex-direction: column; } }
+    .eid-section-label { font-size: 11px; color: var(--eid-hint); text-transform: uppercase; letter-spacing: 0.08em; margin: 14px 0 8px; }
 
     /* TOAST */
-    .toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text); color: #fff;
-      padding: 10px 18px; border-radius: 99px;
-      font-size: 14px; font-family: "Georgia", serif;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s; z-index: 100; white-space: nowrap;
+    .eid-toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
+      background: var(--eid-text); color: #fff; padding: 10px 18px; border-radius: 99px;
+      font-size: 14px; font-family: "Georgia", serif; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s; z-index: 100; max-width: 92vw; text-align: center;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .eid-toast.eid-on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* FOOTER */
-    .footer {
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 22px 20px; text-align: center;
+    .eid-footer { background: var(--eid-card); border-radius: var(--eid-radius-lg); border: 1px solid var(--eid-border); padding: 22px 20px; text-align: center; }
+    .eid-footer-text { font-size: 14px; color: var(--eid-muted); margin-bottom: 12px; font-style: italic; }
+    .eid-footer-share { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--eid-border); }
+    .eid-footer-share-label { font-size: 12px; color: var(--eid-hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .eid-footer-share .eid-btn-row { justify-content: center; }
+    @media (max-width: 480px) {
+      .eid-footer-share .eid-btn-row { display: grid; grid-template-columns: 1fr 1fr; }
+      .eid-footer-share .eid-btn-row .eid-btn { width: 100%; padding: 10px 8px; }
     }
-
-    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+    .eid-footer-links { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--eid-border); }
+    .eid-link { font-size: 13px; color: var(--eid-brand); text-decoration: none; }
+    .eid-link:hover { text-decoration: underline; }
+    .eid-credit { font-size: 12px; color: var(--eid-hint); margin-top: 12px; }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="eid-tool">
+<div class="eid-container" id="eidTop">
 
   <!-- HEADER -->
-  <header class="header">
-    <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+  <header class="eid-header">
+    <div class="eid-logo-wrap">
+      <img class="eid-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <div class="eid-brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Your Positive Strengths Map</h1>
-    <p class="tagline">Answer 9 questions to reveal your strongest emotional and personal qualities. You will get charts, rich insights, and a shareable PDF you can revisit at any time.</p>
+    <h2 class="eid-title">Your Positive Strengths Map</h2>
+    <p class="eid-tagline">Answer 9 quick questions, one at a time. You will get charts, clear insights and a PDF report you can keep and share.</p>
   </header>
 
-  <!-- NAME FIELD -->
-  <div class="name-card" aria-label="Your name for results">
-    <label class="name-label" for="participantName">Your name — for the results page and PDF (optional)</label>
-    <input type="text" id="participantName" maxlength="80" placeholder="Enter your name here…" />
-  </div>
-
   <!-- PROGRESS -->
-  <div class="progress-card" aria-label="Quiz progress">
-    <div class="progress-top">
-      <span class="progress-label" id="progressLabel">0 of 9 answered</span>
-      <span class="progress-pct" id="progressPct">0% complete</span>
+  <div class="eid-progress-card" id="eidProgress" aria-label="Progress">
+    <div class="eid-progress-top">
+      <span class="eid-progress-label" id="eidProgressLabel"></span>
+      <span class="eid-progress-pct" id="eidProgressPct"></span>
     </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="live-insight" id="liveInsight" aria-live="polite"></div>
+    <div class="eid-bar-wrap"><div class="eid-bar-fill" id="eidProgressFill"></div></div>
   </div>
 
-  <!-- PREVIEW CHARTS -->
-  <div class="preview-card" aria-label="Example strengths charts">
-    <p class="card-title">Preview — your results will look like this</p>
-    <p class="card-intro">A pie chart and radar chart will show your personal strengths profile once you answer all 9 questions.</p>
-    <div class="chart-pair">
-      <div class="chart-box">
-        <canvas id="examplePie" style="max-height:200px;"></canvas>
-        <div class="chart-caption">Strengths snapshot</div>
-      </div>
-      <div class="chart-box">
-        <canvas id="exampleRadar" style="max-height:200px;"></canvas>
-        <div class="chart-caption">Strengths overview</div>
-      </div>
-    </div>
-  </div>
+  <!-- STEP 0: START -->
+  <section class="eid-panel eid-on" id="eidStart" tabindex="-1" aria-label="Start">
+    <h3 class="eid-panel-title">Welcome. Let us find your strengths.</h3>
+    <p class="eid-lead">There are no right or wrong answers. Pick the option that feels most like you. It takes about three minutes.</p>
 
-  <!-- QUESTIONS -->
-  <div id="questionsContainer"></div>
-
-  <!-- ACTIONS -->
-  <div class="card">
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="showResultsBtn">See my strengths map</button>
-      <button type="button" class="btn btn-danger" id="resetBtn">Reset</button>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <section class="results-card" id="resultsCard" aria-labelledby="results-heading" aria-live="polite">
-    <div class="results-header">
-      <div class="results-name" id="resultsName">Your Positive Strengths Map</div>
-      <div class="results-subtitle" id="resultsSubtitle">Based on your 9 answers</div>
+    <div class="eid-name-card">
+      <label class="eid-name-label" for="eidName">Your name for the results page and the PDF (optional)</label>
+      <input class="eid-input eid-name-input" type="text" id="eidName" maxlength="60" autocomplete="given-name" placeholder="Type your name here" />
     </div>
 
-    <div class="section-label">Your top 3 strengths</div>
-    <div class="top-strengths" id="topStrengthsGrid"></div>
-
-    <div class="section-label">Your growth edge</div>
-    <div class="growth-card" id="growthCard"></div>
-
-    <div class="section-label">Your strengths charts</div>
-    <div class="results-charts">
-      <div class="chart-box">
-        <canvas id="pieChart" style="max-height:240px;"></canvas>
-        <div class="chart-caption">Strengths snapshot — how your qualities are distributed</div>
+    <p class="eid-note" style="margin-bottom:10px;text-align:center;">Preview: your results will look like this</p>
+    <div class="eid-chart-grid">
+      <div class="eid-chart-box">
+        <div class="eid-chart-wrap eid-small"><canvas id="eidExamplePie" aria-label="Example pie chart"></canvas></div>
+        <div class="eid-chart-caption">Strengths snapshot</div>
       </div>
-      <div class="chart-box">
-        <canvas id="radarChart" style="max-height:240px;"></canvas>
-        <div class="chart-caption">Strengths overview — your full profile at a glance</div>
+      <div class="eid-chart-box">
+        <div class="eid-chart-wrap eid-small"><canvas id="eidExampleRadar" aria-label="Example radar chart"></canvas></div>
+        <div class="eid-chart-caption">Strengths overview</div>
       </div>
     </div>
 
-    <div class="section-label">Actions</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF report</button>
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
-    </div>
+    <div class="eid-btn-row"><button type="button" class="eid-btn eid-btn-primary" id="eidStartBtn">Start the questions</button></div>
   </section>
 
+  <!-- QUIZ PANEL -->
+  <section class="eid-panel" id="eidQuiz" tabindex="-1" aria-live="polite"></section>
+
+  <!-- RESULTS PANEL -->
+  <section class="eid-panel" id="eidResults" aria-live="polite"></section>
+
+  <!-- STEP NAV -->
+  <div class="eid-nav" id="eidNav">
+    <button type="button" class="eid-btn eid-btn-outline" id="eidBack">Back</button>
+    <div class="eid-dots" id="eidDots" aria-hidden="true"></div>
+    <button type="button" class="eid-btn eid-btn-primary" id="eidNext">Next</button>
+  </div>
+
   <!-- FOOTER -->
-  <footer class="footer" aria-label="Footer">
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
-    <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+  <footer class="eid-footer" aria-label="Footer">
+    <p class="eid-footer-text">This platform is free for everyone. If it helped you, please consider supporting it.</p>
+    <a class="eid-btn eid-btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+      <svg class="eid-stick" viewBox="0 0 28 38" aria-hidden="true">
+        <circle cx="14" cy="6" r="4"/>
+        <line x1="14" y1="10" x2="14" y2="24"/>
+        <g class="eid-arms"><line x1="14" y1="14" x2="5" y2="6"/><line x1="14" y1="14" x2="23" y2="6"/></g>
+        <line x1="14" y1="24" x2="8" y2="36"/><line x1="14" y1="24" x2="20" y2="36"/>
+      </svg>
+      <span class="eid-heart" aria-hidden="true">&#9829;</span>
+      <span>Support this website</span>
+      <span class="eid-heart" aria-hidden="true">&#9829;</span>
+      <svg class="eid-stick eid-right" viewBox="0 0 28 38" aria-hidden="true">
+        <circle cx="14" cy="6" r="4"/>
+        <path class="eid-dress" d="M14 10 L6 26 L22 26 Z"/>
+        <g class="eid-arms"><line x1="14" y1="13" x2="5" y2="6"/><line x1="14" y1="13" x2="23" y2="6"/></g>
+        <line x1="11" y1="26" x2="10" y2="36"/><line x1="17" y1="26" x2="18" y2="36"/>
+      </svg>
+    </a>
+
+    <div class="eid-footer-share">
+      <div class="eid-footer-share-label">Share this free tool</div>
+      <div class="eid-btn-row">
+        <button type="button" class="eid-btn eid-btn-share" data-eid-copy>Copy link</button>
+        <a class="eid-btn eid-btn-share" data-eid-share="wa" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="eid-btn eid-btn-share" data-eid-share="fb" target="_blank" rel="noopener">Facebook</a>
+        <a class="eid-btn eid-btn-share" data-eid-share="x" target="_blank" rel="noopener">X</a>
+      </div>
     </div>
-    <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional assessment.
+
+    <div class="eid-footer-links">
+      <a class="eid-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a class="eid-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a class="eid-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a class="eid-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+    </div>
+    <p class="eid-credit">
+      Created by <a class="eid-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;|&nbsp; Reflection support only. Not a professional assessment.
     </p>
   </footer>
 
 </div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<div class="eid-toast" id="eidToast" role="status" aria-live="polite"></div>
 
 <script>
-(function () {
-  'use strict';
+/* All functions are in global scope on purpose (WordPress Custom HTML pattern). */
+var EID_SITE = 'https://emotionalintelligencedeveloper.com';
+var EID_SITE_SHORT = 'emotionalintelligencedeveloper.com';
+var EID_TOOLS_URL = EID_SITE + '/wellbeing-and-self-help-tools/';
+var EID_LOGO_URL = EID_SITE + '/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
 
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const $ = id => document.getElementById(id);
+function eidEl(id) { return document.getElementById(id); }
 
-  const STRENGTHS = ['Focus','Self-Trust','Motivation','Calm Presence','Resilience','Growth','Authenticity','Connection','Awareness'];
+var EID_STRENGTHS = ['Focus','Self-Trust','Motivation','Calm Presence','Resilience','Growth','Authenticity','Connection','Awareness'];
+var EID_COLORS = ['#4a7a58','#3a7a78','#8a7a30','#3a6a98','#6a5aaa','#5a8a68','#8a4a60','#4a6a8a','#7a5a30'];
+function eidColor(s) { return EID_COLORS[EID_STRENGTHS.indexOf(s)]; }
 
-  const STRENGTH_DATA = {
-    'Focus': {
-      what: 'You naturally direct your attention toward what matters most and protect your energy from distractions.',
-      how: 'This shows up as the ability to stay engaged, prioritise deliberately, and complete meaningful work without being pulled in multiple directions.',
-      builds: 'Focus builds the mental discipline that turns intention into action. It is the foundation of productive deep work and clear decision-making.',
-      action: 'Use one 25-minute distraction-free block each day on your single highest priority. Protect this time as non-negotiable.',
-      color: '#4a7a58'
-    },
-    'Self-Trust': {
-      what: 'You have developed a reliable inner compass — the ability to make grounded decisions and stand by them.',
-      how: 'This shows up as confidence in your own judgement, a willingness to move forward even with incomplete information, and a healthy tolerance for uncertainty.',
-      builds: 'Self-trust builds resilience, reduces decision fatigue, and creates the internal stability that lets you navigate change without losing your footing.',
-      action: 'Write one decision win each evening — something you chose well today. This trains your brain to recognise and strengthen its own competence.',
-      color: '#3a7a78'
-    },
-    'Motivation': {
-      what: 'You are energised by purpose, forward movement, and meaningful goals.',
-      how: 'This shows up as initiative, enthusiasm for starting things, and the ability to inspire others by the direction you choose to move in.',
-      builds: 'Motivation builds momentum. It is contagious in teams and relationships, and it converts good intentions into visible progress over time.',
-      action: 'Set one specific, measurable weekly goal and track its progress visually. Make your progress visible — it amplifies motivation further.',
-      color: '#8a7a30'
-    },
-    'Calm Presence': {
-      what: 'You bring a natural steadiness to difficult moments — a capacity to remain grounded when others become reactive.',
-      how: 'This shows up as the ability to regulate your own nervous system under pressure, speak slowly and clearly in conflict, and have a calming effect on the people around you.',
-      builds: 'Calm presence builds trust and psychological safety. In any group, the person who can stay regulated when others cannot becomes the gravitational centre of effective communication.',
-      action: 'Before any high-stakes conversation, take three slow breaths — inhale for 4, exhale for 6. This physiologically activates the calm response before you need it.',
-      color: '#3a6a98'
-    },
-    'Resilience': {
-      what: 'You recover and adapt well when life changes unexpectedly or when setbacks occur.',
-      how: 'This shows up as the ability to process difficulty without being consumed by it, reframe setbacks as information, and return to function relatively quickly after disruption.',
-      builds: 'Resilience is not toughness — it is flexibility. It builds over time and becomes the quality that makes everything else sustainable. Resilient people make better long-term decisions.',
-      action: 'After any setback, write three lines: what happened, what helped or what you did that was right, what the next step is. This builds the reflective loop that strengthens resilience.',
-      color: '#6a5aaa'
-    },
-    'Growth': {
-      what: 'You value learning, reflection, and consistent improvement — you are someone who actively looks for what each experience is teaching you.',
-      how: 'This shows up as curiosity, a low ego response to correction, and the genuine ability to change your mind when you encounter better information.',
-      builds: 'Growth orientation is one of the strongest predictors of long-term success and satisfaction. It builds compound competence — every experience becomes an investment rather than just an event.',
-      action: 'Choose one micro-skill each week and practice it deliberately for 10 minutes daily. Notice what changes after 4 weeks of consistent small effort.',
-      color: '#5a8a68'
-    },
-    'Authenticity': {
-      what: 'You show up honestly and align your actions with your values — you are someone people can count on to say what is real.',
-      how: 'This shows up as directness, integrity in small things, and a natural ability to build trust quickly because people sense that you are not performing.',
-      builds: 'Authenticity builds deep, lasting relationships and personal credibility. In any environment, it is the quality that makes your words carry weight.',
-      action: 'Say one honest, kind truth this week where you would normally hold back. Notice what happens to the quality of that relationship or conversation.',
-      color: '#8a4a60'
-    },
-    'Connection': {
-      what: 'Relationships and meaningful support matter deeply to you — you invest in people and notice when they need something.',
-      how: 'This shows up as warmth, active listening, remembering details, and the ability to make people feel genuinely seen and understood.',
-      builds: 'Connection builds the social infrastructure that supports everything else in life. People with strong connection skills recover faster from adversity because they are not navigating it alone.',
-      action: 'Schedule one intentional check-in with someone who matters to you this week. Make it unhurried — the quality of the attention matters more than the length.',
-      color: '#4a6a8a'
-    },
-    'Awareness': {
-      what: 'You notice inner and outer signals that others often overlook — emotional cues, patterns, shifts in energy and meaning.',
-      how: 'This shows up as perceptiveness, a finely tuned sense of what is really happening in a room or a conversation, and the ability to read yourself accurately.',
-      builds: 'Awareness is the foundation of all emotional intelligence. Without it, the other qualities cannot develop fully. With it, you can continually refine how you show up in every area of life.',
-      action: 'Twice a day — mid-morning and before dinner — pause and name your emotional state in a single specific word. Not "fine" or "okay" — something real. This builds emotional precision over time.',
-      color: '#7a5a30'
+/* Content is written in plain language. Research notes are worded to match what the studies actually found. */
+var EID_DATA = {
+  'Focus': {
+    what: 'You direct your attention to what matters most and protect your energy from distractions.',
+    how: 'You stay with one thing, choose your priorities on purpose, and finish meaningful work without being pulled in many directions.',
+    builds: 'Focus turns good intentions into action. It is the base of deep work and clear decisions.',
+    action: 'Give your single most important task one 25 minute block each day with your phone out of reach.',
+    fact: 'Studies on task switching show that moving between tasks costs time and mental energy (Rubinstein, Meyer and Evans, 2001). The 25 minute block is the popular Pomodoro method, a practical habit rather than a research finding.'
+  },
+  'Self-Trust': {
+    what: 'You have a reliable inner compass. You can make grounded decisions and stand by them.',
+    how: 'You trust your own judgement, you can move forward without every answer, and you cope well with uncertainty.',
+    builds: 'Self-trust lowers decision stress and gives you steady footing when life changes.',
+    action: 'Each evening, write down one decision you made well today. Keep the list for a week and read it back.',
+    fact: 'Albert Bandura\'s research on self-efficacy, the belief that you can handle what comes, links it with greater persistence and better coping with challenge (Bandura, 1997). Writing down what went well is also used in the "three good things" exercise (Seligman et al., 2005).'
+  },
+  'Motivation': {
+    what: 'You are energised by purpose, forward movement and meaningful goals.',
+    how: 'You start things with enthusiasm and you lift others by the direction you choose.',
+    builds: 'Motivation builds momentum and turns effort into visible progress.',
+    action: 'Set one clear, measurable goal for this week and tick off your progress where you can see it.',
+    fact: 'Goal setting research by Locke and Latham found that specific, challenging goals lead to better performance than vague ones. A large review also found that tracking progress helps people reach their goals (Harkin et al., 2016).'
+  },
+  'Calm Presence': {
+    what: 'You stay steady in hard moments and remain grounded when others become reactive.',
+    how: 'You can settle yourself under pressure, speak slowly in conflict, and calm the people around you.',
+    builds: 'Calm builds trust and safety. People feel able to speak openly around someone who stays steady.',
+    action: 'Before a tough conversation, take three slow breaths: in for 4, out for 6.',
+    fact: 'Reviews of slow breathing techniques link them with greater relaxation and a calmer body state (Zaccaro et al., 2018). The effect is helpful, not magic, and it works best with regular practice.'
+  },
+  'Resilience': {
+    what: 'You recover and adapt when life changes or when setbacks happen.',
+    how: 'You can go through difficulty without being consumed by it, learn from what happened, and return to normal function.',
+    builds: 'Resilience is flexibility, not toughness. It makes everything else in your life more sustainable.',
+    action: 'After a setback, write three lines: what happened, what helped, and what your next step is.',
+    fact: 'Psychologist George Bonanno found that most people show resilience after hard events and return to stable functioning over time (Bonanno, 2004). Resilience is common, and it can be supported.'
+  },
+  'Growth': {
+    what: 'You value learning, reflection and steady improvement. You look for what each experience teaches you.',
+    how: 'You are curious, you take correction well, and you can change your mind when you meet better information.',
+    builds: 'Growth makes every experience an investment. Small improvements add up over time.',
+    action: 'Pick one small skill and practise it for 10 minutes a day. Check what has changed after four weeks.',
+    fact: 'Carol Dweck\'s growth mindset work shows that seeing ability as something you can develop is linked with greater persistence. Large studies show the average effect is modest, so use it as a helpful frame, not a cure-all (Yeager et al., 2019).'
+  },
+  'Authenticity': {
+    what: 'You show up honestly and match your actions to your values. People trust you to say what is real.',
+    how: 'You are direct, you keep your word in small things, and people sense you are not performing.',
+    builds: 'Authenticity builds deep relationships and makes your words carry weight.',
+    action: 'This week, share one honest and kind truth where you would normally hold back.',
+    fact: 'Self-determination theory by Deci and Ryan describes autonomy, acting in line with your own values, as a basic psychological need linked with wellbeing (Ryan and Deci, 2000).'
+  },
+  'Connection': {
+    what: 'Relationships and real support matter deeply to you. You notice when people need something.',
+    how: 'You show warmth, listen well, remember details, and help people feel seen.',
+    builds: 'Connection is the base that supports everything else. People with good support cope better with stress.',
+    action: 'Plan one unhurried check-in with someone who matters to you this week. Attention matters more than length.',
+    fact: 'A review of 148 studies found that people with stronger social relationships had about a 50 percent higher likelihood of survival over the study periods (Holt-Lunstad, Smith and Layton, 2010).'
+  },
+  'Awareness': {
+    what: 'You notice inner and outer signals that others often miss, like emotional cues, patterns and shifts in energy.',
+    how: 'You read rooms well, you sense what is really going on in a conversation, and you read yourself accurately.',
+    builds: 'Awareness is a core part of emotional intelligence. It lets you keep refining how you show up.',
+    action: 'Twice a day, pause and name your feeling in one specific word. Not "fine" or "okay", something real.',
+    fact: 'Brain imaging research on affect labelling found that putting feelings into words reduces activity in the amygdala, a region linked to emotional reactions (Lieberman et al., 2007).'
+  }
+};
+
+var EID_QUESTIONS = [
+  { text: 'When starting something important, you usually...', choices: [
+    { text: 'Pick a clear priority and protect your time', s: 'Focus' },
+    { text: 'Picture success and get moving quickly', s: 'Motivation' },
+    { text: 'Ask what this can teach you long term', s: 'Growth' },
+    { text: 'Pause and check your inner state first', s: 'Awareness' } ] },
+  { text: 'When challenges appear, you tend to...', choices: [
+    { text: 'Bounce back and adapt your approach', s: 'Resilience' },
+    { text: 'Stay calm and settle your emotions', s: 'Calm Presence' },
+    { text: 'Treat it as a lesson and keep improving', s: 'Growth' },
+    { text: 'Trust your gut and choose a direction', s: 'Self-Trust' } ] },
+  { text: 'Your energy feels strongest when...', choices: [
+    { text: 'You can be fully yourself', s: 'Authenticity' },
+    { text: 'You are chasing meaningful goals', s: 'Motivation' },
+    { text: 'You feel truly connected to others', s: 'Connection' },
+    { text: 'You are locked in on one clear task', s: 'Focus' } ] },
+  { text: 'In conversations, people notice that you...', choices: [
+    { text: 'Make them feel heard and supported', s: 'Connection' },
+    { text: 'Pick up on subtle emotional cues', s: 'Awareness' },
+    { text: 'Stay composed under pressure', s: 'Calm Presence' },
+    { text: 'Speak honestly and clearly', s: 'Authenticity' } ] },
+  { text: 'When plans change, you usually...', choices: [
+    { text: 'Recover quickly and re-plan', s: 'Resilience' },
+    { text: 'Slow down and stay centred', s: 'Calm Presence' },
+    { text: 'Look for the growth in it', s: 'Growth' },
+    { text: 'Trust yourself to make a new call', s: 'Self-Trust' } ] },
+  { text: 'You feel most confident when you...', choices: [
+    { text: 'Follow your own values and judgement', s: 'Self-Trust' },
+    { text: 'Act in a way that feels true to you', s: 'Authenticity' },
+    { text: 'Stay focused on one clear objective', s: 'Focus' },
+    { text: 'Take decisive action toward an outcome', s: 'Motivation' } ] },
+  { text: 'Your motivation comes mainly from...', choices: [
+    { text: 'A meaningful mission or purpose', s: 'Motivation' },
+    { text: 'Seeing yourself improve over time', s: 'Growth' },
+    { text: 'Helping people you care about', s: 'Connection' },
+    { text: 'Finishing high-value priorities', s: 'Focus' } ] },
+  { text: 'You feel most connected when you...', choices: [
+    { text: 'Share quality time with others', s: 'Connection' },
+    { text: 'Express your real thoughts and feelings', s: 'Authenticity' },
+    { text: 'Understand what someone is truly feeling', s: 'Awareness' },
+    { text: 'Bring steadiness to hard moments', s: 'Calm Presence' } ] },
+  { text: 'Personal growth for you looks like...', choices: [
+    { text: 'Learning something new each week', s: 'Growth' },
+    { text: 'Understanding yourself more deeply', s: 'Awareness' },
+    { text: 'Recovering quickly after difficulty', s: 'Resilience' },
+    { text: 'Trusting your own decisions more', s: 'Self-Trust' } ] }
+];
+
+var EID_SCIENCE = [
+  ['Why knowing your strengths helps',
+   'The strengths-based approach was popularised by Donald Clifton and Marcus Buckingham at Gallup in the book "Now, Discover Your Strengths" (2001). Gallup\'s workplace surveys report that people who use their strengths every day are around six times more likely to be engaged at work and around three times more likely to say they have an excellent quality of life. These are survey links, not proof of cause, but they match what many people find in practice. A separate trial found that using your top character strengths in a new way each day for a week raised happiness and lowered low mood for up to six months (Seligman et al., 2005).'],
+  ['What happens in the brain when we focus on the positive',
+   'Richard Boyatzis and colleagues at Case Western Reserve University describe a "positive emotional attractor": a state of hope and openness that supports learning and change, compared with a "negative emotional attractor" that comes with stress and defensiveness. In a small brain imaging study, recalling a coach who focused on a person\'s vision and compassion lit up brain areas linked to openness and new ideas more than recalling a coach who focused on fixing weaknesses (Jack et al., 2013). It is a small study, so treat it as an interesting pointer, not the final word.'],
+  ['How emotional intelligence and your strengths connect',
+   'Peter Salovey and John Mayer first defined emotional intelligence in 1990, and Daniel Goleman made it widely known in 1995. Goleman\'s model describes self-awareness, self-regulation, motivation, empathy and social skill. The nine strengths in this tool are inspired by that model: Awareness and Self-Trust relate to self-awareness, Calm Presence and Resilience to self-regulation, Focus, Motivation and Growth to motivation, and Connection and Authenticity to empathy and social skill. This tool is a reflection exercise. It is not a scientifically validated test.'],
+  ['Why your growth edge matters',
+   'Your growth edge is not a weakness. It is a strength you used least in this check, so it has the most room to grow. Carol Dweck\'s growth mindset research suggests that seeing a quality as something you can develop helps you keep going. Large studies show the effect is modest on average, so use it as a helpful way to think and pair it with a small daily action.'],
+  ['How long does a new habit take?',
+   'A well known study by Phillippa Lally and colleagues at University College London followed people building a new daily habit. On average it took about 66 days to feel automatic, and it ranged from 18 to 254 days (Lally et al., 2010). Missing a single day did not ruin progress. The advice is simple: choose one small action from this report, repeat it, and be patient with yourself.']
+];
+
+var EID_SOURCES = [
+  'Bandura, A. (1997). Self-Efficacy: The Exercise of Control. W. H. Freeman.',
+  'Bonanno, G. A. (2004). Loss, trauma, and human resilience. American Psychologist, 59(1).',
+  'Buckingham, M. and Clifton, D. (2001). Now, Discover Your Strengths. Free Press.',
+  'Goleman, D. (1995). Emotional Intelligence. Bantam Books.',
+  'Harkin, B. et al. (2016). Does monitoring goal progress promote goal attainment? Psychological Bulletin, 142(2).',
+  'Holt-Lunstad, J., Smith, T. B. and Layton, J. B. (2010). Social relationships and mortality risk. PLoS Medicine, 7(7).',
+  'Jack, A. I., Boyatzis, R. E. et al. (2013). Visioning in the brain: an fMRI study of inspirational coaching and mentoring. Social Neuroscience, 8(4).',
+  'Lally, P. et al. (2010). How are habits formed. European Journal of Social Psychology, 40(6).',
+  'Lieberman, M. D. et al. (2007). Putting feelings into words. Psychological Science, 18(5).',
+  'Rubinstein, J. S., Meyer, D. E. and Evans, J. E. (2001). Executive control of cognitive processes in task switching. Journal of Experimental Psychology: Human Perception and Performance, 27(4).',
+  'Ryan, R. M. and Deci, E. L. (2000). Self-determination theory. American Psychologist, 55(1).',
+  'Salovey, P. and Mayer, J. D. (1990). Emotional intelligence. Imagination, Cognition and Personality, 9(3).',
+  'Seligman, M. E. P., Steen, T. A., Park, N. and Peterson, C. (2005). Positive psychology progress. American Psychologist, 60(5).',
+  'Yeager, D. S. et al. (2019). A national experiment reveals where a growth mindset improves achievement. Nature, 573.',
+  'Zaccaro, A. et al. (2018). How breath-control can change your life. Frontiers in Human Neuroscience, 12.'
+];
+
+/* STATE */
+var eidAnswers = new Array(EID_QUESTIONS.length).fill(-1);
+var eidPhase = 'start';
+var eidQ = 0;
+var eidR = 0;
+var eidPages = [];
+var eidCharts = { pie: null, radar: null, bar: null };
+var eidExampleCharts = [];
+var eidResult = null;
+var eidToastTimer = null;
+
+function eidToast(msg) {
+  var el = eidEl('eidToast');
+  el.textContent = msg;
+  el.classList.add('eid-on');
+  clearTimeout(eidToastTimer);
+  eidToastTimer = setTimeout(function () { el.classList.remove('eid-on'); }, 2600);
+}
+
+/* NAME (two fields stay in sync) */
+function eidGetName() {
+  var el = eidEl('eidName');
+  return el ? el.value.trim() : '';
+}
+function eidSyncName(source) {
+  var v = source.value;
+  document.querySelectorAll('.eid-name-input').forEach(function (inp) { if (inp !== source) inp.value = v; });
+  var rn = eidEl('eidResultsName');
+  if (rn) rn.textContent = (v.trim() ? v.trim() + ': ' : '') + 'Your Positive Strengths Map';
+}
+function eidPdfSafe(t) {
+  return String(t).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-').replace(/…/g, '...').replace(/[^ -ÿ]/g, '').trim();
+}
+
+/* SCORING */
+function eidCompute() {
+  var scores = {}, offered = {}, firstPick = {};
+  EID_STRENGTHS.forEach(function (s) { scores[s] = 0; offered[s] = 0; firstPick[s] = 99; });
+  EID_QUESTIONS.forEach(function (q, i) {
+    q.choices.forEach(function (c) { offered[c.s]++; });
+    var a = eidAnswers[i];
+    if (a >= 0) {
+      var s = q.choices[a].s;
+      scores[s]++;
+      if (i < firstPick[s]) firstPick[s] = i;
     }
-  };
-
-  const QUESTIONS = [
-    {
-      text: 'When starting something important, you usually…',
-      choices: [
-        { text: 'Identify a clear priority and protect your time', strength: 'Focus' },
-        { text: 'Visualise success and get moving quickly', strength: 'Motivation' },
-        { text: 'Ask what this can teach you long-term', strength: 'Growth' },
-        { text: 'Pause and check your inner state first', strength: 'Awareness' }
-      ]
-    },
-    {
-      text: 'When challenges appear, you tend to…',
-      choices: [
-        { text: 'Bounce back and adapt your approach', strength: 'Resilience' },
-        { text: 'Stay calm and regulate your emotions', strength: 'Calm Presence' },
-        { text: 'Treat it as a lesson and keep improving', strength: 'Growth' },
-        { text: 'Trust your gut and choose a direction', strength: 'Self-Trust' }
-      ]
-    },
-    {
-      text: 'Your energy feels strongest when…',
-      choices: [
-        { text: 'You can be fully yourself', strength: 'Authenticity' },
-        { text: 'You are pursuing meaningful goals', strength: 'Motivation' },
-        { text: 'You feel genuinely connected to others', strength: 'Connection' },
-        { text: 'You are locked in on one clear task', strength: 'Focus' }
-      ]
-    },
-    {
-      text: 'In conversations, people notice that you…',
-      choices: [
-        { text: 'Make them feel heard and supported', strength: 'Connection' },
-        { text: 'Pick up subtle emotional cues', strength: 'Awareness' },
-        { text: 'Remain composed under pressure', strength: 'Calm Presence' },
-        { text: 'Speak honestly and clearly', strength: 'Authenticity' }
-      ]
-    },
-    {
-      text: 'When plans change, you usually…',
-      choices: [
-        { text: 'Recover quickly and re-plan', strength: 'Resilience' },
-        { text: 'Slow down and stay centred', strength: 'Calm Presence' },
-        { text: 'Look for what growth is possible now', strength: 'Growth' },
-        { text: 'Trust yourself to make a new call', strength: 'Self-Trust' }
-      ]
-    },
-    {
-      text: 'You feel most confident when you…',
-      choices: [
-        { text: 'Follow your own values and judgement', strength: 'Self-Trust' },
-        { text: 'Act in a way that feels true to you', strength: 'Authenticity' },
-        { text: 'Stay focused on one clear objective', strength: 'Focus' },
-        { text: 'Take decisive action toward an outcome', strength: 'Motivation' }
-      ]
-    },
-    {
-      text: 'Your motivation comes mainly from…',
-      choices: [
-        { text: 'A meaningful mission or purpose', strength: 'Motivation' },
-        { text: 'Seeing yourself improve over time', strength: 'Growth' },
-        { text: 'Contributing to people you care about', strength: 'Connection' },
-        { text: 'Completing high-value priorities', strength: 'Focus' }
-      ]
-    },
-    {
-      text: 'You feel most connected when you…',
-      choices: [
-        { text: 'Share quality time with others', strength: 'Connection' },
-        { text: 'Express your real thoughts and feelings', strength: 'Authenticity' },
-        { text: 'Understand what someone is genuinely feeling', strength: 'Awareness' },
-        { text: 'Bring stability to hard moments', strength: 'Calm Presence' }
-      ]
-    },
-    {
-      text: 'Personal growth for you looks like…',
-      choices: [
-        { text: 'Learning consistently from each week', strength: 'Growth' },
-        { text: 'Understanding yourself more deeply', strength: 'Awareness' },
-        { text: 'Recovering quickly after difficulty', strength: 'Resilience' },
-        { text: 'Trusting your own decisions more', strength: 'Self-Trust' }
-      ]
-    }
-  ];
-
-  const CHART_COLORS = ['#4a7a58','#3a7a78','#8a7a30','#3a6a98','#6a5aaa','#5a8a68','#8a4a60','#4a6a8a','#7a5a30'];
-
-  let pieChart = null;
-  let radarChart = null;
-  let toastTimer;
-  const scores = Object.fromEntries(STRENGTHS.map(s => [s, 0]));
-
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
-  }
-
-  // BUILD QUESTIONS
-  function buildQuestions() {
-    const container = $('questionsContainer');
-    QUESTIONS.forEach((q, i) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.setAttribute('aria-label', 'Question ' + (i + 1));
-
-      card.innerHTML = `
-        <div class="question-num">Question ${i + 1} of ${QUESTIONS.length}</div>
-        <div class="question-text">${q.text}</div>
-        ${q.choices.map((c, ci) => `
-          <label class="choice-label" id="label-${i}-${ci}">
-            <input type="radio" name="q${i}" value="${c.strength}" data-q="${i}" data-ci="${ci}" />
-            ${c.text}
-          </label>
-        `).join('')}
-        <div class="inline-feedback" id="feedback-${i}">
-          <div class="inline-feedback-title" id="feedback-title-${i}"></div>
-          <div id="feedback-body-${i}"></div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-
-    // Bind radio change events
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const qi = parseInt(radio.dataset.q, 10);
-        const ci = parseInt(radio.dataset.ci, 10);
-        const strength = radio.value;
-        const data = STRENGTH_DATA[strength];
-
-        // Update label styling
-        QUESTIONS[qi].choices.forEach((_, idx) => {
-          $('label-' + qi + '-' + idx)?.classList.remove('selected');
-        });
-        $('label-' + qi + '-' + ci)?.classList.add('selected');
-
-        // Show inline feedback
-        const fb = $('feedback-' + qi);
-        const title = $('feedback-title-' + qi);
-        const body = $('feedback-body-' + qi);
-        if (fb && title && body && data) {
-          title.textContent = strength + ' — why this matters';
-          body.innerHTML =
-            '<strong style="color:var(--brand);">What it is:</strong> ' + data.what + '<br><br>' +
-            '<strong style="color:var(--brand);">What it builds:</strong> ' + data.builds;
-          fb.classList.add('show');
-        }
-
-        updateProgress();
-        updateLiveInsight();
-      });
-    });
-  }
-
-  // PROGRESS
-  function getAnsweredCount() {
-    return QUESTIONS.reduce((count, _, i) => count + (document.querySelector('input[name="q' + i + '"]:checked') ? 1 : 0), 0);
-  }
-
-  function updateProgress() {
-    const answered = getAnsweredCount();
-    const pct = Math.round((answered / QUESTIONS.length) * 100);
-    $('progressFill').style.width = pct + '%';
-    $('progressLabel').textContent = answered + ' of ' + QUESTIONS.length + ' answered';
-    $('progressPct').textContent = pct + '% complete';
-  }
-
-  // LIVE INSIGHT
-  function updateLiveInsight() {
-    const temp = Object.fromEntries(STRENGTHS.map(s => [s, 0]));
-    QUESTIONS.forEach((_, i) => {
-      const sel = document.querySelector('input[name="q' + i + '"]:checked');
-      if (sel) temp[sel.value]++;
-    });
-    const leaders = Object.entries(temp).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]).slice(0,2).map(([n]) => n);
-    const insight = $('liveInsight');
-    if (!leaders.length) { insight.style.display = 'none'; return; }
-    insight.style.display = 'block';
-    insight.innerHTML = '<strong>Emerging pattern:</strong> Your strongest themes so far are <strong>' +
-      leaders.join(' and ') + '</strong>. ' +
-      (leaders[0] ? STRENGTH_DATA[leaders[0]]?.what : '') +
-      ' Finish all questions to unlock your complete map.';
-  }
-
-  // SHOW RESULTS
-  function showResults() {
-    // Validate
-    for (let i = 0; i < QUESTIONS.length; i++) {
-      if (!document.querySelector('input[name="q' + i + '"]:checked')) {
-        showToast('Please answer all ' + QUESTIONS.length + ' questions first.');
-        // Scroll to first unanswered
-        const cards = $('questionsContainer').querySelectorAll('.card');
-        cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-    }
-
-    // Tally
-    STRENGTHS.forEach(s => { scores[s] = 0; });
-    QUESTIONS.forEach((_, i) => {
-      const sel = document.querySelector('input[name="q' + i + '"]:checked');
-      if (sel) scores[sel.value]++;
-    });
-
-    const ranked = [...STRENGTHS].sort((a,b) => scores[b] - scores[a]);
-    const top3 = ranked.slice(0, 3);
-    const growthEdge = ranked[ranked.length - 1];
-    const name = $('participantName').value.trim();
-
-    // Results header
-    $('resultsName').textContent = name
-      ? name + ' — Your Positive Strengths Map'
-      : 'Your Positive Strengths Map';
-    $('resultsSubtitle').textContent = 'Based on your answers — ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
-    // Top 3 strength cards
-    const grid = $('topStrengthsGrid');
-    grid.innerHTML = '';
-    top3.forEach((s, idx) => {
-      const d = STRENGTH_DATA[s];
-      const bars = Math.min(scores[s], 5);
-      const card = document.createElement('div');
-      card.className = 'strength-card';
-      card.innerHTML = `
-        <div class="strength-rank">#${idx + 1} strength</div>
-        <div class="strength-name">${s}</div>
-        <div class="strength-score">Score: ${scores[s]} / ${QUESTIONS.length} &nbsp; ${'●'.repeat(bars)}${'○'.repeat(Math.max(0, 3 - bars))}</div>
-        <div class="strength-section">
-          <div class="strength-section-label">What this strength is</div>
-          <div class="strength-section-text">${d.what}</div>
-        </div>
-        <div class="strength-section">
-          <div class="strength-section-label">How it shows up in your life</div>
-          <div class="strength-section-text">${d.how}</div>
-        </div>
-        <div class="strength-section">
-          <div class="strength-section-label">What it builds</div>
-          <div class="strength-section-text">${d.builds}</div>
-        </div>
-        <div class="strength-section">
-          <div class="strength-section-label">What to do with it this week</div>
-          <div class="strength-section-text">${d.action}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    // Growth edge card
-    const gd = STRENGTH_DATA[growthEdge];
-    $('growthCard').innerHTML = `
-      <div class="growth-label">Your growth edge</div>
-      <div class="growth-name">${growthEdge}</div>
-      <div class="growth-text">${gd.what}<br><br><strong style="color:var(--gold);">One thing to try:</strong> ${gd.action}</div>
-    `;
-
-    // Charts
-    if (pieChart) pieChart.destroy();
-    if (radarChart) radarChart.destroy();
-
-    const chartData = STRENGTHS.map(s => scores[s]);
-
-    pieChart = new Chart($('pieChart'), {
-      type: 'pie',
-      data: {
-        labels: STRENGTHS,
-        datasets: [{ data: chartData, backgroundColor: CHART_COLORS, borderWidth: 2, borderColor: '#fff' }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom', labels: { font: { size: 11, family: 'Georgia' }, padding: 10, boxWidth: 12 } },
-          tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed } }
-        }
-      }
-    });
-
-    radarChart = new Chart($('radarChart'), {
-      type: 'radar',
-      data: {
-        labels: STRENGTHS,
-        datasets: [{
-          data: chartData,
-          fill: true,
-          backgroundColor: 'rgba(74, 122, 88, 0.2)',
-          borderColor: '#4a7a58',
-          pointBackgroundColor: '#4a7a58',
-          pointRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          r: {
-            beginAtZero: true,
-            max: Math.max(...chartData) + 1,
-            ticks: { stepSize: 1, font: { size: 10 } },
-            pointLabels: { font: { size: 10, family: 'Georgia' } }
-          }
-        },
-        plugins: { legend: { display: false } }
-      }
-    });
-
-    // Show results
-    $('resultsCard').classList.add('visible');
-    $('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Share links
-    updateShareLinks();
-  }
-
-  // RESET
-  function resetTool() {
-    document.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
-    document.querySelectorAll('.choice-label').forEach(l => l.classList.remove('selected'));
-    document.querySelectorAll('.inline-feedback').forEach(f => f.classList.remove('show'));
-    $('resultsCard').classList.remove('visible');
-    $('liveInsight').style.display = 'none';
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Reset complete.');
-  }
-
-  // SHARE
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('I just discovered my top emotional strengths with this free tool: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-  }
-
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
   });
+  var picked = EID_STRENGTHS.filter(function (s) { return scores[s] > 0; });
+  picked.sort(function (a, b) { return scores[b] - scores[a] || firstPick[a] - firstPick[b]; });
+  var top = picked.slice(0, 3);
+  /* growth edge: least chosen among the rest, preferring one that was offered often but never chosen */
+  var rest = EID_STRENGTHS.filter(function (s) { return top.indexOf(s) === -1; });
+  rest.sort(function (a, b) {
+    return scores[a] - scores[b] || (offered[b] - scores[b]) - (offered[a] - scores[a]) || EID_STRENGTHS.indexOf(a) - EID_STRENGTHS.indexOf(b);
+  });
+  var growth = rest[0];
+  var ranked = EID_STRENGTHS.slice().sort(function (a, b) { return scores[b] - scores[a] || firstPick[a] - firstPick[b]; });
+  return { scores: scores, offered: offered, top: top, growth: growth, ranked: ranked };
+}
 
-  // PDF
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
-    });
+/* RENDER SHELL */
+function eidAnsweredCount() { return eidAnswers.filter(function (a) { return a >= 0; }).length; }
+
+function eidRender(scroll) {
+  var inStart = eidPhase === 'start', inQuiz = eidPhase === 'quiz', inRes = eidPhase === 'results';
+  eidEl('eidStart').classList.toggle('eid-on', inStart);
+  eidEl('eidQuiz').classList.toggle('eid-on', inQuiz);
+  eidEl('eidResults').classList.toggle('eid-on', inRes);
+  eidEl('eidNav').classList.toggle('eid-on', inQuiz || inRes);
+  eidEl('eidProgress').style.display = (inQuiz || inRes) ? 'block' : 'none';
+
+  var label = '', pct = 0, dots = '';
+  if (inQuiz) {
+    eidRenderQuestion();
+    label = 'Question ' + (eidQ + 1) + ' of ' + EID_QUESTIONS.length;
+    pct = Math.round((eidAnsweredCount() / EID_QUESTIONS.length) * 100);
+    for (var i = 0; i < EID_QUESTIONS.length; i++) {
+      dots += '<span class="eid-dot' + (i === eidQ ? ' eid-now' : (eidAnswers[i] >= 0 ? ' eid-done' : '')) + '"></span>';
+    }
+    eidEl('eidNext').textContent = (eidQ === EID_QUESTIONS.length - 1) ? 'See my results' : 'Next';
+    eidEl('eidNext').disabled = eidAnswers[eidQ] < 0;
+    eidEl('eidBack').disabled = false;
   }
-
-  async function downloadPDF() {
-    if (!pieChart || !radarChart) { showToast('Please generate your results first.'); return; }
-    const jsPDFLib = window.jspdf?.jsPDF;
-    if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
-
-    const name = $('participantName').value.trim();
-    const ranked = [...STRENGTHS].sort((a,b) => scores[b]-scores[a]);
-    const top3 = ranked.slice(0, 3);
-    const growthEdge = ranked[ranked.length - 1];
-
-    const doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header
-    doc.setFillColor(234, 242, 236);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(26, 30, 24);
-    doc.text('Your Positive Strengths Map', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 82, 72);
-    if (name) doc.text(name, margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com  ·  ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), margin + 76, name ? y + 56 : y + 41);
-    y += 86;
-
-    // Charts side by side
-    try {
-      const pieImg = pieChart.toBase64Image();
-      const radarImg = radarChart.toBase64Image();
-      const chartW = (pageW - margin * 2 - 12) / 2;
-      const chartH = 160;
-      doc.addImage(pieImg, 'PNG', margin, y, chartW, chartH);
-      doc.addImage(radarImg, 'PNG', margin + chartW + 12, y, chartW, chartH);
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(8.5);
-      doc.setTextColor(138, 160, 136);
-      doc.text('Strengths snapshot', margin + chartW / 2, y + chartH + 12, { align: 'center' });
-      doc.text('Strengths overview', margin + chartW + 12 + chartW / 2, y + chartH + 12, { align: 'center' });
-      y += chartH + 24;
-    } catch(_) { y += 10; }
-
-    // Top 3 strength rows
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(74, 122, 88);
-    doc.text('Your top 3 strengths — in depth', margin, y);
-    y += 14;
-
-    top3.forEach((s, idx) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      const d = STRENGTH_DATA[s];
-
-      doc.setFillColor(234, 242, 236);
-      const sections = [
-        ['What it is', d.what],
-        ['How it shows up', d.how],
-        ['What it builds', d.builds],
-        ['What to do this week', d.action]
-      ];
-      let blockH = 20;
-      sections.forEach(([, text]) => {
-        const lines = doc.splitTextToSize(text, pageW - margin * 2 - 22);
-        blockH += lines.length * 11 + 10;
-      });
-
-      doc.roundedRect(margin, y, pageW - margin * 2, blockH, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(74, 122, 88);
-      doc.text('#' + (idx + 1) + ' — ' + s + '  (score: ' + scores[s] + ')', margin + 10, y + 14);
-      let iy = y + 26;
-
-      sections.forEach(([label, text]) => {
-        if (iy > pageH - 60) { doc.addPage(); iy = margin; }
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
-        doc.setTextColor(74, 82, 72);
-        doc.text(label.toUpperCase(), margin + 10, iy);
-        iy += 11;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9.2);
-        doc.setTextColor(26, 30, 24);
-        const lines = doc.splitTextToSize(text, pageW - margin * 2 - 22);
-        doc.text(lines, margin + 10, iy);
-        iy += lines.length * 11 + 8;
-      });
-
-      y = iy + 10;
-    });
-
-    // Growth edge
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    const gd = STRENGTH_DATA[growthEdge];
-    doc.setFillColor(247, 242, 228);
-    const growthLines = doc.splitTextToSize(gd.what + ' ' + gd.action, pageW - margin * 2 - 22);
-    const gh = growthLines.length * 11 + 32;
-    doc.roundedRect(margin, y, pageW - margin * 2, gh, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(138, 122, 48);
-    doc.text('Growth edge — ' + growthEdge, margin + 10, y + 14);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.2);
-    doc.setTextColor(26, 30, 24);
-    doc.text(growthLines, margin + 10, y + 26);
-    y += gh + 14;
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(74, 122, 88);
-    doc.text('The science of strengths-based development', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why knowing your strengths changes how you perform',
-       'Research by Marcus Buckingham and Donald Clifton at Gallup, published in "Now Discover Your Strengths," showed that people who use their natural strengths daily are six times more likely to be engaged at work, three times more likely to report excellent quality of life, and significantly more productive than those focused on fixing weaknesses. Knowing your strengths is not vanity — it is strategic self-knowledge that produces measurable outcomes.'],
-      ['The neuroscience of positive identity',
-       'Strengths-based approaches activate what neuroscientists call the positive emotional attractor — a brain state associated with openness to learning, creativity, and motivation. Research by Richard Boyatzis at Case Western Reserve University showed that coaching conversations that focus on positive possibilities and personal strengths produce activation in the reward and social cognition networks of the brain, while deficit-focused conversations activate threat-response networks that suppress learning and change.'],
-      ['How emotional intelligence and personal strengths interact',
-       'Research by Daniel Goleman and his colleagues established that emotional intelligence — the ability to recognise and manage emotions in yourself and others — is not a single skill but a cluster of distinct capabilities. The nine strengths measured by this tool map directly onto core EI competencies. Self-awareness and self-regulation are reflected in Focus, Calm Presence, and Awareness. Social awareness and relationship management are reflected in Connection, Empathy, and Authenticity. Knowing which of these you naturally lead with tells you where your EI is strongest and most accessible.'],
-      ['Why growth edges matter as much as top strengths',
-       'Positive psychology research distinguishes between leveraging strengths and growing edges. Your growth edge is not a weakness — it is a strength that is less activated. Research by Carol Dweck at Stanford on growth mindset confirms that viewing underdeveloped qualities as growable rather than fixed produces significantly greater development over time. Your growth edge is therefore your highest-leverage opportunity: a small consistent investment there, combined with continued use of your top strengths, produces compound personal development.'],
-      ['How to use this report for real development',
-       'Research on skill development confirms that the most effective growth comes from identifying specific micro-behaviours tied to a quality and practising them consistently over 4 to 8 weeks. The action suggested for each of your top strengths is designed with this in mind — each one is specific, small, and daily enough to produce real neural change rather than temporary good intentions. The research is clear: insight without behavioural commitment produces no lasting change. The value of this report lies in choosing one action and beginning today.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(74, 122, 88);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 30, 24);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 122, 88);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 30, 24);
-    [
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    // Footer
-    doc.setDrawColor(168, 200, 176);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 160, 136);
-    doc.text('This tool supports reflection and self-awareness. Not a replacement for professional assessment.', margin, pageH - 22);
-
-    doc.save('positive-strengths-map.pdf');
-    showToast('PDF downloaded!');
+  if (inRes) {
+    var n = eidPages.length;
+    label = 'Your results: page ' + (eidR + 1) + ' of ' + n;
+    pct = Math.round(((eidR + 1) / n) * 100);
+    for (var j = 0; j < n; j++) {
+      dots += '<span class="eid-dot' + (j === eidR ? ' eid-now' : (j < eidR ? ' eid-done' : '')) + '"></span>';
+    }
+    eidPages.forEach(function (p, idx) { p.el.classList.toggle('eid-on', idx === eidR); });
+    var last = eidR === n - 1;
+    eidEl('eidNext').textContent = 'Next';
+    eidEl('eidNext').disabled = last;
+    eidEl('eidNext').style.visibility = last ? 'hidden' : 'visible';
+    eidEl('eidBack').disabled = false;
+  } else {
+    eidEl('eidNext').style.visibility = 'visible';
   }
+  eidEl('eidProgressLabel').textContent = label;
+  eidEl('eidProgressPct').textContent = pct + '% complete';
+  eidEl('eidProgressFill').style.width = pct + '%';
+  eidEl('eidDots').innerHTML = dots;
 
-  // PREVIEW CHARTS (example data)
-  window.addEventListener('load', () => {
-    if (!window.Chart) return;
-    new Chart($('examplePie'), {
-      type: 'pie',
-      data: {
-        labels: STRENGTHS,
-        datasets: [{ data: [2,2,2,2,2,2,2,2,2], backgroundColor: CHART_COLORS, borderWidth: 2, borderColor: '#fff' }]
-      },
-      options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10, family: 'Georgia' }, padding: 8, boxWidth: 10 } } }, responsive: true }
-    });
-    new Chart($('exampleRadar'), {
-      type: 'radar',
-      data: {
-        labels: STRENGTHS,
-        datasets: [{ data: [3,4,3,4,3,4,3,4,3], fill: true, backgroundColor: 'rgba(74,122,88,0.2)', borderColor: '#4a7a58', pointBackgroundColor: '#4a7a58', pointRadius: 3 }]
-      },
-      options: { scales: { r: { beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 9 } }, pointLabels: { font: { size: 9, family: 'Georgia' } } } }, plugins: { legend: { display: false } }, responsive: true }
+  if (scroll) {
+    var target = inStart ? eidEl('eidStart') : (inQuiz ? eidEl('eidQuiz') : eidEl('eidResults'));
+    var top = eidEl('eidTop');
+    if (top && top.scrollIntoView) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (target && target.focus) { try { target.focus({ preventScroll: true }); } catch (e) {} }
+  }
+}
+
+function eidRenderQuestion() {
+  var q = EID_QUESTIONS[eidQ];
+  var html = '<div class="eid-qnum">Question ' + (eidQ + 1) + ' of ' + EID_QUESTIONS.length + '</div>' +
+             '<div class="eid-qtext">' + q.text + '</div>';
+  q.choices.forEach(function (c, ci) {
+    var sel = eidAnswers[eidQ] === ci;
+    html += '<label class="eid-choice' + (sel ? ' eid-selected' : '') + '">' +
+            '<input type="radio" name="eidq" value="' + ci + '"' + (sel ? ' checked' : '') + ' /> <span>' + c.text + '</span></label>';
+  });
+  var a = eidAnswers[eidQ];
+  if (a >= 0) {
+    var s = q.choices[a].s, d = EID_DATA[s];
+    html += '<div class="eid-feedback"><div class="eid-feedback-title">' + s + ': why this matters</div>' +
+            '<strong style="color:var(--eid-brand);">What it is:</strong> ' + d.what + '<br><br>' +
+            '<strong style="color:var(--eid-brand);">What it builds:</strong> ' + d.builds + '</div>';
+    var temp = eidCompute();
+    if (eidAnsweredCount() >= 3) {
+      var lead = temp.ranked.filter(function (x) { return temp.scores[x] > 0; }).slice(0, 2);
+      html += '<div class="eid-insight"><strong>Emerging pattern:</strong> your strongest themes so far are <strong>' +
+              lead.join(' and ') + '</strong>. Keep going to see your full map.</div>';
+    }
+  }
+  var box = eidEl('eidQuiz');
+  box.innerHTML = html;
+  box.querySelectorAll('input[name="eidq"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      eidAnswers[eidQ] = parseInt(r.value, 10);
+      eidRender(false);
     });
   });
+}
 
-  // BIND BUTTONS
-  $('showResultsBtn').addEventListener('click', showResults);
-  $('resetBtn').addEventListener('click', resetTool);
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+/* RESULTS PAGES */
+function eidRing(score, color) {
+  var circ = 2 * Math.PI * 26;
+  var pct = Math.min(1, score / EID_QUESTIONS.length);
+  return '<svg class="eid-ring" viewBox="0 0 64 64" aria-hidden="true">' +
+    '<circle cx="32" cy="32" r="26" fill="none" stroke="#dfe8dc" stroke-width="7"/>' +
+    '<circle cx="32" cy="32" r="26" fill="none" stroke="' + color + '" stroke-width="7" stroke-linecap="round" ' +
+    'stroke-dasharray="' + (pct * circ).toFixed(1) + ' ' + circ.toFixed(1) + '" transform="rotate(-90 32 32)"/>' +
+    '<text x="32" y="37" text-anchor="middle" font-size="15" font-family="Georgia,serif" fill="#1a1e18">' + score + '/' + EID_QUESTIONS.length + '</text></svg>';
+}
 
-  // INIT
-  buildQuestions();
-  updateProgress();
-  updateShareLinks();
-}());
+function eidSec(label, text, cls) {
+  return '<div class="eid-sec' + (cls ? ' ' + cls : '') + '"><div class="eid-sec-label">' + label + '</div><div class="eid-sec-text">' + text + '</div></div>';
+}
+
+function eidBuildResults() {
+  eidResult = eidCompute();
+  var r = eidResult, host = eidEl('eidResults'), pages = [];
+  host.innerHTML = '';
+  var date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  var nm = eidGetName();
+
+  function add(html) {
+    var d = document.createElement('div');
+    d.className = 'eid-rpage';
+    d.tabIndex = -1;
+    d.innerHTML = html;
+    host.appendChild(d);
+    pages.push({ el: d });
+    return d;
+  }
+
+  /* 1: overview */
+  var topList = r.top.length ? r.top.join(', ') : 'a balanced mix';
+  add(
+    '<div class="eid-results-header"><div class="eid-results-name" id="eidResultsName"></div>' +
+    '<div class="eid-results-sub">Based on your 9 answers. ' + date + '</div></div>' +
+    '<p class="eid-lead">Your top strengths are <strong>' + topList + '</strong>. Your growth edge is <strong>' + r.growth + '</strong>. ' +
+    'Use the Next button to go through each one.</p>' +
+    '<div class="eid-chart-grid">' +
+      '<div class="eid-chart-box"><div class="eid-chart-wrap"><canvas id="eidPie" aria-label="Strengths pie chart"></canvas></div><div class="eid-chart-caption">Strengths snapshot: how your qualities are shared</div></div>' +
+      '<div class="eid-chart-box"><div class="eid-chart-wrap"><canvas id="eidRadar" aria-label="Strengths radar chart"></canvas></div><div class="eid-chart-caption">Strengths overview: your full profile</div></div>' +
+    '</div>' +
+    '<div class="eid-chart-box"><div class="eid-chart-wrap eid-bar"><canvas id="eidBar" aria-label="Strengths bar chart"></canvas></div><div class="eid-chart-caption">Strengths ranking: your score for each quality out of ' + EID_QUESTIONS.length + '</div></div>'
+  );
+
+  /* 2-4: top strengths */
+  r.top.forEach(function (s, idx) {
+    var d = EID_DATA[s], c = eidColor(s);
+    add(
+      '<div class="eid-strength" style="border-left-color:' + c + ';">' +
+        '<div class="eid-strength-top">' + eidRing(r.scores[s], c) +
+          '<div><div class="eid-rank">Strength #' + (idx + 1) + '</div><div class="eid-strength-name" style="color:' + c + ';">' + s + '</div>' +
+          '<div class="eid-strength-score">Chosen ' + r.scores[s] + (r.scores[s] === 1 ? ' time' : ' times') + ' out of ' + EID_QUESTIONS.length + ' questions</div></div></div>' +
+        eidSec('What this strength is', d.what) +
+        eidSec('How it shows up in your life', d.how) +
+        eidSec('What it builds', d.builds) +
+        eidSec('Try this week', d.action, 'eid-try') +
+        '<div class="eid-fact"><b>What research says:</b> ' + d.fact + '</div>' +
+      '</div>'
+    );
+  });
+
+  /* growth edge */
+  var g = r.growth, gd = EID_DATA[g];
+  add(
+    '<div class="eid-growth">' +
+      '<div class="eid-strength-top">' + eidRing(r.scores[g], eidColor(g)) +
+      '<div><div class="eid-rank">Your growth edge</div><div class="eid-strength-name">' + g + '</div>' +
+      '<div class="eid-strength-score">Offered ' + r.offered[g] + ' times, chosen ' + r.scores[g] + '</div></div></div>' +
+      eidSec('What this quality is', gd.what) +
+      eidSec('Why it is your edge', 'This was the quality you picked least often, so it has the most room to grow. That does not make it a weakness. It simply means it is waiting for more of your attention.') +
+      eidSec('One small step', gd.action, 'eid-try') +
+      '<div class="eid-fact"><b>What research says:</b> ' + gd.fact + '</div>' +
+    '</div>'
+  );
+
+  /* science */
+  var sci = '<h3 class="eid-panel-title">The science behind your report</h3>' +
+            '<p class="eid-lead">Here is what the research says, in plain words, including its limits.</p>';
+  EID_SCIENCE.forEach(function (it) { sci += '<div class="eid-sci"><h3>' + it[0] + '</h3><p>' + it[1] + '</p></div>'; });
+  sci += '<div class="eid-section-label">Sources</div><ul class="eid-sources">' +
+         EID_SOURCES.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+  add(sci);
+
+  /* save and share */
+  add(
+    '<h3 class="eid-panel-title">Save and share your report</h3>' +
+    '<p class="eid-lead">Your PDF includes all three charts, your top strengths, your growth edge, the research notes and our website address.</p>' +
+    '<div class="eid-name-card"><label class="eid-name-label" for="eidName2">Add or change your name for the PDF (optional)</label>' +
+    '<input class="eid-input eid-name-input" type="text" id="eidName2" maxlength="60" placeholder="Type your name here" value="" /></div>' +
+    '<div class="eid-btn-row"><button type="button" class="eid-btn eid-btn-primary" id="eidPdfBtn">Download my PDF report</button></div>' +
+    '<div class="eid-section-label">Share the tool</div>' +
+    '<div class="eid-btn-row"><button type="button" class="eid-btn eid-btn-share" data-eid-copy>Copy link</button>' +
+    '<a class="eid-btn eid-btn-share" data-eid-share="wa" target="_blank" rel="noopener">WhatsApp</a>' +
+    '<a class="eid-btn eid-btn-share" data-eid-share="fb" target="_blank" rel="noopener">Facebook</a>' +
+    '<a class="eid-btn eid-btn-share" data-eid-share="x" target="_blank" rel="noopener">X</a></div>' +
+    '<div class="eid-section-label">Want to go again?</div>' +
+    '<div class="eid-btn-row"><button type="button" class="eid-btn eid-btn-outline" id="eidRetakeBtn">Start again</button></div>' +
+    '<p class="eid-note" style="margin-top:14px;">This tool supports reflection and self-awareness. It is not a professional assessment.</p>'
+  );
+
+  eidPages = pages;
+  eidEl('eidName2').value = nm;
+  eidEl('eidName2').addEventListener('input', function (e) { eidSyncName(e.target); });
+  eidEl('eidPdfBtn').addEventListener('click', eidDownloadPDF);
+  eidEl('eidRetakeBtn').addEventListener('click', eidRetake);
+  eidSyncName(eidEl('eidName'));
+  eidWireShare();
+}
+
+/* CHARTS */
+function eidBuildCharts() {
+  if (!window.Chart) { eidToast('Charts could not load. Check your connection.'); return; }
+  var r = eidResult;
+  ['pie', 'radar', 'bar'].forEach(function (k) { if (eidCharts[k]) { eidCharts[k].destroy(); eidCharts[k] = null; } });
+  var vals = EID_STRENGTHS.map(function (s) { return r.scores[s]; });
+
+  eidCharts.pie = new Chart(eidEl('eidPie'), {
+    type: 'doughnut',
+    data: { labels: EID_STRENGTHS, datasets: [{ data: vals, backgroundColor: EID_COLORS, borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '38%',
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10, family: 'Georgia' }, padding: 8, boxWidth: 10 } },
+        tooltip: { callbacks: { label: function (c) { return ' ' + c.label + ': ' + c.parsed; } } } } }
+  });
+  eidCharts.radar = new Chart(eidEl('eidRadar'), {
+    type: 'radar',
+    data: { labels: EID_STRENGTHS, datasets: [{ data: vals, fill: true, backgroundColor: 'rgba(74,122,88,0.22)', borderColor: '#4a7a58', borderWidth: 2, pointBackgroundColor: EID_COLORS, pointRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      scales: { r: { beginAtZero: true, max: Math.max.apply(null, vals) + 1, ticks: { stepSize: 1, font: { size: 9 }, backdropColor: 'rgba(255,255,255,0)' }, pointLabels: { font: { size: 10, family: 'Georgia' } } } },
+      plugins: { legend: { display: false } } }
+  });
+  var order = r.ranked;
+  eidCharts.bar = new Chart(eidEl('eidBar'), {
+    type: 'bar',
+    data: { labels: order, datasets: [{ data: order.map(function (s) { return r.scores[s]; }), backgroundColor: order.map(eidColor), borderRadius: 6 }] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: { x: { beginAtZero: true, max: Math.max.apply(null, vals) + 1, ticks: { stepSize: 1 }, grid: { color: '#e6ece3' } }, y: { grid: { display: false }, ticks: { font: { family: 'Georgia', size: 12 } } } },
+      plugins: { legend: { display: false } } }
+  });
+}
+
+function eidBuildExampleCharts() {
+  if (!window.Chart || eidExampleCharts.length) return;
+  eidExampleCharts.push(new Chart(eidEl('eidExamplePie'), {
+    type: 'doughnut',
+    data: { labels: EID_STRENGTHS, datasets: [{ data: [2,2,2,2,2,2,2,2,2], backgroundColor: EID_COLORS, borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '38%', plugins: { legend: { position: 'bottom', labels: { font: { size: 9, family: 'Georgia' }, padding: 6, boxWidth: 9 } } } }
+  }));
+  eidExampleCharts.push(new Chart(eidEl('eidExampleRadar'), {
+    type: 'radar',
+    data: { labels: EID_STRENGTHS, datasets: [{ data: [3,4,3,4,3,4,3,4,3], fill: true, backgroundColor: 'rgba(74,122,88,0.22)', borderColor: '#4a7a58', borderWidth: 2, pointBackgroundColor: EID_COLORS, pointRadius: 3 }] },
+    options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 8 }, backdropColor: 'rgba(255,255,255,0)' }, pointLabels: { font: { size: 8, family: 'Georgia' } } } }, plugins: { legend: { display: false } } }
+  }));
+}
+
+/* SHARE (footer row always present, plus one on the save page) */
+function eidShareUrl() {
+  var u = window.location.href.split('#')[0];
+  return /^https?:/i.test(u) ? u : EID_TOOLS_URL;
+}
+function eidWireShare() {
+  var url = encodeURIComponent(eidShareUrl());
+  var msg = encodeURIComponent('I just found my top emotional strengths with this free tool: ');
+  document.querySelectorAll('[data-eid-share]').forEach(function (a) {
+    var k = a.getAttribute('data-eid-share');
+    a.href = k === 'wa' ? 'https://wa.me/?text=' + msg + url
+           : k === 'fb' ? 'https://www.facebook.com/sharer/sharer.php?u=' + url
+           : 'https://twitter.com/intent/tweet?text=' + msg + url;
+  });
+  document.querySelectorAll('[data-eid-copy]').forEach(function (b) {
+    if (b.getAttribute('data-eid-bound')) return;
+    b.setAttribute('data-eid-bound', '1');
+    b.addEventListener('click', function () {
+      var u = eidShareUrl();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(u).then(function () { eidToast('Link copied!'); }, function () { eidToast('Copy the link from your address bar.'); });
+      } else { eidToast('Copy the link from your address bar.'); }
+    });
+  });
+}
+
+/* PDF */
+function eidLoadLogo() {
+  return fetch(EID_LOGO_URL, { mode: 'cors' }).then(function (res) {
+    if (!res.ok) throw new Error('logo');
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onloadend = function () { resolve(fr.result); };
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
+    });
+  });
+}
+
+function eidPdfMan(doc, cx, top, s, rgb) {
+  doc.setDrawColor(rgb[0], rgb[1], rgb[2]); doc.setLineWidth(1.3 * s);
+  doc.circle(cx, top + 4 * s, 3.2 * s, 'S');
+  doc.line(cx, top + 7.2 * s, cx, top + 18 * s);
+  doc.line(cx, top + 10 * s, cx - 7 * s, top + 3 * s); doc.line(cx, top + 10 * s, cx + 7 * s, top + 3 * s);
+  doc.line(cx, top + 18 * s, cx - 5 * s, top + 28 * s); doc.line(cx, top + 18 * s, cx + 5 * s, top + 28 * s);
+}
+function eidPdfWoman(doc, cx, top, s, rgb) {
+  doc.setDrawColor(rgb[0], rgb[1], rgb[2]); doc.setLineWidth(1.3 * s);
+  doc.circle(cx, top + 4 * s, 3.2 * s, 'S');
+  doc.triangle(cx, top + 7.5 * s, cx - 7 * s, top + 20 * s, cx + 7 * s, top + 20 * s, 'S');
+  doc.line(cx, top + 10 * s, cx - 7 * s, top + 3 * s); doc.line(cx, top + 10 * s, cx + 7 * s, top + 3 * s);
+  doc.line(cx - 2.5 * s, top + 20 * s, cx - 3 * s, top + 28 * s); doc.line(cx + 2.5 * s, top + 20 * s, cx + 3 * s, top + 28 * s);
+}
+function eidPdfHeart(doc, cx, cy, s, rgb) {
+  doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+  doc.circle(cx - 2.4 * s, cy - 1 * s, 2.6 * s, 'F'); doc.circle(cx + 2.4 * s, cy - 1 * s, 2.6 * s, 'F');
+  doc.triangle(cx - 4.8 * s, cy + 0.2 * s, cx + 4.8 * s, cy + 0.2 * s, cx, cy + 5.8 * s, 'F');
+}
+function eidHex(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+
+function eidDownloadPDF() {
+  if (!eidCharts.pie || !eidResult) { eidToast('Please finish the questions first.'); return; }
+  var J = window.jspdf && window.jspdf.jsPDF;
+  if (!J) { eidToast('PDF tool is still loading. Please try again.'); return; }
+  eidToast('Preparing your PDF...');
+  eidLoadLogo().catch(function () { return null; }).then(function (logo) {
+    try { eidMakePdf(J, logo); } catch (e) { console.error(e); eidToast('Sorry, the PDF failed. Please try again.'); }
+  });
+}
+
+function eidMakePdf(J, logo) {
+  var r = eidResult;
+  var name = eidPdfSafe(eidGetName());
+  var date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  var doc = new J({ unit: 'pt', format: 'a4' });
+  var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  var M = 40, CW = W - 2 * M, FOOT = 52, y = M;
+  var GREEN = [74, 122, 88], INK = [26, 30, 24], MUTED = [74, 82, 72], PALE = [234, 242, 236], GOLD = [122, 106, 32], TEAL = [58, 122, 120];
+
+  function ensure(h) { if (y + h > H - FOOT) { doc.addPage(); y = M; } }
+  function lines(text, w, size, style) { doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size); return doc.splitTextToSize(eidPdfSafe(text), w); }
+  function para(text, x, w, size, rgb, style, lh) {
+    var ls = lines(text, w, size, style);
+    doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+    doc.text(ls, x, y);
+    y += ls.length * lh;
+  }
+  function heading(text) {
+    ensure(40);
+    doc.setDrawColor(168, 200, 176); doc.setLineWidth(0.8); doc.line(M, y, W - M, y); y += 16;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.text(eidPdfSafe(text), M, y); y += 16;
+  }
+  function chartImg(chart, x, boxY, maxW, maxH) {
+    var cw = chart.canvas.width, ch = chart.canvas.height;
+    var sc = Math.min(maxW / cw, maxH / ch);
+    var w = cw * sc, h = ch * sc;
+    doc.addImage(chart.toBase64Image('image/png', 1), 'PNG', x + (maxW - w) / 2, boxY, w, h);
+    return h;
+  }
+
+  /* header band with logo and website */
+  doc.setFillColor(PALE[0], PALE[1], PALE[2]);
+  doc.roundedRect(M, y, CW, 78, 6, 6, 'F');
+  if (logo) { try { doc.addImage(logo, 'JPEG', M + 10, y + 10, 58, 58); } catch (e) {} }
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(17); doc.setTextColor(INK[0], INK[1], INK[2]);
+  doc.text('Your Positive Strengths Map', M + 80, y + 26);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+  var hy = y + 42;
+  if (name) { doc.setFont('helvetica', 'bold'); doc.text('Prepared for ' + name, M + 80, hy); doc.setFont('helvetica', 'normal'); hy += 14; }
+  doc.text(date, M + 80, hy);
+  doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+  doc.textWithLink(EID_SITE_SHORT, M + 80, hy + 14, { url: EID_SITE });
+  y += 94;
+
+  /* summary */
+  var topTxt = r.top.length ? r.top.join(', ') : 'a balanced mix';
+  para('Top strengths: ' + topTxt + '.  Growth edge: ' + r.growth + '.', M, CW, 11, GREEN, 'bold', 15);
+  y += 6;
+
+  /* charts */
+  var half = (CW - 12) / 2, hA = 175;
+  var h1 = chartImg(eidCharts.pie, M, y, half, hA);
+  var h2 = chartImg(eidCharts.radar, M + half + 12, y, half, hA);
+  y += Math.max(h1, h2) + 11;
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(111, 133, 112);
+  doc.text('Strengths snapshot', M + half / 2, y, { align: 'center' });
+  doc.text('Strengths overview', M + half + 12 + half / 2, y, { align: 'center' });
+  y += 14;
+  var h3 = chartImg(eidCharts.bar, M, y, CW, 170);
+  y += h3 + 11;
+  doc.text('Strengths ranking: your score for each quality out of ' + EID_QUESTIONS.length, W / 2, y, { align: 'center' });
+  y += 16;
+
+  /* top strengths */
+  ensure(340);
+  heading('Your top strengths in depth');
+  r.top.forEach(function (s, idx) {
+    var d = EID_DATA[s], col = eidHex(eidColor(s)), iw = CW - 28;
+    var secs = [['WHAT IT IS', d.what], ['HOW IT SHOWS UP', d.how], ['WHAT IT BUILDS', d.builds], ['TRY THIS WEEK', d.action]];
+    var bh = 44;
+    secs.forEach(function (sc) { bh += 12 + lines(sc[1], iw, 9.5).length * 12 + 6; });
+    var fl = lines('What research says: ' + d.fact, iw - 14, 8.8, 'italic');
+    bh += fl.length * 11.5 + 18;
+    ensure(bh + 10);
+    doc.setFillColor(PALE[0], PALE[1], PALE[2]); doc.roundedRect(M, y, CW, bh, 5, 5, 'F');
+    doc.setFillColor(col[0], col[1], col[2]); doc.rect(M, y + 4, 5, bh - 8, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(col[0], col[1], col[2]);
+    doc.text('#' + (idx + 1) + '  ' + s, M + 16, y + 20);
+    /* score meter */
+    var mx = M + CW - 150, my = y + 12, mw = 130;
+    doc.setFillColor(214, 226, 210); doc.roundedRect(mx, my, mw, 7, 3, 3, 'F');
+    doc.setFillColor(col[0], col[1], col[2]);
+    var fw = Math.max(6, mw * r.scores[s] / EID_QUESTIONS.length); doc.roundedRect(mx, my, fw, 7, 3, 3, 'F');
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text('Score ' + r.scores[s] + ' of ' + EID_QUESTIONS.length, mx + mw, my + 19, { align: 'right' });
+    var iy = y + 42;
+    secs.forEach(function (sc) {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]); doc.text(sc[0], M + 16, iy);
+      iy += 12;
+      var ls = lines(sc[1], iw, 9.5);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]); doc.text(ls, M + 16, iy);
+      iy += ls.length * 12 + 6;
+    });
+    doc.setFillColor(228, 240, 240); doc.roundedRect(M + 16, iy - 2, iw, fl.length * 11.5 + 10, 4, 4, 'F');
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(8.8); doc.setTextColor(TEAL[0], TEAL[1], TEAL[2]); doc.text(fl, M + 23, iy + 9);
+    y += bh + 12;
+  });
+
+  /* growth edge */
+  var gd = EID_DATA[r.growth], gw = CW - 28;
+  var gl1 = lines(gd.what, gw, 9.5), gl2 = lines('One small step: ' + gd.action, gw, 9.5, 'bold'), gl3 = lines('What research says: ' + gd.fact, gw, 8.8, 'italic');
+  var gh = 36 + gl1.length * 12 + gl2.length * 12 + gl3.length * 11.5 + 18;
+  ensure(gh + 10);
+  doc.setFillColor(247, 242, 228); doc.roundedRect(M, y, CW, gh, 5, 5, 'F');
+  doc.setFillColor(216, 200, 120); doc.rect(M, y + 4, 5, gh - 8, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
+  doc.text('Your growth edge: ' + r.growth, M + 16, y + 20);
+  var gy = y + 38;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]); doc.text(gl1, M + 16, gy); gy += gl1.length * 12 + 4;
+  doc.setFont('helvetica', 'bold'); doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]); doc.text(gl2, M + 16, gy); gy += gl2.length * 12 + 4;
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(8.8); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]); doc.text(gl3, M + 16, gy);
+  y += gh + 14;
+
+  /* science */
+  heading('The science behind your report');
+  EID_SCIENCE.forEach(function (it) {
+    var ls = lines(it[1], CW, 9.3);
+    ensure(14 + ls.length * 11.8 + 10);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]); doc.text(eidPdfSafe(it[0]), M, y); y += 13;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3); doc.setTextColor(INK[0], INK[1], INK[2]); doc.text(ls, M, y); y += ls.length * 11.8 + 10;
+  });
+
+  /* sources */
+  heading('Sources');
+  EID_SOURCES.forEach(function (sr) {
+    var ls = lines(sr, CW - 10, 8);
+    ensure(ls.length * 10 + 4);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text('-', M, y); doc.text(ls, M + 10, y); y += ls.length * 10 + 3;
+  });
+  y += 6;
+
+  /* resources and support pill with stick people */
+  heading('More free wellbeing resources');
+  [['Main site', EID_SITE_SHORT, EID_SITE], ['Free tools', EID_SITE_SHORT + '/wellbeing-and-self-help-tools/', EID_TOOLS_URL],
+   ['Audio books', EID_SITE_SHORT + '/recommended-books/', EID_SITE + '/recommended-books/'],
+   ['Help page', EID_SITE_SHORT + '/help-page/', EID_SITE + '/help-page/']].forEach(function (it) {
+    ensure(16);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.3); doc.setTextColor(INK[0], INK[1], INK[2]); doc.text(it[0] + ':', M, y);
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]); doc.textWithLink(it[1], M + 70, y, { url: it[2] });
+    y += 14;
+  });
+  y += 8;
+  ensure(60);
+  var pw = 300, px = (W - pw) / 2, ph = 46, sup = EID_SITE + '/support-this-website/';
+  doc.setFillColor(232, 112, 42); doc.roundedRect(px, y, pw, ph, 23, 23, 'F');
+  eidPdfMan(doc, px + 30, y + 8, 0.95, [255, 255, 255]);
+  eidPdfWoman(doc, px + pw - 30, y + 8, 0.95, [255, 255, 255]);
+  eidPdfHeart(doc, px + 68, y + 21, 1.1, [255, 255, 255]);
+  eidPdfHeart(doc, px + pw - 68, y + 21, 1.1, [255, 255, 255]);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(255, 255, 255);
+  doc.text('Support this website', W / 2, y + 21, { align: 'center' });
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+  doc.text(EID_SITE_SHORT + '/support-this-website', W / 2, y + 34, { align: 'center' });
+  doc.link(px, y, pw, ph, { url: sup });
+  y += ph + 10;
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(111, 133, 112);
+  doc.text('This platform is free for everyone. Your support keeps it that way.', W / 2, y, { align: 'center' });
+
+  /* footer with website on every page */
+  var total = doc.internal.getNumberOfPages();
+  for (var p = 1; p <= total; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(168, 200, 176); doc.setLineWidth(0.8); doc.line(M, H - 40, W - M, H - 40);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.textWithLink(EID_SITE_SHORT, M, H - 26, { url: EID_SITE });
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(111, 133, 112);
+    doc.text('Page ' + p + ' of ' + total, W - M, H - 26, { align: 'right' });
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(7.5);
+    doc.text('Reflection support only. Not a professional assessment.', W / 2, H - 14, { align: 'center' });
+  }
+
+  var fname = 'positive-strengths-map' + (name ? '-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : '') + '.pdf';
+  doc.save(fname);
+  eidToast('PDF downloaded!');
+}
+
+/* FLOW */
+function eidGoNext() {
+  if (eidPhase === 'quiz') {
+    if (eidAnswers[eidQ] < 0) { eidToast('Please choose an answer first.'); return; }
+    if (eidQ < EID_QUESTIONS.length - 1) { eidQ++; eidRender(true); }
+    else {
+      eidBuildResults(); eidPhase = 'results'; eidR = 0; eidRender(true);
+      eidBuildCharts();
+    }
+  } else if (eidPhase === 'results' && eidR < eidPages.length - 1) {
+    eidR++; eidRender(true);
+  }
+}
+function eidGoBack() {
+  if (eidPhase === 'quiz') {
+    if (eidQ > 0) { eidQ--; eidRender(true); } else { eidPhase = 'start'; eidRender(true); }
+  } else if (eidPhase === 'results') {
+    if (eidR > 0) { eidR--; eidRender(true); } else { eidPhase = 'quiz'; eidQ = EID_QUESTIONS.length - 1; eidRender(true); }
+  }
+}
+function eidRetake() {
+  ['pie', 'radar', 'bar'].forEach(function (k) { if (eidCharts[k]) { eidCharts[k].destroy(); eidCharts[k] = null; } });
+  eidAnswers = new Array(EID_QUESTIONS.length).fill(-1);
+  eidQ = 0; eidR = 0; eidPages = []; eidResult = null;
+  eidEl('eidResults').innerHTML = '';
+  eidPhase = 'start';
+  eidRender(true);
+  eidToast('Fresh start. Take your time.');
+}
+
+/* INIT */
+eidEl('eidStartBtn').addEventListener('click', function () { eidPhase = 'quiz'; eidQ = 0; eidRender(true); });
+eidEl('eidNext').addEventListener('click', eidGoNext);
+eidEl('eidBack').addEventListener('click', eidGoBack);
+eidEl('eidName').addEventListener('input', function (e) { eidSyncName(e.target); });
+window.addEventListener('load', eidBuildExampleCharts);
+eidWireShare();
+eidRender(false);
 </script>
 </body>
 </html>

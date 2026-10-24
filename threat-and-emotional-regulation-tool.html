@@ -1,634 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Threat & Emotional Regulation Tool | Emotional Intelligence Developer</title>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #f4f2f8;
-      --card: #ffffff;
-      --text: #1e1a2e;
-      --muted: #5a5470;
-      --hint: #9890b0;
-      --border: #d8d0e8;
-      --brand: #6a5aaa;
-      --brand-light: #f0ecf8;
-      --brand-mid: #c0b0e0;
-      --accent: #8a7acc;
-      --accent-light: #e8e4f8;
-      --teal: #3a7a7a;
-      --teal-light: #e4f2f0;
-      --teal-mid: #a0c8c8;
-      --rose: #8a4a70;
-      --rose-light: #f7eaf2;
-      --rose-mid: #d0a0c0;
-      --warm: #f8f6f2;
-      --gold: #7a6a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
-      --danger-bg: #fff0f0;
-      --danger-border: #f5a0a0;
-      --danger-text: #8b1a1a;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
-
-    /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 14px;
-    }
-
-    .opening-note {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      font-size: 15px;
-      color: var(--brand);
-      font-style: italic;
-      line-height: 1.6;
-    }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 6px;
-    }
-
-    .step-label {
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 14px;
-    }
-
-    .card-intro {
-      font-size: 14px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 14px;
-      line-height: 1.6;
-    }
-
-    /* STEP 1 — THREE PANELS */
-    .three-panel {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 560px) {
-      .three-panel { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .mini-panel {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 14px;
-    }
-
-    .mini-panel-title {
-      font-size: 14px;
-      color: var(--brand);
-      margin-bottom: 10px;
-    }
-
-    /* BREATHING CIRCLE */
-    .breath-wrap { text-align: center; }
-
-    .breath-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 5px solid var(--brand-mid);
-      margin: 0 auto 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      color: var(--brand);
-      font-size: 13px;
-      transition: transform 0.5s ease;
-    }
-
-    .breath-circle::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: conic-gradient(var(--brand-mid) calc(var(--prog, 0) * 1%), transparent 0);
-      opacity: 0.3;
-    }
-
-    .breath-inner { position: relative; z-index: 1; text-align: center; }
-    .breath-label { font-size: 12px; display: block; font-weight: bold; color: var(--brand); }
-    .breath-sec { font-size: 18px; display: block; }
-
-    .breath-prompt {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 10px;
-      min-height: 18px;
-    }
-
-    /* 5-4-3-2-1 */
-    .ground-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff;
-      margin-bottom: 6px;
-      font-size: 13px;
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .ground-item input[type="checkbox"] {
-      accent-color: var(--brand);
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
-    }
-
-    .ground-item.checked { border-color: var(--brand); color: var(--text); }
-
-    /* BODY SCAN */
-    .body-chip-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    .body-chip {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 5px 12px;
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .body-chip:hover { border-color: var(--brand); color: var(--text); }
-    .body-chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-    .body-result {
-      font-size: 13px;
-      color: var(--hint);
-      font-style: italic;
-      margin-top: 8px;
-    }
-
-    /* STEP 2 — THREAT + INPUTS */
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .chip {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 7px 14px;
-      min-height: 38px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .chip:hover { border-color: var(--brand); color: var(--text); }
-    .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-    .field { margin-bottom: 14px; }
-
-    .field-label {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
-
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 80px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { outline: none; border-color: var(--brand); }
-
-    select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239890b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      transition: border-color 0.2s;
-    }
-
-    select:focus { outline: none; border-color: var(--brand); }
-
-    /* STEP 3 — CALM PLAN */
-    .plan-section {
-      display: none;
-    }
-
-    .plan-section.visible { display: block; }
-
-    .plan-intro-box {
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.65;
-      margin-bottom: 14px;
-      font-style: italic;
-    }
-
-    .plan-columns {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-      margin-bottom: 12px;
-    }
-
-    @media (min-width: 480px) {
-      .plan-columns { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .plan-col {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-    }
-
-    .plan-col-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 10px;
-    }
-
-    .plan-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .plan-list li {
-      font-size: 13px;
-      color: var(--muted);
-      padding: 5px 0;
-      border-bottom: 1px solid var(--brand-mid);
-      line-height: 1.5;
-    }
-
-    .plan-list li:last-child { border-bottom: none; }
-
-    .scared-box {
-      background: var(--gold-light);
-      border: 1px solid var(--gold-mid);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 14px;
-    }
-
-    .scared-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-
-    .scared-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .scared-list li {
-      font-size: 13px;
-      color: var(--muted);
-      padding: 5px 0;
-      border-bottom: 1px solid var(--gold-mid);
-      line-height: 1.5;
-    }
-
-    .scared-list li:last-child { border-bottom: none; }
-
-    /* HISTORY */
-    .history-item {
-      background: var(--warm);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      margin-bottom: 8px;
-    }
-
-    .history-date {
-      font-size: 12px;
-      color: var(--hint);
-      margin-bottom: 4px;
-    }
-
-    .history-label {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    /* URGENT CARD */
-    .urgent-card {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      margin-bottom: 16px;
-    }
-
-    .urgent-title {
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--danger-text);
-      margin-bottom: 8px;
-    }
-
-    .urgent-body {
-      font-size: 14px;
-      color: var(--danger-text);
-      line-height: 1.6;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
-
-    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
-    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
-
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-      .chip { width: 100%; justify-content: center; }
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Threat &amp; Emotional Regulation Tool | Emotional Intelligence Developer</title>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f4f2f8;--card:#fff;--text:#1e1a2e;--muted:#5a5470;--hint:#8a82a6;--border:#d8d0e8;
+  --brand:#6a5aaa;--brand-light:#f0ecf8;--brand-mid:#c0b0e0;--accent-light:#e8e4f8;
+  --teal:#3a7a7a;--gold:#7a6a30;--gold-light:#f7f2e4;--gold-mid:#d8c878;
+  --warm:#f8f6f2;--support:#e8702a;
+  --danger-bg:#fff0f0;--danger-border:#f5a0a0;--danger-text:#8b1a1a;
+  --r-sm:10px;--r-md:14px;--r-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Georgia,"Times New Roman",serif;background:var(--bg);color:var(--text);line-height:1.65;font-size:16px;overflow-x:hidden}
+.container{max-width:920px;margin:0 auto;padding:56px 16px 48px}
+p,li,label,span,div,h2,h3,button,a{overflow-wrap:anywhere}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+
+/* stick figures */
+.stk{fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex-shrink:0}
+.fig-sm{width:32px;height:54px;color:var(--brand)}
+.fig-md{width:48px;height:80px;color:var(--brand)}
+.fig-hero{width:64px;height:107px;color:var(--brand)}
+.fig-pair{width:78px;height:60px;color:var(--brand)}
+
+/* quick exit */
+.quick-exit{position:fixed;top:max(10px,env(safe-area-inset-top));right:10px;z-index:60;background:#fff;color:#b94040;border:1.5px solid #e8c0c0;border-radius:99px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;min-height:38px}
+
+/* header */
+.header{background:var(--card);border-radius:var(--r-lg);border:1px solid var(--border);padding:22px 20px 20px;margin-bottom:16px}
+.head-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.logo-wrap{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid var(--brand-mid);flex-shrink:0}
+.brand-name{font-size:13px;color:var(--brand);letter-spacing:.04em;line-height:1.3}
+.page-title{font-size:clamp(1.35rem,4.5vw,1.9rem);font-weight:normal;line-height:1.25;margin-bottom:8px}
+.tagline{font-size:15px;color:var(--muted);margin-bottom:14px}
+.opening-note{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:13px 15px;font-size:15px;color:var(--brand);font-style:italic}
+
+/* progress */
+.progress{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.pstep{background:none;border:none;font:inherit;text-align:left;cursor:pointer;padding:0;min-width:0}
+.pbar{height:6px;border-radius:99px;background:var(--border);margin-bottom:6px;transition:background .2s}
+.plabel{display:block;font-size:12px;color:var(--hint)}
+.pstep.done .pbar,.pstep.current .pbar{background:var(--brand)}
+.pstep.current .plabel{color:var(--brand);font-weight:bold}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--r-lg);border:1px solid var(--border);padding:22px 20px;margin-bottom:16px}
+.step{display:none}
+.step.active{display:block}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.step-label{font-size:11px;font-weight:bold;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.card-title{font-size:1.2rem;font-weight:normal;color:var(--brand);line-height:1.3;outline:none}
+.card-intro{font-size:15px;color:var(--muted);font-style:italic;margin-bottom:16px}
+
+/* step 1 */
+.three-panel{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.three-panel{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mini-panel{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:16px 14px;min-width:0;display:flex;flex-direction:column}
+.mini-panel-title{font-size:15px;color:var(--brand);margin-bottom:4px}
+.mini-note{font-size:13px;color:var(--muted);margin-bottom:10px}
+.pattern-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
+.breath-stage{position:relative;width:150px;height:150px;margin:0 auto 6px}
+.aura{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0%,var(--accent-light) 55%,var(--brand-mid) 100%);border:2px solid var(--brand-mid);transform:scale(var(--s,.72));transition:transform var(--d,1s) ease-in-out}
+.breath-stage .stk{position:absolute;left:50%;top:50%;width:50px;height:84px;transform:translate(-50%,-50%);color:var(--brand)}
+.breath-label{display:block;text-align:center;font-size:15px;color:var(--brand);font-weight:bold;min-height:24px}
+.breath-sec{display:block;text-align:center;font-size:13px;color:var(--muted);min-height:20px;margin-bottom:8px}
+.centered-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:auto}
+.ground-fig{display:flex;justify-content:center;margin-bottom:8px}
+.ground-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;margin-bottom:6px;font-size:14px;color:var(--muted);cursor:pointer;min-height:42px}
+.ground-item input{accent-color:var(--brand);width:18px;height:18px;flex-shrink:0;cursor:pointer}
+.ground-item.checked{border-color:var(--brand);color:var(--text)}
+.body-fig{display:block;width:100%;max-width:150px;height:auto;margin:0 auto 8px;color:var(--brand)}
+.zone{fill:rgba(106,90,170,.05);stroke:var(--brand);stroke-width:1.6;stroke-dasharray:3 3;cursor:pointer;transition:fill .15s}
+.zone:hover{fill:rgba(106,90,170,.25)}
+.zone.active{fill:rgba(106,90,170,.55);stroke-dasharray:none}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip,.body-chip{background:#fff;border:1.5px solid var(--brand-mid);border-radius:99px;padding:7px 14px;min-height:40px;font:inherit;font-size:14px;color:var(--muted);cursor:pointer;transition:all .15s;max-width:100%;text-align:left}
+.body-chip{min-height:36px;padding:5px 12px;font-size:13px}
+.chip:hover,.body-chip:hover{border-color:var(--brand);color:var(--text)}
+.chip.active,.body-chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.body-result{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px}
+
+/* fields */
+.field{margin-bottom:16px}
+.field-label{font-size:15px;color:var(--text);margin-bottom:6px;display:block}
+.field-hint{font-size:13px;color:var(--hint);margin-bottom:6px;display:block}
+input[type=text],textarea,select{width:100%;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 13px;font:inherit;font-size:16px;color:var(--text);background:#fff;transition:border-color .2s}
+textarea{min-height:92px;resize:vertical;line-height:1.55}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239890b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(106,90,170,.15)}
+.two-col{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:760px){.two-col{grid-template-columns:1fr 1fr}}
+
+/* faces */
+.faces{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.face{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 6px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;font-size:11px;line-height:1.2;text-align:center;color:var(--muted);background:#fff;position:relative}
+.face input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.face svg{width:36px;height:36px;fill:none;stroke:var(--brand);stroke-width:2.4;stroke-linecap:round}
+.face.sel{border-color:var(--brand);background:var(--brand-light);color:var(--text)}
+.face:focus-within{outline:3px solid var(--brand);outline-offset:2px}
+@media(max-width:380px){.face{font-size:10px}.face svg{width:30px;height:30px}}
+
+/* plan */
+.crisis-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px;color:var(--danger-text);font-size:15px;display:none}
+.crisis-box.show{display:block}
+.crisis-box a{color:var(--danger-text);font-weight:bold}
+.plan-intro-box{background:var(--accent-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:14px 16px;font-size:15px;line-height:1.6;margin-bottom:14px;font-style:italic}
+.plan-columns{display:grid;gap:12px;grid-template-columns:1fr;margin-bottom:12px}
+@media(min-width:720px){.plan-columns{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.plan-col{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:14px 16px;min-width:0}
+.plan-col-title{font-size:12px;font-weight:bold;color:var(--brand);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plan-list{list-style:none}
+.plan-list li{font-size:14px;color:var(--muted);padding:7px 0;border-bottom:1px solid var(--brand-mid);line-height:1.5}
+.plan-list li:last-child{border-bottom:none}
+.scared-box{background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px}
+.scared-title{font-size:12px;font-weight:bold;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.scared-box li{list-style:none;font-size:14px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--gold-mid)}
+.scared-box li:last-child{border-bottom:none}
+.after-box{border:1px dashed var(--brand-mid);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
+.section-label{font-size:11px;color:var(--hint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+
+/* buttons */
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:99px;font:inherit;font-size:15px;line-height:1.2;text-align:center;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:46px;transition:opacity .15s,transform .1s;max-width:100%}
+.btn:active{transform:scale(.97)}
+.btn:hover{opacity:.88}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn-sm{min-height:40px;padding:8px 16px;font-size:14px}
+.btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-outline{background:#fff;color:var(--text);border-color:var(--border)}
+.btn-danger{background:#fff;color:#b94040;border-color:#e8c0c0}
+.btn-share{background:var(--brand-light);color:var(--brand);border-color:var(--brand-mid)}
+.btn-support{background:var(--support);color:#fff;border-color:var(--support);font-size:16px;padding:12px 24px}
+.btn-support .stk{width:70px;height:54px;color:#fff;stroke-width:4}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-bottom:16px}
+.nav .btn{flex:0 1 auto;min-width:120px}
+
+/* history */
+.history-item{background:var(--warm);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;margin-bottom:8px}
+.history-date{font-size:12px;color:var(--hint);margin-bottom:2px}
+.history-label{font-size:15px;color:var(--muted)}
+
+/* urgent + footer */
+.urgent-card{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:16px}
+.urgent-title{font-size:15px;font-weight:bold;color:var(--danger-text);margin-bottom:6px}
+.urgent-body{font-size:15px;color:var(--danger-text)}
+.urgent-body a{color:var(--danger-text)}
+.footer{background:var(--card);border-radius:var(--r-lg);border:1px solid var(--border);padding:24px 20px;text-align:center}
+.footer-support-text{font-size:15px;color:var(--muted);margin-bottom:14px;font-style:italic}
+.footer .btn-row{justify-content:center}
+.share-block{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.footer-link{font-size:14px;color:var(--brand);text-decoration:none}
+.footer-link:hover{text-decoration:underline}
+.footer-credit{font-size:12px;color:var(--hint);margin-top:12px}
+
+/* toast */
+.toast{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:10px 18px;border-radius:18px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* phones */
+@media(max-width:560px){
+  .container{padding:52px 12px 40px}
+  .card,.header,.footer{padding:18px 14px}
+  .btn-row .btn{flex:1 1 100%}
+  .nav .btn{flex:1 1 0;min-width:0}
+  .btn-support{width:100%}
+  .head-top{align-items:flex-start}
+  .fig-hero{width:48px;height:80px}
+}
+@media(min-width:561px){.btn-row.share .btn{flex:0 1 auto}}
+@media(prefers-reduced-motion:reduce){.aura{transition:none!important}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
+
+<!-- stick figure library -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<symbol id="sm-man" viewBox="0 0 60 100"><circle cx="30" cy="13" r="10"/><path d="M30 23V60M30 34L14 54M30 34L46 54M30 60L19 94M30 60L41 94"/><circle cx="26" cy="11" r="1.3" fill="currentColor" stroke="none"/><circle cx="34" cy="11" r="1.3" fill="currentColor" stroke="none"/><path d="M26 17Q30 21 34 17" stroke-width="2"/></symbol>
+<symbol id="sm-man-wave" viewBox="0 0 60 100"><circle cx="30" cy="13" r="10"/><path d="M30 23V60M30 34L14 54M30 34L47 22L54 10M30 60L19 94M30 60L41 94"/><circle cx="26" cy="11" r="1.3" fill="currentColor" stroke="none"/><circle cx="34" cy="11" r="1.3" fill="currentColor" stroke="none"/><path d="M26 17Q30 21 34 17" stroke-width="2"/></symbol>
+<symbol id="sm-man-open" viewBox="0 0 60 100"><circle cx="30" cy="13" r="10"/><path d="M30 23V60M30 34L8 28M30 34L52 28M30 60L19 94M30 60L41 94"/><circle cx="26" cy="11" r="1.3" fill="currentColor" stroke="none"/><circle cx="34" cy="11" r="1.3" fill="currentColor" stroke="none"/><path d="M26 17Q30 21 34 17" stroke-width="2"/></symbol>
+<symbol id="sm-ground" viewBox="0 0 60 100"><circle cx="30" cy="13" r="10"/><path d="M30 23V60M30 34L14 54M30 34L46 54M30 60L19 92M30 60L41 92M6 96H54"/><circle cx="26" cy="11" r="1.3" fill="currentColor" stroke="none"/><circle cx="34" cy="11" r="1.3" fill="currentColor" stroke="none"/><path d="M26 17Q30 21 34 17" stroke-width="2"/></symbol>
+<symbol id="sm-woman" viewBox="0 0 60 100"><circle cx="30" cy="13" r="10"/><path d="M21 7Q30 -2 39 7"/><path d="M30 23V42M30 33L15 52M30 33L45 52M30 40L15 72H45Z M24 72L22 94M36 72L38 94"/><circle cx="26" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="34" cy="12" r="1.3" fill="currentColor" stroke="none"/><path d="M26 17Q30 21 34 17" stroke-width="2"/></symbol>
+<symbol id="sm-pair" viewBox="0 0 130 100"><use href="#sm-man" x="0" y="0" width="60" height="100"/><use href="#sm-woman" x="70" y="0" width="60" height="100"/><path d="M46 54L84 52"/><path d="M65 40C55 32 56 22 62 22C64 22 65 24 65 25C65 24 66 22 68 22C74 22 75 32 65 40Z" fill="currentColor" stroke="none"/></symbol>
+</defs>
+</svg>
+
+<button type="button" class="quick-exit" id="quickExitBtn" aria-label="Quick exit, leave this page now">Quick exit</button>
+
 <div class="container">
 
-  <!-- HEADER -->
   <header class="header">
-    <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    <div class="head-top">
+      <div class="logo-wrap">
+        <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+        <div class="brand-name">Emotional Intelligence<br>Developer</div>
+      </div>
+      <svg class="stk fig-hero" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-man-wave"/></svg>
     </div>
-    <h1>Threat &amp; Emotional Regulation Tool</h1>
-    <p class="tagline">A gentle space to pause, feel steadier, and choose your next small step. You can go at your own pace.</p>
-    <div class="opening-note">You are not alone. Let's slow this down together — one step at a time.</div>
+    <h2 class="page-title">Threat &amp; Emotional Regulation Tool</h2>
+    <p class="tagline">A gentle space to pause, feel steadier, and choose your next small step. Go at your own pace.</p>
+    <div class="opening-note">You are not alone. Let's slow this down together, one step at a time.</div>
   </header>
 
-  <!-- STEP 1: SAFETY RESET -->
-  <section class="card" aria-labelledby="step1-heading">
-    <div class="step-label">Step 1 of 3</div>
-    <p class="card-title" id="step1-heading">Quick safety reset</p>
-    <p class="card-intro">Choose any of these three tools. You do not need to complete all of them.</p>
+  <nav class="progress" id="progress" aria-label="Progress"></nav>
+
+  <!-- STEP 1 -->
+  <section class="card step active" id="s1" aria-labelledby="h1s">
+    <div class="card-head">
+      <div>
+        <div class="step-label">Step 1 of 4</div>
+        <h3 class="card-title" id="h1s" tabindex="-1">Quick safety reset</h3>
+      </div>
+      <svg class="stk fig-md" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-woman"/></svg>
+    </div>
+    <p class="card-intro">Choose any one of these three tools, or skip straight on. You do not need to do all of them.</p>
 
     <div class="three-panel">
-
-      <!-- BREATHING -->
       <div class="mini-panel">
-        <p class="mini-panel-title">Breathe with me (30 seconds)</p>
-        <div class="breath-wrap">
-          <div class="breath-circle" id="breathCircle">
-            <div class="breath-inner">
-              <span class="breath-label" id="breathLabel">Ready</span>
-              <span class="breath-sec" id="breathSec"></span>
-            </div>
-          </div>
-          <p class="breath-prompt" id="breathPrompt">Follow inhale · hold · exhale.</p>
+        <p class="mini-panel-title">Breathe with me (1 minute)</p>
+        <p class="mini-note">Pick a pattern. Both use a longer breath out.</p>
+        <div class="pattern-row" role="group" aria-label="Breathing pattern">
+          <button type="button" class="body-chip active" id="patSigh">Calming sigh</button>
+          <button type="button" class="body-chip" id="patLong">4 in, 6 out</button>
         </div>
-        <div class="btn-row" style="justify-content:center;">
-          <button type="button" class="btn btn-primary" id="startBreathBtn">Start</button>
-          <button type="button" class="btn btn-outline" id="stopBreathBtn">Stop</button>
+        <div class="breath-stage" id="breathStage">
+          <div class="aura" id="aura"></div>
+          <svg class="stk" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-man-open"/></svg>
+        </div>
+        <span class="breath-label" id="breathLabel" aria-live="polite">Ready</span>
+        <span class="breath-sec" id="breathSec">Press start when you are ready.</span>
+        <div class="centered-row">
+          <button type="button" class="btn btn-primary btn-sm" id="startBreathBtn">Start</button>
+          <button type="button" class="btn btn-outline btn-sm" id="stopBreathBtn">Stop</button>
         </div>
       </div>
 
-      <!-- 5-4-3-2-1 -->
       <div class="mini-panel">
         <p class="mini-panel-title">Name 5-4-3-2-1</p>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Check each as you notice it around you.</p>
+        <div class="ground-fig"><svg class="stk fig-md" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-ground"/></svg></div>
+        <p class="mini-note">Tick each one as you notice it around you. Feel your feet on the floor.</p>
         <label class="ground-item" id="g5"><input type="checkbox" /> 5 things I can see</label>
         <label class="ground-item" id="g4"><input type="checkbox" /> 4 things I can feel</label>
         <label class="ground-item" id="g3"><input type="checkbox" /> 3 things I can hear</label>
@@ -636,11 +254,23 @@
         <label class="ground-item" id="g1"><input type="checkbox" /> 1 thing I can taste</label>
       </div>
 
-      <!-- BODY SCAN -->
       <div class="mini-panel">
         <p class="mini-panel-title">Body scan</p>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Where do you notice tension right now?</p>
-        <div class="body-chip-wrap" id="bodyScan">
+        <p class="mini-note">Tap where you notice tension right now.</p>
+        <svg class="stk body-fig" viewBox="0 0 120 200" role="group" aria-label="Body map">
+          <circle cx="60" cy="24" r="16"/>
+          <path d="M60 40V122M60 54L34 78L28 110M60 54L86 78L92 110M60 122L44 184M60 122L76 184"/>
+          <circle cx="54" cy="21" r="1.6" fill="currentColor" stroke="none"/><circle cx="66" cy="21" r="1.6" fill="currentColor" stroke="none"/>
+          <path d="M53 30Q60 35 67 30" stroke-width="2"/>
+          <circle class="zone" data-body="Jaw" cx="60" cy="34" r="9" tabindex="0" role="button" aria-label="Jaw"/>
+          <circle class="zone" data-body="Shoulders" cx="48" cy="62" r="9" tabindex="0" role="button" aria-label="Left shoulder"/>
+          <circle class="zone" data-body="Shoulders" cx="72" cy="62" r="9" tabindex="0" role="button" aria-label="Right shoulder"/>
+          <circle class="zone" data-body="Chest" cx="60" cy="80" r="10" tabindex="0" role="button" aria-label="Chest"/>
+          <circle class="zone" data-body="Stomach" cx="60" cy="104" r="10" tabindex="0" role="button" aria-label="Stomach"/>
+          <circle class="zone" data-body="Hands" cx="28" cy="112" r="8" tabindex="0" role="button" aria-label="Left hand"/>
+          <circle class="zone" data-body="Hands" cx="92" cy="112" r="8" tabindex="0" role="button" aria-label="Right hand"/>
+        </svg>
+        <div class="chip-wrap" id="bodyScan" style="gap:6px;margin-bottom:0">
           <button type="button" class="body-chip" data-body="Jaw">Jaw</button>
           <button type="button" class="body-chip" data-body="Shoulders">Shoulders</button>
           <button type="button" class="body-chip" data-body="Chest">Chest</button>
@@ -649,135 +279,153 @@
         </div>
         <p class="body-result" id="bodyResult">No selection yet.</p>
       </div>
-
     </div>
   </section>
 
-  <!-- STEP 2: WHAT FEELS THREATENING -->
-  <section class="card" aria-labelledby="step2-heading">
-    <div class="step-label">Step 2 of 3</div>
-    <p class="card-title" id="step2-heading">What feels threatening right now?</p>
-    <p class="card-intro">Choose any that apply, then fill in as much or as little as feels right.</p>
-
+  <!-- STEP 2 -->
+  <section class="card step" id="s2" aria-labelledby="h2s">
+    <div class="card-head">
+      <div>
+        <div class="step-label">Step 2 of 4</div>
+        <h3 class="card-title" id="h2s" tabindex="-1">What feels threatening right now?</h3>
+      </div>
+      <svg class="stk fig-md" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-man"/></svg>
+    </div>
+    <p class="card-intro">Choose any that apply. There are no wrong answers.</p>
     <div class="chip-wrap" id="threatChips" role="group" aria-label="Threat type options"></div>
-
     <div class="field">
-      <label class="field-label" for="otherThreat">Other (optional)</label>
-      <input type="text" id="otherThreat" maxlength="150" placeholder="Another type of threat…" />
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="happened">What happened — in a few words</label>
-      <textarea id="happened" maxlength="600" placeholder="Write what you feel comfortable sharing…"></textarea>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="story">What story is my mind telling me?</label>
-      <textarea id="story" maxlength="600" placeholder="What thoughts keep coming up?"></textarea>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="need">What do I need most right now?</label>
-      <select id="need">
-        <option value="">Choose one…</option>
-        <option>Safety</option>
-        <option>Respect</option>
-        <option>Space</option>
-        <option>Reassurance</option>
-        <option>Clarity</option>
-        <option>Support</option>
-      </select>
-    </div>
-
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="generatePlanBtn">Generate my calm plan</button>
-      <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      <label class="field-label" for="otherThreat">Something else (optional)</label>
+      <input type="text" id="otherThreat" maxlength="150" placeholder="Another type of threat" autocomplete="off" />
     </div>
   </section>
 
-  <!-- STEP 3: CALM PLAN -->
-  <section class="card plan-section" id="planSection" aria-labelledby="step3-heading" aria-live="polite">
-    <div class="step-label">Step 3 of 3</div>
-    <p class="card-title" id="step3-heading">Your calm plan</p>
+  <!-- STEP 3 -->
+  <section class="card step" id="s3" aria-labelledby="h3s">
+    <div class="card-head">
+      <div>
+        <div class="step-label">Step 3 of 4</div>
+        <h3 class="card-title" id="h3s" tabindex="-1">Put it into words</h3>
+      </div>
+      <svg class="stk fig-md" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-woman"/></svg>
+    </div>
+    <p class="card-intro">Share as much or as little as feels right. Naming a feeling can help it settle.</p>
+    <div class="field">
+      <span class="field-label" id="intLabel">How strong does it feel right now?</span>
+      <div class="faces" id="facesBefore" role="radiogroup" aria-labelledby="intLabel"></div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label class="field-label" for="happened">What happened, in a few words</label>
+        <textarea id="happened" maxlength="600" placeholder="Write what you feel comfortable sharing"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="story">What story is my mind telling me?</label>
+        <textarea id="story" maxlength="600" placeholder="What thoughts keep coming up?"></textarea>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label class="field-label" for="need">What do I need most right now?</label>
+        <select id="need">
+          <option value="">Choose one</option>
+          <option>Safety</option><option>Respect</option><option>Space</option>
+          <option>Reassurance</option><option>Clarity</option><option>Support</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="userName">Your name for the PDF (optional)</label>
+        <input type="text" id="userName" maxlength="60" placeholder="First name is fine" autocomplete="given-name" />
+      </div>
+    </div>
+  </section>
 
-    <div class="plan-intro-box" id="planIntro">Your personalised calm plan will appear here.</div>
+  <!-- STEP 4 -->
+  <section class="card step" id="s4" aria-labelledby="h4s" aria-live="polite">
+    <div class="card-head">
+      <div>
+        <div class="step-label">Step 4 of 4</div>
+        <h3 class="card-title" id="h4s" tabindex="-1">Your calm plan</h3>
+      </div>
+      <svg class="stk fig-pair" viewBox="0 0 130 100" aria-hidden="true"><use href="#sm-pair"/></svg>
+    </div>
+
+    <div class="crisis-box" id="crisisBox" role="alert">
+      <strong>What you wrote sounds really heavy.</strong> You do not have to carry it alone. Please reach out to someone you trust or a helpline now. If you think you might act on these thoughts, contact your local emergency services right away.
+      <br><a href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline in your country</a>
+    </div>
+
+    <div class="plan-intro-box" id="planIntro">Your calm plan will appear here.</div>
 
     <div class="plan-columns">
-      <div class="plan-col">
-        <div class="plan-col-title">3 regulation steps</div>
-        <ul class="plan-list" id="regulationList">
-          <li>Take 6 slow breaths — longer on the exhale.</li>
-          <li>Unclench your jaw and lower your shoulders for 20 seconds.</li>
-          <li>Drink water and feel your feet on the floor.</li>
-        </ul>
-      </div>
-      <div class="plan-col">
-        <div class="plan-col-title">Communication options</div>
-        <ul class="plan-list">
-          <li>"I am feeling overwhelmed. Can we pause?"</li>
-          <li>"I want to talk, but I need a calmer moment."</li>
-          <li>"I am not okay right now. I need support."</li>
-        </ul>
-      </div>
-      <div class="plan-col">
-        <div class="plan-col-title">Boundary options</div>
-        <ul class="plan-list">
-          <li>"I am stepping away for 10 minutes."</li>
-          <li>"Please do not raise your voice at me."</li>
-          <li>"I am available to talk when we can be respectful."</li>
-        </ul>
-      </div>
+      <div class="plan-col"><div class="plan-col-title">3 regulation steps</div><ul class="plan-list" id="regulationList"></ul></div>
+      <div class="plan-col"><div class="plan-col-title">Communication options</div><ul class="plan-list" id="commList"></ul></div>
+      <div class="plan-col"><div class="plan-col-title">Boundary options</div><ul class="plan-list" id="boundList"></ul></div>
     </div>
 
     <div class="scared-box">
       <div class="scared-title">If you are scared to talk</div>
-      <ul class="scared-list">
+      <ul>
         <li>Text a trusted person one line: "Could you check in with me today?"</li>
         <li>Ask for company without explaining everything: "Can you stay with me for a bit?"</li>
         <li>Write your thoughts first, then share only what feels safe.</li>
       </ul>
     </div>
 
+    <div class="after-box">
+      <span class="field-label" id="aftLabel">How do you feel now, after your pause?</span>
+      <div class="faces" id="facesAfter" role="radiogroup" aria-labelledby="aftLabel"></div>
+    </div>
+
     <div class="section-label">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
+    <div class="btn-row" style="margin-bottom:6px">
       <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
       <button type="button" class="btn btn-outline" id="saveLocalBtn">Save on this device</button>
       <button type="button" class="btn btn-outline" id="newReflectionBtn">Save and new reflection</button>
       <button type="button" class="btn btn-danger" id="resetBtn">Reset all</button>
     </div>
-
-    <div class="section-label">Share this tool</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
-    </div>
   </section>
+
+  <div class="nav" id="nav">
+    <button type="button" class="btn btn-outline" id="backBtn">Back</button>
+    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+  </div>
 
   <!-- HISTORY -->
   <section class="card" aria-labelledby="history-heading">
-    <p class="card-title" id="history-heading">My past check-ins</p>
-    <p style="font-size:13px;color:var(--hint);margin-bottom:14px;font-style:italic;">Saved only on this device using localStorage.</p>
+    <h3 class="card-title" id="history-heading" style="margin-bottom:6px">My past check-ins</h3>
+    <p class="field-hint" style="font-style:italic">Saved only on this device. If others use this device, clear your history when you are done.</p>
     <div id="historyList"></div>
-    <div class="btn-row" style="margin-top:8px;">
-      <button type="button" class="btn btn-danger" id="clearHistoryBtn">Clear all history</button>
+    <div class="btn-row" style="margin-top:8px">
+      <button type="button" class="btn btn-outline btn-sm" id="restoreBtn" style="display:none">Open my last saved reflection</button>
+      <button type="button" class="btn btn-danger btn-sm" id="clearHistoryBtn">Clear all history</button>
     </div>
   </section>
 
-  <!-- URGENT -->
   <div class="urgent-card" role="alert">
     <div class="urgent-title">If you may be in immediate danger</div>
-    <div class="urgent-body">
-      Please contact your local emergency services right away.<br>
-      For helplines in many countries: <a href="https://findahelpline.com/" target="_blank" rel="noopener" style="color:var(--danger-text);">findahelpline.com</a>
-    </div>
+    <div class="urgent-body">Please contact your local emergency services right away.<br>
+      Helplines in many countries: <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a></div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+    <div class="btn-row">
+      <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+        <svg class="stk" viewBox="0 0 130 100" aria-hidden="true"><use href="#sm-pair"/></svg>
+        <span>Support this website</span>
+      </a>
+    </div>
+
+    <div class="share-block">
+      <div class="section-label">Share this tool</div>
+      <div class="btn-row share" style="justify-content:center">
+        <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+        <button type="button" class="btn btn-share" id="nativeShareBtn" style="display:none">Share</button>
+        <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
 
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
@@ -785,11 +433,7 @@
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-
-    <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not a replacement for professional care.
-    </p>
+    <p class="footer-credit">Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a> &nbsp;|&nbsp; Reflection support only. Not a replacement for professional care.</p>
   </footer>
 
 </div>
@@ -797,489 +441,543 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(function () {
-  'use strict';
+var STORAGE_KEY = 'threatRegToolV4';
+var CHECKINS_KEY = 'threatRegCheckIns';
+var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var STEP_NAMES = ['Reset', 'Feel', 'Words', 'Plan'];
+var FACE_LABELS = ['Calm', 'Okay', 'Uneasy', 'Tense', 'Overwhelmed'];
+var FACE_MOUTHS = ['M13 26Q22 34 31 26', 'M14 27Q22 31 30 27', 'M14 29H30', 'M14 32Q22 27 30 32', 'M13 34Q22 25 31 34'];
+var THREAT_OPTIONS = [
+  'Conflict / argument', 'Feeling judged / embarrassed', 'Unsafe environment', 'Past memory triggered',
+  'Online harassment', 'Workplace pressure', 'Relationship tension', 'Fear for my safety at home'
+];
+var TAILORED = {
+  'Conflict / argument': { say: 'I want to understand you. Can we take ten minutes and come back to this?', bound: 'I will keep talking when voices are calm.' },
+  'Feeling judged / embarrassed': { say: 'That landed badly for me. Can I tell you how it felt?', bound: 'I am not willing to be spoken to that way.', reg: 'Put a hand on your chest and say quietly: "This feels bad, and I am okay right now."' },
+  'Unsafe environment': { say: 'I do not feel safe here. I am going to leave now.', bound: 'I am leaving. We can talk when it is safe.' },
+  'Past memory triggered': { say: 'Something is bringing up a hard memory. I need a moment to ground myself.', bound: 'I am not ready to talk about that today.', reg: 'Tell yourself: "This is a memory. I am here, now, and I am safe in this moment." Look around and name today\'s date.' },
+  'Online harassment': { say: 'I will not keep engaging with this. I am stepping away from this conversation.', bound: 'I am muting or blocking this account and saving the evidence.', reg: 'Put the phone down and look away from the screen for 60 seconds.' },
+  'Workplace pressure': { say: 'I want to do this well. Can we agree on priorities so I can focus?', bound: 'I can take this on once we agree what comes off my list.' },
+  'Relationship tension': { say: 'I care about us. Can we talk when we both feel calmer?', bound: 'I need an hour alone, then I will come back to talk.' },
+  'Fear for my safety at home': { say: 'I need help. Could you check in on me today?', bound: 'I am going to stay with someone I trust tonight.', reg: 'If you can, move to a room with a door that opens to the outside, and keep your phone with you.' }
+};
+var NEED_STEPS = {
+  'Safety': 'Move to a safer place if you can, and message someone you trust that you need support.',
+  'Space': 'Take a 10 minute break. Walk, stretch, or shake out your hands.',
+  'Reassurance': 'Name three things that are stable and okay right now, however small.',
+  'Respect': 'Write one sentence about what respect would look like here. You can decide later whether to share it.',
+  'Clarity': 'Write down the one thing you are most unsure about. Just one.',
+  'Support': 'Message one trusted person: "Could you check in with me today?"'
+};
+var DEFAULT_COMM = ['I am feeling overwhelmed. Can we pause?', 'I want to talk, but I need a calmer moment.', 'I am not okay right now. I need support.'];
+var DEFAULT_BOUND = ['I am stepping away for 10 minutes.', 'Please do not raise your voice at me.', 'I am available to talk when we can be respectful.'];
 
-  const STORAGE_KEY = 'threatRegToolV4';
-  const CHECKINS_KEY = 'threatRegCheckIns';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
-  const $ = id => document.getElementById(id);
+var state = { step: 1, threats: [], body: [], plan: null, before: '', after: '' };
+var breath = { timer: null, pattern: 'sigh' };
+var toastTimer = null;
 
-  const THREAT_OPTIONS = [
-    'Conflict / argument',
-    'Feeling judged / embarrassed',
-    'Unsafe environment',
-    'Past memory triggered',
-    'Online harassment',
-    'Workplace pressure',
-    'Relationship tension'
-  ];
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function showToast(msg) {
+  var el = $('toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+}
 
-  const BODY_AREAS = ['Jaw', 'Shoulders', 'Chest', 'Stomach', 'Hands'];
-
-  let state = {
-    threats: new Set(),
-    body: new Set(),
-    currentPlan: null
-  };
-
-  let breathInterval = null;
-  let toastTimer;
-
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+/* ---------- steps ---------- */
+function renderProgress() {
+  var html = '';
+  for (var i = 1; i <= 4; i++) {
+    var cls = i < state.step ? 'done' : (i === state.step ? 'current' : '');
+    html += '<button type="button" class="pstep ' + cls + '" data-step="' + i + '"' + (i === state.step ? ' aria-current="step"' : '') + '><span class="pbar"></span><span class="plabel">' + i + '. ' + STEP_NAMES[i - 1] + '</span></button>';
   }
+  $('progress').innerHTML = html;
+  var btns = $('progress').querySelectorAll('.pstep');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].addEventListener('click', function () { goStep(parseInt(this.getAttribute('data-step'), 10)); });
+  }
+}
 
-  // THREAT CHIPS
-  function buildThreatChips() {
-    const wrap = $('threatChips');
-    THREAT_OPTIONS.forEach(label => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip';
-      btn.textContent = label;
-      btn.addEventListener('click', () => {
-        if (state.threats.has(label)) { state.threats.delete(label); btn.classList.remove('active'); }
-        else { state.threats.add(label); btn.classList.add('active'); }
+function goStep(n, noScroll) {
+  if (n < 1) n = 1; if (n > 4) n = 4;
+  state.step = n;
+  for (var i = 1; i <= 4; i++) $('s' + i).classList.toggle('active', i === n);
+  if (n === 4) generatePlan();
+  if (n !== 1) stopBreath(true);
+  renderProgress();
+  $('backBtn').style.visibility = n === 1 ? 'hidden' : 'visible';
+  $('nextBtn').style.display = n === 4 ? 'none' : '';
+  $('nextBtn').textContent = n === 3 ? 'Make my calm plan' : (n === 1 ? 'Next' : 'Next');
+  $('nav').style.justifyContent = n === 4 ? 'flex-start' : 'space-between';
+  if (!noScroll) {
+    var head = $('progress');
+    head.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var h = $('h' + n + 's'); if (h) h.focus({ preventScroll: true });
+  }
+}
+
+/* ---------- faces ---------- */
+function buildFaces(containerId, name, key) {
+  var wrap = $(containerId), html = '';
+  for (var i = 0; i < 5; i++) {
+    html += '<label class="face" data-v="' + (i + 1) + '"><input type="radio" name="' + name + '" value="' + (i + 1) + '" aria-label="' + FACE_LABELS[i] + '">' +
+      '<svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/><circle cx="16" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="28" cy="18" r="1.4" fill="currentColor" stroke="none"/><path d="' + FACE_MOUTHS[i] + '"/></svg>' +
+      '<span>' + FACE_LABELS[i] + '</span></label>';
+  }
+  wrap.innerHTML = html;
+  var inputs = wrap.querySelectorAll('input');
+  for (var k = 0; k < inputs.length; k++) {
+    inputs[k].addEventListener('change', function () {
+      state[key] = this.value; markFaces(containerId, this.value);
+    });
+  }
+}
+function markFaces(containerId, val) {
+  var faces = $(containerId).querySelectorAll('.face');
+  for (var i = 0; i < faces.length; i++) {
+    var on = faces[i].getAttribute('data-v') === String(val);
+    faces[i].classList.toggle('sel', on);
+    faces[i].querySelector('input').checked = on;
+  }
+}
+
+/* ---------- threat chips and body ---------- */
+function buildThreatChips() {
+  var wrap = $('threatChips');
+  THREAT_OPTIONS.forEach(function (label) {
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'chip'; btn.textContent = label;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', function () {
+      var i = state.threats.indexOf(label);
+      if (i > -1) state.threats.splice(i, 1); else state.threats.push(label);
+      refreshChips();
+    });
+    wrap.appendChild(btn);
+  });
+}
+function refreshChips() {
+  var chips = $('threatChips').querySelectorAll('.chip');
+  for (var i = 0; i < chips.length; i++) {
+    var on = state.threats.indexOf(chips[i].textContent) > -1;
+    chips[i].classList.toggle('active', on); chips[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+}
+function toggleBody(area) {
+  var i = state.body.indexOf(area);
+  if (i > -1) state.body.splice(i, 1); else state.body.push(area);
+  refreshBody();
+}
+function refreshBody() {
+  var els = document.querySelectorAll('[data-body]');
+  for (var i = 0; i < els.length; i++) {
+    var on = state.body.indexOf(els[i].getAttribute('data-body')) > -1;
+    els[i].classList.toggle('active', on);
+    if (els[i].tagName.toLowerCase() === 'button') els[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  $('bodyResult').textContent = state.body.length ? 'Tension noticed in: ' + state.body.join(', ') + '.' : 'No selection yet.';
+}
+function initBody() {
+  var els = document.querySelectorAll('[data-body]');
+  for (var i = 0; i < els.length; i++) {
+    (function (el) {
+      el.addEventListener('click', function () { toggleBody(el.getAttribute('data-body')); });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBody(el.getAttribute('data-body')); }
       });
-      wrap.appendChild(btn);
-    });
+    })(els[i]);
   }
-
-  // BODY SCAN
-  document.querySelectorAll('.body-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const area = btn.dataset.body;
-      if (state.body.has(area)) { state.body.delete(area); btn.classList.remove('active'); }
-      else { state.body.add(area); btn.classList.add('active'); }
-      $('bodyResult').textContent = state.body.size
-        ? 'Tension noticed in: ' + [...state.body].join(', ') + '.'
-        : 'No selection yet.';
-    });
+}
+function initGround() {
+  ['g5', 'g4', 'g3', 'g2', 'g1'].forEach(function (id) {
+    var el = $(id);
+    el.querySelector('input').addEventListener('change', function (e) { el.classList.toggle('checked', e.target.checked); });
   });
+}
 
-  // 5-4-3-2-1 checkboxes
-  ['g5','g4','g3','g2','g1'].forEach(id => {
-    const el = $(id);
-    el.querySelector('input').addEventListener('change', e => {
-      el.classList.toggle('checked', e.target.checked);
-    });
-  });
-
-  // BREATHING
-  $('startBreathBtn').addEventListener('click', () => {
-    clearInterval(breathInterval);
-    let sec = 30, elapsed = 0;
-    const circle = $('breathCircle');
-    const label = $('breathLabel');
-    const secEl = $('breathSec');
-    const prompt = $('breathPrompt');
-
-    label.textContent = 'Inhale';
-    secEl.textContent = '30';
-    prompt.textContent = 'Breathe in slowly…';
-    circle.style.setProperty('--prog', 0);
-
-    breathInterval = setInterval(() => {
-      sec--; elapsed++;
-      secEl.textContent = sec;
-      circle.style.setProperty('--prog', Math.round(((30 - sec) / 30) * 100));
-
-      const pos = elapsed % 10;
-      if (pos < 4) { label.textContent = 'Inhale'; prompt.textContent = 'Breathe in slowly…'; }
-      else if (pos < 6) { label.textContent = 'Hold'; prompt.textContent = 'Hold gently…'; }
-      else { label.textContent = 'Exhale'; prompt.textContent = 'Breathe out slowly…'; }
-
-      if (sec <= 0) {
-        clearInterval(breathInterval);
-        label.textContent = 'Done';
-        secEl.textContent = '';
-        prompt.textContent = 'You just gave your body a pause. Well done.';
-        circle.style.setProperty('--prog', 0);
-      }
-    }, 1000);
-  });
-
-  $('stopBreathBtn').addEventListener('click', () => {
-    clearInterval(breathInterval);
-    $('breathLabel').textContent = 'Ready';
-    $('breathSec').textContent = '';
-    $('breathPrompt').textContent = 'Press start to try again when you are ready.';
-    $('breathCircle').style.setProperty('--prog', 0);
-  });
-
-  // GENERATE PLAN
-  function generatePlan() {
-    const otherThreat = $('otherThreat').value.trim();
-    const happened = $('happened').value.trim();
-    const story = $('story').value.trim();
-    const need = $('need').value;
-    const threats = [...state.threats];
-    if (otherThreat) threats.push(otherThreat);
-
-    // Intro
-    const introParts = [];
-    if (threats.length) introParts.push('You named: ' + threats.join(', ') + '.');
-    if (need) introParts.push('Right now, your need is ' + need.toLowerCase() + '.');
-    introParts.push('This plan is about safety, steadiness, and one next step at a time.');
-    $('planIntro').textContent = introParts.join(' ');
-
-    // Regulation steps
-    const steps = [];
-    if (state.body.size) {
-      steps.push('Soften ' + [...state.body].join(' and ').toLowerCase() + ' for 20 seconds while breathing out slowly.');
+/* ---------- breathing ---------- */
+var PATTERNS = {
+  sigh: [['Breathe in through your nose', 2, 1], ['A second small sip in', 1, 1.12], ['Long slow breath out', 6, 0.72]],
+  long: [['Breathe in slowly', 4, 1], ['Breathe out, longer', 6, 0.72]]
+};
+function setPattern(p) {
+  breath.pattern = p;
+  $('patSigh').classList.toggle('active', p === 'sigh');
+  $('patLong').classList.toggle('active', p === 'long');
+  if (breath.timer) startBreath();
+}
+function startBreath() {
+  stopBreath(true);
+  var seq = PATTERNS[breath.pattern], cycle = 0, i;
+  for (i = 0; i < seq.length; i++) cycle += seq[i][1];
+  var total = 60, t = 0, aura = $('aura');
+  function paint() {
+    var pos = t % cycle, acc = 0, idx = 0;
+    for (i = 0; i < seq.length; i++) { if (pos < acc + seq[i][1]) { idx = i; break; } acc += seq[i][1]; }
+    var phase = seq[idx];
+    if (!paint.last || paint.last !== idx + '-' + Math.floor(t / cycle)) {
+      paint.last = idx + '-' + Math.floor(t / cycle);
+      $('breathLabel').textContent = phase[0];
+      aura.style.setProperty('--d', phase[1] + 's');
+      aura.style.setProperty('--s', phase[2]);
     }
-    steps.push('Take 6 steady breaths: inhale for 4, exhale for 6. Let your shoulders drop.');
-
-    if (need === 'Space' || threats.includes('Conflict / argument')) {
-      steps.push('Take a 10-minute movement break — walk, stretch, or shake out your hands.');
-    } else if (need === 'Safety' || threats.includes('Unsafe environment')) {
-      steps.push('Move to a safer place if you can, and text someone you trust that you need support.');
-    } else if (need === 'Reassurance') {
-      steps.push('Name three things that are stable and okay right now, however small.');
-    } else {
-      steps.push('Sip water, place both feet on the floor, and name 3 things you can see.');
-    }
-
-    const ul = $('regulationList');
-    ul.innerHTML = '';
-    steps.slice(0, 3).forEach(step => {
-      const li = document.createElement('li');
-      li.textContent = step;
-      ul.appendChild(li);
-    });
-
-    // Show plan
-    $('planSection').classList.add('visible');
-    $('planSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Store for save / PDF
-    state.currentPlan = {
-      timestamp: new Date().toLocaleString(),
-      label: (happened || threats[0] || 'Reflection').slice(0, 70),
-      threats: threats.join(', ') || 'Not specified',
-      body: [...state.body].join(', ') || 'Not selected',
-      happened: happened || 'Not entered',
-      story: story || 'Not entered',
-      need: need || 'Not selected',
-      steps: steps
-    };
+    $('breathSec').textContent = (total - t) + ' seconds left';
   }
-
-  $('generatePlanBtn').addEventListener('click', generatePlan);
-
-  // SAVE TO DEVICE
-  $('saveLocalBtn').addEventListener('click', () => {
-    if (!state.currentPlan) generatePlan();
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.currentPlan));
-      showToast('Saved to this device.');
-    } catch(_) { showToast('Could not save — storage may be full.'); }
-  });
-
-  // NEW REFLECTION
-  $('newReflectionBtn').addEventListener('click', () => {
-    if (!state.currentPlan) generatePlan();
-    addToHistory({ timestamp: state.currentPlan.timestamp, label: state.currentPlan.label });
-    clearInputs(false);
-    showToast('Saved to history. Starting new reflection.');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // RESET
-  $('resetBtn').addEventListener('click', () => {
-    if (!confirm('Reset all answers? Your check-in history will be kept.')) return;
-    clearInputs(false);
-    showToast('Reset complete.');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  function clearInputs(clearHistory) {
-    state.threats.clear();
-    state.body.clear();
-    state.currentPlan = null;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.body-chip').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.ground-item').forEach(el => {
-      el.classList.remove('checked');
-      el.querySelector('input').checked = false;
-    });
-    ['otherThreat', 'happened', 'story'].forEach(id => { $(id).value = ''; });
-    $('need').value = '';
-    $('bodyResult').textContent = 'No selection yet.';
-    $('planIntro').textContent = 'Your personalised calm plan will appear here.';
-    $('planSection').classList.remove('visible');
-    if (clearHistory) {
-      try { localStorage.removeItem(CHECKINS_KEY); localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-      renderHistory();
-    }
-  }
-
-  // HISTORY
-  function getHistory() {
-    try { return JSON.parse(localStorage.getItem(CHECKINS_KEY) || '[]'); } catch(_) { return []; }
-  }
-
-  function addToHistory(entry) {
-    const list = getHistory();
-    list.push(entry);
-    try { localStorage.setItem(CHECKINS_KEY, JSON.stringify(list.slice(-20))); } catch(_) {}
-    renderHistory();
-  }
-
-  function renderHistory() {
-    const list = getHistory();
-    const container = $('historyList');
-    if (!list.length) {
-      container.innerHTML = '<p style="font-size:13px;color:var(--hint);font-style:italic;">No check-ins saved yet.</p>';
+  paint.last = null; paint();
+  breath.timer = setInterval(function () {
+    t++;
+    if (t >= total) {
+      stopBreath(true);
+      $('breathLabel').textContent = 'Done';
+      $('breathSec').textContent = 'You gave your body a pause. Well done.';
       return;
     }
-    container.innerHTML = list.slice().reverse().map(item => `
-      <div class="history-item">
-        <div class="history-date">${item.timestamp}</div>
-        <div class="history-label">${item.label}</div>
-      </div>
-    `).join('');
+    paint();
+  }, 1000);
+}
+function stopBreath(silent) {
+  if (breath.timer) { clearInterval(breath.timer); breath.timer = null; }
+  var aura = $('aura');
+  aura.style.setProperty('--d', '0.6s'); aura.style.setProperty('--s', '0.72');
+  if (silent !== true) { $('breathLabel').textContent = 'Ready'; $('breathSec').textContent = 'Press start when you are ready.'; }
+  else if (!$('breathLabel').textContent || $('breathLabel').textContent !== 'Done') { $('breathLabel').textContent = 'Ready'; $('breathSec').textContent = 'Press start when you are ready.'; }
+}
+
+/* ---------- plan ---------- */
+function uniq(arr) { var out = []; arr.forEach(function (x) { if (x && out.indexOf(x) === -1) out.push(x); }); return out; }
+
+function generatePlan() {
+  var other = $('otherThreat').value.trim();
+  var happened = $('happened').value.trim();
+  var story = $('story').value.trim();
+  var need = $('need').value;
+  var name = $('userName').value.trim();
+  var threats = state.threats.slice();
+  if (other) threats.push(other);
+
+  var intro = [];
+  if (threats.length) intro.push('You named: ' + threats.join(', ') + '.');
+  if (need) intro.push('Right now, your need is ' + need.toLowerCase() + '.');
+  intro.push('This plan is about safety, steadiness, and one next step at a time.');
+  $('planIntro').textContent = intro.join(' ');
+
+  var steps = [];
+  if (state.body.length) steps.push('Soften your ' + state.body.join(' and ').toLowerCase() + ' for 20 seconds while you breathe out slowly.');
+  steps.push('Try 5 calming sighs: two short breaths in through your nose, then one long breath out through your mouth.');
+  var specific = NEED_STEPS[need] || '';
+  if (!specific) {
+    for (var i = 0; i < state.threats.length; i++) { if (TAILORED[state.threats[i]] && TAILORED[state.threats[i]].reg) { specific = TAILORED[state.threats[i]].reg; break; } }
   }
+  if (specific) steps.push(specific);
+  steps.push('Sip water, put both feet flat on the floor, and name 3 things you can see.');
+  steps = uniq(steps).slice(0, 3);
 
-  $('clearHistoryBtn').addEventListener('click', () => {
-    if (!confirm('Clear all check-in history from this device?')) return;
-    try { localStorage.removeItem(CHECKINS_KEY); localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    renderHistory();
-    showToast('History cleared.');
-  });
+  var comm = [], bound = [];
+  if (need === 'Safety' && state.threats.indexOf('Unsafe environment') === -1) { comm.push(TAILORED['Unsafe environment'].say); bound.push(TAILORED['Unsafe environment'].bound); }
+  state.threats.forEach(function (t) { if (TAILORED[t]) { comm.push(TAILORED[t].say); bound.push(TAILORED[t].bound); } });
+  comm = uniq(comm.concat(DEFAULT_COMM)).slice(0, 3);
+  bound = uniq(bound.concat(DEFAULT_BOUND)).slice(0, 3);
 
-  // SHARE
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A gentle reflection tool to pause, feel steadier, and find your next step: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-  }
+  fillList('regulationList', steps); fillList('commList', comm.map(q)); fillList('boundList', bound.map(q));
 
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
-  });
+  var crisis = /(suicid|kill myself|end my life|want to die|hurt myself|self[\s-]?harm|don'?t want to be here|no reason to live)/i.test(happened + ' ' + story + ' ' + other);
+  $('crisisBox').classList.toggle('show', crisis);
 
-  // PDF
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
-    });
-  }
+  state.plan = {
+    timestamp: new Date().toLocaleString(),
+    name: name,
+    label: (happened || threats[0] || 'Reflection').slice(0, 70),
+    threats: threats.join(', ') || 'Not specified',
+    threatsArr: state.threats.slice(), other: other,
+    body: state.body.join(', ') || 'Not selected', bodyArr: state.body.slice(),
+    happened: happened || 'Not entered', story: story || 'Not entered', need: need || 'Not selected',
+    steps: steps, comm: comm, bound: bound, crisis: crisis,
+    before: state.before, after: state.after, needRaw: need
+  };
+}
+function q(s) { return '"' + s + '"'; }
+function fillList(id, items) {
+  var ul = $(id); ul.innerHTML = '';
+  items.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+}
 
-  async function downloadPDF() {
-    const PDF = jsPDF();
-    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    if (!state.currentPlan) generatePlan();
-    const plan = state.currentPlan;
-    showToast('Preparing your PDF…');
+/* ---------- save, history, reset ---------- */
+function currentPlan() { generatePlan(); state.plan.after = state.after; return state.plan; }
 
-    const doc = new PDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header
-    doc.setFillColor(240, 236, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(30, 26, 46);
-    doc.text('Threat & Emotional Regulation — Calm Plan', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(90, 84, 112);
-    doc.text('Personal reflection summary', margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
-
-    // Summary rows
-    const rows = [
-      ['Date', plan.timestamp],
-      ['What feels threatening', plan.threats],
-      ['Body tension noticed', plan.body],
-      ['What happened', plan.happened],
-      ['Mind story', plan.story],
-      ['What I need most', plan.need]
-    ];
-
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(240, 236, 248);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(106, 90, 170);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Regulation steps
-    if (y > pageH - 100) { doc.addPage(); y = margin; }
-    y += 4;
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Your 3 regulation steps', margin, y);
-    y += 14;
-    plan.steps.forEach((step, i) => {
-      if (y > pageH - 60) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize((i + 1) + '. ' + step, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 12 + 6;
-    });
-
-    // Communication and boundary scripts
-    if (y > pageH - 120) { doc.addPage(); y = margin; }
-    y += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Communication options', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.3);
-    doc.setTextColor(30, 26, 46);
-    ['"I am feeling overwhelmed. Can we pause?"',
-     '"I want to talk, but I need a calmer moment."',
-     '"I am not okay right now. I need support."'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    y += 6;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Boundary options', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.3);
-    doc.setTextColor(30, 26, 46);
-    ['"I am stepping away for 10 minutes."',
-     '"Please do not raise your voice at me."',
-     '"I am available to talk when we can be respectful."'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    y += 8;
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Understanding threat responses and emotional regulation — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why threat feels overwhelming — the neuroscience',
-       'When the brain perceives threat — whether physical, social, or emotional — the amygdala initiates a rapid stress response that reduces blood flow to the prefrontal cortex, the part of the brain responsible for measured thinking, language, and decision-making. This is why emotional regulation strategies that work through the body (slow breathing, grounding, movement) are effective: they directly reduce amygdala activation and restore access to clearer thinking. The response is neurological, not a character flaw.'],
-      ['Why breathing works',
-       'Slow, extended exhalation activates the parasympathetic nervous system — sometimes called the "rest and digest" system — which counteracts the sympathetic "fight or flight" response. Research shows that breathing with a longer exhale than inhale (for example, inhaling for 4 and exhaling for 6) measurably reduces heart rate and cortisol within 60 to 90 seconds. This is why grounding through breath is not a distraction from the problem but a physiological condition for addressing it more effectively.'],
-      ['What threatening situations do to the nervous system',
-       'Research in polyvagal theory, developed by Stephen Porges, identifies three states the nervous system moves through in response to perceived threat: social engagement (safe and connected), sympathetic activation (mobilised for fight or flight), and dorsal vagal shutdown (frozen or collapsed). Understanding which state you are in — rather than judging your reaction — is the first step toward regulation. Tools like body scans and grounding exercises help you identify and shift your state.'],
-      ['The role of naming in emotional regulation',
-       'Research by Matthew Lieberman at UCLA shows that labelling emotions — specifically naming what you feel rather than being absorbed by it — reduces amygdala activity and increases prefrontal engagement. This is the neurological basis for the phrase "name it to tame it." Identifying that you feel threatened, overwhelmed, or angry — rather than just experiencing those states — changes your relationship to them and makes choices more available.'],
-      ['Why communication scripts matter in escalated moments',
-       'During interpersonal threat or conflict, access to calm, clear language is significantly reduced by the stress response. Preparing phrases in advance — as this tool does with communication and boundary options — means you can draw on them even when access to spontaneous language is limited. Research in emotional regulation confirms that pre-prepared coping statements and scripted responses are more effective than improvised responses in high-threat moments, because they require less prefrontal processing to access.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(106, 90, 170);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(106, 90, 170);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(30, 26, 46);
-    [
-      'Find a helpline: findahelpline.com',
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    // Footer
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(152, 144, 176);
-    doc.text('This tool supports reflection and awareness. Not a replacement for professional care.', margin, pageH - 22);
-
-    doc.save('threat-emotional-regulation-plan.pdf');
-    showToast('PDF downloaded!');
-  }
-
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
-
-  // INIT
-  buildThreatChips();
+function saveLocal() {
+  var p = currentPlan();
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); showToast('Saved to this device.'); refreshRestore(); }
+  catch (e) { showToast('Could not save. Storage may be full or blocked.'); }
+}
+function getHistory() { try { return JSON.parse(localStorage.getItem(CHECKINS_KEY) || '[]'); } catch (e) { return []; } }
+function addToHistory(entry) {
+  var list = getHistory(); list.push(entry);
+  try { localStorage.setItem(CHECKINS_KEY, JSON.stringify(list.slice(-20))); } catch (e) {}
   renderHistory();
-  updateShareLinks();
+}
+function renderHistory() {
+  var list = getHistory(), box = $('historyList');
+  if (!list.length) { box.innerHTML = '<p class="field-hint" style="font-style:italic">No check-ins saved yet.</p>'; return; }
+  box.innerHTML = list.slice().reverse().map(function (it) {
+    return '<div class="history-item"><div class="history-date">' + esc(it.timestamp) + '</div><div class="history-label">' + esc(it.label) + '</div></div>';
+  }).join('');
+}
+function refreshRestore() {
+  var has = false; try { has = !!localStorage.getItem(STORAGE_KEY); } catch (e) {}
+  $('restoreBtn').style.display = has ? '' : 'none';
+}
+function restoreSaved() {
+  var d = null; try { d = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+  if (!d) { showToast('Nothing saved yet.'); return; }
+  clearInputs();
+  state.threats = (d.threatsArr || []).slice(); state.body = (d.bodyArr || []).slice();
+  $('otherThreat').value = d.other || '';
+  $('happened').value = d.happened && d.happened !== 'Not entered' ? d.happened : '';
+  $('story').value = d.story && d.story !== 'Not entered' ? d.story : '';
+  $('need').value = d.needRaw || (d.need && d.need !== 'Not selected' ? d.need : '');
+  $('userName').value = d.name || '';
+  state.before = d.before || ''; state.after = d.after || '';
+  if (state.before) markFaces('facesBefore', state.before);
+  if (state.after) markFaces('facesAfter', state.after);
+  refreshChips(); refreshBody(); goStep(4);
+}
+function clearInputs() {
+  state.threats = []; state.body = []; state.plan = null; state.before = ''; state.after = '';
+  stopBreath(true);
+  ['otherThreat', 'happened', 'story', 'userName'].forEach(function (id) { $(id).value = ''; });
+  $('need').value = '';
+  markFaces('facesBefore', 0); markFaces('facesAfter', 0);
+  var g = document.querySelectorAll('.ground-item');
+  for (var i = 0; i < g.length; i++) { g[i].classList.remove('checked'); g[i].querySelector('input').checked = false; }
+  refreshChips(); refreshBody();
+  $('crisisBox').classList.remove('show');
+}
 
-  // Restore saved plan label if present
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const d = JSON.parse(saved);
-      if (d && d.label) {
-        // Just flag that a plan existed — don't re-populate the full UI
-      }
-    }
-  } catch(_) {}
-}());
+/* ---------- share ---------- */
+function updateShareLinks() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('A gentle reflection tool to pause, feel steadier, and find your next step: ');
+  $('waShare').href = 'https://wa.me/?text=' + msg + url;
+  $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  if (navigator.share) $('nativeShareBtn').style.display = '';
+}
+function copyLink() {
+  var href = window.location.href;
+  function fallback() {
+    var ta = document.createElement('textarea'); ta.value = href; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); showToast(ok ? 'Link copied!' : 'Copy the link from your address bar.');
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(href).then(function () { showToast('Link copied!'); }, fallback);
+  } else fallback();
+}
+function nativeShare() {
+  navigator.share({ title: 'Threat & Emotional Regulation Tool', text: 'A gentle reflection tool to pause, feel steadier, and find your next step.', url: window.location.href }).catch(function () {});
+}
+
+/* ---------- PDF ---------- */
+function clean(s) {
+  return String(s == null ? '' : s)
+    .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-').replace(/\u2026/g, '...').replace(/\u00A0/g, ' ')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E\u00A1-\u00FF]/g, '?');
+}
+function imageToDataUrl(url) {
+  return fetch(url, { mode: 'cors' }).then(function (res) {
+    if (!res.ok) throw new Error('logo');
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var r = new FileReader(); r.onloadend = function () { resolve(r.result); }; r.onerror = reject; r.readAsDataURL(blob);
+    });
+  });
+}
+function pdfFig(doc, ox, oy, k, type) {
+  function P(x, y) { return [ox + x * k, oy + y * k]; }
+  function L(a, b, c, d) { var p = P(a, b), r = P(c, d); doc.line(p[0], p[1], r[0], r[1]); }
+  doc.setLineWidth(1.4); doc.setLineCap('round'); doc.setLineJoin('round');
+  var h = P(30, 13); doc.circle(h[0], h[1], 10 * k, 'S');
+  if (type === 'woman') {
+    L(30, 23, 30, 42); L(30, 33, 15, 52); L(30, 33, 45, 52); L(24, 72, 22, 94); L(36, 72, 38, 94);
+    var a = P(30, 40), b = P(15, 72), c = P(45, 72); doc.triangle(a[0], a[1], b[0], b[1], c[0], c[1], 'S');
+  } else {
+    L(30, 23, 30, 60); L(30, 60, 19, 94); L(30, 60, 41, 94);
+    if (type === 'wave') { L(30, 34, 14, 54); L(30, 34, 47, 22); L(47, 22, 54, 10); }
+    else { L(30, 34, 14, 54); L(30, 34, 46, 54); }
+  }
+  var e1 = P(26, 11), e2 = P(34, 11); doc.circle(e1[0], e1[1], 0.7, 'F'); doc.circle(e2[0], e2[1], 0.7, 'F');
+}
+
+var EDU = [
+  ['Why a threat feels so big in the body',
+   'When your brain senses a threat, whether it is physical, social or emotional, your body can switch into a stress response within moments. Your heart speeds up, your breathing gets shallow and your muscles tighten. High stress also makes careful thinking and finding words harder. That is a normal human reaction, not a weakness. It is why this tool starts with your body before it asks you to think.'],
+  ['Slow breathing, and why the long breath out matters',
+   'In a 2023 randomised study from Stanford Medicine (Balban and colleagues, Cell Reports Medicine), five minutes a day of breathing exercises for a month improved mood and lowered anxiety. The group who practised cyclic sighing, which uses a long breath out, did best: it lifted mood more than mindfulness meditation and slowed breathing rate more. The effects were modest and the volunteers were generally healthy adults, so treat breathing as a helpful tool, not a treatment. If an exercise makes you dizzy or more anxious, stop and breathe normally.'],
+  ['Putting feelings into words',
+   'A well known brain imaging study (Lieberman and colleagues, 2007) found that naming an emotion reduced the brain\'s alarm response compared with simply looking at the upsetting image. A later study (Burklund and colleagues, 2014) found that labelling feelings eased distress in a way similar to reframing a situation. Try simple, specific words, such as "I feel afraid" or "I feel embarrassed".'],
+  ['Fight, flight or freeze: a useful picture, with a caution',
+   'Many people find it helpful to notice whether they feel wound up (fight or flight), shut down or numb (freeze), or steady and connected. Noticing your state helps you choose a gentler next step. A caution: polyvagal theory, which made some of this language popular, is debated. Reviews published in 2022 and 2023 (Neuhuber and Berthoud; Grossman) argue that its claims about the vagus nerve do not hold up, while its supporters continue to defend it. This tool uses these words only as everyday descriptions of how people feel, not as settled nerve science.'],
+  ['Why prepared words help when things are tense',
+   'Research on "if-then" planning (Gollwitzer, 1999; Gollwitzer and Sheeran, 2006) shows that deciding in advance what you will do or say makes it easier to follow through under pressure. The communication and boundary lines in your plan work the same way: if this happens, then I will say this. Pick the ones that sound like you and change the words freely.'],
+  ['When to reach for more support',
+   'Self-help tools can steady a hard moment, but they do not replace a counsellor, doctor or trusted person. Please seek support if the feeling keeps coming back, if memories of past harm keep intruding, or if you feel unsafe with someone. If you are in danger, contact your local emergency services. Helplines in many countries: findahelpline.com']
+];
+
+function downloadPDF() {
+  var PDF = window.jspdf && window.jspdf.jsPDF;
+  if (!PDF) { showToast('PDF library is still loading. Please try again in a moment.'); return; }
+  var plan = currentPlan();
+  showToast('Preparing your PDF...');
+  imageToDataUrl(LOGO_URL).catch(function () { return null; }).then(function (logo) { buildPdf(PDF, plan, logo); });
+}
+
+function buildPdf(PDF, plan, logo) {
+  var doc = new PDF({ unit: 'pt', format: 'a4' });
+  var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  var M = 44, CW = W - M * 2, y = M;
+  function ensure(h) { if (y + h > H - 56) { doc.addPage(); y = M; } }
+  function setText(size, bold, color) { doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]); }
+  var INK = [30, 26, 46], BRAND = [106, 90, 170], MUTE = [90, 84, 112];
+
+  function heading(text) {
+    ensure(40); y += 6;
+    doc.setDrawColor(192, 176, 224); doc.setLineWidth(0.8); doc.line(M, y, W - M, y); y += 16;
+    setText(12, true, BRAND); doc.text(clean(text), M, y); y += 16;
+  }
+  function para(text, size, lead, color, indent) {
+    setText(size, false, color || INK);
+    var lines = doc.splitTextToSize(clean(text), CW - (indent || 0));
+    lines.forEach(function (ln) { ensure(lead); doc.text(ln, M + (indent || 0), y); y += lead; });
+  }
+
+  /* header band */
+  doc.setFillColor(240, 236, 248); doc.roundedRect(M, y, CW, 88, 8, 8, 'F');
+  if (logo) { try { doc.addImage(logo, 'JPEG', M + 12, y + 16, 56, 56); } catch (e) {} }
+  setText(15, true, INK); doc.text('Threat & Emotional Regulation', M + 82, y + 30);
+  doc.text('Your Calm Plan', M + 82, y + 48);
+  setText(10, false, MUTE); doc.text('Personal reflection summary', M + 82, y + 63);
+  doc.text('emotionalintelligencedeveloper.com', M + 82, y + 77);
+  doc.setDrawColor(106, 90, 170);
+  pdfFig(doc, W - M - 108, y + 12, 0.64, 'man'); pdfFig(doc, W - M - 62, y + 12, 0.64, 'woman');
+  y += 106;
+
+  /* summary */
+  var rows = [['Date', plan.timestamp]];
+  if (plan.name) rows.push(['Prepared for', plan.name]);
+  rows.push(['What feels threatening', plan.threats]);
+  rows.push(['Body tension noticed', plan.body]);
+  if (plan.before) rows.push(['How strong it felt at the start', plan.before + ' of 5 (' + FACE_LABELS[plan.before - 1] + ')']);
+  rows.push(['What happened', plan.happened]);
+  rows.push(['The story my mind is telling me', plan.story]);
+  rows.push(['What I need most', plan.need]);
+  if (plan.after) rows.push(['How I felt after my pause', plan.after + ' of 5 (' + FACE_LABELS[plan.after - 1] + ')']);
+  rows.forEach(function (r) {
+    setText(10, false, INK);
+    var lines = doc.splitTextToSize(clean(r[1]), CW - 24);
+    var bh = lines.length * 13 + 30;
+    ensure(bh + 8);
+    doc.setFillColor(240, 236, 248); doc.roundedRect(M, y, CW, bh, 5, 5, 'F');
+    setText(8.5, true, BRAND); doc.text(clean(r[0]).toUpperCase(), M + 12, y + 15);
+    setText(10, false, INK); doc.text(lines, M + 12, y + 29);
+    y += bh + 8;
+  });
+
+  if (plan.crisis) {
+    var cmsg = 'What you wrote sounds really heavy. You do not have to carry it alone. Please reach out to someone you trust or a helpline now (findahelpline.com). If you might act on these thoughts, contact your local emergency services right away.';
+    setText(10, true, [139, 26, 26]);
+    var cl = doc.splitTextToSize(clean(cmsg), CW - 24), ch = cl.length * 13 + 16;
+    ensure(ch + 8); doc.setFillColor(255, 240, 240); doc.setDrawColor(245, 160, 160);
+    doc.roundedRect(M, y, CW, ch, 5, 5, 'FD'); doc.text(cl, M + 12, y + 18); y += ch + 8;
+  }
+
+  heading('Your 3 regulation steps');
+  plan.steps.forEach(function (s, i) { para((i + 1) + '. ' + s, 10.5, 14, INK); y += 4; });
+
+  heading('Communication options');
+  plan.comm.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
+
+  heading('Boundary options');
+  plan.bound.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
+
+  heading('If you are scared to talk');
+  ['Text a trusted person one line: "Could you check in with me today?"',
+   'Ask for company without explaining everything: "Can you stay with me for a bit?"',
+   'Write your thoughts first, then share only what feels safe.'].forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
+
+  /* education */
+  ensure(70); y += 10;
+  doc.setFillColor(240, 236, 248); doc.roundedRect(M, y, CW, 40, 6, 6, 'F');
+  pdfFig(doc, M + 10, y + 3, 0.34, 'wave');
+  setText(12, true, BRAND); doc.text('What the research says', M + 40, y + 18);
+  setText(9, false, MUTE); doc.text('Reviewed October 2026. Plain language summaries, not medical advice.', M + 40, y + 31);
+  y += 56;
+  EDU.forEach(function (e) {
+    ensure(60);
+    setText(10.5, true, BRAND); doc.text(clean(e[0]), M, y); y += 14;
+    para(e[1], 9.8, 13, INK); y += 10;
+  });
+
+  heading('Sources');
+  para('Balban MY et al. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. Cell Reports Medicine 4(1):100895. | Lieberman MD et al. (2007). Putting feelings into words. Psychological Science 18(5):421-428. | Burklund LJ et al. (2014). The common and distinct neural bases of affect labeling and reappraisal in healthy adults. Frontiers in Psychology 5:221. | Neuhuber WL and Berthoud HR (2022). Polyvagal theory and the anatomy of the vagus. Autonomic Neuroscience. | Grossman P (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. Biological Psychology. | Gollwitzer PM and Sheeran P (2006). Implementation intentions and goal achievement: a meta-analysis. Advances in Experimental Social Psychology 38.', 8.5, 11.5, MUTE);
+  y += 6;
+
+  heading('More free wellbeing resources');
+  ['Find a helpline: findahelpline.com',
+   'Main site: emotionalintelligencedeveloper.com',
+   'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+   'Support this project: emotionalintelligencedeveloper.com/support-this-website/'].forEach(function (s) { para(s, 9.8, 13, INK); });
+
+  /* footer on every page */
+  var n = doc.getNumberOfPages();
+  for (var p = 1; p <= n; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(192, 176, 224); doc.setLineWidth(0.8); doc.line(M, H - 38, W - M, H - 38);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(8); doc.setTextColor(120, 112, 150);
+    doc.text('Reflection support only. Not a replacement for professional care. emotionalintelligencedeveloper.com', M, H - 24);
+    doc.setFont('helvetica', 'normal'); doc.text('Page ' + p + ' of ' + n, W - M, H - 24, { align: 'right' });
+  }
+  doc.save('threat-emotional-regulation-plan.pdf');
+  showToast('PDF downloaded!');
+}
+
+/* ---------- init ---------- */
+function initTool() {
+  if (initTool.done) return; initTool.done = true;
+  buildThreatChips(); initBody(); initGround();
+  buildFaces('facesBefore', 'faceBefore', 'before');
+  buildFaces('facesAfter', 'faceAfter', 'after');
+  renderHistory(); refreshRestore(); updateShareLinks(); goStep(1, true);
+
+  $('nextBtn').addEventListener('click', function () { goStep(state.step + 1); });
+  $('backBtn').addEventListener('click', function () { goStep(state.step - 1); });
+  $('startBreathBtn').addEventListener('click', startBreath);
+  $('stopBreathBtn').addEventListener('click', function () { stopBreath(false); });
+  $('patSigh').addEventListener('click', function () { setPattern('sigh'); });
+  $('patLong').addEventListener('click', function () { setPattern('long'); });
+  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+  $('saveLocalBtn').addEventListener('click', saveLocal);
+  $('restoreBtn').addEventListener('click', restoreSaved);
+  $('copyLinkBtn').addEventListener('click', copyLink);
+  $('nativeShareBtn').addEventListener('click', nativeShare);
+  $('quickExitBtn').addEventListener('click', function () { window.location.replace('https://www.google.com/'); });
+  $('newReflectionBtn').addEventListener('click', function () {
+    var p = currentPlan();
+    addToHistory({ timestamp: p.timestamp, label: p.label });
+    clearInputs(); goStep(1); showToast('Saved to history. Starting a new reflection.');
+  });
+  $('resetBtn').addEventListener('click', function () {
+    if (!confirm('Reset all answers? Your check-in history will be kept.')) return;
+    clearInputs(); goStep(1); showToast('Reset complete.');
+  });
+  $('clearHistoryBtn').addEventListener('click', function () {
+    if (!confirm('Clear all check-in history and your saved reflection from this device?')) return;
+    try { localStorage.removeItem(CHECKINS_KEY); localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderHistory(); refreshRestore(); showToast('History cleared.');
+  });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTool); else initTool();
 </script>
 </body>
 </html>

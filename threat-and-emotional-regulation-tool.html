@@ -123,6 +123,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
 .scared-box li{list-style:none;font-size:14px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--gold-mid)}
 .scared-box li:last-child{border-bottom:none}
 .after-box{border:1px dashed var(--brand-mid);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
+.name-box{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
 .section-label{font-size:11px;color:var(--hint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
 
 /* buttons */
@@ -323,19 +324,13 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
         <textarea id="story" maxlength="600" placeholder="What thoughts keep coming up?"></textarea>
       </div>
     </div>
-    <div class="two-col">
-      <div class="field">
-        <label class="field-label" for="need">What do I need most right now?</label>
-        <select id="need">
-          <option value="">Choose one</option>
-          <option>Safety</option><option>Respect</option><option>Space</option>
-          <option>Reassurance</option><option>Clarity</option><option>Support</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="field-label" for="userName">Your name for the PDF (optional)</label>
-        <input type="text" id="userName" maxlength="60" placeholder="First name is fine" autocomplete="given-name" />
-      </div>
+    <div class="field">
+      <label class="field-label" for="need">What do I need most right now?</label>
+      <select id="need">
+        <option value="">Choose one</option>
+        <option>Safety</option><option>Respect</option><option>Space</option>
+        <option>Reassurance</option><option>Clarity</option><option>Support</option>
+      </select>
     </div>
   </section>
 
@@ -374,6 +369,12 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
     <div class="after-box">
       <span class="field-label" id="aftLabel">How do you feel now, after your pause?</span>
       <div class="faces" id="facesAfter" role="radiogroup" aria-labelledby="aftLabel"></div>
+    </div>
+
+    <div class="name-box">
+      <label class="field-label" for="userName">Your name for the PDF (optional)</label>
+      <span class="field-hint">It will be printed at the top of your PDF. Leave it empty to keep the PDF anonymous.</span>
+      <input type="text" id="userName" maxlength="60" placeholder="First name is fine" autocomplete="given-name" />
     </div>
 
     <div class="section-label">Actions</div>
@@ -857,7 +858,8 @@ function buildPdf(PDF, plan, logo) {
   if (logo) { try { doc.addImage(logo, 'JPEG', M + 12, y + 16, 56, 56); } catch (e) {} }
   setText(15, true, INK); doc.text('Threat & Emotional Regulation', M + 82, y + 30);
   doc.text('Your Calm Plan', M + 82, y + 48);
-  setText(10, false, MUTE); doc.text('Personal reflection summary', M + 82, y + 63);
+  setText(10, false, MUTE);
+  doc.text(plan.name ? 'Prepared for ' + clean(plan.name) : 'Personal reflection summary', M + 82, y + 63);
   doc.text('emotionalintelligencedeveloper.com', M + 82, y + 77);
   doc.setDrawColor(106, 90, 170);
   pdfFig(doc, W - M - 108, y + 12, 0.64, 'man'); pdfFig(doc, W - M - 62, y + 12, 0.64, 'woman');

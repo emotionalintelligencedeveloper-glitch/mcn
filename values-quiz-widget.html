@@ -1,509 +1,845 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Values Quiz + Growth Report | Emotional Intelligence Developer</title>
-  <style>
-    :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --primary: #1f6feb;
-      --primary-dark: #195ed6;
-      --accent: #f59e0b;
-      --success: #10b981;
-      --border: #e5e7eb;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    .wrap {
-      max-width: 920px;
-      margin: 28px auto;
-      padding: 20px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 28px rgba(17, 24, 39, 0.08);
-      padding: 22px;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      line-height: 1.2;
-    }
-
-    .lead {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    .info-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .progress {
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      overflow: hidden;
-      border: 1px solid #d1d5db;
-    }
-
-    .progress > div {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-      transition: width .2s ease;
-    }
-
-    .meta {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .q {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin: 12px 0;
-      background: #fff;
-    }
-
-    .q h3 {
-      margin: 0 0 10px;
-      font-size: 16px;
-    }
-
-    .opts {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 8px;
-    }
-
-    .opt {
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 10px;
-      cursor: pointer;
-      background: #fff;
-      transition: all .15s ease;
-      min-height: 56px;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .opt input { display: none; }
-
-    .opt:hover {
-      border-color: #9ec0ff;
-      box-shadow: 0 0 0 3px rgba(31,111,235,.12);
-    }
-
-    .opt.selected {
-      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      border-color: var(--primary-dark);
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-secondary { background: #e5e7eb; color: #111; }
-    .btn-download { background: var(--success); color: #fff; }
-
-    .result {
-      display: none;
-      margin-top: 18px;
-      border: 1px solid #dbeafe;
-      background: #f8fbff;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .score-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 8px 0 12px;
-    }
-
-    .score-pill {
-      background: #eef2ff;
-      color: #3730a3;
-      border: 1px solid #c7d2fe;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .link-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      background: #fff;
-    }
-
-    .link-card a {
-      display: inline-block;
-      margin-top: 8px;
-      background: var(--accent);
-      color: #111;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 8px 11px;
-      border-radius: 8px;
-    }
-
-    .disclaimer, footer {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 12px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Values Quiz and Growth Report | Emotional Intelligence Developer</title>
+<style>
+#eid-vq{
+  --navy:#1b2a49; --teal:#1fa39a; --salmon:#f08a7e; --yellow:#f6c344; --lav:#9b8be0;
+  --cream:#fbf8f2; --ink:#1f2937; --muted:#5b6475; --line:#e6e0d4; --good:#12905f; --bad:#c2410c;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink); line-height:1.55; max-width:880px; margin:0 auto; padding:14px; box-sizing:border-box;
+}
+#eid-vq *{box-sizing:border-box;}
+#eid-vq .eid-vq-hide{display:none !important;}
+#eid-vq .eid-vq-card{background:var(--cream); border:1px solid var(--line); border-radius:18px; box-shadow:0 10px 30px rgba(27,42,73,.10); overflow:hidden;}
+#eid-vq .eid-vq-head{background:var(--navy); color:#fff; padding:22px 22px 14px; text-align:center;}
+#eid-vq .eid-vq-scene svg{width:100%; max-width:360px; height:auto; display:block; margin:0 auto 6px;}
+#eid-vq .eid-vq-title{font-family:Georgia,"Times New Roman",serif; font-size:28px; line-height:1.2; margin:4px 0 8px; color:#fff;}
+#eid-vq .eid-vq-lead{margin:0 auto; max-width:620px; color:#d8def0; font-size:15px;}
+#eid-vq .eid-vq-body{padding:22px;}
+#eid-vq h3{font-family:Georgia,"Times New Roman",serif; color:var(--navy); margin:22px 0 8px; font-size:21px;}
+#eid-vq .eid-vq-label{display:block; font-weight:700; color:var(--navy); margin-bottom:6px;}
+#eid-vq .eid-vq-input{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:10px; font-size:16px; background:#fff; color:var(--ink);}
+#eid-vq .eid-vq-input:focus{outline:none; border-color:var(--teal);}
+#eid-vq .eid-vq-hint{font-size:13px; color:var(--muted); margin:6px 0 0;}
+#eid-vq .eid-vq-btn{border:0; border-radius:12px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit;}
+#eid-vq .eid-vq-btn:disabled{opacity:.45; cursor:not-allowed;}
+#eid-vq .eid-vq-primary{background:var(--navy); color:#fff;}
+#eid-vq .eid-vq-primary:hover:not(:disabled){background:#12203b;}
+#eid-vq .eid-vq-teal{background:var(--teal); color:#fff;}
+#eid-vq .eid-vq-ghost{background:#fff; color:var(--navy); border:2px solid var(--line);}
+#eid-vq .eid-vq-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; align-items:center;}
+#eid-vq .eid-vq-learn{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:16px 0;}
+#eid-vq .eid-vq-learn div{background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; font-size:14px;}
+#eid-vq .eid-vq-learn strong{display:block; color:var(--navy); margin-bottom:2px;}
+#eid-vq .eid-vq-support{display:inline-flex; align-items:center; gap:10px; background:var(--yellow); color:var(--navy); font-weight:800; padding:8px 16px; border-radius:999px; text-decoration:none; border:2px solid var(--navy); font-size:15px;}
+#eid-vq .eid-vq-support:hover{background:#f2b632;}
+#eid-vq .eid-vq-support svg{height:38px; width:auto; display:block;}
+#eid-vq .eid-vq-progresswrap{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:13px; font-weight:700; color:var(--muted); margin-bottom:6px;}
+#eid-vq .eid-vq-bar{height:10px; background:#e8e3d8; border-radius:999px; overflow:hidden;}
+#eid-vq .eid-vq-bar > div{height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--lav)); transition:width .3s ease;}
+#eid-vq .eid-vq-tag{display:inline-block; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:800; color:#fff; letter-spacing:.3px;}
+#eid-vq .eid-vq-qtop{display:flex; gap:14px; align-items:center; margin:16px 0 6px;}
+#eid-vq .eid-vq-qtop svg{width:120px; height:auto; flex:0 0 auto; background:#fff; border:1px solid var(--line); border-radius:12px; padding:4px;}
+#eid-vq .eid-vq-q{font-family:Georgia,"Times New Roman",serif; font-size:21px; line-height:1.35; color:var(--navy); margin:8px 0 14px;}
+#eid-vq .eid-vq-opts{display:grid; gap:10px;}
+#eid-vq .eid-vq-opt{display:flex; gap:12px; align-items:flex-start; text-align:left; width:100%; background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-size:15px; cursor:pointer; color:var(--ink); font-family:inherit; line-height:1.45;}
+#eid-vq .eid-vq-opt:hover{border-color:var(--teal);}
+#eid-vq .eid-vq-opt .eid-vq-letter{flex:0 0 28px; height:28px; border-radius:50%; background:#eef0f6; color:var(--navy); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:13px;}
+#eid-vq .eid-vq-opt.eid-vq-picked{border-color:var(--navy); background:#eef2ff;}
+#eid-vq .eid-vq-opt.eid-vq-picked .eid-vq-letter{background:var(--navy); color:#fff;}
+#eid-vq .eid-vq-opt.eid-vq-best{border-color:var(--good);}
+#eid-vq .eid-vq-bestmark{display:inline-block; margin-left:6px; font-size:11px; font-weight:800; color:#fff; background:var(--good); border-radius:999px; padding:1px 8px; vertical-align:middle;}
+#eid-vq .eid-vq-lesson{margin-top:14px; padding:14px 16px; border-radius:12px; border-left:6px solid var(--good); background:#ecfaf3;}
+#eid-vq .eid-vq-lesson.eid-vq-l2{border-color:var(--teal); background:#e9f7f6;}
+#eid-vq .eid-vq-lesson.eid-vq-l1{border-color:var(--yellow); background:#fff8e1;}
+#eid-vq .eid-vq-lesson.eid-vq-l0{border-color:var(--bad); background:#fff0ea;}
+#eid-vq .eid-vq-lesson p{margin:6px 0 0; font-size:14.5px;}
+#eid-vq .eid-vq-lesson strong{color:var(--navy);}
+#eid-vq .eid-vq-resulttop{display:flex; flex-wrap:wrap; gap:20px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px;}
+#eid-vq .eid-vq-ring{flex:0 0 150px;}
+#eid-vq .eid-vq-ring svg{width:150px; height:150px; display:block;}
+#eid-vq .eid-vq-rtext{flex:1 1 260px;}
+#eid-vq .eid-vq-rtext h2{font-family:Georgia,"Times New Roman",serif; margin:0 0 6px; color:var(--navy); font-size:26px; line-height:1.2;}
+#eid-vq .eid-vq-rtext p{margin:0 0 8px;}
+#eid-vq .eid-vq-cat{display:grid; grid-template-columns:120px 1fr 110px; gap:10px; align-items:center; margin:10px 0; font-size:14px;}
+#eid-vq .eid-vq-cat b{color:var(--navy);}
+#eid-vq .eid-vq-track{height:16px; background:#e8e3d8; border-radius:999px; overflow:hidden;}
+#eid-vq .eid-vq-fill{height:100%; border-radius:999px;}
+#eid-vq .eid-vq-two{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:14px;}
+#eid-vq .eid-vq-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px;}
+#eid-vq .eid-vq-box h4{margin:0 0 4px; color:var(--navy); font-size:15px;}
+#eid-vq .eid-vq-box p{margin:0; font-size:14px;}
+#eid-vq .eid-vq-guide{display:grid; gap:12px;}
+#eid-vq .eid-vq-gcard{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px;}
+#eid-vq .eid-vq-gcard h4{margin:0 0 8px; font-size:17px; color:var(--navy);}
+#eid-vq .eid-vq-gcols{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+#eid-vq .eid-vq-gcols div{border-radius:10px; padding:10px; font-size:14px;}
+#eid-vq .eid-vq-gcols .eid-vq-gd{background:#ecfaf3; border:1px solid #bfe8d4;}
+#eid-vq .eid-vq-gcols .eid-vq-bd{background:#fff0ea; border:1px solid #f6cdbd;}
+#eid-vq .eid-vq-gcols b{display:block; margin-bottom:2px;}
+#eid-vq .eid-vq-gwhy{margin:8px 0 0; font-size:14px; color:var(--muted);}
+#eid-vq details{background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin:8px 0;}
+#eid-vq summary{cursor:pointer; font-weight:700; color:var(--navy);}
+#eid-vq details p{margin:8px 0 0; font-size:14px;}
+#eid-vq ol.eid-vq-plan{padding-left:22px; margin:8px 0;}
+#eid-vq ol.eid-vq-plan li{margin:7px 0;}
+#eid-vq .eid-vq-links{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin-top:12px;}
+#eid-vq .eid-vq-link{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px;}
+#eid-vq .eid-vq-link a.eid-vq-go{display:inline-block; margin-top:8px; background:var(--yellow); color:var(--navy); text-decoration:none; font-weight:800; padding:8px 12px; border-radius:8px;}
+#eid-vq .eid-vq-fine{font-size:12px; color:var(--muted); margin:6px 0 0;}
+#eid-vq .eid-vq-footer{border-top:1px solid var(--line); background:#f4efe4; padding:20px 22px; text-align:center;}
+#eid-vq .eid-vq-footer h4{margin:0 0 10px; color:var(--navy); font-size:16px;}
+#eid-vq .eid-vq-share{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px;}
+#eid-vq .eid-vq-sbtn{border:0; border-radius:999px; padding:9px 16px; color:#fff; font-weight:700; font-size:14px; cursor:pointer; font-family:inherit;}
+#eid-vq .eid-vq-disc{font-size:12px; color:var(--muted); max-width:640px; margin:14px auto 0;}
+@media (max-width:560px){
+  #eid-vq .eid-vq-title{font-size:23px;}
+  #eid-vq .eid-vq-body{padding:16px;}
+  #eid-vq .eid-vq-cat{grid-template-columns:1fr; gap:4px;}
+  #eid-vq .eid-vq-gcols{grid-template-columns:1fr;}
+  #eid-vq .eid-vq-qtop svg{width:90px;}
+  #eid-vq .eid-vq-q{font-size:19px;}
+}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Values Quiz + Personalized Growth Report</h1>
-      <p class="lead">
-        Complete this quiz to discover your top value profile, get a focused 7-day plan,
-        and practical next steps to keep growing on Emotional Intelligence Developer.
-      </p>
+<div id="eid-vq">
+  <div class="eid-vq-card">
 
-      <div class="info-bar">
-        <div class="meta" id="progressText">0 / 10 answered</div>
-        <div class="meta">Result includes quiz summary + growth actions + resource links</div>
-      </div>
-      <div class="progress" aria-hidden="true"><div id="progressFill"></div></div>
-
-      <div id="quiz"></div>
-
-      <div class="controls">
-        <button class="btn-primary" onclick="showResult()">Get My Result</button>
-        <button class="btn-secondary" onclick="resetQuiz()">Reset</button>
-        <button class="btn-download" onclick="downloadPDF()">Download PDF Report</button>
-      </div>
-
-      <div id="resultArea" class="result"></div>
-
-      <div class="cards">
-        <div class="link-card">
-          <strong>Develop your emotional intelligence</strong>
-          <p>Use guided tools, values exercises, and practical reflection prompts.</p>
-          <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Visit Main Site</a>
-        </div>
-        <div class="link-card">
-          <strong>Recommended books (affiliate links)</strong>
-          <p>Find books and journals aligned with values, self-regulation, purpose, and growth.</p>
-          <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Browse Books</a>
-        </div>
-        <div class="link-card">
-          <strong>Need immediate support tools?</strong>
-          <p>Access grounding and help-page resources if you feel overwhelmed or stuck.</p>
-          <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Open Help Page</a>
-        </div>
-      </div>
-
-      <p class="disclaimer">This tool is for educational wellbeing support and is not a substitute for professional mental health or medical care.</p>
-      <footer>Created by Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/</footer>
+    <div class="eid-vq-head">
+      <div class="eid-vq-scene" id="eid-vq-scene"></div>
+      <h2 class="eid-vq-title">Values Quiz and Growth Report</h2>
+      <p class="eid-vq-lead">Learn the difference between good values and harmful values. Answer 15 real life questions, see why each choice matters, and get a personal report you can download.</p>
     </div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const { jsPDF } = window.jspdf;
+    <div class="eid-vq-body">
 
-    const profiles = {
-      A: {
-        title: "Growth & Mastery",
-        summary: "You are driven by improvement, learning, and building competence.",
-        actions: [
-          "Block 15 focused minutes daily on one high-value skill.",
-          "Track one measurable improvement target this week.",
-          "Get one feedback checkpoint from someone you trust.",
-          "Review wins + lessons every Sunday for momentum."
-        ],
-        siteSuggestions: [
-          "Use self-reflection tools on emotionalintelligencedeveloper.com to track progress.",
-          "Read one growth-focused article and apply one action within 24 hours.",
-          "Pick a skills-oriented journal or book from the recommended books page (affiliate links)."
-        ]
-      },
-      B: {
-        title: "Inner Peace & Regulation",
-        summary: "You value emotional stability, calm, and protecting your nervous system.",
-        actions: [
-          "Do a 5-minute reset practice each morning (breath, body check, or journal).",
-          "Set one boundary this week to reduce emotional overload.",
-          "Use a grounding tool before difficult conversations.",
-          "Create an evening wind-down ritual to improve recovery."
-        ],
-        siteSuggestions: [
-          "Use grounding and regulation resources on emotionalintelligencedeveloper.com.",
-          "Practice one nervous-system regulation exercise daily for 7 days.",
-          "Choose one calming/trauma-informed resource from the recommended books page (affiliate links)."
-        ]
-      },
-      C: {
-        title: "Purpose & Impact",
-        summary: "You are motivated by meaning, contribution, and making a positive difference.",
-        actions: [
-          "Define one clear impact objective for the next 7 days.",
-          "Break it into one first step under 20 minutes.",
-          "Share your goal with an accountability partner.",
-          "Reflect on how your actions aligned with your values at week end."
-        ],
-        siteSuggestions: [
-          "Use values/purpose tools on emotionalintelligencedeveloper.com for decision clarity.",
-          "Read one values-alignment article and apply it to a real choice this week.",
-          "Choose one mission-focused book/journal from the recommended books page (affiliate links)."
-        ]
-      }
-    };
+      <!-- STEP 1: INTRO -->
+      <div id="eid-vq-intro">
+        <h3 style="margin-top:0;">Before you start</h3>
+        <label class="eid-vq-label" for="eid-vq-name">Your name (optional, it will be printed on your PDF)</label>
+        <input id="eid-vq-name" class="eid-vq-input" type="text" maxlength="60" placeholder="Type your name here" autocomplete="name" />
+        <p class="eid-vq-hint">Your name stays in your browser. We do not send it anywhere.</p>
 
-    const questions = [
-      { q: "1) What do you most want right now?", A: "Improve and grow", B: "Feel calm and stable", C: "Make meaningful impact" },
-      { q: "2) In stress, you usually look for:", A: "A better strategy", B: "A way to regulate", C: "A bigger reason" },
-      { q: "3) Your best week feels like:", A: "I made progress", B: "I felt grounded", C: "I helped someone" },
-      { q: "4) You are most energized by:", A: "Learning", B: "Peace", C: "Purpose" },
-      { q: "5) In decisions, you prioritize:", A: "Long-term mastery", B: "Emotional stability", C: "Mission alignment" },
-      { q: "6) You want this tool to help you:", A: "Build momentum", B: "Lower emotional chaos", C: "Take meaningful action" },
-      { q: "7) A challenge motivates you when:", A: "It grows your capability", B: "It can be handled calmly", C: "It serves a bigger cause" },
-      { q: "8) You measure success by:", A: "Skills gained", B: "Peace maintained", C: "Lives positively affected" },
-      { q: "9) Which habit sounds most helpful now?", A: "Skill reps", B: "Daily grounding", C: "Purpose planning" },
-      { q: "10) Your strongest value today is closest to:", A: "Growth", B: "Inner peace", C: "Impact" }
-    ];
-
-    const quizEl = document.getElementById("quiz");
-    const progressText = document.getElementById("progressText");
-    const progressFill = document.getElementById("progressFill");
-
-    function renderQuiz() {
-      quizEl.innerHTML = "";
-      questions.forEach((item, i) => {
-        const n = i + 1;
-        quizEl.insertAdjacentHTML("beforeend", `
-          <section class="q" data-q="${n}">
-            <h3>${item.q}</h3>
-            <div class="opts">
-              <label class="opt"><input type="radio" name="q${n}" value="A"> ${item.A}</label>
-              <label class="opt"><input type="radio" name="q${n}" value="B"> ${item.B}</label>
-              <label class="opt"><input type="radio" name="q${n}" value="C"> ${item.C}</label>
-            </div>
-          </section>
-        `);
-      });
-
-      document.querySelectorAll(".opts").forEach(group => {
-        group.addEventListener("click", (e) => {
-          const opt = e.target.closest(".opt");
-          if (!opt) return;
-          group.querySelectorAll(".opt").forEach(o => o.classList.remove("selected"));
-          opt.classList.add("selected");
-          opt.querySelector("input").checked = true;
-          updateProgress();
-        });
-      });
-
-      updateProgress();
-    }
-
-    function updateProgress() {
-      let answered = 0;
-      for (let i = 1; i <= questions.length; i++) {
-        if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
-      }
-      const pct = Math.round((answered / questions.length) * 100);
-      progressText.textContent = `${answered} / ${questions.length} answered`;
-      progressFill.style.width = `${pct}%`;
-    }
-
-    function getScores() {
-      const scores = { A: 0, B: 0, C: 0 };
-      for (let i = 1; i <= questions.length; i++) {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!selected) {
-          alert("Please answer all questions before viewing your result.");
-          return null;
-        }
-        scores[selected.value]++;
-      }
-      return scores;
-    }
-
-    function rankScores(scores) {
-      return Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    }
-
-    function buildResultHtml(topKey, scores) {
-      const top = profiles[topKey];
-      return `
-        <div class="badge">Quiz Complete</div>
-        <h2 style="margin:0 0 8px;">Your Top Value Profile: ${top.title}</h2>
-        <p>${top.summary}</p>
-
-        <div class="score-row">
-          <span class="score-pill">Growth: ${scores.A}</span>
-          <span class="score-pill">Inner Peace: ${scores.B}</span>
-          <span class="score-pill">Purpose: ${scores.C}</span>
+        <div class="eid-vq-learn">
+          <div><strong>Hunger and giving</strong>How we respond to people in need, and why small gifts matter.</div>
+          <div><strong>War and peace</strong>Why violence hurts ordinary people, and how peace is built.</div>
+          <div><strong>Honesty today</strong>Fake news, AI made fakes, mistakes and telling the truth.</div>
+          <div><strong>Fairness and kindness</strong>Bullying, prejudice, fair pay and standing up for others.</div>
         </div>
+        <p style="margin:0;">There are no tricks. After every answer you will see the best choice and a short lesson on why it is better. Be honest, because the quiz only helps if your answers are real.</p>
 
-        <h3 style="margin:10px 0 6px;">Your 7-Day Growth Plan</h3>
-        <ol>${top.actions.map(step => `<li>${step}</li>`).join("")}</ol>
+        <div class="eid-vq-row">
+          <button class="eid-vq-btn eid-vq-primary" onclick="startQuiz()">Start the quiz</button>
+        </div>
+      </div>
 
-        <h3 style="margin:10px 0 6px;">How to Use Emotional Intelligence Developer Next</h3>
-        <ul>${top.siteSuggestions.map(step => `<li>${step}</li>`).join("")}</ul>
+      <!-- STEP 2: QUESTIONS -->
+      <div id="eid-vq-quiz" class="eid-vq-hide"></div>
 
-        <p><strong>Start here:</strong> <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/</a></p>
-        <p><strong>Affiliate resources:</strong> <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">https://emotionalintelligencedeveloper.com/recommended-books/</a></p>
-      `;
-    }
+      <!-- STEP 3: RESULTS -->
+      <div id="eid-vq-result" class="eid-vq-hide"></div>
 
-    function showResult() {
-      const scores = getScores();
-      if (!scores) return;
-      const topKey = rankScores(scores)[0][0];
-      const area = document.getElementById("resultArea");
-      area.innerHTML = buildResultHtml(topKey, scores);
-      area.style.display = "block";
-      area.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    </div>
 
-    function resetQuiz() {
-      document.querySelectorAll("input[type='radio']").forEach(input => input.checked = false);
-      document.querySelectorAll(".opt").forEach(opt => opt.classList.remove("selected"));
-      const area = document.getElementById("resultArea");
-      area.style.display = "none";
-      area.innerHTML = "";
-      updateProgress();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    <div class="eid-vq-footer">
+      <h4>Share this quiz</h4>
+      <div class="eid-vq-share">
+        <button class="eid-vq-sbtn" style="background:#1877f2;" onclick="shareTo('facebook')">Facebook</button>
+        <button class="eid-vq-sbtn" style="background:#111111;" onclick="shareTo('x')">X</button>
+        <button class="eid-vq-sbtn" style="background:#1fa855;" onclick="shareTo('whatsapp')">WhatsApp</button>
+        <button class="eid-vq-sbtn" style="background:#0a66c2;" onclick="shareTo('linkedin')">LinkedIn</button>
+        <button class="eid-vq-sbtn" style="background:#6b7280;" onclick="shareTo('email')">Email</button>
+        <button class="eid-vq-sbtn" style="background:#1b2a49;" id="eid-vq-copybtn" onclick="copyLink()">Copy link</button>
+      </div>
+      <span class="eid-vq-supportslot"></span>
+      <p class="eid-vq-disc">This tool is for education and personal reflection. It is not a test of your worth as a person, and it is not a substitute for professional mental health or medical care. Values can be learned, practised and changed.</p>
+      <p class="eid-vq-disc" style="margin-top:6px;">Created by Emotional Intelligence Developer: <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">emotionalintelligencedeveloper.com</a></p>
+    </div>
 
-    function wrapText(doc, text, x, y, width, lineHeight) {
-      const lines = doc.splitTextToSize(text, width);
-      doc.text(lines, x, y);
-      return y + (lines.length * lineHeight);
-    }
+  </div>
+</div>
 
-    function ensurePage(doc, y, threshold = 770) {
-      if (y > threshold) {
-        doc.addPage();
-        return 48;
-      }
-      return y;
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var EID_SITE = "https://emotionalintelligencedeveloper.com/";
+var EID_BOOKS = "https://emotionalintelligencedeveloper.com/recommended-books/";
+var EID_HELP = "https://emotionalintelligencedeveloper.com/help-page/";
+/* Change this one line if your donation or support page lives somewhere else */
+var EID_SUPPORT = "https://emotionalintelligencedeveloper.com/support-this-website/";
 
-    function downloadPDF() {
-      const scores = getScores();
-      if (!scores) return;
-      const ranking = rankScores(scores);
-      const topKey = ranking[0][0];
-      const top = profiles[topKey];
+var EID_CAT = {
+  com: { name: "Compassion", color: "#f08a7e",
+    good: "Caring how others feel, listening well, and standing up for people who are being hurt.",
+    bad: "Cruelty, mocking people, ignoring pain, or joining in bullying.",
+    why: "Compassion keeps communities safe. Cruelty and bullying grow when good people stay silent.",
+    tip: "Practise noticing people around you. A greeting, a listening ear or one kind word can change someone's day.",
+    plan: [
+      "Day 1: Ask one person how they are really doing, then listen without interrupting.",
+      "Day 2: Greet or include someone who is usually left out.",
+      "Day 3: Do one small kind thing for someone without telling anyone.",
+      "Day 4: If you see unkind behaviour, say something kind to the person who was hurt.",
+      "Day 5: Write down one time you were unkind and how you will do better."
+    ] },
+  hon: { name: "Honesty", color: "#2c4a7c",
+    good: "Telling the truth, owning mistakes, keeping promises, and checking facts before sharing.",
+    bad: "Lying, cheating, blaming others, or spreading rumours and fake news.",
+    why: "Trust takes years to build and seconds to break. In a world of viral rumours and AI made fakes, honesty also means checking before you share.",
+    tip: "Pause before you share or answer. Ask yourself: is this true, and is it fair to the people involved?",
+    plan: [
+      "Day 1: Tell the truth in every small situation today, even when a lie is easier.",
+      "Day 2: Before sharing anything online, check who made it and look for a trusted source.",
+      "Day 3: Admit one mistake to someone and offer to fix it.",
+      "Day 4: Return or correct something that is not rightfully yours.",
+      "Day 5: Keep one promise you have been putting off."
+    ] },
+  fai: { name: "Fairness", color: "#9b8be0",
+    good: "Treating every person as equal, paying and rewarding people fairly, and speaking up against prejudice.",
+    bad: "Prejudice, favouritism, using people who are desperate, and putting whole groups down.",
+    why: "Every person has the same worth. Unfairness makes whole groups suffer and holds whole societies back.",
+    tip: "Ask yourself who is missing from the room, and whether you would accept the same treatment if you were them.",
+    plan: [
+      "Day 1: Notice your own biases. Write down one unfair thought you have had about a group of people.",
+      "Day 2: Learn about one person or culture different from yours.",
+      "Day 3: Speak up kindly when you hear a put down joke or an unfair comment.",
+      "Day 4: Share credit with others for something you did as a team.",
+      "Day 5: Support or buy from a business that treats its workers fairly."
+    ] },
+  gen: { name: "Generosity", color: "#e0a800",
+    good: "Sharing food, time and money, giving wisely and regularly, and helping without wanting a reward.",
+    bad: "Greed, waste, walking past people in need, and blaming poor people for being poor.",
+    why: "Hunger and poverty are mostly caused by conflict, unfair systems and bad luck, not by laziness. Small gifts given steadily change real lives.",
+    tip: "You do not need to be rich to be generous. Start small, give regularly, and make sure what you support is real and honest.",
+    plan: [
+      "Day 1: Give a small amount of money, food or time to a person or cause you trust.",
+      "Day 2: Look at the food in your home. Share or plan any extra so none is wasted.",
+      "Day 3: Learn about one hunger or poverty charity and check that it is real and open about how it spends money.",
+      "Day 4: Help one person today without expecting thanks.",
+      "Day 5: Decide on a small regular giving amount, even if it is tiny."
+    ] },
+  pea: { name: "Peace", color: "#1fa39a",
+    good: "Staying calm, talking things through, working for peace, and protecting innocent people.",
+    bad: "Revenge, hate, glorifying war or violence, and spreading anger online.",
+    why: "Violence and hate create more pain, hunger and loss, and ordinary people pay the highest price. Peace is built by everyday choices.",
+    tip: "When you feel angry, slow down. A calm reply protects you, protects others, and often solves the real problem.",
+    plan: [
+      "Day 1: Take ten slow breaths before replying to anything that makes you angry.",
+      "Day 2: Do not share or like any hateful or mocking post online today.",
+      "Day 3: Apologise to someone, or forgive someone, to end an old argument.",
+      "Day 4: Learn about one peacebuilding or humanitarian group that helps people hurt by conflict.",
+      "Day 5: Settle one disagreement by asking questions and listening first."
+    ] }
+};
+var EID_CATKEYS = ["com", "hon", "fai", "gen", "pea"];
 
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const left = 42;
-      const width = 510;
-      const lh = 14;
-      let y = 44;
+/* Each option is [text, points]. Best answer is always listed first in the data; it is shuffled when the quiz runs. */
+var EID_Q = [
+  { c: "gen",
+    q: "Hundreds of millions of people around the world still go hungry every day. How do you respond to that?",
+    o: [
+      ["It is a serious problem. I help in ways I can, like giving food, money or time.", 3],
+      ["It is sad, and I would help if someone I know asked me.", 2],
+      ["It is sad, but it is far away and not really my problem.", 1],
+      ["Hungry people mostly caused it themselves, so they should sort it out.", 0]
+    ],
+    l: "Hunger is mostly caused by poverty, war and unfair food systems, not laziness. Good values mean noticing suffering even when it is far away and doing what we can, however small. Around one third of all food made in the world is lost or wasted, so even saving and sharing food at home helps." },
+  { c: "com",
+    q: "A new person joins your class, workplace or neighbourhood. They look lonely and speak a different language. What do you do?",
+    o: [
+      ["Smile, greet them and invite them to sit or talk with you.", 3],
+      ["Be polite, but only if they speak to me first.", 2],
+      ["Ignore them. They will find their own way.", 1],
+      ["Make fun of how they speak, with my friends.", 0]
+    ],
+    l: "Feeling left out hurts, and one friendly person can change everything for a newcomer. Mocking someone for their language or background is a form of bullying. Compassion starts with a simple welcome." },
+  { c: "pea",
+    q: "Some people say war is sometimes a good thing. Which view is the most caring and honest?",
+    o: [
+      ["War is a tragedy. Talking and peace efforts must come first, and force should only ever be a last resort to protect innocent people.", 3],
+      ["War is terrible. I support peace and help for the people it hurts, but I am not sure what else I can do.", 2],
+      ["War is bad, but I do not think about it because it does not affect me.", 1],
+      ["War is fine as long as my side is the one that wins.", 0]
+    ],
+    l: "War brings death, hunger, lost homes and lasting trauma, mostly for ordinary people and children. Winning does not make the harm good. Most moral and religious traditions agree that peace comes first, and that force can only be defended to protect innocent lives when nothing else works. Cheering for war, or not caring who suffers, is a harmful value." },
+  { c: "hon",
+    q: "A shop assistant gives you too much change. You only notice after you have left. What do you do?",
+    o: [
+      ["Go back or tell them next time, because it could come out of their own pay.", 3],
+      ["Return it only if I happen to be passing by.", 2],
+      ["Keep it, but feel a little guilty.", 1],
+      ["Keep it. Shops make plenty of money anyway.", 0]
+    ],
+    l: "Honesty is about what you do when nobody is watching. Often the mistake is taken from a worker's own pay. Small honest acts build a strong character and a trustworthy name." },
+  { c: "fai",
+    q: "You hear a joke that puts down a group of people because of their race, religion, gender, tribe or disability. What do you do?",
+    o: [
+      ["Say calmly that it is not funny, and treat everyone with equal respect.", 3],
+      ["Stay quiet, but I do not join in.", 2],
+      ["Laugh to fit in, even though it bothers me.", 1],
+      ["Laugh and add a joke of my own.", 0]
+    ],
+    l: "Jokes that put down groups spread prejudice, and prejudice is where discrimination and violence begin. Staying silent is better than joining in, but quietly and calmly speaking up shows others that this is not acceptable." },
+  { c: "gen",
+    q: "You have a little extra money this month. What do you do with it?",
+    o: [
+      ["Set aside a small amount regularly for a person or cause in need, even if it is small.", 3],
+      ["Give when someone asks me directly.", 2],
+      ["Plan to give someday when I have more.", 1],
+      ["Spend it all on myself. Giving is for rich people.", 0]
+    ],
+    l: "Generosity is about habit, not size. A small amount given regularly helps more than a big gift that never happens. Give wisely: check that a charity is real, open about its spending, and does not pressure you. Never give to someone who rushes you or asks for secrecy." },
+  { c: "com",
+    q: "A friend tells you they have been feeling very low lately. What do you do?",
+    o: [
+      ["Listen without judging, tell them I care, and help them find support if they need it.", 3],
+      ["Listen for a while, then talk about my own problems.", 2],
+      ["Say 'cheer up' and change the subject.", 1],
+      ["Tell them to stop being dramatic.", 0]
+    ],
+    l: "Feeling heard is often the first step to feeling better. Brushing people off or calling them dramatic makes them feel more alone. If a friend ever talks about hurting themselves, encourage them to speak to a doctor, counsellor or helpline right away, and stay with them if you can." },
+  { c: "pea",
+    q: "Someone insults you in public, in person or online. What do you do?",
+    o: [
+      ["Walk away and cool down. Later, if it still matters, talk calmly.", 3],
+      ["Stay calm and say nothing, even when it keeps happening.", 2],
+      ["Stay quiet, but hold a grudge and say bad things about them to others.", 1],
+      ["Insult them back harder and try to embarrass them.", 0]
+    ],
+    l: "Revenge feeds conflict and usually makes things worse. Calm responses protect your peace and your reputation. Staying silent forever is not ideal either, because real problems should be talked about when everyone is calm." },
+  { c: "hon",
+    q: "You see a shocking post or AI made video online that matches what you already believe. What do you do?",
+    o: [
+      ["Check where it came from, look for trusted sources, and do not share it if I cannot confirm it.", 3],
+      ["Do not share it myself, but I do not say anything when others do.", 2],
+      ["Share it with a note saying I am not sure it is true.", 1],
+      ["Share it right away. It feels true.", 0]
+    ],
+    l: "False posts, edited photos and AI made videos can look completely real, and they spread fast. Things that make us angry are shared the most, so anger is a signal to slow down and check. Sharing something false can harm people, start fights and damage trust." },
+  { c: "fai",
+    q: "A business owner can pay workers a fair wage, or pay much less because workers are desperate for any job. What is the right thing to do?",
+    o: [
+      ["Pay a wage people can really live on, with respect and safe working conditions.", 3],
+      ["Pay fairly when it is easy, but cut wages when money gets tight.", 2],
+      ["Pay only the legal minimum, even if it is not enough to live on.", 1],
+      ["Pay as little as possible. If they accept it, it is fine.", 0]
+    ],
+    l: "Using people because they are desperate is exploitation. A fair wage honours the worker's time and dignity, and fair businesses often earn more loyalty and better work. Fairness means asking what you would accept if you were in their position." },
+  { c: "gen",
+    q: "You see a neighbour struggling with heavy bags, or an elderly person who cannot cross a busy road. What do you do?",
+    o: [
+      ["Ask if they would like help, and help if they say yes.", 3],
+      ["Help, but I expect a big thank you or something in return.", 2],
+      ["Notice and feel bad, but I assume someone else will help.", 1],
+      ["Keep walking. I am busy.", 0]
+    ],
+    l: "Psychologists call it the bystander effect: the more people who see a problem, the less likely any one of them is to help. Be the one who acts. Asking first respects the other person's dignity, and real kindness does not need a reward." },
+  { c: "com",
+    q: "You find out that someone at school or work is being bullied. What do you do?",
+    o: [
+      ["Support the person, tell the bully it is wrong if it is safe to do so, and tell someone who can help.", 3],
+      ["Comfort the person privately, but never speak up.", 2],
+      ["Watch and stay out of it.", 1],
+      ["Join in so that I do not become the next target.", 0]
+    ],
+    l: "Bullying survives because of the people who watch and say nothing. You do not have to be a hero. Reaching out to the person, and telling a teacher, manager or trusted adult, makes a big difference. Joining in to stay safe turns you into part of the harm." },
+  { c: "pea",
+    q: "You see a heated online fight with people calling each other names and sharing hate. What do you do?",
+    o: [
+      ["Report the abuse, refuse to share the hate, and reach out kindly to the person being targeted.", 3],
+      ["Leave one calm, respectful comment asking people to be kind.", 2],
+      ["Scroll past and say nothing.", 1],
+      ["Join in. Everyone else is doing it.", 0]
+    ],
+    l: "Online hate can push people into fear, depression and even violence. Every like, share or nasty comment adds fuel, and every report or kind message helps to put it out. Peace starts with how we speak to each other every day." },
+  { c: "hon",
+    q: "You make a mistake that hurts a friend or team, and nobody knows it was you. What do you do?",
+    o: [
+      ["Own it, say sorry, and help to fix it.", 3],
+      ["Admit it only if someone asks me directly.", 2],
+      ["Say nothing and hope it passes.", 1],
+      ["Say nothing and let someone else take the blame.", 0]
+    ],
+    l: "Everyone makes mistakes. What defines us is how we respond. Owning it quickly keeps trust alive and usually shrinks the problem. Letting someone else take the blame is one of the most harmful choices, because an innocent person pays for what you did." },
+  { c: "fai",
+    q: "Two people are up for the same promotion or prize. One is your friend and the other is a stranger who worked harder. Who should get it?",
+    o: [
+      ["The person who earned it, for fair and clear reasons, even if they are not my friend.", 3],
+      ["Split it some way so nobody is upset, even if one worked harder.", 2],
+      ["My friend. Loyalty comes first.", 1],
+      ["Whoever flatters me the most.", 0]
+    ],
+    l: "Loyalty is a good value, but favouritism is not fair. Rewards should go to the person who earned them. Choosing people because of friendship, flattery or family hurts hard workers and makes workplaces and communities unfair." }
+];
 
-      doc.setFontSize(10);
-      y = wrapText(doc, "Emotional Intelligence Developer — https://emotionalintelligencedeveloper.com/", left, y, width, lh) + 8;
+var EID_LEVELS = [
+  { min: 85, title: "Strong Moral Compass", text: "Your answers show caring, honest and fair values. Keep leading by example, and help the people around you to grow too." },
+  { min: 65, title: "Good Values, Still Growing", text: "You have a solid base of good values. A few of your answers show room to grow, and the lessons below will help you sharpen them." },
+  { min: 45, title: "Values Under Construction", text: "You have a good base, but some of your answers could hurt other people or yourself. The good news is that values can be learned and practised, starting today." },
+  { min: 0,  title: "A Fresh Start", text: "Some of your answers show habits that can cause harm. This is not a judgement of who you are. Everyone can change, and the lessons below show you how to begin with one small choice each day." }
+];
 
-      doc.setFontSize(18);
-      y = wrapText(doc, "Values Quiz + Personalized Growth Report", left, y, width, 18) + 8;
+var eidVq = { cur: 0, answers: [], order: [], done: false, name: "" };
 
-      doc.setFontSize(12);
-      y = wrapText(doc, `Top Profile: ${top.title}`, left, y, width, lh);
-      y = wrapText(doc, top.summary, left, y + 2, width, lh) + 6;
+/* ---------- stick figure helpers ---------- */
+function eidFig(x, y, s, kind, color, arms) {
+  var a = arms || [-12, 20, 12, 20];
+  var g = '<g transform="translate(' + x + ',' + y + ') scale(' + s + ')" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">';
+  g += '<circle cx="0" cy="-10" r="8"/>';
+  if (kind === "w") {
+    g += '<line x1="0" y1="-2" x2="0" y2="8"/>';
+    g += '<polygon points="0,8 -12,36 12,36"/>';
+    g += '<line x1="-5" y1="36" x2="-6" y2="54"/><line x1="5" y1="36" x2="6" y2="54"/>';
+  } else {
+    g += '<line x1="0" y1="-2" x2="0" y2="30"/>';
+    g += '<line x1="0" y1="30" x2="-10" y2="54"/><line x1="0" y1="30" x2="10" y2="54"/>';
+  }
+  g += '<line x1="0" y1="8" x2="' + a[0] + '" y2="' + a[1] + '"/><line x1="0" y1="8" x2="' + a[2] + '" y2="' + a[3] + '"/>';
+  return g + '</g>';
+}
+function eidHeart(x, y, s, color) {
+  return '<path transform="translate(' + x + ',' + y + ') scale(' + s + ')" d="M0 8 C-18 -6 -10 -18 0 -8 C10 -18 18 -6 0 8Z" fill="' + color + '" stroke="none"/>';
+}
+function eidSceneHeader() {
+  var cols = ["#1fa39a", "#f08a7e", "#f6c344", "#9b8be0", "#ffffff"];
+  var kinds = ["m", "w", "m", "w", "m"];
+  var s = '<svg viewBox="0 0 330 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stick people holding hands">';
+  for (var i = 0; i < 5; i++) {
+    var arms = [-30, 12, 30, 12];
+    if (i === 0) arms = [-12, 26, 30, 12];
+    if (i === 4) arms = [-30, 12, 12, 26];
+    s += eidFig(45 + i * 60, 40, 1, kinds[i], cols[i], arms);
+  }
+  s += eidHeart(165, 12, 1, "#f08a7e");
+  return s + '</svg>';
+}
+function eidSceneFor(cat) {
+  var navy = "#1b2a49", s = '<svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">';
+  if (cat === "gen") {
+    s += eidFig(40, 37, 0.9, "m", "#1fa39a", [-12, 20, 26, 6]);
+    s += '<path d="M68 42 h20 q-2 10 -10 10 q-8 0 -10 -10z" fill="#f6c344" stroke="' + navy + '" stroke-width="2"/>';
+    s += eidFig(112, 53, 0.6, "m", "#f08a7e", [-24, 6, 12, 22]);
+    s += eidHeart(80, 24, 0.8, "#f08a7e");
+  } else if (cat === "com") {
+    s += eidFig(60, 37, 0.9, "m", "#f08a7e", [-12, 20, 34, 10]);
+    s += eidFig(94, 37, 0.9, "w", "#9b8be0", [-12, 20, 12, 20]);
+    s += eidHeart(77, 12, 0.9, "#f08a7e");
+  } else if (cat === "pea") {
+    s += eidFig(50, 37, 0.9, "m", "#1fa39a", [-12, 20, 32, 22]);
+    s += eidFig(110, 37, 0.9, "w", "#f08a7e", [-32, 22, 12, 20]);
+    s += '<g fill="none" stroke="#1fa39a" stroke-width="2.5" stroke-linecap="round"><circle cx="80" cy="22" r="12"/><line x1="80" y1="10" x2="80" y2="34"/><line x1="80" y1="22" x2="72" y2="30"/><line x1="80" y1="22" x2="88" y2="30"/></g>';
+  } else if (cat === "hon") {
+    s += eidFig(55, 37, 0.9, "m", "#2c4a7c", [-12, 20, 8, 14]);
+    s += '<g fill="#fff" stroke="' + navy + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="92" y="8" width="56" height="34" rx="10"/><path d="M98 42 l-8 9 l18 -8"/></g>';
+    s += '<path d="M106 26 l8 8 l16 -16" fill="none" stroke="#12905f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+  } else {
+    s += eidFig(20, 37, 0.8, "m", "#9b8be0", [-12, 20, 12, 20]);
+    s += eidFig(140, 37, 0.8, "w", "#f6c344", [-12, 20, 12, 20]);
+    s += '<g fill="none" stroke="' + navy + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="80" y1="18" x2="80" y2="84"/><line x1="56" y1="84" x2="104" y2="84"/><line x1="42" y1="28" x2="118" y2="28"/>';
+    s += '<line x1="42" y1="28" x2="34" y2="50"/><line x1="42" y1="28" x2="50" y2="50"/><path d="M30 50 h24 q-3 8 -12 8 q-9 0 -12 -8z"/>';
+    s += '<line x1="118" y1="28" x2="110" y2="50"/><line x1="118" y1="28" x2="126" y2="50"/><path d="M106 50 h24 q-3 8 -12 8 q-9 0 -12 -8z"/></g>';
+  }
+  return s + '</svg>';
+}
+function eidSupportBtn() {
+  var s = '<svg viewBox="0 0 100 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+  s += eidFig(18, 14, 0.55, "m", "#1b2a49", [-14, -6, 14, -6]);
+  s += eidHeart(50, 18, 0.9, "#c2410c");
+  s += eidFig(82, 14, 0.55, "w", "#1b2a49", [-14, -6, 14, -6]);
+  s += '</svg>';
+  return '<a class="eid-vq-support" href="' + EID_SUPPORT + '" target="_blank" rel="noopener">' + s + '<span>Support this website</span></a>';
+}
 
-      y = wrapText(doc, `Score Summary → Growth: ${scores.A} | Inner Peace: ${scores.B} | Purpose: ${scores.C}`, left, y, width, lh) + 8;
+/* ---------- helpers ---------- */
+function eidEsc(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function eidShuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function eidLabel(pts) {
+  if (pts === 3) return "Strong values choice";
+  if (pts === 2) return "Good, but you can go further";
+  if (pts === 1) return "This one needs a rethink";
+  return "This choice can hurt people";
+}
+function eidCompute() {
+  var sums = { com: 0, hon: 0, fai: 0, gen: 0, pea: 0 };
+  var total = 0;
+  for (var i = 0; i < EID_Q.length; i++) {
+    var pts = EID_Q[i].o[eidVq.answers[i]][1];
+    sums[EID_Q[i].c] += pts;
+    total += pts;
+  }
+  var pct = {};
+  var strongest = EID_CATKEYS[0], weakest = EID_CATKEYS[0];
+  EID_CATKEYS.forEach(function (k) {
+    pct[k] = Math.round(sums[k] / 9 * 100);
+    if (sums[k] > sums[strongest]) strongest = k;
+    if (sums[k] < sums[weakest]) weakest = k;
+  });
+  var overall = Math.round(total / 45 * 100);
+  var level = EID_LEVELS[EID_LEVELS.length - 1];
+  for (var n = 0; n < EID_LEVELS.length; n++) { if (overall >= EID_LEVELS[n].min) { level = EID_LEVELS[n]; break; } }
+  return { sums: sums, pct: pct, total: total, overall: overall, level: level, strongest: strongest, weakest: weakest };
+}
+function eidCatLevel(p) {
+  if (p >= 75) return "Strong";
+  if (p >= 50) return "Growing";
+  return "Needs care";
+}
+function eidToday() {
+  try { return new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }); }
+  catch (e) { return new Date().toDateString(); }
+}
 
-      y = wrapText(doc, "Your Answers:", left, y, width, lh) + 4;
-      for (let i = 1; i <= questions.length; i++) {
-        const q = questions[i - 1].q;
-        const selected = document.querySelector(`input[name="q${i}"]:checked`).parentElement.innerText.trim();
-        y = wrapText(doc, `${i}. ${q}`, left, y, width, lh);
-        y = wrapText(doc, `   Your answer: ${selected}`, left, y, width, lh) + 2;
-        y = ensurePage(doc, y);
-      }
+/* ---------- quiz flow ---------- */
+function startQuiz() {
+  eidVq.name = (document.getElementById("eid-vq-name").value || "").trim();
+  eidVq.cur = 0; eidVq.answers = []; eidVq.order = []; eidVq.done = false;
+  for (var i = 0; i < EID_Q.length; i++) {
+    eidVq.answers.push(null);
+    eidVq.order.push(eidShuffle([0, 1, 2, 3]));
+  }
+  document.getElementById("eid-vq-intro").classList.add("eid-vq-hide");
+  document.getElementById("eid-vq-result").classList.add("eid-vq-hide");
+  document.getElementById("eid-vq-quiz").classList.remove("eid-vq-hide");
+  renderQuestion();
+  eidScrollTop();
+}
+function eidScrollTop() {
+  var el = document.getElementById("eid-vq");
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function renderQuestion() {
+  var i = eidVq.cur, Q = EID_Q[i], cat = EID_CAT[Q.c];
+  var ord = eidVq.order[i], ans = eidVq.answers[i];
+  var answered = ans !== null;
+  var html = '<div class="eid-vq-progresswrap"><span>Question ' + (i + 1) + ' of ' + EID_Q.length + '</span><span>' + Math.round(i / EID_Q.length * 100) + '% done</span></div>';
+  html += '<div class="eid-vq-bar"><div style="width:' + (i / EID_Q.length * 100) + '%"></div></div>';
+  html += '<div class="eid-vq-qtop">' + eidSceneFor(Q.c) + '<div><span class="eid-vq-tag" style="background:' + cat.color + ';">' + cat.name.toUpperCase() + '</span></div></div>';
+  html += '<p class="eid-vq-q">' + eidEsc(Q.q) + '</p>';
+  html += '<div class="eid-vq-opts">';
+  var letters = ["A", "B", "C", "D"];
+  for (var k = 0; k < 4; k++) {
+    var idx = ord[k], opt = Q.o[idx];
+    var cls = "eid-vq-opt";
+    if (answered && ans === idx) cls += " eid-vq-picked";
+    if (answered && opt[1] === 3) cls += " eid-vq-best";
+    html += '<button type="button" class="' + cls + '" onclick="pickOption(' + k + ')"><span class="eid-vq-letter">' + letters[k] + '</span><span>' + eidEsc(opt[0]) + (answered && opt[1] === 3 ? '<span class="eid-vq-bestmark">Best answer</span>' : '') + '</span></button>';
+  }
+  html += '</div>';
+  if (answered) {
+    var pts = Q.o[ans][1];
+    html += '<div class="eid-vq-lesson eid-vq-l' + pts + '"><strong>' + eidLabel(pts) + '</strong>';
+    if (pts < 3) html += '<p><strong>Best answer:</strong> ' + eidEsc(Q.o[0][0]) + '</p>';
+    html += '<p>' + eidEsc(Q.l) + '</p></div>';
+  }
+  html += '<div class="eid-vq-row">';
+  html += '<button class="eid-vq-btn eid-vq-ghost" onclick="prevQ()"' + (i === 0 ? ' disabled' : '') + '>Back</button>';
+  html += '<button class="eid-vq-btn eid-vq-primary" onclick="nextQ()"' + (answered ? '' : ' disabled') + '>' + (i === EID_Q.length - 1 ? 'See my results' : 'Next') + '</button>';
+  html += '</div>';
+  document.getElementById("eid-vq-quiz").innerHTML = html;
+}
+function pickOption(k) {
+  var i = eidVq.cur;
+  eidVq.answers[i] = eidVq.order[i][k];
+  renderQuestion();
+}
+function nextQ() {
+  if (eidVq.answers[eidVq.cur] === null) return;
+  if (eidVq.cur === EID_Q.length - 1) { showResult(); return; }
+  eidVq.cur++;
+  renderQuestion();
+  eidScrollTop();
+}
+function prevQ() {
+  if (eidVq.cur === 0) return;
+  eidVq.cur--;
+  renderQuestion();
+  eidScrollTop();
+}
+function resetQuiz() {
+  eidVq.done = false;
+  document.getElementById("eid-vq-result").classList.add("eid-vq-hide");
+  document.getElementById("eid-vq-quiz").classList.add("eid-vq-hide");
+  document.getElementById("eid-vq-intro").classList.remove("eid-vq-hide");
+  eidScrollTop();
+}
 
-      y = wrapText(doc, "7-Day Growth Plan:", left, y + 6, width, lh) + 2;
-      top.actions.forEach((step, idx) => {
-        y = wrapText(doc, `${idx + 1}. ${step}`, left, y, width, lh);
-        y = ensurePage(doc, y);
-      });
+/* ---------- results ---------- */
+function showResult() {
+  for (var c = 0; c < EID_Q.length; c++) {
+    if (eidVq.answers[c] === null) { alert("Please answer every question first."); return; }
+  }
+  eidVq.done = true;
+  var r = eidCompute();
+  var circ = 2 * Math.PI * 52;
+  var off = circ * (1 - r.overall / 100);
+  var ringColor = r.overall >= 65 ? "#12905f" : (r.overall >= 45 ? "#e0a800" : "#c2410c");
+  var h = "";
+  h += '<div class="eid-vq-resulttop"><div class="eid-vq-ring"><svg viewBox="0 0 120 120" role="img" aria-label="Overall score ' + r.overall + ' percent">';
+  h += '<circle cx="60" cy="60" r="52" fill="none" stroke="#e8e3d8" stroke-width="12"/>';
+  h += '<circle cx="60" cy="60" r="52" fill="none" stroke="' + ringColor + '" stroke-width="12" stroke-linecap="round" stroke-dasharray="' + circ.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '" transform="rotate(-90 60 60)"/>';
+  h += '<text x="60" y="66" text-anchor="middle" font-size="26" font-weight="800" fill="#1b2a49" font-family="Georgia,serif">' + r.overall + '%</text></svg></div>';
+  h += '<div class="eid-vq-rtext"><p style="font-weight:700;color:#5b6475;margin-bottom:2px;">' + (eidVq.name ? eidEsc(eidVq.name) + ', your' : 'Your') + ' values score</p>';
+  h += '<h2>' + r.level.title + '</h2><p>' + r.level.text + '</p></div></div>';
 
-      y = wrapText(doc, "How to Continue Developing:", left, y + 8, width, lh) + 2;
-      top.siteSuggestions.forEach((step, idx) => {
-        y = wrapText(doc, `${idx + 1}. ${step}`, left, y, width, lh);
-        y = ensurePage(doc, y);
-      });
+  h += '<h3>Your value scores</h3>';
+  EID_CATKEYS.forEach(function (k) {
+    h += '<div class="eid-vq-cat"><b>' + EID_CAT[k].name + '</b><div class="eid-vq-track"><div class="eid-vq-fill" style="width:' + r.pct[k] + '%;background:' + EID_CAT[k].color + ';"></div></div><span>' + r.pct[k] + '% ' + eidCatLevel(r.pct[k]) + '</span></div>';
+  });
 
-      y = wrapText(doc, "Primary site: https://emotionalintelligencedeveloper.com/", left, y + 8, width, lh);
-      y = wrapText(doc, "Affiliate links page: https://emotionalintelligencedeveloper.com/recommended-books/", left, y, width, lh);
+  h += '<div class="eid-vq-two"><div class="eid-vq-box"><h4>Your strongest value: ' + EID_CAT[r.strongest].name + '</h4><p>' + EID_CAT[r.strongest].good + '</p></div>';
+  h += '<div class="eid-vq-box"><h4>Your biggest growth area: ' + EID_CAT[r.weakest].name + '</h4><p>' + EID_CAT[r.weakest].tip + '</p></div></div>';
 
-      doc.setFontSize(9);
-      wrapText(doc, "https://emotionalintelligencedeveloper.com/", left, 810, width, 10);
+  h += '<h3>Good values and harmful values</h3><div class="eid-vq-guide">';
+  EID_CATKEYS.forEach(function (k) {
+    h += '<div class="eid-vq-gcard"><h4>' + EID_CAT[k].name + '</h4><div class="eid-vq-gcols"><div class="eid-vq-gd"><b>Healthy value</b>' + EID_CAT[k].good + '</div><div class="eid-vq-bd"><b>Harmful opposite</b>' + EID_CAT[k].bad + '</div></div><p class="eid-vq-gwhy"><strong>Why it matters:</strong> ' + EID_CAT[k].why + '</p></div>';
+  });
+  h += '</div>';
 
-      doc.save("values-quiz-growth-report.pdf");
-    }
+  h += '<h3>Your answers and what to learn</h3><p class="eid-vq-fine" style="margin-top:0;">Tap a question to see the best answer and the lesson.</p>';
+  for (var i = 0; i < EID_Q.length; i++) {
+    var Q = EID_Q[i], pts = Q.o[eidVq.answers[i]][1];
+    h += '<details><summary>' + (i + 1) + '. ' + eidEsc(Q.q) + ' <span style="font-weight:600;color:' + (pts === 3 ? '#12905f' : (pts === 0 ? '#c2410c' : '#5b6475')) + ';">(' + eidLabel(pts) + ')</span></summary>';
+    h += '<p><strong>Your answer:</strong> ' + eidEsc(Q.o[eidVq.answers[i]][0]) + '</p>';
+    if (pts < 3) h += '<p><strong>Best answer:</strong> ' + eidEsc(Q.o[0][0]) + '</p>';
+    h += '<p><strong>Why:</strong> ' + eidEsc(Q.l) + '</p></details>';
+  }
 
-    renderQuiz();
-  </script>
+  h += '<h3>Your 7 day plan: grow your ' + EID_CAT[r.weakest].name.toLowerCase() + '</h3><ol class="eid-vq-plan">';
+  EID_CAT[r.weakest].plan.forEach(function (p) { h += '<li>' + p + '</li>'; });
+  h += '<li>Day 6: Tell one person what you learned from this quiz.</li>';
+  h += '<li>Day 7: Retake the quiz and see how your values have grown.</li></ol>';
+
+  h += '<div class="eid-vq-row"><button class="eid-vq-btn eid-vq-teal" onclick="downloadPDF()">Download my PDF report</button><button class="eid-vq-btn eid-vq-ghost" onclick="resetQuiz()">Retake the quiz</button></div>';
+
+  h += '<div class="eid-vq-links">';
+  h += '<div class="eid-vq-link"><strong>Keep developing your emotional intelligence</strong><p style="margin:6px 0 0;">Free guided tools, reflection prompts and practical exercises.</p><a class="eid-vq-go" href="' + EID_SITE + '" target="_blank" rel="noopener">Visit the main site</a></div>';
+  h += '<div class="eid-vq-link"><strong>Recommended books</strong><p style="margin:6px 0 0;">Books and journals on values, kindness, peace and growth.</p><a class="eid-vq-go" href="' + EID_BOOKS + '" target="_blank" rel="noopener">Browse the books</a><p class="eid-vq-fine">As an Amazon Associate I earn from qualifying purchases.</p></div>';
+  h += '<div class="eid-vq-link"><strong>Feeling overwhelmed?</strong><p style="margin:6px 0 0;">Grounding tools and support pages for hard moments.</p><a class="eid-vq-go" href="' + EID_HELP + '" target="_blank" rel="noopener">Open the help page</a></div>';
+  h += '</div>';
+
+  var box = document.getElementById("eid-vq-result");
+  box.innerHTML = h;
+  document.getElementById("eid-vq-quiz").classList.add("eid-vq-hide");
+  box.classList.remove("eid-vq-hide");
+  eidFillSlots();
+  eidScrollTop();
+}
+
+/* ---------- PDF ---------- */
+function eidRgb(hex) {
+  var n = parseInt(hex.replace("#", ""), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function eidPdfFig(doc, x, y, s, kind, color, arms) {
+  var a = arms || [-12, 20, 12, 20];
+  doc.setDrawColor(color[0], color[1], color[2]);
+  doc.setLineWidth(1.6 * s);
+  doc.circle(x, y - 10 * s, 8 * s, "S");
+  if (kind === "w") {
+    doc.line(x, y - 2 * s, x, y + 8 * s);
+    doc.triangle(x, y + 8 * s, x - 12 * s, y + 36 * s, x + 12 * s, y + 36 * s, "S");
+    doc.line(x - 5 * s, y + 36 * s, x - 6 * s, y + 54 * s);
+    doc.line(x + 5 * s, y + 36 * s, x + 6 * s, y + 54 * s);
+  } else {
+    doc.line(x, y - 2 * s, x, y + 30 * s);
+    doc.line(x, y + 30 * s, x - 10 * s, y + 54 * s);
+    doc.line(x, y + 30 * s, x + 10 * s, y + 54 * s);
+  }
+  doc.line(x, y + 8 * s, x + a[0] * s, y + a[1] * s);
+  doc.line(x, y + 8 * s, x + a[2] * s, y + a[3] * s);
+}
+function downloadPDF() {
+  if (!eidVq.done) { alert("Please finish the quiz first."); return; }
+  if (!window.jspdf || !window.jspdf.jsPDF) { alert("The PDF tool is still loading. Please try again in a moment."); return; }
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ unit: "pt", format: "a4" });
+  var r = eidCompute();
+  var L = 42, W = 511, BOTTOM = 785, y = 0;
+  var NAVY = [27, 42, 73], INK = [31, 41, 55], MUTED = [91, 100, 117], GOOD = [18, 144, 95], BAD = [194, 65, 12];
+
+  function newPage() { doc.addPage(); y = 50; }
+  function need(h) { if (y + h > BOTTOM) newPage(); }
+  function para(text, size, style, color, indent, gap) {
+    indent = indent || 0; gap = (gap === undefined ? 4 : gap);
+    doc.setFont("helvetica", style || "normal");
+    doc.setFontSize(size);
+    doc.setTextColor(color[0], color[1], color[2]);
+    var lines = doc.splitTextToSize(text, W - indent);
+    var lh = size * 1.38;
+    for (var i = 0; i < lines.length; i++) { need(lh); doc.text(lines[i], L + indent, y + size); y += lh; }
+    y += gap;
+  }
+  function heading(text, color) {
+    need(46);
+    y += 8;
+    var c = eidRgb(color || "#1fa39a");
+    doc.setFillColor(c[0], c[1], c[2]);
+    doc.rect(L, y, 5, 20, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(15); doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.text(text, L + 14, y + 15);
+    y += 30;
+  }
+
+  /* header band */
+  doc.setFillColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.rect(0, 0, 595, 112, "F");
+  var figCols = [[31, 163, 154], [240, 138, 126], [246, 195, 68], [155, 139, 224]];
+  var kinds = ["m", "w", "m", "w"];
+  for (var f = 0; f < 4; f++) {
+    var ar = [-27, 12, 27, 12];
+    if (f === 0) ar = [-12, 26, 27, 12];
+    if (f === 3) ar = [-27, 12, 12, 26];
+    eidPdfFig(doc, 390 + f * 44, 46, 0.8, kinds[f], figCols[f], ar);
+  }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(216, 222, 240);
+  doc.text("Emotional Intelligence Developer", L, 34);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(255, 255, 255);
+  doc.text("Values Quiz Growth Report", L, 62);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(216, 222, 240);
+  if (eidVq.name) doc.text("Prepared for: " + eidVq.name, L, 82);
+  doc.text("Date: " + eidToday(), L, eidVq.name ? 98 : 82);
+  y = 130;
+
+  /* overall box */
+  doc.setFillColor(244, 242, 252); doc.setDrawColor(220, 215, 240);
+  doc.roundedRect(L, y, W, 84, 8, 8, "FD");
+  var oc = r.overall >= 65 ? GOOD : (r.overall >= 45 ? [224, 168, 0] : BAD);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(34); doc.setTextColor(oc[0], oc[1], oc[2]);
+  doc.text(r.overall + "%", L + 16, y + 50);
+  doc.setFontSize(15); doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.text(r.level.title, L + 110, y + 26);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+  var sl = doc.splitTextToSize(r.level.text, W - 126);
+  doc.text(sl.slice(0, 4), L + 110, y + 42);
+  y += 104;
+
+  /* bars */
+  heading("Your value scores");
+  EID_CATKEYS.forEach(function (k) {
+    need(28);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.text(EID_CAT[k].name, L, y + 11);
+    doc.setFillColor(232, 227, 216);
+    doc.roundedRect(L + 100, y, 300, 14, 7, 7, "F");
+    var c = eidRgb(EID_CAT[k].color);
+    doc.setFillColor(c[0], c[1], c[2]);
+    var bw = Math.max(14, 300 * r.pct[k] / 100);
+    doc.roundedRect(L + 100, y, bw, 14, 7, 7, "F");
+    doc.setFont("helvetica", "normal"); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(r.pct[k] + "%  " + eidCatLevel(r.pct[k]), L + 412, y + 11);
+    y += 26;
+  });
+  y += 4;
+  para("Strongest value: " + EID_CAT[r.strongest].name + ". " + EID_CAT[r.strongest].good, 11, "normal", INK, 0, 4);
+  para("Biggest growth area: " + EID_CAT[r.weakest].name + ". " + EID_CAT[r.weakest].tip, 11, "normal", INK, 0, 6);
+
+  /* guide */
+  heading("Good values and harmful values", "#9b8be0");
+  para("Values are the beliefs that guide what we do. Some values build people and communities up. Others hurt people, often without us realising. Here is a simple guide to the five values in this quiz.", 10.5, "normal", MUTED, 0, 8);
+  EID_CATKEYS.forEach(function (k) {
+    need(90);
+    para(EID_CAT[k].name, 12.5, "bold", NAVY, 0, 2);
+    para("Healthy value: " + EID_CAT[k].good, 10.5, "normal", GOOD, 10, 2);
+    para("Harmful opposite: " + EID_CAT[k].bad, 10.5, "normal", BAD, 10, 2);
+    para("Why it matters: " + EID_CAT[k].why, 10.5, "normal", INK, 10, 10);
+  });
+
+  /* answers */
+  heading("Your answers and what to learn", "#f08a7e");
+  for (var i = 0; i < EID_Q.length; i++) {
+    var Q = EID_Q[i], pts = Q.o[eidVq.answers[i]][1];
+    need(80);
+    para((i + 1) + ". " + Q.q, 11, "bold", NAVY, 0, 2);
+    para("Your answer: " + Q.o[eidVq.answers[i]][0], 10.5, "normal", INK, 12, 2);
+    para("Result: " + eidLabel(pts), 10.5, "bold", pts === 3 ? GOOD : (pts === 0 ? BAD : MUTED), 12, 2);
+    if (pts < 3) para("Best answer: " + Q.o[0][0], 10.5, "normal", GOOD, 12, 2);
+    para("Why: " + Q.l, 10.5, "normal", INK, 12, 10);
+  }
+
+  /* plan */
+  heading("Your 7 day plan: grow your " + EID_CAT[r.weakest].name.toLowerCase(), "#e0a800");
+  var plan = EID_CAT[r.weakest].plan.concat([
+    "Day 6: Tell one person what you learned from this quiz.",
+    "Day 7: Retake the quiz and see how your values have grown."
+  ]);
+  plan.forEach(function (p) { para(p, 11, "normal", INK, 8, 5); });
+
+  /* links */
+  heading("Keep growing", "#1fa39a");
+  para("Free tools and guides: " + EID_SITE, 10.5, "normal", INK, 0, 3);
+  para("Recommended books: " + EID_BOOKS, 10.5, "normal", INK, 0, 1);
+  para("As an Amazon Associate I earn from qualifying purchases.", 9, "normal", MUTED, 0, 4);
+  para("Support and help pages: " + EID_HELP, 10.5, "normal", INK, 0, 3);
+  para("Support this website: " + EID_SUPPORT, 10.5, "normal", INK, 0, 10);
+  para("This report is for education and personal reflection. It is not a test of your worth as a person and is not a substitute for professional mental health or medical care. Values can be learned, practised and changed.", 9, "normal", MUTED, 0, 0);
+
+  /* footer on every page */
+  var pages = doc.getNumberOfPages();
+  for (var p = 1; p <= pages; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(220, 215, 205); doc.setLineWidth(0.6);
+    doc.line(L, 805, L + W, 805);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text("Emotional Intelligence Developer  |  emotionalintelligencedeveloper.com", L, 820);
+    doc.text("Page " + p + " of " + pages, L + W, 820, { align: "right" });
+  }
+
+  var fname = "values-quiz-growth-report";
+  if (eidVq.name) fname += "-" + eidVq.name.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase();
+  doc.save(fname + ".pdf");
+}
+
+/* ---------- sharing ---------- */
+function eidShareText() {
+  if (eidVq.done) {
+    var r = eidCompute();
+    return "I just took the Values Quiz and scored " + r.overall + "%. Find out how your values compare:";
+  }
+  return "Take the free Values Quiz and learn the difference between good values and harmful values:";
+}
+function eidShareUrl() {
+  var u = window.location.href.split("#")[0];
+  if (!u || u.indexOf("http") !== 0) u = EID_SITE;
+  return u;
+}
+function shareTo(net) {
+  var u = encodeURIComponent(eidShareUrl()), t = encodeURIComponent(eidShareText());
+  var link = "";
+  if (net === "facebook") link = "https://www.facebook.com/sharer/sharer.php?u=" + u;
+  else if (net === "x") link = "https://twitter.com/intent/tweet?text=" + t + "&url=" + u;
+  else if (net === "whatsapp") link = "https://wa.me/?text=" + t + "%20" + u;
+  else if (net === "linkedin") link = "https://www.linkedin.com/sharing/share-offsite/?url=" + u;
+  else if (net === "email") { window.location.href = "mailto:?subject=" + encodeURIComponent("Values Quiz") + "&body=" + t + "%20" + u; return; }
+  if (link) window.open(link, "_blank", "noopener,width=640,height=560");
+}
+function copyLink() {
+  var url = eidShareUrl();
+  var btn = document.getElementById("eid-vq-copybtn");
+  function done() { btn.textContent = "Link copied"; setTimeout(function () { btn.textContent = "Copy link"; }, 2000); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done, function () { window.prompt("Copy this link:", url); });
+  } else {
+    window.prompt("Copy this link:", url);
+  }
+}
+
+/* ---------- start up ---------- */
+function eidFillSlots() {
+  var slots = document.querySelectorAll("#eid-vq .eid-vq-supportslot");
+  for (var i = 0; i < slots.length; i++) { slots[i].innerHTML = eidSupportBtn(); }
+}
+document.getElementById("eid-vq-scene").innerHTML = eidSceneHeader();
+eidFillSlots();
+</script>
 </body>
 </html>

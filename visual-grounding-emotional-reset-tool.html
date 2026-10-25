@@ -1,1223 +1,960 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Visual Grounding + Emotional Reset Tool | Emotional Intelligence Developer</title>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #f3f0f8;
-      --card: #ffffff;
-      --text: #1e1a2e;
-      --muted: #4a4868;
-      --hint: #9890b0;
-      --border: #d4cce8;
-      --brand: #6a5aaa;
-      --brand-light: #f0ecf8;
-      --brand-mid: #c0b0e0;
-      --accent: #8a7acc;
-      --accent-light: #e8e4f8;
-      --teal: #3a7a78;
-      --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
-      --gold: #7a6a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --warm: #f8f6f2;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
-      --danger-bg: #fff0f0;
-      --danger-border: #f5a0a0;
-      --danger-text: #8b1a1a;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-    }
-
-    /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--brand-mid);
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal;
-      color: var(--text);
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .tagline {
-      font-size: 15px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      line-height: 1.65;
-    }
-
-    .disclaimer {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 11px 14px;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-
-    /* PROGRESS */
-    .progress-wrap {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 16px 20px;
-      margin-bottom: 16px;
-    }
-
-    .progress-top {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .progress-step-label {
-      font-size: 13px;
-      color: var(--brand);
-      font-weight: bold;
-    }
-
-    .progress-pct {
-      font-size: 12px;
-      color: var(--hint);
-    }
-
-    .progress-bar-wrap {
-      height: 6px;
-      background: var(--brand-light);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--brand);
-      border-radius: 99px;
-      transition: width 0.3s ease;
-      width: 0%;
-    }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: normal;
-      color: var(--brand);
-      margin-bottom: 6px;
-    }
-
-    .section-tag {
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 14px;
-    }
-
-    .card-intro {
-      font-size: 14px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 14px;
-      line-height: 1.6;
-    }
-
-    /* GROUNDING STEPS */
-    .step-card {
-      display: none;
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
-
-    .step-card.active { display: block; }
-
-    .step-heading {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-
-    .step-hint {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 10px;
-    }
-
-    /* SUGGESTION + CHOSEN CHIPS */
-    .suggestion-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 10px;
-    }
-
-    .suggestion-chip {
-      background: #fff;
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 5px 13px;
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.12s;
-    }
-
-    .suggestion-chip:hover { border-color: var(--brand); color: var(--text); }
-    .suggestion-chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-    .chosen-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 12px;
-      min-height: 14px;
-    }
-
-    .chosen-chip {
-      background: var(--accent-light);
-      border: 1.5px solid var(--brand-mid);
-      border-radius: 99px;
-      padding: 5px 11px;
-      font-family: "Georgia", serif;
-      font-size: 13px;
-      color: var(--brand);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.12s;
-    }
-
-    .chosen-chip:hover { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
-
-    /* ADD INPUT */
-    .add-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 13px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
-
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      min-height: 80px;
-      resize: vertical;
-      line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { outline: none; border-color: var(--brand); }
-
-    select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 13px;
-      font-family: "Georgia", serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fff;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239890b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 13px center;
-      padding-right: 34px;
-    }
-
-    select:focus { outline: none; border-color: var(--brand); }
-
-    /* ANCHOR BUTTONS */
-    .anchor-grid {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr;
-      margin-bottom: 14px;
-    }
-
-    @media (min-width: 480px) {
-      .anchor-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .anchor-btn {
-      background: var(--brand-light);
-      border: 1.5px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 14px 14px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      color: var(--brand);
-      cursor: pointer;
-      text-align: left;
-      line-height: 1.5;
-      transition: all 0.15s;
-      min-height: 60px;
-    }
-
-    .anchor-btn:hover { border-color: var(--brand); background: var(--accent-light); }
-    .anchor-btn.active { background: var(--teal-light); border-color: var(--teal-mid); color: var(--teal); }
-
-    /* TRACE PAD */
-    .trace-pad-wrap {
-      display: none;
-      margin-top: 10px;
-    }
-
-    .trace-pad-wrap.visible { display: block; }
-
-    canvas {
-      width: 100%;
-      height: 160px;
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      background: repeating-linear-gradient(45deg, #fff 0 10px, #f7f5fd 10px 20px);
-      touch-action: none;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    /* BREATHING RING */
-    .breath-wrap {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .breath-ring {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 6px solid var(--brand-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: bold;
-      color: var(--brand);
-      position: relative;
-      background: conic-gradient(var(--brand-mid) 0deg, var(--brand-light) 0deg);
-      transition: background 0.25s linear;
-      flex-shrink: 0;
-    }
-
-    .breath-ring-inner { position: relative; z-index: 1; text-align: center; }
-
-    .breath-controls { flex: 1; min-width: 180px; }
-
-    .breath-prompt {
-      font-size: 14px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 12px;
-      min-height: 22px;
-    }
-
-    .field-label {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    /* SUMMARY BOX */
-    .summary-box {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.7;
-      white-space: pre-wrap;
-      min-height: 80px;
-      margin-bottom: 14px;
-    }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      color: var(--hint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    .field { margin-bottom: 14px; }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px 20px;
-      border-radius: 99px;
-      font-family: "Georgia", serif;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
-
-    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
-    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-small { padding: 8px 14px; min-height: 36px; font-size: 13px; }
-    .btn-support {
-      background: var(--support);
-      color: #fff;
-      border-color: var(--support);
-      font-size: 15px;
-      padding: 14px 24px;
-    }
-
-    @media (max-width: 480px) {
-      .btn { width: 100%; }
-      .btn-row { flex-direction: column; }
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 99px;
-      font-size: 14px;
-      font-family: "Georgia", serif;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* FOOTER */
-    .footer {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      text-align: center;
-    }
-
-    .footer-support-text {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visual Grounding and Emotional Reset Tool | Emotional Intelligence Developer</title>
+<style>
+#eid-gr{
+  --navy:#1b2a49; --teal:#1fa39a; --salmon:#f08a7e; --yellow:#f6c344; --lav:#9b8be0; --brand:#6a5aaa;
+  --cream:#fbf8f2; --ink:#1f2937; --muted:#5b6475; --line:#e6e0d4; --good:#12905f; --bad:#c2410c;
+  --soft:#f0ecf8; --softline:#d4cce8;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink); line-height:1.6; max-width:1100px; margin:0 auto; padding:24px 16px; box-sizing:border-box;
+}
+#eid-gr *{box-sizing:border-box;}
+#eid-gr .eid-gr-hide{display:none !important;}
+#eid-gr .eid-gr-card{background:var(--cream); border:1px solid var(--line); border-radius:18px; box-shadow:0 10px 30px rgba(27,42,73,.10); overflow:hidden;}
+#eid-gr .eid-gr-head{background:var(--navy); color:#fff; padding:22px 22px 16px; text-align:center;}
+#eid-gr .eid-gr-brand{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px; color:#d8def0; font-size:13px; letter-spacing:.04em; text-align:left; line-height:1.3;}
+#eid-gr .eid-gr-brand img{width:46px; height:46px; border-radius:10px; object-fit:cover; border:2px solid #4b5a7d;}
+#eid-gr .eid-gr-scene svg{width:100%; max-width:360px; height:auto; display:block; margin:0 auto 6px;}
+#eid-gr .eid-gr-title{font-family:Georgia,"Times New Roman",serif; font-size:28px; line-height:1.2; margin:4px 0 8px; color:#fff; font-weight:normal;}
+#eid-gr .eid-gr-lead{margin:0 auto; max-width:640px; color:#d8def0; font-size:15px;}
+#eid-gr .eid-gr-progress{padding:16px 22px 0;}
+#eid-gr .eid-gr-ptop{display:flex; justify-content:space-between; gap:10px; font-size:13px; font-weight:700; color:var(--muted); margin-bottom:6px;}
+#eid-gr .eid-gr-pbar{height:10px; background:#e8e3d8; border-radius:999px; overflow:hidden;}
+#eid-gr .eid-gr-pbar > div{height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--lav)); transition:width .3s ease;}
+#eid-gr .eid-gr-body{padding:18px 22px 24px;}
+#eid-gr h3{font-family:Georgia,"Times New Roman",serif; color:var(--navy); margin:6px 0 8px; font-size:23px; font-weight:normal; line-height:1.25;}
+#eid-gr .eid-gr-intro{color:var(--muted); margin:0 0 12px;}
+#eid-gr .eid-gr-top{display:flex; gap:14px; align-items:center; margin:6px 0 10px;}
+#eid-gr .eid-gr-top svg{width:120px; height:auto; flex:0 0 auto; background:#fff; border:1px solid var(--line); border-radius:12px; padding:4px;}
+#eid-gr .eid-gr-tag{display:inline-block; padding:3px 12px; border-radius:999px; font-size:12px; font-weight:800; color:#fff; letter-spacing:.3px; background:var(--brand);}
+#eid-gr .eid-gr-label{display:block; font-weight:700; color:var(--navy); margin:16px 0 6px;}
+#eid-gr .eid-gr-hint{font-size:13px; color:var(--muted); margin:4px 0 0;}
+#eid-gr input[type="text"], #eid-gr textarea, #eid-gr select{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:10px; font-size:16px; background:#fff; color:var(--ink); font-family:inherit;}
+#eid-gr textarea{min-height:90px; resize:vertical; line-height:1.5;}
+#eid-gr input[type="text"]:focus, #eid-gr textarea:focus, #eid-gr select:focus{outline:none; border-color:var(--teal);}
+#eid-gr input[type="range"]{width:100%; accent-color:var(--brand); height:30px;}
+#eid-gr .eid-gr-scale{display:flex; justify-content:space-between; font-size:12px; color:var(--muted);}
+#eid-gr .eid-gr-val{display:inline-block; background:var(--soft); border:1px solid var(--softline); color:var(--brand); font-weight:800; border-radius:999px; padding:2px 12px; margin-left:8px; font-size:14px;}
+#eid-gr .eid-gr-btn{border:0; border-radius:12px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit;}
+#eid-gr .eid-gr-btn:disabled{opacity:.45; cursor:not-allowed;}
+#eid-gr .eid-gr-primary{background:var(--navy); color:#fff;}
+#eid-gr .eid-gr-primary:hover:not(:disabled){background:#12203b;}
+#eid-gr .eid-gr-teal{background:var(--teal); color:#fff;}
+#eid-gr .eid-gr-ghost{background:#fff; color:var(--navy); border:2px solid var(--line);}
+#eid-gr .eid-gr-danger{background:#fff; color:#b94040; border:2px solid #e8c0c0;}
+#eid-gr .eid-gr-small{padding:8px 14px; font-size:14px;}
+#eid-gr .eid-gr-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; align-items:center;}
+#eid-gr .eid-gr-chips{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;}
+#eid-gr .eid-gr-chip{background:#fff; border:2px solid var(--softline); border-radius:999px; padding:6px 14px; font-size:14px; color:var(--muted); cursor:pointer; font-family:inherit;}
+#eid-gr .eid-gr-chip:hover{border-color:var(--brand); color:var(--ink);}
+#eid-gr .eid-gr-chip[aria-pressed="true"]{background:var(--brand); border-color:var(--brand); color:#fff;}
+#eid-gr .eid-gr-chosen{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; min-height:20px;}
+#eid-gr .eid-gr-pick{background:#e8e4f8; border:2px solid var(--softline); border-radius:999px; padding:6px 12px; font-size:14px; color:var(--brand); cursor:pointer; font-family:inherit;}
+#eid-gr .eid-gr-pick:hover{background:#fff0f0; border-color:#f5a0a0; color:#8b1a1a;}
+#eid-gr .eid-gr-add{display:flex; gap:8px;}
+#eid-gr .eid-gr-count{font-size:13px; font-weight:700; color:var(--muted); margin:6px 0 0;}
+#eid-gr .eid-gr-safety{background:#fff6f0; border:2px solid #f3c7b3; border-radius:12px; padding:12px 14px; font-size:14px; color:#6b2f14; margin:12px 0;}
+#eid-gr .eid-gr-safety a{color:#9a3412; font-weight:700;}
+#eid-gr .eid-gr-safety.eid-gr-strong{background:#fff0f0; border-color:#e58a8a; color:#7a1818;}
+#eid-gr .eid-gr-note{background:var(--soft); border:1px solid var(--softline); border-radius:12px; padding:12px 14px; font-size:14px; color:var(--muted); margin:12px 0;}
+#eid-gr .eid-gr-anchors{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:10px 0;}
+#eid-gr .eid-gr-anchor{background:var(--soft); border:2px solid var(--softline); border-radius:14px; padding:14px; font-size:15px; color:var(--brand); cursor:pointer; text-align:left; line-height:1.45; min-height:64px; font-family:inherit;}
+#eid-gr .eid-gr-anchor:hover{border-color:var(--brand);}
+#eid-gr .eid-gr-anchor[aria-pressed="true"]{background:#e4f0f0; border-color:#a0c8c8; color:#2b6f6c;}
+#eid-gr .eid-gr-shapes{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;}
+#eid-gr canvas{width:100%; height:auto; aspect-ratio:800/320; border:2px solid var(--softline); border-radius:14px; background:repeating-linear-gradient(45deg,#fff 0 10px,#f7f5fd 10px 20px); touch-action:none; display:block; margin:8px 0;}
+#eid-gr .eid-gr-breath{display:flex; gap:26px; flex-wrap:wrap; align-items:center; margin:10px 0;}
+#eid-gr .eid-gr-ringwrap{width:200px; height:200px; border-radius:50%; flex:0 0 200px; display:flex; align-items:center; justify-content:center; background:conic-gradient(var(--softline) 0deg, var(--soft) 0deg); transition:background .3s linear;}
+#eid-gr .eid-gr-ringin{width:176px; height:176px; border-radius:50%; background:var(--cream); display:flex; align-items:center; justify-content:center;}
+#eid-gr .eid-gr-bcircle{width:150px; height:150px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #cfeceb, #7cc8c3); display:flex; align-items:center; justify-content:center; transform:scale(.55); transition:transform 1s ease-in-out; color:var(--navy); font-weight:800; text-align:center; font-size:15px; line-height:1.2;}
+#eid-gr .eid-gr-bctl{flex:1 1 280px; min-width:240px;}
+#eid-gr .eid-gr-bsay{font-family:Georgia,"Times New Roman",serif; font-size:22px; color:var(--navy); margin:4px 0 4px; min-height:32px;}
+#eid-gr .eid-gr-bcount{font-size:14px; color:var(--muted); min-height:22px; margin-bottom:6px;}
+#eid-gr .eid-gr-box{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; margin:12px 0;}
+#eid-gr .eid-gr-box h4{margin:0 0 8px; color:var(--navy); font-size:16px;}
+#eid-gr .eid-gr-cr{display:grid; grid-template-columns:90px 1fr 60px; gap:10px; align-items:center; margin:8px 0; font-size:14px;}
+#eid-gr .eid-gr-track{height:18px; background:#e8e3d8; border-radius:999px; overflow:hidden;}
+#eid-gr .eid-gr-fill{height:100%; border-radius:999px;}
+#eid-gr .eid-gr-sum{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; font-size:14.5px; white-space:pre-wrap; line-height:1.7;}
+#eid-gr .eid-gr-footer{border-top:1px solid var(--line); background:#f4efe4; padding:22px; text-align:center;}
+#eid-gr .eid-gr-footer h4{margin:0 0 10px; color:var(--navy); font-size:16px;}
+#eid-gr .eid-gr-share{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px;}
+#eid-gr .eid-gr-sbtn{border:0; border-radius:999px; padding:9px 16px; color:#fff; font-weight:700; font-size:14px; cursor:pointer; font-family:inherit;}
+#eid-gr .eid-gr-supporttext{font-size:14px; color:var(--muted); margin:0 0 10px; font-style:italic;}
+#eid-gr .eid-gr-support{display:inline-flex; align-items:center; gap:10px; background:var(--yellow); color:var(--navy); font-weight:800; padding:8px 16px; border-radius:999px; text-decoration:none; border:2px solid var(--navy); font-size:15px;}
+#eid-gr .eid-gr-support:hover{background:#f2b632;}
+#eid-gr .eid-gr-support svg{height:38px; width:auto; display:block;}
+#eid-gr .eid-gr-links{display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:14px;}
+#eid-gr .eid-gr-links a, #eid-gr .eid-gr-credit a{color:var(--brand); text-decoration:none; font-weight:600;}
+#eid-gr .eid-gr-links a:hover, #eid-gr .eid-gr-credit a:hover{text-decoration:underline;}
+#eid-gr .eid-gr-fine{font-size:12px; color:var(--muted); margin:4px 0 0;}
+#eid-gr .eid-gr-disc{font-size:12px; color:var(--muted); max-width:700px; margin:12px auto 0;}
+#eid-gr .eid-gr-toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--navy); color:#fff; padding:10px 18px; border-radius:999px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:9999; max-width:90vw; text-align:center;}
+#eid-gr .eid-gr-toast.eid-gr-show{opacity:1; transform:translateX(-50%) translateY(0);}
+@media (min-width:900px){
+  #eid-gr .eid-gr-head{padding:36px 48px 24px;}
+  #eid-gr .eid-gr-brand{font-size:15px;}
+  #eid-gr .eid-gr-brand img{width:56px; height:56px;}
+  #eid-gr .eid-gr-scene svg{max-width:460px; margin-bottom:12px;}
+  #eid-gr .eid-gr-title{font-size:38px; margin:8px 0 12px;}
+  #eid-gr .eid-gr-lead{font-size:18px; max-width:760px; line-height:1.6;}
+  #eid-gr .eid-gr-progress{padding:26px 64px 0;}
+  #eid-gr .eid-gr-ptop{font-size:15px; margin-bottom:10px;}
+  #eid-gr .eid-gr-pbar{height:12px;}
+  #eid-gr .eid-gr-body{padding:28px 64px 48px;}
+  #eid-gr h3{font-size:30px; margin:10px 0 12px;}
+  #eid-gr .eid-gr-intro{font-size:18px;}
+  #eid-gr .eid-gr-top{gap:22px; margin:14px 0 14px;}
+  #eid-gr .eid-gr-top svg{width:190px; padding:8px; border-radius:16px;}
+  #eid-gr .eid-gr-tag{font-size:14px; padding:6px 16px;}
+  #eid-gr .eid-gr-label{font-size:17px; margin:24px 0 8px;}
+  #eid-gr input[type="text"], #eid-gr textarea, #eid-gr select{font-size:18px; padding:16px 18px;}
+  #eid-gr .eid-gr-btn{font-size:17px; padding:15px 28px;}
+  #eid-gr .eid-gr-small{font-size:15px; padding:10px 18px;}
+  #eid-gr .eid-gr-row{gap:14px; margin-top:28px;}
+  #eid-gr .eid-gr-chip, #eid-gr .eid-gr-pick{font-size:16px; padding:9px 18px;}
+  #eid-gr .eid-gr-chips{gap:10px;}
+  #eid-gr .eid-gr-anchor{font-size:17px; padding:20px;}
+  #eid-gr .eid-gr-safety, #eid-gr .eid-gr-note{font-size:16px; padding:16px 20px;}
+  #eid-gr .eid-gr-ringwrap{width:260px; height:260px; flex:0 0 260px;}
+  #eid-gr .eid-gr-ringin{width:230px; height:230px;}
+  #eid-gr .eid-gr-bcircle{width:200px; height:200px; font-size:18px;}
+  #eid-gr .eid-gr-bsay{font-size:28px;}
+  #eid-gr .eid-gr-bcount{font-size:16px;}
+  #eid-gr .eid-gr-box{padding:24px;}
+  #eid-gr .eid-gr-box h4{font-size:19px;}
+  #eid-gr .eid-gr-cr{grid-template-columns:110px 1fr 70px; font-size:16px;}
+  #eid-gr .eid-gr-track{height:22px;}
+  #eid-gr .eid-gr-sum{font-size:16.5px; padding:24px;}
+  #eid-gr .eid-gr-footer{padding:36px 64px;}
+  #eid-gr .eid-gr-footer h4{font-size:19px;}
+  #eid-gr .eid-gr-sbtn{font-size:16px; padding:12px 22px;}
+  #eid-gr .eid-gr-support{font-size:17px; padding:10px 22px;}
+  #eid-gr .eid-gr-support svg{height:46px;}
+  #eid-gr .eid-gr-links{font-size:15px;}
+  #eid-gr .eid-gr-disc{font-size:14px; max-width:760px;}
+}
+@media (max-width:560px){
+  #eid-gr .eid-gr-title{font-size:23px;}
+  #eid-gr .eid-gr-body{padding:14px 16px 20px;}
+  #eid-gr .eid-gr-progress{padding:14px 16px 0;}
+  #eid-gr .eid-gr-top svg{width:90px;}
+  #eid-gr .eid-gr-cr{grid-template-columns:70px 1fr 50px;}
+  #eid-gr .eid-gr-row .eid-gr-btn{flex:1 1 100%; text-align:center;}
+  #eid-gr .eid-gr-ringwrap{margin:0 auto;}
+}
+</style>
 </head>
 <body>
-<div class="container">
+<div id="eid-gr">
+  <div class="eid-gr-card">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+    <div class="eid-gr-head">
+      <div class="eid-gr-brand">
+        <img src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" onerror="this.style.display='none'" />
+        <span>Emotional Intelligence<br>Developer</span>
+      </div>
+      <div class="eid-gr-scene" id="eid-gr-scene"></div>
+      <h2 class="eid-gr-title">Visual Grounding and Emotional Reset</h2>
+      <p class="eid-gr-lead">Small, calm steps. No pressure. You can pause any time. Use your senses to come back to the present moment, then take one small step forward.</p>
     </div>
-    <h1>Visual Grounding + Emotional Reset Tool</h1>
-    <p class="tagline">Small, calm steps. No pressure. You can pause any time.</p>
-    <div class="disclaimer">This tool supports reflection. It does not diagnose or replace professional help. If you are in danger, contact local emergency services.</div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button type="button" class="btn btn-primary" id="startBtn">I need a reset — start here</button>
-    </div>
-  </header>
 
-  <!-- PROGRESS -->
-  <div class="progress-wrap" aria-label="Grounding progress">
-    <div class="progress-top">
-      <span class="progress-step-label" id="progressStepLabel">Ready to begin</span>
-      <span class="progress-pct" id="progressPct">0%</span>
+    <div class="eid-gr-progress" aria-label="Progress">
+      <div class="eid-gr-ptop"><span id="eid-gr-plabel">Step 1 of 10: Welcome</span><span id="eid-gr-ppct">0%</span></div>
+      <div class="eid-gr-pbar"><div id="eid-gr-pfill"></div></div>
+      <p id="eid-gr-live" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></p>
     </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-fill" id="progressFill"></div>
+
+    <div class="eid-gr-body" id="eid-gr-stage"></div>
+
+    <div class="eid-gr-footer">
+      <h4>Share this tool</h4>
+      <div class="eid-gr-share">
+        <button class="eid-gr-sbtn" style="background:#1877f2;" onclick="grShare('facebook')">Facebook</button>
+        <button class="eid-gr-sbtn" style="background:#111111;" onclick="grShare('x')">X</button>
+        <button class="eid-gr-sbtn" style="background:#1fa855;" onclick="grShare('whatsapp')">WhatsApp</button>
+        <button class="eid-gr-sbtn" style="background:#0a66c2;" onclick="grShare('linkedin')">LinkedIn</button>
+        <button class="eid-gr-sbtn" style="background:#6b7280;" onclick="grShare('email')">Email</button>
+        <button class="eid-gr-sbtn" style="background:#1b2a49;" id="eid-gr-copybtn" onclick="grCopyLink()">Copy link</button>
+      </div>
+      <p class="eid-gr-supporttext">This platform is free for everyone. If it helped you, consider supporting it.</p>
+      <span id="eid-gr-supportslot"></span>
+      <div class="eid-gr-links">
+        <a href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+        <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+        <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+        <a href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      </div>
+      <p class="eid-gr-fine">As an Amazon Associate I earn from qualifying purchases.</p>
+      <p class="eid-gr-disc">This tool supports reflection and is not a diagnosis or a replacement for professional care. If you are in danger, contact your local emergency services.</p>
+      <p class="eid-gr-disc eid-gr-credit" style="margin-top:6px;">Created by <a href="https://emotionalintelligencedeveloper.com/" target="_blank" rel="noopener">Emotional Intelligence Developer</a></p>
     </div>
-    <p id="liveRegion" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></p>
+
   </div>
-
-  <!-- SECTION B: 5-4-3-2-1 GROUNDING -->
-  <section class="card" id="groundingSection" aria-labelledby="grounding-heading">
-    <div class="section-tag">Section B</div>
-    <p class="card-title" id="grounding-heading">5-4-3-2-1 visual grounding</p>
-    <p class="card-intro">Tap suggestion chips or add your own words. Each step is a mini-level. Use prev and next to move through the steps.</p>
-
-    <div id="stepsContainer"></div>
-
-    <div class="btn-row">
-      <button type="button" class="btn btn-outline" id="prevBtn">Previous step</button>
-      <button type="button" class="btn btn-primary" id="nextBtn">Next step</button>
-    </div>
-  </section>
-
-  <!-- SECTION C: VISUAL ANCHORS + TRACE PAD -->
-  <section class="card" aria-labelledby="anchors-heading">
-    <div class="section-tag">Section C</div>
-    <p class="card-title" id="anchors-heading">Fast visual anchors</p>
-    <p class="card-intro">Choose any anchor activity. The trace pad appears when you select the tracing option.</p>
-
-    <div class="anchor-grid" id="anchorGrid">
-      <button type="button" class="anchor-btn" data-anchor="circles">Find 3 circles somewhere around you</button>
-      <button type="button" class="anchor-btn" data-anchor="blue">Find something blue in the room</button>
-      <button type="button" class="anchor-btn" data-anchor="trace">Trace a shape slowly with your finger</button>
-    </div>
-
-    <div class="trace-pad-wrap" id="tracePadWrap">
-      <canvas id="tracePad" width="800" height="320" aria-label="Trace pad for grounding — draw freely here"></canvas>
-      <div class="btn-row">
-        <button type="button" class="btn btn-outline btn-small" id="clearTraceBtn">Clear trace</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION D: BREATHING TIMER -->
-  <section class="card" aria-labelledby="breathing-heading">
-    <div class="section-tag">Section D</div>
-    <p class="card-title" id="breathing-heading">Breathing micro-reset</p>
-    <p class="card-intro">Choose your timer length, then breathe gently along with the prompts.</p>
-
-    <div class="breath-wrap">
-      <div class="breath-ring" id="breathRing">
-        <div class="breath-ring-inner">
-          <span id="breathSec">45s</span>
-        </div>
-      </div>
-      <div class="breath-controls">
-        <div class="field">
-          <label class="field-label" for="breathLength">Timer length</label>
-          <select id="breathLength">
-            <option value="30">30 seconds</option>
-            <option value="45" selected>45 seconds</option>
-            <option value="60">60 seconds</option>
-          </select>
-        </div>
-        <p class="breath-prompt" id="breathPrompt">Inhale softly · exhale slowly</p>
-        <div class="btn-row">
-          <button type="button" class="btn btn-primary btn-small" id="startBreathBtn">Start breathing</button>
-          <button type="button" class="btn btn-outline btn-small" id="stopBreathBtn">Stop</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION E: REALITY CHECK -->
-  <section class="card" aria-labelledby="reality-heading">
-    <div class="section-tag">Section E</div>
-    <p class="card-title" id="reality-heading">Reality check</p>
-    <p class="card-intro">These three questions help ground you in what is real and available right now.</p>
-
-    <div class="field">
-      <label class="field-label" for="smallStep">What is the smallest safe next step?</label>
-      <textarea id="smallStep" maxlength="400" placeholder="Example: drink water, sit by a window, text one trusted person."></textarea>
-    </div>
-    <div class="field">
-      <label class="field-label" for="needNow">What do I need right now — space, support, water, food, rest, fresh air?</label>
-      <input type="text" id="needNow" maxlength="200" placeholder="You can list one or two." />
-    </div>
-    <div class="field">
-      <label class="field-label" for="feelingMsg">If this feeling had a message, what would it be asking for?</label>
-      <textarea id="feelingMsg" maxlength="400" placeholder="A kind sentence to yourself is enough."></textarea>
-    </div>
-  </section>
-
-  <!-- SECTION F: SUMMARY -->
-  <section class="card" aria-labelledby="summary-heading">
-    <div class="section-tag">Section F</div>
-    <p class="card-title" id="summary-heading">Your plan</p>
-    <p class="card-intro">This updates as you fill in the tool above.</p>
-
-    <div class="summary-box" id="summaryBox">Your summary will appear here as you go.</div>
-
-    <div class="section-label">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
-      <button type="button" class="btn btn-outline" id="copySummaryBtn">Copy my summary</button>
-      <button type="button" class="btn btn-danger" id="resetAllBtn">Reset tool</button>
-      <button type="button" class="btn btn-danger" id="clearSavedBtn">Clear saved data</button>
-    </div>
-
-    <div class="section-label">Share this tool</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer" aria-label="Footer">
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
-
-    <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
-    </div>
-
-    <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not a replacement for professional care.
-    </p>
-  </footer>
-
+  <div class="eid-gr-toast" id="eid-gr-toast" role="status" aria-live="polite"></div>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-(function () {
-  'use strict';
+var GR_KEY = "eidGroundingV5";
+var GR_SITE = "https://emotionalintelligencedeveloper.com/";
+var GR_TOOLS = "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/";
+var GR_HELP = "https://emotionalintelligencedeveloper.com/help-page/";
+var GR_HELPLINE = "https://findahelpline.com/";
+/* Change this one line if your donation or support page lives somewhere else */
+var GR_SUPPORT = "https://emotionalintelligencedeveloper.com/support-this-website/";
+var GR_LOGO = "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg";
 
-  const STORAGE_KEY = 'visualGroundingV4';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
-  const $ = id => document.getElementById(id);
+var GR_SENSES = {
+  see: { count: 5, title: "5 things I can see", tag: "SIGHT", hint: "Look around slowly. Pick things you can name calmly.",
+    suggestions: ["window", "lamp", "plant", "book", "my hands", "ceiling", "cup", "floor pattern", "a colour I like", "the sky"] },
+  feel: { count: 4, title: "4 things I can feel", tag: "TOUCH", hint: "Notice what your body is touching or sensing right now.",
+    suggestions: ["feet on the ground", "shirt texture", "air on my skin", "chair holding me", "warmth", "coolness", "my breath moving", "hands resting"] },
+  hear: { count: 3, title: "3 things I can hear", tag: "SOUND", hint: "Listen for near sounds, then far sounds.",
+    suggestions: ["a fan", "birds", "distant traffic", "my breath", "room hum", "voices far away", "quiet"] },
+  smell: { count: 2, title: "2 things I can smell", tag: "SMELL", hint: "If you cannot smell much, name what you remember or something nearby.",
+    suggestions: ["tea", "soap", "fresh air", "clean laundry", "coffee", "a plant"] },
+  taste: { count: 1, title: "1 thing I can taste", tag: "TASTE", hint: "A sip of water works well, or just notice the taste in your mouth.",
+    suggestions: ["water", "mint", "tea", "coffee", "neutral taste"] }
+};
+var GR_STEPS = [
+  { key: "welcome", title: "Welcome" },
+  { key: "see", title: "5 things I can see" },
+  { key: "feel", title: "4 things I can feel" },
+  { key: "hear", title: "3 things I can hear" },
+  { key: "smell", title: "2 things I can smell" },
+  { key: "taste", title: "1 thing I can taste" },
+  { key: "anchors", title: "Visual anchors" },
+  { key: "breathe", title: "Breathing reset" },
+  { key: "reality", title: "Reality check" },
+  { key: "plan", title: "Your plan" }
+];
+var GR_FEELINGS = ["Anxious", "Overwhelmed", "Angry", "Sad", "Numb", "Restless", "Stressed", "Lonely", "Not sure"];
+var GR_PATTERNS = {
+  gentle: { name: "Gentle: in for 4, out for 6", phases: [["Breathe in", 4, 1], ["Breathe out", 6, 0.55]] },
+  box: { name: "Box: 4 in, 4 hold, 4 out, 4 hold", phases: [["Breathe in", 4, 1], ["Hold", 4, 1], ["Breathe out", 4, 0.55], ["Hold", 4, 0.55]] }
+};
 
-  const STEPS_DATA = [
-    { key: 'see', count: 5, title: '5 things I can see', suggestions: ['window', 'lamp', 'plant', 'book', 'my hands', 'ceiling', 'cup', 'floor pattern'] },
-    { key: 'feel', count: 4, title: '4 things I can feel', suggestions: ['feet on ground', 'shirt texture', 'air on skin', 'chair support', 'warmth', 'coolness'] },
-    { key: 'hear', count: 3, title: '3 things I can hear', suggestions: ['fan', 'birds', 'distant traffic', 'my breath', 'room tone'] },
-    { key: 'smell', count: 2, title: '2 things I can smell', suggestions: ['tea', 'soap', 'fresh air', 'clean laundry'] },
-    { key: 'taste', count: 1, title: '1 thing I can taste', suggestions: ['water', 'mint', 'coffee', 'neutral taste'] }
-  ];
+var GR = {
+  step: 0, name: "", before: 5, beforeSet: false, after: 5, afterSet: false, feelings: [],
+  chips: { see: [], feel: [], hear: [], smell: [], taste: [] },
+  anchors: { circles: false, blue: false, trace: false },
+  found: { circles: "", blue: "" },
+  shape: "circle",
+  reflections: { smallStep: "", needNow: "", feelingMsg: "" },
+  breath: { len: 45, pattern: "gentle", done: false }
+};
+var GR_SAVED_STEP = 0;
+var GR_TRACE = null;
+var GR_TIMER = null;
+var GR_TOAST_T = null;
 
-  let state = {
-    currentStep: 0,
-    chips: { see: [], feel: [], hear: [], smell: [], taste: [] },
-    anchors: { circles: false, blue: false, trace: false },
-    reflections: { smallStep: '', needNow: '', feelingMsg: '' }
-  };
-
-  let breathTimer = null;
-  let boxCycle = null;
-  let toastTimer;
-
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+/* ---------- stick figure helpers ---------- */
+function grFig(x, y, s, kind, color, arms) {
+  var a = arms || [-12, 20, 12, 20];
+  var g = '<g transform="translate(' + x + ',' + y + ') scale(' + s + ')" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">';
+  g += '<circle cx="0" cy="-10" r="8"/>';
+  if (kind === "w") {
+    g += '<line x1="0" y1="-2" x2="0" y2="8"/>';
+    g += '<polygon points="0,8 -12,36 12,36"/>';
+    g += '<line x1="-5" y1="36" x2="-6" y2="54"/><line x1="5" y1="36" x2="6" y2="54"/>';
+  } else {
+    g += '<line x1="0" y1="-2" x2="0" y2="30"/>';
+    g += '<line x1="0" y1="30" x2="-10" y2="54"/><line x1="0" y1="30" x2="10" y2="54"/>';
   }
-
-  // STATE PERSISTENCE
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(_) {}
+  g += '<line x1="0" y1="8" x2="' + a[0] + '" y2="' + a[1] + '"/><line x1="0" y1="8" x2="' + a[2] + '" y2="' + a[3] + '"/>';
+  return g + '</g>';
+}
+function grHeart(x, y, s, color) {
+  return '<path transform="translate(' + x + ',' + y + ') scale(' + s + ')" d="M0 8 C-18 -6 -10 -18 0 -8 C10 -18 18 -6 0 8Z" fill="' + color + '" stroke="none"/>';
+}
+function grSceneHeader() {
+  var cols = ["#1fa39a", "#f08a7e", "#f6c344", "#9b8be0", "#ffffff"];
+  var kinds = ["m", "w", "m", "w", "m"];
+  var s = '<svg viewBox="0 0 330 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stick people holding hands">';
+  for (var i = 0; i < 5; i++) {
+    var arms = [-30, 12, 30, 12];
+    if (i === 0) arms = [-12, 26, 30, 12];
+    if (i === 4) arms = [-30, 12, 12, 26];
+    s += grFig(45 + i * 60, 40, 1, kinds[i], cols[i], arms);
   }
-
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const d = JSON.parse(raw);
-      if (d.chips) state.chips = d.chips;
-      if (d.anchors) state.anchors = d.anchors;
-      if (d.reflections) state.reflections = d.reflections;
-      if (typeof d.currentStep === 'number') state.currentStep = d.currentStep;
-      $('smallStep').value = state.reflections.smallStep || '';
-      $('needNow').value = state.reflections.needNow || '';
-      $('feelingMsg').value = state.reflections.feelingMsg || '';
-    } catch(_) {}
+  s += grHeart(165, 12, 1, "#f08a7e");
+  return s + '</svg>';
+}
+function grSceneFor(key) {
+  var navy = "#1b2a49", lav = "#9b8be0";
+  var s = '<svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">';
+  if (key === "see") {
+    s += grFig(38, 37, 0.9, "m", "#1fa39a");
+    s += '<line x1="56" y1="26" x2="92" y2="36" stroke="' + lav + '" stroke-width="2" stroke-dasharray="4 4"/>';
+    s += '<path d="M96 38 q20 -18 40 0 q-20 18 -40 0z" fill="#fff" stroke="' + navy + '" stroke-width="2.5"/><circle cx="116" cy="38" r="6" fill="' + lav + '"/>';
+  } else if (key === "feel") {
+    s += grFig(80, 28, 0.9, "w", "#f08a7e");
+    s += '<line x1="30" y1="78" x2="130" y2="78" stroke="' + navy + '" stroke-width="3" stroke-linecap="round"/>';
+    s += '<g stroke="' + lav + '" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M64 74 v-8 m-3 3 l3 -3 l3 3"/><path d="M96 74 v-8 m-3 3 l3 -3 l3 3"/></g>';
+  } else if (key === "hear") {
+    s += grFig(40, 37, 0.9, "m", "#2c4a7c");
+    s += '<g fill="none" stroke="' + lav + '" stroke-width="3" stroke-linecap="round"><path d="M80 30 q9 14 0 28"/><path d="M92 22 q15 22 0 44"/><path d="M104 14 q21 30 0 60"/></g>';
+  } else if (key === "smell") {
+    s += grFig(40, 37, 0.9, "w", "#9b8be0");
+    s += '<path d="M100 52 h24 v12 q0 8 -12 8 q-12 0 -12 -8z" fill="#f6c344" stroke="' + navy + '" stroke-width="2.5" stroke-linejoin="round"/>';
+    s += '<g fill="none" stroke="' + navy + '" stroke-width="2.5" stroke-linecap="round"><path d="M106 44 q-5 -6 0 -12 q5 -6 0 -12"/><path d="M116 44 q-5 -6 0 -12 q5 -6 0 -12"/></g>';
+  } else if (key === "taste") {
+    s += grFig(40, 37, 0.9, "m", "#1fa39a", [-12, 20, 24, 6]);
+    s += '<path d="M84 34 l5 38 h18 l5 -38z" fill="#d6eef0" stroke="' + navy + '" stroke-width="2.5" stroke-linejoin="round"/><path d="M87 48 h24" stroke="#1fa39a" stroke-width="3"/>';
+  } else if (key === "anchors") {
+    s += grFig(40, 37, 0.9, "w", "#f08a7e", [-12, 20, 28, 4]);
+    s += '<circle cx="100" cy="36" r="20" fill="none" stroke="' + lav + '" stroke-width="3" stroke-dasharray="6 6"/>';
+    s += '<rect x="126" y="56" width="18" height="18" rx="3" fill="#7fb4e0" stroke="' + navy + '" stroke-width="2"/>';
+  } else if (key === "breathe") {
+    s += '<circle cx="110" cy="45" r="32" fill="none" stroke="#7cc8c3" stroke-width="3" stroke-dasharray="5 6"/><circle cx="110" cy="45" r="19" fill="#cfeceb" stroke="#1fa39a" stroke-width="2.5"/>';
+    s += grFig(40, 37, 0.9, "m", "#9b8be0", [-14, 4, 14, 4]);
+  } else if (key === "reality") {
+    s += grFig(45, 37, 0.9, "m", "#2c4a7c", [-12, 20, 8, 14]);
+    s += '<g fill="#fff" stroke="' + navy + '" stroke-width="2.5" stroke-linejoin="round"><rect x="84" y="10" width="64" height="38" rx="12"/><path d="M92 48 l-8 10 l18 -10"/></g>';
+    s += grHeart(116, 28, 1.1, "#f08a7e");
+  } else {
+    s += grFig(52, 33, 1, "m", "#1fa39a", [-14, -8, 14, -8]);
+    s += grFig(108, 33, 1, "w", "#f08a7e", [-14, -8, 14, -8]);
+    s += grHeart(80, 14, 1.3, "#f08a7e");
   }
+  return s + '</svg>';
+}
+function grSupportBtn() {
+  var s = '<svg viewBox="0 0 100 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+  s += grFig(18, 14, 0.55, "m", "#1b2a49", [-14, -6, 14, -6]);
+  s += grHeart(50, 18, 0.9, "#c2410c");
+  s += grFig(82, 14, 0.55, "w", "#1b2a49", [-14, -6, 14, -6]);
+  s += '</svg>';
+  return '<a class="eid-gr-support" href="' + GR_SUPPORT + '" target="_blank" rel="noopener">' + s + '<span>Support this website</span></a>';
+}
 
-  // PROGRESS
-  function updateProgress() {
-    const total = STEPS_DATA.reduce((a, s) => a + s.count, 0);
-    const done = STEPS_DATA.reduce((a, s) => a + Math.min(state.chips[s.key].length, s.count), 0);
-    const pct = Math.round((done / total) * 100);
-    $('progressFill').style.width = pct + '%';
-    $('progressPct').textContent = pct + '%';
-    $('progressStepLabel').textContent = 'Step ' + (state.currentStep + 1) + ' of ' + STEPS_DATA.length + ' — ' + STEPS_DATA[state.currentStep].title;
-    $('liveRegion').textContent = 'Progress ' + pct + '%. ' + STEPS_DATA[state.currentStep].title + '.';
-  }
+/* ---------- helpers ---------- */
+function grEsc(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function grEl(id) { return document.getElementById(id); }
+function grToast(msg) {
+  var el = grEl("eid-gr-toast");
+  el.textContent = msg;
+  el.classList.add("eid-gr-show");
+  clearTimeout(GR_TOAST_T);
+  GR_TOAST_T = setTimeout(function () { el.classList.remove("eid-gr-show"); }, 2600);
+}
+function grSave() {
+  try { localStorage.setItem(GR_KEY, JSON.stringify(GR)); } catch (e) {}
+}
+function grLoad() {
+  try {
+    var raw = localStorage.getItem(GR_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    ["name", "feelings", "chips", "anchors", "found", "shape", "reflections", "breath"].forEach(function (k) { if (d[k] !== undefined) GR[k] = d[k]; });
+    ["before", "after"].forEach(function (k) { if (typeof d[k] === "number") GR[k] = d[k]; });
+    GR.beforeSet = !!d.beforeSet; GR.afterSet = !!d.afterSet;
+    GR_SAVED_STEP = (typeof d.step === "number") ? d.step : 0;
+    GR.step = 0;
+  } catch (e) {}
+}
+function grToday() {
+  try { return new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }); }
+  catch (e) { return new Date().toDateString(); }
+}
+function grTop() {
+  var el = grEl("eid-gr");
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function grSafetyBox(strong) {
+  var t = strong
+    ? '<strong>Please reach out for support now.</strong> If you are in danger or thinking about harming yourself, contact your local emergency number straight away, or speak to someone you trust. You can find a free helpline in your country at <a href="' + GR_HELPLINE + '" target="_blank" rel="noopener">findahelpline.com</a>.'
+    : '<strong>If you are in danger</strong> or thinking about harming yourself, contact your local emergency number now. You can find a free helpline in your country at <a href="' + GR_HELPLINE + '" target="_blank" rel="noopener">findahelpline.com</a>.';
+  return '<div class="eid-gr-safety' + (strong ? ' eid-gr-strong' : '') + '">' + t + '</div>';
+}
 
-  // RENDER STEPS
-  function renderSteps() {
-    const container = $('stepsContainer');
-    container.innerHTML = '';
+/* ---------- navigation and progress ---------- */
+function grProgress() {
+  var n = GR_STEPS.length;
+  var pct = Math.round(GR.step / (n - 1) * 100);
+  grEl("eid-gr-pfill").style.width = pct + "%";
+  grEl("eid-gr-ppct").textContent = pct + "%";
+  grEl("eid-gr-plabel").textContent = "Step " + (GR.step + 1) + " of " + n + ": " + GR_STEPS[GR.step].title;
+  grEl("eid-gr-live").textContent = "Step " + (GR.step + 1) + " of " + n + ". " + GR_STEPS[GR.step].title + ".";
+}
+function grGo(n) {
+  if (n < 0 || n > GR_STEPS.length - 1) return;
+  grBreathStop(true);
+  GR.step = n;
+  grSave();
+  grRender();
+  grTop();
+}
+function grNavHtml(nextLabel) {
+  return '<div class="eid-gr-row"><button type="button" class="eid-gr-btn eid-gr-ghost" onclick="grGo(' + (GR.step - 1) + ')"' + (GR.step === 0 ? ' disabled' : '') + '>Back</button><button type="button" class="eid-gr-btn eid-gr-primary" onclick="grGo(' + (GR.step + 1) + ')">' + nextLabel + '</button></div>';
+}
+function grRender() {
+  var key = GR_STEPS[GR.step].key;
+  var h = "";
+  if (key === "welcome") h = grStepWelcome();
+  else if (GR_SENSES[key]) h = grStepSense(key);
+  else if (key === "anchors") h = grStepAnchors();
+  else if (key === "breathe") h = grStepBreathe();
+  else if (key === "reality") h = grStepReality();
+  else h = grStepPlan();
+  grEl("eid-gr-stage").innerHTML = h;
+  grProgress();
+  if (key === "anchors") grSetupTrace();
+  if (key === "breathe") grBreathInit();
+}
 
-    STEPS_DATA.forEach((step, idx) => {
-      const card = document.createElement('div');
-      card.className = 'step-card' + (idx === state.currentStep ? ' active' : '');
-      card.dataset.step = idx;
-
-      const chosen = state.chips[step.key];
-
-      card.innerHTML = `
-        <p class="step-heading">Step ${idx + 1} of ${STEPS_DATA.length} — ${step.title}</p>
-        <p class="step-hint">Choose up to ${step.count}. You can also add your own words.</p>
-        <div class="suggestion-wrap" id="suggestions-${step.key}" role="group" aria-label="Suggestions for ${step.title}">
-          ${step.suggestions.map(s => `
-            <button type="button" class="suggestion-chip" data-chip="${s}" data-key="${step.key}" aria-pressed="${chosen.includes(s) ? 'true' : 'false'}">${s}</button>
-          `).join('')}
-        </div>
-        <div class="chosen-wrap" id="chosen-${step.key}"></div>
-        <div class="add-row">
-          <input type="text" id="input-${step.key}" maxlength="48" placeholder="Type and press Add…" />
-          <button type="button" class="btn btn-primary btn-small add-btn" data-key="${step.key}">Add</button>
-        </div>
-      `;
-
-      container.appendChild(card);
-      renderChosenChips(step.key);
-    });
-
-    bindStepEvents();
-    updateProgress();
-  }
-
-  function renderChosenChips(key) {
-    const wrap = $('chosen-' + key);
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    state.chips[key].forEach((val, i) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chosen-chip';
-      btn.innerHTML = val + ' &times;';
-      btn.setAttribute('aria-label', 'Remove ' + val);
-      btn.addEventListener('click', () => {
-        state.chips[key].splice(i, 1);
-        save();
-        renderSteps();
-        updateSummary();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  function bindStepEvents() {
-    // Suggestion chip toggles
-    document.querySelectorAll('.suggestion-chip').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.dataset.key;
-        const text = btn.dataset.chip;
-        const list = state.chips[key];
-        const step = STEPS_DATA.find(s => s.key === key);
-        if (list.includes(text)) {
-          state.chips[key] = list.filter(v => v !== text);
-          btn.setAttribute('aria-pressed', 'false');
-        } else if (list.length < step.count) {
-          list.push(text);
-          btn.setAttribute('aria-pressed', 'true');
-        } else {
-          showToast('You can choose up to ' + step.count + ' for this step.');
-          return;
-        }
-        save();
-        renderChosenChips(key);
-        updateProgress();
-        updateSummary();
-      });
-    });
-
-    // Add custom chips
-    document.querySelectorAll('.add-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.dataset.key;
-        const input = $('input-' + key);
-        const val = (input.value || '').trim();
-        if (!val) return;
-        const step = STEPS_DATA.find(s => s.key === key);
-        const list = state.chips[key];
-        if (list.includes(val)) { showToast('Already added.'); return; }
-        if (list.length >= step.count) { showToast('You can choose up to ' + step.count + ' for this step.'); return; }
-        list.push(val);
-        input.value = '';
-        save();
-        renderChosenChips(key);
-        updateProgress();
-        updateSummary();
-      });
-    });
-
-    // Enter key for add inputs
-    STEPS_DATA.forEach(step => {
-      const input = $('input-' + step.key);
-      if (input) {
-        input.addEventListener('keydown', e => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            document.querySelector('.add-btn[data-key="' + step.key + '"]')?.click();
-          }
-        });
-      }
-    });
-  }
-
-  // STEP NAVIGATION
-  $('prevBtn').addEventListener('click', () => {
-    state.currentStep = Math.max(0, state.currentStep - 1);
-    save();
-    renderSteps();
+/* ---------- step 1: welcome ---------- */
+function grStepWelcome() {
+  var h = '<h3>Take a gentle moment</h3><p class="eid-gr-intro">This tool walks you through the 5-4-3-2-1 senses exercise, a few visual anchors, a short breathing reset and a calm reality check. Go at your own pace.</p>';
+  h += grSafetyBox(false);
+  h += '<label class="eid-gr-label" for="eid-gr-name">Your name (optional, it will be printed on your PDF)</label>';
+  h += '<input type="text" id="eid-gr-name" maxlength="60" placeholder="Type your name here" autocomplete="name" value="' + grEsc(GR.name) + '" oninput="GR.name=this.value;grSave();" />';
+  h += '<p class="eid-gr-hint">Your answers are saved only on this device. We do not send them anywhere.</p>';
+  h += '<label class="eid-gr-label" for="eid-gr-before">How strong does the feeling feel right now?<span class="eid-gr-val" id="eid-gr-bval">' + (GR.beforeSet ? GR.before + " / 10" : "move the slider") + '</span></label>';
+  h += '<input type="range" id="eid-gr-before" min="0" max="10" step="1" value="' + GR.before + '" oninput="grSetBefore(this.value)" aria-describedby="eid-gr-bhint" />';
+  h += '<div class="eid-gr-scale" id="eid-gr-bhint"><span>0 calm</span><span>10 most intense</span></div>';
+  h += '<span class="eid-gr-label">What are you feeling? (optional, choose any)</span><div class="eid-gr-chips">';
+  GR_FEELINGS.forEach(function (f) {
+    h += '<button type="button" class="eid-gr-chip" aria-pressed="' + (GR.feelings.indexOf(f) > -1 ? "true" : "false") + '" onclick="grToggleFeeling(this)">' + f + '</button>';
   });
+  h += '</div>';
+  h += '<div class="eid-gr-row"><button type="button" class="eid-gr-btn eid-gr-primary" onclick="grGo(1)">I need a reset: start here</button>';
+  if (GR_SAVED_STEP > 0) h += '<button type="button" class="eid-gr-btn eid-gr-ghost" onclick="grGo(' + GR_SAVED_STEP + ')">Continue where I left off</button>';
+  h += '</div>';
+  return h;
+}
+function grSetBefore(v) {
+  GR.before = parseInt(v, 10); GR.beforeSet = true;
+  grEl("eid-gr-bval").textContent = GR.before + " / 10";
+  grSave();
+}
+function grToggleFeeling(btn) {
+  var f = btn.textContent, i = GR.feelings.indexOf(f);
+  if (i > -1) { GR.feelings.splice(i, 1); btn.setAttribute("aria-pressed", "false"); }
+  else { GR.feelings.push(f); btn.setAttribute("aria-pressed", "true"); }
+  grSave();
+}
 
-  $('nextBtn').addEventListener('click', () => {
-    state.currentStep = Math.min(STEPS_DATA.length - 1, state.currentStep + 1);
-    save();
-    renderSteps();
+/* ---------- steps 2 to 6: senses ---------- */
+function grStepSense(key) {
+  var S = GR_SENSES[key], chosen = GR.chips[key];
+  var h = '<div class="eid-gr-top">' + grSceneFor(key) + '<div><span class="eid-gr-tag">' + S.tag + '</span></div></div>';
+  h += '<h3>' + S.title + '</h3><p class="eid-gr-intro">' + S.hint + ' Tap a suggestion or add your own words.</p>';
+  h += '<div class="eid-gr-chips" role="group" aria-label="Suggestions">';
+  S.suggestions.forEach(function (s, i) {
+    h += '<button type="button" class="eid-gr-chip" aria-pressed="' + (chosen.indexOf(s) > -1 ? "true" : "false") + '" onclick="grToggleSug(\'' + key + '\',' + i + ')">' + grEsc(s) + '</button>';
   });
-
-  $('startBtn').addEventListener('click', () => {
-    $('groundingSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    $('liveRegion').textContent = 'Grounding started.';
+  h += '</div><div class="eid-gr-chosen">';
+  chosen.forEach(function (v, i) {
+    h += '<button type="button" class="eid-gr-pick" aria-label="Remove ' + grEsc(v) + '" onclick="grRemove(\'' + key + '\',' + i + ')">' + grEsc(v) + ' &times;</button>';
   });
+  h += '</div><div class="eid-gr-add"><input type="text" id="eid-gr-in" maxlength="48" placeholder="Type your own and press Add" onkeydown="if(event.key===\'Enter\'){event.preventDefault();grAdd(\'' + key + '\');}" /><button type="button" class="eid-gr-btn eid-gr-primary eid-gr-small" onclick="grAdd(\'' + key + '\')">Add</button></div>';
+  h += '<p class="eid-gr-count">' + chosen.length + ' of ' + S.count + ' chosen. You can move on any time.</p>';
+  h += grNavHtml("Next");
+  return h;
+}
+function grToggleSug(key, i) {
+  var S = GR_SENSES[key], text = S.suggestions[i], list = GR.chips[key], at = list.indexOf(text);
+  if (at > -1) list.splice(at, 1);
+  else if (list.length < S.count) list.push(text);
+  else { grToast("You can choose up to " + S.count + " for this step."); return; }
+  grSave(); grRender();
+}
+function grRemove(key, i) { GR.chips[key].splice(i, 1); grSave(); grRender(); }
+function grAdd(key) {
+  var input = grEl("eid-gr-in"), val = (input.value || "").trim(), S = GR_SENSES[key], list = GR.chips[key];
+  if (!val) return;
+  if (list.indexOf(val) > -1) { grToast("Already added."); return; }
+  if (list.length >= S.count) { grToast("You can choose up to " + S.count + " for this step."); return; }
+  list.push(val); grSave(); grRender();
+  var again = grEl("eid-gr-in"); if (again) again.focus();
+}
 
-  // ANCHORS
-  function setupAnchors() {
-    document.querySelectorAll('.anchor-btn').forEach(btn => {
-      const key = btn.dataset.anchor;
-      if (state.anchors[key]) btn.classList.add('active');
-      btn.addEventListener('click', () => {
-        state.anchors[key] = !state.anchors[key];
-        btn.classList.toggle('active', state.anchors[key]);
-        if (key === 'trace') {
-          $('tracePadWrap').classList.toggle('visible', state.anchors.trace);
-        }
-        save();
-        updateSummary();
-      });
+/* ---------- step 7: anchors and trace pad ---------- */
+function grStepAnchors() {
+  var A = GR.anchors;
+  var h = '<div class="eid-gr-top">' + grSceneFor("anchors") + '<div><span class="eid-gr-tag">VISUAL ANCHORS</span></div></div>';
+  h += '<h3>Fast visual anchors</h3><p class="eid-gr-intro">Pick any activity that feels easy. Giving your eyes a simple, calm job helps your mind settle.</p>';
+  h += '<div class="eid-gr-anchors">';
+  h += '<button type="button" class="eid-gr-anchor" aria-pressed="' + A.circles + '" onclick="grToggleAnchor(\'circles\')">Find 3 circles somewhere around you</button>';
+  h += '<button type="button" class="eid-gr-anchor" aria-pressed="' + A.blue + '" onclick="grToggleAnchor(\'blue\')">Find something blue in the room</button>';
+  h += '<button type="button" class="eid-gr-anchor" aria-pressed="' + A.trace + '" onclick="grToggleAnchor(\'trace\')">Trace a shape slowly with your finger</button>';
+  h += '</div>';
+  if (A.circles) h += '<label class="eid-gr-label" for="eid-gr-fc">What circles did you find? (optional)</label><input type="text" id="eid-gr-fc" maxlength="120" placeholder="Example: clock, plate, button" value="' + grEsc(GR.found.circles) + '" oninput="GR.found.circles=this.value;grSave();" />';
+  if (A.blue) h += '<label class="eid-gr-label" for="eid-gr-fb">What blue thing did you find? (optional)</label><input type="text" id="eid-gr-fb" maxlength="120" placeholder="Example: a cup, the sky, my jeans" value="' + grEsc(GR.found.blue) + '" oninput="GR.found.blue=this.value;grSave();" />';
+  if (A.trace) {
+    h += '<span class="eid-gr-label">Choose a shape, then trace the dotted line slowly</span><div class="eid-gr-shapes">';
+    [["circle", "Circle"], ["wave", "Wave"], ["infinity", "Infinity"], ["square", "Square"]].forEach(function (p) {
+      h += '<button type="button" class="eid-gr-chip" aria-pressed="' + (GR.shape === p[0]) + '" onclick="grSetShape(\'' + p[0] + '\')">' + p[1] + '</button>';
     });
-
-    if (state.anchors.trace) $('tracePadWrap').classList.add('visible');
+    h += '</div><canvas id="eid-gr-trace" width="800" height="320" aria-label="Trace pad. Draw slowly along the dotted shape."></canvas>';
+    h += '<div class="eid-gr-row" style="margin-top:6px;"><button type="button" class="eid-gr-btn eid-gr-ghost eid-gr-small" onclick="grClearTrace()">Clear trace</button></div>';
+    h += '<p class="eid-gr-hint">Move slowly and breathe out as you trace. There is no right or wrong way.</p>';
   }
+  h += grNavHtml("Next");
+  return h;
+}
+function grToggleAnchor(k) { GR.anchors[k] = !GR.anchors[k]; grSave(); grRender(); }
+function grSetShape(s) { GR.shape = s; GR_TRACE = null; grSave(); grRender(); }
+function grDrawGuide(ctx, w, h, shape) {
+  var cx = w / 2, cy = h / 2, i;
+  ctx.save();
+  ctx.strokeStyle = "#c9c0ee"; ctx.lineWidth = 8; ctx.lineCap = "round"; ctx.setLineDash([2, 18]);
+  ctx.beginPath();
+  if (shape === "circle") { ctx.arc(cx, cy, 110, 0, Math.PI * 2); }
+  else if (shape === "wave") { for (i = 60; i <= w - 60; i += 4) { var y = cy + Math.sin((i - 60) / (w - 120) * Math.PI * 4) * 70; if (i === 60) ctx.moveTo(i, y); else ctx.lineTo(i, y); } }
+  else if (shape === "infinity") { for (var t = 0; t <= Math.PI * 2 + 0.05; t += 0.04) { var d = 1 + Math.sin(t) * Math.sin(t); var x = cx + 290 * Math.cos(t) / d, yy = cy + 290 * Math.sin(t) * Math.cos(t) / d; if (t === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy); } }
+  else { ctx.rect(cx - 150, cy - 100, 300, 200); }
+  ctx.stroke();
+  ctx.restore();
+}
+function grSetupTrace() {
+  var c = grEl("eid-gr-trace");
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
+  if (!ctx) return;
+  grDrawGuide(ctx, c.width, c.height, GR.shape);
+  if (GR_TRACE) {
+    var img = new Image();
+    img.onload = function () { ctx.clearRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0); };
+    img.src = GR_TRACE;
+  }
+  var drawing = false;
+  function pos(e) {
+    var r = c.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * (c.width / r.width), y: (e.clientY - r.top) * (c.height / r.height) };
+  }
+  function style() { ctx.setLineDash([]); ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#6a5aaa"; }
+  c.addEventListener("pointerdown", function (e) {
+    drawing = true; style();
+    if (c.setPointerCapture) { try { c.setPointerCapture(e.pointerId); } catch (x) {} }
+    var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 0.1, p.y + 0.1); ctx.stroke();
+    e.preventDefault();
+  });
+  c.addEventListener("pointermove", function (e) {
+    if (!drawing) return;
+    var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault();
+  });
+  function end() { if (!drawing) return; drawing = false; try { GR_TRACE = c.toDataURL("image/png"); } catch (x) {} }
+  c.addEventListener("pointerup", end);
+  c.addEventListener("pointercancel", end);
+  c.addEventListener("pointerleave", end);
+}
+function grClearTrace() {
+  var c = grEl("eid-gr-trace");
+  GR_TRACE = null;
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
+  if (!ctx) return;
+  ctx.clearRect(0, 0, c.width, c.height);
+  grDrawGuide(ctx, c.width, c.height, GR.shape);
+  grToast("Trace cleared.");
+}
 
-  // TRACE PAD
-  function setupTracePad() {
-    const canvas = $('tracePad');
-    const ctx = canvas.getContext('2d');
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#6a5aaa';
-    let drawing = false;
-
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const p = e.touches ? e.touches[0] : e;
-      return {
-        x: (p.clientX - rect.left) * (canvas.width / rect.width),
-        y: (p.clientY - rect.top) * (canvas.height / rect.height)
-      };
+/* ---------- step 8: breathing ---------- */
+function grStepBreathe() {
+  var B = GR.breath;
+  var h = '<div class="eid-gr-top">' + grSceneFor("breathe") + '<div><span class="eid-gr-tag">BREATHE</span></div></div>';
+  h += '<h3>Breathing micro reset</h3><p class="eid-gr-intro">Choose a pattern and a length, then follow the circle. It grows as you breathe in and shrinks as you breathe out.</p>';
+  h += '<div class="eid-gr-breath"><div class="eid-gr-ringwrap" id="eid-gr-ring"><div class="eid-gr-ringin"><div class="eid-gr-bcircle" id="eid-gr-bcircle"><span id="eid-gr-bsec">' + B.len + 's</span></div></div></div>';
+  h += '<div class="eid-gr-bctl"><div class="eid-gr-bsay" id="eid-gr-bsay">Ready when you are</div><div class="eid-gr-bcount" id="eid-gr-bcount"></div>';
+  h += '<span class="eid-gr-label" style="margin-top:6px;">Pattern</span><div class="eid-gr-shapes">';
+  Object.keys(GR_PATTERNS).forEach(function (k) {
+    h += '<button type="button" class="eid-gr-chip" aria-pressed="' + (B.pattern === k) + '" onclick="grSetBreath(\'pattern\',\'' + k + '\')">' + GR_PATTERNS[k].name + '</button>';
+  });
+  h += '</div><label class="eid-gr-label" for="eid-gr-blen">Timer length</label><select id="eid-gr-blen" onchange="grSetBreath(\'len\',this.value)">';
+  [30, 45, 60, 90].forEach(function (n) { h += '<option value="' + n + '"' + (B.len === n ? " selected" : "") + '>' + n + ' seconds</option>'; });
+  h += '</select><div class="eid-gr-row"><button type="button" class="eid-gr-btn eid-gr-teal eid-gr-small" onclick="grBreathStart()">Start breathing</button><button type="button" class="eid-gr-btn eid-gr-ghost eid-gr-small" onclick="grBreathStop(false)">Stop</button></div></div></div>';
+  h += '<p class="eid-gr-hint">Breathe gently, never forcing it. If you feel dizzy or uncomfortable, stop and breathe normally.</p>';
+  h += grNavHtml("Next");
+  return h;
+}
+function grSetBreath(k, v) {
+  if (k === "len") GR.breath.len = parseInt(v, 10); else GR.breath.pattern = v;
+  grBreathStop(true); grSave(); grRender();
+}
+function grBreathInit() {}
+function grBreathStop(silent) {
+  if (GR_TIMER) { clearInterval(GR_TIMER); GR_TIMER = null; if (!silent) { var s = grEl("eid-gr-bsay"); if (s) s.textContent = "Paused. Restart any time."; } }
+}
+function grBreathStart() {
+  grBreathStop(true);
+  var total = GR.breath.len, phases = GR_PATTERNS[GR.breath.pattern].phases, cycle = 0, i;
+  for (i = 0; i < phases.length; i++) cycle += phases[i][1];
+  var circ = grEl("eid-gr-bcircle"), ring = grEl("eid-gr-ring"), say = grEl("eid-gr-bsay"), cnt = grEl("eid-gr-bcount"), sec = grEl("eid-gr-bsec");
+  if (!circ) return;
+  var t = 0;
+  GR.breath.done = false;
+  circ.style.transition = "none"; circ.style.transform = "scale(0.55)";
+  function apply() {
+    var pos = t % cycle, acc = 0, idx = 0, within = 0;
+    for (var k = 0; k < phases.length; k++) {
+      if (pos < acc + phases[k][1]) { idx = k; within = pos - acc; break; }
+      acc += phases[k][1];
     }
-
-    function startDraw(e) { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
-    function continueDraw(e) { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
-    function endDraw() { drawing = false; }
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', continueDraw);
-    window.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', continueDraw, { passive: false });
-    canvas.addEventListener('touchend', endDraw);
-
-    $('clearTraceBtn').addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      showToast('Trace cleared.');
-    });
-  }
-
-  // BREATHING
-  function setupBreathing() {
-    const ring = $('breathRing');
-    const secEl = $('breathSec');
-    const prompt = $('breathPrompt');
-
-    function updateRing(left, total) {
-      const deg = Math.round(((total - left) / total) * 360);
-      ring.style.background = 'conic-gradient(var(--brand) ' + deg + 'deg, var(--brand-light) ' + deg + 'deg)';
-      secEl.textContent = left + 's';
-      prompt.textContent = left % 8 < 4 ? 'Inhale softly…' : 'Exhale slowly…';
+    var ph = phases[idx];
+    if (within === 0) {
+      circ.style.transition = "transform " + ph[1] + "s ease-in-out";
+      circ.style.transform = "scale(" + ph[2] + ")";
     }
-
-    $('breathLength').addEventListener('change', () => {
-      const total = parseInt($('breathLength').value, 10);
-      updateRing(total, total);
-    });
-
-    $('startBreathBtn').addEventListener('click', () => {
-      clearInterval(breathTimer);
-      const total = parseInt($('breathLength').value, 10);
-      let left = total;
-      updateRing(left, total);
-
-      breathTimer = setInterval(() => {
-        left--;
-        updateRing(Math.max(left, 0), total);
-        if (left <= 0) {
-          clearInterval(breathTimer);
-          secEl.textContent = '✓';
-          prompt.textContent = 'Done. Notice one small shift in your body.';
-          ring.style.background = 'conic-gradient(var(--teal) 360deg, var(--teal-light) 360deg)';
-          showToast('Breathing reset complete.');
-        }
-      }, 1000);
-    });
-
-    $('stopBreathBtn').addEventListener('click', () => {
-      clearInterval(breathTimer);
-      prompt.textContent = 'Paused. You can restart any time.';
-    });
+    say.textContent = ph[0];
+    cnt.textContent = (ph[1] - within) + "   |   " + (total - t) + "s left";
+    sec.textContent = (ph[1] - within);
+    ring.style.background = "conic-gradient(#1fa39a " + Math.round(t / total * 360) + "deg, #f0ecf8 " + Math.round(t / total * 360) + "deg)";
   }
+  setTimeout(apply, 30);
+  GR_TIMER = setInterval(function () {
+    t++;
+    if (t >= total) {
+      clearInterval(GR_TIMER); GR_TIMER = null;
+      GR.breath.done = true; grSave();
+      circ.style.transition = "transform 2s ease-in-out"; circ.style.transform = "scale(0.8)";
+      ring.style.background = "conic-gradient(#1fa39a 360deg, #f0ecf8 360deg)";
+      say.textContent = "Well done";
+      cnt.textContent = "Notice one small shift in your body.";
+      sec.textContent = "Done";
+      grToast("Breathing reset complete.");
+      return;
+    }
+    apply();
+  }, 1000);
+}
 
-  // SUMMARY
-  function updateSummary() {
-    state.reflections.smallStep = $('smallStep').value.trim();
-    state.reflections.needNow = $('needNow').value.trim();
-    state.reflections.feelingMsg = $('feelingMsg').value.trim();
+/* ---------- step 9: reality check ---------- */
+function grStepReality() {
+  var R = GR.reflections;
+  var h = '<div class="eid-gr-top">' + grSceneFor("reality") + '<div><span class="eid-gr-tag">REALITY CHECK</span></div></div>';
+  h += '<h3>Reality check</h3><p class="eid-gr-intro">These questions help you see what is real and what is available to you right now. Short answers are fine.</p>';
+  h += '<label class="eid-gr-label" for="eid-gr-r1">What is the smallest safe next step?</label><textarea id="eid-gr-r1" maxlength="400" placeholder="Example: drink water, sit by a window, text one trusted person." oninput="GR.reflections.smallStep=this.value;grSave();">' + grEsc(R.smallStep) + '</textarea>';
+  h += '<label class="eid-gr-label" for="eid-gr-r2">What do I need right now: space, support, water, food, rest, fresh air?</label><input type="text" id="eid-gr-r2" maxlength="200" placeholder="You can list one or two." value="' + grEsc(R.needNow) + '" oninput="GR.reflections.needNow=this.value;grSave();" />';
+  h += '<label class="eid-gr-label" for="eid-gr-r3">If this feeling had a message, what would it be asking for?</label><textarea id="eid-gr-r3" maxlength="400" placeholder="A kind sentence to yourself is enough." oninput="GR.reflections.feelingMsg=this.value;grSave();">' + grEsc(R.feelingMsg) + '</textarea>';
+  h += '<label class="eid-gr-label" for="eid-gr-after">Now, how strong does the feeling feel?<span class="eid-gr-val" id="eid-gr-aval">' + (GR.afterSet ? GR.after + " / 10" : "move the slider") + '</span></label>';
+  h += '<input type="range" id="eid-gr-after" min="0" max="10" step="1" value="' + GR.after + '" oninput="grSetAfter(this.value)" />';
+  h += '<div class="eid-gr-scale"><span>0 calm</span><span>10 most intense</span></div>';
+  h += grNavHtml("See my plan");
+  return h;
+}
+function grSetAfter(v) {
+  GR.after = parseInt(v, 10); GR.afterSet = true;
+  grEl("eid-gr-aval").textContent = GR.after + " / 10";
+  grSave();
+}
 
-    const groundingLines = STEPS_DATA.map(s =>
-      s.title + ': ' + (state.chips[s.key].join(', ') || '—')
-    ).join('\n');
+/* ---------- step 10: plan ---------- */
+function grChangeMessage() {
+  if (!GR.beforeSet || !GR.afterSet) return "";
+  var d = GR.before - GR.after;
+  if (d > 0) return "Your feeling went down by " + d + (d === 1 ? " point" : " points") + ". Well done for pausing and giving yourself this time.";
+  if (d === 0) return "Your feeling is about the same, and that is okay. Grounding is a skill that often takes a few rounds. You could repeat the breathing step, try 5-4-3-2-1 again, or reach out to someone you trust.";
+  return "The feeling seems stronger right now. That can happen and it does not mean you did anything wrong. Be gentle with yourself, try again slowly, and consider reaching out to someone you trust or a helpline.";
+}
+function grChartHtml() {
+  if (!GR.beforeSet && !GR.afterSet) return "";
+  var h = '<div class="eid-gr-box"><h4>How the feeling changed</h4>';
+  if (GR.beforeSet) h += '<div class="eid-gr-cr"><span>Before</span><div class="eid-gr-track"><div class="eid-gr-fill" style="width:' + GR.before * 10 + '%;background:#f08a7e;"></div></div><b>' + GR.before + ' / 10</b></div>';
+  if (GR.afterSet) h += '<div class="eid-gr-cr"><span>After</span><div class="eid-gr-track"><div class="eid-gr-fill" style="width:' + GR.after * 10 + '%;background:#1fa39a;"></div></div><b>' + GR.after + ' / 10</b></div>';
+  var m = grChangeMessage();
+  if (m) h += '<p style="margin:10px 0 0;">' + m + '</p>';
+  return h + '</div>';
+}
+function grSummaryText() {
+  var R = GR.reflections, a = [];
+  Object.keys(GR.anchors).forEach(function (k) { if (GR.anchors[k]) a.push(k === "trace" ? "tracing a shape" : (k === "circles" ? "finding circles" : "finding something blue")); });
+  var lines = [];
+  if (GR.name) lines.push("Name: " + GR.name);
+  if (GR.beforeSet) lines.push("Feeling before: " + GR.before + " / 10");
+  if (GR.afterSet) lines.push("Feeling after: " + GR.after + " / 10");
+  if (GR.feelings.length) lines.push("What I was feeling: " + GR.feelings.join(", "));
+  lines.push("", "5-4-3-2-1 grounding:");
+  ["see", "feel", "hear", "smell", "taste"].forEach(function (k) { lines.push(GR_SENSES[k].title + ": " + (GR.chips[k].join(", ") || "not entered")); });
+  lines.push("", "Visual anchors used: " + (a.join(", ") || "none yet"));
+  if (GR.found.circles) lines.push("Circles I found: " + GR.found.circles);
+  if (GR.found.blue) lines.push("Blue thing I found: " + GR.found.blue);
+  lines.push("Breathing reset: " + (GR.breath.done ? "completed (" + GR.breath.len + " seconds)" : "not completed yet"));
+  lines.push("", "Smallest safe next step: " + (R.smallStep || "not entered"));
+  lines.push("What I need right now: " + (R.needNow || "not entered"));
+  lines.push("My feeling's message: " + (R.feelingMsg || "not entered"));
+  return lines.join("\n");
+}
+function grStepPlan() {
+  var h = '<div class="eid-gr-top">' + grSceneFor("plan") + '<div><span class="eid-gr-tag">YOUR PLAN</span></div></div>';
+  h += '<h3>' + (GR.name ? grEsc(GR.name) + ", you did something kind for yourself" : "You did something kind for yourself") + '</h3><p class="eid-gr-intro">Here is your summary. You can download it as a PDF, copy it, or keep it on this device.</p>';
+  h += grChartHtml();
+  if (GR.afterSet && GR.after >= 8) h += grSafetyBox(true); else h += grSafetyBox(false);
+  h += '<div class="eid-gr-sum" id="eid-gr-sum">' + grEsc(grSummaryText()) + '</div>';
+  h += '<div class="eid-gr-box"><h4>If the feeling comes back</h4><p style="margin:0;">1. Name it: "I am feeling anxious right now." 2. Feel your feet and slow your breath. 3. Do 5-4-3-2-1 again. 4. Pick the smallest safe next step. 5. Reach out to someone you trust.</p></div>';
+  h += '<div class="eid-gr-row"><button type="button" class="eid-gr-btn eid-gr-teal" onclick="grDownloadPDF()">Download my PDF</button><button type="button" class="eid-gr-btn eid-gr-ghost" onclick="grCopySummary()">Copy my summary</button></div>';
+  h += '<div class="eid-gr-row"><button type="button" class="eid-gr-btn eid-gr-ghost" onclick="grGo(' + (GR.step - 1) + ')">Back</button><button type="button" class="eid-gr-btn eid-gr-danger eid-gr-small" onclick="grReset()">Start over</button><button type="button" class="eid-gr-btn eid-gr-danger eid-gr-small" onclick="grClearSaved()">Clear saved data</button></div>';
+  return h;
+}
+function grCopySummary() {
+  var t = grSummaryText();
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { grToast("Summary copied."); }, function () { grToast("Could not copy. Please try again."); });
+  else grToast("Could not copy. Please select the text and copy it.");
+}
+function grFreshState() {
+  GR.step = 0; GR.name = ""; GR.before = 5; GR.beforeSet = false; GR.after = 5; GR.afterSet = false; GR.feelings = [];
+  GR.chips = { see: [], feel: [], hear: [], smell: [], taste: [] };
+  GR.anchors = { circles: false, blue: false, trace: false };
+  GR.found = { circles: "", blue: "" };
+  GR.shape = "circle";
+  GR.reflections = { smallStep: "", needNow: "", feelingMsg: "" };
+  GR.breath = { len: 45, pattern: "gentle", done: false };
+  GR_TRACE = null; GR_SAVED_STEP = 0;
+}
+function grReset() {
+  if (!confirm("Start over and remove all entries?")) return;
+  grBreathStop(true);
+  try { localStorage.removeItem(GR_KEY); } catch (e) {}
+  grFreshState(); grRender(); grTop();
+}
+function grClearSaved() {
+  if (!confirm("Clear all saved data from this device?")) return;
+  try { localStorage.removeItem(GR_KEY); } catch (e) {}
+  grToast("Saved data cleared.");
+}
 
-    const anchorsUsed = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'none yet';
+/* ---------- sharing ---------- */
+function grShareUrl() {
+  var u = window.location.href.split("#")[0];
+  if (!u || u.indexOf("http") !== 0) u = GR_SITE;
+  return u;
+}
+function grShare(net) {
+  var u = encodeURIComponent(grShareUrl()), t = encodeURIComponent("A gentle visual grounding and emotional reset tool:");
+  var link = "";
+  if (net === "facebook") link = "https://www.facebook.com/sharer/sharer.php?u=" + u;
+  else if (net === "x") link = "https://twitter.com/intent/tweet?text=" + t + "&url=" + u;
+  else if (net === "whatsapp") link = "https://wa.me/?text=" + t + "%20" + u;
+  else if (net === "linkedin") link = "https://www.linkedin.com/sharing/share-offsite/?url=" + u;
+  else if (net === "email") { window.location.href = "mailto:?subject=" + encodeURIComponent("A calming grounding tool") + "&body=" + t + "%20" + u; return; }
+  if (link) window.open(link, "_blank", "noopener,width=640,height=560");
+}
+function grCopyLink() {
+  var url = grShareUrl(), btn = grEl("eid-gr-copybtn");
+  function done() { btn.textContent = "Link copied"; setTimeout(function () { btn.textContent = "Copy link"; }, 2000); }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt("Copy this link:", url); });
+  else window.prompt("Copy this link:", url);
+}
 
-    const text = [
-      'Visual grounding:',
-      groundingLines,
-      '',
-      'Visual anchors used: ' + anchorsUsed,
-      '',
-      'Smallest safe next step: ' + (state.reflections.smallStep || '—'),
-      'Need right now: ' + (state.reflections.needNow || '—'),
-      'Feeling message: ' + (state.reflections.feelingMsg || '—')
-    ].join('\n');
-
-    $('summaryBox').textContent = text;
-    save();
-  }
-
-  // REFLECTION LISTENERS
-  ['smallStep', 'needNow', 'feelingMsg'].forEach(id => {
-    $(id).addEventListener('input', updateSummary);
-  });
-
-  // SHARE
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A gentle visual grounding and emotional reset tool: ');
-    $('waShare').href = 'https://wa.me/?text=' + msg + url;
-    $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
-    $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
-  }
-
-  $('copyLinkBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
-  });
-
-  $('copySummaryBtn').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText($('summaryBox').textContent); showToast('Summary copied!'); }
-    catch(_) { showToast('Could not copy — please try again.'); }
-  });
-
-  // RESET
-  $('resetAllBtn').addEventListener('click', () => {
-    if (!confirm('Reset the tool and remove all entries?')) return;
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    location.reload();
-  });
-
-  $('clearSavedBtn').addEventListener('click', () => {
-    if (!confirm('Clear all saved data from this device?')) return;
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    showToast('Saved data cleared.');
-  });
-
-  // PDF
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
+/* ---------- PDF ---------- */
+function grBlobToDataUrl(url) {
+  if (typeof fetch !== "function") return Promise.reject(new Error("nofetch"));
+  return fetch(url, { mode: "cors" }).then(function (res) {
+    if (!res.ok) throw new Error("fail");
+    return res.blob();
+  }).then(function (blob) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onloadend = function () { resolve(fr.result); };
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
     });
+  });
+}
+function grTraceOnWhite() {
+  return new Promise(function (resolve) {
+    if (!GR_TRACE) { resolve(null); return; }
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var c = document.createElement("canvas"); c.width = img.width; c.height = img.height;
+        var x = c.getContext("2d"); x.fillStyle = "#ffffff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0);
+        resolve({ data: c.toDataURL("image/png"), w: c.width, h: c.height });
+      } catch (e) { resolve(null); }
+    };
+    img.onerror = function () { resolve(null); };
+    img.src = GR_TRACE;
+  });
+}
+function grPdfFig(doc, x, y, s, kind, color, arms) {
+  var a = arms || [-12, 20, 12, 20];
+  doc.setDrawColor(color[0], color[1], color[2]);
+  doc.setLineWidth(1.6 * s);
+  doc.circle(x, y - 10 * s, 8 * s, "S");
+  if (kind === "w") {
+    doc.line(x, y - 2 * s, x, y + 8 * s);
+    doc.triangle(x, y + 8 * s, x - 12 * s, y + 36 * s, x + 12 * s, y + 36 * s, "S");
+    doc.line(x - 5 * s, y + 36 * s, x - 6 * s, y + 54 * s);
+    doc.line(x + 5 * s, y + 36 * s, x + 6 * s, y + 54 * s);
+  } else {
+    doc.line(x, y - 2 * s, x, y + 30 * s);
+    doc.line(x, y + 30 * s, x - 10 * s, y + 54 * s);
+    doc.line(x, y + 30 * s, x + 10 * s, y + 54 * s);
   }
+  doc.line(x, y + 8 * s, x + a[0] * s, y + a[1] * s);
+  doc.line(x, y + 8 * s, x + a[2] * s, y + a[3] * s);
+}
+function grDownloadPDF() {
+  if (!window.jspdf || !window.jspdf.jsPDF) { grToast("The PDF tool is still loading. Please try again in a moment."); return; }
+  grToast("Preparing your PDF...");
+  var logoP = grBlobToDataUrl(GR_LOGO).catch(function () { return null; });
+  Promise.all([logoP, grTraceOnWhite()]).then(function (res) { grBuildPDF(res[0], res[1]); });
+}
+function grBuildPDF(logoData, trace) {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ unit: "pt", format: "a4" });
+  var L = 42, W = 511, BOTTOM = 780, y = 0;
+  var NAVY = [27, 42, 73], INK = [31, 41, 55], MUTED = [91, 100, 117], GOOD = [18, 144, 95], BAD = [194, 65, 12], BRAND = [106, 90, 170];
 
-  async function downloadPDF() {
-    const PDF = jsPDF();
-    if (!PDF) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
-
-    const doc = new PDF({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header
+  function newPage() { doc.addPage(); y = 50; }
+  function need(h) { if (y + h > BOTTOM) newPage(); }
+  function para(text, size, style, color, indent, gap) {
+    indent = indent || 0; gap = (gap === undefined ? 4 : gap);
+    doc.setFont("helvetica", style || "normal"); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]);
+    var lines = doc.splitTextToSize(text, W - indent), lh = size * 1.38;
+    for (var i = 0; i < lines.length; i++) { need(lh); doc.text(lines[i], L + indent, y + size); y += lh; }
+    y += gap;
+  }
+  function heading(text, hex) {
+    need(110); y += 8;
+    var n = parseInt(hex.replace("#", ""), 16);
+    doc.setFillColor((n >> 16) & 255, (n >> 8) & 255, n & 255);
+    doc.rect(L, y, 5, 20, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(15); doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.text(text, L + 14, y + 15);
+    y += 30;
+  }
+  function row(label, value) {
+    var lines = doc.splitTextToSize(value, W - 24);
+    var bh = lines.length * 13 + 30;
+    need(bh + 8);
     doc.setFillColor(240, 236, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(30, 26, 46);
-    doc.text('Visual Grounding + Emotional Reset', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 72, 104);
-    doc.text('Personal grounding summary — ' + new Date().toLocaleString(), margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
-
-    // Grounding rows
-    STEPS_DATA.forEach(step => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      const value = state.chips[step.key].join(', ') || 'Not entered';
-      doc.setFillColor(240, 236, 248);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(106, 90, 170);
-      doc.text(step.title.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Anchors + reflections
-    const anchorsUsed = Object.entries(state.anchors).filter(([,v]) => v).map(([k]) => k).join(', ') || 'None';
-    const refRows = [
-      ['Visual anchors used', anchorsUsed],
-      ['Smallest safe next step', state.reflections.smallStep || 'Not entered'],
-      ['Need right now', state.reflections.needNow || 'Not entered'],
-      ['Feeling message', state.reflections.feelingMsg || 'Not entered']
-    ];
-
-    refRows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(240, 236, 248);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(106, 90, 170);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 26, 46);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    y += 4;
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(106, 90, 170);
-    doc.text('Understanding visual grounding and emotional reset — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why the 5-4-3-2-1 technique works',
-       'The 5-4-3-2-1 grounding technique is rooted in sensory-based attention redirection — a core component of both Cognitive Behavioural Therapy and trauma-informed practice. By deliberately directing attention to present-moment sensory experience, the technique interrupts ruminative or anxious thought patterns that amplify distress. Research shows that engaging multiple sensory channels simultaneously reduces the subjective intensity of overwhelming emotion more effectively than cognitive reframing alone, because it activates different neural pathways.'],
-      ['The neuroscience of grounding',
-       'During acute emotional distress, the limbic system — particularly the amygdala — dominates processing and suppresses prefrontal cortex activity. Grounding techniques work by providing concrete sensory input that the somatosensory and perceptual cortices must process, which naturally reduces limbic dominance and partially restores prefrontal access. This is why grounding feels stabilising: it is not distraction but a neurological shift from threat-processing to present-moment processing.'],
-      ['Visual anchoring as an emotional regulation strategy',
-       'Visual anchoring — deliberately directing visual attention to neutral or calming objects — is an evidence-based technique used in EMDR therapy and trauma-informed stabilisation protocols. The visual cortex is the largest sensory processing region in the human brain. Deliberately engaging it with specific, intentional visual tasks (finding shapes, colours, or objects) commands significant neural resources that would otherwise be allocated to emotional amplification, producing measurable calming effects.'],
-      ['Why drawing and tracing calm the nervous system',
-       'Research in art therapy and occupational therapy consistently shows that repetitive fine motor activities — including drawing, tracing, and colouring — activate the parasympathetic nervous system and produce measurable reductions in cortisol and heart rate. These activities engage the motor cortex, the cerebellum, and the visual cortex simultaneously, creating a state of focused engagement that is incompatible with sustained anxiety. Even 2 to 3 minutes of slow, deliberate tracing has measurable calming effects.'],
-      ['The role of small steps in emotional recovery',
-       'Research in positive psychology and behaviour activation — including work by Peter Lewinsohn and Aaron Beck — shows that the ability to identify and take one small, concrete, achievable next step is a significant predictor of recovery from depressive and anxious states. The act of identifying a specific small step activates the prefrontal cortex\'s planning and agency systems, which are suppressed during acute distress. Even naming a single tiny action restores a sense of control, which directly reduces emotional intensity.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(106, 90, 170);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(30, 26, 46);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(106, 90, 170);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(30, 26, 46);
-    [
-      'Find a helpline: findahelpline.com',
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    // Footer
-    doc.setDrawColor(192, 176, 224);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(152, 144, 176);
-    doc.text('This tool supports reflection. Not a replacement for professional care. If you are in danger, please seek urgent help now.', margin, pageH - 22);
-
-    doc.save('visual-grounding-reset.pdf');
-    showToast('PDF downloaded!');
+    doc.roundedRect(L, y, W, bh, 5, 5, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(BRAND[0], BRAND[1], BRAND[2]);
+    doc.text(label.toUpperCase(), L + 12, y + 15);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(lines, L + 12, y + 29);
+    y += bh + 8;
   }
 
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
+  /* header band */
+  doc.setFillColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.rect(0, 0, 595, 112, "F");
+  var figCols = [[31, 163, 154], [240, 138, 126], [246, 195, 68], [155, 139, 224]], kinds = ["m", "w", "m", "w"];
+  for (var f = 0; f < 4; f++) {
+    var ar = [-27, 12, 27, 12];
+    if (f === 0) ar = [-12, 26, 27, 12];
+    if (f === 3) ar = [-27, 12, 12, 26];
+    grPdfFig(doc, 400 + f * 44, 46, 0.8, kinds[f], figCols[f], ar);
+  }
+  var tx = L;
+  if (logoData) { try { doc.addImage(logoData, "JPEG", L, 22, 56, 56); tx = L + 68; } catch (e) { tx = L; } }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(216, 222, 240);
+  doc.text("Emotional Intelligence Developer", tx, 34);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(19); doc.setTextColor(255, 255, 255);
+  doc.text("Visual Grounding and Emotional Reset", tx, 60);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(216, 222, 240);
+  var sub = (GR.name ? "Prepared for: " + GR.name + "   |   " : "") + grToday();
+  doc.text(sub, tx, 80);
+  doc.text("emotionalintelligencedeveloper.com", tx, 96);
+  y = 130;
 
-  // INIT
-  load();
-  renderSteps();
-  setupAnchors();
-  setupTracePad();
-  setupBreathing();
-  updateSummary();
-  updateShareLinks();
-}());
+  /* feeling chart */
+  if (GR.beforeSet || GR.afterSet) {
+    heading("How the feeling changed", "#f08a7e");
+    var bars = [];
+    if (GR.beforeSet) bars.push(["Before", GR.before, [240, 138, 126]]);
+    if (GR.afterSet) bars.push(["After", GR.after, [31, 163, 154]]);
+    bars.forEach(function (b) {
+      need(28);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+      doc.text(b[0], L, y + 11);
+      doc.setFillColor(232, 227, 216); doc.roundedRect(L + 70, y, 300, 14, 7, 7, "F");
+      doc.setFillColor(b[2][0], b[2][1], b[2][2]); doc.roundedRect(L + 70, y, Math.max(14, 30 * b[1]), 14, 7, 7, "F");
+      doc.setFont("helvetica", "normal"); doc.setTextColor(INK[0], INK[1], INK[2]);
+      doc.text(b[1] + " / 10", L + 384, y + 11);
+      y += 26;
+    });
+    var msg = grChangeMessage();
+    if (msg) para(msg, 10.5, "normal", INK, 0, 6);
+  }
+  if (GR.feelings.length) para("What I was feeling: " + GR.feelings.join(", "), 10.5, "normal", MUTED, 0, 6);
+
+  /* senses */
+  heading("My 5-4-3-2-1 grounding", "#9b8be0");
+  ["see", "feel", "hear", "smell", "taste"].forEach(function (k) { row(GR_SENSES[k].title, GR.chips[k].join(", ") || "Not entered"); });
+
+  /* anchors */
+  heading("My visual anchors", "#1fa39a");
+  var used = [];
+  if (GR.anchors.circles) used.push("Finding 3 circles" + (GR.found.circles ? ": " + GR.found.circles : ""));
+  if (GR.anchors.blue) used.push("Finding something blue" + (GR.found.blue ? ": " + GR.found.blue : ""));
+  if (GR.anchors.trace) used.push("Tracing a shape slowly (" + GR.shape + ")");
+  row("Anchors I used", used.join("\n") || "None this time");
+  if (trace) {
+    var iw = 300, ih = iw * trace.h / trace.w;
+    need(ih + 30);
+    try { doc.addImage(trace.data, "PNG", L, y, iw, ih); doc.setDrawColor(212, 204, 232); doc.rect(L, y, iw, ih); } catch (e) {}
+    y += ih + 6;
+    para("My trace", 9, "italic", MUTED, 0, 8);
+  }
+  row("Breathing reset", GR.breath.done ? "Completed: " + GR_PATTERNS[GR.breath.pattern].name + ", " + GR.breath.len + " seconds" : "Not completed this time");
+
+  /* reality check */
+  heading("My reality check", "#f6c344");
+  row("Smallest safe next step", GR.reflections.smallStep || "Not entered");
+  row("What I need right now", GR.reflections.needNow || "Not entered");
+  row("If my feeling had a message", GR.reflections.feelingMsg || "Not entered");
+
+  /* if it comes back */
+  heading("If the feeling comes back", "#f08a7e");
+  ["1. Name it: say what you feel, for example 'I am feeling anxious right now.'",
+   "2. Feel your feet on the ground and let your breath slow down, with a longer breath out.",
+   "3. Do 5-4-3-2-1 again: 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.",
+   "4. Choose the smallest safe next step, such as a drink of water or a short walk.",
+   "5. Reach out to someone you trust. You do not have to carry this alone."].forEach(function (t) { para(t, 10.5, "normal", INK, 6, 4); });
+
+  /* education */
+  heading("Understanding grounding (general information)", "#9b8be0");
+  [
+    ["What grounding is", "Grounding techniques such as 5-4-3-2-1 are widely used in therapy, including CBT informed and trauma informed work, to help people shift attention from overwhelming thoughts and feelings to the present moment through the senses. They are a coping skill, not a cure. Research on grounding itself is still limited and people respond differently, so what works for you matters most."],
+    ["Why it may help", "When we feel anxious or overwhelmed, attention is often pulled into worry, memories or physical alarm. Naming what you can see, feel and hear gives the mind a simple, concrete task, which can ease the loop of racing thoughts. Noticing your body supported by the floor or a chair can also remind you that you are safe in this moment."],
+    ["Slow breathing", "Slowing the breath, with a longer breath out, is commonly taught to help the body settle. Studies of slow breathing suggest it can reduce stress and tension for many people, although the effects are usually modest and vary from person to person. Breathe gently, and stop if you feel dizzy or uncomfortable."],
+    ["Visual focus and tracing", "Simple visual tasks, like finding shapes or colours, and slow repetitive movements, like tracing, occupy attention in a calm and structured way. Many people find this a gentle form of mindful focus that helps them settle."],
+    ["The power of small steps", "Behavioural activation, developed by researchers including Peter Lewinsohn and later built into CBT, is based on the idea that taking one small, doable action can lift mood and restore a sense of control. Choosing the smallest safe next step uses that idea."],
+    ["When to get more support", "Grounding can help in the moment, but it does not replace professional care. Consider speaking to a doctor, counsellor or trusted person if distress is frequent, lasts for weeks, affects sleep, work or relationships, or if you ever have thoughts of harming yourself. If you are in danger, contact your local emergency number. You can find a free helpline in your country at findahelpline.com."]
+  ].forEach(function (p) { para(p[0], 11, "bold", BRAND, 0, 2); para(p[1], 10, "normal", INK, 0, 8); });
+
+  /* resources */
+  heading("More free resources", "#1fa39a");
+  para("Main site: emotionalintelligencedeveloper.com", 10.5, "normal", INK, 0, 3);
+  para("Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/", 10.5, "normal", INK, 0, 3);
+  para("Recommended audio books: emotionalintelligencedeveloper.com/recommended-books/", 10.5, "normal", INK, 0, 1);
+  para("As an Amazon Associate I earn from qualifying purchases.", 9, "normal", MUTED, 0, 4);
+  para("Help page: emotionalintelligencedeveloper.com/help-page/", 10.5, "normal", INK, 0, 3);
+  para("Find a helpline: findahelpline.com", 10.5, "normal", INK, 0, 3);
+  para("Support this website: emotionalintelligencedeveloper.com/support-this-website/", 10.5, "normal", INK, 0, 10);
+  para("This report supports reflection and is not a diagnosis or a replacement for professional care. If you are in danger, please contact your local emergency services now.", 9, "italic", MUTED, 0, 0);
+
+  /* footer on every page */
+  var pages = doc.getNumberOfPages();
+  for (var p = 1; p <= pages; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(220, 215, 205); doc.setLineWidth(0.6);
+    doc.line(L, 805, L + W, 805);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text("Emotional Intelligence Developer  |  emotionalintelligencedeveloper.com", L, 820);
+    doc.text("Page " + p + " of " + pages, L + W, 820, { align: "right" });
+  }
+  var fname = "visual-grounding-reset";
+  if (GR.name) fname += "-" + GR.name.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase();
+  doc.save(fname + ".pdf");
+  grToast("PDF downloaded.");
+}
+
+/* ---------- start up ---------- */
+grLoad();
+grEl("eid-gr-scene").innerHTML = grSceneHeader();
+grEl("eid-gr-supportslot").innerHTML = grSupportBtn();
+grRender();
 </script>
 </body>
 </html>

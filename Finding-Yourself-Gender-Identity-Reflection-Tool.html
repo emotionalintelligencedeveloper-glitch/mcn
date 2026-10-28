@@ -413,6 +413,7 @@
   <div class="fs-btn-row" style="margin-bottom:18px;">
     <button type="button" class="fs-btn fs-btn-purple" id="fsPdfBtn">Download my reflection (PDF)</button>
     <button type="button" class="fs-btn fs-btn-outline" id="fsEditBtn">Go back and edit</button>
+    <button type="button" class="fs-btn fs-btn-danger" id="fsResetBtn2">Start again</button>
   </div>
 
   <div class="fs-section-label">Share this tool with someone who might need it</div>
@@ -1148,6 +1149,8 @@ ge('fsResetBtn').addEventListener('click', function(){
   showToast('Reset. Begin again when you are ready.');
 });
 
+ge('fsResetBtn2').addEventListener('click', function(){ ge('fsResetBtn').click(); });
+
 /* ================= SHARE ================= */
 function updateShareLinks(){
   var url = encodeURIComponent(TOOL_URL);
@@ -1289,9 +1292,12 @@ async function generatePDF(){
     doc.text('emotionalintelligencedeveloper.com', TXT_X, 38);
   }
   function drawFooter(){
-    doc.setFillColor(106,90,168); doc.rect(0, pageH - 32, pageW, 32, 'F');
-    doc.setFillColor(232,112,42); doc.rect(0, pageH - 35, pageW, 3, 'F');
-    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+    doc.setFillColor(106,90,168); doc.rect(0, pageH - 44, pageW, 44, 'F');
+    doc.setFillColor(232,112,42); doc.rect(0, pageH - 47, pageW, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.6); doc.setTextColor(255,255,255);
+    var uw = doc.getTextWidth(TOOL_URL);
+    doc.textWithLink(TOOL_URL, (pageW - uw)/2, pageH - 29, {url: TOOL_URL});
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(226,218,248);
     doc.text('General wellbeing support only. Not professional care.', margin, pageH - 13);
     doc.text('Page ' + pgNum, pageW - margin - 36, pageH - 13);
   }
@@ -1318,7 +1324,7 @@ async function generatePDF(){
     y += bh + 8;
   }
   function ensureSpace(h){
-    if(y + h > pageH - 54){
+    if(y + h > pageH - 62){
       drawFooter(); doc.addPage(); pgNum++; drawHeader(); y = 72;
     }
   }
@@ -1363,7 +1369,7 @@ async function generatePDF(){
     y = top + bh + 10;
   }
 
-  drawHeader(); y = 72;
+  drawHeader(); y = 96;
   addTitle('Finding Yourself: Your Reflection');
   if(name) addMeta('Name: ' + name);
   addMeta('Date: ' + new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'}));

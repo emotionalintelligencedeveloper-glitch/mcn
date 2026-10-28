@@ -1,5 +1,5 @@
-<!-- Finding Yourself Tool — Emotional Intelligence Developer -->
-<!-- WordPress HTML Block Embed — paste this entire block into an HTML block in the editor -->
+<!-- Finding Yourself Tool v2 (stick figure edition) - Emotional Intelligence Developer -->
+<!-- WordPress HTML Block Embed: paste this entire block into a Custom HTML block in the editor -->
 
 <!-- Load jsPDF FIRST before any other script runs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -10,6 +10,7 @@
 
 <style>
 #findself-root *{box-sizing:border-box;margin:0;padding:0;}
+#findself-root button{font-family:'Georgia','Times New Roman',serif;}
 #findself-root .fs-card{background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;margin-bottom:14px;}
 #findself-root .fs-logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
 #findself-root .fs-logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:2px solid #b8c8e8;flex-shrink:0;}
@@ -20,69 +21,82 @@
 #findself-root .fs-disclaimer{background:#e8eef8;border:1px solid #b8c8e8;border-radius:10px;padding:10px 12px;font-size:13px;color:#4a5870;}
 #findself-root .fs-safety{background:#fff0f4;border:1px solid #f0b8c8;border-radius:10px;padding:10px 12px;font-size:13px;color:#7a2a48;margin-top:8px;}
 #findself-root .fs-safety a{color:#7a2a48;font-weight:bold;}
+#findself-root .fs-toggle{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:#4a5870;cursor:pointer;}
+#findself-root .fs-toggle input{width:20px;height:20px;accent-color:#6a7acc;flex-shrink:0;}
+
+/* Stick figure */
+#findself-root .fs-stick{display:block;overflow:visible;}
+#findself-root .fs-stick .fs-body{transform-origin:60px 132px;}
+@keyframes fsBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes fsShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.6px)}75%{transform:translateX(1.6px)}}
+@keyframes fsSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes fsDroop{0%,100%{transform:translateY(0)}50%{transform:translateY(2.5px)}}
+@keyframes fsJump{0%,100%{transform:translateY(0)}40%{transform:translateY(-9px)}}
+@keyframes fsFloat{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-4px);opacity:1}}
+#findself-root .fs-stick.fs-on.fs-anim-bob .fs-body{animation:fsBob 2.4s ease-in-out infinite;}
+#findself-root .fs-stick.fs-on.fs-anim-shake .fs-body{animation:fsShake .35s linear infinite;}
+#findself-root .fs-stick.fs-on.fs-anim-sway .fs-body{animation:fsSway 2.8s ease-in-out infinite;}
+#findself-root .fs-stick.fs-on.fs-anim-droop .fs-body{animation:fsDroop 3.2s ease-in-out infinite;}
+#findself-root .fs-stick.fs-on.fs-anim-jump .fs-body{animation:fsJump .9s ease-in-out infinite;}
+#findself-root .fs-stick.fs-on .fs-extra{animation:fsFloat 2.6s ease-in-out infinite;}
+#findself-root.fs-quiet .fs-stick .fs-body,#findself-root.fs-quiet .fs-stick .fs-extra{animation:none !important;}
+@media (prefers-reduced-motion: reduce){#findself-root .fs-stick .fs-body,#findself-root .fs-stick .fs-extra{animation:none !important;}}
+
+/* Buddy */
+#findself-root .fs-buddy{display:flex;gap:14px;align-items:center;}
+#findself-root .fs-buddy-fig{flex-shrink:0;width:84px;}
+#findself-root .fs-bubble{position:relative;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:14px;padding:12px 14px;font-size:14px;color:#4a3a6a;font-style:italic;flex:1;line-height:1.6;}
+#findself-root .fs-bubble:before{content:'';position:absolute;left:-8px;top:50%;margin-top:-7px;border:7px solid transparent;border-right-color:#c8b8e0;border-left:0;}
 
 /* Progress */
 #findself-root .fs-progress-wrap{background:#e8eef8;border-radius:99px;height:7px;overflow:hidden;margin-bottom:6px;}
 #findself-root .fs-progress-fill{height:100%;background:linear-gradient(90deg,#6a7acc,#a878c8);border-radius:99px;transition:width .3s ease;width:0%;}
 #findself-root .fs-progress-label{font-size:12px;color:#8090b8;font-style:italic;text-align:center;}
 
-/* Step label */
 #findself-root .fs-step{font-size:11px;font-weight:bold;color:#a0b0c8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
-
-/* Fields */
-#findself-root .fs-field{margin-bottom:14px;}
+#findself-root .fs-field{margin-bottom:6px;}
 #findself-root .fs-field-label{font-size:15px;color:#1a1e2a;margin-bottom:7px;display:block;line-height:1.5;}
-#findself-root .fs-field-hint{font-size:13px;color:#8090b8;font-style:italic;margin-bottom:8px;display:block;}
+#findself-root .fs-field-hint{font-size:13px;color:#8090b8;font-style:italic;margin-bottom:10px;display:block;}
 
-/* Inputs — larger tap targets on mobile */
-#findself-root .fs-input{
-  width:100%;
-  border:1px solid #d0d8e8;
-  border-radius:10px;
-  padding:13px 14px;
-  font-family:'Georgia',serif;
-  font-size:16px; /* 16px prevents iOS zoom on focus */
-  color:#1a1e2a;
-  background:#fff;
-  transition:border-color .2s;
-  outline:none;
-  -webkit-appearance:none;
-  appearance:none;
-  min-height:50px;
-}
+#findself-root .fs-input{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:13px 14px;font-family:'Georgia',serif;font-size:16px;color:#1a1e2a;background:#fff;transition:border-color .2s;outline:none;-webkit-appearance:none;appearance:none;min-height:50px;}
 #findself-root .fs-input:focus{border-color:#6a7acc;}
-#findself-root .fs-textarea{
-  width:100%;
-  border:1px solid #d0d8e8;
-  border-radius:10px;
-  padding:13px 14px;
-  font-family:'Georgia',serif;
-  font-size:16px; /* 16px prevents iOS zoom */
-  color:#1a1e2a;
-  background:#fff;
-  min-height:96px;
-  resize:vertical;
-  line-height:1.65;
-  transition:border-color .2s;
-  outline:none;
-}
+#findself-root .fs-textarea{width:100%;border:1px solid #d0d8e8;border-radius:10px;padding:13px 14px;font-family:'Georgia',serif;font-size:16px;color:#1a1e2a;background:#fff;min-height:96px;resize:vertical;line-height:1.65;transition:border-color .2s;outline:none;}
 #findself-root .fs-textarea:focus{border-color:#6a7acc;}
-#findself-root select.fs-input{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238090b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 14px center;
-  padding-right:38px;
-  cursor:pointer;
-}
 
-/* Inline affirmations */
-#findself-root .fs-inline-affirm{display:none;margin-top:8px;padding:11px 13px;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;font-size:13px;color:#4a3a6a;line-height:1.65;font-style:italic;}
-#findself-root .fs-inline-affirm.show{display:block;}
-#findself-root .fs-affirm-label{font-size:11px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-style:normal;}
+/* Feeling grid */
+#findself-root .fs-feel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;}
+#findself-root .fs-feel{background:#fff;border:1.5px solid #d0d8e8;border-radius:14px;padding:8px 4px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;color:#1a1e2a;min-height:112px;-webkit-tap-highlight-color:transparent;transition:transform .1s,border-color .15s,background .15s;}
+#findself-root .fs-feel:hover{border-color:#a8b4e8;}
+#findself-root .fs-feel:active{transform:scale(.96);}
+#findself-root .fs-feel.sel{border-color:#6a7acc;background:#eef0fb;box-shadow:0 0 0 2px #c9d0f2;}
+
+/* Chips */
+#findself-root .fs-chips{display:flex;flex-wrap:wrap;}
+#findself-root .fs-chip{display:inline-flex;align-items:center;border:1.5px solid #d0d8e8;background:#fff;border-radius:99px;padding:8px 14px;font-size:14px;cursor:pointer;margin:0 6px 8px 0;min-height:40px;color:#1a1e2a;-webkit-tap-highlight-color:transparent;transition:background .15s,color .15s,border-color .15s;}
+#findself-root .fs-chip.sel{background:#6a7acc;color:#fff;border-color:#6a7acc;}
+#findself-root .fs-chip.fs-starter{background:#f8f4fe;border-style:dashed;border-color:#c8b8e0;font-style:italic;font-size:13px;color:#4a3a6a;}
+#findself-root .fs-chip-label{font-size:12px;color:#8090b8;margin:2px 0 6px;font-style:italic;}
+#findself-root .fs-add-row{display:flex;gap:8px;margin-top:4px;}
+#findself-root .fs-add-row .fs-input{flex:1;}
+#findself-root .fs-add-row .fs-btn{width:auto;flex:0 0 auto;padding:0 20px;min-height:50px;}
+
+/* Battery */
+#findself-root .fs-batt-row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+#findself-root .fs-batt{display:flex;align-items:center;flex-shrink:0;}
+#findself-root .fs-batt-body{width:70px;height:32px;border:3px solid #4a3a6a;border-radius:7px;padding:2px;background:#fff;}
+#findself-root .fs-batt-fill{height:100%;width:50%;border-radius:3px;background:#f0c060;transition:width .2s,background .2s;}
+#findself-root .fs-batt-tip{width:5px;height:12px;background:#4a3a6a;border-radius:0 3px 3px 0;}
+#findself-root .fs-batt-label{font-size:14px;color:#4a5870;font-style:italic;}
+#findself-root input[type=range]{width:100%;height:34px;accent-color:#6a7acc;cursor:pointer;}
+
+/* Inline reactions */
+#findself-root .fs-inline-affirm{display:none;margin-top:10px;padding:10px 13px;background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;font-size:13px;color:#4a3a6a;line-height:1.65;font-style:italic;}
+#findself-root .fs-inline-affirm.show{display:flex;gap:10px;align-items:center;}
+#findself-root .fs-affirm-label{font-size:11px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;font-style:normal;}
 
 /* Breathing */
 #findself-root .fs-breathe-card{display:none;text-align:center;background:#f8f4fe;border:1px solid #c8b8e0;border-radius:16px;padding:28px 20px;margin-bottom:14px;}
-#findself-root .fs-breathe-ring{width:90px;height:90px;border-radius:50%;border:4px solid #c8b8e0;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:transform .4s ease,border-color .4s ease;}
+#findself-root .fs-breathe-ring{width:100px;height:100px;border-radius:50%;border:4px solid #c8b8e0;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:transform .4s ease,border-color .4s ease;}
 #findself-root .fs-breathe-ring.expand{transform:scale(1.22);border-color:#a878c8;}
 #findself-root .fs-breathe-ring.contract{transform:scale(0.88);border-color:#6a7acc;}
 #findself-root .fs-breathe-text{font-size:14px;color:#6a5088;font-style:italic;margin-bottom:14px;min-height:22px;}
@@ -91,12 +105,15 @@
 
 /* Results */
 #findself-root .fs-results{display:none;background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;margin-bottom:14px;}
+#findself-root .fs-results.show{display:block;}
 #findself-root .fs-results-header{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:12px;padding:14px 16px;text-align:center;margin-bottom:16px;}
+#findself-root .fs-results-header .fs-stick{margin:0 auto 6px;}
 #findself-root .fs-results-title{font-size:1.1rem;color:#4a3a6a;font-weight:normal;margin-bottom:6px;}
 #findself-root .fs-results-sub{font-size:13px;color:#8070a0;font-style:italic;}
-#findself-root .fs-result-section{margin-bottom:16px;}
+#findself-root .fs-result-section{margin-bottom:18px;}
 #findself-root .fs-result-section-title{font-size:12px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
 #findself-root .fs-result-insight{background:#f8f4fe;border:1px solid #d0c8e8;border-radius:10px;padding:13px 14px;font-size:14px;color:#1a1e2a;line-height:1.7;margin-bottom:10px;}
+#findself-root .fs-fb-title{font-size:11px;font-weight:bold;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
 #findself-root .fs-next-steps{list-style:none;padding:0;}
 #findself-root .fs-next-steps li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #e8eef8;font-size:14px;color:#4a5870;line-height:1.6;}
 #findself-root .fs-next-steps li:last-child{border-bottom:none;}
@@ -108,28 +125,31 @@
 #findself-root .fs-answer-label{font-size:11px;font-weight:bold;color:#8090b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
 #findself-root .fs-answer-val{font-size:14px;color:#1a1e2a;}
 #findself-root .fs-section-label{font-size:11px;color:#a0b0c8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+#findself-root .fs-care{display:none;background:#fff0f4;border:1px solid #f0b8c8;border-radius:12px;padding:14px 16px;font-size:14px;color:#7a2a48;line-height:1.7;margin-bottom:16px;}
+#findself-root .fs-care a{color:#7a2a48;font-weight:bold;}
 
-/* Buttons — full width on mobile, side by side on larger screens */
+/* Comic */
+#findself-root .fs-comic{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+#findself-root .fs-panel{border:2px solid #4a3a6a;border-radius:10px;background:#fcfaff;padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+#findself-root .fs-panel-tag{font-size:10px;font-weight:bold;color:#8060a8;letter-spacing:.08em;text-transform:uppercase;}
+#findself-root .fs-panel-cap{font-size:13px;color:#1a1e2a;line-height:1.5;font-style:italic;word-break:break-word;}
+@media(max-width:520px){#findself-root .fs-comic{grid-template-columns:1fr;}}
+
+/* Experiments, myths, scripts */
+#findself-root .fs-exp,#findself-root .fs-myth{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid #d0d8e8;border-radius:12px;padding:12px 14px;font-size:14px;color:#1a1e2a;line-height:1.6;margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+#findself-root .fs-exp.sel{border-color:#6a7acc;background:#eef0fb;box-shadow:0 0 0 2px #c9d0f2;}
+#findself-root .fs-myth{background:#f8f4fe;border-color:#d0c8e8;}
+#findself-root .fs-myth-q{font-style:italic;color:#4a3a6a;}
+#findself-root .fs-myth-hint{font-size:11px;color:#8060a8;text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
+#findself-root .fs-myth-truth{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed #c8b8e0;color:#1a1e2a;}
+#findself-root .fs-myth.open .fs-myth-truth{display:block;}
+#findself-root .fs-myth.open .fs-myth-hint{display:none;}
+#findself-root .fs-script{background:#f0ecf8;border:1px solid #c8b8e0;border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:14px;color:#4a3a6a;font-style:italic;line-height:1.6;}
+#findself-root .fs-copy-mini{display:inline-block;margin-top:8px;background:#fff;border:1px solid #c8b8e0;border-radius:99px;padding:6px 14px;font-size:12px;color:#4a3a6a;cursor:pointer;font-style:normal;}
+
+/* Buttons */
 #findself-root .fs-btn-row{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
-#findself-root .fs-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:15px 20px;
-  border-radius:99px;
-  font-family:'Georgia',serif;
-  font-size:15px;
-  cursor:pointer;
-  text-decoration:none;
-  border:1.5px solid transparent;
-  min-height:52px;
-  transition:opacity .15s,transform .1s;
-  white-space:nowrap;
-  width:100%;
-  text-align:center;
-  -webkit-tap-highlight-color:transparent;
-}
+#findself-root .fs-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:15px 20px;border-radius:99px;font-family:'Georgia',serif;font-size:15px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:52px;transition:opacity .15s,transform .1s;white-space:nowrap;width:100%;text-align:center;-webkit-tap-highlight-color:transparent;}
 #findself-root .fs-btn:active{transform:scale(.97);opacity:.85;}
 #findself-root .fs-btn:hover{opacity:.88;}
 #findself-root .fs-btn-primary{background:#6a7acc;color:#fff;border-color:#6a7acc;}
@@ -138,18 +158,14 @@
 #findself-root .fs-btn-danger{background:#fff;color:#b94040;border-color:#e8c0c0;}
 #findself-root .fs-btn-share{background:#f0ecf8;color:#4a3a6a;border-color:#c8b8e0;}
 #findself-root .fs-btn-support{background:#e8702a;color:#fff;border-color:#e8702a;font-size:16px;padding:16px 24px;}
-
-/* On wider screens, allow buttons to sit side-by-side */
 @media(min-width:480px){
   #findself-root .fs-btn-row{flex-direction:row;flex-wrap:wrap;}
   #findself-root .fs-btn{width:auto;flex:1 1 auto;}
 }
 
-/* Toast */
 #findself-root .fs-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:#1a1e2a;color:#fff;padding:12px 20px;border-radius:99px;font-size:14px;font-family:'Georgia',serif;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap;max-width:90vw;text-align:center;}
 #findself-root .fs-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* Footer */
 #findself-root .fs-footer{background:#fff;border-radius:16px;border:1px solid #d0d8e8;padding:20px 16px;text-align:center;}
 #findself-root .fs-footer-support-text{font-size:14px;color:#4a5870;margin-bottom:12px;font-style:italic;}
 #findself-root .fs-footer-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;padding-top:14px;border-top:1px solid #d0d8e8;}
@@ -157,11 +173,11 @@
 #findself-root .fs-footer-link:hover{text-decoration:underline;}
 #findself-root .fs-footer-credit{font-size:12px;color:#a0b0c8;margin-top:10px;line-height:1.6;}
 
-/* Extra small phones */
 @media(max-width:360px){
   #findself-root{padding:10px 8px 40px;}
   #findself-root .fs-card{padding:16px 13px;}
   #findself-root h1{font-size:1.2rem;}
+  #findself-root .fs-buddy-fig{width:64px;}
 }
 </style>
 
@@ -172,101 +188,135 @@
     <div class="fs-brand">Emotional Intelligence<br>Developer</div>
   </div>
   <h1>Finding Yourself</h1>
-  <p class="fs-tagline">A gentle reflection space to explore who you are, how you feel, and what you need right now. There are no right answers here — only yours.</p>
+  <p class="fs-tagline">A gentle reflection space to explore who you are, how you feel, and what you need right now. There are no right answers here, only yours. You will have a stick figure friend along the way.</p>
   <div class="fs-affirm-banner">You are allowed to exist exactly as you are. You are allowed to question, to pause, and to take up space. This tool is a private space for you.</div>
   <div class="fs-disclaimer">Everything you write stays on this page only. Nothing is saved, sent, or stored anywhere.</div>
-  <div class="fs-safety">If you feel unsafe or overwhelmed, please reach out for support. <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> — find a helpline near you.</div>
+  <div class="fs-safety">If you feel unsafe or overwhelmed, please reach out for support. <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> helps you find a helpline near you.</div>
+  <label class="fs-toggle"><input type="checkbox" id="fsQuiet" /> <span>Gentle mode: no jokes, no wiggling. Just calm and quiet.</span></label>
+</div>
+
+<!-- BUDDY -->
+<div class="fs-card fs-buddy">
+  <div class="fs-buddy-fig" id="fsBuddyFig"></div>
+  <div class="fs-bubble" id="fsBuddyText"></div>
 </div>
 
 <!-- PROGRESS -->
 <div class="fs-card" style="padding:16px;">
   <div class="fs-progress-wrap"><div class="fs-progress-fill" id="fsProgressFill"></div></div>
-  <p class="fs-progress-label" id="fsProgressLabel">Begin when you are ready — there is no rush.</p>
+  <p class="fs-progress-label" id="fsProgressLabel">Begin when you are ready. There is no rush.</p>
 </div>
 
-<!-- NAME FIELD -->
+<!-- NAME -->
 <div class="fs-card">
   <div class="fs-step">Before you begin</div>
   <div class="fs-field">
-    <label class="fs-field-label" for="fsName">Your name or a name you feel comfortable with (optional — used in your PDF)</label>
-    <input type="text" id="fsName" class="fs-input" maxlength="80" placeholder="Any name, nickname, or leave blank…" autocomplete="off" />
+    <label class="fs-field-label" for="fsName">Your name or a name you feel comfortable with (optional, used in your PDF)</label>
+    <input type="text" id="fsName" class="fs-input" maxlength="80" placeholder="Any name, nickname, or leave blank..." autocomplete="off" />
   </div>
 </div>
 
-<!-- QUESTION 1 -->
+<!-- Q1 FEELING -->
 <div class="fs-card">
-  <div class="fs-step">Question 1 of 5</div>
+  <div class="fs-step">Question 1 of 8</div>
   <div class="fs-field">
-    <label class="fs-field-label" for="fsFeelingNow">How are you feeling right now?</label>
-    <span class="fs-field-hint">Choose what feels closest — or the one you least want to admit.</span>
-    <select id="fsFeelingNow" class="fs-input">
-      <option value="">Choose one…</option>
-      <option value="Confused">Confused</option>
-      <option value="Sad">Sad</option>
-      <option value="Numb">Numb</option>
-      <option value="Calm">Calm</option>
-      <option value="Hopeful">Hopeful</option>
-      <option value="Overwhelmed">Overwhelmed</option>
-      <option value="Curious">Curious</option>
-      <option value="Anxious">Anxious</option>
-      <option value="Tired">Tired</option>
-      <option value="Relieved">Relieved</option>
-    </select>
-    <div class="fs-inline-affirm" id="fsAffirm1"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm1Text"></span></div>
+    <div class="fs-field-label">Which stick figure is you right now?</div>
+    <span class="fs-field-hint">Tap the one that fits best, or the one you least want to admit.</span>
+    <div class="fs-feel-grid" id="fsFeelGrid"></div>
+    <div class="fs-inline-affirm" id="fsAffirm1"></div>
   </div>
 </div>
 
-<!-- QUESTION 2 -->
+<!-- Q2 BATTERY -->
 <div class="fs-card">
-  <div class="fs-step">Question 2 of 5</div>
+  <div class="fs-step">Question 2 of 8</div>
   <div class="fs-field">
-    <label class="fs-field-label" for="fsStartExploring">When did you first start exploring your sense of self or identity?</label>
-    <span class="fs-field-hint">This could mean gender, sexuality, values, belonging — whatever feels true for you.</span>
-    <select id="fsStartExploring" class="fs-input">
-      <option value="">Choose one…</option>
-      <option value="As a child">As a child</option>
-      <option value="During puberty">During puberty</option>
-      <option value="In my teens or early twenties">In my teens or early twenties</option>
-      <option value="Recently, as an adult">Recently, as an adult</option>
-      <option value="Still figuring it out">Still figuring it out</option>
-      <option value="I don't think in those terms">I don't think in those terms</option>
-    </select>
-    <div class="fs-inline-affirm" id="fsAffirm2"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm2Text"></span></div>
+    <label class="fs-field-label" for="fsEnergy">How charged is your inner battery today?</label>
+    <span class="fs-field-hint">Slide it. Honest beats impressive.</span>
+    <div class="fs-batt-row">
+      <div class="fs-batt"><div class="fs-batt-body"><div class="fs-batt-fill" id="fsBattFill"></div></div><div class="fs-batt-tip"></div></div>
+      <div class="fs-batt-label" id="fsBattLabel">Slide to set it</div>
+    </div>
+    <input type="range" id="fsEnergy" min="0" max="100" value="50" />
+    <div class="fs-inline-affirm" id="fsAffirm2"></div>
   </div>
 </div>
 
-<!-- QUESTION 3 -->
+<!-- Q3 STARTED EXPLORING -->
 <div class="fs-card">
-  <div class="fs-step">Question 3 of 5</div>
+  <div class="fs-step">Question 3 of 8</div>
+  <div class="fs-field">
+    <div class="fs-field-label">When did you first start exploring your sense of self or identity?</div>
+    <span class="fs-field-hint">This could mean gender, sexuality, values, belonging, whatever feels true for you.</span>
+    <div class="fs-chips" id="fsStartChips"></div>
+    <div class="fs-inline-affirm" id="fsAffirm3"></div>
+  </div>
+</div>
+
+<!-- Q4 WORDS -->
+<div class="fs-card">
+  <div class="fs-step">Question 4 of 8</div>
+  <div class="fs-field">
+    <div class="fs-field-label">Which words feel true about you lately?</div>
+    <span class="fs-field-hint">Pick up to 5. Think of them like outfits: you can swap them any time. Add your own if yours is missing.</span>
+    <div class="fs-chips" id="fsWordChips"></div>
+    <div class="fs-add-row">
+      <input type="text" id="fsWordAdd" class="fs-input" maxlength="24" placeholder="Add your own word" autocomplete="off" />
+      <button type="button" class="fs-btn fs-btn-outline" id="fsWordAddBtn">Add</button>
+    </div>
+    <div class="fs-inline-affirm" id="fsAffirm4"></div>
+  </div>
+</div>
+
+<!-- Q5 MEANING -->
+<div class="fs-card">
+  <div class="fs-step">Question 5 of 8</div>
   <div class="fs-field">
     <label class="fs-field-label" for="fsMeaning">What does your sense of identity mean to you right now?</label>
-    <span class="fs-field-hint">Use your own words. You do not need labels. Just write what is true for you today.</span>
-    <textarea id="fsMeaning" class="fs-textarea" maxlength="700" placeholder="There is no right answer — only your experience and language…"></textarea>
-    <div class="fs-inline-affirm" id="fsAffirm3"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm3Text"></span></div>
+    <span class="fs-field-hint">Use your own words. You do not need labels. Stuck? Tap a starter below.</span>
+    <div class="fs-chips" id="fsMeaningStarters" style="margin-bottom:2px;"></div>
+    <textarea id="fsMeaning" class="fs-textarea" maxlength="700" placeholder="There is no right answer, only your experience and language..."></textarea>
+    <div class="fs-inline-affirm" id="fsAffirm5"></div>
   </div>
 </div>
 
-<!-- QUESTION 4 -->
+<!-- Q6 NEED -->
 <div class="fs-card">
-  <div class="fs-step">Question 4 of 5</div>
+  <div class="fs-step">Question 6 of 8</div>
   <div class="fs-field">
-    <label class="fs-field-label" for="fsWhatNeed">What do you need most right now?</label>
-    <span class="fs-field-hint">Safety, space, understanding, rest, connection, time — anything that comes up.</span>
-    <textarea id="fsWhatNeed" class="fs-textarea" maxlength="500" placeholder="What would help you feel even a little more okay right now…"></textarea>
-    <div class="fs-inline-affirm" id="fsAffirm4"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm4Text"></span></div>
+    <div class="fs-field-label">What do you need most right now?</div>
+    <span class="fs-field-hint">Tap up to 3, then add your own words below if you like.</span>
+    <div class="fs-chips" id="fsNeedChips"></div>
+    <textarea id="fsWhatNeed" class="fs-textarea" maxlength="500" placeholder="Anything else that would help you feel even a little more okay..."></textarea>
+    <div class="fs-inline-affirm" id="fsAffirm6"></div>
   </div>
 </div>
 
-<!-- QUESTION 5 -->
+<!-- Q7 WINS -->
 <div class="fs-card">
-  <div class="fs-step">Question 5 of 5</div>
+  <div class="fs-step">Question 7 of 8</div>
+  <div class="fs-field">
+    <div class="fs-field-label">Which tiny wins did you collect this week?</div>
+    <span class="fs-field-hint">Tiny counts. Getting out of bed is a real thing. Tap all that apply.</span>
+    <div class="fs-chips" id="fsWinChips"></div>
+    <div class="fs-inline-affirm" id="fsAffirm7"></div>
+  </div>
+</div>
+
+<!-- Q8 KINDNESS -->
+<div class="fs-card">
+  <div class="fs-step">Question 8 of 8</div>
   <div class="fs-field">
     <label class="fs-field-label" for="fsSelfKindness">Write one kind sentence to yourself.</label>
-    <span class="fs-field-hint">Say it the way you would say it to a friend you love — someone who deserves patience and care.</span>
+    <span class="fs-field-hint">Say it the way you would say it to a friend you love, someone who deserves patience and care. Need a starter? Tap one.</span>
+    <div class="fs-chips" id="fsKindStarters" style="margin-bottom:2px;"></div>
     <textarea id="fsSelfKindness" class="fs-textarea" maxlength="400" placeholder="For example: You are enough exactly as you are."></textarea>
-    <div class="fs-inline-affirm" id="fsAffirm5"><div class="fs-affirm-label">A gentle note</div><span id="fsAffirm5Text"></span></div>
+    <div class="fs-inline-affirm" id="fsAffirm8"></div>
   </div>
 </div>
+
+<!-- LIVE CARE NOTE -->
+<div class="fs-care" id="fsCareLive"></div>
 
 <!-- ACTIONS -->
 <div class="fs-card" id="fsActionCard">
@@ -281,7 +331,7 @@
   <div class="fs-breathe-title">Take a breath before your results</div>
   <div class="fs-breathe-note">You just shared something real. Take a moment with your breath before reading your reflection.</div>
   <div class="fs-breathe-ring" id="fsBreathRing"></div>
-  <div class="fs-breathe-text" id="fsBreathText">Breathe in slowly…</div>
+  <div class="fs-breathe-text" id="fsBreathText">Breathe in slowly...</div>
   <div class="fs-btn-row" style="justify-content:center;margin-top:14px;">
     <button type="button" class="fs-btn fs-btn-outline" id="fsSkipBreathBtn">Skip to my results</button>
   </div>
@@ -290,27 +340,55 @@
 <!-- RESULTS -->
 <div class="fs-results" id="fsResults">
   <div class="fs-results-header">
+    <div id="fsResultsFig"></div>
     <div class="fs-results-title" id="fsResultsTitle">Thank you for sharing this with yourself.</div>
     <div class="fs-results-sub">This was an act of courage, even if it did not feel like one.</div>
   </div>
 
+  <div class="fs-care" id="fsCareBox"></div>
+
   <div class="fs-result-section">
-    <div class="fs-result-section-title">What this reflection says about you</div>
+    <div class="fs-result-section-title">Your stick figure comic</div>
+    <div class="fs-comic" id="fsComic"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">What stood out, just for you</div>
     <div id="fsInsightBox"></div>
   </div>
 
   <div class="fs-result-section">
-    <div class="fs-result-section-title">Gentle next steps — for right now</div>
+    <div class="fs-result-section-title">Do this in the next hour</div>
+    <ul class="fs-next-steps" id="fsTinyActions"></ul>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Pick one tiny experiment for this week</div>
+    <div id="fsExperiments"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Gentle next steps for right now</div>
     <ul class="fs-next-steps" id="fsNextSteps"></ul>
   </div>
 
   <div class="fs-result-section">
-    <div class="fs-result-section-title">Reflection prompts to go deeper — when you are ready</div>
+    <div class="fs-result-section-title">Myths we can drop (tap to flip)</div>
+    <div id="fsMyths"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">If you want to tell someone, here are words you can borrow</div>
+    <div id="fsScripts"></div>
+  </div>
+
+  <div class="fs-result-section">
+    <div class="fs-result-section-title">Reflection prompts to go deeper, when you are ready</div>
     <div id="fsPrompts"></div>
   </div>
 
   <div class="fs-result-section">
-    <div class="fs-result-section-title">Your reflection — what you wrote</div>
+    <div class="fs-result-section-title">Your reflection, what you wrote</div>
     <div class="fs-answers-summary" id="fsAnswersSummary"></div>
   </div>
 
@@ -341,165 +419,498 @@
   </div>
   <p class="fs-footer-credit">
     Created by <a class="fs-footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-    &nbsp;·&nbsp; General wellbeing support only — not professional care.
+    &nbsp;&middot;&nbsp; General wellbeing support only, not professional care.
   </p>
 </div>
 
 <div class="fs-toast" id="fsToast"></div>
 
 <script>
-/* Finding Yourself Tool — all logic inline, no external dependencies after jsPDF above */
+/* Finding Yourself Tool v2: all logic inline, no external dependencies after jsPDF above */
 (function(){
 
 var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var NONE_WIN = 'None today, and that is okay';
 
-/* Safe getElementById — works even if WP wraps the block */
 function ge(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function trunc(s,n){ s=String(s); return s.length>n ? s.slice(0,n-3).replace(/\s+$/,'')+'...' : s; }
 
 var toastTimer;
 function showToast(msg){
-  var el = ge('fsToast');
-  if(!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
+  var el = ge('fsToast'); if(!el) return;
+  el.textContent = msg; el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
 }
 
-/* ── DATA ── */
-var FEELING_AFFIRMS = {
-  'Confused':'Confusion is not a sign that something is wrong with you. It is often a sign that you are paying honest attention to something complex and real.',
-  'Sad':'Sadness is a signal worth listening to, not a problem to fix immediately. You are allowed to feel this fully without rushing to the other side of it.',
-  'Numb':'Numbness can be the mind\'s way of protecting you from too much at once. You do not have to feel everything right now — just a little bit, at your own pace.',
-  'Calm':'Calm is a resource. Whatever brought you here today, you are meeting it from a grounded place — even if that place feels fragile.',
-  'Hopeful':'Hope is brave, especially when it arrives during uncertainty. Hold it gently.',
-  'Overwhelmed':'Overwhelmed means there is more coming in than you can currently process. That is not your fault. It is a signal that you need more space and less demand for now.',
-  'Curious':'Curiosity is one of the most honest and courageous things a person can bring to their own inner life.',
-  'Anxious':'Anxiety often means something matters to you. Whatever you are exploring here clearly does. That matters.',
-  'Tired':'Being tired does not mean you are weak. It often means you have been carrying a lot, for a long time, without enough rest or recognition.',
-  'Relieved':'Relief is worth noticing — something that was held tight has loosened a little. Let that be real.'
+/* ================= STATE ================= */
+var BASE_WORDS = ['Curious','Private','Loud','Quiet','Creative','Loyal','Sensitive','Funny','Stubborn','Caring','Independent','Adventurous','Thoughtful','Changing','Protective','Hopeful','Tired','Brave','Scared','Gentle','Observant','In progress'];
+var WORDS = BASE_WORDS.slice();
+var FEELINGS = ['Confused','Sad','Numb','Calm','Hopeful','Overwhelmed','Curious','Anxious','Tired','Relieved'];
+var START_OPTS = ['As a child','During puberty','In my teens or early twenties','Recently, as an adult','Still figuring it out',"I don't think in those terms"];
+var NEED_OPTS = ['Rest','Space','Someone to listen','Something fun','Quiet','Reassurance','A plan','Time'];
+var WIN_OPTS = ['Got out of bed','Drank some water','Went outside','Slept okay','Laughed','Asked for help','Said no to something','Told someone how I feel','Did something just for me','Was kind to myself', NONE_WIN];
+var MEANING_STARTERS = ['Right now, identity feels like...','The part of me I am still getting to know is...','I feel most like myself when...','Something I want people to understand about me is...'];
+var KIND_STARTERS = ['You are doing better than you think.','It is okay to still be figuring it out.','You do not have to earn rest.','You are allowed to take up space.','Whoever you are becoming, you are already worth care.'];
+
+var S = freshState();
+function freshState(){
+  return { feeling:'', energy:50, energyTouched:false, exploring:'', words:[], needChips:[], wins:[], experiment:'', quiet:false };
+}
+var ms4 = false, ms8 = false;
+
+/* ================= STICK FIGURE ================= */
+var INK = '#4a3a6a', ACC = '#8060a8';
+var DOWNL = [[60,62],[48,76],[44,92]];
+var ARMS = {
+  down:   [DOWNL, [[60,62],[72,76],[76,92]]],
+  up:     [[[60,62],[44,52],[36,36]], [[60,62],[76,52],[84,36]]],
+  oneup:  [DOWNL, [[60,62],[78,52],[88,38]]],
+  scratch:[DOWNL, [[60,62],[82,56],[70,30]]],
+  chin:   [DOWNL, [[60,62],[80,66],[66,52]]],
+  hug:    [[[60,62],[46,72],[62,76]], [[60,62],[74,72],[58,76]]],
+  slump:  [[[60,62],[50,78],[48,98]], [[60,62],[70,78],[72,98]]],
+  hands:  [[[60,62],[40,60],[44,42]], [[60,62],[80,60],[76,42]]]
+};
+var EYES = {
+  dot:   {c:[[53,31,2.2],[67,31,2.2]]},
+  wide:  {o:[[53,31,3.6],[67,31,3.6]], c:[[53,31,1.3],[67,31,1.3]]},
+  closed:{q:[[49,31,53,35,57,31],[63,31,67,35,71,31]]},
+  flat:  {q:[[50,31,53,31,56,31],[64,31,67,31,70,31]]},
+  droop: {q:[[50,29,53,30,56,33],[64,33,67,30,70,29]]}
+};
+var MOUTHS = {
+  smile:[[52,40,60,48,68,40]],
+  small:[[54,41,60,45,66,41]],
+  frown:[[52,45,60,37,68,45]],
+  flat: [[53,42,60,42,67,42]],
+  wavy: [[52,42,56,38,60,42],[60,42,64,46,68,42]],
+  open: {e:[60,43,4,5]}
+};
+var MOODS = {
+  confused:   {eyes:'dot',   mouth:'wavy',  arms:'scratch',txt:{t:'?',x:86,y:20},anim:'sway', tilt:-6},
+  sad:        {eyes:'droop', mouth:'frown', arms:'down',   shape:'tear', anim:'droop', tilt:6},
+  numb:       {eyes:'flat',  mouth:'flat',  arms:'slump',  anim:'droop'},
+  calm:       {eyes:'closed',mouth:'small', arms:'down',   anim:'bob'},
+  hopeful:    {eyes:'dot',   mouth:'smile', arms:'oneup',  txt:{t:'*',x:92,y:26},anim:'bob'},
+  overwhelmed:{eyes:'wide',  mouth:'open',  arms:'hands',  shape:'sweat',txt:{t:'!?',x:84,y:16},anim:'shake'},
+  curious:    {eyes:'wide',  mouth:'small', arms:'chin',   txt:{t:'?',x:88,y:22},anim:'bob', tilt:-4},
+  anxious:    {eyes:'wide',  mouth:'wavy',  arms:'hug',    shape:'sweat',anim:'shake'},
+  tired:      {eyes:'closed',mouth:'flat',  arms:'slump',  txt:{t:'zzz',x:80,y:18},anim:'droop', tilt:-8},
+  relieved:   {eyes:'closed',mouth:'smile', arms:'down',   txt:{t:'phew',x:76,y:14},anim:'bob'},
+  cheer:      {eyes:'dot',   mouth:'smile', arms:'up',     txt:{t:'* *',x:78,y:14},anim:'jump'},
+  heart:      {eyes:'closed',mouth:'smile', arms:'hug',    txt:{t:'<3',x:82,y:20},anim:'bob'}
 };
 
+function qPath(a){ return 'M'+a[0]+' '+a[1]+' Q'+a[2]+' '+a[3]+' '+a[4]+' '+a[5]; }
+
+function stickSVG(mood, size, on){
+  var m = MOODS[mood] || MOODS.calm;
+  var w = size, h = Math.round(size*140/120);
+  var s = '<svg class="fs-stick fs-anim-'+m.anim+(on?' fs-on':'')+'" data-anim="'+m.anim+'" viewBox="0 0 120 140" width="'+w+'" height="'+h+'" role="img" aria-label="Stick figure who feels '+esc(mood)+'" xmlns="http://www.w3.org/2000/svg">';
+  s += '<line x1="30" y1="132" x2="90" y2="132" stroke="#d8d0ee" stroke-width="2" stroke-linecap="round"/>';
+  s += '<g class="fs-body" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">';
+  s += '<line x1="60" y1="52" x2="60" y2="92"/>';
+  s += '<polyline points="60,92 46,126"/><polyline points="60,92 74,126"/>';
+  ARMS[m.arms].forEach(function(a){ s += '<polyline points="'+a.map(function(p){return p.join(',');}).join(' ')+'"/>'; });
+  s += '<g transform="rotate('+(m.tilt||0)+' 60 52)">';
+  s += '<circle cx="60" cy="34" r="18" fill="#fff"/>';
+  var e = EYES[m.eyes];
+  if(e.o) e.o.forEach(function(c){ s += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#fff" stroke-width="2"/>'; });
+  if(e.c) e.c.forEach(function(c){ s += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="'+INK+'" stroke="none"/>'; });
+  if(e.q) e.q.forEach(function(a){ s += '<path d="'+qPath(a)+'" stroke-width="2.4"/>'; });
+  var mo = MOUTHS[m.mouth];
+  if(mo.e){ s += '<ellipse cx="'+mo.e[0]+'" cy="'+mo.e[1]+'" rx="'+mo.e[2]+'" ry="'+mo.e[3]+'" stroke-width="2.4"/>'; }
+  else mo.forEach(function(a){ s += '<path d="'+qPath(a)+'" stroke-width="2.6"/>'; });
+  if(m.shape === 'tear') s += '<path d="M53 40 Q49 47 53 50 Q57 47 53 40Z" fill="#8ab4e8" stroke="none"/>';
+  s += '</g>';
+  if(m.shape === 'sweat') s += '<path d="M84 22 Q79 30 84 34 Q89 30 84 22Z" fill="#8ab4e8" stroke="none"/>';
+  s += '</g>';
+  if(m.txt) s += '<text class="fs-extra" x="'+m.txt.x+'" y="'+m.txt.y+'" font-size="16" font-style="italic" font-family="Georgia,serif" fill="'+ACC+'">'+esc(m.txt.t)+'</text>';
+  s += '</svg>';
+  return s;
+}
+
+/* ================= WORDS AND DATA ================= */
+var FEEL_FUN = {
+  Confused:'Same energy as a browser with 47 tabs open, and one of them is playing music. You do not have to close them all today.',
+  Sad:'Rain cloud day. You do not have to chase it off. I will hold the umbrella.',
+  Numb:'Low signal today. Totally okay. Airplane mode is allowed.',
+  Calm:'Look at you, being a quiet lake instead of a washing machine.',
+  Hopeful:'A tiny sun just peeked out. Do not scare it. Just wave.',
+  Overwhelmed:'Too many things, one stick figure. Let us drop a few. Dropping is allowed.',
+  Curious:'Detective mode on. No rush to solve the case.',
+  Anxious:'Your brain is playing a movie about things that have not happened yet. You are allowed to hit pause.',
+  Tired:'Battery at 3 percent. Charging counts as being productive.',
+  Relieved:'Phew. Shoulders down. That is the sound of a held breath leaving.'
+};
+var FEEL_CALM = {
+  Confused:'Not knowing yet is okay. We can go slowly.',
+  Sad:'That sounds heavy. You do not have to fix it right now.',
+  Numb:'Feeling very little is okay. There is no pressure to feel more.',
+  Calm:'A steady moment. Nice to have one.',
+  Hopeful:'Hope is a good thing to carry gently.',
+  Overwhelmed:'A lot is happening. We can take one small thing at a time.',
+  Curious:'Curiosity is a good place to explore from.',
+  Anxious:'That sounds uncomfortable. One slow breath at a time.',
+  Tired:'You sound worn out. Rest is allowed.',
+  Relieved:'Good to feel some relief. Let it be real.'
+};
+var FEEL_NOTE = {
+  Confused:'Confusion is not a sign that something is wrong with you. It is often a sign that you are paying honest attention to something complex and real.',
+  Sad:'Sadness is a signal worth listening to, not a problem to fix immediately. You are allowed to feel this fully without rushing to the other side of it.',
+  Numb:'Numbness can be the mind\'s way of protecting you from too much at once. You do not have to feel everything right now, just a little bit, at your own pace.',
+  Calm:'Calm is a resource. Whatever brought you here today, you are meeting it from a grounded place, even if that place feels fragile.',
+  Hopeful:'Hope is brave, especially when it arrives during uncertainty. Hold it gently.',
+  Overwhelmed:'Overwhelmed means there is more coming in than you can currently process. That is not your fault. It is a signal that you need more space and fewer demands for now.',
+  Curious:'Curiosity is one of the most honest and courageous things a person can bring to their own inner life.',
+  Anxious:'Anxiety often means something matters to you. Whatever you are exploring here clearly does. That matters.',
+  Tired:'Being tired does not mean you are weak. It often means you have been carrying a lot, for a long time, without enough rest or recognition.',
+  Relieved:'Relief is worth noticing. Something that was held tight has loosened a little. Let that be real.'
+};
 var EXPLORING_AFFIRMS = {
-  'As a child':'Knowing something from childhood does not make it more or less real than knowing it now. What matters is that you know it — and that you are here.',
+  'As a child':'Knowing something from childhood does not make it more or less real than knowing it now. What matters is that you know it, and that you are here.',
   'During puberty':'Puberty is one of the most complex periods anyone navigates. What you felt then was real, even if it was hard to name or hold.',
   'In my teens or early twenties':'The early years of adulthood are when many people begin to find language for things they have long felt. Wherever you are now in that journey is exactly where you are supposed to be.',
-  'Recently, as an adult':'There is no expiry date on self-discovery. Arriving at something later in life does not make it less valid — it often makes it braver.',
+  'Recently, as an adult':'There is no expiry date on self-discovery. Arriving at something later in life does not make it less valid. It often makes it braver.',
   'Still figuring it out':'Still figuring it out is a completely whole and honest answer. You do not need to have arrived to be worthy of reflection and care.',
-  'I don\'t think in those terms':'You are allowed to hold your experience in your own way, without the frameworks others use. Your language for yourself is the only one that has to fit.'
+  "I don't think in those terms":'You are allowed to hold your experience in your own way, without the frameworks others use. Your language for yourself is the only one that has to fit.'
 };
+var EXPLORING_FEEDBACK = {
+  'As a child':'You have known yourself for a long time, which can feel lonely when nobody asked. You are asking now, and that matters.',
+  'During puberty':'That was a lot of change at once. Whatever you felt then was real, even without words for it.',
+  'In my teens or early twenties':'Many people find their words in these years. You are in good company.',
+  'Recently, as an adult':'Starting later is not starting behind. Adult self-discovery comes with a lot of life experience to draw on.',
+  'Still figuring it out':'Still figuring it out is a complete answer. Explorers do not need a finished map.',
+  "I don't think in those terms":'You get to hold your experience your own way. Labels are optional.'
+};
+var ENERGY_FUN = ['Running on fumes. Honest answer, and fumes still got you here.','Low battery mode. Very relatable. Be extra gentle with yourself.','About half charged. Respectable. Pace yourself.','Nicely charged. Spend it kindly.','Full battery! Try not to spend it all on one thing.'];
+var ENERGY_CALM = ['Your energy is very low today. Go gently.','Low energy today. Small steps are enough.','About half your energy. Pace yourself.','Decent energy today. Use it kindly.','Plenty of energy today. Use it in a way that feels good.'];
 
 var NEXT_STEPS = {
-  'Confused':['Give yourself permission not to have an answer today. Confusion is a valid resting place, not a failure to understand yourself.','Try naming one thing you do know — even something small and partial. Write it down if that helps.','Avoid the pressure to categorise or label anything right now. Your experience can exist without a name for it.'],
-  'Sad':['Let the sadness be present without trying to argue with it. Naming it — as you just did — is enough for now.','Do one small physical act of care: drink water, breathe slowly, rest your hands somewhere warm.','If the sadness feels heavy or persistent, consider speaking to one trusted person — even a brief message can help.'],
-  'Numb':['Gentleness first. Do not try to force feeling. Numbness is the mind protecting itself — it will ease when you feel safe enough.','Try small sensory grounding: name 5 things you can see, feel your feet on the floor, hold something warm.','Keep this moment simple. You do not need to process everything today.'],
-  'Calm':['Use this steadiness to go a little deeper if you want — calm is a good moment to look honestly at something.','Note what created this calm, so you can return to it when things feel harder.','You might be ready to take one small step toward something you have been considering.'],
-  'Hopeful':['Let hope be a direction, not a pressure. Use it to take one small action — however modest.','Write down what the hope is pointing toward. That direction is information about what genuinely matters to you.','Protect this feeling by not demanding too much of it too soon.'],
-  'Overwhelmed':['Do less. Reduce one demand on yourself right now — even a small one.','You do not have to process everything at once. One thing at a time. One breath at a time.','Consider who or what gives you rest — not advice, just rest — and move toward that today.'],
-  'Curious':['Follow the curiosity gently. Read, explore, ask questions without needing them answered right away.','Note what you are curious about and let that be interesting rather than urgent.','Curiosity is one of the most generative states there is. It does not need to be resolved.'],
-  'Anxious':['Slow your exhale: breathe in for 4, hold for 2, out for 6. Do this three times before anything else.','Name what specifically feels uncertain — anxiety often becomes smaller when the exact worry is spoken.','Avoid making major decisions or reaching firm conclusions right now. Let the body settle first.'],
-  'Tired':['Rest is not optional today. Prioritise one act of genuine rest — not distraction, but actual downtime.','Lower your expectations for yourself in the next few hours. You are running on reduced resources and that is okay.','If tiredness is persistent, it is worth asking whether you have been carrying something without enough support.'],
-  'Relieved':['Savour this. Something loosened — notice what that was, so you understand what you were holding.','This is a good moment to be gentle rather than immediately productive with the relief.','Consider what made this feel relieving — that is information about what you actually need more of.']
+  'Confused':['Give yourself permission not to have an answer today. Confusion is a fine place to rest.','Try naming one thing you do know, even something small. Write it down if that helps.','Skip the pressure to label anything right now. Your experience can exist without a name.'],
+  'Sad':['Let the sadness be here without arguing with it. Naming it, as you just did, is enough for now.','Do one small act of care: drink water, breathe slowly, rest your hands somewhere warm.','If it feels heavy or keeps hanging around, tell one trusted person. A short message counts.'],
+  'Numb':['Be gentle. Do not force feeling. Numbness is the mind protecting itself, and it eases when you feel safer.','Try small sensory grounding: name 5 things you can see, feel your feet on the floor, hold something warm.','Keep today simple. You do not have to process everything at once.'],
+  'Calm':['Use this steadiness to look a little deeper if you want to. Calm is a good time for honesty.','Notice what created this calm so you can come back to it on harder days.','You might be ready for one small step toward something you have been considering.'],
+  'Hopeful':['Let hope be a direction, not a pressure. Use it for one small action.','Write down what the hope points toward. That direction tells you what matters to you.','Protect this feeling by not demanding too much of it too soon.'],
+  'Overwhelmed':['Do less. Remove one demand on yourself right now, even a tiny one.','You do not have to process everything at once. One thing at a time. One breath at a time.','Think of who or what gives you rest, not advice, just rest, and move toward that today.'],
+  'Curious':['Follow the curiosity gently. Read, explore, and ask questions without needing answers yet.','Note what you are curious about and let it be interesting rather than urgent.','Curiosity is one of the most useful states there is. It does not need to be resolved.'],
+  'Anxious':['Slow your exhale: breathe in for 4, hold for 2, out for 6. Do it three times before anything else.','Name what exactly feels uncertain. Worries often shrink once they are spoken.','Avoid big decisions right now. Let your body settle first.'],
+  'Tired':['Rest is not optional today. Choose one real break. Not scrolling, actual downtime.','Lower your expectations for the next few hours. You are running on less, and that is okay.','If the tiredness sticks around, ask whether you have been carrying something without enough support.'],
+  'Relieved':['Savour this. Something loosened. Notice what it was so you understand what you were holding.','Be gentle rather than instantly productive with this relief.','Ask what made this feel better. That tells you what you need more of.']
 };
-
 var PROMPTS = {
-  'Confused':['What is the question I am most afraid to answer honestly?','If confusion is a message, what might it be asking me to slow down and look at?','What would it feel like to sit with not-knowing for a little longer, without trying to fix it?'],
-  'Sad':['What am I grieving or missing right now — named or unnamed?','What would I say to a friend who felt exactly as I feel today?','What has this sadness been trying to tell me that I keep moving past?'],
-  'Numb':['When did I last feel something deeply — and what was it?','What am I protecting myself from by feeling less?','What would the first small step back toward feeling look like, if I took it very gently?'],
+  'Confused':['What is the question I am most afraid to answer honestly?','If confusion is a message, what might it be asking me to slow down and look at?','What would it feel like to sit with not knowing for a little longer, without trying to fix it?'],
+  'Sad':['What am I grieving or missing right now, named or unnamed?','What would I say to a friend who felt exactly as I feel today?','What has this sadness been trying to tell me that I keep moving past?'],
+  'Numb':['When did I last feel something deeply, and what was it?','What am I protecting myself from by feeling less?','What would the first small step back toward feeling look like, if I took it very gently?'],
   'Calm':['What does this calm feel like in my body, and where does it live?','What do I know from here that is harder to know when things are loud?','What has this stillness been trying to show me?'],
-  'Hopeful':['What specifically am I hoping for — can I name it clearly?','What would it mean for this hope to come true, and what would I need to do or allow?','What has kept this hope alive in me, even through hard times?'],
-  'Overwhelmed':['What is taking up the most space in me right now?','What am I responsible for that I actually do not need to carry alone?','If I could remove one thing from my life right now, what would it be — and why haven\'t I?'],
-  'Curious':['What is the question underneath the curiosity — what am I really asking?','What would I explore if there were no consequences to the answer?','Who do I know whose experience I am curious about, and what might I learn by asking?'],
+  'Hopeful':['What specifically am I hoping for? Can I name it clearly?','What would it mean for this hope to come true, and what would I need to do or allow?','What has kept this hope alive in me, even through hard times?'],
+  'Overwhelmed':['What is taking up the most space in me right now?','What am I responsible for that I actually do not need to carry alone?','If I could remove one thing from my life right now, what would it be, and why have I not?'],
+  'Curious':['What is the question underneath the curiosity? What am I really asking?','What would I explore if there were no consequences to the answer?','Who do I know whose experience I am curious about, and what might I learn by asking?'],
   'Anxious':['What is the specific thing I am most afraid of right now?','What is the worst realistic outcome, and how would I handle it if it happened?','What would I need to feel even 10% less anxious right now?'],
   'Tired':['What have I been carrying that no one knows about?','What am I not allowing myself to rest from?','If my tiredness could speak, what would it ask of me?'],
-  'Relieved':['What was I holding that just loosened — and for how long had I been holding it?','What does this relief tell me about what I actually need?','What can I do to make more room for this feeling in my daily life?']
+  'Relieved':['What was I holding that just loosened, and for how long had I been holding it?','What does this relief tell me about what I actually need?','What can I do to make more room for this feeling in my daily life?']
 };
-
 var DEFAULT_STEPS = ['Give yourself a few minutes of quiet after this reflection.','Notice how your body feels now compared to when you started.','You do not need to resolve anything. Reflecting was enough.'];
-var DEFAULT_PROMPTS = ['What part of today\'s reflection surprised me?','What do I want to remember from this — one sentence I could carry?','What would I tell myself to come back to in one month?'];
+var DEFAULT_PROMPTS = ['What part of today\'s reflection surprised me?','What do I want to remember from this, in one sentence I could carry?','What would I tell myself to come back to in one month?'];
 
-/* ── PROGRESS ── */
+var NEED_ACTIONS = {
+  'Rest':'Lie down for 10 minutes with your phone out of reach. Resting counts even if you do not sleep.',
+  'Space':'Step into another room or outside for five minutes. Space is allowed.',
+  'Someone to listen':'Send one message: "Do you have 10 minutes? I do not need advice, I just need someone to listen."',
+  'Something fun':'Put on one song you love and move however you like. Nobody is grading it.',
+  'Quiet':'Headphones in, lights low, no input for ten minutes.',
+  'Reassurance':'Read your own kind sentence out loud, even quietly. Hearing your voice be kind sticks better than reading it.',
+  'A plan':'Write down only the next one small step. Not the whole staircase, just one stair.',
+  'Time':'Set a reminder to come back to this on Sunday. Future you can pick it up gently.'
+};
+var DEFAULT_ACTIONS = ['Drink a glass of water and let your shoulders drop.','Take three slow breaths, longer on the way out.','Do one small thing that feels kind, then stop there.'];
+
+var EXPERIMENTS = [
+  'Say one true thing about yourself out loud, to a mirror or a safe person.',
+  'Write for three minutes with no editing and no audience.',
+  'Do one thing this week just because you like it, with no explanation needed.',
+  'Read or watch one story from someone on a similar journey, and notice what lands.',
+  'Tell one safe person one sentence about how you really are.'
+];
+var MYTHS = [
+  {m:'I should have this figured out by now.', t:'There is no deadline. Plenty of people are still editing their story at 40, 60 and 80.'},
+  {m:'If I am questioning things, something is wrong with me.', t:'Questions mean you are paying attention. That is a feature, not a bug.'},
+  {m:'Everyone else seems so sure.', t:'People tend to show their conclusions, not the messy middle. The messy middle is where most of us live.'},
+  {m:'I have to tell everyone right away.', t:'You choose who knows, and when. Privacy is not the same as hiding.'}
+];
+var SCRIPTS = [
+  'Hey, can I tell you something I have been thinking about? I do not need advice. I just need you to listen.',
+  'I am figuring some things out about myself. I might not have the words yet, and that is okay. Can I think out loud with you?',
+  'I am not ready to talk about it yet. I just wanted you to know I have a lot on my mind, and I could use some company.'
+];
+
+/* ================= BUDDY ================= */
+var buddy = {mood:'hopeful', fun:'', calm:''};
+function setBuddy(mood, fun, calm){
+  buddy = {mood:mood, fun:fun, calm:calm || fun};
+  renderBuddy();
+}
+function renderBuddy(){
+  var f = ge('fsBuddyFig'), t = ge('fsBuddyText');
+  if(f) f.innerHTML = stickSVG(buddy.mood, 84, true);
+  if(t) t.textContent = S.quiet ? buddy.calm : buddy.fun;
+}
+function greeting(){
+  setBuddy('hopeful',
+    'Hi, I am Sam. I am a stick figure, so my advice is limited, but I am excellent company. Tap how you feel to start.',
+    'Hi, I am Sam. I will keep you company while you reflect. Start whenever you like.');
+}
+
+/* ================= INLINE REACTIONS ================= */
+function react(id, mood, text){
+  var el = ge(id); if(!el) return;
+  if(!text){ el.classList.remove('show'); el.innerHTML = ''; return; }
+  el.innerHTML = '<div style="flex-shrink:0">'+stickSVG(mood,46,true)+'</div><div><div class="fs-affirm-label">A gentle note</div>'+esc(text)+'</div>';
+  el.classList.add('show');
+}
+function energyBucket(v){ return v<=15?0 : v<=40?1 : v<=65?2 : v<=85?3 : 4; }
+function energyLabel(v){ return ['Running on fumes','Low','About half','Good','Fully charged'][energyBucket(v)]; }
+function energyMood(v){ return v<=25?'tired' : v<=65?'calm' : v<=85?'hopeful' : 'cheer'; }
+function fm(f){ return (f||'calm').toLowerCase(); }
+
+/* ================= PROGRESS ================= */
+function countDone(){
+  var n = 0;
+  if(S.feeling) n++;
+  if(S.energyTouched) n++;
+  if(S.exploring) n++;
+  if(S.words.length) n++;
+  if(ge('fsMeaning').value.trim()) n++;
+  if(S.needChips.length || ge('fsWhatNeed').value.trim()) n++;
+  if(S.wins.length) n++;
+  if(ge('fsSelfKindness').value.trim()) n++;
+  return n;
+}
 function updateProgress(){
-  var fields = [
-    ge('fsFeelingNow') ? ge('fsFeelingNow').value : '',
-    ge('fsStartExploring') ? ge('fsStartExploring').value : '',
-    ge('fsMeaning') ? ge('fsMeaning').value.trim() : '',
-    ge('fsWhatNeed') ? ge('fsWhatNeed').value.trim() : '',
-    ge('fsSelfKindness') ? ge('fsSelfKindness').value.trim() : ''
-  ];
-  var done = fields.filter(function(v){ return v && v.length > 0; }).length;
-  var pct = Math.round((done / 5) * 100);
-  if(ge('fsProgressFill')) ge('fsProgressFill').style.width = pct + '%';
-  if(ge('fsProgressLabel')){
-    if(pct === 0) ge('fsProgressLabel').textContent = 'Begin when you are ready — there is no rush.';
-    else if(pct < 100) ge('fsProgressLabel').textContent = done + ' of 5 questions answered';
-    else ge('fsProgressLabel').textContent = 'All 5 questions answered — ready when you are.';
+  var done = countDone();
+  var pct = Math.round((done/8)*100);
+  ge('fsProgressFill').style.width = pct + '%';
+  var lbl = ge('fsProgressLabel');
+  if(done === 0) lbl.textContent = 'Begin when you are ready. There is no rush.';
+  else if(done < 8) lbl.textContent = done + ' of 8 questions answered';
+  else lbl.textContent = 'All 8 questions answered. Ready when you are.';
+  if(done >= 4 && !ms4 && done < 8){
+    ms4 = true;
+    setBuddy('hopeful','Halfway there. You are doing the brave bit.','You are about halfway.');
+  }
+  if(done === 8 && !ms8){
+    ms8 = true;
+    setBuddy('cheer','All done! Hit the button below when you are ready.','All questions are answered. Continue when you are ready.');
   }
 }
 
-/* ── FIELD AFFIRMATIONS ── */
-function bindAffirm(selectId, affirmId, textId, lookup){
-  var el = ge(selectId);
-  if(!el) return;
-  el.addEventListener('change', function(){
-    var val = el.value;
-    var aff = ge(affirmId);
-    var txt = ge(textId);
-    if(val && lookup[val] && aff && txt){
-      txt.textContent = lookup[val];
-      aff.classList.add('show');
-    } else if(aff){
-      aff.classList.remove('show');
+/* ================= FEELING GRID ================= */
+function renderFeelGrid(){
+  var g = ge('fsFeelGrid'); g.innerHTML = '';
+  FEELINGS.forEach(function(f){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'fs-feel' + (S.feeling === f ? ' sel' : '');
+    b.setAttribute('aria-pressed', S.feeling === f ? 'true' : 'false');
+    b.innerHTML = stickSVG(fm(f), 60, S.feeling === f) + '<span>' + f + '</span>';
+    b.addEventListener('click', function(){
+      S.feeling = (S.feeling === f) ? '' : f;
+      renderFeelGrid();
+      var nb = g.children[FEELINGS.indexOf(f)]; if(nb) nb.focus();
+      onFeeling();
+    });
+    g.appendChild(b);
+  });
+}
+function onFeeling(){
+  var f = S.feeling;
+  if(f){
+    setBuddy(fm(f), FEEL_FUN[f], FEEL_CALM[f]);
+    react('fsAffirm1', fm(f), FEEL_NOTE[f]);
+  } else {
+    greeting();
+    react('fsAffirm1', null, null);
+  }
+  updateProgress();
+}
+
+/* ================= CHIPS ================= */
+var CHIPBOXES = [];
+function buildChips(id, optsRef, key, opt){
+  var box = ge(id); opt = opt || {};
+  CHIPBOXES.push(id);
+  function render(){
+    box.innerHTML = '';
+    optsRef().forEach(function(o){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'fs-chip';
+      var sel = opt.single ? S[key] === o : S[key].indexOf(o) > -1;
+      if(sel) b.classList.add('sel');
+      b.setAttribute('aria-pressed', sel ? 'true' : 'false');
+      b.textContent = o;
+      b.addEventListener('click', function(){ toggle(o); });
+      box.appendChild(b);
+    });
+  }
+  function toggle(o){
+    if(opt.single){ S[key] = (S[key] === o) ? '' : o; }
+    else {
+      var i = S[key].indexOf(o);
+      if(i > -1) S[key].splice(i,1);
+      else if(opt.exclusive && o === opt.exclusive) S[key] = [o];
+      else {
+        if(opt.exclusive){ var j = S[key].indexOf(opt.exclusive); if(j > -1) S[key].splice(j,1); }
+        if(opt.max && S[key].length >= opt.max){ showToast('That is ' + opt.max + '. Tap one to swap it.'); return; }
+        S[key].push(o);
+      }
     }
+    render();
+    if(opt.onChange) opt.onChange();
     updateProgress();
+  }
+  box._render = render;
+  render();
+}
+function rerenderChips(){ CHIPBOXES.forEach(function(id){ var b = ge(id); if(b && b._render) b._render(); }); }
+
+function buildStarters(id, list, textareaId){
+  var box = ge(id);
+  list.forEach(function(txt){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'fs-chip fs-starter'; b.textContent = txt;
+    b.addEventListener('click', function(){
+      var ta = ge(textareaId);
+      ta.value = ta.value.trim() ? (ta.value.replace(/\s+$/,'') + ' ' + txt) : txt;
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+      ta.dispatchEvent(new Event('input'));
+    });
+    box.appendChild(b);
   });
 }
 
-function bindTextAffirm(textareaId, affirmId, textId, msg, minLen){
-  var el = ge(textareaId);
-  if(!el) return;
+/* ================= QUESTION HOOKS ================= */
+buildChips('fsStartChips', function(){ return START_OPTS; }, 'exploring', {single:true, onChange:function(){
+  react('fsAffirm3', 'calm', S.exploring ? EXPLORING_AFFIRMS[S.exploring] : null);
+}});
+
+function wordsChanged(){
+  var n = S.words.length;
+  if(!n){ react('fsAffirm4', null, null); return; }
+  var t;
+  if(n >= 5) t = S.quiet ? 'That is five words. Tap one to swap it.' : 'That is five, the max! Tap one to swap it.';
+  else t = S.quiet ? 'Those words are yours. You can change them any time.' : 'Good picks. Words are like outfits, so swap them whenever you like.';
+  react('fsAffirm4', 'hopeful', t);
+}
+buildChips('fsWordChips', function(){ return WORDS; }, 'words', {max:5, onChange:wordsChanged});
+
+ge('fsWordAddBtn').addEventListener('click', addWord);
+ge('fsWordAdd').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); addWord(); } });
+function addWord(){
+  var inp = ge('fsWordAdd'), v = inp.value.trim().replace(/\s+/g,' ');
+  if(!v) return;
+  v = v.charAt(0).toUpperCase() + v.slice(1);
+  if(WORDS.indexOf(v) < 0) WORDS.push(v);
+  if(S.words.indexOf(v) < 0){
+    if(S.words.length >= 5) showToast('That is 5. Tap one to swap it.');
+    else S.words.push(v);
+  }
+  inp.value = '';
+  ge('fsWordChips')._render();
+  wordsChanged();
+  updateProgress();
+}
+
+buildChips('fsNeedChips', function(){ return NEED_OPTS; }, 'needChips', {max:3, onChange:needChanged});
+function needChanged(){
+  var has = S.needChips.length || ge('fsWhatNeed').value.trim().length >= 3;
+  react('fsAffirm6', 'heart', has ? (S.quiet ? 'Knowing what you need is useful information.' : 'Good to know. Needs are not demands. They are information.') : null);
+}
+
+buildChips('fsWinChips', function(){ return WIN_OPTS; }, 'wins', {exclusive:NONE_WIN, onChange:function(){
+  var none = S.wins.length === 1 && S.wins[0] === NONE_WIN;
+  var n = none ? 0 : S.wins.length;
+  if(!S.wins.length){ react('fsAffirm7', null, null); return; }
+  if(none){
+    react('fsAffirm7', 'calm', 'Zero is allowed. Some days the win is just showing up here.');
+  } else {
+    var w = n === 1 ? 'tiny win' : 'tiny wins';
+    react('fsAffirm7', 'cheer', S.quiet ? (n + ' small ' + (n===1?'win':'wins') + '. They add up.') : (n + ' ' + w + '. Tiny wins are how big things get built. I am doing a little jump.'));
+    setBuddy('cheer', n + ' ' + w + ' collected. Look at you go.', n + ' small ' + (n===1?'win':'wins') + ' noted.');
+  }
+}});
+
+buildStarters('fsMeaningStarters', MEANING_STARTERS, 'fsMeaning');
+buildStarters('fsKindStarters', KIND_STARTERS, 'fsSelfKindness');
+
+function bindText(taId, affId, minLen, mood, msg){
+  var el = ge(taId); var aff = ge(affId);
   el.addEventListener('input', function(){
-    var aff = ge(affirmId);
-    var txt = ge(textId);
-    if(el.value.trim().length >= minLen && aff && txt){
-      txt.textContent = msg;
-      aff.classList.add('show');
-    } else if(aff){
-      aff.classList.remove('show');
-    }
+    if(el.value.trim().length >= minLen){ if(!aff.classList.contains('show')) react(affId, mood, msg); }
+    else react(affId, null, null);
     updateProgress();
+    checkCareLive();
   });
 }
+bindText('fsMeaning','fsAffirm5',10,'curious','Thank you for putting that into your own words. Whatever you wrote, tentative or certain, brief or long, it is yours. That is enough.');
+bindText('fsSelfKindness','fsAffirm8',6,'heart','Keep that sentence. Read it again slowly before you close this page. You wrote it, which means part of you already knows it is true.');
+ge('fsWhatNeed').addEventListener('input', function(){ needChanged(); updateProgress(); checkCareLive(); });
 
-bindAffirm('fsFeelingNow', 'fsAffirm1', 'fsAffirm1Text', FEELING_AFFIRMS);
-bindAffirm('fsStartExploring', 'fsAffirm2', 'fsAffirm2Text', EXPLORING_AFFIRMS);
-bindTextAffirm('fsMeaning', 'fsAffirm3', 'fsAffirm3Text', 'Thank you for putting that into your own words. Whatever you wrote — tentative or certain, brief or long — it is yours. That is enough.', 10);
-bindTextAffirm('fsWhatNeed', 'fsAffirm4', 'fsAffirm4Text', 'Naming what you need is one of the most honest acts of self-care there is. Whatever you wrote, it counts as something worth listening to.', 6);
-bindTextAffirm('fsSelfKindness', 'fsAffirm5', 'fsAffirm5Text', 'Keep that sentence. Read it again slowly before you close this page. You wrote it — which means part of you already knows it is true.', 6);
+/* ================= BATTERY ================= */
+ge('fsEnergy').addEventListener('input', function(){
+  var v = parseInt(this.value, 10) || 0;
+  S.energy = v; S.energyTouched = true;
+  var fill = ge('fsBattFill');
+  fill.style.width = Math.max(3, v) + '%';
+  fill.style.background = v <= 25 ? '#e88a8a' : v <= 60 ? '#f0c060' : '#7ac890';
+  ge('fsBattLabel').textContent = v + '%: ' + energyLabel(v);
+  var b = energyBucket(v);
+  react('fsAffirm2', energyMood(v), S.quiet ? ENERGY_CALM[b] : ENERGY_FUN[b]);
+  updateProgress();
+});
 
-/* ── BREATHING ── */
+/* ================= QUIET MODE ================= */
+ge('fsQuiet').addEventListener('change', function(){
+  S.quiet = this.checked;
+  ge('findself-root').classList.toggle('fs-quiet', S.quiet);
+  renderBuddy();
+  showToast(S.quiet ? 'Gentle mode on.' : 'Gentle mode off.');
+});
+
+/* ================= CARE CHECK ================= */
+var CARE_RE = /(suicid|kill myself|end my life|want to die|wanna die|do not want to (be here|live|exist)|don'?t want to (be here|live|exist)|hurt myself|self[- ]?harm|no reason to live|better off without me)/i;
+function allText(){
+  return [ge('fsMeaning').value, ge('fsWhatNeed').value, ge('fsSelfKindness').value, S.words.join(' ')].join(' ');
+}
+function needsCare(){ return CARE_RE.test(allText()); }
+var CARE_HTML = '<strong>A quick, caring note.</strong> Some of what you wrote sounds really heavy. If you might hurt yourself, or you feel unsafe right now, please reach out to someone today: a trusted person, a local emergency number, or a helpline at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. You deserve support from a real person, and you do not have to carry this alone. Nothing you wrote has been sent anywhere.';
+function checkCareLive(){
+  var el = ge('fsCareLive');
+  if(needsCare()){ el.innerHTML = CARE_HTML; el.style.display = 'block'; }
+  else el.style.display = 'none';
+}
+
+/* ================= BREATHING ================= */
 var breathTimer = null;
-
 function startBreathing(onComplete){
-  var ring = ge('fsBreathRing');
-  var text = ge('fsBreathText');
+  var ring = ge('fsBreathRing'), text = ge('fsBreathText');
+  ring.innerHTML = stickSVG('calm', 56, true);
   var phases = [
-    {label:'Breathe in slowly…', cls:'expand', ms:4000},
-    {label:'Hold gently…', cls:'', ms:2000},
-    {label:'Breathe out slowly…', cls:'contract', ms:6000},
-    {label:'Rest…', cls:'', ms:2000}
+    {label:'Breathe in slowly...', cls:'expand', ms:4000},
+    {label:'Hold gently...', cls:'', ms:2000},
+    {label:'Breathe out slowly...', cls:'contract', ms:6000},
+    {label:'Rest...', cls:'', ms:2000}
   ];
-  var phaseIdx = 0;
-  var cycleCount = 0;
-  var totalCycles = 2;
-
+  var phaseIdx = 0, cycleCount = 0, totalCycles = 2;
   function nextPhase(){
     var p = phases[phaseIdx];
-    if(ring) ring.className = 'fs-breathe-ring' + (p.cls ? ' ' + p.cls : '');
-    if(text) text.textContent = p.label;
+    ring.className = 'fs-breathe-ring' + (p.cls ? ' ' + p.cls : '');
+    text.textContent = p.label;
     breathTimer = setTimeout(function(){
       phaseIdx = (phaseIdx + 1) % phases.length;
-      if(phaseIdx === 0){ cycleCount++; }
+      if(phaseIdx === 0) cycleCount++;
       if(cycleCount >= totalCycles){ onComplete(); return; }
       nextPhase();
     }, p.ms);
@@ -507,164 +918,216 @@ function startBreathing(onComplete){
   nextPhase();
 }
 
-/* ── SHOW RESULTS ── */
+/* ================= FEEDBACK BUILDERS ================= */
+function has(w){ return S.words.indexOf(w) > -1; }
+function winsCount(){ return (S.wins.length === 1 && S.wins[0] === NONE_WIN) ? 0 : S.wins.length; }
+function needSummary(){
+  var parts = [];
+  if(S.needChips.length) parts.push(S.needChips.join(', ').toLowerCase());
+  var t = ge('fsWhatNeed').value.trim();
+  if(t) parts.push(t);
+  return parts.join('. ');
+}
+function buildFeedback(){
+  var out = [], f = S.feeling, e = S.energy;
+  if(S.energyTouched){
+    var heavy = ['Tired','Numb','Overwhelmed','Sad','Anxious'].indexOf(f) > -1;
+    var light = ['Calm','Hopeful','Relieved','Curious'].indexOf(f) > -1;
+    var t;
+    if(heavy && e > 60) t = 'You feel ' + f.toLowerCase() + ', yet your battery sits at ' + e + ' percent. That mix is common. The body can be fine while the heart is loud, and both are real.';
+    else if(light && e <= 30) t = 'You feel ' + f.toLowerCase() + ' even with a low battery of ' + e + ' percent. That is a good sign. Protect it with some rest.';
+    else if(e <= 30) t = 'Your battery is at ' + e + ' percent. That changes the advice: rest first, big thinking later.';
+    else if(e <= 65) t = 'Your battery is at ' + e + ' percent. That is enough for small steps, not heroics. Pick one thing, not five.';
+    else t = 'Your battery is at ' + e + ' percent. That is a good moment for one small brave step, like writing one honest sentence or sending one message.';
+    out.push({t:'Your energy', b:t});
+  }
+  if(S.words.length){
+    var b2 = 'You picked: ' + S.words.join(', ').toLowerCase() + '. If you introduced yourself to a kind stranger, which word would you say first? There is no wrong answer, and you can swap words any time.';
+    if(has('Loud') && has('Quiet')) b2 += ' You picked both loud and quiet. People are allowed to be more than one thing.';
+    else if(has('Brave') && has('Scared')) b2 += ' You picked brave and scared together. That is usually what bravery looks like.';
+    out.push({t:'Your words', b:b2});
+  }
+  if(S.exploring && EXPLORING_FEEDBACK[S.exploring]) out.push({t:'Your starting point', b:EXPLORING_FEEDBACK[S.exploring]});
+  if(S.wins.length){
+    var n = winsCount(), wb;
+    if(n === 0) wb = 'No wins ticked this week, and that is okay. You still showed up to reflect, so call that win number one.';
+    else if(n <= 2) wb = n + ' tiny ' + (n===1?'win':'wins') + '. Tiny wins are real wins. They are how bigger changes get built.';
+    else wb = n + ' tiny wins. That is a solid pile for someone in the middle of figuring things out.';
+    out.push({t:'Your tiny wins', b:wb});
+  }
+  var kind = ge('fsSelfKindness').value.trim();
+  if(kind) out.push({t:'Your kind sentence', b:'You wrote yourself something kind. Read it out loud once, even quietly. Hearing your own voice be kind sticks better than reading it.'});
+  else out.push({t:'Your kind sentence', b:'You did not write a kind sentence this time, and that is fine. If you want one to borrow: "You are doing better than you think."'});
+  return out;
+}
+function tinyActions(){
+  var acts = S.needChips.map(function(n){ return NEED_ACTIONS[n]; }).filter(Boolean);
+  if(!acts.length){
+    var t = ge('fsWhatNeed').value.trim();
+    if(t) acts.push('Pick one small thing that gives you a little of what you wrote, and do it in the next hour.');
+  }
+  return acts.length ? acts : DEFAULT_ACTIONS;
+}
+
+/* ================= RESULTS ================= */
 function showResults(){
-  var feeling  = ge('fsFeelingNow').value  || '';
-  var exploring= ge('fsStartExploring').value || '';
-  var meaning  = ge('fsMeaning').value.trim() || '';
-  var need     = ge('fsWhatNeed').value.trim() || '';
-  var kindness = ge('fsSelfKindness').value.trim() || '';
-  var name     = ge('fsName').value.trim() || '';
+  S.name = ge('fsName').value.trim();
+  var f = S.feeling, mood = fm(f);
+  var meaning = ge('fsMeaning').value.trim(), kindness = ge('fsSelfKindness').value.trim();
+  var need = needSummary();
 
-  /* Hide breathing card */
-  var bc = ge('fsBreathCard');
-  if(bc) { bc.classList.remove('show'); bc.style.display = ''; }
+  ge('fsBreathCard').style.display = '';
+  clearTimeout(breathTimer);
 
-  /* Results title */
-  var rt = ge('fsResultsTitle');
-  if(rt) rt.textContent = name
-    ? 'Thank you, ' + name + '. Thank you for sharing this with yourself.'
-    : 'Thank you for sharing this with yourself.';
+  ge('fsResultsFig').innerHTML = stickSVG('cheer', 90, true);
+  ge('fsResultsTitle').textContent = S.name ? ('Thank you, ' + S.name + '. Thank you for sharing this with yourself.') : 'Thank you for sharing this with yourself.';
 
-  /* Insight paragraphs */
-  var ib = ge('fsInsightBox');
-  if(ib){
-    var p1 = 'You just took time to pause and look honestly at your inner world. That is not a small thing — many people go through entire days without doing it once.';
-    var p2 = feeling
-      ? 'You chose the word "' + feeling + '" to describe how you feel right now. That choice matters. The fact that you can name it — even if imperfectly — means you are listening to yourself. That is the beginning of everything.'
-      : 'The fact that you are here, asking these questions, is already a form of courage.';
-    var p3 = 'You are at a moment of reflection, not a moment of conclusion. You do not need to resolve what you are exploring. You do not need to arrive anywhere today. Being here is already enough.';
-    if(exploring && exploring !== "I don't think in those terms" && exploring !== 'Still figuring it out'){
-      p3 += ' You mentioned that your journey of self-exploration began ' + exploring.toLowerCase() + '. Wherever the beginning was, you are still with yourself now — and that continuity matters.';
-    }
-    ib.innerHTML =
-      '<div class="fs-result-insight">' + p1 + '</div>' +
-      '<div class="fs-result-insight" style="margin-top:8px;">' + p2 + '</div>' +
-      '<div class="fs-result-insight" style="margin-top:8px;">' + p3 + '</div>';
-  }
+  var care = ge('fsCareBox');
+  if(needsCare()){ care.innerHTML = CARE_HTML; care.style.display = 'block'; } else care.style.display = 'none';
 
-  /* Next steps */
-  var ns = ge('fsNextSteps');
-  if(ns){
-    ns.innerHTML = '';
-    var steps = NEXT_STEPS[feeling] || DEFAULT_STEPS;
-    steps.forEach(function(s){
-      ns.innerHTML += '<li><span class="fs-next-dot"></span><span>' + s + '</span></li>';
+  /* Comic */
+  var panels = [
+    {tag:'Right now', mood:mood, cap:'I feel ' + f.toLowerCase() + '.'},
+    {tag:'What I need', mood:'curious', cap: need ? trunc(need, 90) : 'Still working that out.'},
+    {tag:'What I tell myself', mood:'heart', cap: kindness ? '"' + trunc(kindness, 110) + '"' : 'I am still here, and that counts.'}
+  ];
+  ge('fsComic').innerHTML = panels.map(function(p){
+    return '<div class="fs-panel"><div class="fs-panel-tag">' + esc(p.tag) + '</div>' + stickSVG(p.mood, 84, true) + '<div class="fs-panel-cap">' + esc(p.cap) + '</div></div>';
+  }).join('');
+
+  /* Feedback */
+  ge('fsInsightBox').innerHTML = buildFeedback().map(function(x){
+    return '<div class="fs-result-insight"><div class="fs-fb-title">' + esc(x.t) + '</div>' + esc(x.b) + '</div>';
+  }).join('');
+
+  /* Tiny actions */
+  ge('fsTinyActions').innerHTML = tinyActions().map(function(a){
+    return '<li><span class="fs-next-dot"></span><span>' + esc(a) + '</span></li>';
+  }).join('');
+
+  /* Experiments */
+  renderExperiments();
+
+  /* Steps */
+  ge('fsNextSteps').innerHTML = (NEXT_STEPS[f] || DEFAULT_STEPS).map(function(s){
+    return '<li><span class="fs-next-dot"></span><span>' + esc(s) + '</span></li>';
+  }).join('');
+
+  /* Myths */
+  var mw = ge('fsMyths'); mw.innerHTML = '';
+  MYTHS.forEach(function(m){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'fs-myth'; b.setAttribute('aria-expanded','false');
+    b.innerHTML = '<div class="fs-myth-q">"' + esc(m.m) + '"</div><div class="fs-myth-hint">Tap to flip</div><div class="fs-myth-truth">' + esc(m.t) + '</div>';
+    b.addEventListener('click', function(){
+      var open = b.classList.toggle('open');
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  }
+    mw.appendChild(b);
+  });
+
+  /* Scripts */
+  var sw = ge('fsScripts'); sw.innerHTML = '';
+  SCRIPTS.forEach(function(sc){
+    var d = document.createElement('div'); d.className = 'fs-script';
+    d.appendChild(document.createTextNode('"' + sc + '"'));
+    d.appendChild(document.createElement('br'));
+    var cb = document.createElement('button'); cb.type = 'button'; cb.className = 'fs-copy-mini'; cb.textContent = 'Copy';
+    cb.addEventListener('click', function(){
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(sc).then(function(){ showToast('Copied. Paste it wherever you like.'); }).catch(function(){ showToast('Select the text to copy it.'); });
+      } else showToast('Select the text to copy it.');
+    });
+    d.appendChild(cb); sw.appendChild(d);
+  });
 
   /* Prompts */
-  var pc = ge('fsPrompts');
-  if(pc){
-    pc.innerHTML = '';
-    var prompts = PROMPTS[feeling] || DEFAULT_PROMPTS;
-    prompts.forEach(function(p){
-      pc.innerHTML += '<div class="fs-prompt-item">' + p + '</div>';
-    });
-  }
+  ge('fsPrompts').innerHTML = (PROMPTS[f] || DEFAULT_PROMPTS).map(function(p){
+    return '<div class="fs-prompt-item">' + esc(p) + '</div>';
+  }).join('');
 
-  /* Answers summary */
-  var as = ge('fsAnswersSummary');
-  if(as){
-    var rows = [
-      ['How you are feeling now',      feeling   || 'Not answered'],
-      ['When you started exploring',   exploring || 'Not answered'],
-      ['What identity means to you',   meaning   || 'Not written'],
-      ['What you need right now',      need      || 'Not written'],
-      ['A kindness to yourself',       kindness  || 'Not written']
-    ];
-    as.innerHTML = rows.map(function(r){
-      return '<div class="fs-answer-row">' +
-        '<div class="fs-answer-label">' + r[0] + '</div>' +
-        '<div class="fs-answer-val">'   + r[1] + '</div>' +
-        '</div>';
-    }).join('');
-  }
+  /* Answers */
+  var rows = [
+    ['How you are feeling now', f || 'Not answered'],
+    ['Your inner battery', S.energyTouched ? (S.energy + '% (' + energyLabel(S.energy) + ')') : 'Not set'],
+    ['When you started exploring', S.exploring || 'Not answered'],
+    ['Words that feel true', S.words.length ? S.words.join(', ') : 'Not picked'],
+    ['What identity means to you', meaning || 'Not written'],
+    ['What you need right now', need || 'Not written'],
+    ['Tiny wins this week', S.wins.length ? S.wins.join(', ') : 'Not answered'],
+    ['A kindness to yourself', kindness || 'Not written']
+  ];
+  ge('fsAnswersSummary').innerHTML = rows.map(function(r){
+    return '<div class="fs-answer-row"><div class="fs-answer-label">' + esc(r[0]) + '</div><div class="fs-answer-val">' + esc(r[1]) + '</div></div>';
+  }).join('');
 
-  /* Show results panel */
+  setBuddy('cheer','You did it. Proud of you. Okay, I am a stick figure, so my pride is mostly wiggling.','You did it. Well done for taking this time.');
+
   var rp = ge('fsResults');
-  if(rp){
-    rp.classList.add('show');
-    rp.style.display = '';
-    setTimeout(function(){
-      rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+  rp.classList.add('show');
+  setTimeout(function(){ rp.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+}
+
+function renderExperiments(){
+  var box = ge('fsExperiments'); box.innerHTML = '';
+  EXPERIMENTS.forEach(function(x){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'fs-exp' + (S.experiment === x ? ' sel' : '');
+    b.setAttribute('aria-pressed', S.experiment === x ? 'true' : 'false');
+    b.textContent = x;
+    b.addEventListener('click', function(){
+      S.experiment = (S.experiment === x) ? '' : x;
+      renderExperiments();
+      if(S.experiment) showToast(S.quiet ? 'Saved to your PDF.' : 'Nice pick. It will be in your PDF.');
+    });
+    box.appendChild(b);
+  });
+}
+
+/* ================= SUBMIT / SKIP / EDIT / RESET ================= */
+ge('fsSubmitBtn').addEventListener('click', function(){
+  if(!S.feeling){
+    showToast('Please tap how you are feeling right now.');
+    var g = ge('fsFeelGrid'); if(g) g.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
   }
-}
+  ge('fsActionCard').style.display = 'none';
+  var bc = ge('fsBreathCard');
+  bc.style.display = 'block';
+  setTimeout(function(){ bc.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+  startBreathing(showResults);
+});
+ge('fsSkipBreathBtn').addEventListener('click', function(){ clearTimeout(breathTimer); showResults(); });
+ge('fsEditBtn').addEventListener('click', function(){
+  ge('fsResults').classList.remove('show');
+  var ac = ge('fsActionCard');
+  ac.style.display = 'block';
+  setTimeout(function(){ ac.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+});
+ge('fsResetBtn').addEventListener('click', function(){
+  var quiet = S.quiet;
+  S = freshState(); S.quiet = quiet;
+  ms4 = false; ms8 = false;
+  WORDS = BASE_WORDS.slice();
+  ['fsMeaning','fsWhatNeed','fsSelfKindness','fsName','fsWordAdd'].forEach(function(id){ ge(id).value = ''; });
+  ge('fsEnergy').value = 50;
+  ge('fsBattFill').style.width = '50%'; ge('fsBattFill').style.background = '#f0c060';
+  ge('fsBattLabel').textContent = 'Slide to set it';
+  ['fsAffirm1','fsAffirm2','fsAffirm3','fsAffirm4','fsAffirm5','fsAffirm6','fsAffirm7','fsAffirm8'].forEach(function(id){ react(id, null, null); });
+  ge('fsCareLive').style.display = 'none';
+  ge('fsResults').classList.remove('show');
+  ge('fsBreathCard').style.display = '';
+  ge('fsActionCard').style.display = 'block';
+  clearTimeout(breathTimer);
+  renderFeelGrid(); rerenderChips(); greeting(); updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+  showToast('Reset. Begin again when you are ready.');
+});
 
-/* ── SUBMIT BUTTON ── */
-var submitBtn = ge('fsSubmitBtn');
-if(submitBtn){
-  submitBtn.addEventListener('click', function(){
-    var feeling = ge('fsFeelingNow').value;
-    if(!feeling){
-      showToast('Please choose how you are feeling right now.');
-      return;
-    }
-
-    /* Hide action card */
-    var ac = ge('fsActionCard');
-    if(ac) ac.style.display = 'none';
-
-    /* Show breathing card */
-    var bc = ge('fsBreathCard');
-    if(bc){
-      bc.style.display = 'block';
-      setTimeout(function(){ bc.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
-      startBreathing(showResults);
-    } else {
-      showResults();
-    }
-  });
-}
-
-/* ── SKIP BREATH ── */
-var skipBtn = ge('fsSkipBreathBtn');
-if(skipBtn){
-  skipBtn.addEventListener('click', function(){
-    clearTimeout(breathTimer);
-    showResults();
-  });
-}
-
-/* ── EDIT ── */
-var editBtn = ge('fsEditBtn');
-if(editBtn){
-  editBtn.addEventListener('click', function(){
-    var rp = ge('fsResults');
-    if(rp){ rp.classList.remove('show'); rp.style.display = ''; }
-    var ac = ge('fsActionCard');
-    if(ac){
-      ac.style.display = 'block';
-      setTimeout(function(){ ac.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
-    }
-  });
-}
-
-/* ── RESET ── */
-var resetBtn = ge('fsResetBtn');
-if(resetBtn){
-  resetBtn.addEventListener('click', function(){
-    ['fsFeelingNow','fsStartExploring'].forEach(function(id){ if(ge(id)) ge(id).value = ''; });
-    ['fsMeaning','fsWhatNeed','fsSelfKindness','fsName'].forEach(function(id){ if(ge(id)) ge(id).value = ''; });
-    document.querySelectorAll('#findself-root .fs-inline-affirm').forEach(function(el){ el.classList.remove('show'); });
-    var rp = ge('fsResults');
-    if(rp){ rp.classList.remove('show'); rp.style.display = ''; }
-    var bc = ge('fsBreathCard');
-    if(bc){ bc.style.display = ''; }
-    var ac = ge('fsActionCard');
-    if(ac) ac.style.display = 'block';
-    clearTimeout(breathTimer);
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Reset — begin again when you are ready.');
-  });
-}
-
-/* ── SHARE ── */
+/* ================= SHARE ================= */
 function updateShareLinks(){
   var url = encodeURIComponent(window.location.href);
-  var msg = encodeURIComponent('A gentle identity and self-reflection tool — free and private: ');
+  var msg = encodeURIComponent('A gentle identity and self-reflection tool, free and private: ');
   var ids = {
     fsWaShare: 'https://wa.me/?text=' + msg + url,
     fsFbShare: 'https://www.facebook.com/sharer/sharer.php?u=' + url,
@@ -673,21 +1136,23 @@ function updateShareLinks(){
   Object.keys(ids).forEach(function(id){ if(ge(id)) ge(id).href = ids[id]; });
 }
 updateShareLinks();
+ge('fsCopyLink').addEventListener('click', function(){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(window.location.href)
+      .then(function(){ showToast('Link copied!'); })
+      .catch(function(){ showToast('Copy from your address bar.'); });
+  } else showToast('Copy from your address bar.');
+});
 
-var copyBtn = ge('fsCopyLink');
-if(copyBtn){
-  copyBtn.addEventListener('click', function(){
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(window.location.href)
-        .then(function(){ showToast('Link copied!'); })
-        .catch(function(){ showToast('Copy from your address bar.'); });
-    } else { showToast('Copy from your address bar.'); }
-  });
+/* ================= PDF ================= */
+function san(s){
+  return String(s == null ? '' : s)
+    .replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"')
+    .replace(/[\u2013\u2014]/g,'-').replace(/\u2026/g,'...')
+    .replace(/[^\x00-\xFF]/g,'');
 }
-
-/* ── PDF ── */
 function imgToDataUrl(url){
-  return fetch(url, { mode: 'cors' })
+  return fetch(url, {mode:'cors'})
     .then(function(r){ if(!r.ok) throw new Error('logo'); return r.blob(); })
     .then(function(blob){
       return new Promise(function(resolve, reject){
@@ -698,43 +1163,95 @@ function imgToDataUrl(url){
       });
     });
 }
-
-var pdfBtn = ge('fsPdfBtn');
-if(pdfBtn){
-  pdfBtn.addEventListener('click', function(){
-    if(!window.jspdf || !window.jspdf.jsPDF){
-      showToast('PDF library not ready — please wait a moment and try again.');
-      return;
-    }
-    showToast('Building your reflection PDF…');
-    generatePDF();
+function sampleQ(a, steps){
+  var pts = [];
+  for(var i = 0; i <= steps; i++){
+    var t = i/steps, u = 1-t;
+    pts.push([u*u*a[0] + 2*u*t*a[2] + t*t*a[4], u*u*a[1] + 2*u*t*a[3] + t*t*a[5]]);
+  }
+  return pts;
+}
+function pdfStick(doc, x, y, s, mood){
+  var m = MOODS[mood] || MOODS.calm;
+  function X(v){ return x + v*s; }
+  function Y(v){ return y + v*s; }
+  function curve(a){
+    var p = sampleQ(a, 8);
+    for(var i = 0; i < p.length-1; i++) doc.line(X(p[i][0]), Y(p[i][1]), X(p[i+1][0]), Y(p[i+1][1]));
+  }
+  doc.setDrawColor(208,200,238); doc.setLineWidth(1.2);
+  doc.line(X(30), Y(132), X(90), Y(132));
+  doc.setDrawColor(74,58,106); doc.setLineWidth(2.2*s+0.6);
+  doc.setLineCap('round'); doc.setLineJoin('round');
+  doc.line(X(60), Y(52), X(60), Y(92));
+  doc.line(X(60), Y(92), X(46), Y(126));
+  doc.line(X(60), Y(92), X(74), Y(126));
+  ARMS[m.arms].forEach(function(a){
+    doc.line(X(a[0][0]), Y(a[0][1]), X(a[1][0]), Y(a[1][1]));
+    doc.line(X(a[1][0]), Y(a[1][1]), X(a[2][0]), Y(a[2][1]));
   });
+  doc.setFillColor(255,255,255);
+  doc.circle(X(60), Y(34), 18*s, 'FD');
+  doc.setLineWidth(1.4*s+0.4);
+  var e = EYES[m.eyes];
+  if(e.o) e.o.forEach(function(c){ doc.setFillColor(255,255,255); doc.circle(X(c[0]), Y(c[1]), c[2]*s, 'FD'); });
+  if(e.c) e.c.forEach(function(c){ doc.setFillColor(74,58,106); doc.circle(X(c[0]), Y(c[1]), c[2]*s, 'F'); });
+  if(e.q) e.q.forEach(curve);
+  var mo = MOUTHS[m.mouth];
+  if(mo.e) doc.ellipse(X(mo.e[0]), Y(mo.e[1]), mo.e[2]*s, mo.e[3]*s, 'S');
+  else mo.forEach(curve);
+  doc.setFillColor(138,180,232);
+  if(m.shape === 'tear') doc.circle(X(53), Y(46), 2.4*s, 'F');
+  if(m.shape === 'sweat') doc.circle(X(84), Y(28), 2.8*s, 'F');
+  if(m.txt){
+    doc.setFont('helvetica','bolditalic'); doc.setFontSize(Math.max(8, 14*s));
+    doc.setTextColor(128,96,168);
+    doc.text(m.txt.t, X(m.txt.x), Y(m.txt.y));
+  }
+  doc.setLineWidth(0.5);
+}
+function pdfFace(doc, cx, cy, r, c){
+  doc.setDrawColor(74,58,106); doc.setLineWidth(1.2); doc.setFillColor(255,255,255);
+  doc.circle(cx, cy, r, 'FD');
+  doc.setFillColor(74,58,106);
+  doc.circle(cx - r*0.35, cy - r*0.2, 1.2, 'F');
+  doc.circle(cx + r*0.35, cy - r*0.2, 1.2, 'F');
+  var a = [cx - r*0.4, cy + r*0.38, cx, cy + r*0.38 + c*r, cx + r*0.4, cy + r*0.38];
+  var p = sampleQ(a, 8);
+  for(var i = 0; i < p.length-1; i++) doc.line(p[i][0], p[i][1], p[i+1][0], p[i+1][1]);
 }
 
+var pdfBtn = ge('fsPdfBtn');
+pdfBtn.addEventListener('click', function(){
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    showToast('PDF library not ready. Please wait a moment and try again.');
+    return;
+  }
+  showToast('Building your reflection PDF...');
+  generatePDF();
+});
+
 async function generatePDF(){
-  var name     = (ge('fsName')         ? ge('fsName').value.trim()         : '') || '';
-  var feeling  = (ge('fsFeelingNow')   ? ge('fsFeelingNow').value          : '') || 'Not answered';
-  var exploring= (ge('fsStartExploring')? ge('fsStartExploring').value     : '') || 'Not answered';
-  var meaning  = (ge('fsMeaning')      ? ge('fsMeaning').value.trim()      : '') || 'Not written';
-  var need     = (ge('fsWhatNeed')     ? ge('fsWhatNeed').value.trim()      : '') || 'Not written';
-  var kindness = (ge('fsSelfKindness') ? ge('fsSelfKindness').value.trim() : '') || 'Not written';
+  var name = san(S.name);
+  var feeling = S.feeling || 'Not answered';
+  var meaning = san(ge('fsMeaning').value.trim()) || 'Not written';
+  var needTxt = san(needSummary()) || 'Not written';
+  var kindness = san(ge('fsSelfKindness').value.trim()) || 'Not written';
+  var energyTxt = S.energyTouched ? (S.energy + ' percent (' + energyLabel(S.energy) + ')') : 'Not set';
+  var winsTxt = S.wins.length ? san(S.wins.join(', ')) : 'Not answered';
+  var wordsTxt = S.words.length ? san(S.words.join(', ')) : 'Not picked';
+  var mood = fm(S.feeling);
 
   var logoData = null;
   try { logoData = await imgToDataUrl(LOGO_URL); } catch(e){}
 
   var jsPDF = window.jspdf.jsPDF;
-  var doc   = new jsPDF({ unit: 'pt', format: 'a4' });
+  var doc = new jsPDF({unit:'pt', format:'a4'});
   var pageW = doc.internal.pageSize.getWidth();
   var pageH = doc.internal.pageSize.getHeight();
-  var margin= 42;
-  var width = pageW - margin * 2;
-  var lineH = 14;
-  var pgNum = 1;
-  var LOGY  = 14;
-  var LOGW  = 36;
-  var LOGH  = 36;
-  var TXT_X = margin + LOGW + 10;
-  var y     = margin;
+  var margin = 42, width = pageW - margin*2, lineH = 14, pgNum = 1;
+  var LOGY = 14, LOGW = 36, LOGH = 36, TXT_X = margin + LOGW + 10;
+  var y = margin;
 
   function drawHeader(){
     if(logoData) doc.addImage(logoData, 'JPEG', margin, LOGY, LOGW, LOGH);
@@ -742,162 +1259,209 @@ async function generatePDF(){
     doc.text('Emotional Intelligence Developer', TXT_X, 26);
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(74,88,112);
     doc.text('emotionalintelligencedeveloper.com', TXT_X, 38);
-    doc.setDrawColor(208,216,232); doc.line(margin, 54, pageW - margin, 54);
+    doc.setDrawColor(208,216,232); doc.setLineWidth(0.5); doc.line(margin, 54, pageW - margin, 54);
   }
-
   function drawFooter(){
-    doc.setDrawColor(208,216,232); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(130);
-    doc.text('General wellbeing support only — not professional care', margin, pageH - 20);
+    doc.setDrawColor(208,216,232); doc.setLineWidth(0.5); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(130,130,130);
+    doc.text('General wellbeing support only. Not professional care.', margin, pageH - 20);
     doc.text('Page ' + pgNum, pageW - margin - 36, pageH - 20);
   }
-
   function ensureSpace(h){
     if(y + h > pageH - 54){
-      drawFooter();
-      doc.addPage();
-      pgNum++;
-      drawHeader();
-      y = 72;
+      drawFooter(); doc.addPage(); pgNum++; drawHeader(); y = 72;
     }
   }
-
-  function addTitle(t){
-    ensureSpace(30);
-    doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.setTextColor(26,30,42);
-    doc.text(t, margin, y); y += 26;
+  function addText(t, size, style, rgb, opt){
+    opt = opt || {};
+    var lh = opt.lh || size*1.45;
+    doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size);
+    var lines = doc.splitTextToSize(san(t), opt.w || width);
+    lines.forEach(function(l){
+      ensureSpace(lh);
+      doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size);
+      doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+      doc.text(l, opt.x || margin, y);
+      y += lh;
+    });
+    y += (opt.after == null ? 4 : opt.after);
   }
-
-  function addMeta(t){
-    ensureSpace(18);
-    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(74,88,112);
-    doc.text(t, margin, y); y += 18;
-  }
-
-  function addSectionTitle(t){
-    ensureSpace(30);
+  function addTitle(t){ ensureSpace(34); doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(26,30,42); doc.text(san(t), margin, y); y += 26; }
+  function addMeta(t){ ensureSpace(18); doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(74,88,112); doc.text(san(t), margin, y); y += 17; }
+  function addSection(t){
+    y += 8; ensureSpace(40);
     doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(26,30,42);
-    doc.text(t, margin, y); y += 10;
-    doc.setDrawColor(220,226,240); doc.line(margin, y, pageW - margin, y); y += 13;
+    doc.text(san(t), margin, y); y += 9;
+    doc.setDrawColor(220,226,240); doc.setLineWidth(0.5); doc.line(margin, y, pageW - margin, y); y += 14;
   }
-
   function addBlock(label, value){
-    var sv = value && String(value).trim() ? String(value).trim() : '—';
-    ensureSpace(24);
+    var sv = value && String(value).trim() ? String(value).trim() : '-';
+    ensureSpace(26);
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(106,90,168);
     doc.text(label.toUpperCase(), margin, y); y += 11;
-    var lines = doc.splitTextToSize(sv, width);
-    var bh = lines.length * lineH + 16;
+    doc.setFont('helvetica','normal'); doc.setFontSize(11);
+    var lines = doc.splitTextToSize(sv, width - 20);
+    var bh = lines.length*lineH + 16;
     ensureSpace(bh);
     var top = y;
-    doc.setFillColor(248,246,254); doc.setDrawColor(210,200,232);
+    doc.setFillColor(248,246,254); doc.setDrawColor(210,200,232); doc.setLineWidth(0.7);
     doc.roundedRect(margin, top, width, bh, 4, 4, 'FD');
     doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(26,30,42);
-    doc.text(lines, margin + 10, top + 12);
+    doc.text(lines, margin + 10, top + 14);
     y = top + bh + 10;
   }
 
-  function addPara(t){
-    var s = t && String(t).trim() ? String(t).trim() : '—';
-    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(26,30,42);
-    var ls = doc.splitTextToSize(s, width);
-    var bh = ls.length * lineH + 4;
-    ensureSpace(bh);
-    doc.text(ls, margin, y); y += bh + 2;
+  drawHeader(); y = 72;
+  addTitle('Finding Yourself: Your Reflection');
+  if(name) addMeta('Name: ' + name);
+  addMeta('Date: ' + new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'}));
+  addMeta('Time: ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
+  y += 6;
+
+  ensureSpace(48);
+  doc.setFillColor(242,240,252); doc.setDrawColor(200,188,224); doc.setLineWidth(0.7);
+  doc.roundedRect(margin, y, width, 38, 6, 6, 'FD');
+  doc.setFont('helvetica','italic'); doc.setFontSize(11.5); doc.setTextColor(74,58,106);
+  doc.text('You are allowed to exist exactly as you are.', margin + 14, y + 24);
+  y += 52;
+
+  /* Care note if needed */
+  if(needsCare()){
+    addText('A caring note: some of what you wrote sounds really heavy. If you might hurt yourself or feel unsafe, please reach out to someone today: a trusted person, a local emergency number, or a helpline at findahelpline.com. You do not have to carry this alone.', 10.5, 'bold', [122,42,72], {after:10});
   }
 
-  /* Build PDF */
-  drawHeader();
-  y = 72;
+  /* Comic */
+  addSection('Your stick figure comic');
+  ensureSpace(184);
+  var gap = 8, pw = (width - gap*2)/3, ph = 172, ss = 0.62;
+  var caps = [
+    {tag:'RIGHT NOW', mood:mood, cap:'I feel ' + (S.feeling ? S.feeling.toLowerCase() : 'not sure yet') + '.'},
+    {tag:'WHAT I NEED', mood:'curious', cap: needSummary() ? trunc(needSummary(), 90) : 'Still working that out.'},
+    {tag:'WHAT I TELL MYSELF', mood:'heart', cap: ge('fsSelfKindness').value.trim() ? '"' + trunc(ge('fsSelfKindness').value.trim(), 110) + '"' : 'I am still here, and that counts.'}
+  ];
+  caps.forEach(function(c, i){
+    var px = margin + i*(pw + gap);
+    doc.setDrawColor(74,58,106); doc.setLineWidth(1.2); doc.setFillColor(252,250,255);
+    doc.roundedRect(px, y, pw, ph, 6, 6, 'FD');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(128,96,168);
+    doc.text(c.tag, px + pw/2, y + 14, {align:'center'});
+    pdfStick(doc, px + (pw - 120*ss)/2, y + 20, ss, c.mood);
+    doc.setFont('helvetica','italic'); doc.setFontSize(8.8); doc.setTextColor(26,30,42);
+    var cl = doc.splitTextToSize(san(c.cap), pw - 16).slice(0,5);
+    doc.text(cl, px + pw/2, y + 20 + 140*ss + 12, {align:'center', lineHeightFactor:1.25});
+  });
+  y += ph + 14;
 
-  addTitle('Finding Yourself — Personal Reflection');
-  if(name) addMeta('Name: ' + name);
-  addMeta('Date: ' + new Date().toLocaleDateString('en-GB',{ weekday:'long', day:'numeric', month:'long', year:'numeric' }));
-  addMeta('Time: ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }));
-  addMeta('emotionalintelligencedeveloper.com');
-  y += 6;
+  /* Reflection */
+  addSection('Your reflection');
+  addBlock('How you are feeling now', feeling);
+  addBlock('Your inner battery', energyTxt);
+  addBlock('When you started exploring your identity', S.exploring || 'Not answered');
+  addBlock('Words that feel true about you', wordsTxt);
+  addBlock('What identity means to you', meaning);
+  addBlock('What you need right now', needTxt);
+  addBlock('Tiny wins this week', winsTxt);
+  addBlock('A kindness you wrote to yourself', kindness);
 
-  ensureSpace(44);
-  doc.setFillColor(242,240,252); doc.setDrawColor(200,188,224);
-  doc.roundedRect(margin, y, width, 36, 6, 6, 'FD');
-  doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(74,58,106);
-  doc.text('You are allowed to exist exactly as you are.', margin + 12, y + 23);
-  y += 48;
-
-  addSectionTitle('Your reflection');
-  addBlock('How you are feeling now',               feeling);
-  addBlock('When you started exploring your identity', exploring);
-  addBlock('What identity means to you',            meaning);
-  addBlock('What you need right now',               need);
-  addBlock('A kindness you wrote to yourself',      kindness);
-
-  ensureSpace(40);
-  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
-  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(106,90,168);
-  doc.text('Gentle next steps for right now', margin, y); y += 14;
-  var steps = NEXT_STEPS[feeling] || DEFAULT_STEPS;
-  steps.forEach(function(s){ addPara('- ' + s); });
-
-  ensureSpace(40);
-  y += 6;
-  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
-  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(106,90,168);
-  doc.text('Reflection prompts — when you are ready', margin, y); y += 14;
-  var prompts = PROMPTS[feeling] || DEFAULT_PROMPTS;
-  prompts.forEach(function(p){
-    doc.setFont('helvetica','italic');
-    addPara('- ' + p);
+  /* Feedback */
+  addSection('What stood out, just for you');
+  buildFeedback().forEach(function(x){
+    addText(x.t, 10, 'bold', [106,90,168], {after:1});
+    addText(x.b, 10, 'normal', [26,30,42], {after:8});
   });
 
-  ensureSpace(80);
-  y += 8;
-  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
-  var closingTxt = 'This page is for you. You are allowed to explore, to question, and to grow at your own pace. If you revisit this reflection later, notice what has shifted and what has stayed the same. You are not required to have answers. You are only required to be honest with yourself — and you already did that today.';
+  /* Tiny actions */
+  addSection('Do this in the next hour');
+  tinyActions().forEach(function(a){ addText('- ' + a, 10, 'normal', [26,30,42], {after:4}); });
+
+  /* Experiment */
+  addSection('Your tiny experiment for this week');
+  var exps = S.experiment ? [S.experiment] : EXPERIMENTS.slice(0,3);
+  if(!S.experiment) addText('You did not pick one yet. Circle the one you like, or ignore all three.', 9.5, 'italic', [74,88,112], {after:6});
+  exps.forEach(function(x){
+    doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+    var ls = doc.splitTextToSize(san(x), width - 24);
+    ensureSpace(ls.length*14 + 6);
+    doc.setDrawColor(106,90,168); doc.setLineWidth(1); doc.rect(margin, y - 9, 10, 10);
+    ls.forEach(function(l, i){ doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(26,30,42); doc.text(l, margin + 20, y); y += 14; });
+    y += 4;
+  });
+
+  /* Steps and prompts */
+  addSection('Gentle next steps for right now');
+  (NEXT_STEPS[S.feeling] || DEFAULT_STEPS).forEach(function(s){ addText('- ' + s, 10, 'normal', [26,30,42], {after:4}); });
+  addSection('Reflection prompts, when you are ready');
+  (PROMPTS[S.feeling] || DEFAULT_PROMPTS).forEach(function(p){ addText('- ' + p, 10, 'italic', [74,58,106], {after:4}); });
+
+  /* Myths */
+  addSection('Myths we can drop');
+  MYTHS.forEach(function(m){
+    addText('Myth: ' + m.m, 10, 'bolditalic', [106,90,168], {after:1});
+    addText('Truth: ' + m.t, 10, 'normal', [26,30,42], {after:8});
+  });
+
+  /* Scripts */
+  addSection('If you want to tell someone, words you can borrow');
+  SCRIPTS.forEach(function(sc){ addText('"' + sc + '"', 10, 'italic', [74,58,106], {after:7}); });
+
+  /* Check-in */
+  addSection('Check in with yourself in 7 days');
+  addText('Circle the face that fits you on that day, then fill in the lines.', 10, 'normal', [74,88,112], {after:8});
+  ensureSpace(64);
+  var faces = [{c:-0.55,l:'Rough'},{c:-0.15,l:'Low'},{c:0.2,l:'Okay'},{c:0.6,l:'Good'},{c:1.0,l:'Great'}];
+  var fx0 = margin + 34, fstep = (width - 68)/4;
+  faces.forEach(function(fc, i){
+    var cx = fx0 + i*fstep;
+    pdfFace(doc, cx, y + 14, 14, fc.c);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(74,88,112);
+    doc.text(fc.l, cx, y + 40, {align:'center'});
+  });
+  y += 56;
+  ['One thing that feels different:', 'One thing that feels the same:', 'One kind thing I did for myself:'].forEach(function(q){
+    ensureSpace(34);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
+    doc.text(q, margin, y); y += 18;
+    doc.setDrawColor(200,208,224); doc.setLineWidth(0.6); doc.line(margin, y, pageW - margin, y); y += 14;
+  });
+
+  /* Closing */
+  y += 6;
+  var closingTxt = 'This page is for you. You are allowed to explore, to question, and to grow at your own pace. If you revisit this reflection later, notice what has shifted and what has stayed the same. You are not required to have answers. You are only required to be honest with yourself, and you already did that today.';
+  doc.setFont('helvetica','italic'); doc.setFontSize(11);
   var cl = doc.splitTextToSize(closingTxt, width - 20);
-  var ch = cl.length * lineH + 24;
-  ensureSpace(ch + 8);
-  doc.setFillColor(248,246,254); doc.setDrawColor(200,188,224);
+  var ch = cl.length*lineH + 24;
+  ensureSpace(ch + 12);
+  doc.setFillColor(248,246,254); doc.setDrawColor(200,188,224); doc.setLineWidth(0.7);
   doc.roundedRect(margin, y, width, ch, 6, 6, 'FD');
   doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(74,58,106);
-  doc.text(cl, margin + 10, y + 14);
+  doc.text(cl, margin + 10, y + 16);
   y += ch + 14;
 
-  ensureSpace(160);
-  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 13;
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(106,90,168);
-  doc.text('Understanding identity exploration — what research tells us', margin, y); y += 14;
-
+  /* Research */
+  addSection('Understanding identity exploration: what research tells us');
   var edu = [
     ['Why identity exploration is a healthy and necessary process',
-     'Developmental psychologist Erik Erikson\'s foundational research on identity formation identified the process of questioning and exploring one\'s sense of self as a core developmental task — not a crisis or pathology. People who engage in active identity exploration consistently show higher levels of wellbeing, clearer values, and greater psychological resilience. Reflection itself is protective.'],
-    ['The neuroscience of self-compassion',
-     'Research by Kristin Neff at the University of Texas demonstrates that self-compassion — treating oneself with the same care one would offer a struggling friend — produces measurably lower anxiety, reduced shame, and significantly higher wellbeing compared to self-criticism. The kindness statement you wrote in this reflection is a direct practice of this.'],
+     'Developmental psychologist Erik Erikson\'s foundational research on identity formation identified the process of questioning and exploring one\'s sense of self as a core developmental task, not a crisis or pathology. People who engage in active identity exploration consistently show higher levels of wellbeing, clearer values, and greater psychological resilience. Reflection itself is protective.'],
+    ['The science of self-compassion',
+     'Research by Kristin Neff at the University of Texas demonstrates that self-compassion, treating oneself with the same care one would offer a struggling friend, produces measurably lower anxiety, reduced shame, and significantly higher wellbeing compared to self-criticism. The kindness statement you wrote in this reflection is a direct practice of this.'],
     ['Why naming feelings reduces their intensity',
-     'Research by Matthew Lieberman at UCLA shows that labelling an emotional state activates the prefrontal cortex and reduces amygdala activation — measurably reducing the intensity of the emotion being experienced. The simple act of choosing a word for how you feel is not passive description; it is active regulation.'],
+     'Research by Matthew Lieberman at UCLA shows that labelling an emotional state activates the prefrontal cortex and reduces amygdala activation, measurably reducing the intensity of the emotion being experienced. The simple act of choosing a word for how you feel is not passive description. It is active regulation.'],
     ['The psychological safety of private reflection',
-     'Research on expressive writing by James Pennebaker at the University of Texas confirms that private, unshared reflection produces significant psychological benefits — including reduced rumination, improved mood, and greater clarity. Being able to express honestly what you think and feel, without social consequence, creates the conditions for genuine self-understanding.'],
-    ['Identity and belonging — a note for anyone on this journey',
+     'Research on expressive writing by James Pennebaker at the University of Texas confirms that private, unshared reflection produces significant psychological benefits, including reduced rumination, improved mood, and greater clarity. Being able to express honestly what you think and feel, without social consequence, creates the conditions for genuine self-understanding.'],
+    ['Identity and belonging: a note for anyone on this journey',
      'Research on minority stress by Ilan Meyer and others in social psychology shows that the psychological distress often experienced during identity exploration is not caused by the identity itself, but by the social environment. What you are exploring has inherent value. Support, community, and connection are the evidence-based responses to that difficulty.']
   ];
-
   edu.forEach(function(item){
-    ensureSpace(80);
-    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
-    doc.text(item[0], margin, y); y += 12;
-    doc.setFont('helvetica','normal'); doc.setFontSize(9.2); doc.setTextColor(26,30,42);
-    var ls = doc.splitTextToSize(item[1], width);
-    doc.text(ls, margin, y); y += ls.length * 11.5 + 12;
+    addText(item[0], 9.5, 'bold', [106,90,168], {after:1});
+    addText(item[1], 9.2, 'normal', [26,30,42], {after:8, lh:11.8});
   });
 
-  ensureSpace(70);
-  doc.setDrawColor(200,188,224); doc.line(margin, y, pageW - margin, y); y += 12;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
-  doc.text('More free wellbeing resources', margin, y); y += 12;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(26,30,42);
+  /* Resources */
+  addSection('More free wellbeing resources');
   ['emotionalintelligencedeveloper.com',
    'emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-   'findahelpline.com — find a helpline near you'
-  ].forEach(function(l){ doc.text(l, margin, y); y += 13; });
+   'findahelpline.com (find a helpline near you)'
+  ].forEach(function(l){ addText(l, 9, 'normal', [26,30,42], {after:2}); });
 
   drawFooter();
 
@@ -906,11 +1470,13 @@ async function generatePDF(){
   showToast('PDF downloaded!');
 }
 
-/* ── INIT ── */
+/* ================= INIT ================= */
+renderFeelGrid();
+greeting();
 updateProgress();
 
 })();
 </script>
 
 </div>
-<!-- End Finding Yourself Tool -->
+<!-- End Finding Yourself Tool v2 -->

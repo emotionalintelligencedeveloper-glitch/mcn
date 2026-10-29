@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Emotional Support Self-Check (Addiction Check-In) | Emotional Intelligence Developer</title>
+  <title>Emotional Support Self-Check (Addiction and Social Anxiety Check-In) | Emotional Intelligence Developer</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
@@ -16,18 +16,8 @@
       --brand: #3a6a8a;
       --brand-light: #e8f2f8;
       --brand-mid: #a0c0d8;
-      --accent: #5a8aaa;
-      --accent-light: #e4eff8;
       --teal: #3a7a78;
       --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
-      --gold: #7a6a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --rose: #8a3a5a;
-      --rose-light: #f8eaee;
-      --rose-mid: #d0a0b4;
-      --warm: #f8f6f2;
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -38,6 +28,7 @@
       --warn-text: #8a5a18;
       --risk-bg: #f8eaee;
       --risk-text: #8a2a3a;
+      --rose-mid: #d0a0b4;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,266 +49,164 @@
       background: var(--card);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
-
-    .logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-
-    .logo {
-      width: 56px; height: 56px;
-      border-radius: 12px; object-fit: cover;
-      border: 2px solid var(--brand-mid); flex-shrink: 0;
-    }
-
-    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
-
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal; color: var(--text);
-      line-height: 1.3; margin-bottom: 8px;
-    }
-
-    .tagline { font-size: 15px; color: var(--muted); margin-bottom: 12px; line-height: 1.65; }
-
-    .notice {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 11px 14px; font-size: 13px; color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .safety-header {
-      background: var(--risk-bg);
-      border: 1px solid var(--rose-mid);
-      border-radius: var(--radius-md);
-      padding: 11px 14px; font-size: 13px; color: var(--risk-text);
-    }
-
-    .safety-header a { color: var(--risk-text); font-weight: bold; }
-
-    /* CARD */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 22px 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.05rem; font-weight: normal; color: var(--brand);
+      padding: 22px 20px 18px;
       margin-bottom: 14px;
     }
-
-    .step-label {
-      font-size: 11px; font-weight: bold; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+    .logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .logo {
+      width: 52px; height: 52px; border-radius: 12px; object-fit: cover;
+      border: 2px solid var(--brand-mid); flex-shrink: 0;
     }
-
-    /* FOCUS GRID */
-    .focus-grid {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: 1fr;
+    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
+    h1 { font-size: clamp(1.3rem, 4vw, 1.65rem); font-weight: normal; line-height: 1.3; margin-bottom: 6px; }
+    .tagline { font-size: 15px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
+    .notice {
+      background: var(--brand-light); border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: var(--muted);
+      margin-bottom: 8px;
     }
-
-    @media (min-width: 480px) { .focus-grid { grid-template-columns: 1fr 1fr; } }
-
-    .focus-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px 15px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      background: #fff; cursor: pointer;
-      font-size: 15px; color: var(--muted);
-      transition: all 0.15s;
+    .safety-header {
+      background: var(--risk-bg); border: 1px solid var(--rose-mid);
+      border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: var(--risk-text);
     }
+    .safety-header a { color: var(--risk-text); font-weight: bold; }
 
-    .focus-item:hover { border-color: var(--brand); color: var(--text); }
-    .focus-item.active { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
+    /* PROGRESS */
+    .progress { margin-bottom: 14px; padding: 0 4px; }
+    .progress-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .bar { height: 7px; background: #dde6ee; border-radius: 99px; overflow: hidden; }
+    .fill { height: 100%; width: 16%; background: var(--brand); border-radius: 99px; transition: width 0.3s; }
+    .linkbtn { background: none; border: none; color: var(--brand); font-family: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; }
 
-    .focus-item input[type="radio"] {
-      accent-color: var(--brand); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer;
+    /* STEPS */
+    .step { display: none; background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 22px 20px; margin-bottom: 16px; }
+    .step.active { display: block; animation: rise 0.25s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .step.active { animation: none; } html { scroll-behavior: auto; } }
+
+    .step-label { font-size: 11px; font-weight: bold; color: var(--hint); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .step-title { font-size: 1.25rem; font-weight: normal; color: var(--brand); margin-bottom: 8px; line-height: 1.35; }
+    .step-intro { font-size: 15px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+
+    .scene-wrap { text-align: center; margin: 4px 0 10px; }
+    .scene { width: 100%; max-width: 190px; height: auto; color: var(--brand); }
+    .scene.small { max-width: 90px; }
+    .scene.wide { max-width: 230px; }
+
+    .field { margin-bottom: 14px; }
+    .field-label { font-size: 14px; color: var(--text); margin-bottom: 5px; display: block; }
+    .field-hint { font-size: 13px; color: var(--hint); font-style: italic; margin-bottom: 6px; display: block; }
+
+    input[type="text"], textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 11px 12px; font-family: "Georgia", serif; font-size: 15px;
+      color: var(--text); background: #fff; line-height: 1.5; transition: border-color 0.2s;
     }
+    textarea { min-height: 62px; resize: vertical; }
+    input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--brand); }
+
+    /* CHIP GRIDS */
+    .chip-grid { display: grid; gap: 8px; grid-template-columns: 1fr; }
+    @media (min-width: 480px) { .chip-grid.two { grid-template-columns: 1fr 1fr; } }
+
+    .chip {
+      display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+      border: 1.5px solid var(--border); border-radius: var(--radius-md);
+      background: #fff; cursor: pointer; font-size: 15px; color: var(--muted); transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--brand); color: var(--text); }
+    .chip.active { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
+    .chip input { accent-color: var(--brand); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+    .chip small { display: block; font-size: 12px; color: var(--hint); line-height: 1.35; }
+
+    .mood-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    @media (min-width: 480px) { .mood-grid { grid-template-columns: repeat(4, 1fr); } }
+    .mood-grid .chip { padding: 9px 10px; font-size: 14px; text-transform: capitalize; }
 
     /* SLIDERS */
-    .slider-group { margin-bottom: 14px; }
+    .slider-group { margin-bottom: 12px; }
+    .slider-label { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 4px; }
+    .slider-val { font-size: 14px; font-weight: bold; color: var(--brand); background: var(--brand-light); border-radius: 6px; padding: 1px 8px; min-width: 28px; text-align: center; }
+    input[type="range"] { width: 100%; accent-color: var(--brand); height: 4px; cursor: pointer; }
 
-    .slider-label {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 14px; color: var(--text); margin-bottom: 6px;
-    }
+    .sub-title { font-size: 1rem; color: var(--brand); margin: 16px 0 8px; }
 
-    .slider-val {
-      font-size: 14px; font-weight: bold; color: var(--brand);
-      background: var(--brand-light); border-radius: 6px;
-      padding: 2px 8px; min-width: 28px; text-align: center;
-    }
+    .crisis-box { margin-top: 14px; }
+    .crisis-box label { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .crisis-box input { margin-top: 5px; accent-color: var(--risk-text); }
+    .crisis-note { display: none; margin-top: 8px; background: var(--risk-bg); border: 1px solid var(--rose-mid); border-radius: var(--radius-md); padding: 11px 14px; font-size: 14px; color: var(--risk-text); }
+    .crisis-note.show { display: block; }
+    .crisis-note a { color: var(--risk-text); font-weight: bold; }
 
-    input[type="range"] {
-      width: 100%; accent-color: var(--brand);
-      height: 4px; cursor: pointer;
-    }
-
-    /* MOOD */
-    .mood-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    @media (min-width: 480px) { .mood-grid { grid-template-columns: repeat(4, 1fr); } }
-
-    .mood-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff; cursor: pointer;
-      font-size: 14px; color: var(--muted);
-      text-transform: capitalize;
-      transition: all 0.15s;
-    }
-
-    .mood-item:hover { border-color: var(--brand); }
-    .mood-item.active { border-color: var(--brand); background: var(--brand-light); color: var(--text); }
-    .mood-item input[type="radio"] { accent-color: var(--brand); width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; }
-
-    /* TEXTAREA */
-    .field { margin-bottom: 14px; }
-    .field-label { font-size: 14px; color: var(--text); margin-bottom: 7px; display: block; }
-    .field-hint { font-size: 13px; color: var(--hint); font-style: italic; margin-bottom: 8px; display: block; }
-
-    textarea {
-      width: 100%; border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 12px;
-      font-family: "Georgia", serif; font-size: 15px;
-      color: var(--text); background: #fff;
-      min-height: 80px; resize: vertical; line-height: 1.6;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { outline: none; border-color: var(--brand); }
+    /* CONNECTION QUESTIONS */
+    .q { margin-bottom: 14px; }
+    .q p { font-size: 15px; margin-bottom: 6px; }
+    .opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    @media (min-width: 520px) { .opts { grid-template-columns: repeat(4, 1fr); } }
+    .opts .chip { padding: 8px 10px; font-size: 13px; justify-content: center; text-align: center; }
+    .opts .chip input { display: none; }
 
     /* RESULTS */
-    .results-card {
-      display: none;
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 22px 20px; margin-bottom: 16px;
-    }
-
-    .results-card.visible { display: block; }
-
-    .risk-pill {
-      display: inline-block; font-size: 14px; font-weight: bold;
-      border-radius: 99px; padding: 7px 16px; margin-bottom: 14px;
-    }
-
+    .risk-pill { display: inline-block; font-size: 14px; font-weight: bold; border-radius: 99px; padding: 7px 16px; margin-bottom: 8px; }
     .pill-low { background: var(--success-bg); color: var(--success-text); }
     .pill-moderate { background: var(--warn-bg); color: var(--warn-text); }
     .pill-high { background: var(--risk-bg); color: var(--risk-text); }
-
-    .score-line {
-      font-size: 13px; color: var(--hint); margin-bottom: 6px; font-style: italic;
-    }
-
-    .result-safety {
-      display: none;
-      background: var(--risk-bg); border: 1px solid var(--rose-mid);
-      border-radius: var(--radius-md); padding: 13px 15px;
-      font-size: 14px; color: var(--risk-text); margin-bottom: 14px;
-      line-height: 1.6;
-    }
-
+    .score-line { font-size: 13px; color: var(--hint); margin-bottom: 8px; font-style: italic; }
+    .msg-box { background: var(--teal-light); border-radius: var(--radius-md); padding: 11px 14px; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .result-safety { display: none; background: var(--risk-bg); border: 1px solid var(--rose-mid); border-radius: var(--radius-md); padding: 12px 14px; font-size: 14px; color: var(--risk-text); margin-bottom: 12px; }
+    .result-safety.show { display: block; }
     .result-safety a { color: var(--risk-text); font-weight: bold; }
 
-    .suggestions-list { list-style: none; padding: 0; }
+    .section-label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.08em; margin: 12px 0 8px; }
+    .list { list-style: none; padding: 0; }
+    .list li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .list li:last-child { border-bottom: none; }
+    .sug-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+    .plain-list li { display: block; }
 
-    .suggestions-list li {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 9px 0; border-bottom: 1px solid var(--border);
-      font-size: 14px; color: var(--muted); line-height: 1.55;
-    }
+    .plan-box { background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md); padding: 12px 14px; margin: 10px 0 14px; }
+    .plan-box .list li { border-bottom-color: var(--brand-mid); }
 
-    .suggestions-list li:last-child { border-bottom: none; }
-
-    .sug-num {
-      min-width: 22px; height: 22px; border-radius: 50%;
-      background: var(--brand); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: bold; flex-shrink: 0; margin-top: 1px;
-    }
-
-    /* HISTORY */
-    .history-list { list-style: none; padding: 0; }
-
-    .history-list li {
-      padding: 7px 0; border-bottom: 1px solid var(--border);
-      font-size: 13px; color: var(--muted); line-height: 1.5;
-    }
-
+    details { margin-top: 14px; }
+    summary { cursor: pointer; font-size: 13px; color: var(--brand); }
+    .history-list { list-style: none; padding: 0; margin-top: 6px; }
+    .history-list li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); }
     .history-list li:last-child { border-bottom: none; }
 
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
-    }
-
     /* BUTTONS */
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .btn-row.between { justify-content: space-between; margin-top: 18px; }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 12px 20px; border-radius: 99px;
-      font-family: "Georgia", serif; font-size: 14px;
-      cursor: pointer; text-decoration: none;
-      border: 1.5px solid transparent; min-height: 46px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px 20px; border-radius: 99px; font-family: "Georgia", serif; font-size: 14px;
+      cursor: pointer; text-decoration: none; border: 1.5px solid transparent; min-height: 46px;
       transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
     }
-
     .btn:active { transform: scale(0.97); }
     .btn:hover { opacity: 0.88; }
-
     .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn-teal { background: var(--teal); color: #fff; border-color: var(--teal); }
     .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
     .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support); color: #fff; border-color: var(--support);
-      font-size: 15px; padding: 14px 24px;
-    }
-
+    .btn-support { background: var(--support); color: #fff; border-color: var(--support); font-size: 15px; padding: 14px 24px; }
     @media (max-width: 480px) { .btn { width: 100%; } .btn-row { flex-direction: column; } }
 
-    /* TOAST */
     .toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text); color: #fff;
-      padding: 10px 18px; border-radius: 99px;
-      font-size: 14px; font-family: "Georgia", serif;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s; z-index: 100; white-space: nowrap;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
+      background: var(--text); color: #fff; padding: 10px 18px; border-radius: 99px;
+      font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 100;
+      max-width: 92vw; text-align: center;
     }
-
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* FOOTER */
-    .footer {
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 22px 20px; text-align: center;
-    }
-
-    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 20px; text-align: center; }
+    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 8px; font-style: italic; }
+    .footer .btn-row { justify-content: center; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
     .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -330,110 +219,170 @@
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
     <h1>Emotional Support Self-Check</h1>
-    <p class="tagline">A compassionate check-in to understand what is pulling at you lately — your patterns, your needs, and one honest next step.</p>
+    <p class="tagline">A kind check-in for habits, urges and social anxiety. Understand what is pulling at you, what you need, and take one honest next step.</p>
     <div class="notice">
-      <strong>Private:</strong> Your answers stay on your device only. This tool is not medical advice, not a diagnosis, and not a replacement for professional care.
+      <strong>Private:</strong> Your answers stay on your device. This tool is not medical advice, not a diagnosis, and not a replacement for professional care.
     </div>
-    <div class="safety-header" style="margin-top:8px;">
-      <strong>If you feel unsafe or at risk of harming yourself or others, seek emergency help now.</strong>
+    <div class="safety-header">
+      <strong>If you feel unsafe or at risk of harming yourself or others, contact emergency services now.</strong>
       Find support at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>
     </div>
   </header>
 
-  <!-- STEP 1: FOCUS -->
-  <div class="card">
-    <div class="step-label">Step 1</div>
-    <p class="card-title">Choose your check-in focus</p>
-    <div class="focus-grid" id="focusGrid">
-      <label class="focus-item"><input type="radio" name="focus" value="Social / phone" aria-label="Social or phone" /> Social / phone</label>
-      <label class="focus-item"><input type="radio" name="focus" value="Drugs &amp; alcohol" aria-label="Drugs and alcohol" /> Drugs &amp; alcohol</label>
-      <label class="focus-item"><input type="radio" name="focus" value="Sex" aria-label="Sex" /> Sex</label>
-      <label class="focus-item"><input type="radio" name="focus" value="Porn" aria-label="Porn" /> Porn</label>
-      <label class="focus-item"><input type="radio" name="focus" value="Other / not sure" aria-label="Other or not sure" /> Other / not sure</label>
+  <!-- PROGRESS -->
+  <div class="progress">
+    <div class="progress-top">
+      <span id="stepLabel">Step 1 of 6</span>
+      <button type="button" class="linkbtn" id="startOverTop">Start over</button>
     </div>
+    <div class="bar"><div class="fill" id="barFill"></div></div>
   </div>
 
+  <!-- STEP 1: WELCOME -->
+  <section class="step active" data-step="0">
+    <div class="step-label">Step 1 of 6</div>
+    <h2 class="step-title">Let us begin</h2>
+    <div class="scene-wrap" id="welcomeScene"></div>
+    <p class="step-intro">This takes about five minutes. There are no right or wrong answers. At the end you can download a personal PDF with reflections, a plan and trusted websites to read more.</p>
+
+    <div class="field">
+      <label class="field-label" for="userName">Your name (optional)</label>
+      <span class="field-hint">It will appear on your PDF. Use a first name or a nickname.</span>
+      <input type="text" id="userName" maxlength="40" autocomplete="off" />
+    </div>
+
+    <p class="sub-title">What would you like to check in on?</p>
+    <div class="chip-grid two" id="focusGrid" role="radiogroup" aria-label="Check-in focus"></div>
+
+    <div class="btn-row between">
+      <span></span>
+      <button type="button" class="btn btn-primary" data-to="1">Next</button>
+    </div>
+  </section>
+
   <!-- STEP 2: SIGNALS -->
-  <div class="card">
-    <div class="step-label">Step 2</div>
-    <p class="card-title">Quick signals</p>
+  <section class="step" data-step="1">
+    <div class="step-label">Step 2 of 6</div>
+    <h2 class="step-title">How are things right now?</h2>
+    <p class="step-intro">Move each slider to where you are today.</p>
 
     <div class="slider-group">
-      <div class="slider-label"><span>Intensity today (0–10)</span><span class="slider-val" id="intensityVal">5</span></div>
+      <div class="slider-label"><span>Intensity today (0 to 10)</span><span class="slider-val" id="intensityVal">5</span></div>
       <input type="range" id="intensity" min="0" max="10" value="5" aria-label="Intensity today 0 to 10" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Urge / craving level (0–10)</span><span class="slider-val" id="urgeVal">5</span></div>
+      <div class="slider-label"><span>Urge or craving (0 to 10)</span><span class="slider-val" id="urgeVal">5</span></div>
       <input type="range" id="urge" min="0" max="10" value="5" aria-label="Urge or craving level 0 to 10" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Time lost / impact (0–10)</span><span class="slider-val" id="impactVal">5</span></div>
+      <div class="slider-label"><span>Time lost or impact (0 to 10)</span><span class="slider-val" id="impactVal">5</span></div>
       <input type="range" id="impact" min="0" max="10" value="5" aria-label="Time lost or impact 0 to 10" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Control — higher means more in control (0–10)</span><span class="slider-val" id="controlVal">5</span></div>
+      <div class="slider-label"><span>Control (higher means more in control)</span><span class="slider-val" id="controlVal">5</span></div>
       <input type="range" id="control" min="0" max="10" value="5" aria-label="Control level 0 to 10" />
     </div>
 
-    <p class="card-title" style="margin-top:18px;">Mood check</p>
-    <div class="mood-grid" id="moodGrid">
-      <label class="mood-item"><input type="radio" name="mood" value="anxious" /> anxious</label>
-      <label class="mood-item"><input type="radio" name="mood" value="stressed" /> stressed</label>
-      <label class="mood-item"><input type="radio" name="mood" value="numb" /> numb</label>
-      <label class="mood-item"><input type="radio" name="mood" value="sad" /> sad</label>
-      <label class="mood-item"><input type="radio" name="mood" value="lonely" /> lonely</label>
-      <label class="mood-item"><input type="radio" name="mood" value="angry" /> angry</label>
-      <label class="mood-item"><input type="radio" name="mood" value="okay" /> okay</label>
-    </div>
-  </div>
+    <p class="sub-title">What is your mood?</p>
+    <div class="scene-wrap"><div id="moodScene"></div></div>
+    <div class="mood-grid" id="moodGrid" role="radiogroup" aria-label="Mood"></div>
 
-  <!-- STEP 3: REFLECTION -->
-  <div class="card">
-    <div class="step-label">Step 3</div>
-    <p class="card-title">Gentle reflection prompts — optional but encouraged</p>
+    <div class="crisis-box">
+      <label><input type="checkbox" id="crisis" /> <span>Right now I am having thoughts of harming myself or someone else.</span></label>
+      <div class="crisis-note" id="crisisNote" role="alert">
+        <strong>Thank you for being honest. Your safety comes first.</strong> Please contact your local emergency services now, or reach someone you trust and stay with them. You can find a helpline in your country at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
+      </div>
+    </div>
+
+    <div class="btn-row between">
+      <button type="button" class="btn btn-outline" data-to="0">Back</button>
+      <button type="button" class="btn btn-primary" data-to="2">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: CONNECTION -->
+  <section class="step" data-step="2">
+    <div class="step-label">Step 3 of 6</div>
+    <h2 class="step-title">People and connection</h2>
+    <p class="step-intro">Social worry and habits often feed each other. Choose the answer that fits you best.</p>
+    <div id="connQs"></div>
+    <div class="btn-row between">
+      <button type="button" class="btn btn-outline" data-to="1">Back</button>
+      <button type="button" class="btn btn-primary" data-to="3">Next</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: REFLECT -->
+  <section class="step" data-step="3">
+    <div class="step-label">Step 4 of 6</div>
+    <h2 class="step-title">A few gentle questions</h2>
+    <p class="step-intro">Short answers are fine. You can skip any of them.</p>
 
     <div class="field">
       <label class="field-label" for="trigger">What usually triggers it?</label>
-      <span class="field-hint">Bedtime scrolling, arguments, loneliness, stress after work…</span>
-      <textarea id="trigger" maxlength="500" aria-label="What usually triggers it"></textarea>
+      <span class="field-hint">Bedtime scrolling, arguments, loneliness, stress after work, being around people</span>
+      <textarea id="trigger" maxlength="500" rows="2"></textarea>
     </div>
     <div class="field">
       <label class="field-label" for="need">What need is it trying to meet?</label>
-      <span class="field-hint">Escape, comfort, excitement, connection, relief…</span>
-      <textarea id="need" maxlength="500" aria-label="What need is it trying to meet"></textarea>
+      <span class="field-hint">Escape, comfort, excitement, connection, relief, feeling safe</span>
+      <textarea id="need" maxlength="500" rows="2"></textarea>
     </div>
     <div class="field">
       <label class="field-label" for="alternative">What is one small thing you can do in the next 10 minutes instead?</label>
-      <span class="field-hint">Drink water, step outside, text a safe person, shower…</span>
-      <textarea id="alternative" maxlength="500" aria-label="One small thing to do instead"></textarea>
+      <span class="field-hint">Drink water, step outside, breathe slowly, shower</span>
+      <textarea id="alternative" maxlength="500" rows="2"></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label" for="safePerson">Who is one safe person you could reach out to?</label>
+      <span class="field-hint">A friend, family member, counsellor, group leader</span>
+      <input type="text" id="safePerson" maxlength="120" autocomplete="off" />
     </div>
 
-    <div class="section-label">Actions</div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="showBtn">Show my results</button>
-      <button type="button" class="btn btn-outline" id="saveBtn">Save on this device</button>
-      <button type="button" class="btn btn-outline" id="fileBtn">Save as .txt file</button>
-      <button type="button" class="btn btn-danger" id="resetBtn">Reset</button>
+    <div class="btn-row between">
+      <button type="button" class="btn btn-outline" data-to="2">Back</button>
+      <button type="button" class="btn btn-primary" data-to="4">See my results</button>
     </div>
-  </div>
+  </section>
 
-  <!-- RESULTS -->
-  <section class="results-card" id="resultsCard" aria-live="polite">
-    <div class="step-label">Step 4 — Your results</div>
-
+  <!-- STEP 5: RESULTS -->
+  <section class="step" data-step="4" aria-live="polite">
+    <div class="step-label">Step 5 of 6</div>
+    <h2 class="step-title" id="greet">Your results</h2>
+    <div class="scene-wrap" id="levelScene"></div>
     <div class="risk-pill" id="riskPill"></div>
     <div class="score-line" id="scoreLine"></div>
 
     <div class="result-safety" id="resultSafety">
-      <strong>High strain today — please be gentle with yourself.</strong> If you feel unsafe or at risk of harming yourself or others, seek urgent support now via <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> or contact local emergency services.
+      <strong>Please be gentle with yourself today.</strong> If you feel unsafe or at risk of harming yourself or others, contact local emergency services now or find a helpline at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
 
-    <div class="section-label" style="margin-top:4px;">Suggested next steps</div>
-    <ul class="suggestions-list" id="suggestionsList"></ul>
+    <div class="msg-box" id="connMsg"></div>
 
-    <div class="btn-row" style="margin-top:16px;margin-bottom:18px;">
-      <button type="button" class="btn btn-teal" id="pdfBtn">Download PDF</button>
+    <div class="section-label">Suggested next steps</div>
+    <ul class="list" id="suggestionsList"></ul>
+    <p class="step-intro" style="margin-top:10px;font-size:13px;">Your PDF has every step, reflection questions for your focus area and trusted websites to read more.</p>
+
+    <div class="btn-row between">
+      <button type="button" class="btn btn-outline" data-to="3">Back</button>
+      <button type="button" class="btn btn-primary" data-to="5">Get my PDF and next steps</button>
     </div>
+  </section>
+
+  <!-- STEP 6: KEEP GOING -->
+  <section class="step" data-step="5">
+    <div class="step-label">Step 6 of 6</div>
+    <h2 class="step-title">Well done. Now keep going.</h2>
+    <p class="step-intro">Your PDF includes reflections, a craving plan, a 7 day follow up sheet and websites you can trust. Share it with a counsellor or a safe person if you want to.</p>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-teal" id="pdfBtn">Download my PDF</button>
+      <button type="button" class="btn btn-outline" id="saveBtn">Save on this device</button>
+      <button type="button" class="btn btn-outline" id="fileBtn">Save as .txt file</button>
+    </div>
+
+    <div class="section-label">Your plan for the next 24 hours</div>
+    <div class="plan-box"><ul class="list plain-list" id="planList"></ul></div>
 
     <div class="section-label">Share this tool</div>
     <div class="btn-row">
@@ -442,34 +391,41 @@
       <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
       <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
     </div>
-  </section>
 
-  <!-- HISTORY -->
-  <div class="card">
-    <div class="step-label">Last 7 check-ins on this device</div>
-    <ul class="history-list" id="historyList"></ul>
-    <p style="font-size:12px;color:var(--hint);margin-top:10px;">No accounts, no logins, no data sent anywhere.</p>
-  </div>
+    <details>
+      <summary>Last 7 check-ins on this device</summary>
+      <ul class="history-list" id="historyList"></ul>
+      <p style="font-size:12px;color:var(--hint);margin-top:8px;">No accounts, no logins, nothing sent anywhere.</p>
+    </details>
+
+    <div class="btn-row between">
+      <button type="button" class="btn btn-outline" data-to="4">Back</button>
+      <button type="button" class="btn btn-primary" id="restartBtn">Start a new check-in</button>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
+    <div class="scene-wrap" id="supportScene"></div>
     <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+    <div class="btn-row">
+      <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-share" id="copyLinkFooter">Copy link</button>
+      <a class="btn btn-share" id="waShareFooter" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-share" id="fbShareFooter" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn btn-share" id="xShareFooter" target="_blank" rel="noopener">X</a>
+    </div>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
       <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-    <div class="btn-row" style="justify-content:center;margin-top:16px;">
-      <button type="button" class="btn btn-share" id="copyLinkFooter">Copy link</button>
-      <a class="btn btn-share" id="waShareFooter" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShareFooter" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShareFooter" target="_blank" rel="noopener">X</a>
-    </div>
     <p class="footer-credit">
       Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not a substitute for professional care.
+      &nbsp;&middot;&nbsp; Reflection support only. Not a substitute for professional care.
     </p>
   </footer>
 
@@ -481,34 +437,345 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'eidAddictionCheckinsV4';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const $ = id => document.getElementById(id);
+  var TOOL_URL = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/emotional-support-self-check-addiction-check-in.html';
+  var SUPPORT_URL = 'https://emotionalintelligencedeveloper.com/support-this-website/';
+  var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+  var STORAGE_KEY = 'eidAddictionCheckinsV5';
+  var $ = function (id) { return document.getElementById(id); };
 
-  const SLIDERS = ['intensity', 'urge', 'impact', 'control'];
-  let latest = null;
-  let toastTimer;
+  var SLIDERS = ['intensity', 'urge', 'impact', 'control'];
+  var MOODS = ['anxious', 'stressed', 'numb', 'sad', 'lonely', 'angry', 'okay'];
+  var STEP_COUNT = 6;
+
+  /* ---------------- CONTENT ---------------- */
+
+  var FOCUS_ORDER = ['Social anxiety', 'Social media / phone', 'Drugs & alcohol', 'Sex', 'Porn', 'Gaming / gambling', 'Other / not sure'];
+
+  var FOCUS = {
+    'Social anxiety': {
+      blurb: 'Fear of being judged, avoiding people, or using habits to get through social moments',
+      intro: 'Social anxiety is a strong fear of being judged, embarrassed or rejected around other people. It is very common, and it can be treated. Many people reach for scrolling, drinking, gaming or other habits to feel safer around people, or to recover afterwards. That helps for a moment, but it can keep the fear going.',
+      research: 'Research shows that avoiding people gives short relief but makes the fear stronger over time. Cognitive behavioural therapy (CBT) and small, planned steps towards feared situations are among the best supported treatments for social anxiety.',
+      tips: [
+        'Choose one small social step this week, like saying hello first or a two minute call. Small and often beats big and rare.',
+        'When you think "they are judging me", ask yourself what the real evidence is. Most people are busy thinking about themselves.',
+        'Before you go out, set one goal that is about you, not about their reaction. For example: "I will ask one question."'
+      ],
+      reflections: [
+        'Which situations with people make me most nervous, and what exactly am I afraid will happen?',
+        'What do I do before, during or after those moments to feel safer? Does it really help, or does it keep the fear alive?',
+        'What would I say to a friend who felt the way I do?',
+        'Who is one person I feel even a little safe around? What could I share with them this week?',
+        'What is one small step I can take this week, and what will I do if it feels uncomfortable?'
+      ],
+      refs: [
+        { n: 'Anxiety & Depression Association of America', u: 'https://adaa.org', d: 'Clear guides on social anxiety and treatment options.' },
+        { n: 'National Institute of Mental Health (NIMH)', u: 'https://www.nimh.nih.gov', d: 'Research based information on social anxiety disorder.' },
+        { n: 'NHS mental health', u: 'https://www.nhs.uk/mental-health/', d: 'Self help advice and information on anxiety.' },
+        { n: 'Mind', u: 'https://www.mind.org.uk', d: 'Plain language guides on anxiety and where to find support.' },
+        { n: 'South African Depression and Anxiety Group (SADAG)', u: 'https://www.sadag.org', d: 'Support and helplines for people in Southern Africa.' }
+      ],
+      books: ['Overcoming Social Anxiety and Shyness by Gillian Butler', 'The Anxiety and Phobia Workbook by Edmund Bourne']
+    },
+    'Social media / phone': {
+      blurb: 'Scrolling, notifications, comparing, losing hours or sleep',
+      intro: 'Phones and social media are built to hold your attention. Scrolling can become a way to escape stress, loneliness or boredom, and it can quietly take hours, sleep and real conversations.',
+      research: 'Many apps use rewards that arrive unpredictably, which is the same pattern that makes habits hard to put down. Studies link heavy use, especially when it replaces sleep or time with people, to lower mood for some people. Small changes to your environment often work better than willpower alone.',
+      tips: [
+        'Turn off notifications you do not need and move distracting apps off your first screen.',
+        'Charge your phone outside the bedroom tonight and use a normal alarm clock if you can.',
+        'Pick one time each day that is phone free, like the first 30 minutes after waking or meals with others.'
+      ],
+      reflections: [
+        'When do I reach for my phone most? What feeling is usually there just before?',
+        'What do I hope the scrolling will give me: comfort, escape, company, a break?',
+        'What does my phone use cost me: sleep, focus, time with people, my mood?',
+        'What would I do with one extra hour a day? What would feel good to bring back?',
+        'Who could I message or call instead of scrolling when I feel low or alone?'
+      ],
+      refs: [
+        { n: 'American Psychological Association (APA)', u: 'https://www.apa.org', d: 'Psychology research and practical guidance on technology and wellbeing.' },
+        { n: 'Center for Humane Technology', u: 'https://www.humanetech.com', d: 'Explains how apps are designed to hold attention and how to take back control.' },
+        { n: 'NHS mental health', u: 'https://www.nhs.uk/mental-health/', d: 'Advice on sleep, stress and healthy routines.' },
+        { n: 'World Health Organization', u: 'https://www.who.int', d: 'Global health information on mental health and wellbeing.' },
+        { n: 'Mind', u: 'https://www.mind.org.uk', d: 'Guides on mental health and where to find support.' }
+      ],
+      books: ['Stolen Focus by Johann Hari', 'Digital Minimalism by Cal Newport']
+    },
+    'Drugs & alcohol': {
+      blurb: 'Using to relax, cope, feel less shy, or feel something',
+      intro: 'Many people use alcohol or drugs to relax, to cope with stress or pain, to feel less shy around people, or to feel something when they are numb. Using for these reasons is common. It becomes a problem when you feel you cannot stop, or when it starts to cost your health, money, work or relationships.',
+      research: 'Cravings come from the brain\'s reward and stress systems. They usually rise, peak and fade within minutes to an hour if you do not act on them. Important: stopping heavy alcohol use, or some drugs, suddenly can be medically dangerous. Speak to a doctor or clinic before you cut down quickly.',
+      tips: [
+        'If you have been using heavily, speak to a doctor or clinic before stopping suddenly.',
+        'Plan your exit before you go anywhere you might use. Know how you will leave and who you will call.',
+        'Remove or avoid what is easy to reach today, and tell one safe person your plan.'
+      ],
+      reflections: [
+        'What do I hope alcohol or drugs will do for me: calm me, help me with people, numb the pain, give me energy?',
+        'Which moments, places or people make me want to use most?',
+        'What has using cost me so far, and what would I like to protect?',
+        'What has helped me get through a craving, even once?',
+        'Who could I tell the truth to this week, and what professional help is near me?'
+      ],
+      refs: [
+        { n: 'NIAAA (alcohol)', u: 'https://www.niaaa.nih.gov', d: 'Information on alcohol, risk and getting help.' },
+        { n: 'NIDA (drugs)', u: 'https://nida.nih.gov', d: 'Research based information on drugs and addiction.' },
+        { n: 'SAMHSA', u: 'https://www.samhsa.gov', d: 'Treatment information and a national helpline for people in the United States.' },
+        { n: 'Alcoholics Anonymous', u: 'https://www.aa.org', d: 'Free peer support for people who want to stop drinking.' },
+        { n: 'Narcotics Anonymous', u: 'https://www.na.org', d: 'Free peer support groups for people recovering from drug use.' },
+        { n: 'SADAG', u: 'https://www.sadag.org', d: 'Support and helplines for people in Southern Africa.' }
+      ],
+      books: ['In the Realm of Hungry Ghosts by Gabor Mate', 'Chasing the Scream by Johann Hari']
+    },
+    'Sex': {
+      blurb: 'Patterns that feel out of control or leave you with regret',
+      intro: 'Sex is a normal part of life. This check-in is only for patterns that feel out of control, leave you in regret or risk, or are used to escape painful feelings. Sexual behaviour can become a way to chase comfort, closeness, excitement or relief, and then leave you feeling worse.',
+      research: 'Research on compulsive sexual behaviour shows it is often connected to stress, loneliness, shame and difficulty with strong feelings. Talking therapies, especially CBT and approaches that build emotional skills, are commonly used and many people improve with support. Shame keeps the pattern hidden, and honest support helps break it.',
+      tips: [
+        'Set a clear boundary for the times, places or apps that lead to choices you regret.',
+        'Protect your health: use protection and get tested regularly if you are sexually active.',
+        'When the urge comes, name the feeling under it first: lonely, stressed, bored, rejected. Then choose one safe way to meet that need.'
+      ],
+      reflections: [
+        'What feeling am I usually trying to escape or meet just before the urge?',
+        'Which choices have I regretted, and what did I need in that moment?',
+        'What do I want my intimate life and relationships to look like?',
+        'Where do I feel shame, and what would it be like to talk about it with someone safe or a trained counsellor?',
+        'What are three ways I can feel close to people without sex?'
+      ],
+      refs: [
+        { n: 'Sex Addicts Anonymous', u: 'https://saa-recovery.org', d: 'Peer support fellowship for people struggling with compulsive sexual behaviour.' },
+        { n: 'AASECT', u: 'https://www.aasect.org', d: 'Find a qualified sex therapist or counsellor.' },
+        { n: 'NHS', u: 'https://www.nhs.uk', d: 'Trusted health information, including sexual health and mental health.' },
+        { n: 'Mind', u: 'https://www.mind.org.uk', d: 'Guides on mental health and where to find support.' }
+      ],
+      books: ['In the Realm of Hungry Ghosts by Gabor Mate', 'Daring Greatly by Brene Brown']
+    },
+    'Porn': {
+      blurb: 'Use that feels out of control or is used to escape feelings',
+      intro: 'Watching porn is not the question here. The question is whether it feels out of your control, harms your relationships, work or self respect, or is used mainly to escape stress, loneliness or boredom.',
+      research: 'Researchers do not all agree on how to define problematic porn use, but many people report that it feels compulsive and that shame follows. Approaches that help include blocking easy access, building new routines for vulnerable times, learning to ride out urges, and talking to a counsellor. Isolation and secrecy often make the pattern stronger.',
+      tips: [
+        'Add filters or blockers, keep devices out of private spaces at night, and avoid using alone in bed.',
+        'Write a redirect list for urges: move your body, cold water, a short walk, a task that uses your hands.',
+        'Notice your high risk times, like late night, after stress or after rejection, and plan something different for those exact times.'
+      ],
+      reflections: [
+        'When do I use most: what time, where, and what feeling comes before?',
+        'What do I get from it in the moment, and what does it cost me afterwards?',
+        'How does it affect my view of myself, my partner or my relationships?',
+        'What would I like to feel instead, and where else could I find that?',
+        'Who can I be honest with, or what counsellor could I reach out to?'
+      ],
+      refs: [
+        { n: 'Sex Addicts Anonymous', u: 'https://saa-recovery.org', d: 'Peer support fellowship for people struggling with compulsive sexual behaviour.' },
+        { n: 'AASECT', u: 'https://www.aasect.org', d: 'Find a qualified sex therapist or counsellor.' },
+        { n: 'Counselling Directory', u: 'https://www.counselling-directory.org.uk', d: 'Find a qualified counsellor (UK based, with online options).' },
+        { n: 'NHS', u: 'https://www.nhs.uk', d: 'Trusted health information, including mental health.' },
+        { n: 'Mind', u: 'https://www.mind.org.uk', d: 'Guides on mental health and where to find support.' }
+      ],
+      books: ['In the Realm of Hungry Ghosts by Gabor Mate', 'Daring Greatly by Brene Brown']
+    },
+    'Gaming / gambling': {
+      blurb: 'Losing time or money, chasing the next win or level',
+      intro: 'Gaming and gambling are designed with rewards, near wins and constant prompts to keep you going. For some people they become a way to escape stress or loneliness, and time and money can disappear fast.',
+      research: 'The World Health Organization recognises gaming disorder and gambling disorder as conditions. Gambling in particular can cause serious money and relationship harm, and chasing losses is a warning sign. Setting limits before you start, blocking access and getting support early all help.',
+      tips: [
+        'Set a time or money limit before you begin, and use blocking or self exclusion tools if you gamble.',
+        'Take away easy access today: remove saved cards, log out and delete apps for now.',
+        'Plan a replacement for your usual play time with something active or social.'
+      ],
+      reflections: [
+        'What do I get from playing or gambling: excitement, escape, a sense of control, company?',
+        'How much time or money have I lost, and how do I feel when I think about it honestly?',
+        'When do I chase a win or one more level, and what am I trying to avoid feeling?',
+        'What would I do with the time and money if I stepped back?',
+        'Who can I talk to about this, and who can help with money worries?'
+      ],
+      refs: [
+        { n: 'GamCare', u: 'https://www.gamcare.org.uk', d: 'Free support, advice and live chat about gambling harm.' },
+        { n: 'Gamblers Anonymous', u: 'https://www.gamblersanonymous.org', d: 'Peer support for people who want to stop gambling.' },
+        { n: 'National Council on Problem Gambling', u: 'https://www.ncpgambling.org', d: 'Information and helpline details for problem gambling.' },
+        { n: 'Gambling Therapy', u: 'https://www.gamblingtherapy.org', d: 'Free online support available worldwide.' },
+        { n: 'World Health Organization', u: 'https://www.who.int', d: 'Global health information on gaming and gambling disorders.' }
+      ],
+      books: ['Chasing the Scream by Johann Hari', 'Atomic Habits by James Clear']
+    },
+    'Other / not sure': {
+      blurb: 'Something keeps pulling at you and you want to understand it',
+      intro: 'You do not need a label to deserve support. If something keeps pulling at you, takes time or energy you want to use elsewhere, or you do it to avoid hard feelings, this check-in can help you understand it.',
+      research: 'Most habits that feel hard to control are trying to meet a need, such as relief, comfort, connection or a break from pain. When you find the need underneath, it becomes easier to meet it in ways that do not cost so much.',
+      tips: [
+        'Track the pattern for 24 hours without judging yourself. What happened just before it?',
+        'Choose one small boundary for today and check how it went tonight.',
+        'Tell one safe person what you are noticing. Being honest takes some power away from the habit.'
+      ],
+      reflections: [
+        'What is the habit or pattern I am worried about, in my own words?',
+        'What happens in my body and mind just before it?',
+        'What need is it meeting, and what else could meet that need?',
+        'What is it costing me, and what do I want my life to look like instead?',
+        'Who can I trust with this, and what is my next small step?'
+      ],
+      refs: [
+        { n: 'Find a Helpline', u: 'https://findahelpline.com', d: 'Free, confidential support lines in your country.' },
+        { n: 'Mind', u: 'https://www.mind.org.uk', d: 'Plain language guides on mental health and where to find support.' },
+        { n: 'NHS mental health', u: 'https://www.nhs.uk/mental-health/', d: 'Self help advice and trusted health information.' },
+        { n: 'World Health Organization', u: 'https://www.who.int', d: 'Global health information on mental health and wellbeing.' },
+        { n: 'Psychology Today', u: 'https://www.psychologytoday.com', d: 'Search for therapists and read articles on mental health.' },
+        { n: 'SADAG', u: 'https://www.sadag.org', d: 'Support and helplines for people in Southern Africa.' }
+      ],
+      books: ['In the Realm of Hungry Ghosts by Gabor Mate', 'Atomic Habits by James Clear']
+    }
+  };
+
+  var GENERAL_REFS = [
+    { n: 'Find a Helpline', u: 'https://findahelpline.com', d: 'Free, confidential support lines in your country.' }
+  ];
+
+  var CONN_Q = [
+    { id: 'q1', t: 'I avoid people or places because I worry about being judged.' },
+    { id: 'q2', t: 'I use my habit to cope before, during or after being around people.' },
+    { id: 'q3', t: 'I feel alone, even when other people are around.' },
+    { id: 'q4', t: 'I hide this part of my life from people close to me.' }
+  ];
+  var CONN_OPTS = [['0', 'Rarely'], ['1', 'Sometimes'], ['2', 'Often'], ['3', 'Almost always']];
+
+  var MOOD_TIPS = {
+    anxious: 'For anxiety: breathe in for 4 seconds and out for 6, for 2 minutes.',
+    stressed: 'For stress: unclench your jaw, drop your shoulders and slow your pace for one minute.',
+    numb: 'For numbness: ground yourself. Hold something cool, name 5 things you see and 4 things you feel.',
+    sad: 'For sadness: one gentle act of care for yourself is enough right now.',
+    lonely: 'For loneliness: send one short message to a safe person today.',
+    angry: 'For anger: step away and delay big decisions until your body calms down.',
+    okay: 'You feel okay. Protect that with one clear boundary today.'
+  };
+
+  var CONN_INFO = {
+    Light: {
+      msg: 'Your connection with people feels mostly steady right now. Keep it that way with small, regular contact.',
+      tip: 'Keep one regular, low pressure contact each week, like a short chat or a walk with someone safe.'
+    },
+    Some: {
+      msg: 'Some social worry or hiding is showing up. This is common. Small steps with people you trust can help a lot.',
+      tip: 'Choose one small social step this week and plan it, like a short call or saying hello first.'
+    },
+    Strong: {
+      msg: 'Fear of people, or hiding this part of your life, is weighing on you. You deserve support. Talking to a counsellor or one trusted person can make a real difference.',
+      tip: 'Tell one safe person what you are going through, or book a visit with a counsellor. You do not have to carry this alone.'
+    }
+  };
+
+  var EDU = [
+    ['Why compulsive behaviours develop: the needs underneath',
+     'Research in addiction science, including the work of Gabor Mate, a physician who has written widely about trauma, emotional pain and addiction, suggests that compulsive behaviours are often less about the substance or activity and more about the relief they give from emotional pain or unmet needs. Asking "what need is this meeting?" is one of the most useful questions you can ask, because it opens the door to meeting that need in less costly ways.'],
+    ['Urges and cravings are brain events, not character flaws',
+     'Cravings are neurological events. Repeated rewarding behaviour builds pathways that light up when you meet cues linked to the behaviour, often before you notice. That is why urges can feel sudden and strong. Urge surfing, developed from the work of psychologist Alan Marlatt, means watching an urge rise, peak and pass without acting on it. Practised often, it can reduce the power urges have over you.'],
+    ['Emotional regulation is a skill you can build',
+     'Difficulty handling strong or uncomfortable feelings is one of the factors most often linked to compulsive behaviour. Dialectical Behaviour Therapy (DBT), developed by Marsha Linehan, teaches distress tolerance and emotional regulation skills, and studies suggest these skills can reduce impulsive behaviour. Recovery is less about willpower and more about having more ways to cope in hard moments.'],
+    ['Connection protects you',
+     'Writers and researchers on recovery, including Johann Hari and the studies by Bruce Alexander on environment and addiction, point to connection, meaningful activity and belonging as strong protective factors. Isolation is both a trigger and a result of many habits. Even one trusted person you can be truthful with can make a real difference.'],
+    ['Professional support is a strength, not a failure',
+     'Self reflection tools like this one help you build awareness. For moderate or strong patterns, support from a counsellor, doctor, peer group or structured programme helps many people more than going it alone. If your pattern keeps harming your relationships, health, work or money, reaching out is a wise next step.']
+  ];
+
+  /* ---------------- STICKMEN ---------------- */
+
+  var POSES = {
+    stand: { arms: [[[40, 42], [24, 62]], [[40, 42], [56, 62]]], legs: [[[40, 70], [28, 100]], [[40, 70], [52, 100]]] },
+    cheer: { arms: [[[40, 42], [22, 24]], [[40, 42], [58, 24]]], legs: [[[40, 70], [28, 100]], [[40, 70], [52, 100]]] },
+    wave:  { arms: [[[40, 42], [24, 62]], [[40, 42], [56, 40], [60, 24]]], legs: [[[40, 70], [28, 100]], [[40, 70], [52, 100]]] },
+    walk:  { arms: [[[40, 42], [28, 60]], [[40, 42], [54, 58]]], legs: [[[40, 70], [26, 98]], [[40, 70], [56, 96]]] },
+    sit:   { head: [2, 4], body: [[40, 32], [40, 64]], arms: [[[40, 44], [52, 58]], [[40, 44], [30, 58]]], legs: [[[40, 64], [58, 64], [58, 94]]] },
+    reachL: { arms: [[[40, 42], [14, 48]], [[40, 42], [56, 62]]], legs: [[[40, 70], [28, 100]], [[40, 70], [52, 100]]] },
+    reachR: { arms: [[[40, 42], [66, 50]], [[40, 42], [24, 62]]], legs: [[[40, 70], [28, 100]], [[40, 70], [52, 100]]] }
+  };
+
+  var FACES = {
+    happy:   { mouth: [[-6, 4], [-3, 7], [3, 7], [6, 4]] },
+    sad:     { mouth: [[-6, 7], [-3, 4], [3, 4], [6, 7]] },
+    neutral: { mouth: [[-5, 5], [5, 5]] },
+    worried: { mouth: [[-5, 6], [-2, 4], [2, 7], [5, 5]] },
+    angry:   { mouth: [[-5, 6], [5, 6]], brows: [[[-8, -8], [-2, -5]], [[8, -8], [2, -5]]] }
+  };
+
+  var FACE_FOR = { anxious: 'worried', stressed: 'worried', numb: 'neutral', sad: 'sad', lonely: 'sad', angry: 'angry', okay: 'happy' };
+
+  var SCENES = {
+    welcome:  { w: 140, label: 'Two stick figures greeting each other', figs: [{ ox: 0, pose: 'wave', mood: 'okay' }, { ox: 60, pose: 'stand', mood: 'okay' }] },
+    low:      { w: 140, label: 'Two stick figures cheering', figs: [{ ox: 0, pose: 'cheer', mood: 'okay' }, { ox: 60, pose: 'cheer', mood: 'okay' }] },
+    moderate: { w: 140, label: 'Two stick figures walking together', figs: [{ ox: 0, pose: 'walk', mood: 'numb' }, { ox: 60, pose: 'walk', mood: 'okay' }] },
+    high:     { w: 130, label: 'A stick figure sitting while a friend comforts them', figs: [{ ox: 0, pose: 'sit', mood: 'sad' }, { ox: 40, pose: 'reachL', mood: 'okay' }] },
+    support:  { w: 132, label: 'Two stick figures holding a heart together', figs: [{ ox: 0, pose: 'reachR', mood: 'okay' }, { ox: 52, pose: 'reachL', mood: 'okay' }], heart: [66, 36] }
+  };
+
+  function pts(p) { return p.map(function (q) { return q[0] + ',' + q[1]; }).join(' '); }
+
+  function figureSVG(f) {
+    var P = POSES[f.pose] || POSES.stand;
+    var face = FACES[FACE_FOR[f.mood] || 'neutral'] || FACES.neutral;
+    var hx = P.head ? P.head[0] : 0, hy = P.head ? P.head[1] : 0;
+    var cx = 40 + hx, cy = 20 + hy;
+    var s = '<g transform="translate(' + f.ox + ',0)" stroke-linecap="round" stroke-linejoin="round">';
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="12" fill="#fff" stroke="currentColor" stroke-width="3"/>';
+    var limbs = [P.body || [[40, 32], [40, 70]]].concat(P.arms, P.legs);
+    limbs.forEach(function (l) {
+      s += '<polyline points="' + pts(l) + '" fill="none" stroke="currentColor" stroke-width="3"/>';
+    });
+    s += '<circle cx="' + (cx - 4) + '" cy="' + (cy - 2) + '" r="1.6" fill="currentColor"/>';
+    s += '<circle cx="' + (cx + 4) + '" cy="' + (cy - 2) + '" r="1.6" fill="currentColor"/>';
+    var m = face.mouth.map(function (q) { return [cx + q[0], cy + q[1]]; });
+    s += '<polyline points="' + pts(m) + '" fill="none" stroke="currentColor" stroke-width="1.8"/>';
+    if (face.brows) {
+      face.brows.forEach(function (b) {
+        var bb = b.map(function (q) { return [cx + q[0], cy + q[1]]; });
+        s += '<polyline points="' + pts(bb) + '" fill="none" stroke="currentColor" stroke-width="1.8"/>';
+      });
+    }
+    return s + '</g>';
+  }
+
+  function renderScene(sc, cls) {
+    var s = '<svg class="scene ' + (cls || '') + '" viewBox="0 0 ' + sc.w + ' 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + sc.label + '">';
+    sc.figs.forEach(function (f) { s += figureSVG(f); });
+    if (sc.heart) {
+      s += '<path transform="translate(' + sc.heart[0] + ',' + sc.heart[1] + ')" d="M0 8 C-14 -2 -10 -14 0 -6 C10 -14 14 -2 0 8Z" fill="#e8702a"/>';
+    }
+    return s + '</svg>';
+  }
+
+  function moodScene(mood) {
+    return { w: 80, label: 'A stick figure showing how you feel', figs: [{ ox: 0, pose: 'stand', mood: mood || 'numb' }] };
+  }
+
+  /* ---------------- HELPERS ---------------- */
+
+  var latest = null;
+  var cur = 0;
+  var toastTimer;
+  var steps = [];
 
   function showToast(msg) {
-    const el = $('toast');
+    var el = $('toast');
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
   }
 
   function storageOk() {
-    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return true; } catch(_) { return false; }
+    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return true; } catch (_) { return false; }
   }
 
   function valueOf(name) {
-    const el = document.querySelector('input[name="' + name + '"]:checked');
+    var el = document.querySelector('input[name="' + name + '"]:checked');
     return el ? el.value : '';
   }
 
   function trim(text, max) {
-    const s = (text || '').trim();
-    return s.length <= max ? s : s.slice(0, max - 1).trimEnd() + '…';
+    var s = (text || '').trim();
+    return s.length <= max ? s : s.slice(0, max - 3).trimEnd() + '...';
   }
 
   function levelFromScore(score) {
@@ -517,407 +784,607 @@
     return 'High';
   }
 
-  function getSuggestions(focus, level, mood) {
-    const core = [
-      'Reduce access now — move triggers away, change room, or sign out of high-risk apps.',
-      'Use the 10-minute delay rule: pause the urge for 10 minutes, then reassess before acting.',
-      'Urge surfing: breathe slowly and watch the craving wave rise, peak, and pass.',
-      'Replace with one micro-action — short walk, water, shower, or message a safe person.',
-      'Write a simple 3-step craving plan: trigger, first action, support contact.'
+  function connLevel(score) {
+    if (score <= 3) return 'Light';
+    if (score <= 7) return 'Some';
+    return 'Strong';
+  }
+
+  function getSuggestions(focus, level, mood, conn) {
+    var core = [
+      'Use the 10 minute delay rule: pause the urge for 10 minutes, then check in with yourself before acting.',
+      'Try urge surfing: breathe slowly and watch the craving rise, peak and pass.',
+      'Replace it with one small action: a short walk, water, a shower, or a message to a safe person.'
     ];
-
-    const byFocus = {
-      'Social / phone': ['Turn off non-essential notifications for today.', 'Keep your phone out of reach during one high-risk window.'],
-      'Drugs &amp; alcohol': ['If substances are involved, consider seeking safe professional support.', 'Avoid high-risk places and people today — prepare an exit plan if needed.'],
-      'Sex': ['Set a clear boundary for times or places that raise impulsive choices.', 'Use connection alternatives that are safe and grounding.'],
-      'Porn': ['Add blockers or filters and avoid private device use in vulnerable moments.', 'Pre-write a redirect list for cravings: move body, breathe, cold water, short task.'],
-      'Other / not sure': ['Track the pattern for 24 hours without judgment — what happened right before it?', 'Pick one small boundary for today and review tonight.']
-    };
-
-    const byMood = {
-      anxious: 'For anxiety: try 4 seconds inhale, 6 seconds exhale, repeated for 2 minutes.',
-      stressed: 'For stress: unclench your jaw, drop your shoulders, and slow your pace for one minute.',
-      numb: 'For numbness: use grounding — cold water, name 5 things you see, 4 you feel.',
-      sad: 'For sadness: one gentle act of care for yourself is enough for right now.',
-      lonely: 'For loneliness: send one short message to a safe person today.',
-      angry: 'For anger: step away and delay major decisions until your body calms down.',
-      okay: 'You feel okay — protect that momentum with one clear boundary today.'
-    };
-
-    const list = [...core, ...(byFocus[focus] || byFocus['Other / not sure'])];
-    if (byMood[mood]) list.push(byMood[mood]);
-    if (level === 'High') list.push('High strain day — simplify your demands and seek direct support now.');
+    var f = FOCUS[focus] || FOCUS['Other / not sure'];
+    var list = core.concat(f.tips.slice(0, 2));
+    if (MOOD_TIPS[mood]) list.push(MOOD_TIPS[mood]);
+    list.push(CONN_INFO[conn].tip);
+    if (level === 'High') list.push('It is a heavy day. Lower your demands, drink water, and reach out to a person or a helpline today.');
     return list.slice(0, 8);
   }
 
-  // ── SLIDERS ──────────────────────────────────────────────────────────
+  /* ---------------- STEP NAVIGATION ---------------- */
 
-  SLIDERS.forEach(id => {
-    const el = $(id);
-    const valEl = $(id + 'Val');
-    valEl.textContent = el.value;
-    el.addEventListener('input', () => { valEl.textContent = el.value; });
-  });
-
-  // ── FOCUS CHIPS ───────────────────────────────────────────────────────
-
-  $('focusGrid').addEventListener('change', () => {
-    document.querySelectorAll('.focus-item').forEach(label => {
-      label.classList.toggle('active', label.querySelector('input').checked);
-    });
-  });
-
-  // ── MOOD CHIPS ────────────────────────────────────────────────────────
-
-  $('moodGrid').addEventListener('change', () => {
-    document.querySelectorAll('.mood-item').forEach(label => {
-      label.classList.toggle('active', label.querySelector('input').checked);
-    });
-  });
-
-  // ── BUILD RESULT ──────────────────────────────────────────────────────
+  function go(n) {
+    cur = n;
+    steps.forEach(function (s, i) { s.classList.toggle('active', i === n); });
+    $('stepLabel').textContent = 'Step ' + (n + 1) + ' of ' + STEP_COUNT;
+    $('barFill').style.width = ((n + 1) / STEP_COUNT * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   function buildResult() {
-    const focus = valueOf('focus');
-    if (!focus) { showToast('Please choose your check-in focus first.'); return null; }
+    var focus = valueOf('focus');
+    var mood = valueOf('mood') || 'okay';
+    var intensity = parseInt($('intensity').value, 10);
+    var urge = parseInt($('urge').value, 10);
+    var impact = parseInt($('impact').value, 10);
+    var control = parseInt($('control').value, 10);
+    var score = intensity + urge + impact + (10 - control);
+    var crisis = $('crisis').checked;
+    var level = crisis ? 'High' : levelFromScore(score);
 
-    const mood = valueOf('mood') || 'okay';
-    const intensity = parseInt($(  'intensity').value, 10);
-    const urge = parseInt($('urge').value, 10);
-    const impact = parseInt($('impact').value, 10);
-    const control = parseInt($('control').value, 10);
-    const score = intensity + urge + impact + (10 - control);
-    const level = levelFromScore(score);
+    var connScore = 0;
+    CONN_Q.forEach(function (q) { connScore += parseInt(valueOf(q.id) || '0', 10); });
+    var conn = connLevel(connScore);
 
     return {
       date: new Date().toLocaleString(),
-      focus,
-      mood,
-      intensity, urge, impact, control,
-      score, level,
+      name: trim($('userName').value, 40),
+      focus: focus,
+      mood: mood,
+      intensity: intensity, urge: urge, impact: impact, control: control,
+      score: score, level: level,
+      crisis: crisis,
+      connScore: connScore, conn: conn,
       trigger: trim($('trigger').value, 250),
       need: trim($('need').value, 250),
       alternative: trim($('alternative').value, 250),
-      suggestions: getSuggestions(focus, level, mood)
+      safePerson: trim($('safePerson').value, 120),
+      suggestions: getSuggestions(focus, level, mood, conn)
     };
   }
 
-  // ── SHOW RESULTS ──────────────────────────────────────────────────────
+  function renderResults(r) {
+    $('greet').textContent = r.name ? 'Thank you for checking in, ' + r.name : 'Thank you for checking in';
 
-  function showResults() {
-    const result = buildResult();
-    if (!result) return false;
-    latest = result;
-
-    const pill = $('riskPill');
-    const cls = result.level === 'Low' ? 'pill-low' : result.level === 'Moderate' ? 'pill-moderate' : 'pill-high';
+    var pill = $('riskPill');
+    var cls = r.level === 'Low' ? 'pill-low' : r.level === 'Moderate' ? 'pill-moderate' : 'pill-high';
     pill.className = 'risk-pill ' + cls;
-    pill.textContent = "Today's risk / strain level: " + result.level;
+    pill.textContent = "Today's strain level: " + r.level;
 
-    $('scoreLine').textContent = 'Score: ' + result.score + ' / 40  ·  Focus: ' + result.focus + '  ·  Mood: ' + result.mood + '  ·  Control: ' + result.control + '/10';
+    $('scoreLine').textContent = 'Score ' + r.score + ' / 40  \u00b7  Focus: ' + r.focus + '  \u00b7  Mood: ' + r.mood + '  \u00b7  Connection: ' + r.conn + ' (' + r.connScore + ' / 12)';
+    $('resultSafety').classList.toggle('show', r.level === 'High');
+    $('connMsg').textContent = CONN_INFO[r.conn].msg;
+    $('levelScene').innerHTML = renderScene(SCENES[r.level.toLowerCase()], 'wide');
 
-    $('resultSafety').style.display = result.level === 'High' ? 'block' : 'none';
-
-    const list = $('suggestionsList');
+    var list = $('suggestionsList');
     list.innerHTML = '';
-    result.suggestions.forEach((tip, i) => {
-      list.innerHTML += `<li><span class="sug-num">${i + 1}</span><span>${tip}</span></li>`;
+    r.suggestions.slice(0, 6).forEach(function (tip, i) {
+      var li = document.createElement('li');
+      var n = document.createElement('span'); n.className = 'sug-num'; n.textContent = String(i + 1);
+      var t = document.createElement('span'); t.textContent = tip;
+      li.appendChild(n); li.appendChild(t);
+      list.appendChild(li);
     });
 
-    $('resultsCard').classList.add('visible');
-    $('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return true;
+    var plan = $('planList');
+    plan.innerHTML = '';
+    function addPlan(label, val) {
+      var li = document.createElement('li');
+      var b = document.createElement('strong'); b.textContent = label + ' ';
+      li.appendChild(b);
+      li.appendChild(document.createTextNode(val));
+      plan.appendChild(li);
+    }
+    addPlan('When it gets hard:', r.trigger || 'Notice what happens just before the urge.');
+    addPlan('My first small action:', r.alternative || 'Pause for 10 minutes and breathe slowly.');
+    addPlan('Who I will reach out to:', r.safePerson || 'One safe person or a helpline.');
+    addPlan('Tomorrow:', 'Come back at the same time and check in again.');
   }
 
-  $('showBtn').addEventListener('click', showResults);
-
-  // ── SAVE / HISTORY ────────────────────────────────────────────────────
+  /* ---------------- HISTORY ---------------- */
 
   function readEntries() {
     if (!storageOk()) return [];
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(_) { return []; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (_) { return []; }
   }
 
   function writeEntries(entries) {
     if (!storageOk()) return false;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); return true; } catch(_) { return false; }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); return true; } catch (_) { return false; }
   }
 
   function renderHistory() {
-    const el = $('historyList');
-    const entries = readEntries();
+    var el = $('historyList');
+    var entries = readEntries();
     el.innerHTML = '';
     if (!entries.length) {
-      el.innerHTML = '<li>No saved check-ins yet.</li>';
+      var li0 = document.createElement('li'); li0.textContent = 'No saved check-ins yet.'; el.appendChild(li0);
       return;
     }
-    entries.forEach(e => {
-      el.innerHTML += `<li>${e.date} — ${e.focus} — ${e.level}</li>`;
+    entries.forEach(function (e) {
+      var li = document.createElement('li');
+      li.textContent = e.date + ' | ' + e.focus + ' | ' + e.level;
+      el.appendChild(li);
     });
   }
 
-  $('saveBtn').addEventListener('click', () => {
-    if (!latest && !showResults()) return;
-    const entries = readEntries();
-    entries.unshift({ date: latest.date, focus: latest.focus, level: latest.level });
-    if (!writeEntries(entries.slice(0, 7))) {
-      showToast('Could not save — browser privacy mode may be blocking local storage.');
-      return;
+  function ensureLatest() {
+    if (!latest) {
+      if (!valueOf('focus')) { showToast('Please choose your check-in focus first.'); go(0); return false; }
+      latest = buildResult();
     }
-    renderHistory();
-    showToast('Saved on this device.');
-  });
+    return true;
+  }
 
-  // ── TEXT FILE ─────────────────────────────────────────────────────────
+  /* ---------------- TEXT FILE ---------------- */
 
-  $('fileBtn').addEventListener('click', () => {
-    if (!latest && !showResults()) return;
-    const lines = [
+  function downloadTxt() {
+    if (!ensureLatest()) return;
+    var r = latest;
+    var lines = [
       'Emotional Support Self-Check',
-      'Generated: ' + latest.date,
+      r.name ? 'Prepared for: ' + r.name : '',
+      'Generated: ' + r.date,
       '',
-      'Level: ' + latest.level + ' | Score: ' + latest.score + '/40',
-      'Focus: ' + latest.focus + ' | Mood: ' + latest.mood,
-      'Intensity: ' + latest.intensity + '/10 | Urge: ' + latest.urge + '/10 | Impact: ' + latest.impact + '/10 | Control: ' + latest.control + '/10',
+      'Strain level: ' + r.level + ' | Score: ' + r.score + '/40',
+      'Focus: ' + r.focus + ' | Mood: ' + r.mood,
+      'Intensity: ' + r.intensity + '/10 | Urge: ' + r.urge + '/10 | Impact: ' + r.impact + '/10 | Control: ' + r.control + '/10',
+      'Connection: ' + r.conn + ' (' + r.connScore + '/12)',
       '',
-      'Triggers: ' + (latest.trigger || 'Not provided'),
-      'Need behind urge: ' + (latest.need || 'Not provided'),
-      '10-minute alternative: ' + (latest.alternative || 'Not provided'),
+      'Triggers: ' + (r.trigger || 'Not provided'),
+      'Need behind it: ' + (r.need || 'Not provided'),
+      '10 minute alternative: ' + (r.alternative || 'Not provided'),
+      'Safe person: ' + (r.safePerson || 'Not provided'),
       '',
-      'Suggested next steps:',
-      ...latest.suggestions.map((s, i) => (i + 1) + '. ' + s),
+      'Suggested next steps:'
+    ].concat(r.suggestions.map(function (s, i) { return (i + 1) + '. ' + s; }), [
       '',
-      'This tool is not medical advice. If you feel unsafe, seek urgent help now.',
-      'emotionalintelligencedeveloper.com'
-    ];
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+      'This tool is not medical advice. If you feel unsafe, seek urgent help now: https://findahelpline.com',
+      'Use this free tool again: ' + TOOL_URL
+    ]);
+    var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url; a.download = 'emotional-support-check-in.txt';
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     showToast('.txt file downloaded.');
-  });
+  }
 
-  // ── RESET ─────────────────────────────────────────────────────────────
+  /* ---------------- RESTART ---------------- */
 
-  $('resetBtn').addEventListener('click', () => {
-    document.querySelectorAll('input[name="focus"], input[name="mood"]').forEach(el => { el.checked = false; });
-    document.querySelectorAll('.focus-item, .mood-item').forEach(el => el.classList.remove('active'));
-    SLIDERS.forEach(id => { $(id).value = 5; $(id + 'Val').textContent = 5; });
-    $('trigger').value = '';
-    $('need').value = '';
-    $('alternative').value = '';
-    $('resultsCard').classList.remove('visible');
+  function restart() {
+    document.querySelectorAll('input[type="radio"]').forEach(function (el) { el.checked = false; });
+    document.querySelectorAll('.chip').forEach(function (el) { el.classList.remove('active'); });
+    SLIDERS.forEach(function (id) { $(id).value = 5; $(id + 'Val').textContent = '5'; });
+    ['userName', 'trigger', 'need', 'alternative', 'safePerson'].forEach(function (id) { $(id).value = ''; });
+    $('crisis').checked = false;
+    $('crisisNote').classList.remove('show');
+    $('moodScene').innerHTML = renderScene(moodScene('numb'), 'small');
     latest = null;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Check-in reset.');
-  });
+    go(0);
+    showToast('Ready for a new check-in.');
+  }
 
-  // ── SHARE ─────────────────────────────────────────────────────────────
+  /* ---------------- SHARE ---------------- */
 
   function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A compassionate check-in tool for understanding emotional patterns and urges: ');
-    ['waShare','waShareFooter'].forEach(id => { $(id).href = 'https://wa.me/?text=' + msg + url; });
-    ['fbShare','fbShareFooter'].forEach(id => { $(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
-    ['xShare','xShareFooter'].forEach(id => { $(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
+    var url = encodeURIComponent(TOOL_URL);
+    var msg = encodeURIComponent('A free, kind check-in tool for habits, urges and social anxiety: ');
+    ['waShare', 'waShareFooter'].forEach(function (id) { $(id).href = 'https://wa.me/?text=' + msg + url; });
+    ['fbShare', 'fbShareFooter'].forEach(function (id) { $(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
+    ['xShare', 'xShareFooter'].forEach(function (id) { $(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
   }
 
-  async function copyLink() {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
+  function copyLink() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TOOL_URL).then(function () { showToast('Link copied!'); }, function () { showToast('Could not copy. Please copy the link manually.'); });
+    } else {
+      showToast('Could not copy. Please copy the link manually.');
+    }
   }
 
-  $('copyLinkBtn').addEventListener('click', copyLink);
-  $('copyLinkFooter').addEventListener('click', copyLink);
+  /* ---------------- PDF ---------------- */
 
-  // ── PDF ───────────────────────────────────────────────────────────────
+  function pdfFigure(doc, ox, oy, s, f, color) {
+    var P = POSES[f.pose] || POSES.stand;
+    var face = FACES[FACE_FOR[f.mood] || 'neutral'] || FACES.neutral;
+    var hx = P.head ? P.head[0] : 0, hy = P.head ? P.head[1] : 0;
+    var cx = 40 + hx, cy = 20 + hy;
+    doc.setDrawColor(color[0], color[1], color[2]);
+    doc.setFillColor(color[0], color[1], color[2]);
+    doc.setLineWidth(Math.max(1, 3 * s));
+    doc.circle(ox + cx * s, oy + cy * s, 12 * s, 'S');
+    function poly(p) {
+      for (var i = 0; i < p.length - 1; i++) {
+        doc.line(ox + p[i][0] * s, oy + p[i][1] * s, ox + p[i + 1][0] * s, oy + p[i + 1][1] * s);
+      }
+    }
+    poly(P.body || [[40, 32], [40, 70]]);
+    P.arms.forEach(poly);
+    P.legs.forEach(poly);
+    doc.setLineWidth(Math.max(0.6, 1.8 * s));
+    doc.circle(ox + (cx - 4) * s, oy + (cy - 2) * s, Math.max(0.6, 1.5 * s), 'F');
+    doc.circle(ox + (cx + 4) * s, oy + (cy - 2) * s, Math.max(0.6, 1.5 * s), 'F');
+    poly(face.mouth.map(function (q) { return [cx + q[0], cy + q[1]]; }));
+    if (face.brows) {
+      face.brows.forEach(function (b) { poly(b.map(function (q) { return [cx + q[0], cy + q[1]]; })); });
+    }
+  }
 
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
+  function pdfScene(doc, name, x, y, s, color) {
+    var sc = SCENES[name];
+    sc.figs.forEach(function (f) { pdfFigure(doc, x + f.ox * s, y, s, f, color); });
+    if (sc.heart) {
+      var hx = x + sc.heart[0] * s, hy = y + sc.heart[1] * s;
+      doc.setFillColor(232, 112, 42);
+      doc.circle(hx - 4.2 * s, hy - 2.5 * s, 5 * s, 'F');
+      doc.circle(hx + 4.2 * s, hy - 2.5 * s, 5 * s, 'F');
+      doc.triangle(hx - 8.6 * s, hy - 0.5 * s, hx + 8.6 * s, hy - 0.5 * s, hx, hy + 9 * s, 'F');
+    }
+  }
+
+  function imageToDataUrl(url) {
+    return fetch(url, { mode: 'cors' }).then(function (res) {
+      if (!res.ok) throw new Error('Logo failed');
+      return res.blob();
+    }).then(function (blob) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onloadend = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
     });
   }
 
-  async function downloadPDF() {
-    if (!latest && !showResults()) return;
-    const jsPDFLib = window.jspdf?.jsPDF;
-    if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
+  function buildPDF(doc, r, logoData) {
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    var margin = 40;
+    var L = margin;
+    var W = pageW - margin * 2;
+    var bottom = pageH - 62;
+    var y = margin;
+    var BRAND = [58, 106, 138];
+    var INK = [26, 37, 48];
+    var LINK = [30, 90, 160];
+    var data = FOCUS[r.focus] || FOCUS['Other / not sure'];
 
-    const doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
+    try { doc.setLineCap('round'); doc.setLineJoin('round'); } catch (_) {}
 
-    // Header
+    function need(h) { if (y + h > bottom) { doc.addPage(); y = margin; } }
+
+    function heading(t) {
+      need(40);
+      y += 6;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5);
+      doc.setTextColor(BRAND[0], BRAND[1], BRAND[2]);
+      doc.text(t, L, y + 12);
+      doc.setDrawColor(160, 192, 216); doc.setLineWidth(0.8);
+      doc.line(L, y + 18, L + W, y + 18);
+      y += 28;
+    }
+
+    function para(t, size, style, color, gap) {
+      size = size || 9.5; style = style || 'normal'; color = color || INK; gap = gap === undefined ? 6 : gap;
+      doc.setFont('helvetica', style); doc.setFontSize(size);
+      doc.setTextColor(color[0], color[1], color[2]);
+      var lines = doc.splitTextToSize(t, W);
+      var lh = size * 1.4;
+      lines.forEach(function (l) { need(lh); doc.text(l, L, y + size); y += lh; });
+      y += gap;
+    }
+
+    function writeLines(n) {
+      doc.setDrawColor(200, 212, 224); doc.setLineWidth(0.6);
+      for (var i = 0; i < n; i++) { need(20); y += 18; doc.line(L, y, L + W, y); }
+      y += 8;
+    }
+
+    // Header banner
     doc.setFillColor(232, 242, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(26, 37, 48);
-    doc.text('Emotional Support Self-Check', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 90, 104);
-    doc.text('Personal check-in summary — ' + latest.date, margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-    y += 86;
+    doc.roundedRect(L, y, W, 78, 6, 6, 'F');
+    if (logoData) { try { doc.addImage(logoData, 'JPEG', L + 10, y + 12, 54, 54); } catch (_) {} }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text('Emotional Support Self-Check', L + 76, y + 24);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 90, 104);
+    doc.text(r.name ? 'Prepared for: ' + r.name : 'Personal check-in summary', L + 76, y + 40);
+    doc.text(r.date + '  |  Focus: ' + r.focus, L + 76, y + 54);
+    doc.setFontSize(7.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
+    doc.textWithLink('Free tool: ' + TOOL_URL, L + 76, y + 68, { url: TOOL_URL });
+    y += 92;
 
-    // Risk level
-    const pillColors = { Low: [232, 245, 238], Moderate: [253, 244, 228], High: [248, 234, 238] };
-    const pillTextColors = { Low: [42, 106, 72], Moderate: [138, 90, 24], High: [138, 42, 58] };
-    const pc = pillColors[latest.level] || pillColors.Low;
-    const pt = pillTextColors[latest.level] || pillTextColors.Low;
-    doc.setFillColor(pc[0], pc[1], pc[2]);
-    doc.roundedRect(margin, y, pageW - margin * 2, 34, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(pt[0], pt[1], pt[2]);
-    doc.text("Today's risk / strain level: " + latest.level + "  (Score: " + latest.score + " / 40)", margin + 12, y + 22);
-    y += 44;
+    // Level box with stickmen
+    var lc = { Low: [232, 245, 238], Moderate: [253, 244, 228], High: [248, 234, 238] }[r.level];
+    var lt = { Low: [42, 106, 72], Moderate: [138, 90, 24], High: [138, 42, 58] }[r.level];
+    doc.setFillColor(lc[0], lc[1], lc[2]);
+    doc.roundedRect(L, y, W, 88, 6, 6, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5); doc.setTextColor(lt[0], lt[1], lt[2]);
+    doc.text("Today's strain level: " + r.level, L + 14, y + 26);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    doc.text('Score ' + r.score + ' / 40', L + 14, y + 44);
+    doc.text('Connection: ' + r.conn + ' (' + r.connScore + ' / 12)', L + 14, y + 60);
+    pdfScene(doc, r.level.toLowerCase(), L + W - 118, y + 6, 0.68, lt);
+    y += 100;
 
-    // Check-in data rows
-    const rows = [
-      ['Focus', latest.focus],
-      ['Mood', latest.mood],
-      ['Intensity', latest.intensity + ' / 10'],
-      ['Urge / craving', latest.urge + ' / 10'],
-      ['Time lost / impact', latest.impact + ' / 10'],
-      ['Control', latest.control + ' / 10'],
-      ['Triggers', latest.trigger || 'Not provided'],
-      ['Need behind urge', latest.need || 'Not provided'],
-      ['10-minute alternative', latest.alternative || 'Not provided']
+    if (r.crisis || r.level === 'High') {
+      var cmsg = 'If you feel unsafe or at risk of harming yourself or someone else, contact local emergency services now. Find a helpline in your country at findahelpline.com.';
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
+      var cl = doc.splitTextToSize(cmsg, W - 24);
+      var ch = cl.length * 13 + 16;
+      need(ch + 8);
+      doc.setFillColor(248, 234, 238);
+      doc.roundedRect(L, y, W, ch, 5, 5, 'F');
+      doc.setTextColor(138, 42, 58);
+      doc.text(cl, L + 12, y + 17);
+      y += ch + 10;
+    }
+
+    // Check-in snapshot
+    heading('Your check-in');
+    para('Mood: ' + r.mood + '   |   Intensity: ' + r.intensity + '/10   |   Urge: ' + r.urge + '/10   |   Impact: ' + r.impact + '/10   |   Control: ' + r.control + '/10', 9.5, 'normal', INK, 8);
+    para('Connection check: ' + CONN_INFO[r.conn].msg, 9.5, 'normal', INK, 8);
+
+    var words = [
+      ['What usually triggers it', r.trigger],
+      ['The need it is trying to meet', r.need],
+      ['One small thing I can do in 10 minutes', r.alternative],
+      ['A safe person I can reach out to', r.safePerson]
     ];
-
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(240, 246, 250);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 26;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(58, 106, 138);
-      doc.text(label.toUpperCase(), margin + 10, y + 13);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 37, 48);
-      doc.text(lines, margin + 10, y + 24);
-      y += bh + 7;
+    words.forEach(function (w) {
+      para(w[0], 9, 'bold', BRAND, 1);
+      para(w[1] || 'Not provided', 9.5, 'normal', INK, 7);
     });
 
     // Suggestions
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 106, 138);
-    doc.text('Suggested next steps', margin, y);
-    y += 14;
-    latest.suggestions.forEach((tip, i) => {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 37, 48);
-      const lines = doc.splitTextToSize((i + 1) + '. ' + tip, pageW - margin * 2);
-      const itemH = lines.length * 14 + 5;
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
+    heading('Suggested next steps');
+    r.suggestions.forEach(function (tip, i) { para((i + 1) + '. ' + tip, 9.5, 'normal', INK, 4); });
+
+    // About focus
+    heading('About ' + r.focus);
+    para(data.intro, 9.5, 'normal', INK, 6);
+    para(data.research, 9.5, 'normal', INK, 6);
+    para('More ideas for this area', 9.5, 'bold', BRAND, 2);
+    data.tips.forEach(function (t) { para('- ' + t, 9.5, 'normal', INK, 3); });
+
+    // Reflections
+    heading('Reflections that help');
+    para('Take your time. Write short answers below, or think them through and talk them over with someone you trust.', 9, 'italic', [74, 90, 104], 6);
+    data.reflections.forEach(function (q, i) {
+      need(70);
+      para((i + 1) + '. ' + q, 9.5, 'bold', INK, 0);
+      writeLines(2);
     });
 
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 106, 138);
-    doc.text('Understanding compulsive patterns — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why compulsive behaviours develop — the needs underneath',
-       'Research in addiction science — including the work of Gabor Mate, a physician who has written extensively on the relationship between trauma, emotional pain, and addictive behaviour — consistently shows that compulsive behaviours are rarely about the substance or activity itself. They are about the relief they provide from emotional pain, dysregulation, or unmet developmental needs. Understanding what need a behaviour is meeting is one of the most therapeutically significant questions anyone can ask, because it opens the door to finding other, less costly ways to meet that same need.'],
-      ['The neuroscience of urges and craving cycles',
-       'Cravings and urges are neurological events — not moral failures or character defects. Research on the dopamine system shows that repeated engagement with rewarding behaviour creates neural pathways that are activated by cues associated with the behaviour, often before conscious awareness. This is why urges can feel sudden and overwhelming. Research on urge surfing, developed by psychologist Alan Marlatt, shows that observing an urge without acting on it — watching it rise, peak, and pass — measurably reduces its intensity over time and weakens the associated neural pathway. The urge does not have to be acted on to eventually diminish.'],
-      ['The role of emotional regulation in recovery',
-       'Research consistently identifies poor emotional regulation — difficulty managing intense or uncomfortable feelings without maladaptive coping — as one of the strongest predictors of addictive and compulsive behaviour. Dialectical Behaviour Therapy (DBT), developed by Marsha Linehan, was specifically designed to build emotional regulation skills, and its distress tolerance techniques have been shown in randomised controlled trials to reduce impulsive and addictive behaviour. Recovery is not primarily about willpower; it is primarily about expanding the repertoire of emotional coping strategies available in difficult moments.'],
-      ['Why social connection is a core recovery resource',
-       'Research on addiction recovery — including Johann Hari\'s synthesis of the social science evidence and the foundational animal studies by Bruce Alexander on environmental context — shows that social connection, meaningful activity, and a sense of belonging are among the most powerful protective factors against compulsive behaviour. Isolation is both a trigger and a consequence of many compulsive patterns. Recovery is substantially supported by safe, honest relationships — even one trusted person to whom you can be truthful about your struggle significantly improves outcomes.'],
-      ['The importance of professional support',
-       'While self-reflection tools like this one provide genuine value in building awareness, research on addiction and compulsive behaviour is unambiguous that professional support — whether through therapy, medical care, peer support groups, or structured programmes — produces significantly better outcomes than self-management alone, particularly for moderate to severe patterns. If you recognise that your pattern is causing consistent harm to your relationships, health, work, or finances, this is a signal that professional support is not a sign of failure but a clinically appropriate and evidence-based next step. Resources are available in most countries through helplines and community health services.']
+    // Craving plan
+    heading('My craving plan');
+    var plan = [
+      ['When it gets hard, my trigger is:', r.trigger],
+      ['My first action, within 10 minutes:', r.alternative],
+      ['The person I will reach out to:', r.safePerson]
     ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(58, 106, 138);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(26, 37, 48);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
+    plan.forEach(function (p) {
+      need(50);
+      para(p[0], 9, 'bold', BRAND, 1);
+      if (p[1]) { para(p[1], 9.5, 'normal', INK, 6); } else { writeLines(1); }
     });
 
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 192, 216);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(58, 106, 138);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 37, 48);
-    [
-      'Find a helpline: findahelpline.com',
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
+    // Understanding
+    heading('Understanding compulsive patterns: what research tells us');
+    EDU.forEach(function (e) {
+      need(60);
+      para(e[0], 9.5, 'bold', BRAND, 2);
+      para(e[1], 9.2, 'normal', INK, 8);
+    });
 
-    doc.setDrawColor(160, 192, 216);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 154, 170);
-    doc.text('This tool supports self-reflection only. Not medical advice or a replacement for professional care. Seek urgent help if you feel unsafe.', margin, pageH - 22);
+    // 7 day follow up
+    heading('My 7 day follow up');
+    para('Fill this in each day. It takes two minutes and shows you what is really helping.', 9, 'normal', INK, 6);
+    var cols = [{ t: 'Day', w: 46 }, { t: 'Urge (0 to 10)', w: 84 }];
+    cols.push({ t: 'What helped', w: W - 46 - 84 - 150 });
+    cols.push({ t: 'One small win', w: 150 });
+    var rowH = 24;
+    need(rowH * 8 + 6);
+    var cx0 = L;
+    doc.setFillColor(232, 242, 248);
+    doc.rect(L, y, W, rowH, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(BRAND[0], BRAND[1], BRAND[2]);
+    cols.forEach(function (c) { doc.text(c.t, cx0 + 6, y + 15); cx0 += c.w; });
+    doc.setDrawColor(190, 204, 218); doc.setLineWidth(0.6);
+    for (var d = 0; d < 8; d++) {
+      doc.rect(L, y + d * rowH, W, rowH, 'S');
+    }
+    var vx = L;
+    cols.forEach(function (c, i) { if (i > 0) doc.line(vx, y, vx, y + rowH * 8); vx += c.w; });
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(INK[0], INK[1], INK[2]);
+    for (var k = 1; k <= 7; k++) { doc.text('Day ' + k, L + 6, y + k * rowH + 15); }
+    y += rowH * 8 + 12;
 
-    doc.save('emotional-support-check-in.pdf');
-    showToast('PDF downloaded!');
+    // Keep learning
+    heading('Keep learning: trusted websites');
+    para('These sites are independent and are listed so you can read more from credible sources. Some are based in other countries, so check what is available where you live.', 9, 'italic', [74, 90, 104], 6);
+    var seen = {};
+    var refs = data.refs.concat(GENERAL_REFS).filter(function (x) {
+      if (seen[x.u]) return false; seen[x.u] = true; return true;
+    });
+    refs.forEach(function (ref) {
+      need(44);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+      doc.text(ref.n, L, y + 10);
+      y += 13;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
+      doc.textWithLink(ref.u, L, y + 9, { url: ref.u });
+      y += 12;
+      para(ref.d, 9, 'normal', [74, 90, 104], 6);
+    });
+
+    if (data.books && data.books.length) {
+      need(50);
+      para('Books you may find helpful', 9.5, 'bold', BRAND, 2);
+      data.books.forEach(function (b) { para('- ' + b, 9.5, 'normal', INK, 2); });
+      y += 6;
+    }
+
+    // Support block
+    need(150);
+    doc.setFillColor(253, 244, 234);
+    doc.roundedRect(L, y, W, 120, 6, 6, 'F');
+    pdfScene(doc, 'support', L + 14, y + 10, 0.85, BRAND);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text('You are not alone in this.', L + 140, y + 30);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    var sl = doc.splitTextToSize('This tool is free for everyone. Come back and check in again any time. If it helped you, you can support the website here:', W - 156);
+    doc.text(sl, L + 140, y + 46);
+    doc.setFontSize(8.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
+    doc.textWithLink(SUPPORT_URL, L + 140, y + 46 + sl.length * 12 + 6, { url: SUPPORT_URL });
+    y += 132;
+
+    // Footer on every page
+    var total = doc.internal.getNumberOfPages();
+    for (var p = 1; p <= total; p++) {
+      doc.setPage(p);
+      doc.setDrawColor(160, 192, 216); doc.setLineWidth(0.8);
+      doc.line(L, pageH - 50, pageW - margin, pageH - 50);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(INK[0], INK[1], INK[2]);
+      doc.text('Use this free tool again:', L, pageH - 38);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
+      doc.textWithLink(TOOL_URL, L + 100, pageH - 38, { url: TOOL_URL });
+      doc.setFontSize(7.5); doc.setTextColor(138, 154, 170);
+      doc.text('Reflection support only. Not medical advice or a replacement for professional care. If you feel unsafe, seek urgent help.', L, pageH - 26);
+      doc.text('Page ' + p + ' of ' + total, pageW - margin, pageH - 38, { align: 'right' });
+    }
   }
 
-  $('pdfBtn').addEventListener('click', downloadPDF);
+  function downloadPDF() {
+    if (!ensureLatest()) return;
+    var lib = window.jspdf && window.jspdf.jsPDF;
+    if (!lib) { showToast('PDF library is not ready. Please try again in a moment.'); return; }
+    showToast('Preparing your PDF...');
+    var r = latest;
+    imageToDataUrl(LOGO_URL).catch(function () { return null; }).then(function (logoData) {
+      try {
+        var doc = new lib({ unit: 'pt', format: 'a4' });
+        doc.setProperties({ title: 'Emotional Support Self-Check', subject: TOOL_URL });
+        buildPDF(doc, r, logoData);
+        doc.save('emotional-support-check-in.pdf');
+        showToast('PDF downloaded!');
+      } catch (err) {
+        showToast('Something went wrong making the PDF. Please try again.');
+      }
+    });
+  }
 
-  // ── INIT ──────────────────────────────────────────────────────────────
+  /* ---------------- INIT ---------------- */
 
-  renderHistory();
-  updateShareLinks();
-  if (!storageOk()) showToast('Browser privacy mode detected — device save is unavailable. Use .txt instead.');
+  function init() {
+    steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+
+    // Focus options
+    var fg = $('focusGrid');
+    FOCUS_ORDER.forEach(function (name) {
+      var lab = document.createElement('label'); lab.className = 'chip';
+      var inp = document.createElement('input'); inp.type = 'radio'; inp.name = 'focus'; inp.value = name;
+      var span = document.createElement('span');
+      span.appendChild(document.createTextNode(name));
+      var sm = document.createElement('small'); sm.textContent = FOCUS[name].blurb;
+      span.appendChild(sm);
+      lab.appendChild(inp); lab.appendChild(span);
+      fg.appendChild(lab);
+    });
+
+    // Mood options
+    var mg = $('moodGrid');
+    MOODS.forEach(function (m) {
+      var lab = document.createElement('label'); lab.className = 'chip';
+      var inp = document.createElement('input'); inp.type = 'radio'; inp.name = 'mood'; inp.value = m;
+      lab.appendChild(inp); lab.appendChild(document.createTextNode(m));
+      mg.appendChild(lab);
+    });
+
+    // Connection questions
+    var cq = $('connQs');
+    CONN_Q.forEach(function (q) {
+      var wrap = document.createElement('div'); wrap.className = 'q';
+      var p = document.createElement('p'); p.textContent = q.t; wrap.appendChild(p);
+      var opts = document.createElement('div'); opts.className = 'opts'; opts.setAttribute('role', 'radiogroup');
+      CONN_OPTS.forEach(function (o) {
+        var lab = document.createElement('label'); lab.className = 'chip';
+        var inp = document.createElement('input'); inp.type = 'radio'; inp.name = q.id; inp.value = o[0];
+        lab.appendChild(inp); lab.appendChild(document.createTextNode(o[1]));
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      cq.appendChild(wrap);
+    });
+
+    // Scenes
+    $('welcomeScene').innerHTML = renderScene(SCENES.welcome, 'wide');
+    $('supportScene').innerHTML = renderScene(SCENES.support, 'wide');
+    $('moodScene').innerHTML = renderScene(moodScene('numb'), 'small');
+
+    // Radio highlight and mood scene
+    document.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t && t.type === 'radio') {
+        document.querySelectorAll('input[name="' + t.name + '"]').forEach(function (i) {
+          i.parentElement.classList.toggle('active', i.checked);
+        });
+        if (t.name === 'mood') $('moodScene').innerHTML = renderScene(moodScene(t.value), 'small');
+      }
+    });
+
+    // Sliders
+    SLIDERS.forEach(function (id) {
+      var el = $(id), valEl = $(id + 'Val');
+      el.addEventListener('input', function () { valEl.textContent = el.value; });
+    });
+
+    // Crisis
+    $('crisis').addEventListener('change', function () {
+      $('crisisNote').classList.toggle('show', $('crisis').checked);
+    });
+
+    // Navigation
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-to]') : null;
+      if (!b) return;
+      var to = parseInt(b.getAttribute('data-to'), 10);
+      if (cur === 0 && to > 0 && !valueOf('focus')) { showToast('Please choose what you want to check in on.'); return; }
+      if (to === 4) { latest = buildResult(); renderResults(latest); }
+      if (to === 5 && !latest) { latest = buildResult(); renderResults(latest); }
+      go(to);
+    });
+
+    $('startOverTop').addEventListener('click', restart);
+    $('restartBtn').addEventListener('click', restart);
+
+    $('pdfBtn').addEventListener('click', downloadPDF);
+    $('fileBtn').addEventListener('click', downloadTxt);
+    $('saveBtn').addEventListener('click', function () {
+      if (!ensureLatest()) return;
+      var entries = readEntries();
+      entries.unshift({ date: latest.date, focus: latest.focus, level: latest.level });
+      if (!writeEntries(entries.slice(0, 7))) {
+        showToast('Could not save. Private browsing may be blocking local storage.');
+        return;
+      }
+      renderHistory();
+      showToast('Saved on this device.');
+    });
+
+    $('copyLinkBtn').addEventListener('click', copyLink);
+    $('copyLinkFooter').addEventListener('click', copyLink);
+
+    renderHistory();
+    updateShareLinks();
+    go(0);
+    if (!storageOk()) showToast('Private browsing detected. Saving on this device is unavailable. Use the .txt file instead.');
+  }
+
+  init();
 }());
 </script>
 </body>

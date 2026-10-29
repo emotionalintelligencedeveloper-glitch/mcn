@@ -1,968 +1,859 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wellbeing Journey — Quick Check &amp; Reset | Emotional Intelligence Developer</title>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #f0f5f2;
-      --card: #ffffff;
-      --text: #12221a;
-      --muted: #4a5e54;
-      --hint: #8aa898;
-      --border: #ccddd5;
-      --brand: #3a7a58;
-      --brand-light: #e8f5ee;
-      --brand-mid: #a0c8b4;
-      --accent: #5a9a78;
-      --accent-light: #e4f2ea;
-      --teal: #3a7a78;
-      --teal-light: #e4f0f0;
-      --teal-mid: #a0c8c8;
-      --gold: #7a6a30;
-      --gold-light: #f7f2e4;
-      --gold-mid: #d8c878;
-      --warm: #f8f6f2;
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --support: #e8702a;
-    }
+<!-- EID Wellbeing Journey: Quick Check and Reset (upgraded). Paste into a WordPress Custom HTML block. -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+.eid-wj{
+  --bg:#f0f5f2;--card:#ffffff;--text:#12221a;--muted:#4a5e54;--hint:#7f9a8a;--border:#ccddd5;
+  --brand:#3a7a58;--brand-light:#e8f5ee;--brand-mid:#a0c8b4;--accent-light:#e4f2ea;
+  --teal:#3a7a78;--teal-light:#e4f0f0;--teal-mid:#a0c8c8;
+  --gold:#7a6a30;--gold-light:#f7f2e4;--gold-mid:#d8c878;
+  --warm:#f8f6f2;--support:#e8702a;
+  --r-sm:10px;--r-md:14px;--r-lg:22px;
+  font-family:Georgia,"Times New Roman",serif;color:var(--text);line-height:1.7;font-size:16px;
+  background:var(--bg);padding:28px 16px 48px;border-radius:var(--r-lg);
+}
+.eid-wj *{box-sizing:border-box}
+.eid-wj .eid-wrap{max-width:960px;margin:0 auto}
+.eid-wj .eid-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:30px 32px;margin-bottom:20px}
+.eid-wj .eid-logo-row{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.eid-wj .eid-logo{width:64px;height:64px;border-radius:14px;object-fit:cover;border:2px solid var(--brand-mid);flex-shrink:0}
+.eid-wj .eid-brand{font-size:13px;color:var(--brand);letter-spacing:.05em;line-height:1.35;text-transform:uppercase}
+.eid-wj .eid-title{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:normal;line-height:1.25;margin:0 0 10px;color:var(--text)}
+.eid-wj .eid-tagline{font-size:17px;color:var(--muted);margin:0 0 16px;max-width:720px}
+.eid-wj .eid-note{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:12px 16px;font-size:13.5px;color:var(--muted)}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+/* progress */
+.eid-wj .eid-progress{padding:20px 32px}
+.eid-wj .eid-prog-top{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+.eid-wj .eid-prog-label{color:var(--brand);font-weight:bold}
+.eid-wj .eid-prog-pct{color:var(--hint)}
+.eid-wj .eid-bar{height:8px;background:var(--brand-light);border-radius:99px;overflow:hidden}
+.eid-wj .eid-bar-fill{height:100%;background:var(--brand);border-radius:99px;transition:width .35s ease;width:0}
+.eid-wj .eid-dots{display:flex;gap:8px;margin-top:14px}
+.eid-wj .eid-dot{flex:1;height:5px;border-radius:99px;background:var(--border);transition:background .25s}
+.eid-wj .eid-dot.done{background:var(--brand-mid)}
+.eid-wj .eid-dot.now{background:var(--brand)}
 
-    body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-    }
+/* panels */
+.eid-wj .eid-panel{display:none}
+.eid-wj .eid-panel.show{display:block;animation:eidWjFade .3s ease}
+@keyframes eidWjFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.eid-wj .eid-step-num{font-size:12px;font-weight:bold;color:var(--hint);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+.eid-wj .eid-q{font-size:clamp(1.25rem,2.6vw,1.65rem);line-height:1.4;margin:0 0 24px;font-weight:normal}
+.eid-wj .eid-opts{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:640px){.eid-wj .eid-opts{grid-template-columns:repeat(3,1fr)}}
+.eid-wj .eid-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:120px;padding:20px 16px;border:1.5px solid var(--border);border-radius:var(--r-md);background:#fff;font-family:inherit;font-size:16px;color:var(--muted);cursor:pointer;line-height:1.45;text-align:center;transition:all .15s}
+.eid-wj .eid-opt svg{width:34px;height:34px;stroke:var(--brand);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.eid-wj .eid-opt:hover{border-color:var(--brand);color:var(--text);background:var(--brand-light)}
+.eid-wj .eid-opt.sel{background:var(--brand);border-color:var(--brand);color:#fff}
+.eid-wj .eid-opt.sel svg{stroke:#fff}
+.eid-wj .eid-fb{display:none;background:var(--accent-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:16px 18px;font-size:14.5px;color:var(--muted);margin-top:20px}
+.eid-wj .eid-fb.show{display:block}
+.eid-wj .eid-fb-t{font-size:12px;font-weight:bold;color:var(--brand);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.eid-wj .eid-nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
 
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
+/* name */
+.eid-wj .eid-label{display:block;font-size:15px;margin-bottom:8px}
+.eid-wj input[type=text]{width:100%;max-width:520px;border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;font-family:inherit;font-size:16px;color:var(--text);background:#fff}
+.eid-wj input[type=text]:focus{outline:none;border-color:var(--brand)}
+.eid-wj .eid-intro-grid{display:grid;gap:14px;grid-template-columns:1fr;margin:22px 0}
+@media(min-width:640px){.eid-wj .eid-intro-grid{grid-template-columns:repeat(3,1fr)}}
+.eid-wj .eid-intro-item{background:var(--warm);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;font-size:14px;color:var(--muted);text-align:center}
+.eid-wj .eid-intro-item svg{width:34px;height:34px;stroke:var(--brand);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
 
-    /* HEADER */
-    .header {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px 20px 20px;
-      margin-bottom: 16px;
-    }
+/* buttons */
+.eid-wj .eid-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:99px;font-family:inherit;font-size:15px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;min-height:48px;transition:opacity .15s,transform .1s}
+.eid-wj .eid-btn:hover{opacity:.88}
+.eid-wj .eid-btn:active{transform:scale(.97)}
+.eid-wj .eid-btn[disabled]{opacity:.4;cursor:not-allowed}
+.eid-wj .eid-btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.eid-wj .eid-btn-outline{background:#fff;color:var(--text);border-color:var(--border)}
+.eid-wj .eid-btn-share{background:var(--brand-light);color:var(--brand);border-color:var(--brand-mid)}
+.eid-wj .eid-btn-support{background:var(--support);color:#fff;border-color:var(--support);font-size:16px;padding:14px 28px}
+.eid-wj .eid-btn-support svg{width:24px;height:30px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eid-wj .eid-row{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:520px){.eid-wj .eid-btn{width:100%}.eid-wj .eid-row,.eid-wj .eid-nav{flex-direction:column}}
 
-    .logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+/* results */
+.eid-wj .eid-res-head{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:24px;text-align:center;margin-bottom:24px}
+.eid-wj .eid-res-name{font-size:15px;color:var(--brand)}
+.eid-wj .eid-res-type{font-size:clamp(1.3rem,3vw,1.8rem);margin:8px 0;line-height:1.3}
+.eid-wj .eid-res-sec{font-size:14px;color:var(--muted)}
+.eid-wj .eid-res-date{font-size:12px;color:var(--hint);font-style:italic;margin-top:4px}
+.eid-wj .eid-sec{margin-bottom:28px}
+.eid-wj .eid-sec-t{font-size:12px;font-weight:bold;color:var(--brand);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.eid-wj .eid-expl{background:var(--accent-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:18px 20px;font-size:16px}
+.eid-wj .eid-chart{background:var(--warm);border:1px solid var(--border);border-radius:var(--r-md);padding:20px}
+.eid-wj .eid-chart-row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:16px}
+.eid-wj .eid-chart-row:last-child{margin-bottom:0}
+@media(min-width:640px){.eid-wj .eid-chart-row{grid-template-columns:190px 1fr 60px;align-items:center;gap:14px}}
+.eid-wj .eid-chart-lab{font-size:14px;color:var(--text)}
+.eid-wj .eid-chart-track{height:18px;background:#fff;border:1px solid var(--border);border-radius:99px;overflow:hidden}
+.eid-wj .eid-chart-fill{height:100%;border-radius:99px;width:0;transition:width .8s ease}
+.eid-wj .eid-chart-val{font-size:13px;color:var(--muted)}
+.eid-wj .eid-insights{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.eid-wj .eid-insights{grid-template-columns:repeat(3,1fr)}}
+.eid-wj .eid-insight{border:1px solid var(--border);border-radius:var(--r-md);background:#fff;padding:16px 18px}
+.eid-wj .eid-insight-l{font-size:11px;font-weight:bold;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.eid-wj .eid-insight-t{font-size:14px;color:var(--text);line-height:1.65}
 
-    .logo {
-      width: 56px; height: 56px;
-      border-radius: 12px; object-fit: cover;
-      border: 2px solid var(--brand-mid); flex-shrink: 0;
-    }
+/* breathing */
+.eid-wj .eid-breath{background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:var(--r-md);padding:24px;text-align:center}
+.eid-wj .eid-breath-stage{height:190px;display:flex;align-items:center;justify-content:center}
+.eid-wj .eid-circle{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#bfe3d3,var(--brand));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;transform:scale(.55);transition:transform 4s ease-in-out;box-shadow:0 6px 24px rgba(58,122,88,.25)}
+.eid-wj .eid-breath p{font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 14px}
 
-    .brand-name { font-size: 13px; color: var(--brand); letter-spacing: 0.04em; line-height: 1.3; }
+/* timeline */
+.eid-wj .eid-days{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.eid-wj .eid-days{grid-template-columns:1fr 1fr}}
+.eid-wj .eid-day{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;font-size:14.5px;color:var(--muted)}
+.eid-wj .eid-day-n{min-width:46px;height:46px;border-radius:12px;background:var(--brand);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;letter-spacing:.06em;text-transform:uppercase;line-height:1.1;flex-shrink:0}
+.eid-wj .eid-day-n b{font-size:18px;font-weight:bold;letter-spacing:0}
+.eid-wj .eid-ans{background:var(--warm);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 18px}
+.eid-wj .eid-ans-row{display:flex;gap:14px;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.eid-wj .eid-ans-row:last-child{border-bottom:none}
+.eid-wj .eid-ans-q{color:var(--muted);flex:1}
+.eid-wj .eid-ans-a{color:var(--brand);font-weight:bold;text-align:right}
 
-    h1 {
-      font-size: clamp(1.3rem, 4vw, 1.7rem);
-      font-weight: normal; color: var(--text);
-      line-height: 1.3; margin-bottom: 8px;
-    }
+/* footer */
+.eid-wj .eid-footer{text-align:center}
+.eid-wj .eid-foot-text{font-size:15px;color:var(--muted);margin:0 0 16px;font-style:italic}
+.eid-wj .eid-foot-links{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.eid-wj .eid-foot-links a,.eid-wj .eid-credit a{font-size:13.5px;color:var(--brand);text-decoration:none}
+.eid-wj .eid-foot-links a:hover,.eid-wj .eid-credit a:hover{text-decoration:underline}
+.eid-wj .eid-share{justify-content:center;margin-top:20px}
+.eid-wj .eid-credit{font-size:12.5px;color:var(--hint);margin-top:16px}
+.eid-wj .eid-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:11px 20px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;white-space:nowrap}
+.eid-wj .eid-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:520px){.eid-wj .eid-card{padding:22px 18px}.eid-wj .eid-progress{padding:18px}}
+@media(prefers-reduced-motion:reduce){.eid-wj .eid-panel.show{animation:none}.eid-wj .eid-chart-fill{transition:none}}
+</style>
 
-    .tagline { font-size: 15px; color: var(--muted); margin-bottom: 12px; line-height: 1.65; }
+<div class="eid-wj" id="eidWj">
+<div class="eid-wrap">
 
-    .disclaimer {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 11px 14px; font-size: 13px; color: var(--muted);
-    }
-
-    /* NAME FIELD */
-    .name-card {
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 16px 18px; margin-bottom: 16px;
-    }
-
-    .field-label { font-size: 14px; color: var(--text); margin-bottom: 7px; display: block; }
-
-    input[type="text"] {
-      width: 100%; border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 11px 14px;
-      font-family: "Georgia", serif; font-size: 15px;
-      color: var(--text); background: #fff; transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus { outline: none; border-color: var(--brand); }
-
-    /* PROGRESS */
-    .progress-card {
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 16px 20px; margin-bottom: 16px;
-    }
-
-    .progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .progress-label { font-size: 13px; color: var(--brand); font-weight: bold; }
-    .progress-pct { font-size: 12px; color: var(--hint); }
-
-    .progress-bar-wrap { height: 6px; background: var(--brand-light); border-radius: 99px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--brand); border-radius: 99px; transition: width 0.3s ease; width: 0%; }
-
-    /* QUESTION CARDS */
-    .question-card {
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 20px; margin-bottom: 14px;
-    }
-
-    .question-num {
-      font-size: 11px; font-weight: bold; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
-    }
-
-    .question-text { font-size: 16px; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
-
-    /* OPTIONS */
-    .options-grid {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 480px) { .options-grid { grid-template-columns: repeat(3, 1fr); } }
-
-    .option-btn {
-      display: block; width: 100%;
-      text-align: center; padding: 14px 12px;
-      border: 1.5px solid var(--border); border-radius: var(--radius-md);
-      background: #fff; font-family: "Georgia", serif;
-      font-size: 14px; color: var(--muted);
-      cursor: pointer; line-height: 1.45;
-      transition: all 0.15s;
-    }
-
-    .option-btn:hover { border-color: var(--brand); color: var(--text); background: var(--brand-light); }
-    .option-btn.selected { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-    /* INLINE FEEDBACK */
-    .inline-feedback {
-      display: none;
-      background: var(--accent-light);
-      border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md);
-      padding: 12px 14px; font-size: 13px;
-      color: var(--muted); line-height: 1.65; margin-top: 10px;
-    }
-
-    .inline-feedback.show { display: block; }
-
-    .feedback-title {
-      font-size: 12px; font-weight: bold; color: var(--brand);
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
-    }
-
-    /* RESULTS */
-    .results-card {
-      display: none; background: var(--card);
-      border-radius: var(--radius-lg); border: 1px solid var(--border);
-      padding: 22px 20px; margin-bottom: 16px;
-    }
-
-    .results-card.visible { display: block; }
-
-    .results-header {
-      background: var(--brand-light); border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md); padding: 18px 20px;
-      text-align: center; margin-bottom: 18px;
-    }
-
-    .results-name { font-size: 1.0rem; color: var(--brand); font-weight: normal; }
-    .results-type { font-size: 1.25rem; color: var(--text); margin: 6px 0; line-height: 1.3; }
-    .results-date { font-size: 12px; color: var(--hint); font-style: italic; }
-
-    .result-section { margin-bottom: 16px; }
-
-    .result-section-title {
-      font-size: 12px; font-weight: bold; color: var(--brand);
-      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;
-    }
-
-    .result-explanation {
-      background: var(--accent-light); border: 1px solid var(--brand-mid);
-      border-radius: var(--radius-md); padding: 14px 16px;
-      font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 12px;
-    }
-
-    .insight-row {
-      border: 1px solid var(--border); border-radius: var(--radius-md);
-      background: #fff; padding: 12px 15px; margin-bottom: 10px;
-    }
-
-    .insight-row-label {
-      font-size: 11px; font-weight: bold; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
-    }
-
-    .insight-row-text { font-size: 14px; color: var(--text); line-height: 1.65; }
-
-    /* PLAN */
-    .plan-list { list-style: none; padding: 0; }
-
-    .plan-list li {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 9px 0; border-bottom: 1px solid var(--border);
-      font-size: 14px; color: var(--muted); line-height: 1.55;
-    }
-
-    .plan-list li:last-child { border-bottom: none; }
-
-    .plan-num {
-      min-width: 22px; height: 22px; border-radius: 50%;
-      background: var(--brand); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: bold; flex-shrink: 0; margin-top: 1px;
-    }
-
-    /* ANSWER SUMMARY */
-    .answer-summary {
-      background: var(--warm); border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px;
-    }
-
-    .answer-row {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 7px 0; border-bottom: 1px solid var(--border);
-      font-size: 13px; line-height: 1.5;
-    }
-
-    .answer-row:last-child { border-bottom: none; }
-    .answer-q { color: var(--muted); flex: 1; }
-    .answer-a { color: var(--brand); font-weight: bold; white-space: nowrap; }
-
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
-    }
-
-    /* BUTTONS */
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 12px 20px; border-radius: 99px;
-      font-family: "Georgia", serif; font-size: 14px;
-      cursor: pointer; text-decoration: none;
-      border: 1.5px solid transparent; min-height: 46px;
-      transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(0.97); }
-    .btn:hover { opacity: 0.88; }
-
-    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    .btn-outline { background: #fff; color: var(--text); border-color: var(--border); }
-    .btn-danger { background: #fff; color: #b94040; border-color: #e8c0c0; }
-    .btn-share { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
-    .btn-support {
-      background: var(--support); color: #fff; border-color: var(--support);
-      font-size: 15px; padding: 14px 24px;
-    }
-
-    @media (max-width: 480px) { .btn { width: 100%; } .btn-row { flex-direction: column; } }
-
-    /* TOAST */
-    .toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--text); color: #fff;
-      padding: 10px 18px; border-radius: 99px;
-      font-size: 14px; font-family: "Georgia", serif;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s; z-index: 100; white-space: nowrap;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* FOOTER */
-    .footer {
-      background: var(--card); border-radius: var(--radius-lg);
-      border: 1px solid var(--border); padding: 22px 20px; text-align: center;
-    }
-
-    .footer-support-text { font-size: 14px; color: var(--muted); margin-bottom: 12px; font-style: italic; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
-    .footer-link:hover { text-decoration: underline; }
-    .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
-  </style>
-</head>
-<body>
-<div class="container">
-
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
-      <div class="brand-name">Emotional Intelligence<br>Developer</div>
+  <div class="eid-card">
+    <div class="eid-logo-row">
+      <img class="eid-logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy">
+      <div class="eid-brand">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Wellbeing Journey — Quick Check &amp; Reset</h1>
-    <p class="tagline">Answer 6 questions to discover your current wellbeing pattern, understand what it means, and get a practical 7-day micro-plan to start today.</p>
-    <div class="disclaimer">This tool offers general wellbeing guidance and is not a substitute for professional care.</div>
-  </header>
-
-  <!-- NAME FIELD -->
-  <div class="name-card">
-    <label class="field-label" for="participantName">Your name — for the results and PDF (optional)</label>
-    <input type="text" id="participantName" maxlength="80" placeholder="Enter your name here…" />
+    <h2 class="eid-title">Wellbeing Journey: Quick Check and Reset</h2>
+    <p class="eid-tagline">Answer 6 short questions to discover your current wellbeing pattern, understand what it means, and get a practical 7-day micro-plan to start today.</p>
+    <div class="eid-note">This tool offers general wellbeing guidance and is not a substitute for professional care.</div>
   </div>
 
-  <!-- PROGRESS -->
-  <div class="progress-card" aria-live="polite">
-    <div class="progress-top">
-      <span class="progress-label" id="progressLabel">0 of 6 answered</span>
-      <span class="progress-pct" id="progressPct">0% complete</span>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+  <div class="eid-card eid-progress" id="eidWjProgress" aria-live="polite">
+    <div class="eid-prog-top"><span class="eid-prog-label" id="eidWjProgLabel">Ready to begin</span><span class="eid-prog-pct" id="eidWjProgPct">0% complete</span></div>
+    <div class="eid-bar"><div class="eid-bar-fill" id="eidWjProgFill"></div></div>
+    <div class="eid-dots" id="eidWjDots"></div>
   </div>
 
-  <!-- QUESTIONS -->
-  <div id="questionsContainer"></div>
+  <!-- INTRO -->
+  <div class="eid-card eid-panel" id="eidWjIntro">
+    <div class="eid-step-num">Before you start</div>
+    <h2 class="eid-q">A calm two-minute check-in, one question at a time</h2>
+    <div class="eid-intro-grid">
+      <div class="eid-intro-item"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><path d="M20 12v8l5 3"/></svg><br>About two minutes</div>
+      <div class="eid-intro-item"><svg viewBox="0 0 40 40"><path d="M8 30c4-14 10-18 24-18-1 14-6 22-20 22"/><path d="M8 34c3-8 8-12 14-15"/></svg><br>Your pattern explained</div>
+      <div class="eid-intro-item"><svg viewBox="0 0 40 40"><rect x="7" y="9" width="26" height="24" rx="4"/><path d="M7 16h26M14 6v6M26 6v6"/></svg><br>A 7-day micro-plan and PDF</div>
+    </div>
+    <label class="eid-label" for="eidWjName">Your name for the results and PDF (optional)</label>
+    <input type="text" id="eidWjName" maxlength="80" placeholder="Enter your name here">
+    <div class="eid-nav"><span></span><button type="button" class="eid-btn eid-btn-primary" id="eidWjStart">Begin the check-in</button></div>
+  </div>
 
-  <!-- ACTIONS -->
-  <div class="question-card">
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="showResultsBtn">See my wellbeing plan</button>
-      <button type="button" class="btn btn-danger" id="resetBtn">Reset</button>
+  <!-- QUESTION -->
+  <div class="eid-card eid-panel" id="eidWjQuestion">
+    <div class="eid-step-num" id="eidWjQNum"></div>
+    <h2 class="eid-q" id="eidWjQText"></h2>
+    <div class="eid-opts" id="eidWjOpts"></div>
+    <div class="eid-fb" id="eidWjFb"><div class="eid-fb-t" id="eidWjFbT"></div><div id="eidWjFbB"></div></div>
+    <div class="eid-nav">
+      <button type="button" class="eid-btn eid-btn-outline" id="eidWjBack">Back</button>
+      <button type="button" class="eid-btn eid-btn-primary" id="eidWjNext" disabled>Next</button>
     </div>
   </div>
 
   <!-- RESULTS -->
-  <section class="results-card" id="resultsCard" aria-live="polite">
-
-    <div class="results-header">
-      <div class="results-name" id="resultsName"></div>
-      <div class="results-type" id="resultsType"></div>
-      <div class="results-date" id="resultsDate"></div>
+  <div class="eid-card eid-panel" id="eidWjResults" aria-live="polite">
+    <div class="eid-res-head">
+      <div class="eid-res-name" id="eidWjResName"></div>
+      <div class="eid-res-type" id="eidWjResType"></div>
+      <div class="eid-res-sec" id="eidWjResSec"></div>
+      <div class="eid-res-date" id="eidWjResDate"></div>
     </div>
 
-    <!-- EXPLANATION -->
-    <div class="result-section">
-      <div class="result-section-title">What this pattern means for you</div>
-      <div class="result-explanation" id="resultExplanation"></div>
+    <div class="eid-sec"><div class="eid-sec-t">Your pattern at a glance</div><div class="eid-chart" id="eidWjChart"></div></div>
+    <div class="eid-sec"><div class="eid-sec-t">What this pattern means for you</div><div class="eid-expl" id="eidWjExpl"></div></div>
+    <div class="eid-sec"><div class="eid-sec-t">Understanding your pattern</div><div class="eid-insights" id="eidWjInsights"></div></div>
+
+    <div class="eid-sec">
+      <div class="eid-sec-t">Try a reset right now</div>
+      <div class="eid-breath">
+        <div class="eid-breath-stage"><div class="eid-circle" id="eidWjCircle">Ready</div></div>
+        <p>A 60-second guided breath: in for 4, hold for 2, out for 6. Longer exhales help the body settle.</p>
+        <button type="button" class="eid-btn eid-btn-primary" id="eidWjBreathBtn">Start 60-second reset</button>
+      </div>
     </div>
 
-    <!-- INSIGHTS -->
-    <div class="result-section" id="insightRows"></div>
+    <div class="eid-sec"><div class="eid-sec-t">Your 7-day micro-plan</div><div class="eid-days" id="eidWjDays"></div></div>
+    <div class="eid-sec"><div class="eid-sec-t">Your answers</div><div class="eid-ans" id="eidWjAns"></div></div>
 
-    <!-- PLAN -->
-    <div class="result-section">
-      <div class="result-section-title">Your 7-day micro-plan</div>
-      <ul class="plan-list" id="planList"></ul>
+    <div class="eid-row">
+      <button type="button" class="eid-btn eid-btn-primary" id="eidWjPdf">Download PDF plan</button>
+      <button type="button" class="eid-btn eid-btn-outline" id="eidWjReview">Review my answers</button>
+      <button type="button" class="eid-btn eid-btn-outline" id="eidWjReset">Start again</button>
     </div>
-
-    <!-- YOUR ANSWERS -->
-    <div class="result-section">
-      <div class="result-section-title">Your answers</div>
-      <div class="answer-summary" id="answerSummary"></div>
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="section-label">Actions</div>
-    <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="downloadPdfBtn">Download PDF plan</button>
-      <button type="button" class="btn btn-share" id="copyLinkBtnResult">Copy link</button>
-      <a class="btn btn-share" id="waShareResult" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShareResult" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShareResult" target="_blank" rel="noopener">X</a>
-    </div>
-  </section>
+  </div>
 
   <!-- FOOTER -->
-  <footer class="footer" aria-label="Footer">
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
-    <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+  <footer class="eid-card eid-footer">
+    <p class="eid-foot-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="eid-btn eid-btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 28 36" aria-hidden="true"><circle cx="14" cy="6" r="4"/><path d="M14 10v14M14 14l-8-5M14 14l8-5M14 24l-6 10M14 24l6 10"/></svg>
+      <span>Support this website</span>
+      <svg viewBox="0 0 28 36" aria-hidden="true"><circle cx="14" cy="6" r="4"/><path d="M14 10l-7 15h14zM14 14l-8-5M14 14l8-5M11 25v9M17 25v9"/></svg>
+    </a>
+    <div class="eid-foot-links">
+      <a href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
+      <a href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
+      <a href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
+      <a href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
     </div>
-    <div class="btn-row" style="justify-content:center;margin-top:16px;">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+    <div class="eid-row eid-share">
+      <button type="button" class="eid-btn eid-btn-share" id="eidWjCopy">Copy link</button>
+      <a class="eid-btn eid-btn-share" id="eidWjWa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="eid-btn eid-btn-share" id="eidWjFb2" target="_blank" rel="noopener">Facebook</a>
+      <a class="eid-btn eid-btn-share" id="eidWjX" target="_blank" rel="noopener">X</a>
     </div>
-    <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;·&nbsp; Reflection support only — not professional care.
-    </p>
+    <p class="eid-credit">Created by <a href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a> | Reflection support only, not professional care.</p>
   </footer>
 
 </div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="eid-toast" id="eidWjToast" role="status" aria-live="polite"></div>
+</div>
 
 <script>
-(function () {
-  'use strict';
+var WJ_KEY = 'wellbeingJourneyV4';
+var WJ_LOGO = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
+var WJ_SITE = 'emotionalintelligencedeveloper.com';
 
-  const STORAGE_KEY = 'wellbeingJourneyV3';
-  const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const $ = id => document.getElementById(id);
+function wjEl(id) { return document.getElementById(id); }
 
-  // ── DATA ──────────────────────────────────────────────────────────────
+var WJ_ICONS = {
+  A: '<svg viewBox="0 0 40 40"><path d="M6 22c4-6 8-6 12 0s8 6 12 0 4-4 6-2"/><path d="M6 30c4-6 8-6 12 0s8 6 12 0 4-4 6-2"/><path d="M6 14c4-6 8-6 12 0s8 6 12 0 4-4 6-2"/></svg>',
+  B: '<svg viewBox="0 0 40 40"><path d="M10 28V14a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H16l-6 5z"/><path d="M16 17h8M16 22h5"/></svg>',
+  C: '<svg viewBox="0 0 40 40"><path d="M30 24a12 12 0 1 1-14-14 9 9 0 0 0 14 14z"/></svg>'
+};
 
-  const QUESTIONS = [
-    {
-      text: 'Which best describes how you feel most days?',
-      options: [
-        { key: 'A', label: 'Tense or rushed' },
-        { key: 'B', label: 'Mentally scattered' },
-        { key: 'C', label: 'Drained but pushing on' }
-      ],
-      feedback: {
-        A: { title: 'Physical tension pattern', body: 'Feeling tense or rushed most days suggests your nervous system is running in a sustained state of readiness — elevated but not necessarily acute. This is one of the most common modern stress signatures, and body-based tools respond to it fastest.' },
-        B: { title: 'Cognitive overload pattern', body: 'Feeling mentally scattered is a sign that the number of open loops — thoughts, tasks, worries, decisions — exceeds your current capacity to hold them. The brain burns significant energy maintaining these loops, which is why scattered-mind days feel exhausting even without physical activity.' },
-        C: { title: 'Depletion and override pattern', body: 'Feeling drained but pushing on is one of the most common and underrecognised patterns. The push-through reflex overrides the body\'s natural rest signals, which means depletion deepens without the person fully registering it — until the body finds a way to stop them.' }
-      }
-    },
-    {
-      text: 'When stress builds, you usually:',
-      options: [
-        { key: 'A', label: 'Hold tension in my body' },
-        { key: 'B', label: 'Overthink' },
-        { key: 'C', label: 'Keep going anyway' }
-      ],
-      feedback: {
-        A: { title: 'Somatic stress expression', body: 'Holding tension in the body — jaw, shoulders, chest, stomach — is how the nervous system stores unprocessed stress. Physical cues often appear before conscious awareness of the emotion, which is why body-based release practices are particularly effective for this pattern.' },
-        B: { title: 'Rumination pattern', body: 'Overthinking under stress is a common cognitive response where the prefrontal cortex attempts to solve what the emotional system has flagged as a threat. The problem is that most stress is not a solvable problem — it is a state that needs processing, not more analysis. Naming and writing can interrupt the loop.' },
-        C: { title: 'Suppression through action', body: 'Continuing to push through stress rather than pausing is often a learned adaptation — particularly common in people who were rewarded for productivity and persistence. It works in the short term and compounds in the medium term, producing the depletion that eventually forces a stop.' }
-      }
-    },
-    {
-      text: 'What helps you calm down most?',
-      options: [
-        { key: 'A', label: 'Breathing or movement' },
-        { key: 'B', label: 'Writing or reflection' },
-        { key: 'C', label: 'Rest and routine' }
-      ],
-      feedback: {
-        A: { title: 'Somatic regulation works for you', body: 'Knowing that breathing or movement reliably calms you is valuable self-knowledge. These are physiological interventions that directly shift nervous system state — they do not require insight or understanding to work. Short and regular is more effective than long and occasional for this approach.' },
-        B: { title: 'Reflective processing works for you', body: 'Writing or reflection helps you process what you are carrying. This is particularly effective for people whose stress is cognitive or emotional in nature — the act of externalising thoughts reduces the mental load of holding them internally and allows the brain to process rather than just loop.' },
-        C: { title: 'Structural recovery works for you', body: 'Rest and routine work because they provide the nervous system with predictability — a signal that it is safe to downregulate. For depletion-based stress, structural recovery (consistent sleep, regular meals, protected rest time) is more effective than acute interventions because it addresses the underlying deficit rather than just the surface symptoms.' }
-      }
-    },
-    {
-      text: 'How often do you recharge properly?',
-      options: [
-        { key: 'A', label: 'Rarely' },
-        { key: 'B', label: 'Sometimes' },
-        { key: 'C', label: 'Not enough' }
-      ],
-      feedback: {
-        A: { title: 'Recharge deficit is significant', body: 'Rarely recharging properly is not a personal failing — it is often a structural problem. Recharge has been deprioritised, crowded out, or made to feel indulgent. Research on recovery science shows the nervous system cannot sustain high output without real recovery windows. What is happening is not sustainable indefinitely.' },
-        B: { title: 'Inconsistent recovery pattern', body: 'Recharging sometimes suggests recovery is happening reactively — after it becomes unavoidable — rather than proactively as a planned part of daily or weekly life. Reactive recovery is less efficient than scheduled recovery because it happens from a deeper deficit.' },
-        C: { title: 'Chronic under-recovery', body: 'Knowing you are not recharging enough and continuing to operate that way is a pattern many people recognise but struggle to change. The barrier is usually structural — too many demands, too little protected time — rather than motivational. Small protected blocks, even 10 to 15 minutes daily, produce measurable recovery benefit over time.' }
-      }
-    },
-    {
-      text: 'What do you need most right now?',
-      options: [
-        { key: 'A', label: 'A quick calm reset' },
-        { key: 'B', label: 'Emotional clarity' },
-        { key: 'C', label: 'Better balance' }
-      ],
-      feedback: {
-        A: { title: 'Immediate regulation is your priority', body: 'Needing a quick calm reset means the current state is uncomfortable enough that you want direct relief. This is a well-calibrated self-awareness — your system is correctly identifying that physiological activation needs to come down before anything else can be addressed.' },
-        B: { title: 'Emotional processing is your priority', body: 'Needing emotional clarity means there is something unresolved or unnamed that is using cognitive and emotional resources. Clarity usually comes from naming — writing, talking, or even just sitting with a question like "What am I actually feeling?" for a few minutes.' },
-        C: { title: 'Structural balance is your priority', body: 'Wanting better balance is a recognition that the current arrangement of demands and recovery is unsustainable. Balance is not achieved by doing more — it is achieved by protecting less, saying no to more, and being deliberate about where energy goes rather than responding to whoever asks loudest.' }
-      }
-    },
-    {
-      text: 'Can you try one small change this week?',
-      options: [
-        { key: 'A', label: 'Yes' },
-        { key: 'B', label: 'Maybe' },
-        { key: 'C', label: 'I\'ll try' }
-      ],
-      feedback: {
-        A: { title: 'Readiness is high', body: 'Being ready to try something is the most important ingredient. The research on behaviour change confirms that intention combined with a specific plan — not a vague commitment — is the strongest predictor of follow-through. Choose the one smallest possible action and schedule it.' },
-        B: { title: 'Ambivalence is honest', body: '"Maybe" is an honest answer and more useful than forced certainty. Research on motivational interviewing shows that acknowledging ambivalence — rather than overriding it with willpower — produces better behaviour change outcomes. What would make it a yes? That question is worth sitting with.' },
-        C: { title: 'Intention is present', body: '"I\'ll try" contains genuine intention. The most effective version of trying is making the action as small as possible — small enough that it feels almost too easy. Research on implementation intentions shows that pairing the action with a specific time ("when I wake up, I will…") doubles follow-through rates.' }
-      }
+var WJ_AXES = {
+  A: { label: 'Body and tension', color: '#3a7a58' },
+  B: { label: 'Mind and clarity', color: '#3a7a78' },
+  C: { label: 'Rest and recovery', color: '#b89a3c' }
+};
+
+var WJ_QUESTIONS = [
+  { text: 'Which best describes how you feel most days?',
+    options: [ {key:'A',label:'Tense or rushed'}, {key:'B',label:'Mentally scattered'}, {key:'C',label:'Drained but pushing on'} ],
+    feedback: {
+      A: { title: 'Physical tension pattern', body: 'Feeling tense or rushed most days suggests your nervous system is running in a sustained state of readiness, elevated but not necessarily acute. This is one of the most common modern stress signatures, and body-based tools respond to it fastest.' },
+      B: { title: 'Cognitive overload pattern', body: 'Feeling mentally scattered is a sign that the number of open loops (thoughts, tasks, worries, decisions) exceeds your current capacity to hold them. The brain burns significant energy maintaining these loops, which is why scattered-mind days feel exhausting even without physical activity.' },
+      C: { title: 'Depletion and override pattern', body: "Feeling drained but pushing on is one of the most common and underrecognised patterns. The push-through reflex overrides the body's natural rest signals, which means depletion deepens without the person fully registering it, until the body finds a way to stop them." }
+    } },
+  { text: 'When stress builds, you usually:',
+    options: [ {key:'A',label:'Hold tension in my body'}, {key:'B',label:'Overthink'}, {key:'C',label:'Keep going anyway'} ],
+    feedback: {
+      A: { title: 'Somatic stress expression', body: 'Holding tension in the body (jaw, shoulders, chest, stomach) is how the nervous system stores unprocessed stress. Physical cues often appear before conscious awareness of the emotion, which is why body-based release practices are particularly effective for this pattern.' },
+      B: { title: 'Rumination pattern', body: 'Overthinking under stress is a common cognitive response where the prefrontal cortex attempts to solve what the emotional system has flagged as a threat. The problem is that most stress is not a solvable problem. It is a state that needs processing, not more analysis. Naming and writing can interrupt the loop.' },
+      C: { title: 'Suppression through action', body: 'Continuing to push through stress rather than pausing is often a learned adaptation, particularly common in people who were rewarded for productivity and persistence. It works in the short term and compounds in the medium term, producing the depletion that eventually forces a stop.' }
+    } },
+  { text: 'What helps you calm down most?',
+    options: [ {key:'A',label:'Breathing or movement'}, {key:'B',label:'Writing or reflection'}, {key:'C',label:'Rest and routine'} ],
+    feedback: {
+      A: { title: 'Somatic regulation works for you', body: 'Knowing that breathing or movement reliably calms you is valuable self-knowledge. These are physiological interventions that directly shift nervous system state, and they do not require insight or understanding to work. Short and regular is more effective than long and occasional for this approach.' },
+      B: { title: 'Reflective processing works for you', body: 'Writing or reflection helps you process what you are carrying. This is particularly effective for people whose stress is cognitive or emotional in nature. The act of externalising thoughts reduces the mental load of holding them internally and allows the brain to process rather than just loop.' },
+      C: { title: 'Structural recovery works for you', body: 'Rest and routine work because they give the nervous system predictability, a signal that it is safe to downregulate. For depletion-based stress, structural recovery (consistent sleep, regular meals, protected rest time) is more effective than acute interventions because it addresses the underlying deficit rather than just the surface symptoms.' }
+    } },
+  { text: 'How often do you recharge properly?',
+    options: [ {key:'A',label:'Rarely'}, {key:'B',label:'Sometimes'}, {key:'C',label:'Not enough'} ],
+    feedback: {
+      A: { title: 'Recharge deficit is significant', body: 'Rarely recharging properly is not a personal failing. It is often a structural problem. Recharge has been deprioritised, crowded out, or made to feel indulgent. Research on recovery science shows the nervous system cannot sustain high output without real recovery windows, so this is not sustainable indefinitely.' },
+      B: { title: 'Inconsistent recovery pattern', body: 'Recharging sometimes suggests recovery is happening reactively, after it becomes unavoidable, rather than proactively as a planned part of daily or weekly life. Reactive recovery is less efficient than scheduled recovery because it happens from a deeper deficit.' },
+      C: { title: 'Chronic under-recovery', body: 'Knowing you are not recharging enough and continuing to operate that way is a pattern many people recognise but struggle to change. The barrier is usually structural (too many demands, too little protected time) rather than motivational. Small protected blocks, even 10 to 15 minutes daily, produce measurable recovery benefit over time.' }
+    } },
+  { text: 'What do you need most right now?',
+    options: [ {key:'A',label:'A quick calm reset'}, {key:'B',label:'Emotional clarity'}, {key:'C',label:'Better balance'} ],
+    feedback: {
+      A: { title: 'Immediate regulation is your priority', body: 'Needing a quick calm reset means the current state is uncomfortable enough that you want direct relief. This is well-calibrated self-awareness. Your system is correctly identifying that physiological activation needs to come down before anything else can be addressed.' },
+      B: { title: 'Emotional processing is your priority', body: 'Needing emotional clarity means there is something unresolved or unnamed that is using cognitive and emotional resources. Clarity usually comes from naming: writing, talking, or even just sitting with a question like "What am I actually feeling?" for a few minutes.' },
+      C: { title: 'Structural balance is your priority', body: 'Wanting better balance is a recognition that the current arrangement of demands and recovery is unsustainable. Balance is not achieved by doing more. It is achieved by protecting more, saying no more often, and being deliberate about where energy goes rather than responding to whoever asks loudest.' }
+    } },
+  { text: 'Can you try one small change this week?',
+    options: [ {key:'A',label:'Yes'}, {key:'B',label:'Maybe'}, {key:'C',label:"I'll try"} ],
+    feedback: {
+      A: { title: 'Readiness is high', body: 'Being ready to try something is the most important ingredient. The research on behaviour change confirms that intention combined with a specific plan, not a vague commitment, is the strongest predictor of follow-through. Choose the one smallest possible action and schedule it.' },
+      B: { title: 'Ambivalence is honest', body: '"Maybe" is an honest answer and more useful than forced certainty. Research on motivational interviewing shows that acknowledging ambivalence, rather than overriding it with willpower, produces better behaviour change outcomes. What would make it a yes? That question is worth sitting with.' },
+      C: { title: 'Intention is present', body: '"I\'ll try" contains genuine intention. The most effective version of trying is making the action as small as possible, small enough that it feels almost too easy. Research on implementation intentions shows that pairing the action with a specific time ("when I wake up, I will...") substantially improves follow-through.' }
+    } }
+];
+
+var WJ_PLANS = {
+  A: {
+    title: 'Quick Calm Reset: Breath and Body',
+    explanation: 'Your answers point to a pattern where physical tension and urgency dominate your experience. Your nervous system is running in a sustained state of readiness that does not easily switch off. The most effective tools for this pattern work at the physiological level, directly shifting the body rather than reasoning with the mind about it.',
+    insights: [
+      { label: 'Why this pattern shows up', text: 'Sustained physical tension is how the nervous system maintains readiness when demands are consistently high. The body is doing its job, keeping you alert and responsive, but without regular physical downregulation it stays elevated even when the pressure has passed. The system is not broken. It is stuck in a mode that is no longer needed.' },
+      { label: 'How it affects your daily life', text: 'Chronic physical tension tends to show up as difficulty fully relaxing, disturbed sleep, jaw pain, headaches, or a vague sense of being unable to switch off. Decision-making and creativity are also affected, because the prefrontal cortex operates below its capacity when the body is in sustained activation.' },
+      { label: 'What consistent practice builds', text: "Regular brief physical resets measurably reduce baseline cortisol over time, improve sleep quality, and increase what physiologists call vagal tone, the nervous system's capacity to shift between activation and rest. Even two minutes of slow extended exhales, practised consistently, produces genuine physiological change within a few weeks." }
+    ],
+    plan: [
+      'Morning: 90-second breathing reset before looking at your phone. Inhale 4, hold 2, exhale 6.',
+      'Midday: one 2-minute body scan. Notice and release jaw, shoulders, and hands.',
+      'Evening: a short walk without headphones before or after dinner.',
+      'Set one physical anchor for stress: a gesture, a breath, or a movement you use every time tension rises.',
+      'Identify the time of day you feel most tense and protect 5 minutes either side of it for a micro-reset.',
+      'Choose one screen-free activity each day, however small. Even 10 minutes counts.',
+      'End the week by noticing one thing that helped your body feel less tight.'
+    ]
+  },
+  B: {
+    title: 'Emotional Clarity Reset: Reflection and Processing',
+    explanation: 'Your answers point to a pattern where mental and emotional load exceeds your current processing capacity. Thoughts accumulate, emotions go unnamed, and the resulting cognitive noise makes everything feel harder than it needs to be. The most effective tools for this pattern involve externalising: getting what is inside into a form you can look at, rather than carrying it around in your head.',
+    insights: [
+      { label: 'Why this pattern shows up', text: 'Mental scatter and overthinking are the predictable result of more input than output, with more coming in than is being processed. The brain maintains open loops for everything unresolved, and each loop uses working memory and emotional energy. Writing, talking, and naming are not luxuries. They are how the brain closes loops and restores available capacity.' },
+      { label: 'How it affects your daily life', text: 'This pattern tends to show up as difficulty concentrating, a sense of low-grade anxiety without a clear cause, trouble sleeping because the mind stays active, and interactions feeling more loaded than they should. Small decisions can feel disproportionately hard because the system is already near capacity before the decision arrives.' },
+      { label: 'What consistent practice builds', text: 'Research by James Pennebaker at the University of Texas shows that expressive writing for as little as 15 minutes, three to four times, produces lasting measurable improvements in mood, immune function, and cognitive clarity. The mechanism is not catharsis but cognitive integration. The brain processes and organises what was previously unsorted.' }
+    ],
+    plan: [
+      'Morning: write three sentences about how you are actually feeling today, not how you should feel.',
+      'Use the phrase "A part of me feels..." when you notice something difficult. It reduces self-judgment.',
+      'Set a 15-minute reflection block three times this week. No task agenda, just honest awareness.',
+      'Write one "release list" of things you are carrying that you are ready to put down, even temporarily.',
+      'Identify one conversation you have been postponing and take one small step toward it.',
+      'End each day with one honest sentence: what was the strongest feeling today, and what did it need?',
+      'Notice one recurring thought this week and write a kinder or more accurate version of it.'
+    ]
+  },
+  C: {
+    title: 'Balance and Rest Reset: Structure and Recovery',
+    explanation: 'Your answers point to a pattern of sustained output without adequate recovery. You are functioning, but the gap between what is being spent and what is being restored is widening. The most effective tools for this pattern are not techniques. They are structural changes that protect recovery time before it gets consumed by the next demand.',
+    insights: [
+      { label: 'Why this pattern shows up', text: 'Chronic under-recovery is often not a choice. It is a situation. Demands accumulate, recovery gets crowded out, and the pattern becomes self-reinforcing because fatigue reduces the capacity to make the changes needed to address it. The nervous system adapts by reducing its distress signals, which is why depletion can feel like numbness rather than pain.' },
+      { label: 'How it affects your daily life', text: 'This pattern tends to show up as decision fatigue (small choices feeling disproportionately hard), reduced patience with minor frustrations, difficulty feeling genuinely interested or motivated, and a growing gap between what you want to do and what you have energy for. Over time it erodes the sense of possibility that is central to wellbeing.' },
+      { label: 'What consistent practice builds', text: "Research on recovery and performance, including Matthew Walker's work on sleep science and the occupational health research of Sabine Sonnentag on detachment and recovery, shows that consistent small recovery actions produce compound benefits over time. Sleep consistency (the same wake time) is one of the highest-leverage variables available. Even 20 minutes of genuine rest, non-productive and unstimulating, produces measurable cognitive and emotional restoration." }
+    ],
+    plan: [
+      'Set a consistent wake time and keep it for the full week, even at weekends.',
+      'Identify one commitment you can postpone, decline, or delegate this week.',
+      'Schedule two 15-minute rest blocks daily. Genuinely unstructured, phone away.',
+      'Set one wind-down anchor: a time each evening when you begin reducing stimulation.',
+      'Protect a 20-minute no-screen window before sleep for the full week.',
+      "Write tomorrow's one most important task tonight, then stop planning and rest.",
+      'End the week by identifying one structural change that would make next week slightly more sustainable.'
+    ]
+  }
+};
+
+var WJ_SCIENCE = [
+  ['Why daily recovery matters more than weekend rest',
+   'Research in occupational health by Sabine Sonnentag at the University of Mannheim identifies daily recovery, meaning brief genuine detachment from work and demands during evenings and between tasks, as a stronger predictor of wellbeing and performance than weekly or holiday rest. The mechanism is psychological detachment: the brain needs regular windows of low-demand processing to restore the attentional and emotional resources consumed during high-demand periods. Without daily recovery, deficit accumulates across the week regardless of what happens at the weekend.'],
+  ['The neuroscience of the stress response and why it persists',
+   'The stress response evolved to handle acute, time-limited threats. When activated by sustained modern demands such as deadlines, uncertainty, and relational friction, it produces the same physiological cascade: cortisol, elevated heart rate, muscle tension, reduced digestion. The off-switch for sustained stress is not the absence of threat but an active physiological signal of safety. This is why passive rest (scrolling, TV) often does not produce genuine recovery, because the nervous system is still registering stimulation. Active downregulation through breathing, movement, or genuine rest is required.'],
+  ['Why small consistent actions outperform large irregular efforts',
+   'Research on habit formation and neuroplasticity confirms that the brain reorganises itself around what it does regularly, not what it does intensely. A two-minute breathing practice every day produces more durable physiological change than a one-hour session done once a week. This is the basis of the micro-habit approach developed by B.J. Fogg at Stanford: the smallest possible version of a beneficial action, reliably performed, builds the neural infrastructure that makes larger change possible. Consistency is the mechanism; intensity matters far less than regularity.'],
+  ['The role of emotional naming in reducing distress',
+   'Research by Matthew Lieberman at UCLA shows that labelling an emotional state, writing or saying "I feel anxious" rather than just experiencing anxiety, activates the prefrontal cortex and measurably reduces amygdala activation. This effect has been replicated across multiple studies and is the neurological basis for journaling, reflective writing, and any practice that involves naming internal experience. Labelling is not merely descriptive. It is regulatory. It shifts the brain from reactive processing to reflective processing, which restores the sense of agency that stress tends to erode.'],
+  ['Sleep consistency as a wellbeing foundation',
+   'Research by Matthew Walker at UC Berkeley on sleep science identifies sleep timing consistency, maintaining a regular wake time, as one of the most powerful variables in emotional regulation, cognitive function, and physical health. Irregular sleep schedules disrupt circadian rhythm in ways that compound other stressors, reducing emotional resilience and increasing the subjective intensity of daily demands. Even one week of consistent wake times produces measurable improvement in mood and cognitive performance. The quality of everything else depends significantly on the quality of this foundation.']
+];
+
+var wjAnswers = [null, null, null, null, null, null];
+var wjStep = 0; // 0 intro, 1-6 questions, 7 results
+var wjToastTimer = null;
+var wjBreathTimer = null;
+var wjBreathRunning = false;
+
+function wjToast(msg) {
+  var el = wjEl('eidWjToast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(wjToastTimer);
+  wjToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+}
+
+function wjSave() {
+  try {
+    localStorage.setItem(WJ_KEY, JSON.stringify({ a: wjAnswers, n: wjEl('eidWjName').value, s: wjStep }));
+  } catch (e) {}
+}
+
+function wjRestore() {
+  try {
+    var raw = localStorage.getItem(WJ_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (d && Array.isArray(d.a) && d.a.length === 6) wjAnswers = d.a;
+    if (d && typeof d.n === 'string') wjEl('eidWjName').value = d.n;
+    if (d && typeof d.s === 'number' && d.s >= 0 && d.s <= 7) {
+      wjStep = d.s;
+      if (wjStep === 7 && wjAnswers.indexOf(null) !== -1) wjStep = 1;
     }
+  } catch (e) {}
+}
+
+function wjAnsweredCount() {
+  var n = 0;
+  for (var i = 0; i < wjAnswers.length; i++) if (wjAnswers[i]) n++;
+  return n;
+}
+
+function wjProgress() {
+  var done = wjAnsweredCount();
+  var pct = Math.round((done / 6) * 100);
+  var label;
+  if (wjStep === 0) label = 'Ready to begin';
+  else if (wjStep === 7) label = 'All 6 answered';
+  else label = 'Question ' + wjStep + ' of 6';
+  wjEl('eidWjProgLabel').textContent = label;
+  wjEl('eidWjProgPct').textContent = pct + '% complete';
+  wjEl('eidWjProgFill').style.width = pct + '%';
+  var dots = wjEl('eidWjDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= 6; i++) {
+    var d = document.createElement('div');
+    d.className = 'eid-dot' + (wjAnswers[i - 1] ? ' done' : '') + (i === wjStep ? ' now' : '');
+    dots.appendChild(d);
+  }
+}
+
+function wjShowPanel(id) {
+  var ids = ['eidWjIntro', 'eidWjQuestion', 'eidWjResults'];
+  for (var i = 0; i < ids.length; i++) wjEl(ids[i]).classList.toggle('show', ids[i] === id);
+}
+
+function wjRenderQuestion() {
+  var qi = wjStep - 1;
+  var q = WJ_QUESTIONS[qi];
+  wjEl('eidWjQNum').textContent = 'Question ' + (qi + 1) + ' of 6';
+  wjEl('eidWjQText').textContent = q.text;
+  var opts = wjEl('eidWjOpts');
+  opts.innerHTML = '';
+  q.options.forEach(function (opt) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'eid-opt' + (wjAnswers[qi] === opt.key ? ' sel' : '');
+    b.innerHTML = WJ_ICONS[opt.key] + '<span></span>';
+    b.querySelector('span').textContent = opt.label;
+    b.addEventListener('click', function () { wjChoose(qi, opt.key); });
+    opts.appendChild(b);
+  });
+  wjFeedback(qi);
+  wjEl('eidWjNext').disabled = !wjAnswers[qi];
+  wjEl('eidWjNext').textContent = qi === 5 ? 'See my wellbeing plan' : 'Next';
+}
+
+function wjFeedback(qi) {
+  var key = wjAnswers[qi];
+  var box = wjEl('eidWjFb');
+  if (!key) { box.classList.remove('show'); return; }
+  var fb = WJ_QUESTIONS[qi].feedback[key];
+  wjEl('eidWjFbT').textContent = fb.title;
+  wjEl('eidWjFbB').textContent = fb.body;
+  box.classList.add('show');
+}
+
+function wjChoose(qi, key) {
+  wjAnswers[qi] = key;
+  var btns = wjEl('eidWjOpts').children;
+  for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('sel', WJ_QUESTIONS[qi].options[i].key === key);
+  wjFeedback(qi);
+  wjEl('eidWjNext').disabled = false;
+  wjProgress();
+  wjSave();
+}
+
+function wjCounts() {
+  var c = { A: 0, B: 0, C: 0 };
+  wjAnswers.forEach(function (a) { if (a) c[a]++; });
+  return c;
+}
+
+function wjRanked() {
+  var c = wjCounts();
+  return ['A', 'B', 'C'].sort(function (x, y) {
+    if (c[y] !== c[x]) return c[y] - c[x];
+    return x < y ? -1 : 1;
+  });
+}
+
+function wjFormatDate() {
+  return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function wjRenderResults() {
+  var c = wjCounts();
+  var ranked = wjRanked();
+  var top = ranked[0];
+  var second = ranked[1];
+  var data = WJ_PLANS[top];
+  var name = wjEl('eidWjName').value.trim();
+
+  wjEl('eidWjResName').textContent = name ? name + ', your Wellbeing Journey results' : 'Your Wellbeing Journey results';
+  wjEl('eidWjResType').textContent = data.title;
+  wjEl('eidWjResSec').textContent = c[second] > 0 ? 'Also showing up: ' + WJ_AXES[second].label.toLowerCase() : '';
+  wjEl('eidWjResDate').textContent = wjFormatDate();
+
+  var chart = wjEl('eidWjChart');
+  chart.innerHTML = '';
+  ['A', 'B', 'C'].forEach(function (k) {
+    var row = document.createElement('div');
+    row.className = 'eid-chart-row';
+    row.innerHTML = '<div class="eid-chart-lab"></div><div class="eid-chart-track"><div class="eid-chart-fill"></div></div><div class="eid-chart-val"></div>';
+    row.querySelector('.eid-chart-lab').textContent = WJ_AXES[k].label + (k === top ? ' (main)' : '');
+    row.querySelector('.eid-chart-val').textContent = c[k] + ' of 6';
+    var fill = row.querySelector('.eid-chart-fill');
+    fill.style.background = WJ_AXES[k].color;
+    chart.appendChild(row);
+    setTimeout(function () { fill.style.width = Math.round((c[k] / 6) * 100) + '%'; }, 80);
+  });
+
+  wjEl('eidWjExpl').textContent = data.explanation;
+
+  var ins = wjEl('eidWjInsights');
+  ins.innerHTML = '';
+  data.insights.forEach(function (i) {
+    var d = document.createElement('div');
+    d.className = 'eid-insight';
+    d.innerHTML = '<div class="eid-insight-l"></div><div class="eid-insight-t"></div>';
+    d.querySelector('.eid-insight-l').textContent = i.label;
+    d.querySelector('.eid-insight-t').textContent = i.text;
+    ins.appendChild(d);
+  });
+
+  var days = wjEl('eidWjDays');
+  days.innerHTML = '';
+  data.plan.forEach(function (item, i) {
+    var d = document.createElement('div');
+    d.className = 'eid-day';
+    d.innerHTML = '<div class="eid-day-n">Day<b>' + (i + 1) + '</b></div><div></div>';
+    d.lastChild.textContent = item;
+    days.appendChild(d);
+  });
+
+  var ans = wjEl('eidWjAns');
+  ans.innerHTML = '';
+  WJ_QUESTIONS.forEach(function (q, i) {
+    var chosen = q.options.filter(function (o) { return o.key === wjAnswers[i]; })[0];
+    var r = document.createElement('div');
+    r.className = 'eid-ans-row';
+    r.innerHTML = '<span class="eid-ans-q"></span><span class="eid-ans-a"></span>';
+    r.querySelector('.eid-ans-q').textContent = q.text;
+    r.querySelector('.eid-ans-a').textContent = chosen ? chosen.label : 'Not answered';
+    ans.appendChild(r);
+  });
+}
+
+function wjRender() {
+  wjProgress();
+  if (wjStep === 0) wjShowPanel('eidWjIntro');
+  else if (wjStep === 7) { wjRenderResults(); wjShowPanel('eidWjResults'); }
+  else { wjRenderQuestion(); wjShowPanel('eidWjQuestion'); }
+  wjSave();
+}
+
+function wjScrollTop() {
+  var el = wjEl('eidWj');
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function wjGo(step) {
+  wjBreathStop(true);
+  wjStep = step;
+  wjRender();
+  wjScrollTop();
+}
+
+function wjNext() {
+  if (wjStep >= 1 && wjStep <= 6) {
+    if (!wjAnswers[wjStep - 1]) { wjToast('Please choose an answer first.'); return; }
+    wjGo(wjStep + 1);
+  }
+}
+
+function wjBack() {
+  if (wjStep > 1) wjGo(wjStep - 1);
+  else wjGo(0);
+}
+
+function wjReset() {
+  wjBreathStop(true);
+  wjAnswers = [null, null, null, null, null, null];
+  try { localStorage.removeItem(WJ_KEY); } catch (e) {}
+  wjStep = 0;
+  wjRender();
+  wjScrollTop();
+  wjToast('Reset complete.');
+}
+
+/* breathing reset */
+function wjBreathStop(silent) {
+  clearTimeout(wjBreathTimer);
+  wjBreathRunning = false;
+  var c = wjEl('eidWjCircle');
+  var b = wjEl('eidWjBreathBtn');
+  if (!c || !b) return;
+  c.style.transition = 'transform .6s ease';
+  c.style.transform = 'scale(.55)';
+  c.textContent = silent ? 'Ready' : 'Ready';
+  b.textContent = 'Start 60-second reset';
+}
+
+function wjBreathStart() {
+  if (wjBreathRunning) { wjBreathStop(); return; }
+  wjBreathRunning = true;
+  var c = wjEl('eidWjCircle');
+  wjEl('eidWjBreathBtn').textContent = 'Stop';
+  var phases = [
+    { t: 'Breathe in', s: 4, scale: 1 },
+    { t: 'Hold', s: 2, scale: 1 },
+    { t: 'Breathe out', s: 6, scale: 0.55 }
   ];
-
-  const PLAN_DATA = {
-    A: {
-      title: 'Quick Calm Reset — Breath and Body',
-      explanation: 'Your answers point to a pattern where physical tension and urgency dominate your experience. Your nervous system is running in a sustained state of readiness that does not easily switch off. The most effective tools for this pattern work at the physiological level — directly shifting the body rather than reasoning with the mind about it.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'Sustained physical tension is how the nervous system maintains readiness when demands are consistently high. The body is doing its job — keeping you alert and responsive — but without regular physical downregulation, it stays elevated even when the pressure has passed. The system is not broken; it is stuck in a mode that is no longer needed.' },
-        { label: 'How it affects your daily life', text: 'Chronic physical tension tends to show up as difficulty fully relaxing, disturbed sleep, jaw pain, headaches, or a vague sense of being unable to switch off. Decision-making and creativity are also affected, because the prefrontal cortex operates below its capacity when the body is in sustained activation.' },
-        { label: 'What consistent practice builds', text: 'Regular brief physical resets measurably reduce baseline cortisol over time, improve sleep quality, and increase what physiologists call vagal tone — the nervous system\'s capacity to shift between activation and rest. Even two minutes of slow extended exhales, practised consistently, produces genuine physiological change within a few weeks.' }
-      ],
-      plan: [
-        'Morning: 90-second breathing reset before looking at your phone — inhale 4, hold 2, exhale 6.',
-        'Midday: one 2-minute body scan — notice and release jaw, shoulders, and hands.',
-        'Evening: a short walk without headphones before or after dinner.',
-        'Set one physical anchor for stress — a gesture, a breath, a movement you use every time tension rises.',
-        'Identify the time of day you feel most tense and protect 5 minutes either side of it for a micro-reset.',
-        'Choose one screen-free activity each day, however small — even 10 minutes counts.',
-        'End the week by noticing one thing that helped your body feel less tight.'
-      ]
-    },
-    B: {
-      title: 'Emotional Clarity Reset — Reflection and Processing',
-      explanation: 'Your answers point to a pattern where mental and emotional load exceeds your current processing capacity. Thoughts accumulate, emotions go unnamed, and the resulting cognitive noise makes everything feel harder than it needs to be. The most effective tools for this pattern involve externalising — getting what is inside into a form you can look at, rather than carrying it around in your head.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'Mental scatter and overthinking are the predictable result of more input than output — more coming in than being processed. The brain maintains open loops for everything unresolved, and each loop uses working memory and emotional energy. Writing, talking, and naming are not luxuries; they are how the brain closes loops and restores available capacity.' },
-        { label: 'How it affects your daily life', text: 'This pattern tends to show up as difficulty concentrating, a sense of low-grade anxiety without a clear cause, trouble sleeping because the mind stays active, and interactions feeling more loaded than they should. Small decisions can feel disproportionately hard because the system is already near capacity before the decision arrives.' },
-        { label: 'What consistent practice builds', text: 'Research by James Pennebaker at the University of Texas shows that expressive writing for as little as 15 minutes, three to four times, produces lasting measurable improvements in mood, immune function, and cognitive clarity. The mechanism is not catharsis but cognitive integration — the brain processes and organises what was previously unsorted.' }
-      ],
-      plan: [
-        'Morning: write three sentences about how you are actually feeling today — not how you should feel.',
-        'Use the phrase "A part of me feels…" when you notice something difficult. It reduces self-judgment.',
-        'Set a 15-minute reflection block three times this week — no task agenda, just honest awareness.',
-        'Write one "release list" — things you are carrying that you are ready to put down, even temporarily.',
-        'Identify one conversation you have been postponing and take one small step toward it.',
-        'End each day with one honest sentence: what was the strongest feeling today, and what did it need?',
-        'Notice one recurring thought this week and write a kinder or more accurate version of it.'
-      ]
-    },
-    C: {
-      title: 'Balance and Rest Reset — Structure and Recovery',
-      explanation: 'Your answers point to a pattern of sustained output without adequate recovery. You are functioning, but the gap between what is being spent and what is being restored is widening. The most effective tools for this pattern are not techniques — they are structural changes that protect recovery time before it gets consumed by the next demand.',
-      insights: [
-        { label: 'Why this pattern shows up', text: 'Chronic under-recovery is often not a choice — it is a situation. Demands accumulate, recovery gets crowded out, and the pattern becomes self-reinforcing because fatigue reduces the capacity to make the changes needed to address it. The nervous system adapts by reducing its distress signals, which is why depletion can feel like numbness rather than pain.' },
-        { label: 'How it affects your daily life', text: 'This pattern tends to show up as decision fatigue (small choices feeling disproportionately hard), reduced patience with minor frustrations, difficulty feeling genuinely interested or motivated, and a growing gap between what you want to do and what you have energy for. Over time it erodes the sense of possibility that is central to wellbeing.' },
-        { label: 'What consistent practice builds', text: 'Research on recovery and performance — including Matthew Walker\'s work on sleep science and the occupational health research of Sabine Sonnentag on detachment and recovery — shows that consistent small recovery actions produce compound benefits over time. Sleep consistency (same wake time) is one of the highest-leverage variables available. Even 20 minutes of genuine rest — non-productive, unstimulating — produces measurable cognitive and emotional restoration.' }
-      ],
-      plan: [
-        'Set a consistent wake time and maintain it for the full week — even at weekends.',
-        'Identify one commitment you can postpone, decline, or delegate this week.',
-        'Schedule two 15-minute rest blocks daily — genuinely unstructured, phone away.',
-        'Set one wind-down anchor: a time each evening when you begin reducing stimulation.',
-        'Protect a 20-minute no-screen window before sleep for the full week.',
-        'Write tomorrow\'s one most important task tonight — then stop planning and rest.',
-        'End the week by identifying one structural change that would make next week slightly more sustainable.'
-      ]
-    }
-  };
-
-  // ── STATE ──────────────────────────────────────────────────────────────
-
-  const answers = new Array(QUESTIONS.length).fill(null);
-  let toastTimer;
-
-  function showToast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
-  }
-
-  // ── BUILD QUESTIONS ────────────────────────────────────────────────────
-
-  function buildQuestions() {
-    const container = $('questionsContainer');
-    QUESTIONS.forEach((q, i) => {
-      const card = document.createElement('div');
-      card.className = 'question-card';
-
-      card.innerHTML = `
-        <div class="question-num">Question ${i + 1} of ${QUESTIONS.length}</div>
-        <div class="question-text">${q.text}</div>
-        <div class="options-grid" id="opts-${i}">
-          ${q.options.map(opt => `
-            <button type="button" class="option-btn" data-q="${i}" data-key="${opt.key}">${opt.label}</button>
-          `).join('')}
-        </div>
-        <div class="inline-feedback" id="fb-${i}">
-          <div class="feedback-title" id="fbt-${i}"></div>
-          <div id="fbb-${i}"></div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-
-    document.querySelectorAll('.option-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const qi = parseInt(btn.dataset.q, 10);
-        const key = btn.dataset.key;
-        answers[qi] = key;
-
-        // Update button states
-        document.querySelectorAll(`.option-btn[data-q="${qi}"]`).forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-
-        // Show inline feedback
-        const fb = QUESTIONS[qi].feedback[key];
-        if (fb) {
-          $('fbt-' + qi).textContent = fb.title;
-          $('fbb-' + qi).textContent = fb.body;
-          $('fb-' + qi).classList.add('show');
-        }
-
-        updateProgress();
-        saveState();
-      });
-    });
-  }
-
-  // ── PROGRESS ───────────────────────────────────────────────────────────
-
-  function updateProgress() {
-    const done = answers.filter(a => a !== null).length;
-    const pct = Math.round((done / QUESTIONS.length) * 100);
-    $('progressLabel').textContent = done + ' of ' + QUESTIONS.length + ' answered';
-    $('progressPct').textContent = pct + '% complete';
-    $('progressFill').style.width = pct + '%';
-  }
-
-  // ── SAVE / RESTORE ─────────────────────────────────────────────────────
-
-  function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); } catch(_) {}
-  }
-
-  function restoreState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const saved = JSON.parse(raw);
-      if (!Array.isArray(saved)) return;
-      saved.forEach((key, i) => {
-        if (!key) return;
-        answers[i] = key;
-        const btn = document.querySelector(`.option-btn[data-q="${i}"][data-key="${key}"]`);
-        if (btn) {
-          btn.classList.add('selected');
-          const fb = QUESTIONS[i].feedback[key];
-          if (fb) {
-            $('fbt-' + i).textContent = fb.title;
-            $('fbb-' + i).textContent = fb.body;
-            $('fb-' + i).classList.add('show');
-          }
-        }
-      });
-      updateProgress();
-    } catch(_) {}
-  }
-
-  // ── RESULTS ────────────────────────────────────────────────────────────
-
-  function getTopKey() {
-    const counts = { A: 0, B: 0, C: 0 };
-    answers.forEach(a => { if (a) counts[a]++; });
-    return Object.keys(counts).reduce((a, b) => counts[a] >= counts[b] ? a : b);
-  }
-
-  function showResults() {
-    if (answers.includes(null)) {
-      showToast('Please answer all 6 questions first.');
-      const firstNull = answers.indexOf(null);
-      document.querySelectorAll('.question-card')[firstNull]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  var cycles = 0;
+  var idx = 0;
+  function run() {
+    if (!wjBreathRunning) return;
+    if (cycles >= 5) {
+      wjBreathStop();
+      c.textContent = 'Well done';
       return;
     }
+    var p = phases[idx];
+    c.textContent = p.t;
+    c.style.transition = 'transform ' + p.s + 's ease-in-out';
+    c.style.transform = 'scale(' + p.scale + ')';
+    wjBreathTimer = setTimeout(function () {
+      idx++;
+      if (idx >= phases.length) { idx = 0; cycles++; }
+      run();
+    }, p.s * 1000);
+  }
+  run();
+}
 
-    const key = getTopKey();
-    const data = PLAN_DATA[key];
-    const name = $('participantName').value.trim();
+/* sharing */
+function wjShareLinks() {
+  var url = encodeURIComponent(window.location.href);
+  var msg = encodeURIComponent('A gentle 6-question wellbeing check-in with a practical 7-day reset plan: ');
+  wjEl('eidWjWa').href = 'https://wa.me/?text=' + msg + url;
+  wjEl('eidWjFb2').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  wjEl('eidWjX').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+}
 
-    $('resultsName').textContent = name ? name + ' — Wellbeing Journey Results' : 'Wellbeing Journey Results';
-    $('resultsType').textContent = data.title;
-    $('resultsDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+async function wjCopy() {
+  try { await navigator.clipboard.writeText(window.location.href); wjToast('Link copied!'); }
+  catch (e) { wjToast('Copy from your address bar.'); }
+}
 
-    $('resultExplanation').textContent = data.explanation;
+/* PDF */
+async function wjImageToDataUrl(url) {
+  var res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error('Logo failed');
+  var blob = await res.blob();
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.onloadend = function () { resolve(reader.result); };
+    reader.onerror = function () { reject(); };
+    reader.readAsDataURL(blob);
+  });
+}
 
-    const insightContainer = $('insightRows');
-    insightContainer.innerHTML = '<div class="result-section-title">Understanding your pattern</div>';
-    data.insights.forEach(ins => {
-      insightContainer.innerHTML += `
-        <div class="insight-row">
-          <div class="insight-row-label">${ins.label}</div>
-          <div class="insight-row-text">${ins.text}</div>
-        </div>
-      `;
-    });
+async function wjDownloadPdf() {
+  if (!wjEl('eidWjResults').classList.contains('show')) { wjToast('Please complete the check-in first.'); return; }
+  var lib = window.jspdf && window.jspdf.jsPDF;
+  if (!lib) { wjToast('PDF library unavailable. Please retry.'); return; }
+  wjToast('Preparing your PDF...');
 
-    const planList = $('planList');
-    planList.innerHTML = '';
-    data.plan.forEach((item, i) => {
-      planList.innerHTML += `
-        <li>
-          <span class="plan-num">${i + 1}</span>
-          <span>${item}</span>
-        </li>
-      `;
-    });
+  var counts = wjCounts();
+  var ranked = wjRanked();
+  var top = ranked[0];
+  var second = ranked[1];
+  var data = WJ_PLANS[top];
+  var name = wjEl('eidWjName').value.trim();
 
-    const answerSummary = $('answerSummary');
-    answerSummary.innerHTML = '';
-    QUESTIONS.forEach((q, i) => {
-      const chosen = q.options.find(o => o.key === answers[i]);
-      answerSummary.innerHTML += `
-        <div class="answer-row">
-          <span class="answer-q">${q.text}</span>
-          <span class="answer-a">${chosen ? chosen.label : '—'}</span>
-        </div>
-      `;
-    });
+  var doc = new lib({ unit: 'pt', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin = 40;
+  var cw = pageW - margin * 2;
+  var bottom = pageH - 56;
+  var y = margin;
 
-    $('resultsCard').classList.add('visible');
-    $('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  var GREEN = [58, 122, 88], INK = [18, 34, 26], MUTED = [74, 94, 84], LIGHT = [232, 245, 238], RULE = [160, 200, 180];
+
+  function need(h) { if (y + h > bottom) { doc.addPage(); y = margin; } }
+  function rule() { doc.setDrawColor(RULE[0], RULE[1], RULE[2]); doc.line(margin, y, pageW - margin, y); y += 16; }
+  function heading(txt) {
+    need(40);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.text(txt, margin, y); y += 18;
   }
 
-  // ── RESET ──────────────────────────────────────────────────────────────
+  // header band
+  doc.setFillColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+  doc.roundedRect(margin, y, cw, 78, 6, 6, 'F');
+  try {
+    var logo = await wjImageToDataUrl(WJ_LOGO);
+    doc.addImage(logo, 'JPEG', margin + 10, y + 11, 56, 56);
+  } catch (e) {}
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(INK[0], INK[1], INK[2]);
+  doc.text('Wellbeing Journey: Quick Check and Reset', margin + 78, y + 28);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+  var ly = y + 44;
+  if (name) { doc.text('Prepared for ' + name, margin + 78, ly); ly += 14; }
+  doc.text(WJ_SITE + '  |  ' + wjFormatDate(), margin + 78, ly);
+  y += 96;
 
-  function resetTool() {
-    answers.fill(null);
-    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-    document.querySelectorAll('.inline-feedback').forEach(fb => fb.classList.remove('show'));
-    $('resultsCard').classList.remove('visible');
-    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Reset complete.');
+  // pattern box
+  doc.setFillColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+  var tl = doc.splitTextToSize('Your pattern: ' + data.title, cw - 24);
+  var th = tl.length * 15 + 16;
+  doc.roundedRect(margin, y, cw, th, 4, 4, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+  doc.text(tl, margin + 12, y + 20);
+  y += th + 10;
+  if (counts[second] > 0) {
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(9.5); doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text('Also showing up: ' + WJ_AXES[second].label.toLowerCase(), margin, y + 4);
+    y += 18;
+  } else { y += 6; }
+
+  // chart
+  heading('Your pattern at a glance');
+  var colors = { A: [58, 122, 88], B: [58, 122, 120], C: [184, 154, 60] };
+  ['A', 'B', 'C'].forEach(function (k) {
+    need(26);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(WJ_AXES[k].label + (k === top ? ' (main)' : ''), margin, y + 10);
+    var bx = margin + 140, bw = cw - 140 - 52;
+    doc.setFillColor(238, 244, 241);
+    doc.roundedRect(bx, y, bw, 14, 7, 7, 'F');
+    if (counts[k] > 0) {
+      doc.setFillColor(colors[k][0], colors[k][1], colors[k][2]);
+      doc.roundedRect(bx, y, Math.max(14, bw * counts[k] / 6), 14, 7, 7, 'F');
+    }
+    doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text(counts[k] + ' of 6', bx + bw + 8, y + 10);
+    y += 24;
+  });
+  y += 6;
+
+  // explanation
+  heading('What this pattern means for you');
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(INK[0], INK[1], INK[2]);
+  doc.splitTextToSize(data.explanation, cw).forEach(function (ln) { need(14); doc.text(ln, margin, y); y += 13.5; });
+  y += 10;
+
+  // insights
+  data.insights.forEach(function (ins) {
+    var lines = doc.splitTextToSize(ins.text, cw - 24);
+    var bh = lines.length * 12 + 32;
+    need(bh + 8);
+    doc.setFillColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.roundedRect(margin, y, cw, bh, 4, 4, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.text(ins.label.toUpperCase(), margin + 12, y + 16);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(lines, margin + 12, y + 30);
+    y += bh + 8;
+  });
+  y += 6;
+
+  // plan
+  need(60); rule();
+  heading('Your 7-day micro-plan');
+  data.plan.forEach(function (item, i) {
+    var lines = doc.splitTextToSize(item, cw - 56);
+    var h = Math.max(30, lines.length * 12.5 + 14);
+    need(h + 6);
+    doc.setFillColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.roundedRect(margin, y, 42, h - 4, 5, 5, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(255, 255, 255);
+    doc.text('DAY ' + (i + 1), margin + 21, y + (h - 4) / 2 + 3, { align: 'center' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(lines, margin + 54, y + 13);
+    y += h + 4;
+  });
+  y += 8;
+
+  // answers
+  need(60); rule();
+  heading('Your answers');
+  WJ_QUESTIONS.forEach(function (q, i) {
+    var chosen = q.options.filter(function (o) { return o.key === wjAnswers[i]; })[0];
+    if (!chosen) return;
+    var lines = doc.splitTextToSize(q.text + '  ' + chosen.label, cw);
+    need(lines.length * 12 + 6);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(lines, margin, y);
+    y += lines.length * 12 + 6;
+  });
+  y += 8;
+
+  // science
+  need(80); rule();
+  heading('The science of wellbeing and daily recovery');
+  WJ_SCIENCE.forEach(function (pair) {
+    var lines = doc.splitTextToSize(pair[1], cw);
+    need(34);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.text(pair[0], margin, y); y += 13;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+    lines.forEach(function (ln) { need(13); doc.text(ln, margin, y); y += 12; });
+    y += 10;
+  });
+
+  // resources
+  need(100); rule();
+  heading('More free wellbeing resources');
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0], INK[1], INK[2]);
+  [
+    'Main site: ' + WJ_SITE,
+    'Free tools: ' + WJ_SITE + '/wellbeing-and-self-help-tools/',
+    'Audio books: ' + WJ_SITE + '/recommended-books/',
+    'Support this project: ' + WJ_SITE + '/support-this-website/',
+    'Find a helpline: findahelpline.com'
+  ].forEach(function (ln) { need(14); doc.text(ln, margin, y); y += 14; });
+
+  // footer on every page
+  var total = doc.internal.getNumberOfPages();
+  for (var p = 1; p <= total; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(RULE[0], RULE[1], RULE[2]);
+    doc.line(margin, pageH - 38, pageW - margin, pageH - 38);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(GREEN[0], GREEN[1], GREEN[2]);
+    doc.text(WJ_SITE, margin, pageH - 24);
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(138, 168, 152);
+    doc.text('Reflection support only, not professional care.', pageW / 2, pageH - 24, { align: 'center' });
+    doc.text('Page ' + p + ' of ' + total, pageW - margin, pageH - 24, { align: 'right' });
   }
 
-  // ── SHARE ──────────────────────────────────────────────────────────────
+  doc.save('wellbeing-journey-plan.pdf');
+  wjToast('PDF downloaded!');
+}
 
-  function updateShareLinks() {
-    const url = encodeURIComponent(window.location.href);
-    const msg = encodeURIComponent('A gentle 6-question wellbeing check-in with a practical 7-day reset plan: ');
-    ['waShare','waShareResult'].forEach(id => { $(id).href = 'https://wa.me/?text=' + msg + url; });
-    ['fbShare','fbShareResult'].forEach(id => { $(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
-    ['xShare','xShareResult'].forEach(id => { $(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
-  }
-
-  async function copyLink() {
-    try { await navigator.clipboard.writeText(window.location.href); showToast('Link copied!'); }
-    catch(_) { showToast('Copy from your address bar.'); }
-  }
-
-  $('copyLinkBtn').addEventListener('click', copyLink);
-  $('copyLinkBtnResult').addEventListener('click', copyLink);
-
-  // ── PDF ────────────────────────────────────────────────────────────────
-
-  async function imageToDataUrl(url) {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('Logo failed');
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject();
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  async function downloadPDF() {
-    if (!$('resultsCard').classList.contains('visible')) { showToast('Please generate your results first.'); return; }
-    const jsPDFLib = window.jspdf?.jsPDF;
-    if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
-    showToast('Preparing your PDF…');
-
-    const key = getTopKey();
-    const data = PLAN_DATA[key];
-    const name = $('participantName').value.trim();
-
-    const doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
-    let y = margin;
-
-    // Header
-    doc.setFillColor(232, 245, 238);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch(_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(18, 34, 26);
-    doc.text('Wellbeing Journey — Quick Check & Reset', margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 94, 84);
-    if (name) doc.text(name, margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com  ·  ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), margin + 76, name ? y + 56 : y + 41);
-    y += 86;
-
-    // Result type
-    doc.setFillColor(232, 245, 238);
-    doc.roundedRect(margin, y, pageW - margin * 2, 36, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(58, 122, 88);
-    doc.text('Your pattern: ' + data.title, margin + 10, y + 23);
-    y += 46;
-
-    // Explanation
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(18, 34, 26);
-    const explLines = doc.splitTextToSize(data.explanation, pageW - margin * 2);
-    doc.text(explLines, margin, y);
-    y += explLines.length * 12 + 12;
-
-    // Insights
-    data.insights.forEach(ins => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(232, 245, 238);
-      const bodyLines = doc.splitTextToSize(ins.text, pageW - margin * 2 - 22);
-      const bh = bodyLines.length * 11 + 30;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(58, 122, 88);
-      doc.text(ins.label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.3);
-      doc.setTextColor(18, 34, 26);
-      doc.text(bodyLines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    // 7-day plan
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 200, 180);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 122, 88);
-    doc.text('Your 7-day micro-plan', margin, y);
-    y += 16;
-    data.plan.forEach((item, i) => {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(18, 34, 26);
-      const lines = doc.splitTextToSize('Day ' + (i + 1) + ': ' + item, pageW - margin * 2);
-      const itemH = lines.length * 14 + 6;
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
-    });
-
-    // Your answers
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    y += 6;
-    doc.setDrawColor(160, 200, 180);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 122, 88);
-    doc.text('Your answers', margin, y);
-    y += 14;
-    QUESTIONS.forEach((q, i) => {
-      const chosen = q.options.find(o => o.key === answers[i]);
-      if (!chosen) return;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(18, 34, 26);
-      const lines = doc.splitTextToSize(q.text + '  —  ' + chosen.label, pageW - margin * 2);
-      const itemH = lines.length * 12 + 5;
-      if (y + itemH > pageH - margin) { doc.addPage(); y = margin; }
-      doc.text(lines, margin, y);
-      y += itemH;
-    });
-
-    // Educational section
-    if (y > pageH - 160) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 200, 180);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(58, 122, 88);
-    doc.text('The science of wellbeing and daily recovery — what research tells us', margin, y);
-    y += 14;
-
-    const educational = [
-      ['Why daily recovery matters more than weekend rest',
-       'Research in occupational health by Sabine Sonnentag at the University of Mannheim identifies daily recovery — brief genuine detachment from work and demands during evenings and between tasks — as a stronger predictor of wellbeing and performance than weekly or holiday rest. The mechanism is psychological detachment: the brain needs regular windows of low-demand processing to restore the attentional and emotional resources consumed during high-demand periods. Without daily recovery, deficit accumulates across the week regardless of what happens at the weekend.'],
-      ['The neuroscience of the stress response and why it persists',
-       'The stress response evolved to handle acute, time-limited threats. When activated by sustained modern demands — deadlines, uncertainty, relational friction — it produces the same physiological cascade: cortisol, elevated heart rate, muscle tension, reduced digestion. The problem is that the off-switch for sustained stress is not the absence of threat but an active physiological signal of safety. This is why passive rest (scrolling, TV) often does not produce genuine recovery — the nervous system is still registering stimulation. Active downregulation through breathing, movement, or genuine rest is required.'],
-      ['Why small consistent actions outperform large irregular efforts',
-       'Research on habit formation and neuroplasticity confirms that the brain reorganises itself around what it does regularly, not what it does intensely. A two-minute breathing practice every day produces more durable physiological change than a one-hour session done once a week. This is the basis of micro-habit approaches developed by B.J. Fogg at Stanford — the smallest possible version of a beneficial action, reliably performed, builds the neural infrastructure that makes larger change possible. Consistency is the mechanism; intensity matters far less than regularity.'],
-      ['The role of emotional naming in reducing distress',
-       'Research by Matthew Lieberman at UCLA shows that labelling an emotional state — writing or saying "I feel anxious" rather than just experiencing anxiety — activates the prefrontal cortex and measurably reduces amygdala activation. This effect has been replicated across multiple studies and is the neurological basis for journaling, reflective writing, and any practice that involves naming internal experience. The act of labelling is not merely descriptive — it is regulatory. It shifts the brain from reactive processing to reflective processing, which restores the sense of agency that stress tends to erode.'],
-      ['Sleep consistency as a wellbeing foundation',
-       'Research by Matthew Walker at UC Berkeley on sleep science identifies sleep timing consistency — maintaining a regular wake time — as one of the most powerful variables in emotional regulation, cognitive function, and physical health. Irregular sleep schedules disrupt circadian rhythm in ways that compound other stressors, reducing emotional resilience and increasing the subjective intensity of daily demands. Even one week of consistent wake times produces measurable improvement in mood and cognitive performance. The quality of everything else depends significantly on the quality of this foundation.']
-    ];
-
-    educational.forEach(([title, body]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(58, 122, 88);
-      doc.text(title, margin, y);
-      y += 12;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.2);
-      doc.setTextColor(18, 34, 26);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
-    });
-
-    // Resources
-    if (y > pageH - 80) { doc.addPage(); y = margin; }
-    doc.setDrawColor(160, 200, 180);
-    doc.line(margin, y, pageW - margin, y);
-    y += 14;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(58, 122, 88);
-    doc.text('More free wellbeing resources', margin, y);
-    y += 13;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(18, 34, 26);
-    [
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-      'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
-      'Find a helpline: findahelpline.com'
-    ].forEach(line => { doc.text(line, margin, y); y += 13; });
-
-    doc.setDrawColor(160, 200, 180);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(138, 168, 152);
-    doc.text('This tool supports wellbeing reflection. Not a substitute for professional care.', margin, pageH - 22);
-
-    doc.save('wellbeing-journey-plan.pdf');
-    showToast('PDF downloaded!');
-  }
-
-  // ── BIND ───────────────────────────────────────────────────────────────
-
-  $('showResultsBtn').addEventListener('click', showResults);
-  $('resetBtn').addEventListener('click', resetTool);
-  $('downloadPdfBtn').addEventListener('click', downloadPDF);
-
-  // ── INIT ───────────────────────────────────────────────────────────────
-
-  buildQuestions();
-  restoreState();
-  updateProgress();
-  updateShareLinks();
-}());
+/* init */
+function wjInit() {
+  wjEl('eidWjStart').addEventListener('click', function () { wjGo(1); });
+  wjEl('eidWjNext').addEventListener('click', wjNext);
+  wjEl('eidWjBack').addEventListener('click', wjBack);
+  wjEl('eidWjReset').addEventListener('click', wjReset);
+  wjEl('eidWjReview').addEventListener('click', function () { wjGo(6); });
+  wjEl('eidWjPdf').addEventListener('click', wjDownloadPdf);
+  wjEl('eidWjBreathBtn').addEventListener('click', wjBreathStart);
+  wjEl('eidWjCopy').addEventListener('click', wjCopy);
+  wjEl('eidWjName').addEventListener('input', wjSave);
+  wjRestore();
+  wjShareLinks();
+  wjRender();
+}
+wjInit();
 </script>
-</body>
-</html>

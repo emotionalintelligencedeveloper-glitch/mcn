@@ -113,6 +113,12 @@ Community supporters help us:
 
 ---
 
+## Notice and Credit
+
+Please read [NOTICE.md](NOTICE.md) for the health disclaimer, branding rules and how to credit this project.
+
+---
+
 ## License
 
 Released under the MIT License.

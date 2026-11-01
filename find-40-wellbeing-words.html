@@ -1,961 +1,1445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wellbeing & Emotional Intelligence Word Puzzle</title>
-  <style>
-    :root {
-      --bg: #f4fbff;
-      --card: #ffffff;
-      --ink: #17324d;
-      --muted: #426180;
-      --primary: #2f80ed;
-      --primary-strong: #1f65c2;
-      --accent: #ffd76a;
-      --good: #2e9f67;
-      --focus: #0f5ed9;
-      --shadow: 0 10px 28px rgba(18, 67, 117, 0.12);
-      --radius: 16px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Find 40 Wellbeing Words | Free Emotional Intelligence Word Game</title>
+<meta name="description" content="A free word game that teaches emotional intelligence. Find 40 wellbeing words, learn what each one means, and get a PDF with a 7 day plan to use them in real life. Four rounds to play.">
+<meta name="theme-color" content="#2f80ed">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Emotional Intelligence Developer">
+<meta property="og:title" content="Find 40 Wellbeing Words | Free Word Game">
+<meta property="og:description" content="Find the words, learn what they mean, and take a 7 day plan home. Four free rounds. Can you finish them all?">
+<meta property="og:url" content="https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html">
+<meta property="og:image" content="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Find 40 Wellbeing Words | Free Word Game">
+<meta name="twitter:description" content="Find the words, learn what they mean, and take a 7 day plan home. Four free rounds.">
+<meta name="twitter:image" content="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg">
+<style>
+:root{
+  --accent:#2f80ed;
+  --ink:#17324d;
+  --muted:#52708d;
+  --line:#d6e4f3;
+  --bg1:#f6fcff;
+  --bg2:#e6f2ff;
+  --soft:color-mix(in srgb,var(--accent) 12%,#fff);
+  --cell:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--bg1),var(--bg2))}
+button,input,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column}
 
-    * { box-sizing: border-box; }
+/* buttons */
+.btn{border:1px solid #bfd1e7;background:#fff;color:var(--ink);padding:9px 12px;border-radius:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;font-size:.92rem;transition:transform .1s,background-color .2s}
+.btn:hover{background:#f3f8ff}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(.93)}
+.btn.support{background:#ffeef3;border-color:#f3bdd0}
+.btn.small{min-height:38px;padding:6px 8px;font-size:.82rem}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,.lvl:focus-visible,.chip:focus-visible{outline:3px solid #0f5ed9;outline-offset:2px}
+.btn[disabled]{opacity:.6;cursor:wait}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, #f6fcff 0%, #eff8ff 100%);
-      color: var(--ink);
-    }
+/* home */
+#home{overflow:auto;-webkit-overflow-scrolling:touch}
+.home-in{width:100%;max-width:780px;margin:0 auto;padding:16px 14px 28px;text-align:center}
+.logo{width:64px;height:64px;border-radius:14px;border:2px solid #d8e6f7;object-fit:cover;background:#ffe74c}
+.title{font-size:clamp(1.55rem,5.5vw,2.3rem);font-weight:900;letter-spacing:-.02em;margin:8px 0 4px;background:linear-gradient(90deg,#2f80ed,#8e5be8,#d9661a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 auto;max-width:56ch;color:var(--muted);line-height:1.45;font-size:.97rem}
+.crew{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin:12px 0 4px;height:84px}
+.namebox{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px auto 14px;max-width:460px;text-align:left;box-shadow:0 6px 20px rgba(18,67,117,.08)}
+.namebox label{font-weight:700;font-size:.9rem;display:block;margin-bottom:6px}
+.namebox input[type=text],.sheet input[type=text],.sheet textarea{width:100%;border:1px solid #c7d9ed;border-radius:10px;padding:10px;background:#fff}
+.chk{display:flex!important;align-items:center;gap:8px;font-weight:600!important;color:var(--muted);margin:8px 0 0!important;font-size:.84rem!important}
+.sectionlabel{font-weight:800;margin:6px 0 10px;font-size:1.05rem}
+.levels{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.lvl{background:#fff;border:1px solid var(--line);border-top:6px solid var(--c);border-radius:16px;padding:12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:3px;box-shadow:0 6px 18px rgba(18,67,117,.09);transition:transform .15s,box-shadow .15s}
+.lvl:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(18,67,117,.16)}
+.lvn{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.lvname{font-size:1.1rem;font-weight:900}
+.lvtag{font-size:.82rem;color:var(--muted);line-height:1.3}
+.lvst{font-size:.78rem;font-weight:700;margin-top:4px;color:#2e7d55}
+.homelinks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
 
-    a { color: inherit; }
+/* game */
+.topbar{display:flex;align-items:center;gap:6px;padding:6px 8px;height:48px;flex:0 0 auto}
+.topbar .btn{min-height:36px;padding:4px 10px}
+.rtitle{flex:1;min-width:0;font-weight:900;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--accent)}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:.9rem}
+.progress{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px;flex:0 0 auto}
+.pcount{font-weight:900;font-size:.92rem;min-width:44px;color:var(--accent)}
+.track{position:relative;flex:1;height:46px}
+.track::before{content:"";position:absolute;left:0;right:0;bottom:6px;height:8px;background:#dfeaf6;border-radius:99px}
+.fill{position:absolute;left:0;bottom:6px;height:8px;background:var(--accent);border-radius:99px;width:0;transition:width .6s ease}
+.walker{position:absolute;bottom:10px;left:0;width:22px;transition:left .7s cubic-bezier(.3,1.4,.5,1)}
+.walker .stick{width:22px;height:34px}
+.flag{position:absolute;right:-2px;bottom:10px;font-size:1.1rem;line-height:1}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center}
+.boardwrap{flex:0 0 auto;display:flex;justify-content:center;padding:2px 0}
+.board{display:grid;width:max-content;background:#fff;border:2px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(18,67,117,.13);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overflow:hidden;cursor:pointer}
+.cell{width:var(--cell);height:var(--cell);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:calc(var(--cell)*.56);line-height:1;color:#1d2d45;box-shadow:inset 0 0 0 .5px #e8eff8}
+.cell.sel{background:var(--accent);color:#fff}
+.cell.found{background:var(--fc);color:#fff}
+.cell.pop{animation:pop .45s ease both}
+.cell.hint{animation:pulse .55s ease-in-out 4;background:#ffe27a}
+.cell.miss{background:#ffd9d9}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.panel{flex:1;min-height:0;width:100%;max-width:640px;display:flex;flex-direction:column;gap:6px;padding:6px 8px 8px}
+.coach{display:none}
+.chips{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));grid-auto-rows:max-content;gap:4px;align-content:start;padding:2px}
+.chip{border:1px solid #d3e1f1;background:#fff;border-radius:9px;padding:3px 2px;line-height:1.25;min-height:21px;font-weight:800;font-size:.72rem;letter-spacing:.01em;cursor:default;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.chip.found{background:var(--fc);border-color:var(--fc);color:#fff;cursor:pointer}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:0 0 auto}
+body.land .main{flex-direction:row;justify-content:center;align-items:flex-start;gap:14px;padding:0 12px}
+body.land .boardwrap{padding:4px 0}
+body.land .panel{flex:0 0 auto;width:360px;max-width:none;height:100%;padding:4px 0 12px}
+body.land .coach{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 10px;flex:0 0 auto}
+body.land .coach .stick{width:40px;height:66px;flex:0 0 auto}
+.bubble{font-weight:700;font-size:.92rem;line-height:1.3}
+body.land .chips{grid-template-columns:repeat(3,1fr);gap:5px}
+body.land .chip{font-size:.68rem;padding:5px 2px}
+body.land .actions{grid-template-columns:repeat(2,1fr)}
 
-    .page {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 12px;
-    }
+/* stickmen */
+.stick{width:44px;height:73px;overflow:visible;display:block}
+.stick .armL{transform-origin:30px 36px}
+.stick .armR{transform-origin:30px 36px}
+.stick .legL{transform-origin:30px 62px}
+.stick .legR{transform-origin:30px 62px}
+.stick.idle{animation:sway 2.4s ease-in-out infinite}
+.stick.dance{animation:bob .6s ease-in-out infinite}
+.stick.dance .armL{animation:aL .6s ease-in-out infinite alternate}
+.stick.dance .armR{animation:aR .6s ease-in-out infinite alternate}
+.stick.dance .legL{animation:lL .6s ease-in-out infinite alternate}
+.stick.dance .legR{animation:lR .6s ease-in-out infinite alternate}
+.stick.cheer{animation:jump .5s ease-in-out 3}
+.stick.cheer .armL{transform:rotate(125deg)}
+.stick.cheer .armR{transform:rotate(-125deg)}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes jump{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes aL{from{transform:rotate(0)}to{transform:rotate(125deg)}}
+@keyframes aR{from{transform:rotate(-125deg)}to{transform:rotate(0)}}
+@keyframes lL{from{transform:rotate(-12deg)}to{transform:rotate(8deg)}}
+@keyframes lR{from{transform:rotate(12deg)}to{transform:rotate(-8deg)}}
 
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid #d7e6f5;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
+/* modals */
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(14,32,54,.55);display:none;align-items:center;justify-content:center;padding:12px}
+.modal.open{display:flex;animation:fade .2s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{background:#fff;border-radius:22px;width:100%;max-width:460px;max-height:94dvh;overflow:auto;padding:16px;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:rise .28s cubic-bezier(.2,1.2,.4,1)}
+@keyframes rise{from{transform:translateY(30px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.sheet.center{text-align:center}
+.cheers{display:flex;justify-content:center;align-items:flex-end;gap:10px;height:82px}
+.cheer{font-weight:900;color:var(--accent);font-size:1.05rem;margin-top:4px}
+.bigword{font-size:clamp(1.8rem,8vw,2.6rem);font-weight:900;letter-spacing:.03em;margin:2px 0 6px}
+.means{font-size:1.08rem;line-height:1.5;color:#27455f;margin:0 auto 10px;max-width:34ch}
+.mwcount{font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:12px}
+.btn.big{width:100%;min-height:50px;font-size:1.05rem}
+.mtitle{font-weight:900;font-size:1.3rem;margin:2px 0 8px}
+.stars{font-size:2rem;letter-spacing:.2em;color:#f2b01e;text-align:center;line-height:1.1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.stat{background:var(--soft);border-radius:12px;padding:8px 4px;text-align:center}
+.stat b{display:block;font-size:1.15rem}
+.stat span{font-size:.72rem;color:var(--muted);font-weight:700}
+.sheet label.l{display:block;font-weight:700;font-size:.88rem;margin:10px 0 4px}
+.sheet textarea{min-height:70px;resize:vertical}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btnrow .btn{flex:1 1 140px}
+.sharegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+.shtext{background:var(--soft);padding:10px;border-radius:12px;font-size:.92rem;line-height:1.4}
+.linklist{display:grid;gap:8px;margin:8px 0}
+.how li{margin:6px 0;line-height:1.45}
+.safety{border:1px solid #ffdcb7;background:#fff9f3;border-radius:12px;padding:10px;margin-top:10px;font-size:.88rem}
 
-    header.card {
-      padding: 18px;
-      text-align: center;
-      background: linear-gradient(135deg, #ffffff 0%, #f2f9ff 100%);
-    }
+/* confetti + toast */
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2000}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(14px);background:#1f3a5b;color:#fff;border-radius:999px;padding:9px 16px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1500;font-size:.9rem;font-weight:600;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-    .logo {
-      width: min(240px, 70%);
-      height: auto;
-      border-radius: 12px;
-      border: 2px solid #d8e6f7;
-      display: inline-block;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-    }
-
-    .intro {
-      margin: 8px auto 0;
-      max-width: 70ch;
-      line-height: 1.5;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-
-    .grid-wrap {
-      width: 100%;
-      border: 1px solid #d7e2f0;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-      margin-bottom: 12px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(var(--n, 18), minmax(0, 1fr));
-      width: 100%;
-      min-height: 280px;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .cell {
-      aspect-ratio: 1 / 1;
-      min-height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #edf2f8;
-      font-weight: 700;
-      font-size: clamp(10px, 2.7vw, 16px);
-      line-height: 1;
-      background: #fff;
-      color: #1d2d45;
-    }
-
-    .cell.preview { background: #e8f1ff; }
-    .cell.found { background: var(--primary); color: #fff; border-color: var(--primary-strong); }
-
-    .controls,
-    .stack,
-    .share-row,
-    .links,
-    .bottom-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .controls { justify-content: space-between; }
-
-    .counter {
-      font-weight: 700;
-      color: var(--primary-strong);
-      margin-left: auto;
-    }
-
-    button,
-    .btn-link {
-      border: 1px solid #bfd1e7;
-      background: #fff;
-      color: var(--ink);
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      transition: transform 0.1s ease, background-color 0.2s ease;
-    }
-
-    button:hover, .btn-link:hover { background: #f5f9ff; }
-    button:active, .btn-link:active { transform: translateY(1px); }
-
-    button.primary { background: var(--primary); border-color: var(--primary-strong); color: #fff; }
-    button.primary:hover { background: var(--primary-strong); }
-
-    button.warn, .btn-link.warn { background: #fff8de; border-color: #efd788; }
-    .btn-link.support { background: #ffeef3; border-color: #f3bdd0; }
-
-    button:focus-visible,
-    .btn-link:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
-    }
-
-    .status {
-      margin: 8px 0;
-      min-height: 1.4em;
-      font-weight: 600;
-      color: #28557d;
-    }
-
-    .words {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 6px;
-    }
-
-    .word {
-      border: 1px solid #dbe6f4;
-      border-radius: 10px;
-      padding: 8px;
-      font-weight: 700;
-      background: #fff;
-      font-size: 0.9rem;
-    }
-
-    .word.done { background: var(--primary); border-color: var(--primary-strong); color: #fff; }
-
-    .output-grid {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr;
-    }
-
-    label { font-weight: 700; font-size: 0.95rem; }
-
-    textarea,
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid #c7d9ed;
-      border-radius: 10px;
-      padding: 10px;
-      font: inherit;
-      color: var(--ink);
-      background: #fff;
-    }
-
-    textarea { min-height: 100px; resize: vertical; }
-    .hint { font-size: 0.86rem; color: var(--muted); margin-top: 4px; }
-
-    .inline {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .toggle-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-    }
-
-    .message {
-      margin-top: 8px;
-      font-size: 0.9rem;
-      min-height: 1.2em;
-      color: #1a5f92;
-    }
-
-    .share-row button, .share-row .btn-link,
-    .bottom-links .btn-link { flex: 1 1 170px; }
-
-    .safety {
-      border: 1px solid #ffdcb7;
-      background: #fff9f3;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 0.94rem;
-    }
-
-    footer {
-      text-align: center;
-      color: #365a7a;
-      padding: 4px 0 18px;
-      font-size: 0.95rem;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: #1f3a5b;
-      color: #fff;
-      border-radius: 999px;
-      padding: 8px 14px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      z-index: 999;
-      font-size: 0.88rem;
-    }
-
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    @media (max-width: 760px) {
-      .words { grid-template-columns: 1fr; }
-      .controls > * { flex: 1 1 140px; }
-      .counter { margin-left: 0; }
-    }
-
-    @media (max-width: 420px) {
-      .page { padding: 8px; }
-      .card { padding: 12px; }
-      button, .btn-link { width: 100%; }
-      .controls, .share-row, .bottom-links { flex-direction: column; align-items: stretch; }
-      .counter { text-align: center; }
-    }
-  </style>
+@media (min-width:700px){.levels{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:480px){.chips{grid-template-columns:repeat(4,1fr);gap:3px}.chip{font-size:.6rem;letter-spacing:0}.rtitle .rn{display:none}}
+@media (max-width:380px){.topbar .btn.wide{padding:4px 6px;font-size:.8rem}.chip{font-size:.66rem}}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body>
-  <div class="page" id="top">
-    <header class="card">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" />
-      <h1>✨ Wellbeing & Emotional Intelligence Word Puzzle</h1>
-      <p class="intro">Take a gentle pause and find 40 uplifting words. This activity is designed for reflection and support, helping you reconnect with strengths one word at a time.</p>
-    </header>
 
-    <main>
-      <section class="card" aria-labelledby="tool-heading">
-        <h2 id="tool-heading" style="margin-top:0;">1) Word Puzzle</h2>
-        <p class="hint">Drag in a straight line (forward, backward, up/down, or diagonal) to find each word.</p>
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="home-in">
+    <img class="logo" id="homeLogo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" width="64" height="64">
+    <div class="title">Find 40 Wellbeing Words</div>
+    <p class="sub">A free game that teaches emotional intelligence. Find a word, learn what it means, and take it into your real life. Pick any round you like.</p>
+    <div class="crew" id="crew" aria-hidden="true"></div>
 
-        <div class="grid-wrap">
-          <div class="grid" id="grid" aria-label="Wellbeing word search grid"></div>
-        </div>
+    <div class="namebox">
+      <label for="nameHome">Your name (it will be printed on your PDF)</label>
+      <input id="nameHome" type="text" maxlength="40" autocomplete="name" placeholder="Type your name">
+      <label class="chk"><input type="checkbox" id="remember"> Remember my name on this device</label>
+    </div>
 
-        <div class="controls">
-          <button id="newPuzzleBtn" type="button" aria-label="Generate a new puzzle">New Puzzle</button>
-          <button id="resetPuzzleBtn" type="button" aria-label="Reset found words in current puzzle">Reset Puzzle</button>
-          <div class="counter" aria-live="polite"><span id="foundCount">0</span>/40 found</div>
-        </div>
+    <div class="sectionlabel">Choose your level</div>
+    <div class="levels" id="levels"></div>
 
-        <p class="status" id="status" role="status" aria-live="polite">Loading puzzle…</p>
-        <ul class="words" id="wordList" aria-label="Word list"></ul>
-      </section>
-
-      <section class="card" aria-labelledby="reflection-heading">
-        <h2 id="reflection-heading" style="margin-top:0;">2) Reflection</h2>
-        <div class="output-grid">
-          <div>
-            <label for="nameInput">Your name (optional for PDF)</label>
-            <input id="nameInput" type="text" maxlength="60" aria-label="Your name optional" placeholder="Enter your name (optional)" />
-          </div>
-          <div>
-            <label for="reflectionInput">What stood out to you in this puzzle?</label>
-            <textarea id="reflectionInput" aria-label="Reflection text" placeholder="Example: The words COURAGE and BALANCE reminded me to breathe and take one step at a time."></textarea>
-            <p id="reflectionHint" class="hint">Add a short reflection to generate your PDF summary.</p>
-          </div>
-        </div>
-
-        <div class="inline">
-          <label class="toggle-wrap" for="saveToggle">
-            <input id="saveToggle" type="checkbox" aria-label="Save my reflection toggle" />
-            Save my reflection
-          </label>
-          <button id="clearSavedBtn" type="button" aria-label="Clear saved reflection">Clear saved reflection</button>
-        </div>
-
-        <div class="message" id="message" role="status" aria-live="polite"></div>
-      </section>
-
-      <section class="card" aria-labelledby="results-heading">
-        <h2 id="results-heading" style="margin-top:0;">3) Results / Reflection Output</h2>
-        <p class="hint" id="resultText">Find words and add your reflection. Your summary appears here for sharing and PDF export.</p>
-      </section>
-
-      <section class="card" aria-labelledby="actions-heading">
-        <h2 id="actions-heading" style="margin-top:0;">4) Actions</h2>
-        <div class="share-row" aria-label="Share buttons">
-          <button id="copyLinkBtn" type="button" aria-label="Copy Link">Copy Link</button>
-          <a id="whatsappBtn" class="btn-link" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
-          <a id="facebookBtn" class="btn-link" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
-          <a id="xBtn" class="btn-link" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
-          <button id="pdfBtn" class="primary" type="button" aria-label="Download PDF">Download PDF</button>
-          <button id="resetAllBtn" class="warn" type="button" aria-label="Reset all inputs and results">Reset</button>
-        </div>
-      </section>
-
-      <section class="card" aria-labelledby="support-heading">
-        <h2 id="support-heading" style="margin-top:0;">5) Support, Explore & Help</h2>
-        <div class="bottom-links">
-          <a class="btn-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help">Help</a>
-          <a class="btn-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">Recommended Audio Books</a>
-          <a class="btn-link support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us">Support Us</a>
-          <a class="btn-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">Explore More Free Tools</a>
-        </div>
-
-        <div class="safety">
-          This tool is for reflection and support. If you feel unsafe or at risk, reach out for help.
-          <div style="margin-top:8px;">
-            <a class="btn-link" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find an external Helpline">Find an external Helpline</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      © Emotional Intelligence Developer
-    </footer>
+    <div class="homelinks">
+      <button class="btn small" id="homeHow" type="button">How to play</button>
+      <button class="btn small" id="homeShare" type="button">Share this game</button>
+      <button class="btn small" id="homeMore" type="button">Help and more</button>
+    </div>
   </div>
+</div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite">Link copied!</div>
+<!-- GAME -->
+<div id="game" class="screen hidden">
+  <div class="topbar" id="topbar">
+    <button class="btn wide" id="btnLevels" type="button" aria-label="Back to level choice">&#8249; Levels</button>
+    <div class="rtitle" id="rtitle">Round 1</div>
+    <div class="timer" id="timer" aria-label="Time">00:00</div>
+    <button class="btn" id="btnSound" type="button" aria-label="Turn sound on or off">&#128266;</button>
+    <button class="btn" id="btnMore" type="button" aria-label="More options">&#8943;</button>
+  </div>
+  <div class="progress" id="progress">
+    <span class="pcount" id="pcount">0/40</span>
+    <div class="track"><div class="fill" id="fill"></div><div class="walker" id="walker"></div><span class="flag" aria-hidden="true">&#127937;</span></div>
+  </div>
+  <div class="main" id="main">
+    <div class="boardwrap" id="boardwrap">
+      <div class="board" id="board" role="application" aria-label="Word search grid. Drag across letters in a straight line to find a word."></div>
+    </div>
+    <div class="panel" id="panel">
+      <div class="coach" id="coach"><div id="coachStick"></div><div class="bubble" id="bubble">Drag across the letters to find a word. I will cheer you on!</div></div>
+      <div class="chips" id="chips" aria-label="Word list"></div>
+      <div class="actions">
+        <button class="btn small" id="btnHint" type="button">&#128161; Hint</button>
+        <button class="btn small" id="btnNew" type="button">&#128256; New grid</button>
+        <button class="btn small" id="btnShare" type="button">&#128228; Share</button>
+        <button class="btn small primary" id="btnResults" type="button">&#128196; Results</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    (function () {
-      const WORDS = [
-        "AWARENESS","EMPATHY","RESILIENCE","MINDFULNESS","COMPASSION","GRATITUDE","CALM","BALANCE","CLARITY","COURAGE",
-        "PATIENCE","KINDNESS","GROWTH","HEALING","HOPE","JOY","CONFIDENCE","TRUST","BOUNDARIES","PRESENCE",
-        "LISTENING","FORGIVENESS","ACCEPTANCE","FLEXIBILITY","INTEGRITY","HUMILITY","SELFLOVE","OPTIMISM","PURPOSE","BELONGING",
-        "STRENGTH","FOCUS","PEACE","WISDOM","HONESTY","RESPECT","CONNECTION","ALTRUISM","BREATH","LIGHT"
-      ];
-      const BASE_N = 18;
-      const DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]];
-      const SAVE_KEY = "eid_word_puzzle_reflection_v1";
-      const SAVE_PREF_KEY = "eid_word_puzzle_save_pref_v1";
-      const RECOMMENDED_AUDIO_BOOKS_LINK = "https://emotionalintelligencedeveloper.com/recommended-books/";
+<!-- MEANING POPUP -->
+<div class="modal" id="mMeaning" role="dialog" aria-modal="true" aria-labelledby="mwWord">
+  <div class="sheet center">
+    <div class="cheers" id="mwCrew"></div>
+    <div class="cheer" id="mwCheer">Great find!</div>
+    <div class="bigword" id="mwWord">WORD</div>
+    <p class="means" id="mwMeaning"></p>
+    <div class="mwcount" id="mwCount"></div>
+    <button class="btn primary big" id="mwNext" type="button" data-focus>Next word</button>
+  </div>
+</div>
 
-      const el = {
-        grid: document.getElementById("grid"),
-        wordList: document.getElementById("wordList"),
-        status: document.getElementById("status"),
-        foundCount: document.getElementById("foundCount"),
-        newPuzzleBtn: document.getElementById("newPuzzleBtn"),
-        resetPuzzleBtn: document.getElementById("resetPuzzleBtn"),
-        nameInput: document.getElementById("nameInput"),
-        reflectionInput: document.getElementById("reflectionInput"),
-        reflectionHint: document.getElementById("reflectionHint"),
-        saveToggle: document.getElementById("saveToggle"),
-        clearSavedBtn: document.getElementById("clearSavedBtn"),
-        message: document.getElementById("message"),
-        resultText: document.getElementById("resultText"),
-        copyLinkBtn: document.getElementById("copyLinkBtn"),
-        whatsappBtn: document.getElementById("whatsappBtn"),
-        facebookBtn: document.getElementById("facebookBtn"),
-        xBtn: document.getElementById("xBtn"),
-        pdfBtn: document.getElementById("pdfBtn"),
-        resetAllBtn: document.getElementById("resetAllBtn"),
-        toast: document.getElementById("toast")
-      };
+<!-- RESULTS -->
+<div class="modal" id="mResults" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+  <div class="sheet">
+    <div class="cheers" id="rsCrew"></div>
+    <div class="mtitle" id="rsTitle" style="text-align:center">Your results</div>
+    <div class="stars" id="rsStars" aria-live="polite"></div>
+    <div class="stats">
+      <div class="stat"><b id="rsFound">0/40</b><span>Words found</span></div>
+      <div class="stat"><b id="rsTime">00:00</b><span>Time</span></div>
+      <div class="stat"><b id="rsHints">0</b><span>Hints used</span></div>
+    </div>
+    <label class="l" for="nameRes">Your name for the PDF</label>
+    <input id="nameRes" type="text" maxlength="40" autocomplete="name" placeholder="Type your name">
+    <label class="l" for="reflection">What stood out to you? (optional, goes on your PDF)</label>
+    <textarea id="reflection" maxlength="400" placeholder="Example: COURAGE reminded me to take one small step even when I feel nervous."></textarea>
+    <div class="btnrow">
+      <button class="btn primary" id="rsPdf" type="button">&#11015; Download PDF</button>
+      <button class="btn" id="rsCard" type="button">&#128444; Result picture</button>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="rsShare" type="button">&#128228; Share</button>
+      <button class="btn primary" id="rsNext" type="button">Next level &#8250;</button>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="rsLevels" type="button">Choose level</button>
+      <button class="btn" id="rsClose" type="button" data-focus>Back to game</button>
+    </div>
+  </div>
+</div>
 
-      const state = {
-        N: BASE_N,
-        grid: [],
-        placements: {},
-        found: {},
-        foundCells: {},
-        dragging: false,
-        pointerId: null,
-        start: null,
-        preview: []
-      };
+<!-- SHARE -->
+<div class="modal" id="mShare" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="sheet">
+    <div class="mtitle" id="shTitle">Share this game</div>
+    <div class="shtext" id="shText"></div>
+    <div class="sharegrid">
+      <button class="btn" id="shCopy" type="button" aria-label="Copy Link">&#128279; Copy Link</button>
+      <a class="btn" id="shWa" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a class="btn" id="shFb" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <a class="btn" id="shX" href="#" target="_blank" rel="noopener" aria-label="Share on X">X</a>
+      <button class="btn" id="shNative" type="button">&#128241; More ways to share</button>
+      <button class="btn" id="shMsg" type="button">&#128203; Copy message</button>
+    </div>
+    <button class="btn big" id="shClose" type="button" data-focus>Close</button>
+  </div>
+</div>
 
-      function key(r,c){ return r + "," + c; }
-      function rand(n){ return Math.floor(Math.random() * n); }
-      function pick(arr){ return arr[rand(arr.length)]; }
+<!-- HOW TO PLAY -->
+<div class="modal" id="mHow" role="dialog" aria-modal="true" aria-labelledby="hwTitle">
+  <div class="sheet">
+    <div class="mtitle" id="hwTitle">How to play</div>
+    <ol class="how">
+      <li>Press on the first letter of a word and drag in a straight line. Words go forward, backward, up, down and diagonally.</li>
+      <li>When you find a word, confetti flies and a card tells you what the word means.</li>
+      <li>Tap Next word and keep going until you have found all 40.</li>
+      <li>Stuck? Tap Hint and the first letter of a word will glow.</li>
+      <li>Add your name, download your PDF with all the meanings and a 7 day plan, and share the game.</li>
+      <li>Then pick the next round. There are four, each with 40 new words.</li>
+    </ol>
+    <button class="btn primary big" id="hwClose" type="button" data-focus>Let us play</button>
+  </div>
+</div>
 
-      function showMessage(text, isError = false) {
-        el.message.textContent = text || "";
-        el.message.style.color = isError ? "#b53838" : "#1a5f92";
-      }
+<!-- MORE -->
+<div class="modal" id="mMore" role="dialog" aria-modal="true" aria-labelledby="moTitle">
+  <div class="sheet">
+    <div class="mtitle" id="moTitle">Help and more</div>
+    <div class="linklist">
+      <a class="btn" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" aria-label="Help">Help</a>
+      <a class="btn" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" aria-label="Recommended Audio Books">Recommended Audio Books</a>
+      <a class="btn support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us">Support Us</a>
+      <a class="btn" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" aria-label="Explore More Free Tools">Explore More Free Tools</a>
+      <button class="btn" id="moHow" type="button">How to play</button>
+    </div>
+    <div class="safety">
+      This game is for reflection and support. If you feel unsafe or at risk, please reach out for help.
+      <div style="margin-top:8px"><a class="btn" href="https://findahelpline.com/" target="_blank" rel="noopener" aria-label="Find an external Helpline">Find an external Helpline</a></div>
+    </div>
+    <!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+    <div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+      Created by Clive Ngwenya (M.C.N) for
+      <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+      Free to use under the MIT License.
+      <br>
+      <span style="font-size:12px;opacity:0.85;">For reflection and self-support only. Not medical or crisis advice.</span>
+    </div>
+    <button class="btn big" id="moClose" type="button" data-focus>Close</button>
+  </div>
+</div>
 
-      function showToast(text) {
-        el.toast.textContent = text;
-        el.toast.classList.add("show");
-        setTimeout(() => el.toast.classList.remove("show"), 1700);
-      }
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-      function getShareUrl() {
-        return window.location.href;
-      }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ============================== DATA ============================== */
+var BASE_URL = "https://emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html";
+var LOGO_URLS = [
+  "https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg",
+  "eid-logo.jpg"
+];
 
-      function buildShareLinks() {
-        const url = encodeURIComponent(getShareUrl());
-        const text = encodeURIComponent("I just tried this Wellbeing & Emotional Intelligence Word Puzzle ✨");
-        el.whatsappBtn.href = `https://wa.me/?text=${text}%20${url}`;
-        el.facebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        el.xBtn.href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-      }
+function parseWords(txt){
+  return txt.trim().split("\n").map(function(l){
+    var i = l.indexOf("|");
+    return { w: l.slice(0, i).trim(), m: l.slice(i + 1).trim() };
+  });
+}
 
-      function emptyGrid() {
-        const g = [];
-        for (let r = 0; r < state.N; r++) {
-          g[r] = [];
-          for (let c = 0; c < state.N; c++) g[r][c] = "";
-        }
-        return g;
-      }
+var LEVELS = [
+{
+  n: 1, name: "Foundations", tag: "The building blocks of emotional intelligence", color: "#2f80ed",
+  words: parseWords(`
+AWARENESS|Noticing what you think, feel and do, and what is going on around you.
+EMPATHY|Understanding how another person feels and showing that you care.
+RESILIENCE|The ability to bounce back after hard times and keep going.
+MINDFULNESS|Paying calm attention to this moment without judging it.
+COMPASSION|Feeling for someone who is hurting and wanting to help.
+GRATITUDE|Noticing the good in your life and being thankful for it.
+CALM|A quiet, steady feeling in your mind and body.
+BALANCE|Giving the right amount of time and energy to each part of your life.
+CLARITY|Seeing what matters clearly so you can think and choose well.
+COURAGE|Doing the right thing even when you feel afraid.
+PATIENCE|Staying calm while you wait or while things take time.
+KINDNESS|Being gentle, generous and thoughtful toward others and yourself.
+GROWTH|Learning and changing so you become a little better each day.
+HEALING|The slow process of becoming well again in body, mind or heart.
+HOPE|Believing that good things are still possible.
+JOY|A deep feeling of happiness and delight.
+CONFIDENCE|Trusting in your own ability to handle what comes.
+TRUST|Believing that someone or something is honest and reliable.
+BOUNDARIES|Clear limits that protect your time, energy and feelings.
+PRESENCE|Being fully here, with your mind and body in the same place.
+LISTENING|Giving your full attention so you truly hear another person.
+FORGIVENESS|Letting go of anger toward someone who hurt you, or toward yourself.
+ACCEPTANCE|Allowing things to be as they are without fighting them.
+FLEXIBILITY|Being willing to adjust when plans or situations change.
+INTEGRITY|Doing what is right and keeping your word, even when no one sees.
+HUMILITY|Knowing your worth without needing to be better than others.
+SELFLOVE|Treating yourself with the same care you give people you love.
+OPTIMISM|Expecting that good outcomes can happen and working toward them.
+PURPOSE|The reason you get up each day, the thing that gives life meaning.
+BELONGING|Feeling accepted and welcome as part of a group.
+STRENGTH|The power to carry on through hard things, in body and spirit.
+FOCUS|Keeping your attention on one thing at a time.
+PEACE|A state of calm, free from worry and conflict.
+WISDOM|Using what you have learned to make good choices.
+HONESTY|Telling the truth and being real with yourself and others.
+RESPECT|Treating people as valuable and listening to their views.
+CONNECTION|A feeling of being linked with others in a caring way.
+ALTRUISM|Helping others without expecting anything back.
+BREATH|The air you take in and out, a simple way to calm down.
+LIGHT|Warmth and brightness that brings hope and helps you see.
+`),
+  plan: [
+    { t: "Know yourself", w: "AWARENESS MINDFULNESS PRESENCE BREATH CALM FOCUS",
+      k: "Set a timer for three minutes. Sit still, breathe slowly and notice how you feel. Then do one task with full focus and no phone.",
+      q: "What did I notice about myself today?" },
+    { t: "Be kind to others", w: "EMPATHY COMPASSION KINDNESS LISTENING RESPECT ALTRUISM",
+      k: "Listen to one person today without interrupting. Say one kind thing and do one small helpful act with no reward in mind.",
+      q: "Who did I make feel respected today?" },
+    { t: "Be thankful and hopeful", w: "GRATITUDE HOPE JOY OPTIMISM LIGHT PEACE",
+      k: "Write down three things you are thankful for. Look for one bright spot in a hard moment, and share a smile or a joke with someone.",
+      q: "What gave me hope today?" },
+    { t: "Stand strong", w: "RESILIENCE COURAGE STRENGTH CONFIDENCE PATIENCE GROWTH",
+      k: "Do one thing you have been putting off because it scares you. Be patient with yourself while you do it, and note one thing you learned.",
+      q: "What did I do today that took courage?" },
+    { t: "Be honest and true", w: "HONESTY INTEGRITY TRUST HUMILITY WISDOM CLARITY",
+      k: "Tell the truth kindly in one situation. Keep one promise you made. Admit one thing you do not know and ask someone to teach you.",
+      q: "Where did I stay true to my word today?" },
+    { t: "Care for yourself", w: "SELFLOVE BOUNDARIES BALANCE HEALING ACCEPTANCE",
+      k: "Say no to one thing that drains you. Do one activity that fills your cup. Speak to yourself the way you would speak to a good friend.",
+      q: "What did I do today to look after myself?" },
+    { t: "Let go and belong", w: "FORGIVENESS FLEXIBILITY PURPOSE BELONGING CONNECTION",
+      k: "Forgive one small hurt, or forgive yourself for one mistake. Change one plan without stress. Tell a friend or group why they matter to you.",
+      q: "What did I let go of, and who did I connect with?" }
+  ]
+},
+{
+  n: 2, name: "Inner Strength", tag: "Stay steady, rest well and keep going", color: "#2e9f67",
+  words: parseWords(`
+PERSEVERANCE|Keeping going toward a goal even when it is hard.
+DISCIPLINE|Doing what needs to be done, even when you do not feel like it.
+PERSISTENCE|Not giving up, even after setbacks.
+RESOLVE|A firm decision to do something and stick with it.
+GRIT|Strong passion and effort for a long term goal.
+BRAVERY|Facing danger, pain or fear with a strong heart.
+STEADY|Calm and even, not easily shaken.
+GROUNDED|Feeling stable and connected to the present, not swept away by emotion.
+CENTERED|Feeling balanced and calm inside, with a clear sense of yourself.
+RELAXED|Free from tension and worry.
+SERENITY|A peaceful state of mind, calm and untroubled.
+TRANQUIL|Quiet, calm and still.
+STILLNESS|A pause with no rush or noise, inside or out.
+REST|Stopping to let your body and mind recover.
+SLEEP|Your nightly reset that restores body and mind.
+ENERGY|The strength and drive you need to do things.
+VITALITY|A lively feeling of health and strength.
+HEALTH|Being well in body and mind.
+NOURISH|To feed and care for your body, mind or spirit so it can grow.
+MOVEMENT|Using your body through walking, stretching or play to feel better.
+STRETCH|Gently lengthening your muscles to release tension.
+WALKING|A simple daily movement that clears the mind and lifts mood.
+NATURE|Trees, water, sky and animals, which calm and refresh us.
+GARDEN|A place where you grow plants, and a reminder that care brings growth.
+JOURNAL|A notebook where you write your thoughts and feelings.
+REFLECT|To think carefully about what happened and what it taught you.
+MEDITATE|To sit quietly and train your attention, often by following your breath.
+RELEASE|To let go of a feeling, a worry or a hurt.
+UNWIND|To slow down and let your body and mind loosen up.
+REFRAME|To look at a problem from a new angle so it feels lighter.
+CHOICE|The power to decide what you do next.
+CONTROL|Focusing on what you can change and letting go of the rest.
+ROUTINE|A set of daily habits that give your day shape and calm.
+HABITS|Things you do so often they become automatic.
+PAUSE|A short stop before you react, so you can choose well.
+SELFTALK|The words you say to yourself in your mind.
+SELFWORTH|Knowing you matter simply because you are you.
+RECOVER|To get back your strength and health after something hard.
+RENEW|To begin again with fresh energy.
+SOOTHE|To bring comfort and ease to a sore or upset feeling.
+`),
+  plan: [
+    { t: "Keep going", w: "PERSEVERANCE DISCIPLINE PERSISTENCE RESOLVE GRIT BRAVERY",
+      k: "Pick one goal and take one small step toward it today, even if you do not feel like it. Write down what you will do tomorrow to keep going.",
+      q: "What small step did I take even when it was hard?" },
+    { t: "Find your calm", w: "STEADY GROUNDED CENTERED RELAXED SERENITY TRANQUIL",
+      k: "Take five slow breaths, feel your feet on the floor and name five things you can see. Stay steady when something annoys you today.",
+      q: "When did I feel most calm today?" },
+    { t: "Rest and renew", w: "STILLNESS REST SLEEP RECOVER RENEW SOOTHE",
+      k: "Go to bed 30 minutes earlier. Plan one short break in your day to rest. Do one thing that soothes you, like warm tea or soft music.",
+      q: "What helped me recover today?" },
+    { t: "Care for your body", w: "ENERGY VITALITY HEALTH NOURISH MOVEMENT STRETCH",
+      k: "Drink water, eat one nourishing meal and stretch for five minutes. Do some movement that gives you energy.",
+      q: "How did my body feel after caring for it?" },
+    { t: "Go outside, look inside", w: "WALKING NATURE GARDEN JOURNAL REFLECT MEDITATE",
+      k: "Take a ten minute walk outside, ideally near trees, plants or sky. Write in a journal for five minutes about how you feel, then sit quietly for two minutes.",
+      q: "What did I learn from sitting with my thoughts?" },
+    { t: "Let it go", w: "RELEASE UNWIND REFRAME PAUSE SELFTALK",
+      k: "Notice one stressful thought and reframe it into a kinder one. Pause for three breaths before you reply to anything tense. Unwind tonight and release the day.",
+      q: "What kinder words did I say to myself today?" },
+    { t: "Own your choices", w: "CHOICE CONTROL ROUTINE HABITS SELFWORTH",
+      k: "Choose one habit to build, like a morning routine. Focus only on what you can control today. Tell yourself: I matter, I am enough.",
+      q: "Which choice today made me proud?" }
+  ]
+},
+{
+  n: 3, name: "Connection", tag: "Build warm, honest and fair relationships", color: "#8e5be8",
+  words: parseWords(`
+FRIENDSHIP|A close bond built on trust, care and shared time.
+FAMILY|The people who are close to you, by blood or by love.
+COMMUNITY|A group of people who share a place or purpose and look after each other.
+TEAMWORK|Working together so everyone's effort adds up to more.
+SUPPORT|Helping someone by being there, listening or lending a hand.
+DIALOGUE|A real two way conversation where both sides speak and listen.
+SHARING|Giving others a part of what you have, whether things, time or feelings.
+GENEROSITY|Giving freely, with an open heart.
+GIVING|Offering your time, help or things to benefit someone else.
+THANKS|Words that show you value what someone did.
+APOLOGY|Saying sorry and meaning it after you hurt someone.
+LOYALTY|Staying faithful and supportive to people, even in hard times.
+TENDERNESS|Gentle, soft care toward someone.
+WARMTH|A kind, friendly feeling that makes others feel safe.
+WELCOME|Greeting someone in a way that makes them feel wanted.
+INCLUSION|Making sure everyone has a place and a voice.
+UNDERSTAND|To see why someone thinks or feels the way they do.
+OPENNESS|Being willing to hear new ideas and share honestly.
+CURIOSITY|A real wish to learn about people and the world.
+FAIRNESS|Treating people equally and honestly.
+JUSTICE|Making things right and protecting everyone's rights.
+SERVICE|Helping others through your work, time or skills.
+MENTOR|A wise person who guides you as you grow.
+GUIDANCE|Advice and direction that helps you find your way.
+ENCOURAGE|To give someone courage and hope to keep going.
+COMFORT|Easing someone's pain with care and calm.
+CARING|Showing concern and looking after others.
+GENTLE|Soft and kind in the way you speak and act.
+SMILE|A simple expression that can make someone's day.
+LAUGHTER|A joyful sound that releases stress and brings people together.
+CELEBRATE|To mark good moments with others and enjoy them.
+UNITY|People coming together as one for a shared goal.
+BRIDGE|Something that connects people who are far apart or different.
+TOGETHER|With one another, not alone.
+NEIGHBOUR|Someone who lives near you, and a person you can look out for.
+BOND|A strong link that joins people.
+EQUALITY|Everyone being treated as equally valuable.
+HUGS|Warm embraces that show care and ease stress.
+COOPERATE|To work with others toward a common aim.
+RAPPORT|A friendly, easy understanding between people.
+`),
+  plan: [
+    { t: "Friends and family", w: "FRIENDSHIP FAMILY COMMUNITY NEIGHBOUR BOND TOGETHER",
+      k: "Message or call one friend or family member just to say you are thinking of them. Greet a neighbour by name.",
+      q: "Who did I reach out to today?" },
+    { t: "Talk and listen", w: "DIALOGUE UNDERSTAND OPENNESS CURIOSITY RAPPORT GUIDANCE",
+      k: "Have one conversation where you ask questions and listen more than you speak. Try to understand before you reply, and ask someone for advice.",
+      q: "What did I learn about someone by listening?" },
+    { t: "Give and share", w: "SHARING GENEROSITY GIVING SERVICE SUPPORT COOPERATE",
+      k: "Share something with someone today, like food, time or a skill. Help a person without being asked.",
+      q: "How did it feel to give today?" },
+    { t: "Say it with warmth", w: "THANKS APOLOGY WARMTH WELCOME TENDERNESS GENTLE",
+      k: "Say thank you to three people, and say sorry to someone if you owe it. Greet people with a warm voice and a gentle tone.",
+      q: "Who did I make feel welcome today?" },
+    { t: "Be fair to all", w: "INCLUSION FAIRNESS JUSTICE EQUALITY UNITY LOYALTY",
+      k: "Make sure one quiet person gets heard in a group. Stand up for fairness in a small way and keep a promise to someone.",
+      q: "Where did I stand up for fairness today?" },
+    { t: "Lift others up", w: "ENCOURAGE MENTOR COMFORT CARING HUGS BRIDGE",
+      k: "Encourage someone who is struggling and offer a hug or a kind word. Thank a mentor, or be one by sharing what you know. Help two people get to know each other.",
+      q: "Who did I lift up today?" },
+    { t: "Enjoy being together", w: "SMILE LAUGHTER CELEBRATE TEAMWORK",
+      k: "Smile at the people you meet, share a laugh and celebrate someone's win. Do a team activity with family, friends or colleagues.",
+      q: "What made me laugh with someone today?" }
+  ]
+},
+{
+  n: 4, name: "Thriving", tag: "Dream big, learn, grow and leave your mark", color: "#d9661a",
+  words: parseWords(`
+AMBITION|A strong wish to achieve something meaningful.
+VISION|A clear picture of the future you want.
+GOALS|Targets you set and work toward.
+DREAMS|Hopes for the future that inspire you.
+PASSION|A strong love for something that drives you.
+CREATIVITY|Using imagination to make or solve something new.
+INSPIRE|To fill someone with the wish to do something good.
+IMAGINE|To picture something that is not in front of you yet.
+INNOVATE|To try new ideas and better ways of doing things.
+LEARNING|Gaining new knowledge or skills.
+MASTERY|Deep skill gained through steady practice.
+SKILL|Something you can do well because you learned and practised.
+PRACTICE|Doing something again and again to get better.
+PROGRESS|Moving forward, even by small steps.
+DISCOVER|To find something new about the world or yourself.
+EXPLORE|To search and learn with curiosity.
+ADVENTURE|A new and exciting experience that stretches you.
+WONDER|A feeling of amazement and curiosity.
+PLAYFUL|Light hearted and ready to have fun.
+HUMOR|Seeing the funny side of life, which eases stress.
+ENTHUSIASM|Excited energy for something you care about.
+FULFILLED|Feeling that your life has meaning and satisfaction.
+ABUNDANCE|Having plenty, and noticing the richness you already have.
+LEGACY|What you leave behind in the lives of others.
+IMPACT|The difference your actions make.
+LEADERSHIP|Guiding others by example, care and clear direction.
+INITIATIVE|Starting something good without waiting to be told.
+OWNERSHIP|Taking responsibility for your choices and results.
+DIRECTION|The path you choose to move toward.
+MEANING|The sense that your life and actions matter.
+VALUES|The beliefs that guide how you live.
+COMMITMENT|Sticking with a promise or goal through the ups and downs.
+TRANSFORM|To change deeply for the better.
+BLOOM|To grow and show your best self.
+SHINE|To let your gifts show and bring light to others.
+FREEDOM|The power to choose how you live and think.
+AUTHENTIC|Being true to who you really are.
+EVOLVE|To grow and change step by step over time.
+SUMMIT|The top of a climb, and a big goal reached.
+JOURNEY|The path of learning and growing, not only the destination.
+`),
+  plan: [
+    { t: "Dream it", w: "VISION DREAMS GOALS AMBITION IMAGINE PASSION",
+      k: "Write down one big dream and one goal you can reach this month. Close your eyes and imagine it clearly for two minutes.",
+      q: "What excites me most about my dream?" },
+    { t: "Create and play", w: "CREATIVITY INNOVATE PLAYFUL HUMOR WONDER ADVENTURE",
+      k: "Make or try something new, like a drawing, a recipe or a song. Do something playful and find one funny thing to laugh at.",
+      q: "What new thing did I try today?" },
+    { t: "Learn and practise", w: "LEARNING SKILL PRACTICE MASTERY PROGRESS DISCOVER",
+      k: "Pick one skill and practise it for 20 minutes. Write down one thing you learned and one small bit of progress.",
+      q: "What did I get better at today?" },
+    { t: "Explore and shine", w: "EXPLORE ENTHUSIASM INSPIRE SHINE BLOOM JOURNEY",
+      k: "Go somewhere new or take a new route. Share your excitement with someone and encourage them. Do one thing that lets you shine.",
+      q: "Where did I let my light show today?" },
+    { t: "Live your values", w: "VALUES AUTHENTIC MEANING COMMITMENT DIRECTION FREEDOM",
+      k: "Write down your top three values. Make one choice today that matches them, be honest about who you are, and renew one promise.",
+      q: "Which choice today matched my values?" },
+    { t: "Take charge", w: "INITIATIVE OWNERSHIP LEADERSHIP TRANSFORM EVOLVE SUMMIT",
+      k: "Start one thing you have been waiting to begin, without being told. Take responsibility for one result, good or bad. Lead by example in a small way.",
+      q: "What did I start or take ownership of today?" },
+    { t: "Leave your mark", w: "LEGACY IMPACT ABUNDANCE FULFILLED",
+      k: "Write down how you want to be remembered. Do one thing today that helps someone else. List what you already have, and celebrate how far you have come.",
+      q: "What difference did I make today?" }
+  ]
+}
+];
 
-      function canPlace(word, r, c, dx, dy) {
-        for (let i = 0; i < word.length; i++) {
-          const rr = r + dy * i;
-          const cc = c + dx * i;
-          if (rr < 0 || cc < 0 || rr >= state.N || cc >= state.N) return false;
-          const ch = state.grid[rr][cc];
-          if (ch && ch !== word[i]) return false;
-        }
-        return true;
-      }
+/* ============================== PUZZLE BUILDER ============================== */
+var DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]];
+function rand(n){ return Math.floor(Math.random() * n); }
 
-      function place(word, r, c, dx, dy) {
-        const coords = [];
-        for (let i = 0; i < word.length; i++) {
-          const rr = r + dy * i;
-          const cc = c + dx * i;
-          state.grid[rr][cc] = word[i];
-          coords.push([rr, cc]);
-        }
-        state.placements[word] = coords;
-      }
-
-      function buildPuzzle() {
-        const sorted = WORDS.slice().sort((a,b) => b.length - a.length);
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-        for (let size = BASE_N; size <= 22; size++) {
-          state.N = size;
-          for (let attempts = 0; attempts < 80; attempts++) {
-            state.grid = emptyGrid();
-            state.placements = {};
-            let okAll = true;
-
-            for (let w = 0; w < sorted.length; w++) {
-              const word = sorted[w];
-              let placed = false;
-              for (let t = 0; t < 2400; t++) {
-                const d = pick(DIRS);
-                const r = rand(state.N);
-                const c = rand(state.N);
-                if (canPlace(word, r, c, d[0], d[1])) {
-                  place(word, r, c, d[0], d[1]);
-                  placed = true;
-                  break;
-                }
-              }
-              if (!placed) {
-                okAll = false;
-                break;
-              }
-            }
-
-            if (okAll) {
-              for (let rr = 0; rr < state.N; rr++) {
-                for (let cc = 0; cc < state.N; cc++) {
-                  if (!state.grid[rr][cc]) state.grid[rr][cc] = letters[rand(letters.length)];
-                }
-              }
-              return true;
-            }
+function buildPuzzle(words){
+  var sorted = words.slice().sort(function(a,b){ return b.length - a.length; });
+  var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (var N = 17; N <= 22; N++){
+    for (var attempt = 0; attempt < 12; attempt++){
+      var g = [], place = {}, ok = true, r, c, i;
+      for (r = 0; r < N; r++){ g[r] = []; for (c = 0; c < N; c++) g[r][c] = ""; }
+      for (var wi = 0; wi < sorted.length && ok; wi++){
+        var w = sorted[wi], best = null, bestScore = -1, valid = 0;
+        for (var t = 0; t < 400 && valid < 25; t++){
+          var d = DIRS[rand(8)], r0 = rand(N), c0 = rand(N);
+          var er = r0 + d[1] * (w.length - 1), ec = c0 + d[0] * (w.length - 1);
+          if (er < 0 || ec < 0 || er >= N || ec >= N) continue;
+          var score = 0, fit = true;
+          for (i = 0; i < w.length; i++){
+            var ch = g[r0 + d[1] * i][c0 + d[0] * i];
+            if (ch){ if (ch !== w[i]){ fit = false; break; } score++; }
           }
+          if (!fit || score === w.length) continue;
+          valid++;
+          if (score > bestScore || (score === bestScore && Math.random() < 0.3)){ bestScore = score; best = [r0, c0, d]; }
         }
-        return false;
+        if (!best){ ok = false; break; }
+        for (i = 0; i < w.length; i++) g[best[0] + best[2][1] * i][best[1] + best[2][0] * i] = w[i];
+        place[w] = { r: best[0], c: best[1], d: best[2] };
       }
-
-      function cellSelector(r,c) { return `.cell[data-r="${r}"][data-c="${c}"]`; }
-
-      function renderGrid() {
-        el.grid.style.setProperty("--n", String(state.N));
-        el.grid.innerHTML = "";
-
-        for (let r = 0; r < state.N; r++) {
-          for (let c = 0; c < state.N; c++) {
-            const div = document.createElement("div");
-            div.className = "cell";
-            div.dataset.r = String(r);
-            div.dataset.c = String(c);
-            div.textContent = state.grid[r][c];
-            div.setAttribute("role", "button");
-            div.setAttribute("tabindex", "-1");
-            div.setAttribute("aria-label", `Row ${r+1} column ${c+1} letter ${state.grid[r][c]}`);
-            el.grid.appendChild(div);
-          }
-        }
+      if (ok){
+        for (r = 0; r < N; r++) for (c = 0; c < N; c++) if (!g[r][c]) g[r][c] = letters[rand(26)];
+        return { N: N, grid: g, place: place };
       }
+    }
+  }
+  return null;
+}
+</script>
+<script>
+/* ============================== APP ============================== */
+var $ = function(id){ return document.getElementById(id); };
+var PALETTE = ["#e5484d","#f08c00","#2f9e44","#1c7ed6","#9c36b5","#0ca678","#e64980","#5c7cfa","#d9480f","#12b886"];
+var STICK_COLORS = ["#2f80ed","#2e9f67","#8e5be8","#d9661a","#e0457b"];
+var CHEERS = ["Great find!","Brilliant!","You got it!","Well done!","Wonderful!","Yes! Keep going!","Sharp eyes!","Amazing!","Superb!","Nailed it!"];
+var COACH = ["Nice one! Keep that streak going.","You are on fire!","Another one down!","Your eyes are sharp today.","Look at you go!","That word is yours now."];
 
-      function renderWords() {
-        el.wordList.innerHTML = "";
-        WORDS.forEach((word) => {
-          const li = document.createElement("li");
-          li.className = "word";
-          li.dataset.word = word;
-          li.textContent = word;
-          el.wordList.appendChild(li);
-        });
-      }
+var S = {
+  round: 1, words: [], N: 15, grid: [], cells: [], place: {},
+  found: {}, foundCount: 0, elapsed: 0, hints: 0, stars: 0,
+  complete: false, shownFinish: false, locked: false, screen: "home",
+  name: "", reflection: "", muted: false, openModals: [], sel: null, selCells: [],
+  meaningReplay: false, running: false, lastFocus: null
+};
 
-      function clearPreview() {
-        el.grid.querySelectorAll(".cell.preview").forEach((node) => node.classList.remove("preview"));
-        state.preview = [];
-      }
+/* ---------- storage (device only) ---------- */
+var STORE_KEY = "eid_find40_v1";
+function loadStore(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; } }
+function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {} }
+var store = loadStore();
+store.done = store.done || {};
 
-      function resetFound(updateMessage) {
-        state.found = {};
-        state.foundCells = {};
-        el.foundCount.textContent = "0";
-        clearPreview();
-        el.grid.querySelectorAll(".cell").forEach((node) => node.className = "cell");
-        el.wordList.querySelectorAll(".word").forEach((n) => n.classList.remove("done"));
-        if (updateMessage) el.status.textContent = "Puzzle reset complete. Find all 40 words.";
-        updateResults();
-      }
+/* ---------- helpers ---------- */
+function fmt(sec){
+  sec = Math.max(0, Math.floor(sec));
+  return String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0");
+}
+function toast(msg, ms){
+  var t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove("show"); }, ms || 1800);
+}
+function clean(t){ return String(t || "").replace(/[^\x20-\x7E\u00A0-\u00FF]/g, "").replace(/\s+/g, " ").trim(); }
+function hexToRgb(h){ var n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
 
-      function eventCell(evt) {
-        const t = evt.target && evt.target.closest ? evt.target.closest(".cell") : null;
-        if (!t || !el.grid.contains(t)) return null;
-        return [parseInt(t.dataset.r, 10), parseInt(t.dataset.c, 10)];
-      }
+function stick(color, cls){
+  return '<svg class="stick ' + (cls || "") + '" viewBox="0 0 60 100" aria-hidden="true">' +
+    '<g stroke="' + color + '" stroke-width="5" stroke-linecap="round" fill="none">' +
+    '<circle cx="30" cy="16" r="11" fill="#fff"/>' +
+    '<line x1="30" y1="27" x2="30" y2="62"/>' +
+    '<line class="armL" x1="30" y1="36" x2="10" y2="52"/>' +
+    '<line class="armR" x1="30" y1="36" x2="50" y2="52"/>' +
+    '<line class="legL" x1="30" y1="62" x2="16" y2="94"/>' +
+    '<line class="legR" x1="30" y1="62" x2="44" y2="94"/></g>' +
+    '<circle cx="26" cy="14" r="1.8" fill="' + color + '"/><circle cx="34" cy="14" r="1.8" fill="' + color + '"/>' +
+    '<path d="M25 19 Q30 24.5 35 19" stroke="' + color + '" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>';
+}
+function crew(el, n, cls){
+  var h = "";
+  for (var i = 0; i < n; i++){
+    h += '<div style="animation-delay:' + (i * 0.12) + 's">' + stick(STICK_COLORS[i % STICK_COLORS.length], cls || "dance") + "</div>";
+  }
+  el.innerHTML = h;
+  el.querySelectorAll(".stick, .stick *").forEach(function(n2){ n2.style.animationDelay = (Math.random() * 0.4) + "s"; });
+}
 
-      function cellFromPoint(evt) {
-        const target = document.elementFromPoint(evt.clientX, evt.clientY);
-        if (!target) return null;
-        const t = target.closest ? target.closest(".cell") : null;
-        if (!t || !el.grid.contains(t)) return null;
-        return [parseInt(t.dataset.r, 10), parseInt(t.dataset.c, 10)];
-      }
+/* ---------- name ---------- */
+function setName(v, from){
+  S.name = v;
+  if (from !== "home") $("nameHome").value = v;
+  if (from !== "res") $("nameRes").value = v;
+  if (store.remember){ store.name = v; saveStore(); }
+}
 
-      function straightPath(a, b) {
-        if (!a || !b) return [];
-        const dr = b[0] - a[0];
-        const dc = b[1] - a[1];
-        const straight = (dr === 0 && dc !== 0) || (dc === 0 && dr !== 0) || (Math.abs(dr) === Math.abs(dc) && dr !== 0);
-        if (!straight) return [];
-        const sr = dr === 0 ? 0 : dr / Math.abs(dr);
-        const sc = dc === 0 ? 0 : dc / Math.abs(dc);
-        const len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
-        const out = [];
-        for (let i = 0; i < len; i++) out.push([a[0] + sr*i, a[1] + sc*i]);
-        return out;
-      }
+/* ---------- modals ---------- */
+function openModal(id){
+  var m = $(id);
+  if (S.openModals.indexOf(id) < 0) S.openModals.push(id);
+  S.lastFocus = document.activeElement;
+  m.classList.add("open");
+  updateRunning();
+  var f = m.querySelector("[data-focus]");
+  if (f) setTimeout(function(){ try { f.focus({ preventScroll: true }); } catch (e) {} }, 30);
+}
+function closeModal(id){
+  $(id).classList.remove("open");
+  S.openModals = S.openModals.filter(function(x){ return x !== id; });
+  updateRunning();
+}
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && S.openModals.length){
+    var top = S.openModals[S.openModals.length - 1];
+    if (top === "mMeaning") meaningNext(); else closeModal(top);
+  }
+});
+document.querySelectorAll(".modal").forEach(function(m){
+  m.addEventListener("pointerdown", function(e){
+    if (e.target === m){
+      if (m.id === "mMeaning") meaningNext(); else closeModal(m.id);
+    }
+  });
+});
 
-      function pathLetters(path) {
-        return path.map(([r,c]) => state.grid[r][c]).join("");
-      }
+/* ---------- sound ---------- */
+var actx = null;
+function initAudio(){
+  if (!actx){ try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (actx && actx.state === "suspended") actx.resume();
+}
+function tone(freq, t0, dur, type, vol){
+  if (!actx || S.muted) return;
+  var o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + t0;
+  o.type = type || "sine"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.15, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + 0.05);
+}
+function playFound(){ tone(660, 0, 0.14); tone(880, 0.1, 0.16); tone(1175, 0.2, 0.26); }
+function playWin(){ [523, 659, 784, 1047, 1319, 1568].forEach(function(f, i){ tone(f, i * 0.12, 0.3, "triangle", 0.16); }); }
+function playMiss(){ tone(220, 0, 0.12, "sine", 0.06); }
 
-      function paintPreview(path) {
-        clearPreview();
-        state.preview = path;
-        path.forEach(([r,c]) => {
-          if (state.foundCells[key(r,c)]) return;
-          const cell = el.grid.querySelector(cellSelector(r,c));
-          if (cell) cell.classList.add("preview");
-        });
-      }
+/* ---------- confetti ---------- */
+var cv = $("confetti"), cx = cv.getContext ? cv.getContext("2d") : null, parts = [], raf = 0, dpr = 1;
+var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+var CONF = ["#ff595e","#ffca3a","#8ac926","#1982c4","#6a4c93","#ff9f1c","#2ec4b6","#f15bb5"];
+function sizeCanvas(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = Math.floor(innerWidth * dpr); cv.height = Math.floor(innerHeight * dpr);
+  if (cx) cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function burst(x, y, n, power){
+  if (!cx) return;
+  n = reduceMotion ? Math.round(n / 3) : n; power = power || 1;
+  for (var i = 0; i < n; i++){
+    parts.push({
+      x: x, y: y, vx: (Math.random() - 0.5) * 11 * power, vy: -(7 + Math.random() * 12) * power,
+      g: 0.26 + Math.random() * 0.12, w: 6 + Math.random() * 7, h: 4 + Math.random() * 6,
+      rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.35, ph: Math.random() * 6,
+      c: CONF[rand(CONF.length)], life: 0, max: 110 + Math.random() * 70, circle: Math.random() < 0.2
+    });
+  }
+  if (!raf) raf = requestAnimationFrame(drawConfetti);
+}
+function drawConfetti(){
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(function(p){ return p.life < p.max && p.y < innerHeight + 40; });
+  parts.forEach(function(p){
+    p.life++; p.vy += p.g; p.vx *= 0.992; p.x += p.vx + Math.sin(p.life / 7 + p.ph) * 0.8; p.y += p.vy; p.rot += p.vr;
+    var a = p.life > p.max - 30 ? Math.max(0, (p.max - p.life) / 30) : 1;
+    cx.save(); cx.globalAlpha = a; cx.translate(p.x, p.y); cx.rotate(p.rot); cx.fillStyle = p.c;
+    if (p.circle){ cx.beginPath(); cx.arc(0, 0, p.w / 2.4, 0, 6.3); cx.fill(); }
+    else cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    cx.restore();
+  });
+  raf = parts.length ? requestAnimationFrame(drawConfetti) : 0;
+  if (!raf) cx.clearRect(0, 0, innerWidth, innerHeight);
+}
+function bigConfetti(){
+  for (var i = 0; i < 8; i++){
+    (function(k){
+      setTimeout(function(){
+        burst(Math.random() * innerWidth, innerHeight * 0.95, 90, 1.5);
+      }, k * 260);
+    })(i);
+  }
+}
 
-      function finalize(path) {
-        if (path.length < 2) return;
-        const s = pathLetters(path);
-        const rev = s.split("").reverse().join("");
-        const word = state.placements[s] ? s : (state.placements[rev] ? rev : "");
+/* ---------- screens ---------- */
+function show(screen){
+  S.screen = screen;
+  $("home").classList.toggle("hidden", screen !== "home");
+  $("game").classList.toggle("hidden", screen !== "game");
+  if (screen === "home"){
+    document.documentElement.style.setProperty("--accent", "#2f80ed");
+    renderLevels();
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
+  updateRunning();
+  layout();
+}
 
-        if (!word || state.found[word]) {
-          el.status.textContent = "Not a listed word yet. Keep going!";
-          return;
-        }
+function renderLevels(){
+  $("levels").innerHTML = LEVELS.map(function(lv){
+    var d = store.done[lv.n];
+    var st = d ? ("Done " + "\u2605".repeat(d.stars) + "  Best " + fmt(d.best)) : "Not played yet";
+    return '<button type="button" class="lvl" data-n="' + lv.n + '" style="--c:' + lv.color + '">' +
+      '<span class="lvn">Round ' + lv.n + '</span><span class="lvname">' + lv.name + '</span>' +
+      '<span class="lvtag">' + lv.tag + '</span><span class="lvst">' + st + '</span></button>';
+  }).join("");
+}
 
-        state.found[word] = true;
-        (state.placements[word] || []).forEach(([r,c]) => {
-          state.foundCells[key(r,c)] = true;
-          const cell = el.grid.querySelector(cellSelector(r,c));
-          if (cell) {
-            cell.classList.remove("preview");
-            cell.classList.add("found");
-          }
-        });
+function startRound(n){
+  var lv = LEVELS[n - 1];
+  S.round = n; S.words = lv.words;
+  document.documentElement.style.setProperty("--accent", lv.color);
+  $("rtitle").innerHTML = "Round " + n + '<span class="rn">: ' + lv.name + "</span>";
+  $("walker").innerHTML = stick(lv.color, "idle");
+  $("coachStick").innerHTML = stick(lv.color, "dance");
+  newGrid();
+  show("game");
+  try { history.replaceState(null, "", "#round-" + n); } catch (e) {}
+}
 
-        const item = el.wordList.querySelector(`.word[data-word="${word}"]`);
-        if (item) item.classList.add("done");
+function newGrid(){
+  var res = buildPuzzle(S.words.map(function(x){ return x.w; }));
+  S.N = res.N; S.grid = res.grid; S.place = res.place;
+  S.found = {}; S.foundCount = 0; S.elapsed = 0; S.hints = 0; S.stars = 0;
+  S.complete = false; S.shownFinish = false; S.locked = false; S.sel = null; S.selCells = [];
+  renderBoard(); renderChips(); updateProgress(); renderTimer();
+  $("bubble").textContent = "Drag across the letters to find a word. I will cheer you on!";
+  layout();
+}
 
-        const count = Object.keys(state.found).length;
-        el.foundCount.textContent = String(count);
-        el.status.textContent = count === WORDS.length
-          ? "Great work! You found all 40 words."
-          : `Found: ${word}. ${count}/40 complete.`;
+function renderBoard(){
+  var b = $("board"); b.innerHTML = ""; S.cells = [];
+  b.style.gridTemplateColumns = "repeat(" + S.N + ", var(--cell))";
+  var frag = document.createDocumentFragment();
+  for (var r = 0; r < S.N; r++){
+    S.cells[r] = [];
+    for (var c = 0; c < S.N; c++){
+      var d = document.createElement("div");
+      d.className = "cell"; d.textContent = S.grid[r][c];
+      S.cells[r][c] = d; frag.appendChild(d);
+    }
+  }
+  b.appendChild(frag);
+}
 
-        updateResults();
-      }
+function renderChips(){
+  $("chips").innerHTML = S.words.map(function(w){
+    return '<button type="button" class="chip" data-w="' + w.w + '">' + w.w + "</button>";
+  }).join("");
+}
 
-      function updateResults() {
-        const count = Object.keys(state.found).length;
-        const reflection = el.reflectionInput.value.trim();
-        const completed = count === WORDS.length ? "Yes ✅" : "Not yet";
+function updateProgress(){
+  var p = S.foundCount / S.words.length;
+  $("pcount").textContent = S.foundCount + "/" + S.words.length;
+  $("fill").style.width = (p * 100) + "%";
+  $("walker").style.left = "calc((100% - 22px) * " + p + ")";
+}
+function renderTimer(){ $("timer").textContent = fmt(S.elapsed / 1000); }
 
-        let text = `Words found: ${count}/40. Completed: ${completed}.`;
-        if (reflection) text += ` Reflection: ${reflection}`;
+/* ---------- layout: everything fits on one screen ---------- */
+function layout(){
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var land = vw > vh * 1.15 && vw >= 560;
+  document.body.classList.toggle("land", land);
+  sizeCanvas();
+  if (S.screen !== "game") return;
+  var top = $("topbar").offsetHeight + $("progress").offsetHeight;
+  var size;
+  if (land){
+    var pw = 360;
+    size = Math.min(vh - top - 14, vw - pw - 40, 820);
+  } else {
+    size = Math.min(vw - 12, vh - top - 176, 640);
+  }
+  size = Math.max(size, 200);
+  var cell = Math.max(12, Math.floor((size - 4) / S.N));
+  $("board").style.setProperty("--cell", cell + "px");
+}
+window.addEventListener("resize", layout);
+window.addEventListener("orientationchange", function(){ setTimeout(layout, 200); });
+if (window.visualViewport) visualViewport.addEventListener("resize", layout);
 
-        el.resultText.textContent = text;
+/* ---------- timer ---------- */
+var lastT = performance.now();
+function updateRunning(){
+  S.running = S.screen === "game" && S.openModals.length === 0 && !S.complete && !document.hidden;
+}
+setInterval(function(){
+  var now = performance.now();
+  if (S.running) S.elapsed += now - lastT;
+  lastT = now;
+  if (S.screen === "game") renderTimer();
+}, 250);
+document.addEventListener("visibilitychange", function(){ lastT = performance.now(); updateRunning(); });
 
-        if (!reflection) {
-          el.reflectionHint.textContent = "Tip: Add a short reflection to enable a meaningful PDF summary.";
-        } else {
-          el.reflectionHint.textContent = "Great reflection ✨ You can now download your summary PDF.";
-        }
+/* ---------- selecting words ---------- */
+function paintSel(path){
+  S.selCells.forEach(function(el){ el.classList.remove("sel"); });
+  S.selCells = [];
+  path.forEach(function(p){
+    var el = S.cells[p[0]][p[1]];
+    el.classList.add("sel"); S.selCells.push(el);
+  });
+}
+function clearSel(){
+  S.selCells.forEach(function(el){ el.classList.remove("sel"); });
+  S.selCells = [];
+}
+var board = $("board");
+board.addEventListener("pointerdown", function(e){
+  if (S.locked || S.complete) return;
+  e.preventDefault(); initAudio();
+  var rect = board.getBoundingClientRect(), cell = (rect.width - 4) / S.N;
+  var c = Math.min(S.N - 1, Math.max(0, Math.floor((e.clientX - rect.left - 2) / cell)));
+  var r = Math.min(S.N - 1, Math.max(0, Math.floor((e.clientY - rect.top - 2) / cell)));
+  S.sel = { rect: rect, cell: cell, r0: r, c0: c, path: [[r, c]], id: e.pointerId };
+  try { board.setPointerCapture(e.pointerId); } catch (err) {}
+  paintSel(S.sel.path);
+});
+board.addEventListener("pointermove", function(e){
+  var s = S.sel; if (!s || e.pointerId !== s.id) return;
+  e.preventDefault();
+  var cx0 = s.rect.left + 2 + (s.c0 + 0.5) * s.cell, cy0 = s.rect.top + 2 + (s.r0 + 0.5) * s.cell;
+  var dx = e.clientX - cx0, dy = e.clientY - cy0;
+  var path = [[s.r0, s.c0]];
+  if (Math.hypot(dx, dy) / s.cell > 0.6){
+    var step = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
+    var ddx = Math.round(Math.cos(step * Math.PI / 4)), ddy = Math.round(Math.sin(step * Math.PI / 4));
+    var proj = (dx * ddx + dy * ddy) / (s.cell * (ddx * ddx + ddy * ddy));
+    var len = Math.round(proj);
+    while (len > 0){
+      var er = s.r0 + ddy * len, ec = s.c0 + ddx * len;
+      if (er >= 0 && ec >= 0 && er < S.N && ec < S.N) break;
+      len--;
+    }
+    for (var i = 1; i <= len; i++) path.push([s.r0 + ddy * i, s.c0 + ddx * i]);
+  }
+  s.path = path; paintSel(path);
+});
+function endSel(e){
+  var s = S.sel; if (!s || e.pointerId !== s.id) return;
+  S.sel = null; clearSel();
+  if (e.type !== "pointercancel") finalizePath(s.path);
+}
+board.addEventListener("pointerup", endSel);
+board.addEventListener("pointercancel", endSel);
+board.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 
-        maybeAutoSave();
-      }
+function finalizePath(path){
+  if (path.length < 2) return;
+  var s = path.map(function(p){ return S.grid[p[0]][p[1]]; }).join("");
+  var rs = s.split("").reverse().join("");
+  var hit = null, already = false;
+  S.words.forEach(function(w){
+    if (w.w === s || w.w === rs){ if (S.found[w.w]) already = true; else hit = w; }
+  });
+  if (hit){ onFound(hit, path); return; }
+  if (already){ toast("You already found that one."); return; }
+  playMiss();
+  path.forEach(function(p){
+    var el = S.cells[p[0]][p[1]]; el.classList.add("miss");
+    setTimeout(function(){ el.classList.remove("miss"); }, 350);
+  });
+}
 
-      function maybeAutoSave() {
-        if (!el.saveToggle.checked) return;
-        const payload = {
-          name: el.nameInput.value,
-          reflection: el.reflectionInput.value
-        };
-        try {
-          localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
-          localStorage.setItem(SAVE_PREF_KEY, "1");
-        } catch (error) {
-          console.warn("Could not save reflection:", error);
-        }
-      }
+function onFound(w, path){
+  S.locked = true;
+  var color = PALETTE[S.foundCount % PALETTE.length];
+  S.foundCount++; S.found[w.w] = { color: color, order: S.foundCount };
+  path.forEach(function(p, i){
+    var el = S.cells[p[0]][p[1]];
+    el.classList.add("found"); el.style.setProperty("--fc", color);
+    el.classList.remove("pop"); void el.offsetWidth;
+    el.style.animationDelay = (i * 40) + "ms"; el.classList.add("pop");
+  });
+  var chip = $("chips").querySelector('[data-w="' + w.w + '"]');
+  if (chip){ chip.classList.add("found"); chip.style.setProperty("--fc", color); }
+  updateProgress();
+  var wk = $("walker").firstChild;
+  if (wk){ wk.classList.remove("idle"); wk.classList.add("cheer"); setTimeout(function(){ wk.classList.remove("cheer"); wk.classList.add("idle"); }, 1600); }
+  var rect = board.getBoundingClientRect(), cell = (rect.width - 4) / S.N, mid = path[Math.floor(path.length / 2)];
+  burst(rect.left + 2 + (mid[1] + 0.5) * cell, rect.top + 2 + (mid[0] + 0.5) * cell, 120, 1);
+  initAudio(); playFound();
+  if (navigator.vibrate) { try { navigator.vibrate(30); } catch (e) {} }
+  $("bubble").textContent = COACH[rand(COACH.length)];
+  if (S.foundCount === S.words.length){
+    S.complete = true; recordResult(); updateRunning();
+  }
+  setTimeout(function(){ S.locked = false; showMeaning(w.w, false); }, 750);
+}
 
-      function restoreSaved() {
-        const pref = localStorage.getItem(SAVE_PREF_KEY) === "1";
-        el.saveToggle.checked = pref;
-        if (!pref) return;
-        const raw = localStorage.getItem(SAVE_KEY);
-        if (!raw) return;
-        try {
-          const data = JSON.parse(raw);
-          if (data && typeof data === "object") {
-            el.nameInput.value = data.name || "";
-            el.reflectionInput.value = data.reflection || "";
-            showMessage("Saved reflection restored.");
-          }
-        } catch (_error) {
-          showMessage("Saved reflection could not be restored.", true);
-        }
-      }
+/* ---------- meaning popup ---------- */
+function showMeaning(word, replay){
+  var w = S.words.filter(function(x){ return x.w === word; })[0];
+  var n = S.foundCount, cheer = CHEERS[rand(CHEERS.length)];
+  if (!replay){
+    if (n === 10) cheer = "10 down, 30 to go!";
+    else if (n === 20) cheer = "Halfway there!";
+    else if (n === 30) cheer = "Only 10 left!";
+    else if (n === 39) cheer = "One more word!";
+    else if (n === 40) cheer = "You found them all!";
+  } else cheer = "Remember this one";
+  S.meaningReplay = !!replay;
+  crew($("mwCrew"), 3, "dance");
+  $("mwCheer").textContent = cheer;
+  $("mwWord").textContent = w.w;
+  $("mwMeaning").textContent = w.m;
+  $("mwCount").textContent = replay ? "" : (n + " of " + S.words.length + " found");
+  $("mwNext").textContent = replay ? "Back to game" : (S.complete ? "See my results" : "Next word");
+  openModal("mMeaning");
+}
+function meaningNext(){
+  closeModal("mMeaning");
+  if (!S.meaningReplay && S.complete && !S.shownFinish){
+    S.shownFinish = true;
+    bigConfetti(); initAudio(); playWin();
+    setTimeout(openResults, 500);
+  }
+}
+$("mwNext").addEventListener("click", meaningNext);
+$("chips").addEventListener("click", function(e){
+  var c = e.target.closest(".chip");
+  if (c && S.found[c.dataset.w]) showMeaning(c.dataset.w, true);
+});
 
-      function clearSaved() {
-        localStorage.removeItem(SAVE_KEY);
-        localStorage.removeItem(SAVE_PREF_KEY);
-        showMessage("Saved reflection cleared.");
-      }
+/* ---------- results ---------- */
+function calcStars(){
+  var m = S.elapsed / 60000, s = m <= 12 ? 3 : (m <= 25 ? 2 : 1);
+  if (S.hints > 5) s = Math.max(1, s - 1);
+  return s;
+}
+function recordResult(){
+  S.stars = calcStars();
+  var d = store.done[S.round], t = Math.round(S.elapsed / 1000);
+  if (!d) store.done[S.round] = { best: t, stars: S.stars };
+  else store.done[S.round] = { best: Math.min(d.best, t), stars: Math.max(d.stars, S.stars) };
+  saveStore();
+}
+function renderResults(){
+  var lv = LEVELS[S.round - 1];
+  crew($("rsCrew"), 4, S.complete ? "dance" : "idle");
+  $("rsTitle").textContent = S.complete ? ("Round " + S.round + " complete!") : ("Round " + S.round + ": your progress");
+  $("rsStars").textContent = S.complete ? ("\u2605".repeat(S.stars) + "\u2606".repeat(3 - S.stars)) : "";
+  $("rsFound").textContent = S.foundCount + "/" + S.words.length;
+  $("rsTime").textContent = fmt(S.elapsed / 1000);
+  $("rsHints").textContent = S.hints;
+  $("nameRes").value = S.name;
+  $("reflection").value = S.reflection;
+  $("rsNext").classList.toggle("hidden", !(S.complete && S.round < LEVELS.length));
+  $("rsNext").textContent = "Round " + (S.round + 1) + " \u203A";
+  $("rsClose").textContent = S.complete ? "Stay here" : "Back to game";
+}
+function openResults(){ renderResults(); openModal("mResults"); }
+$("nameHome").addEventListener("input", function(e){ setName(e.target.value, "home"); });
+$("nameRes").addEventListener("input", function(e){ setName(e.target.value, "res"); });
+$("reflection").addEventListener("input", function(e){ S.reflection = e.target.value; });
 
-      function copyLink() {
-        const url = getShareUrl();
-        navigator.clipboard.writeText(url).then(() => {
-          showToast("Link copied!");
-        }).catch(() => {
-          const temp = document.createElement("input");
-          temp.value = url;
-          document.body.appendChild(temp);
-          temp.select();
-          document.execCommand("copy");
-          temp.remove();
-          showToast("Link copied!");
-        });
-      }
+/* ---------- sharing ---------- */
+function shareUrl(){ return S.screen === "game" ? BASE_URL + "#round-" + S.round : BASE_URL; }
+function shareText(){
+  var lv = LEVELS[S.round - 1];
+  if (S.screen === "game" && S.complete)
+    return "I found all 40 words in Round " + S.round + ": " + lv.name + " in " + fmt(S.elapsed / 1000) + " " + "\u2B50".repeat(S.stars) + ". Can you beat me? Play free:";
+  if (S.screen === "game" && S.foundCount > 0)
+    return "I am playing Round " + S.round + ": " + lv.name + " and have found " + S.foundCount + " of 40 wellbeing words so far. Try it free:";
+  return "Find 40 wellbeing words, learn what each one means and get a 7 day plan. Free game with 4 rounds:";
+}
+function openShare(){
+  var url = shareUrl(), text = shareText();
+  $("shText").textContent = text + " " + url;
+  $("shWa").href = "https://wa.me/?text=" + encodeURIComponent(text + " " + url);
+  $("shFb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url);
+  $("shX").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(url);
+  $("shNative").classList.toggle("hidden", !navigator.share);
+  openModal("mShare");
+}
+function copyText(txt, okMsg){
+  function fallback(){
+    var t = document.createElement("textarea"); t.value = txt; t.style.position = "fixed"; t.style.opacity = "0";
+    document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); toast(okMsg); } catch (e) { toast("Could not copy. Please copy it by hand."); }
+    t.remove();
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ toast(okMsg); }, fallback);
+  else fallback();
+}
+$("shCopy").addEventListener("click", function(){ copyText(shareUrl(), "Link copied!"); });
+$("shMsg").addEventListener("click", function(){ copyText(shareText() + " " + shareUrl(), "Message copied!"); });
+$("shNative").addEventListener("click", function(){
+  if (navigator.share) navigator.share({ title: "Find 40 Wellbeing Words", text: shareText(), url: shareUrl() }).catch(function(){});
+});
 
-      function ensurePdfReady() {
-        const reflection = el.reflectionInput.value.trim();
-        const found = parseInt(el.foundCount.textContent, 10) || 0;
-        if (!reflection && found === 0) {
-          showMessage("Please complete some puzzle progress or add a reflection before downloading your PDF.", true);
-          return false;
-        }
-        return true;
-      }
+/* ---------- result picture ---------- */
+function roundRect(c, x, y, w, h, r){
+  c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function drawStickCanvas(c, x, y, s, color){
+  c.strokeStyle = color; c.lineWidth = 9 * s; c.lineCap = "round";
+  c.fillStyle = "#fff";
+  c.beginPath(); c.arc(x, y - 52 * s, 18 * s, 0, 6.3); c.fill(); c.stroke();
+  c.beginPath(); c.moveTo(x, y - 34 * s); c.lineTo(x, y + 20 * s);
+  c.moveTo(x, y - 20 * s); c.lineTo(x - 30 * s, y - 56 * s);
+  c.moveTo(x, y - 20 * s); c.lineTo(x + 30 * s, y - 56 * s);
+  c.moveTo(x, y + 20 * s); c.lineTo(x - 22 * s, y + 70 * s);
+  c.moveTo(x, y + 20 * s); c.lineTo(x + 22 * s, y + 70 * s); c.stroke();
+  c.fillStyle = color;
+  c.beginPath(); c.arc(x - 7 * s, y - 55 * s, 2.6 * s, 0, 6.3); c.arc(x + 7 * s, y - 55 * s, 2.6 * s, 0, 6.3); c.fill();
+  c.lineWidth = 4 * s; c.beginPath(); c.arc(x, y - 50 * s, 8 * s, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+}
+function makeCard(){
+  var lv = LEVELS[S.round - 1], cvs = document.createElement("canvas");
+  cvs.width = 1080; cvs.height = 1350;
+  var c = cvs.getContext("2d");
+  var g = c.createLinearGradient(0, 0, 1080, 1350); g.addColorStop(0, lv.color); g.addColorStop(1, "#17324d");
+  c.fillStyle = g; c.fillRect(0, 0, 1080, 1350);
+  for (var i = 0; i < 70; i++){
+    c.fillStyle = CONF[i % CONF.length]; c.globalAlpha = 0.85;
+    c.save(); c.translate(Math.random() * 1080, Math.random() * 1350); c.rotate(Math.random() * 6);
+    c.fillRect(-9, -5, 18, 10); c.restore();
+  }
+  c.globalAlpha = 1;
+  c.fillStyle = "#fff"; roundRect(c, 70, 150, 940, 1050, 44); c.fill();
+  c.textAlign = "center"; c.fillStyle = lv.color;
+  c.font = "800 34px system-ui, Arial, sans-serif"; c.fillText("ROUND " + S.round + ": " + lv.name.toUpperCase(), 540, 235);
+  c.fillStyle = "#17324d"; c.font = "900 70px system-ui, Arial, sans-serif"; c.fillText("Find 40", 540, 330);
+  c.fillText("Wellbeing Words", 540, 410);
+  var nm = clean(S.name);
+  c.font = "700 46px system-ui, Arial, sans-serif"; c.fillStyle = "#27455f";
+  var line = nm ? nm : "A wellbeing word finder";
+  if (c.measureText(line).width > 820) line = line.slice(0, 22) + "...";
+  c.fillText(line, 540, 500);
+  c.fillStyle = lv.color; c.font = "900 190px system-ui, Arial, sans-serif";
+  c.fillText(S.foundCount + "/" + S.words.length, 540, 700);
+  c.fillStyle = "#27455f"; c.font = "700 40px system-ui, Arial, sans-serif";
+  c.fillText("words found in " + fmt(S.elapsed / 1000), 540, 770);
+  if (S.complete){ c.fillStyle = "#f2b01e"; c.font = "900 90px system-ui, Arial, sans-serif"; c.fillText("\u2605".repeat(S.stars) + "\u2606".repeat(3 - S.stars), 540, 880); }
+  [250, 420, 540, 660, 830].forEach(function(x, k){ drawStickCanvas(c, x, 1030 + (k % 2) * 8, 1, STICK_COLORS[k % 5]); });
+  c.fillStyle = "#fff"; c.font = "700 34px system-ui, Arial, sans-serif";
+  c.fillText("Can you beat me? Play free:", 540, 1262);
+  c.font = "600 26px system-ui, Arial, sans-serif";
+  c.fillText("emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html", 540, 1306, 980);
+  return cvs;
+}
+function saveCard(){
+  var cvs = makeCard();
+  cvs.toBlob(function(blob){
+    if (!blob){ toast("Could not make the picture."); return; }
+    var file = null;
+    try { file = new File([blob], "my-wellbeing-words-round-" + S.round + ".png", { type: "image/png" }); } catch (e) {}
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })){
+      navigator.share({ files: [file], text: shareText(), url: shareUrl() }).catch(function(){});
+    } else {
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+      a.download = "my-wellbeing-words-round-" + S.round + ".png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+      toast("Picture saved!");
+    }
+  }, "image/png");
+}
 
-      function drawLogoToCanvas(imageUrl) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          img.onload = function () {
-            const canvas = document.createElement("canvas");
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            resolve({ dataUrl: canvas.toDataURL("image/jpeg", 0.92), aspectRatio: img.naturalWidth / img.naturalHeight });
-          };
-          img.onerror = reject;
-          img.src = imageUrl;
-        });
-      }
+/* ---------- PDF ---------- */
+async function loadLogo(){
+  for (var k = 0; k < LOGO_URLS.length; k++){
+    try {
+      var ctl = new AbortController(), to = setTimeout(function(){ ctl.abort(); }, 5000);
+      var res = await fetch(LOGO_URLS[k], { signal: ctl.signal });
+      clearTimeout(to);
+      if (!res.ok) continue;
+      var blob = await res.blob();
+      var dataUrl = await new Promise(function(ok, no){ var fr = new FileReader(); fr.onload = function(){ ok(fr.result); }; fr.onerror = no; fr.readAsDataURL(blob); });
+      var dim = await new Promise(function(ok, no){ var im = new Image(); im.onload = function(){ ok({ w: im.naturalWidth, h: im.naturalHeight }); }; im.onerror = no; im.src = dataUrl; });
+      return { dataUrl: dataUrl, fmt: blob.type.indexOf("png") >= 0 ? "PNG" : "JPEG", ratio: dim.w / dim.h };
+    } catch (e) {}
+  }
+  return null;
+}
 
-      async function downloadPdf() {
-        if (!ensurePdfReady()) return;
+async function buildPdf(logo){
+  if (!window.jspdf) throw new Error("nopdf");
+  var doc = new window.jspdf.jsPDF({ unit: "pt", format: "a4", compress: true });
+  var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  var M = 44, CW = W - 2 * M, LIM = H - 70, y = 0;
+  var lv = LEVELS[S.round - 1], rgb = hexToRgb(lv.color);
+  var tint = rgb.map(function(v){ return Math.round(v + (255 - v) * 0.9); });
+  var DARK = [23, 50, 77], GREY = [82, 112, 141];
+  var name = clean(S.name), refl = clean(S.reflection);
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4", compress: true });
-        const pageW = doc.internal.pageSize.getWidth();
-        const pageH = doc.internal.pageSize.getHeight();
-        const margin = 40;
-        const contentW = pageW - margin * 2;
-        let y = margin;
+  function ensure(h){ if (y + h > LIM){ doc.addPage(); y = M; } }
+  function lines(str, size, style, color, x, w, lh){
+    doc.setFont("helvetica", style); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]);
+    doc.splitTextToSize(str, w).forEach(function(l){ ensure(lh); doc.text(l, x, y + size); y += lh; });
+  }
+  function heading(str){
+    ensure(40); y += 8;
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]); doc.rect(M, y, 5, 20, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(15); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.text(str, M + 14, y + 15); y += 32;
+  }
 
-        try {
-          const logo = await drawLogoToCanvas("https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg");
-          const logoW = 160;
-          const logoH = Math.round(logoW / logo.aspectRatio);
-          doc.addImage(logo.dataUrl, "JPEG", margin, y, logoW, logoH);
-          y += logoH + 16;
-        } catch (_error) {
-          doc.setFontSize(10);
-          doc.text("Emotional Intelligence Developer", margin, y + 14);
-          y += 30;
-        }
+  /* header band */
+  doc.setFillColor(rgb[0], rgb[1], rgb[2]); doc.rect(0, 0, W, 96, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(25);
+  doc.text("Find 40 Wellbeing Words", M, 44);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(13);
+  doc.text("Round " + S.round + ": " + lv.name, M, 66);
+  doc.setFontSize(9); doc.text("Emotional Intelligence Developer", M, 82);
+  if (logo){
+    try {
+      var lh = 60, lw = Math.min(90, Math.round(lh * logo.ratio));
+      doc.addImage(logo.dataUrl, logo.fmt, W - M - lw, 18, lw, lh);
+    } catch (e) {}
+  }
+  y = 96 + 26;
 
-        doc.setTextColor(23, 50, 77);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.text("Wellbeing & Emotional Intelligence Word Puzzle", margin, y);
-        y += 22;
+  /* name */
+  if (name){
+    lines("Well done, " + name + "!", 22, "bold", DARK, M, CW, 30);
+  } else {
+    doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.text("Name:", M, y + 13);
+    doc.setDrawColor(150, 170, 190); doc.setLineWidth(0.8); doc.line(M + 46, y + 14, M + 300, y + 14);
+    y += 30;
+  }
 
-        doc.setDrawColor(210, 224, 240);
-        doc.setLineWidth(0.5);
-        doc.line(margin, y, pageW - margin, y);
-        y += 16;
+  /* summary box */
+  var boxH = 56;
+  doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, boxH, 8, 8, "F");
+  var stars = S.complete ? (S.stars + " of 3") : "Not finished";
+  var d = new Date(), dateStr = d.getDate() + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()] + " " + d.getFullYear();
+  var cols = [["Words found", S.foundCount + " of " + S.words.length], ["Time", fmt(S.elapsed / 1000)], ["Stars", stars], ["Date", dateStr]];
+  cols.forEach(function(cc, i){
+    var x = M + 14 + i * (CW / 4);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(GREY[0], GREY[1], GREY[2]); doc.text(cc[0], x, y + 21);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(DARK[0], DARK[1], DARK[2]); doc.text(cc[1], x, y + 41);
+  });
+  y += boxH + 16;
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
+  if (refl){
+    heading("My reflection");
+    lines(refl, 11, "italic", DARK, M, CW, 15);
+    y += 6;
+  }
 
-        const nameValue = el.nameInput.value.trim();
-        const found = parseInt(el.foundCount.textContent, 10) || 0;
-        const reflection = el.reflectionInput.value.trim() || "No reflection entered.";
-        const foundWords = Object.keys(state.found);
+  /* words and meanings */
+  heading("The " + S.words.length + " words and what they mean");
+  S.words.forEach(function(w){
+    var found = !!S.found[w.w];
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+    var ml = doc.splitTextToSize(w.m, CW - 12);
+    ensure(18 + ml.length * 13 + 6);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11.5); doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+    doc.text(w.w, M, y + 11);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
+    if (found){ doc.setTextColor(46, 125, 85); doc.text("Found", W - M - 28, y + 11); }
+    else { doc.setTextColor(150, 150, 150); doc.text("Not found yet", W - M - 56, y + 11); }
+    y += 16;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    ml.forEach(function(l){ doc.text(l, M + 12, y + 9); y += 13; });
+    doc.setDrawColor(228, 236, 246); doc.setLineWidth(0.5); doc.line(M, y + 2, W - M, y + 2);
+    y += 8;
+  });
 
-        if (nameValue) {
-          doc.setFont("helvetica", "bold");
-          doc.text("Name:", margin, y);
-          doc.setFont("helvetica", "normal");
-          doc.text(nameValue, margin + 42, y);
-          y += 18;
-        }
+  /* 7 day plan */
+  doc.addPage(); y = M;
+  heading("Your 7 Day Plan");
+  lines("Take one day at a time. Each day gives you a few of your words to use in real life. Do the action, answer the question, and tick the box when you are done.", 10.5, "normal", GREY, M, CW, 14);
+  y += 8;
+  lv.plan.forEach(function(p, i){
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
+    var tl = doc.splitTextToSize(p.k, CW - 24);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5);
+    var wl = doc.splitTextToSize("Words for today: " + p.w.split(" ").join(", "), CW - 24);
+    var ql = doc.splitTextToSize("Ask yourself: " + p.q, CW - 24);
+    var need = 30 + wl.length * 13 + tl.length * 14 + ql.length * 13 + 24;
+    ensure(need);
+    doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, 26, 6, 6, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(12.5); doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+    doc.text("Day " + (i + 1) + ": " + p.t, M + 10, y + 17);
+    doc.setDrawColor(rgb[0], rgb[1], rgb[2]); doc.setLineWidth(1); doc.rect(W - M - 62, y + 7, 12, 12);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.text("Done", W - M - 44, y + 17);
+    y += 34;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+    wl.forEach(function(l){ doc.text(l, M + 12, y + 8); y += 13; });
+    y += 3;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    tl.forEach(function(l){ doc.text(l, M + 12, y + 9); y += 14; });
+    y += 3;
+    doc.setFont("helvetica", "italic"); doc.setFontSize(10); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+    ql.forEach(function(l){ doc.text(l, M + 12, y + 8); y += 13; });
+    y += 14;
+  });
 
-        doc.setFont("helvetica", "bold");
-        doc.text("Words found:", margin, y);
-        doc.setFont("helvetica", "normal");
-        doc.text(`${found}/40`, margin + 82, y);
-        y += 22;
+  /* next level */
+  ensure(110); y += 6;
+  doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, 92, 10, 10, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+  var next = S.round < LEVELS.length ? ("Ready for Round " + (S.round + 1) + ": " + LEVELS[S.round].name + "?") : "Want to play the rounds again?";
+  doc.text(next, M + 14, y + 24);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+  doc.splitTextToSize("There are four free rounds with 40 new words each. Come back to the link below and choose any level you like. Share it with someone who could use a little more calm and kindness today.", CW - 28)
+    .forEach(function(l, i){ doc.text(l, M + 14, y + 42 + i * 13); });
+  doc.setTextColor(30, 100, 160); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+  doc.textWithLink(BASE_URL, M + 14, y + 82, { url: BASE_URL });
+  y += 100;
 
-        doc.setFont("helvetica", "bold");
-        doc.text("Reflection:", margin, y);
-        y += 16;
-        doc.setFont("helvetica", "normal");
-        const reflectionLines = doc.splitTextToSize(reflection, contentW);
-        doc.text(reflectionLines, margin, y);
-        y += reflectionLines.length * 14 + 16;
+  /* footer on every page */
+  var total = doc.getNumberOfPages();
+  for (var pg = 1; pg <= total; pg++){
+    doc.setPage(pg);
+    doc.setDrawColor(210, 224, 240); doc.setLineWidth(0.5); doc.line(M, H - 48, W - M, H - 48);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(30, 100, 160);
+    doc.textWithLink("Play free: " + BASE_URL, M, H - 33, { url: BASE_URL });
+    doc.setFont("helvetica", "normal"); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+    doc.text("Page " + pg + " of " + total, W - M - 44, H - 33);
+    doc.setFontSize(7.5);
+    doc.text("Emotional Intelligence Developer. For reflection and self-support only. Not medical or crisis advice.", M, H - 20);
+  }
+  return doc;
+}
 
-        if (foundWords.length > 0) {
-          doc.setFont("helvetica", "bold");
-          doc.text("Words found:", margin, y);
-          y += 16;
-          doc.setFont("helvetica", "normal");
-          const wordsLine = foundWords.join(", ");
-          const wordsLines = doc.splitTextToSize(wordsLine, contentW);
-          doc.text(wordsLines, margin, y);
-          y += wordsLines.length * 14 + 20;
-        }
+async function downloadPdf(){
+  var btn = $("rsPdf"), old = btn.innerHTML;
+  btn.disabled = true; btn.textContent = "Making your PDF...";
+  try {
+    var logo = await loadLogo();
+    var doc = await buildPdf(logo);
+    var who = clean(S.name).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    doc.save("wellbeing-words-round-" + S.round + (who ? "-" + who : "") + ".pdf");
+    toast("PDF saved!");
+  } catch (e) {
+    toast(e && e.message === "nopdf" ? "The PDF tool did not load. Check your connection and try again." : "Sorry, the PDF could not be made. Please try again.", 3000);
+  }
+  btn.disabled = false; btn.innerHTML = old;
+}
 
-        doc.setDrawColor(210, 224, 240);
-        doc.line(margin, y, pageW - margin, y);
-        y += 14;
+/* ---------- hints ---------- */
+function giveHint(){
+  if (S.complete || S.locked) return;
+  var left = S.words.filter(function(w){ return !S.found[w.w]; });
+  if (!left.length) return;
+  var w = left[rand(left.length)], p = S.place[w.w];
+  var el = S.cells[p.r][p.c];
+  S.hints++;
+  el.classList.add("hint");
+  setTimeout(function(){ el.classList.remove("hint"); }, 2500);
+  toast("Look for the glowing letter. It starts " + w.w + ".", 2600);
+}
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.text("Resources", margin, y);
-        y += 14;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        const resources = [
-          "https://emotionalintelligencedeveloper.com/",
-          "https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
-          RECOMMENDED_AUDIO_BOOKS_LINK,
-          "https://emotionalintelligencedeveloper.com/support-this-website/"
-        ];
-        resources.forEach((url) => {
-          doc.setTextColor(30, 100, 160);
-          doc.text(url, margin, y);
-          y += 14;
-        });
+/* ---------- wiring ---------- */
+$("levels").addEventListener("click", function(e){
+  var b = e.target.closest(".lvl"); if (!b) return;
+  initAudio(); startRound(parseInt(b.dataset.n, 10));
+});
+$("btnLevels").addEventListener("click", function(){
+  if (S.foundCount > 0 && !S.complete && !confirm("Go back to the levels? Your progress in this round will be lost.")) return;
+  show("home");
+});
+$("btnSound").addEventListener("click", function(){
+  S.muted = !S.muted; store.muted = S.muted; saveStore();
+  $("btnSound").innerHTML = S.muted ? "&#128263;" : "&#128266;";
+  if (!S.muted){ initAudio(); tone(880, 0, 0.12); }
+});
+$("btnHint").addEventListener("click", giveHint);
+$("btnNew").addEventListener("click", function(){
+  if (S.foundCount > 0 && !confirm("Make a fresh grid? You will lose your progress in this round.")) return;
+  newGrid(); toast("Fresh grid ready!");
+});
+$("btnShare").addEventListener("click", openShare);
+$("btnResults").addEventListener("click", openResults);
+$("btnMore").addEventListener("click", function(){ openModal("mMore"); });
+$("homeMore").addEventListener("click", function(){ openModal("mMore"); });
+$("homeShare").addEventListener("click", openShare);
+$("homeHow").addEventListener("click", function(){ openModal("mHow"); });
+$("moHow").addEventListener("click", function(){ closeModal("mMore"); openModal("mHow"); });
+$("hwClose").addEventListener("click", function(){ closeModal("mHow"); });
+$("moClose").addEventListener("click", function(){ closeModal("mMore"); });
+$("shClose").addEventListener("click", function(){ closeModal("mShare"); });
+$("rsClose").addEventListener("click", function(){ closeModal("mResults"); });
+$("rsPdf").addEventListener("click", downloadPdf);
+$("rsCard").addEventListener("click", saveCard);
+$("rsShare").addEventListener("click", openShare);
+$("rsNext").addEventListener("click", function(){ closeModal("mResults"); startRound(S.round + 1); });
+$("rsLevels").addEventListener("click", function(){ closeModal("mResults"); show("home"); });
+$("remember").addEventListener("change", function(e){
+  store.remember = e.target.checked;
+  if (store.remember) store.name = S.name; else delete store.name;
+  saveStore();
+});
+$("homeLogo").addEventListener("error", function(){ this.style.display = "none"; });
 
-        doc.setFontSize(10);
-        doc.setTextColor(38, 84, 120);
-        doc.text("https://emotionalintelligencedeveloper.com/", margin, pageH - 22);
-
-        doc.save("wellbeing-word-puzzle-summary.pdf");
-        showMessage("PDF downloaded successfully.");
-      }
-
-      function resetAll() {
-        el.nameInput.value = "";
-        el.reflectionInput.value = "";
-        showMessage("");
-        el.status.textContent = "Puzzle reset complete. Find all 40 words.";
-        resetFound(false);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function generateAndRenderPuzzle() {
-        if (buildPuzzle()) {
-          renderGrid();
-          resetFound(false);
-          el.status.textContent = "Puzzle ready. Drag across letters in a straight line.";
-        } else {
-          el.status.textContent = "Unable to build puzzle right now. Please try New Puzzle again.";
-        }
-      }
-
-      function onPointerDown(evt) {
-        const start = eventCell(evt);
-        if (!start) return;
-        evt.preventDefault();
-        state.dragging = true;
-        state.start = start;
-        state.pointerId = evt.pointerId;
-        if (el.grid.setPointerCapture) el.grid.setPointerCapture(evt.pointerId);
-        paintPreview([start]);
-      }
-
-      function onPointerMove(evt) {
-        if (!state.dragging || evt.pointerId !== state.pointerId) return;
-        const end = eventCell(evt) || cellFromPoint(evt);
-        if (!end) return;
-        const path = straightPath(state.start, end);
-        paintPreview(path.length ? path : [state.start]);
-      }
-
-      function onPointerEnd(evt) {
-        if (!state.dragging || evt.pointerId !== state.pointerId) return;
-        evt.preventDefault();
-        const end = eventCell(evt) || cellFromPoint(evt) || state.start;
-        const path = straightPath(state.start, end);
-        finalize(path.length > 1 ? path : state.preview);
-        clearPreview();
-        state.dragging = false;
-        state.start = null;
-        state.pointerId = null;
-      }
-
-      el.grid.addEventListener("pointerdown", onPointerDown, { passive: false });
-      el.grid.addEventListener("pointermove", onPointerMove, { passive: false });
-      el.grid.addEventListener("pointerup", onPointerEnd, { passive: false });
-      el.grid.addEventListener("pointercancel", onPointerEnd, { passive: false });
-
-      el.newPuzzleBtn.addEventListener("click", () => {
-        generateAndRenderPuzzle();
-        el.status.textContent = "New puzzle generated. Enjoy finding words!";
-      });
-
-      el.resetPuzzleBtn.addEventListener("click", () => resetFound(true));
-
-      el.reflectionInput.addEventListener("input", () => {
-        const val = el.reflectionInput.value.trim();
-        if (val.length > 0 && val.length < 8) {
-          showMessage("Reflection is short — feel free to add a bit more detail.");
-        } else {
-          showMessage("");
-        }
-        updateResults();
-      });
-
-      el.nameInput.addEventListener("input", maybeAutoSave);
-
-      el.saveToggle.addEventListener("change", () => {
-        if (el.saveToggle.checked) {
-          localStorage.setItem(SAVE_PREF_KEY, "1");
-          maybeAutoSave();
-          showMessage("Save my reflection is ON.");
-        } else {
-          localStorage.setItem(SAVE_PREF_KEY, "0");
-          showMessage("Save my reflection is OFF.");
-        }
-      });
-
-      el.clearSavedBtn.addEventListener("click", clearSaved);
-      el.copyLinkBtn.addEventListener("click", copyLink);
-      el.pdfBtn.addEventListener("click", downloadPdf);
-      el.resetAllBtn.addEventListener("click", resetAll);
-
-      renderWords();
-      restoreSaved();
-      buildShareLinks();
-      generateAndRenderPuzzle();
-      updateResults();
-    })();
-  </script>
+/* ---------- start ---------- */
+(function init(){
+  S.muted = !!store.muted;
+  $("btnSound").innerHTML = S.muted ? "&#128263;" : "&#128266;";
+  $("remember").checked = !!store.remember;
+  if (store.remember && store.name){ S.name = store.name; $("nameHome").value = store.name; $("nameRes").value = store.name; }
+  crew($("crew"), 5, "dance");
+  renderLevels();
+  sizeCanvas();
+  var m = /^#round-([1-4])$/.exec(location.hash || "");
+  if (m) startRound(parseInt(m[1], 10)); else show("home");
+})();
+</script>
 </body>
 </html>

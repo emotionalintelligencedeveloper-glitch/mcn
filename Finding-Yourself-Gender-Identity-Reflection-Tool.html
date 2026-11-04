@@ -187,7 +187,19 @@
   #findself-root h1{font-size:1.2rem;}
   #findself-root .fs-buddy-fig{width:64px;}
 }
+/* Language switcher (added) */
+#findself-root .fs-lang{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-bottom:10px;font-size:14px;color:#4a5870;}
+#findself-root .fs-lang select{font-family:'Georgia','Times New Roman',serif;font-size:15px;padding:8px 12px;border:1px solid #d0d8e8;border-radius:10px;background:#fff;color:#1a1e2a;min-height:44px;}
 </style>
+
+<!-- LANGUAGE -->
+<div class="fs-lang">
+  <label for="fsLang">Language / Idioma</label>
+  <select id="fsLang">
+    <option value="en">English</option>
+    <option value="es">Español</option>
+  </select>
+</div>
 
 <!-- HEADER -->
 <div class="fs-card">
@@ -464,7 +476,7 @@ function trunc(s,n){ s=String(s); return s.length>n ? s.slice(0,n-3).replace(/\s
 var toastTimer;
 function showToast(msg){
   var el = ge('fsToast'); if(!el) return;
-  el.textContent = msg; el.classList.add('show');
+  el.textContent = T(msg); el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
 }
@@ -533,7 +545,7 @@ function qPath(a){ return 'M'+a[0]+' '+a[1]+' Q'+a[2]+' '+a[3]+' '+a[4]+' '+a[5]
 function stickSVG(mood, size, on){
   var m = MOODS[mood] || MOODS.calm;
   var w = size, h = Math.round(size*140/120);
-  var s = '<svg class="fs-stick fs-anim-'+m.anim+(on?' fs-on':'')+'" data-anim="'+m.anim+'" viewBox="0 0 120 140" width="'+w+'" height="'+h+'" role="img" aria-label="Stick figure who feels '+esc(mood)+'" xmlns="http://www.w3.org/2000/svg">';
+  var s = '<svg class="fs-stick fs-anim-'+m.anim+(on?' fs-on':'')+'" data-anim="'+m.anim+'" viewBox="0 0 120 140" width="'+w+'" height="'+h+'" role="img" aria-label="'+(LANG==='es' ? 'Figura de palitos que siente '+esc(ES_MOOD[mood]||mood) : 'Stick figure who feels '+esc(mood))+'" xmlns="http://www.w3.org/2000/svg">';
   s += '<line x1="30" y1="132" x2="90" y2="132" stroke="#d8d0ee" stroke-width="2" stroke-linecap="round"/>';
   s += '<g class="fs-body" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">';
   s += '<line x1="60" y1="52" x2="60" y2="92"/>';
@@ -680,7 +692,7 @@ function setBuddy(mood, fun, calm){
 function renderBuddy(){
   var f = ge('fsBuddyFig'), t = ge('fsBuddyText');
   if(f) f.innerHTML = stickSVG(buddy.mood, 84, true);
-  if(t) t.textContent = S.quiet ? buddy.calm : buddy.fun;
+  if(t) t.textContent = T(S.quiet ? buddy.calm : buddy.fun);
 }
 function greeting(){
   setBuddy('hopeful',
@@ -692,11 +704,11 @@ function greeting(){
 function react(id, mood, text){
   var el = ge(id); if(!el) return;
   if(!text){ el.classList.remove('show'); el.innerHTML = ''; return; }
-  el.innerHTML = '<div style="flex-shrink:0">'+stickSVG(mood,46,true)+'</div><div><div class="fs-affirm-label">A gentle note</div>'+esc(text)+'</div>';
+  el.innerHTML = '<div style="flex-shrink:0">'+stickSVG(mood,46,true)+'</div><div><div class="fs-affirm-label">'+esc(T('A gentle note'))+'</div>'+esc(T(text))+'</div>';
   el.classList.add('show');
 }
 function energyBucket(v){ return v<=15?0 : v<=40?1 : v<=65?2 : v<=85?3 : 4; }
-function energyLabel(v){ return ['Running on fumes','Low','About half','Good','Fully charged'][energyBucket(v)]; }
+function energyLabel(v){ return T(['Running on fumes','Low','About half','Good','Fully charged'][energyBucket(v)]); }
 function energyMood(v){ return v<=25?'tired' : v<=65?'calm' : v<=85?'hopeful' : 'cheer'; }
 function fm(f){ return (f||'calm').toLowerCase(); }
 
@@ -718,9 +730,9 @@ function updateProgress(){
   var pct = Math.round((done/8)*100);
   ge('fsProgressFill').style.width = pct + '%';
   var lbl = ge('fsProgressLabel');
-  if(done === 0) lbl.textContent = 'Begin when you are ready. There is no rush.';
-  else if(done < 8) lbl.textContent = done + ' of 8 questions answered';
-  else lbl.textContent = 'All 8 questions answered. Ready when you are.';
+  if(done === 0) lbl.textContent = T('Begin when you are ready. There is no rush.');
+  else if(done < 8) lbl.textContent = LANG === 'es' ? (done + ' de 8 preguntas respondidas') : (done + ' of 8 questions answered');
+  else lbl.textContent = LANG === 'es' ? 'Las 8 preguntas están respondidas. Cuando quieras.' : 'All 8 questions answered. Ready when you are.';
   if(done >= 4 && !ms4 && done < 8){
     ms4 = true;
     setBuddy('hopeful','Halfway there. You are doing the brave bit.','You are about halfway.');
@@ -739,7 +751,7 @@ function renderFeelGrid(){
     b.type = 'button';
     b.className = 'fs-feel' + (S.feeling === f ? ' sel' : '');
     b.setAttribute('aria-pressed', S.feeling === f ? 'true' : 'false');
-    b.innerHTML = stickSVG(fm(f), 60, S.feeling === f) + '<span>' + f + '</span>';
+    b.innerHTML = stickSVG(fm(f), 60, S.feeling === f) + '<span>' + esc(T(f)) + '</span>';
     b.addEventListener('click', function(){
       S.feeling = (S.feeling === f) ? '' : f;
       renderFeelGrid();
@@ -774,7 +786,7 @@ function buildChips(id, optsRef, key, opt){
       var sel = opt.single ? S[key] === o : S[key].indexOf(o) > -1;
       if(sel) b.classList.add('sel');
       b.setAttribute('aria-pressed', sel ? 'true' : 'false');
-      b.textContent = o;
+      b.textContent = T(o);
       b.addEventListener('click', function(){ toggle(o); });
       box.appendChild(b);
     });
@@ -787,7 +799,7 @@ function buildChips(id, optsRef, key, opt){
       else if(opt.exclusive && o === opt.exclusive) S[key] = [o];
       else {
         if(opt.exclusive){ var j = S[key].indexOf(opt.exclusive); if(j > -1) S[key].splice(j,1); }
-        if(opt.max && S[key].length >= opt.max){ showToast('That is ' + opt.max + '. Tap one to swap it.'); return; }
+        if(opt.max && S[key].length >= opt.max){ showToast(LANG === 'es' ? ('Son ' + opt.max + '. Toca una para cambiarla.') : ('That is ' + opt.max + '. Tap one to swap it.')); return; }
         S[key].push(o);
       }
     }
@@ -801,13 +813,13 @@ function buildChips(id, optsRef, key, opt){
 function rerenderChips(){ CHIPBOXES.forEach(function(id){ var b = ge(id); if(b && b._render) b._render(); }); }
 
 function buildStarters(id, list, textareaId){
-  var box = ge(id);
+  var box = ge(id); box.innerHTML = '';
   list.forEach(function(txt){
     var b = document.createElement('button');
-    b.type = 'button'; b.className = 'fs-chip fs-starter'; b.textContent = txt;
+    b.type = 'button'; b.className = 'fs-chip fs-starter'; b.textContent = T(txt);
     b.addEventListener('click', function(){
       var ta = ge(textareaId);
-      ta.value = ta.value.trim() ? (ta.value.replace(/\s+$/,'') + ' ' + txt) : txt;
+      var tx = T(txt); ta.value = ta.value.trim() ? (ta.value.replace(/\s+$/,'') + ' ' + tx) : tx;
       ta.focus();
       ta.setSelectionRange(ta.value.length, ta.value.length);
       ta.dispatchEvent(new Event('input'));
@@ -862,13 +874,16 @@ buildChips('fsWinChips', function(){ return WIN_OPTS; }, 'wins', {exclusive:NONE
     react('fsAffirm7', 'calm', 'Zero is allowed. Some days the win is just showing up here.');
   } else {
     var w = n === 1 ? 'tiny win' : 'tiny wins';
-    react('fsAffirm7', 'cheer', S.quiet ? (n + ' small ' + (n===1?'win':'wins') + '. They add up.') : (n + ' ' + w + '. Tiny wins are how big things get built. I am doing a little jump.'));
-    setBuddy('cheer', n + ' ' + w + ' collected. Look at you go.', n + ' small ' + (n===1?'win':'wins') + ' noted.');
+    react('fsAffirm7', 'cheer', LANG === 'es' ? ESW(n) : S.quiet ? (n + ' small ' + (n===1?'win':'wins') + '. They add up.') : (n + ' ' + w + '. Tiny wins are how big things get built. I am doing a little jump.'));
+    if(LANG === 'es') setBuddy('cheer', ESWB(n,0), ESWB(n,1)); else setBuddy('cheer', n + ' ' + w + ' collected. Look at you go.', n + ' small ' + (n===1?'win':'wins') + ' noted.');
   }
 }});
 
-buildStarters('fsMeaningStarters', MEANING_STARTERS, 'fsMeaning');
-buildStarters('fsKindStarters', KIND_STARTERS, 'fsSelfKindness');
+function renderStarters(){
+  buildStarters('fsMeaningStarters', MEANING_STARTERS, 'fsMeaning');
+  buildStarters('fsKindStarters', KIND_STARTERS, 'fsSelfKindness');
+}
+renderStarters();
 
 function bindText(taId, affId, minLen, mood, msg){
   var el = ge(taId); var aff = ge(affId);
@@ -905,15 +920,15 @@ ge('fsQuiet').addEventListener('change', function(){
 });
 
 /* ================= CARE CHECK ================= */
-var CARE_RE = /(suicid|kill myself|end my life|want to die|wanna die|do not want to (be here|live|exist)|don'?t want to (be here|live|exist)|hurt myself|self[- ]?harm|no reason to live|better off without me)/i;
+var CARE_RE = /(suicid|kill myself|end my life|want to die|wanna die|do not want to (be here|live|exist)|don'?t want to (be here|live|exist)|hurt myself|self[- ]?harm|no reason to live|better off without me|quiero morir|quitarme la vida|matarme|hacerme da[ñn]o|lastimarme|no quiero (vivir|existir|estar aqu[ií])|autolesi|mejor sin m[ií]|no tengo ganas de vivir)/i;
 function allText(){
   return [ge('fsMeaning').value, ge('fsWhatNeed').value, ge('fsSelfKindness').value, S.words.join(' ')].join(' ');
 }
 function needsCare(){ return CARE_RE.test(allText()); }
-var CARE_HTML = '<strong>A quick, caring note.</strong> Some of what you wrote sounds really heavy. If you might hurt yourself, or you feel unsafe right now, please reach out to someone today: a trusted person, a local emergency number, or a helpline at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. You deserve support from a real person, and you do not have to carry this alone. Nothing you wrote has been sent anywhere.';
+var CARE_HTML_EN = '<strong>A quick, caring note.</strong> Some of what you wrote sounds really heavy. If you might hurt yourself, or you feel unsafe right now, please reach out to someone today: a trusted person, a local emergency number, or a helpline at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. You deserve support from a real person, and you do not have to carry this alone. Nothing you wrote has been sent anywhere.';
 function checkCareLive(){
   var el = ge('fsCareLive');
-  if(needsCare()){ el.innerHTML = CARE_HTML; el.style.display = 'block'; }
+  if(needsCare()){ el.innerHTML = careHtml(); el.style.display = 'block'; }
   else el.style.display = 'none';
 }
 
@@ -932,7 +947,7 @@ function startBreathing(onComplete){
   function nextPhase(){
     var p = phases[phaseIdx];
     ring.className = 'fs-breathe-ring' + (p.cls ? ' ' + p.cls : '');
-    text.textContent = p.label;
+    text.textContent = T(p.label);
     breathTimer = setTimeout(function(){
       phaseIdx = (phaseIdx + 1) % phases.length;
       if(phaseIdx === 0) cycleCount++;
@@ -948,12 +963,13 @@ function has(w){ return S.words.indexOf(w) > -1; }
 function winsCount(){ return (S.wins.length === 1 && S.wins[0] === NONE_WIN) ? 0 : S.wins.length; }
 function needSummary(){
   var parts = [];
-  if(S.needChips.length) parts.push(S.needChips.join(', ').toLowerCase());
+  if(S.needChips.length) parts.push(S.needChips.map(T).join(', ').toLowerCase());
   var t = ge('fsWhatNeed').value.trim();
   if(t) parts.push(t);
   return parts.join('. ');
 }
 function buildFeedback(){
+  if(LANG === 'es') return buildFeedbackES();
   var out = [], f = S.feeling, e = S.energy;
   if(S.energyTouched){
     var heavy = ['Tired','Numb','Overwhelmed','Sad','Anxious'].indexOf(f) > -1;
@@ -995,7 +1011,7 @@ function tinyActions(){
 }
 
 /* ================= RESULTS ================= */
-function showResults(){
+function showResults(noScroll){
   S.name = ge('fsName').value.trim();
   var f = S.feeling, mood = fm(f);
   var meaning = ge('fsMeaning').value.trim(), kindness = ge('fsSelfKindness').value.trim();
@@ -1005,16 +1021,16 @@ function showResults(){
   clearTimeout(breathTimer);
 
   ge('fsResultsFig').innerHTML = stickSVG('cheer', 90, true);
-  ge('fsResultsTitle').textContent = S.name ? ('Thank you, ' + S.name + '. Thank you for sharing this with yourself.') : 'Thank you for sharing this with yourself.';
+  ge('fsResultsTitle').textContent = S.name ? (LANG === 'es' ? ('Gracias, ' + S.name + '. Gracias por compartir esto contigo.') : ('Thank you, ' + S.name + '. Thank you for sharing this with yourself.')) : T('Thank you for sharing this with yourself.');
 
   var care = ge('fsCareBox');
-  if(needsCare()){ care.innerHTML = CARE_HTML; care.style.display = 'block'; } else care.style.display = 'none';
+  if(needsCare()){ care.innerHTML = careHtml(); care.style.display = 'block'; } else care.style.display = 'none';
 
   /* Comic */
   var panels = [
-    {tag:'Right now', mood:mood, cap:'I feel ' + f.toLowerCase() + '.'},
-    {tag:'What I need', mood:'curious', cap: need ? trunc(need, 90) : 'Still working that out.'},
-    {tag:'What I tell myself', mood:'heart', cap: kindness ? '"' + trunc(kindness, 110) + '"' : 'I am still here, and that counts.'}
+    {tag:T('Right now'), mood:mood, cap:(LANG === 'es' ? 'Siento ' : 'I feel ') + T(f).toLowerCase() + '.'},
+    {tag:T('What I need'), mood:'curious', cap: need ? trunc(need, 90) : T('Still working that out.')},
+    {tag:T('What I tell myself'), mood:'heart', cap: kindness ? '"' + trunc(kindness, 110) + '"' : T('I am still here, and that counts.')}
   ];
   ge('fsComic').innerHTML = panels.map(function(p){
     return '<div class="fs-panel"><div class="fs-panel-tag">' + esc(p.tag) + '</div>' + stickSVG(p.mood, 84, true) + '<div class="fs-panel-cap">' + esc(p.cap) + '</div></div>';
@@ -1027,7 +1043,7 @@ function showResults(){
 
   /* Tiny actions */
   ge('fsTinyActions').innerHTML = tinyActions().map(function(a){
-    return '<li><span class="fs-next-dot"></span><span>' + esc(a) + '</span></li>';
+    return '<li><span class="fs-next-dot"></span><span>' + esc(T(a)) + '</span></li>';
   }).join('');
 
   /* Experiments */
@@ -1035,7 +1051,7 @@ function showResults(){
 
   /* Steps */
   ge('fsNextSteps').innerHTML = (NEXT_STEPS[f] || DEFAULT_STEPS).map(function(s){
-    return '<li><span class="fs-next-dot"></span><span>' + esc(s) + '</span></li>';
+    return '<li><span class="fs-next-dot"></span><span>' + esc(T(s)) + '</span></li>';
   }).join('');
 
   /* Myths */
@@ -1043,7 +1059,7 @@ function showResults(){
   MYTHS.forEach(function(m){
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'fs-myth'; b.setAttribute('aria-expanded','false');
-    b.innerHTML = '<div class="fs-myth-q">"' + esc(m.m) + '"</div><div class="fs-myth-hint">Tap to flip</div><div class="fs-myth-truth">' + esc(m.t) + '</div>';
+    b.innerHTML = '<div class="fs-myth-q">"' + esc(T(m.m)) + '"</div><div class="fs-myth-hint">' + esc(T('Tap to flip')) + '</div><div class="fs-myth-truth">' + esc(T(m.t)) + '</div>';
     b.addEventListener('click', function(){
       var open = b.classList.toggle('open');
       b.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -1055,12 +1071,12 @@ function showResults(){
   var sw = ge('fsScripts'); sw.innerHTML = '';
   SCRIPTS.forEach(function(sc){
     var d = document.createElement('div'); d.className = 'fs-script';
-    d.appendChild(document.createTextNode('"' + sc + '"'));
+    d.appendChild(document.createTextNode('"' + T(sc) + '"'));
     d.appendChild(document.createElement('br'));
-    var cb = document.createElement('button'); cb.type = 'button'; cb.className = 'fs-copy-mini'; cb.textContent = 'Copy';
+    var cb = document.createElement('button'); cb.type = 'button'; cb.className = 'fs-copy-mini'; cb.textContent = T('Copy');
     cb.addEventListener('click', function(){
       if(navigator.clipboard){
-        navigator.clipboard.writeText(sc).then(function(){ showToast('Copied. Paste it wherever you like.'); }).catch(function(){ showToast('Select the text to copy it.'); });
+        navigator.clipboard.writeText(T(sc)).then(function(){ showToast('Copied. Paste it wherever you like.'); }).catch(function(){ showToast('Select the text to copy it.'); });
       } else showToast('Select the text to copy it.');
     });
     d.appendChild(cb); sw.appendChild(d);
@@ -1068,29 +1084,29 @@ function showResults(){
 
   /* Prompts */
   ge('fsPrompts').innerHTML = (PROMPTS[f] || DEFAULT_PROMPTS).map(function(p){
-    return '<div class="fs-prompt-item">' + esc(p) + '</div>';
+    return '<div class="fs-prompt-item">' + esc(T(p)) + '</div>';
   }).join('');
 
   /* Answers */
   var rows = [
-    ['How you are feeling now', f || 'Not answered'],
+    ['How you are feeling now', f ? T(f) : 'Not answered'],
     ['Your inner battery', S.energyTouched ? (S.energy + '% (' + energyLabel(S.energy) + ')') : 'Not set'],
-    ['When you started exploring', S.exploring || 'Not answered'],
-    ['Words that feel true', S.words.length ? S.words.join(', ') : 'Not picked'],
+    ['When you started exploring', T(S.exploring || 'Not answered')],
+    ['Words that feel true', S.words.length ? S.words.map(T).join(', ') : 'Not picked'],
     ['What identity means to you', meaning || 'Not written'],
     ['What you need right now', need || 'Not written'],
-    ['Tiny wins this week', S.wins.length ? S.wins.join(', ') : 'Not answered'],
+    ['Tiny wins this week', S.wins.length ? S.wins.map(T).join(', ') : 'Not answered'],
     ['A kindness to yourself', kindness || 'Not written']
   ];
   ge('fsAnswersSummary').innerHTML = rows.map(function(r){
-    return '<div class="fs-answer-row"><div class="fs-answer-label">' + esc(r[0]) + '</div><div class="fs-answer-val">' + esc(r[1]) + '</div></div>';
+    return '<div class="fs-answer-row"><div class="fs-answer-label">' + esc(T(r[0])) + '</div><div class="fs-answer-val">' + esc(T(r[1])) + '</div></div>';
   }).join('');
 
   setBuddy('cheer','You did it. Proud of you. Okay, I am a stick figure, so my pride is mostly wiggling.','You did it. Well done for taking this time.');
 
   var rp = ge('fsResults');
   rp.classList.add('show');
-  setTimeout(function(){ rp.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+  if(!noScroll) setTimeout(function(){ rp.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
 }
 
 function renderExperiments(){
@@ -1099,7 +1115,7 @@ function renderExperiments(){
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'fs-exp' + (S.experiment === x ? ' sel' : '');
     b.setAttribute('aria-pressed', S.experiment === x ? 'true' : 'false');
-    b.textContent = x;
+    b.textContent = T(x);
     b.addEventListener('click', function(){
       S.experiment = (S.experiment === x) ? '' : x;
       renderExperiments();
@@ -1137,7 +1153,7 @@ ge('fsResetBtn').addEventListener('click', function(){
   ['fsMeaning','fsWhatNeed','fsSelfKindness','fsName','fsWordAdd'].forEach(function(id){ ge(id).value = ''; });
   ge('fsEnergy').value = 50;
   ge('fsBattFill').style.width = '50%'; ge('fsBattFill').style.background = '#f0c060';
-  ge('fsBattLabel').textContent = 'Slide to set it';
+  ge('fsBattLabel').textContent = T('Slide to set it');
   ['fsAffirm1','fsAffirm2','fsAffirm3','fsAffirm4','fsAffirm5','fsAffirm6','fsAffirm7','fsAffirm8'].forEach(function(id){ react(id, null, null); });
   ge('fsCareLive').style.display = 'none';
   ge('fsResults').classList.remove('show');
@@ -1154,7 +1170,7 @@ ge('fsResetBtn2').addEventListener('click', function(){ ge('fsResetBtn').click()
 /* ================= SHARE ================= */
 function updateShareLinks(){
   var url = encodeURIComponent(TOOL_URL);
-  var msg = encodeURIComponent('A gentle identity and self-reflection tool, free and private: ');
+  var msg = encodeURIComponent(T('A gentle identity and self-reflection tool, free and private: '));
   var wa = 'https://wa.me/?text=' + msg + url;
   var fb = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
   var xx = 'https://twitter.com/intent/tweet?text=' + msg + url;
@@ -1261,13 +1277,13 @@ pdfBtn.addEventListener('click', function(){
 
 async function generatePDF(){
   var name = san(S.name);
-  var feeling = S.feeling || 'Not answered';
-  var meaning = san(ge('fsMeaning').value.trim()) || 'Not written';
-  var needTxt = san(needSummary()) || 'Not written';
-  var kindness = san(ge('fsSelfKindness').value.trim()) || 'Not written';
-  var energyTxt = S.energyTouched ? (S.energy + ' percent (' + energyLabel(S.energy) + ')') : 'Not set';
-  var winsTxt = S.wins.length ? san(S.wins.join(', ')) : 'Not answered';
-  var wordsTxt = S.words.length ? san(S.words.join(', ')) : 'Not picked';
+  var feeling = S.feeling ? T(S.feeling) : T('Not answered');
+  var meaning = san(ge('fsMeaning').value.trim()) || T('Not written');
+  var needTxt = san(needSummary()) || T('Not written');
+  var kindness = san(ge('fsSelfKindness').value.trim()) || T('Not written');
+  var energyTxt = S.energyTouched ? (S.energy + (LANG === 'es' ? ' por ciento (' : ' percent (') + energyLabel(S.energy) + ')') : T('Not set');
+  var winsTxt = S.wins.length ? san(S.wins.map(T).join(', ')) : T('Not answered');
+  var wordsTxt = S.words.length ? san(S.words.map(T).join(', ')) : T('Not picked');
   var mood = fm(S.feeling);
 
   var logoData = null;
@@ -1298,8 +1314,8 @@ async function generatePDF(){
     var uw = doc.getTextWidth(TOOL_URL);
     doc.textWithLink(TOOL_URL, (pageW - uw)/2, pageH - 29, {url: TOOL_URL});
     doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(226,218,248);
-    doc.text('General wellbeing support only. Not professional care.', margin, pageH - 13);
-    doc.text('Page ' + pgNum, pageW - margin - 36, pageH - 13);
+    doc.text(T('General wellbeing support only. Not professional care.'), margin, pageH - 13);
+    doc.text(T('Page ') + pgNum, pageW - margin - 36, pageH - 13);
   }
   var SEC = [[106,122,204],[168,120,200],[232,112,42],[72,166,146],[216,110,150],[90,140,220]];
   var secIdx = 0, curAccent = [106,90,168];
@@ -1370,33 +1386,33 @@ async function generatePDF(){
   }
 
   drawHeader(); y = 96;
-  addTitle('Finding Yourself: Your Reflection');
-  if(name) addMeta('Name: ' + name);
-  addMeta('Date: ' + new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'}));
-  addMeta('Time: ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
+  addTitle(T('Finding Yourself: Your Reflection'));
+  if(name) addMeta(T('Name: ') + name);
+  addMeta(T('Date: ') + new Date().toLocaleDateString(LANG === 'es' ? 'es-ES' : 'en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'}));
+  addMeta(T('Time: ') + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
   y += 6;
 
   ensureSpace(48);
   doc.setFillColor(168,120,200); doc.setDrawColor(106,90,168); doc.setLineWidth(1);
   doc.roundedRect(margin, y, width, 44, 8, 8, 'FD');
   doc.setFont('helvetica','bolditalic'); doc.setFontSize(12.5); doc.setTextColor(255,255,255);
-  doc.text('You are allowed to exist exactly as you are.', margin + 16, y + 27);
+  doc.text(T('You are allowed to exist exactly as you are.'), margin + 16, y + 27);
   pdfStick(doc, margin + width - 46, y + 3, 0.27, 'cheer');
   y += 52;
 
   /* Care note if needed */
   if(needsCare()){
-    addText('A caring note: some of what you wrote sounds really heavy. If you might hurt yourself or feel unsafe, please reach out to someone today: a trusted person, a local emergency number, or a helpline at findahelpline.com. You do not have to carry this alone.', 10.5, 'bold', [122,42,72], {after:10});
+    addText(LANG === 'es' ? ES_PDFCARE : 'A caring note: some of what you wrote sounds really heavy. If you might hurt yourself or feel unsafe, please reach out to someone today: a trusted person, a local emergency number, or a helpline at findahelpline.com. You do not have to carry this alone.', 10.5, 'bold', [122,42,72], {after:10});
   }
 
   /* Comic */
-  addSection('Your stick figure comic');
+  addSection(T('Your stick figure comic'));
   ensureSpace(184);
   var gap = 8, pw = (width - gap*2)/3, ph = 172, ss = 0.62;
   var caps = [
-    {tag:'RIGHT NOW', mood:mood, cap:'I feel ' + (S.feeling ? S.feeling.toLowerCase() : 'not sure yet') + '.'},
-    {tag:'WHAT I NEED', mood:'curious', cap: needSummary() ? trunc(needSummary(), 90) : 'Still working that out.'},
-    {tag:'WHAT I TELL MYSELF', mood:'heart', cap: ge('fsSelfKindness').value.trim() ? '"' + trunc(ge('fsSelfKindness').value.trim(), 110) + '"' : 'I am still here, and that counts.'}
+    {tag:T('RIGHT NOW'), mood:mood, cap:(LANG === 'es' ? 'Siento ' : 'I feel ') + (S.feeling ? T(S.feeling).toLowerCase() : T('not sure yet')) + '.'},
+    {tag:T('WHAT I NEED'), mood:'curious', cap: needSummary() ? trunc(needSummary(), 90) : T('Still working that out.')},
+    {tag:T('WHAT I TELL MYSELF'), mood:'heart', cap: ge('fsSelfKindness').value.trim() ? '"' + trunc(ge('fsSelfKindness').value.trim(), 110) + '"' : T('I am still here, and that counts.')}
   ];
   caps.forEach(function(c, i){
     var px = margin + i*(pw + gap);
@@ -1413,31 +1429,31 @@ async function generatePDF(){
   y += ph + 14;
 
   /* Reflection */
-  addSection('Your reflection');
-  addBlock('How you are feeling now', feeling);
-  addBlock('Your inner battery', energyTxt);
-  addBlock('When you started exploring your identity', S.exploring || 'Not answered');
-  addBlock('Words that feel true about you', wordsTxt);
-  addBlock('What identity means to you', meaning);
-  addBlock('What you need right now', needTxt);
-  addBlock('Tiny wins this week', winsTxt);
-  addBlock('A kindness you wrote to yourself', kindness);
+  addSection(T('Your reflection'));
+  addBlock(T('How you are feeling now'), feeling);
+  addBlock(T('Your inner battery'), energyTxt);
+  addBlock(T('When you started exploring your identity'), T(S.exploring || 'Not answered'));
+  addBlock(T('Words that feel true about you'), wordsTxt);
+  addBlock(T('What identity means to you'), meaning);
+  addBlock(T('What you need right now'), needTxt);
+  addBlock(T('Tiny wins this week'), winsTxt);
+  addBlock(T('A kindness you wrote to yourself'), kindness);
 
   /* Feedback */
-  addSection('What stood out, just for you');
+  addSection(T('What stood out, just for you'));
   buildFeedback().forEach(function(x){ addCard(x.t, x.b, 'normal'); });
 
   /* Tiny actions */
-  addSection('Do this in the next hour');
-  tinyActions().forEach(function(a){ addCard('', a, 'normal'); });
+  addSection(T('Do this in the next hour'));
+  tinyActions().forEach(function(a){ addCard('', T(a), 'normal'); });
 
   /* Experiment */
-  addSection('Your tiny experiment for this week');
+  addSection(T('Your tiny experiment for this week'));
   var exps = S.experiment ? [S.experiment] : EXPERIMENTS.slice(0,3);
-  if(!S.experiment) addText('You did not pick one yet. Circle the one you like, or ignore all three.', 9.5, 'italic', [74,88,112], {after:6});
+  if(!S.experiment) addText(T('You did not pick one yet. Circle the one you like, or ignore all three.'), 9.5, 'italic', [74,88,112], {after:6});
   exps.forEach(function(x){
     doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
-    var ls = doc.splitTextToSize(san(x), width - 24);
+    var ls = doc.splitTextToSize(san(T(x)), width - 24);
     ensureSpace(ls.length*14 + 6);
     doc.setDrawColor(curAccent[0],curAccent[1],curAccent[2]); doc.setLineWidth(1.6); doc.rect(margin, y - 9, 10, 10);
     ls.forEach(function(l, i){ doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(26,30,42); doc.text(l, margin + 20, y); y += 14; });
@@ -1445,22 +1461,22 @@ async function generatePDF(){
   });
 
   /* Steps and prompts */
-  addSection('Gentle next steps for right now');
-  (NEXT_STEPS[S.feeling] || DEFAULT_STEPS).forEach(function(s){ addCard('', s, 'normal'); });
-  addSection('Reflection prompts, when you are ready');
-  (PROMPTS[S.feeling] || DEFAULT_PROMPTS).forEach(function(p){ addCard('', p, 'italic'); });
+  addSection(T('Gentle next steps for right now'));
+  (NEXT_STEPS[S.feeling] || DEFAULT_STEPS).forEach(function(s){ addCard('', T(s), 'normal'); });
+  addSection(T('Reflection prompts, when you are ready'));
+  (PROMPTS[S.feeling] || DEFAULT_PROMPTS).forEach(function(p){ addCard('', T(p), 'italic'); });
 
   /* Myths */
-  addSection('Myths we can drop');
-  MYTHS.forEach(function(m){ addCard('Myth: ' + m.m, 'Truth: ' + m.t, 'normal'); });
+  addSection(T('Myths we can drop'));
+  MYTHS.forEach(function(m){ addCard(T('Myth: ') + T(m.m), T('Truth: ') + T(m.t), 'normal'); });
 
   /* Scripts */
-  addSection('If you want to tell someone, words you can borrow');
-  SCRIPTS.forEach(function(sc){ addCard('', '"' + sc + '"', 'italic'); });
+  addSection(T('If you want to tell someone, words you can borrow'));
+  SCRIPTS.forEach(function(sc){ addCard('', '"' + T(sc) + '"', 'italic'); });
 
   /* Check-in */
-  addSection('Check in with yourself in 7 days');
-  addText('Circle the face that fits you on that day, then fill in the lines.', 10, 'normal', [74,88,112], {after:8});
+  addSection(T('Check in with yourself in 7 days'));
+  addText(T('Circle the face that fits you on that day, then fill in the lines.'), 10, 'normal', [74,88,112], {after:8});
   ensureSpace(64);
   var faces = [{c:-0.55,l:'Rough',f:[248,190,190]},{c:-0.15,l:'Low',f:[250,214,176]},{c:0.2,l:'Okay',f:[252,240,178]},{c:0.6,l:'Good',f:[208,238,188]},{c:1.0,l:'Great',f:[176,228,208]}];
   var fx0 = margin + 34, fstep = (width - 68)/4;
@@ -1468,19 +1484,19 @@ async function generatePDF(){
     var cx = fx0 + i*fstep;
     pdfFace(doc, cx, y + 14, 14, fc.c, fc.f);
     doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(74,88,112);
-    doc.text(fc.l, cx, y + 40, {align:'center'});
+    doc.text(LANG === 'es' ? ES_FACES[i] : fc.l, cx, y + 40, {align:'center'});
   });
   y += 56;
   ['One thing that feels different:', 'One thing that feels the same:', 'One kind thing I did for myself:'].forEach(function(q){
     ensureSpace(34);
     doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(106,90,168);
-    doc.text(q, margin, y); y += 18;
+    doc.text(san(T(q)), margin, y); y += 18;
     doc.setDrawColor(200,208,224); doc.setLineWidth(0.6); doc.line(margin, y, pageW - margin, y); y += 14;
   });
 
   /* Closing */
   y += 6;
-  var closingTxt = 'This page is for you. You are allowed to explore, to question, and to grow at your own pace. If you revisit this reflection later, notice what has shifted and what has stayed the same. You are not required to have answers. You are only required to be honest with yourself, and you already did that today.';
+  var closingTxt = LANG === 'es' ? ES_CLOSING : 'This page is for you. You are allowed to explore, to question, and to grow at your own pace. If you revisit this reflection later, notice what has shifted and what has stayed the same. You are not required to have answers. You are only required to be honest with yourself, and you already did that today.';
   doc.setFont('helvetica','italic'); doc.setFontSize(11);
   var cl = doc.splitTextToSize(closingTxt, width - 20);
   var ch = cl.length*lineH + 24;
@@ -1492,8 +1508,8 @@ async function generatePDF(){
   y += ch + 14;
 
   /* Research */
-  addSection('Understanding identity exploration: what research tells us');
-  var edu = [
+  addSection(T('Understanding identity exploration: what research tells us'));
+  var edu = LANG === 'es' ? ES_EDU : [
     ['Why identity exploration is a healthy and necessary process',
      'Developmental psychologist Erik Erikson\'s foundational research on identity formation identified the process of questioning and exploring one\'s sense of self as a core developmental task, not a crisis or pathology. People who engage in active identity exploration consistently show higher levels of wellbeing, clearer values, and greater psychological resilience. Reflection itself is protective.'],
     ['The science of self-compassion',
@@ -1508,11 +1524,11 @@ async function generatePDF(){
   edu.forEach(function(item){ addCard(item[0], item[1], 'normal', 9.2); });
 
   /* Resources */
-  addSection('More free wellbeing resources');
+  addSection(T('More free wellbeing resources'));
   ['emotionalintelligencedeveloper.com',
    'emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
    'findahelpline.com (find a helpline near you)'
-  ].forEach(function(l){ addText(l, 9, 'normal', [26,30,42], {after:2}); });
+  ].forEach(function(l){ addText(T(l), 9, 'normal', [26,30,42], {after:2}); });
 
   drawFooter();
 
@@ -1521,15 +1537,443 @@ async function generatePDF(){
   showToast('PDF downloaded!');
 }
 
+/* ================= LANGUAGE SWITCHER (added): English and Spanish ================= */
+var LANG = 'en';
+var ES = {};
+function T(s){ return (LANG === 'es' && ES && ES[s] !== undefined) ? ES[s] : s; }
+function addPairs(en, es){ for(var i = 0; i < en.length; i++){ if(es[i] !== undefined) ES[en[i]] = es[i]; } }
+function addObj(en, es){ Object.keys(es).forEach(function(k){ if(en[k] !== undefined) ES[en[k]] = es[k]; }); }
+function addObjArr(en, es){ Object.keys(es).forEach(function(k){ if(en[k]) addPairs(en[k], es[k]); }); }
+function addMap(o){ Object.keys(o).forEach(function(k){ ES[k] = o[k]; }); }
+
+var ES_MOOD = {confused:'confusión',sad:'tristeza',numb:'insensibilidad',calm:'calma',hopeful:'esperanza',overwhelmed:'agobio',curious:'curiosidad',anxious:'ansiedad',tired:'cansancio',relieved:'alivio',cheer:'alegría',heart:'cariño'};
+var ES_FACES = ['Mal','Bajo','Regular','Bien','Muy bien'];
+
+/* Option lists (same order as the English lists) */
+addPairs(BASE_WORDS, ['Curioso/a','Reservado/a','Ruidoso/a','Callado/a','Creativo/a','Leal','Sensible','Divertido/a','Terco/a','Cariñoso/a','Independiente','Aventurero/a','Reflexivo/a','Cambiando','Protector/a','Esperanzado/a','Cansado/a','Valiente','Asustado/a','Dulce','Observador/a','En proceso']);
+addPairs(FEELINGS, ['Confusión','Tristeza','Insensibilidad','Calma','Esperanza','Agobio','Curiosidad','Ansiedad','Cansancio','Alivio']);
+addPairs(START_OPTS, ['En la infancia','Durante la pubertad','En mi adolescencia o a principios de mis veinte','Hace poco, ya de adulto/a','Todavía lo estoy descubriendo','No pienso en esos términos']);
+addPairs(NEED_OPTS, ['Descanso','Espacio','Alguien que me escuche','Algo divertido','Silencio','Que me tranquilicen','Un plan','Tiempo']);
+addPairs(WIN_OPTS, ['Me levanté de la cama','Bebí agua','Salí a la calle','Dormí bien','Me reí','Pedí ayuda','Dije que no a algo','Le conté a alguien cómo me siento','Hice algo solo para mí','Fui amable conmigo','Ninguno hoy, y está bien']);
+addPairs(MEANING_STARTERS, ['Ahora mismo, la identidad se siente como...','La parte de mí que todavía estoy conociendo es...','Me siento más yo cuando...','Algo que quiero que la gente entienda de mí es...']);
+addPairs(KIND_STARTERS, ['Lo estás haciendo mejor de lo que crees.','Está bien seguir descubriéndote.','No tienes que ganarte el descanso.','Tienes derecho a ocupar tu espacio.','Seas quien seas en lo que te estás convirtiendo, ya mereces cuidado.']);
+addPairs(ENERGY_FUN, ['Funcionando con las últimas gotas. Respuesta honesta, y esas gotas te trajeron hasta aquí.','Modo batería baja. Muy comprensible. Sé extra amable contigo.','Más o menos a medias. Respetable. Ve a tu ritmo.','Bien cargado/a. Gástalo con cariño.','¡Batería llena! Intenta no gastarla toda en una sola cosa.']);
+addPairs(ENERGY_CALM, ['Tu energía está muy baja hoy. Ve con suavidad.','Poca energía hoy. Los pasos pequeños son suficientes.','Tienes la mitad de tu energía. Ve a tu ritmo.','Buena energía hoy. Úsala con cariño.','Mucha energía hoy. Úsala de una forma que te haga sentir bien.']);
+addPairs(['Running on fumes','Low','About half','Good','Fully charged'], ['Sin fuerzas','Baja','A medias','Buena','Carga completa']);
+
+addObj(FEEL_FUN, {
+  Confused:'Como un navegador con 47 pestañas abiertas, y una está reproduciendo música. No tienes que cerrarlas todas hoy.',
+  Sad:'Día de nube de lluvia. No tienes que espantarla. Yo sostengo el paraguas.',
+  Numb:'Poca señal hoy. Totalmente normal. El modo avión está permitido.',
+  Calm:'Mira tú, siendo un lago tranquilo en vez de una lavadora.',
+  Hopeful:'Un solcito acaba de asomarse. No lo asustes. Solo saluda.',
+  Overwhelmed:'Demasiadas cosas y un solo muñeco de palitos. Soltemos algunas. Soltar está permitido.',
+  Curious:'Modo detective activado. Sin prisa por resolver el caso.',
+  Anxious:'Tu mente está proyectando una película sobre cosas que aún no han pasado. Puedes ponerle pausa.',
+  Tired:'Batería al 3 por ciento. Cargar también cuenta como ser productivo.',
+  Relieved:'Uf. Hombros abajo. Ese es el sonido de un respiro que por fin sale.'
+});
+addObj(FEEL_CALM, {
+  Confused:'No saber todavía está bien. Podemos ir despacio.',
+  Sad:'Eso suena pesado. No tienes que arreglarlo ahora mismo.',
+  Numb:'Sentir muy poco está bien. No hay presión por sentir más.',
+  Calm:'Un momento estable. Qué bueno tener uno.',
+  Hopeful:'La esperanza es bonita para llevarla con suavidad.',
+  Overwhelmed:'Están pasando muchas cosas. Podemos ir con una cosa pequeña a la vez.',
+  Curious:'La curiosidad es un buen lugar desde donde explorar.',
+  Anxious:'Eso suena incómodo. Una respiración lenta a la vez.',
+  Tired:'Suenas agotado/a. Descansar está permitido.',
+  Relieved:'Qué bien sentir algo de alivio. Deja que sea real.'
+});
+addObj(FEEL_NOTE, {
+  Confused:'La confusión no es señal de que algo ande mal contigo. Muchas veces es señal de que estás prestando atención honesta a algo complejo y real.',
+  Sad:'La tristeza es una señal que vale la pena escuchar, no un problema que arreglar de inmediato. Puedes sentirla por completo sin apurarte a llegar al otro lado.',
+  Numb:'La insensibilidad puede ser la forma en que la mente te protege de demasiado a la vez. No tienes que sentirlo todo ahora, solo un poquito, a tu ritmo.',
+  Calm:'La calma es un recurso. Sea lo que sea lo que te trajo hoy, lo estás enfrentando desde un lugar estable, aunque ese lugar se sienta frágil.',
+  Hopeful:'La esperanza es valiente, sobre todo cuando llega en medio de la incertidumbre. Sostenla con suavidad.',
+  Overwhelmed:'Agobio significa que entra más de lo que puedes procesar por ahora. No es tu culpa. Es una señal de que necesitas más espacio y menos exigencias por un tiempo.',
+  Curious:'La curiosidad es una de las cosas más honestas y valientes que una persona puede traer a su mundo interior.',
+  Anxious:'La ansiedad suele significar que algo te importa. Lo que sea que estás explorando aquí claramente te importa. Eso cuenta.',
+  Tired:'Estar cansado/a no significa que seas débil. Muchas veces significa que llevas mucho tiempo cargando demasiado, sin suficiente descanso ni reconocimiento.',
+  Relieved:'El alivio merece atención. Algo que estaba muy apretado se aflojó un poco. Deja que sea real.'
+});
+addObj(EXPLORING_AFFIRMS, {
+  'As a child':'Saberlo desde la infancia no lo hace más ni menos real que saberlo ahora. Lo que importa es que lo sabes y que estás aquí.',
+  'During puberty':'La pubertad es una de las etapas más complejas que cualquiera atraviesa. Lo que sentiste entonces fue real, aunque fuera difícil de nombrar o sostener.',
+  'In my teens or early twenties':'Los primeros años de la vida adulta son cuando muchas personas empiezan a encontrar palabras para lo que sienten desde hace tiempo. Donde estés ahora en ese camino es justo donde debes estar.',
+  'Recently, as an adult':'Descubrirse no tiene fecha de vencimiento. Llegar a algo más tarde en la vida no lo hace menos válido. Muchas veces lo hace más valiente.',
+  'Still figuring it out':'Seguir descubriéndolo es una respuesta completa y honesta. No necesitas haber llegado para merecer reflexión y cuidado.',
+  "I don't think in those terms":'Puedes vivir tu experiencia a tu manera, sin los marcos que usan otras personas. Tu forma de nombrarte es la única que tiene que encajar.'
+});
+addObj(EXPLORING_FEEDBACK, {
+  'As a child':'Te conoces desde hace mucho, y eso puede sentirse solitario cuando nadie preguntaba. Ahora te lo preguntas tú, y eso importa.',
+  'During puberty':'Fueron muchos cambios a la vez. Lo que sentiste entonces fue real, aunque no tuvieras palabras.',
+  'In my teens or early twenties':'Mucha gente encuentra sus palabras en estos años. Estás en buena compañía.',
+  'Recently, as an adult':'Empezar más tarde no es empezar atrasado. Descubrirse de adulto trae mucha experiencia de vida para apoyarte.',
+  'Still figuring it out':'Seguir descubriéndolo es una respuesta completa. Quienes exploran no necesitan un mapa terminado.',
+  "I don't think in those terms":'Puedes vivir tu experiencia a tu manera. Las etiquetas son opcionales.'
+});
+
+/* Single messages, toasts, labels and PDF labels (English text is the key) */
+addMap({
+  'A gentle note':'Una nota amable',
+  'Hi, I am Sam. I am a stick figure, so my advice is limited, but I am excellent company. Tap how you feel to start.':'Hola, soy Sam. Soy un muñeco de palitos, así que mis consejos son limitados, pero soy excelente compañía. Toca cómo te sientes para empezar.',
+  'Hi, I am Sam. I will keep you company while you reflect. Start whenever you like.':'Hola, soy Sam. Te acompaño mientras reflexionas. Empieza cuando quieras.',
+  'Halfway there. You are doing the brave bit.':'Vas por la mitad. Estás haciendo la parte valiente.',
+  'You are about halfway.':'Vas más o menos por la mitad.',
+  'All done! Hit the button below when you are ready.':'¡Listo! Toca el botón de abajo cuando estés preparado/a.',
+  'All questions are answered. Continue when you are ready.':'Todas las preguntas están respondidas. Continúa cuando estés preparado/a.',
+  'You did it. Proud of you. Okay, I am a stick figure, so my pride is mostly wiggling.':'Lo lograste. Estoy orgulloso de ti. Bueno, soy un muñeco de palitos, así que mi orgullo es sobre todo menearme.',
+  'You did it. Well done for taking this time.':'Lo lograste. Bien hecho por tomarte este tiempo.',
+  'Begin when you are ready. There is no rush.':'Empieza cuando estés preparado/a. No hay prisa.',
+  'That is five words. Tap one to swap it.':'Son cinco palabras. Toca una para cambiarla.',
+  'Those words are yours. You can change them any time.':'Esas palabras son tuyas. Puedes cambiarlas cuando quieras.',
+  'That is five, the max! Tap one to swap it.':'¡Son cinco, el máximo! Toca una para cambiarla.',
+  'Good picks. Words are like outfits, so swap them whenever you like.':'Buena elección. Las palabras son como la ropa, cámbialas cuando quieras.',
+  'Knowing what you need is useful information.':'Saber lo que necesitas es información útil.',
+  'Good to know. Needs are not demands. They are information.':'Bueno saberlo. Las necesidades no son exigencias. Son información.',
+  'Zero is allowed. Some days the win is just showing up here.':'Cero está permitido. Algunos días el logro es solo venir aquí.',
+  'Thank you for putting that into your own words. Whatever you wrote, tentative or certain, brief or long, it is yours. That is enough.':'Gracias por ponerlo en tus propias palabras. Sea lo que sea que escribiste, dudoso o seguro, breve o largo, es tuyo. Eso es suficiente.',
+  'Keep that sentence. Read it again slowly before you close this page. You wrote it, which means part of you already knows it is true.':'Guarda esa frase. Léela de nuevo despacio antes de cerrar esta página. La escribiste tú, así que una parte de ti ya sabe que es verdad.',
+  'Gentle mode on.':'Modo suave activado.',
+  'Gentle mode off.':'Modo suave desactivado.',
+  'Please tap how you are feeling right now.':'Por favor, toca cómo te sientes ahora mismo.',
+  'Link copied!':'¡Enlace copiado!',
+  'Copy the link from the footer.':'Copia el enlace del pie de página.',
+  'Copied. Paste it wherever you like.':'Copiado. Pégalo donde quieras.',
+  'Select the text to copy it.':'Selecciona el texto para copiarlo.',
+  'PDF library not ready. Please wait a moment and try again.':'El PDF aún no está listo. Espera un momento e inténtalo de nuevo.',
+  'Building your reflection PDF...':'Creando tu PDF de reflexión...',
+  'PDF downloaded!':'¡PDF descargado!',
+  'Saved to your PDF.':'Guardado en tu PDF.',
+  'Nice pick. It will be in your PDF.':'Buena elección. Estará en tu PDF.',
+  'Reset. Begin again when you are ready.':'Reiniciado. Empieza de nuevo cuando quieras.',
+  'Breathe in slowly...':'Inhala despacio...',
+  'Hold gently...':'Sostén con suavidad...',
+  'Breathe out slowly...':'Exhala despacio...',
+  'Rest...':'Descansa...',
+  'Tap to flip':'Toca para voltear',
+  'Copy':'Copiar',
+  'Not answered':'Sin responder',
+  'Not set':'Sin definir',
+  'Not picked':'Sin elegir',
+  'Not written':'Sin escribir',
+  'Slide to set it':'Desliza para ajustarla',
+  'Still working that out.':'Todavía lo estoy pensando.',
+  'I am still here, and that counts.':'Sigo aquí, y eso cuenta.',
+  'Right now':'Ahora mismo',
+  'What I need':'Lo que necesito',
+  'What I tell myself':'Lo que me digo',
+  'RIGHT NOW':'AHORA MISMO',
+  'WHAT I NEED':'LO QUE NECESITO',
+  'WHAT I TELL MYSELF':'LO QUE ME DIGO',
+  'not sure yet':'algo que aún no sé nombrar',
+  'Thank you for sharing this with yourself.':'Gracias por compartir esto contigo.',
+  'Pick one small thing that gives you a little of what you wrote, and do it in the next hour.':'Elige una cosa pequeña que te dé un poco de lo que escribiste, y hazla en la próxima hora.',
+  'A gentle identity and self-reflection tool, free and private: ':'Una herramienta suave de reflexión sobre la identidad, gratis y privada: ',
+  'How you are feeling now':'Cómo te sientes ahora',
+  'Your inner battery':'Tu batería interior',
+  'When you started exploring':'Cuándo empezaste a explorar',
+  'Words that feel true':'Palabras que te parecen ciertas',
+  'What identity means to you':'Qué significa para ti la identidad',
+  'What you need right now':'Lo que necesitas ahora mismo',
+  'Tiny wins this week':'Pequeños logros de esta semana',
+  'A kindness to yourself':'Una frase amable para ti',
+  'When you started exploring your identity':'Cuándo empezaste a explorar tu identidad',
+  'Words that feel true about you':'Palabras que te parecen ciertas sobre ti',
+  'A kindness you wrote to yourself':'Una frase amable que te escribiste',
+  'Finding Yourself: Your Reflection':'Encontrarte a ti: tu reflexión',
+  'Name: ':'Nombre: ',
+  'Date: ':'Fecha: ',
+  'Time: ':'Hora: ',
+  'You are allowed to exist exactly as you are.':'Tienes derecho a existir tal como eres.',
+  'Your stick figure comic':'Tu cómic de muñecos de palitos',
+  'Your reflection':'Tu reflexión',
+  'What stood out, just for you':'Lo que destacó, solo para ti',
+  'Do this in the next hour':'Haz esto en la próxima hora',
+  'Your tiny experiment for this week':'Tu pequeño experimento de esta semana',
+  'Gentle next steps for right now':'Próximos pasos suaves para ahora',
+  'Reflection prompts, when you are ready':'Preguntas de reflexión, cuando estés preparado/a',
+  'Myths we can drop':'Mitos que podemos soltar',
+  'If you want to tell someone, words you can borrow':'Si quieres contárselo a alguien, palabras que puedes usar',
+  'Check in with yourself in 7 days':'Vuelve a revisar cómo estás en 7 días',
+  'Understanding identity exploration: what research tells us':'Entender la exploración de la identidad: lo que dice la investigación',
+  'More free wellbeing resources':'Más recursos gratuitos de bienestar',
+  'You did not pick one yet. Circle the one you like, or ignore all three.':'Aún no elegiste uno. Rodea el que te guste, o ignora los tres.',
+  'Circle the face that fits you on that day, then fill in the lines.':'Rodea la cara que te represente ese día y luego completa las líneas.',
+  'One thing that feels different:':'Una cosa que se siente diferente:',
+  'One thing that feels the same:':'Una cosa que se siente igual:',
+  'One kind thing I did for myself:':'Una cosa amable que hice por mí:',
+  'findahelpline.com (find a helpline near you)':'findahelpline.com (encuentra una línea de ayuda cerca de ti)',
+  'General wellbeing support only. Not professional care.':'Solo apoyo general de bienestar. No es atención profesional.',
+  'Page ':'Página ',
+  'Myth: ':'Mito: ',
+  'Truth: ':'Verdad: '
+});
+
+/* Longer content */
+addObjArr(NEXT_STEPS, {
+  Confused:['Date permiso de no tener una respuesta hoy. La confusión es un buen lugar para descansar.','Intenta nombrar una cosa que sí sabes, aunque sea pequeña. Escríbela si te ayuda.','Quítate la presión de ponerle etiqueta a algo ahora. Tu experiencia puede existir sin un nombre.'],
+  Sad:['Deja que la tristeza esté aquí sin discutir con ella. Nombrarla, como acabas de hacer, es suficiente por ahora.','Haz un pequeño acto de cuidado: toma agua, respira despacio, apoya las manos en algo cálido.','Si se siente pesada o no se va, cuéntaselo a una persona de confianza. Un mensaje corto cuenta.'],
+  Numb:['Sé amable contigo. No fuerces el sentir. La insensibilidad es la mente protegiéndose, y se suaviza cuando te sientes más seguro/a.','Prueba un anclaje sencillo con los sentidos: nombra 5 cosas que ves, siente tus pies en el suelo, sostén algo cálido.','Que hoy sea simple. No tienes que procesarlo todo de una vez.'],
+  Calm:['Usa esta estabilidad para mirar un poco más hondo si quieres. La calma es un buen momento para la honestidad.','Fíjate en qué creó esta calma para poder volver a ella en días más difíciles.','Quizás estés listo/a para un pequeño paso hacia algo que has estado considerando.'],
+  Hopeful:['Deja que la esperanza sea una dirección, no una presión. Úsala para una pequeña acción.','Escribe hacia dónde apunta esa esperanza. Esa dirección te dice qué es importante para ti.','Protege este sentimiento sin exigirle demasiado demasiado pronto.'],
+  Overwhelmed:['Haz menos. Quítate una exigencia ahora mismo, aunque sea diminuta.','No tienes que procesarlo todo a la vez. Una cosa a la vez. Una respiración a la vez.','Piensa en quién o qué te da descanso, no consejos, solo descanso, y acércate a eso hoy.'],
+  Curious:['Sigue la curiosidad con suavidad. Lee, explora y pregunta sin necesitar respuestas todavía.','Anota de qué tienes curiosidad y deja que sea interesante en vez de urgente.','La curiosidad es uno de los estados más útiles que existen. No necesita resolverse.'],
+  Anxious:['Alarga tu exhalación: inhala contando 4, sostén 2, exhala contando 6. Hazlo tres veces antes de cualquier otra cosa.','Nombra qué exactamente se siente incierto. Las preocupaciones suelen encogerse al decirlas en voz alta.','Evita las decisiones grandes ahora. Deja que tu cuerpo se calme primero.'],
+  Tired:['Descansar hoy no es opcional. Elige una pausa real. No desplazarte por el teléfono, descanso de verdad.','Baja tus expectativas para las próximas horas. Estás funcionando con menos, y está bien.','Si el cansancio no se va, pregúntate si has estado cargando algo sin suficiente apoyo.'],
+  Relieved:['Saboréalo. Algo se aflojó. Fíjate en qué era para entender qué estabas cargando.','Sé amable contigo en vez de ponerte productivo/a de inmediato con este alivio.','Pregúntate qué hizo que esto se sintiera mejor. Eso te dice qué necesitas más.']
+});
+addObjArr(PROMPTS, {
+  Confused:['¿Cuál es la pregunta que más miedo me da responder con honestidad?','Si la confusión es un mensaje, ¿qué podría estar pidiéndome que mire más despacio?','¿Cómo se sentiría quedarme un poco más con el no saber, sin intentar arreglarlo?'],
+  Sad:['¿Qué estoy llorando o extrañando ahora mismo, con nombre o sin nombre?','¿Qué le diría a un amigo que se sintiera exactamente como yo hoy?','¿Qué ha intentado decirme esta tristeza que yo sigo pasando por alto?'],
+  Numb:['¿Cuándo fue la última vez que sentí algo profundamente, y qué fue?','¿De qué me estoy protegiendo al sentir menos?','¿Cómo se vería el primer pasito de regreso al sentir, si lo diera con mucha suavidad?'],
+  Calm:['¿Cómo se siente esta calma en mi cuerpo, y dónde vive?','¿Qué sé desde aquí que es más difícil de saber cuando todo es ruidoso?','¿Qué ha intentado mostrarme esta quietud?'],
+  Hopeful:['¿Qué es exactamente lo que espero? ¿Puedo nombrarlo con claridad?','¿Qué significaría que esta esperanza se cumpliera, y qué necesitaría hacer o permitir?','¿Qué ha mantenido viva esta esperanza en mí, incluso en tiempos difíciles?'],
+  Overwhelmed:['¿Qué ocupa más espacio en mí ahora mismo?','¿De qué soy responsable que en realidad no necesito cargar solo/a?','Si pudiera quitar una cosa de mi vida ahora, ¿cuál sería, y por qué no lo he hecho?'],
+  Curious:['¿Cuál es la pregunta que está debajo de la curiosidad? ¿Qué estoy preguntando de verdad?','¿Qué exploraría si la respuesta no tuviera consecuencias?','¿De quién conozco la experiencia y me da curiosidad, y qué podría aprender al preguntarle?'],
+  Anxious:['¿Qué es exactamente lo que más temo ahora mismo?','¿Cuál es el peor resultado realista, y cómo lo manejaría si pasara?','¿Qué necesitaría para sentir aunque sea un 10 por ciento menos de ansiedad ahora?'],
+  Tired:['¿Qué he estado cargando que nadie sabe?','¿De qué no me estoy permitiendo descansar?','Si mi cansancio pudiera hablar, ¿qué me pediría?'],
+  Relieved:['¿Qué estaba sosteniendo que acaba de aflojarse, y desde hace cuánto lo sostenía?','¿Qué me dice este alivio sobre lo que realmente necesito?','¿Qué puedo hacer para dejar más espacio a este sentimiento en mi día a día?']
+});
+addPairs(DEFAULT_STEPS, ['Date unos minutos de quietud después de esta reflexión.','Fíjate en cómo se siente tu cuerpo ahora comparado con cuando empezaste.','No necesitas resolver nada. Reflexionar fue suficiente.']);
+addPairs(DEFAULT_PROMPTS, ['¿Qué parte de la reflexión de hoy me sorprendió?','¿Qué quiero recordar de esto, en una frase que pueda llevar conmigo?','¿Qué me diría a mí mismo/a para volver a esto dentro de un mes?']);
+addObj(NEED_ACTIONS, {
+  'Rest':'Acuéstate 10 minutos con el teléfono fuera de tu alcance. Descansar cuenta aunque no duermas.',
+  'Space':'Sal a otra habitación o al exterior por cinco minutos. El espacio está permitido.',
+  'Someone to listen':'Envía un mensaje: "¿Tienes 10 minutos? No necesito consejos, solo alguien que me escuche."',
+  'Something fun':'Pon una canción que te guste y muévete como quieras. Nadie te está calificando.',
+  'Quiet':'Audífonos puestos, luz baja, sin estímulos por diez minutos.',
+  'Reassurance':'Lee en voz alta tu propia frase amable, aunque sea bajito. Escuchar tu voz siendo amable se queda mejor que leerla.',
+  'A plan':'Escribe solo el siguiente paso pequeño. No toda la escalera, solo un escalón.',
+  'Time':'Pon un recordatorio para volver a esto el domingo. Tu yo del futuro puede retomarlo con suavidad.'
+});
+addPairs(DEFAULT_ACTIONS, ['Toma un vaso de agua y deja caer los hombros.','Respira lento tres veces, más largo al exhalar.','Haz una cosa pequeña que se sienta amable y luego para ahí.']);
+addPairs(EXPERIMENTS, [
+  'Di una cosa verdadera sobre ti en voz alta, frente a un espejo o a una persona segura.',
+  'Escribe durante tres minutos sin corregir y sin público.',
+  'Haz una cosa esta semana solo porque te gusta, sin tener que explicarla.',
+  'Lee o mira una historia de alguien en un camino parecido, y fíjate qué te llega.',
+  'Cuéntale a una persona segura, en una frase, cómo estás de verdad.'
+]);
+addPairs(MYTHS.map(function(x){return x.m;}), ['Ya debería tener esto claro.','Si me estoy cuestionando cosas, algo anda mal conmigo.','Todos los demás parecen tan seguros.','Tengo que contárselo a todo el mundo ya.']);
+addPairs(MYTHS.map(function(x){return x.t;}), [
+  'No hay fecha límite. Mucha gente sigue editando su historia a los 40, a los 60 y a los 80.',
+  'Las preguntas significan que estás prestando atención. Eso es una virtud, no un defecto.',
+  'La gente suele mostrar sus conclusiones, no el desorden del medio. Ese desorden es donde vivimos casi todos.',
+  'Tú eliges quién lo sabe y cuándo. La privacidad no es lo mismo que esconderse.'
+]);
+addPairs(SCRIPTS, [
+  'Oye, ¿puedo contarte algo en lo que he estado pensando? No necesito consejos. Solo necesito que me escuches.',
+  'Estoy descubriendo cosas sobre mí. Quizás aún no tenga las palabras, y está bien. ¿Puedo pensar en voz alta contigo?',
+  'Todavía no estoy listo/a para hablar de eso. Solo quería que supieras que tengo mucho en la cabeza y me vendría bien algo de compañía.'
+]);
+
+var ES_CLOSING = 'Esta página es para ti. Tienes derecho a explorar, a cuestionar y a crecer a tu propio ritmo. Si vuelves a esta reflexión más adelante, fíjate en lo que cambió y en lo que sigue igual. No estás obligado/a a tener respuestas. Solo tienes que ser honesto/a contigo, y hoy ya lo hiciste.';
+var ES_PDFCARE = 'Una nota con cariño: parte de lo que escribiste suena muy pesado. Si podrías hacerte daño o te sientes en peligro, por favor busca a alguien hoy: una persona de confianza, un número de emergencias local, o una línea de ayuda en findahelpline.com. No tienes que cargar esto solo/a.';
+var ES_EDU = [
+  ['Por qué explorar la identidad es un proceso sano y necesario',
+   'La investigación fundamental del psicólogo del desarrollo Erik Erikson sobre la formación de la identidad señaló que cuestionarse y explorar el sentido de uno mismo es una tarea central del desarrollo, no una crisis ni una patología. Las personas que exploran su identidad de forma activa suelen mostrar mayor bienestar, valores más claros y más resiliencia psicológica. Reflexionar, por sí solo, protege.'],
+  ['La ciencia de la autocompasión',
+   'La investigación de Kristin Neff, de la Universidad de Texas, muestra que la autocompasión, tratarse con el mismo cuidado que se le daría a un amigo que está pasando un mal momento, produce menos ansiedad, menos vergüenza y mucho más bienestar que la autocrítica. La frase amable que escribiste en esta reflexión es una práctica directa de esto.'],
+  ['Por qué nombrar los sentimientos reduce su intensidad',
+   'La investigación de Matthew Lieberman, de UCLA, muestra que ponerle nombre a un estado emocional activa la corteza prefrontal y reduce la activación de la amígdala, lo que disminuye la intensidad de la emoción. Elegir una palabra para lo que sientes no es solo describir. Es regular activamente.'],
+  ['La seguridad psicológica de la reflexión privada',
+   'La investigación sobre escritura expresiva de James Pennebaker, de la Universidad de Texas, confirma que la reflexión privada, sin compartir, aporta beneficios psicológicos importantes, como menos rumiación, mejor ánimo y mayor claridad. Poder expresar con honestidad lo que piensas y sientes, sin consecuencias sociales, crea las condiciones para entenderte de verdad.'],
+  ['Identidad y pertenencia: una nota para quien está en este camino',
+   'La investigación sobre el estrés de las minorías, de Ilan Meyer y otros en psicología social, muestra que el malestar que a veces aparece al explorar la identidad no lo causa la identidad en sí, sino el entorno social. Lo que estás explorando tiene valor propio. El apoyo, la comunidad y la conexión son la respuesta respaldada por la evidencia ante esa dificultad.']
+];
+
+var CARE_ES = '<strong>Una nota con cariño.</strong> Parte de lo que escribiste suena muy pesado. Si podrías hacerte daño, o te sientes en peligro ahora mismo, por favor busca a alguien hoy: una persona de confianza, un número de emergencias local, o una línea de ayuda en <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>. Mereces el apoyo de una persona real, y no tienes que cargar esto solo/a. Nada de lo que escribiste se ha enviado a ningún lado.';
+function careHtml(){ return LANG === 'es' ? CARE_ES : CARE_HTML_EN; }
+
+function ESW(n){
+  var w = n === 1 ? 'pequeño logro' : 'pequeños logros';
+  return S.quiet ? (n + ' ' + w + '. Se van sumando.') : (n + ' ' + w + '. Los logros pequeños son cómo se construyen las cosas grandes. Estoy dando un saltito.');
+}
+function ESWB(n, calm){
+  var one = n === 1;
+  return calm ? (n + ' ' + (one ? 'pequeño logro anotado' : 'pequeños logros anotados') + '.') : (n + ' ' + (one ? 'pequeño logro reunido' : 'pequeños logros reunidos') + '. Mira cómo vas.');
+}
+
+function buildFeedbackES(){
+  var out = [], f = S.feeling, e = S.energy, fl = T(f || '').toLowerCase();
+  if(S.energyTouched){
+    var heavy = ['Tired','Numb','Overwhelmed','Sad','Anxious'].indexOf(f) > -1;
+    var light = ['Calm','Hopeful','Relieved','Curious'].indexOf(f) > -1;
+    var t;
+    if(heavy && e > 60) t = 'Sientes ' + fl + ', y aun así tu batería está en ' + e + ' por ciento. Esa mezcla es común. El cuerpo puede estar bien mientras el corazón hace ruido, y ambas cosas son reales.';
+    else if(light && e <= 30) t = 'Sientes ' + fl + ' incluso con la batería baja, en ' + e + ' por ciento. Es buena señal. Protégelo con algo de descanso.';
+    else if(e <= 30) t = 'Tu batería está en ' + e + ' por ciento. Eso cambia el consejo: primero descansar, pensar en grande después.';
+    else if(e <= 65) t = 'Tu batería está en ' + e + ' por ciento. Alcanza para pasos pequeños, no para hazañas. Elige una cosa, no cinco.';
+    else t = 'Tu batería está en ' + e + ' por ciento. Es buen momento para un pequeño paso valiente, como escribir una frase honesta o enviar un mensaje.';
+    out.push({t:'Tu energía', b:t});
+  }
+  if(S.words.length){
+    var b2 = 'Elegiste: ' + S.words.map(T).join(', ').toLowerCase() + '. Si te presentaras ante un desconocido amable, ¿qué palabra dirías primero? No hay respuesta incorrecta, y puedes cambiar las palabras cuando quieras.';
+    if(has('Loud') && has('Quiet')) b2 += ' Elegiste ruidoso/a y callado/a a la vez. Las personas pueden ser más de una cosa.';
+    else if(has('Brave') && has('Scared')) b2 += ' Elegiste valiente y asustado/a a la vez. Normalmente así se ve la valentía.';
+    out.push({t:'Tus palabras', b:b2});
+  }
+  if(S.exploring && EXPLORING_FEEDBACK[S.exploring]) out.push({t:'Tu punto de partida', b:T(EXPLORING_FEEDBACK[S.exploring])});
+  if(S.wins.length){
+    var n = winsCount(), wb;
+    if(n === 0) wb = 'No marcaste logros esta semana, y está bien. Aun así viniste a reflexionar, así que cuenta eso como el logro número uno.';
+    else if(n <= 2) wb = n + ' ' + (n === 1 ? 'pequeño logro' : 'pequeños logros') + '. Los logros pequeños son logros de verdad. Así se construyen los cambios más grandes.';
+    else wb = n + ' pequeños logros. Es un buen montón para alguien en medio de descubrirse.';
+    out.push({t:'Tus pequeños logros', b:wb});
+  }
+  var kind = ge('fsSelfKindness').value.trim();
+  if(kind) out.push({t:'Tu frase amable', b:'Te escribiste algo amable. Léelo en voz alta una vez, aunque sea bajito. Escuchar tu propia voz siendo amable se queda mejor que solo leerlo.'});
+  else out.push({t:'Tu frase amable', b:'Esta vez no escribiste una frase amable, y no pasa nada. Si quieres una prestada: "Lo estás haciendo mejor de lo que crees."'});
+  return out;
+}
+
+/* Fixed page text: [selector, index, Spanish]. Only the visible words change, never links or buttons. */
+var STATIC_TEXT = [
+  ['h1',0,'Encontrarte a ti'],
+  ['.fs-tagline',0,'Un espacio suave de reflexión para explorar quién eres, cómo te sientes y qué necesitas ahora mismo. No hay respuestas correctas aquí, solo las tuyas. Tendrás un amigo muñeco de palitos en el camino.'],
+  ['.fs-affirm-banner',0,'Tienes derecho a existir exactamente como eres. Tienes derecho a cuestionar, a hacer una pausa y a ocupar tu espacio. Esta herramienta es un espacio privado para ti.'],
+  ['.fs-disclaimer',0,'Todo lo que escribas se queda solo en esta página. Nada se guarda, se envía ni se almacena en ningún lado.'],
+  ['.fs-toggle span',0,'Modo suave: sin bromas, sin movimiento. Solo calma y quietud.'],
+  ['.fs-section-label',0,'¿Conoces a alguien a quien le podría servir? Compártela'],
+  ['#fsTopCopy',0,'Copiar enlace'],
+  ['.fs-step',0,'Antes de empezar'],
+  ['.fs-step',1,'Pregunta 1 de 8'],['.fs-step',2,'Pregunta 2 de 8'],['.fs-step',3,'Pregunta 3 de 8'],['.fs-step',4,'Pregunta 4 de 8'],
+  ['.fs-step',5,'Pregunta 5 de 8'],['.fs-step',6,'Pregunta 6 de 8'],['.fs-step',7,'Pregunta 7 de 8'],['.fs-step',8,'Pregunta 8 de 8'],
+  ['.fs-field-label',0,'Tu nombre, o un nombre con el que te sientas cómodo/a (opcional, se usa en tu PDF)'],
+  ['.fs-field-label',1,'¿Qué muñeco de palitos eres tú ahora mismo?'],
+  ['.fs-field-label',2,'¿Qué tan cargada está tu batería interior hoy?'],
+  ['.fs-field-label',3,'¿Cuándo empezaste a explorar tu identidad o tu forma de verte a ti mismo/a?'],
+  ['.fs-field-label',4,'¿Qué palabras te parecen ciertas sobre ti últimamente?'],
+  ['.fs-field-label',5,'¿Qué significa para ti tu identidad en este momento?'],
+  ['.fs-field-label',6,'¿Qué necesitas más ahora mismo?'],
+  ['.fs-field-label',7,'¿Qué pequeños logros reuniste esta semana?'],
+  ['.fs-field-label',8,'Escribe una frase amable para ti.'],
+  ['.fs-field-hint',0,'Toca el que mejor encaje, o el que menos quieras admitir.'],
+  ['.fs-field-hint',1,'Deslízala. La honestidad vale más que impresionar.'],
+  ['.fs-field-hint',2,'Puede ser tu género, tu sexualidad, tus valores, tu sentido de pertenencia, lo que sea verdad para ti.'],
+  ['.fs-field-hint',3,'Elige hasta 5. Piensa en ellas como ropa: puedes cambiarlas cuando quieras. Agrega la tuya si falta.'],
+  ['.fs-field-hint',4,'Usa tus propias palabras. No necesitas etiquetas. ¿Atascado/a? Toca una frase de inicio abajo.'],
+  ['.fs-field-hint',5,'Toca hasta 3 y luego agrega tus propias palabras abajo si quieres.'],
+  ['.fs-field-hint',6,'Lo pequeño cuenta. Levantarte de la cama es algo real. Toca todo lo que aplique.'],
+  ['.fs-field-hint',7,'Dila como se la dirías a un amigo al que quieres, alguien que merece paciencia y cuidado. ¿Necesitas una frase de inicio? Toca una.'],
+  ['#fsWordAddBtn',0,'Añadir'],
+  ['#fsSubmitBtn',0,'Completar mi reflexión'],
+  ['#fsResetBtn',0,'Empezar de nuevo'],
+  ['#fsResetBtn2',0,'Empezar de nuevo'],
+  ['.fs-breathe-title',0,'Respira antes de ver tus resultados'],
+  ['.fs-breathe-note',0,'Acabas de compartir algo real. Tómate un momento con tu respiración antes de leer tu reflexión.'],
+  ['#fsSkipBreathBtn',0,'Ir a mis resultados'],
+  ['.fs-results-sub',0,'Esto fue un acto de valentía, aunque no lo haya parecido.'],
+  ['.fs-result-section-title',0,'Tu cómic de muñecos de palitos'],
+  ['.fs-result-section-title',1,'Lo que destacó, solo para ti'],
+  ['.fs-result-section-title',2,'Haz esto en la próxima hora'],
+  ['.fs-result-section-title',3,'Elige un pequeño experimento para esta semana'],
+  ['.fs-result-section-title',4,'Próximos pasos suaves para ahora'],
+  ['.fs-result-section-title',5,'Mitos que podemos soltar (toca para voltear)'],
+  ['.fs-result-section-title',6,'Si quieres contárselo a alguien, aquí tienes palabras que puedes usar'],
+  ['.fs-result-section-title',7,'Preguntas de reflexión para ir más hondo, cuando estés preparado/a'],
+  ['.fs-result-section-title',8,'Tu reflexión, lo que escribiste'],
+  ['.fs-section-label',1,'Acciones'],
+  ['#fsPdfBtn',0,'Descargar mi reflexión (PDF)'],
+  ['#fsEditBtn',0,'Volver y editar'],
+  ['.fs-section-label',2,'Comparte esta herramienta con alguien que la pueda necesitar'],
+  ['#fsCopyLink',0,'Copiar enlace'],
+  ['.fs-footer-support-text',0,'Esta plataforma es gratis para todos. Si te ayudó, considera apoyarla.'],
+  ['.fs-btn-support',0,'♥ Apoya este sitio web'],
+  ['.fs-footer-links .fs-footer-link',0,'Más herramientas gratis'],
+  ['.fs-footer-links .fs-footer-link',1,'Libros recomendados'],
+  ['.fs-footer-links .fs-footer-link',2,'Ayuda'],
+  ['.fs-footer-links .fs-footer-link',3,'Encontrar una línea de ayuda'],
+  ['.eid-credit span',0,'Solo para reflexión y autoapoyo. No es consejo médico ni de crisis.']
+];
+/* Elements that hold a link between two pieces of text: only the text pieces change, the link is left alone */
+var STATIC_NODES = [
+  ['.fs-safety',0,['Si te sientes inseguro/a o abrumado/a, por favor busca apoyo. ',' te ayuda a encontrar una línea de ayuda cerca de ti.']],
+  ['.fs-footer-credit',0,['Creado por ',' ·  Solo apoyo general de bienestar, no es atención profesional.']],
+  ['.fs-footer-url',0,['Esta herramienta está en:']],
+  ['.eid-credit',0,['Creado por Clive Ngwenya (M.C.N) para ','. De uso libre bajo la licencia MIT.']]
+];
+var STATIC_PH = [
+  ['fsName','Cualquier nombre, apodo, o déjalo en blanco...'],
+  ['fsWordAdd','Agrega tu propia palabra'],
+  ['fsMeaning','No hay respuesta correcta, solo tu experiencia y tu lenguaje...'],
+  ['fsWhatNeed','Algo más que te ayudaría a sentirte un poco mejor...'],
+  ['fsSelfKindness','Por ejemplo: Eres suficiente tal como eres.']
+];
+function textNodesOf(el){
+  var a = [];
+  for(var i = 0; i < el.childNodes.length; i++){ var n = el.childNodes[i]; if(n.nodeType === 3 && n.nodeValue.trim()) a.push(n); }
+  return a;
+}
+function applyStatic(){
+  var es = LANG === 'es';
+  STATIC_TEXT.forEach(function(r){
+    var el = document.querySelectorAll(r[0])[r[1]]; if(!el) return;
+    if(el._en === undefined) el._en = el.textContent;
+    el.textContent = es ? r[2] : el._en;
+  });
+  STATIC_NODES.forEach(function(r){
+    var el = document.querySelectorAll(r[0])[r[1]]; if(!el) return;
+    var nodes = textNodesOf(el);
+    if(el._enNodes === undefined) el._enNodes = nodes.map(function(n){ return n.nodeValue; });
+    nodes.forEach(function(n, i){ if(r[2][i] !== undefined) n.nodeValue = es ? r[2][i] : el._enNodes[i]; });
+  });
+  STATIC_PH.forEach(function(r){
+    var el = ge(r[0]); if(!el) return;
+    if(el._enPh === undefined) el._enPh = el.getAttribute('placeholder');
+    el.setAttribute('placeholder', es ? r[1] : el._enPh);
+  });
+}
+
+function setLang(l){
+  LANG = (l === 'es') ? 'es' : 'en';
+  try { localStorage.setItem('eidToolLang', LANG); } catch(e){}
+  var root = ge('findself-root'); if(root) root.setAttribute('lang', LANG);
+  var sel = ge('fsLang'); if(sel && sel.value !== LANG) sel.value = LANG;
+  applyStatic();
+  renderFeelGrid(); rerenderChips(); renderStarters();
+  if(S.energyTouched) ge('fsBattLabel').textContent = S.energy + '%: ' + energyLabel(S.energy);
+  else ge('fsBattLabel').textContent = T('Slide to set it');
+  if(S.feeling) onFeeling(); else { greeting(); updateProgress(); }
+  ['fsAffirm2','fsAffirm5','fsAffirm7','fsAffirm8'].forEach(function(id){ react(id, null, null); });
+  if(S.energyTouched) ge('fsEnergy').dispatchEvent(new Event('input'));
+  ge('fsMeaning').dispatchEvent(new Event('input'));
+  ge('fsSelfKindness').dispatchEvent(new Event('input'));
+  react('fsAffirm3', 'calm', S.exploring ? EXPLORING_AFFIRMS[S.exploring] : null);
+  wordsChanged(); needChanged();
+  updateShareLinks();
+  checkCareLive();
+  if(ge('fsResults').classList.contains('show')) showResults(true);
+}
+function initLang(){
+  var sel = ge('fsLang');
+  if(sel) sel.addEventListener('change', function(){ setLang(this.value); });
+  var saved = null;
+  try { saved = localStorage.getItem('eidToolLang'); } catch(e){}
+  if(saved === 'es') setLang('es');
+}
+
 /* ================= INIT ================= */
 ge('fsSupFigL').innerHTML = stickSVG('cheer', 66, true);
 ge('fsSupFigR').innerHTML = stickSVG('heart', 66, true);
 renderFeelGrid();
 greeting();
 updateProgress();
+initLang();
 
 })();
 </script>
 
 </div>
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  Created by Clive Ngwenya (M.C.N) for
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  Free to use under the MIT License.
+  <br>
+  <span style="font-size:12px;opacity:0.85;">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
+
 <!-- End Finding Yourself Tool v2 -->

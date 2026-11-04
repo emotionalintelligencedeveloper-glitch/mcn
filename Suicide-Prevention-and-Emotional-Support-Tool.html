@@ -285,6 +285,13 @@
       * { transition: none !important; }
     }
 
+    /* LANGUAGE */
+    .lang-row { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 14px; }
+    .lang-row label { font-size: 14px; color: var(--muted); }
+    .lang-row select { width: auto; min-width: 140px; }
+    @media (prefers-color-scheme: dark) { .eid-credit { color: var(--muted) !important; } }
+    @media print { .lang-row { display: none !important; } }
+
     /* PRINT */
     @media print {
       body { background: #fff; color: #000; }
@@ -299,8 +306,8 @@
 <body>
 
 <!-- STICKY CRISIS BAR -->
-<div class="crisis-bar" role="region" aria-label="Emergency support">
-  <strong>If you might act on thoughts of self-harm, call emergency services now.</strong>
+<div class="crisis-bar" role="region" aria-label="Emergency support" data-i18n-aria="bar.aria">
+  <strong data-i18n="bar.text">If you might act on thoughts of self-harm, call emergency services now.</strong>
   <div class="crisis-bar-links" id="crisisBarLinks">
     <a href="https://findahelpline.com" target="_blank" rel="noopener">Find crisis lines by country</a>
   </div>
@@ -310,44 +317,51 @@
 
   <!-- URGENT NOTICE (shown on high-risk selection) -->
   <div class="urgent-notice" id="urgentNotice" aria-live="assertive" role="alert">
-    <div class="urgent-notice-title">Your safety comes first right now.</div>
+    <div class="urgent-notice-title" data-i18n="urg.title">Your safety comes first right now.</div>
     <ul>
-      <li>Call emergency services in your area now.</li>
-      <li>Move away from anything you could use to harm yourself.</li>
-      <li>Text or call one trusted person: <em>"Please stay with me right now."</em></li>
-      <li>If you cannot call, go to your nearest emergency department.</li>
+      <li data-i18n="urg.l1">Call emergency services in your area now.</li>
+      <li data-i18n="urg.l2">Move away from anything you could use to harm yourself.</li>
+      <li data-i18n-html="urg.l3">Text or call one trusted person: <em>"Please stay with me right now."</em></li>
+      <li data-i18n="urg.l4">If you cannot call, go to your nearest emergency department.</li>
     </ul>
     <div class="urgent-actions" id="urgentCall"></div>
   </div>
 
   <!-- HEADER -->
   <header class="header">
+    <div class="lang-row">
+      <label for="langSelect">Language / Idioma</label>
+      <select id="langSelect">
+        <option value="en" lang="en">English</option>
+        <option value="es" lang="es">Español</option>
+      </select>
+    </div>
     <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" onerror="this.style.display='none'" />
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" data-i18n-alt="logo.alt" loading="lazy" onerror="this.style.display='none'" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>You Matter</h1>
-    <p class="tagline">If you are here, something feels heavy. This space is for the next few minutes only. No pressure, no judgment. <strong>You are not alone in this moment.</strong></p>
+    <h1 data-i18n="h1">You Matter</h1>
+    <p class="tagline" data-i18n-html="tag">If you are here, something feels heavy. This space is for the next few minutes only. No pressure, no judgment. <strong>You are not alone in this moment.</strong></p>
 
-    <div class="you-matter-note">
+    <div class="you-matter-note" data-i18n="note">
       Wanting the pain to stop is not the same as wanting life to end. What you are feeling right now is a signal. It is not a verdict on your worth or your future.
     </div>
 
-    <div class="immediate-danger">
+    <div class="immediate-danger" data-i18n-html="danger">
       <strong>If you are in immediate danger:</strong> Contact local emergency services now, or ask someone nearby to help you call.
     </div>
 
-    <div class="privacy-note">
+    <div class="privacy-note" data-i18n-html="priv">
       <strong>Private by design.</strong> What you type stays in your browser. It is not sent to us or anyone else. It is only saved on this device if you choose to tick the save box further down.
     </div>
   </header>
 
   <!-- CRISIS SUPPORT -->
   <div class="crisis-card" id="crisisSection" aria-labelledby="crisis-heading">
-    <p class="crisis-title" id="crisis-heading">Crisis support, free and confidential</p>
-    <p class="crisis-subtitle">If speaking feels hard, you can start with: "I am not safe by myself right now."</p>
+    <p class="crisis-title" id="crisis-heading" data-i18n="cc.title">Crisis support, free and confidential</p>
+    <p class="crisis-subtitle" data-i18n="cc.sub">If speaking feels hard, you can start with: "I am not safe by myself right now."</p>
     <div class="country-row">
-      <label for="countrySelect">Choose your country to see the right numbers</label>
+      <label for="countrySelect" data-i18n="cc.country">Choose your country to see the right numbers</label>
       <select id="countrySelect"></select>
     </div>
     <div class="resource-grid" id="resourceGrid"></div>
@@ -355,16 +369,16 @@
   </div>
 
   <!-- BREATHING AND GROUNDING -->
-  <div class="pause-box" aria-label="Breathing and grounding">
-    <p class="pause-title">Before anything else, one slow minute</p>
-    <p class="pause-sub">Breathe in for 4, hold for 3, breathe out for 6. Follow the circle.</p>
+  <div class="pause-box" aria-label="Breathing and grounding" data-i18n-aria="pause.aria">
+    <p class="pause-title" data-i18n="pause.title">Before anything else, one slow minute</p>
+    <p class="pause-sub" data-i18n="pause.sub">Breathe in for 4, hold for 3, breathe out for 6. Follow the circle.</p>
     <div class="breath-stage"><div class="breath-circle" id="breathCircle"></div></div>
     <div class="breath-label" id="breathLabel">Ready when you are</div>
     <button type="button" class="btn btn-primary" id="breathBtn">Start breathing</button>
-    <p class="pause-note">Strong urges often rise and ease like waves. Waiting, even 10 minutes, can help. You do not have to decide anything right now.</p>
+    <p class="pause-note" data-i18n="pause.note">Strong urges often rise and ease like waves. Waiting, even 10 minutes, can help. You do not have to decide anything right now.</p>
 
     <div class="ground-box">
-      <p class="pause-title">Grounding: 5-4-3-2-1</p>
+      <p class="pause-title" data-i18n="ground.title">Grounding: 5-4-3-2-1</p>
       <div class="ground-text" id="groundText" aria-live="polite">A simple way to come back to the present moment.</div>
       <button type="button" class="btn btn-outline" id="groundBtn">Start grounding</button>
     </div>
@@ -372,135 +386,135 @@
 
   <!-- CHECK-IN CARD -->
   <section class="card" aria-labelledby="checkin-heading">
-    <p class="card-title" id="checkin-heading">Your gentle check-in</p>
+    <p class="card-title" id="checkin-heading" data-i18n="ci.title">Your gentle check-in</p>
 
     <div class="save-row">
       <input type="checkbox" id="saveLocal" />
-      <label for="saveLocal">Save my answers on this device only, so they are here if I come back. They never leave this browser. The Reset button deletes them.</label>
+      <label for="saveLocal" data-i18n="save.label">Save my answers on this device only, so they are here if I come back. They never leave this browser. The Reset button deletes them.</label>
     </div>
 
     <!-- SAFETY CHECK -->
     <div class="question">
-      <span class="question-label" id="safetyLabel">Safety check: which statement fits best right now?</span>
-      <p class="question-hint">This only helps tailor the support shown to you. You are not being judged.</p>
+      <span class="question-label" id="safetyLabel" data-i18n="safe.label">Safety check: which statement fits best right now?</span>
+      <p class="question-hint" data-i18n="safe.hint">This only helps tailor the support shown to you. You are not being judged.</p>
       <div role="radiogroup" aria-labelledby="safetyLabel">
         <label class="radio-option">
           <input type="radio" name="safetyNow" value="overwhelmed" />
-          I feel emotionally overwhelmed, but not in immediate danger.
+          <span data-i18n="safe.a">I feel emotionally overwhelmed, but not in immediate danger.</span>
         </label>
         <label class="radio-option">
           <input type="radio" name="safetyNow" value="thoughts" />
-          I am having thoughts of harming myself, but do not have a plan right now.
+          <span data-i18n="safe.b">I am having thoughts of harming myself, but do not have a plan right now.</span>
         </label>
         <label class="radio-option high-risk">
           <input type="radio" name="safetyNow" value="mightact" />
-          I might act on thoughts of harming myself soon.
+          <span data-i18n="safe.c">I might act on thoughts of harming myself soon.</span>
         </label>
       </div>
-      <p class="question-note">Whatever you selected, you made the right choice by being here.</p>
+      <p class="question-note" data-i18n="safe.note">Whatever you selected, you made the right choice by being here.</p>
     </div>
 
     <!-- FEELING NOW -->
     <div class="question">
-      <label class="question-label" for="feelingNow">How are you feeling right now?</label>
-      <p class="question-hint">Choose what fits closest. You do not have to have the exact words.</p>
+      <label class="question-label" for="feelingNow" data-i18n="feel.label">How are you feeling right now?</label>
+      <p class="question-hint" data-i18n="feel.hint">Choose what fits closest. You do not have to have the exact words.</p>
       <select id="feelingNow">
-        <option value="">Select what fits best...</option>
-        <option value="Empty or numb">Empty or numb</option>
-        <option value="Overwhelming sadness">Overwhelming sadness</option>
-        <option value="Anxious or panicked">Anxious or panicked</option>
-        <option value="Angry at myself or others">Angry at myself or others</option>
-        <option value="Hopeless or trapped">Hopeless or trapped</option>
-        <option value="Tired of fighting">Tired of fighting</option>
-        <option value="I just need someone to listen">I just need someone to listen</option>
+        <option value="" data-i18n="feel.0">Select what fits best...</option>
+        <option value="Empty or numb" data-i18n="feel.1">Empty or numb</option>
+        <option value="Overwhelming sadness" data-i18n="feel.2">Overwhelming sadness</option>
+        <option value="Anxious or panicked" data-i18n="feel.3">Anxious or panicked</option>
+        <option value="Angry at myself or others" data-i18n="feel.4">Angry at myself or others</option>
+        <option value="Hopeless or trapped" data-i18n="feel.5">Hopeless or trapped</option>
+        <option value="Tired of fighting" data-i18n="feel.6">Tired of fighting</option>
+        <option value="I just need someone to listen" data-i18n="feel.7">I just need someone to listen</option>
       </select>
     </div>
 
     <!-- THOUGHT LOOP -->
     <div class="question">
-      <label class="question-label" for="thoughtLoop">Which thought keeps looping right now?</label>
-      <p class="question-hint">Naming the thought can help you create a little distance from it.</p>
+      <label class="question-label" for="thoughtLoop" data-i18n="th.label">Which thought keeps looping right now?</label>
+      <p class="question-hint" data-i18n="th.hint">Naming the thought can help you create a little distance from it.</p>
       <select id="thoughtLoop">
-        <option value="">Choose one if it fits...</option>
-        <option value="This pain will never end">"This pain will never end"</option>
-        <option value="I am a burden to others">"I am a burden to others"</option>
-        <option value="No one would understand me">"No one would understand me"</option>
-        <option value="I have tried everything already">"I have tried everything already"</option>
-        <option value="I do not want to die, I want the pain to stop">"I do not want to die, I want the pain to stop"</option>
+        <option value="" data-i18n="th.0">Choose one if it fits...</option>
+        <option value="This pain will never end" data-i18n="th.1">"This pain will never end"</option>
+        <option value="I am a burden to others" data-i18n="th.2">"I am a burden to others"</option>
+        <option value="No one would understand me" data-i18n="th.3">"No one would understand me"</option>
+        <option value="I have tried everything already" data-i18n="th.4">"I have tried everything already"</option>
+        <option value="I do not want to die, I want the pain to stop" data-i18n="th.5">"I do not want to die, I want the pain to stop"</option>
       </select>
     </div>
 
     <!-- OPEN QUESTIONS -->
     <div class="question">
-      <label class="question-label" for="q1">What has been weighing most heavily on your mind?</label>
-      <p class="question-hint">You do not need to explain it perfectly. Just write what is there.</p>
-      <textarea id="q1" maxlength="700" placeholder="Write freely. This is only for you..."></textarea>
+      <label class="question-label" for="q1" data-i18n="q1.label">What has been weighing most heavily on your mind?</label>
+      <p class="question-hint" data-i18n="q1.hint">You do not need to explain it perfectly. Just write what is there.</p>
+      <textarea id="q1" maxlength="700" placeholder="Write freely. This is only for you..." data-i18n-ph="q1.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q2">What emotions feel strongest right now?</label>
-      <textarea id="q2" maxlength="500" placeholder="As many or as few words as you need..."></textarea>
+      <label class="question-label" for="q2" data-i18n="q2.label">What emotions feel strongest right now?</label>
+      <textarea id="q2" maxlength="500" placeholder="As many or as few words as you need..." data-i18n-ph="q2.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q3">What has helped you get through hard moments before?</label>
-      <p class="question-hint">Even small things: a person, a song, a place, a memory.</p>
-      <textarea id="q3" maxlength="500" placeholder="You have been through difficult moments before..."></textarea>
+      <label class="question-label" for="q3" data-i18n="q3.label">What has helped you get through hard moments before?</label>
+      <p class="question-hint" data-i18n="q3.hint">Even small things: a person, a song, a place, a memory.</p>
+      <textarea id="q3" maxlength="500" placeholder="You have been through difficult moments before..." data-i18n-ph="q3.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q4">If someone you love felt this way, what would you tell them?</label>
-      <p class="question-hint">Try to offer yourself the same words.</p>
-      <textarea id="q4" maxlength="500" placeholder="Speak to yourself as you would to someone you care about..."></textarea>
+      <label class="question-label" for="q4" data-i18n="q4.label">If someone you love felt this way, what would you tell them?</label>
+      <p class="question-hint" data-i18n="q4.hint">Try to offer yourself the same words.</p>
+      <textarea id="q4" maxlength="500" placeholder="Speak to yourself as you would to someone you care about..." data-i18n-ph="q4.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q5">One small reason you could stay today:</label>
-      <p class="question-hint">It does not have to be big. It just has to be true.</p>
-      <textarea id="q5" maxlength="400" placeholder="Even one small reason is enough for today..."></textarea>
+      <label class="question-label" for="q5" data-i18n="q5.label">One small reason you could stay today:</label>
+      <p class="question-hint" data-i18n="q5.hint">It does not have to be big. It just has to be true.</p>
+      <textarea id="q5" maxlength="400" placeholder="Even one small reason is enough for today..." data-i18n-ph="q5.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q6">Who can you contact in the next 10 minutes?</label>
-      <p class="question-hint">A person, a helpline, or a text. Any contact counts.</p>
-      <textarea id="q6" maxlength="300" placeholder="Name, number, or service..."></textarea>
+      <label class="question-label" for="q6" data-i18n="q6.label">Who can you contact in the next 10 minutes?</label>
+      <p class="question-hint" data-i18n="q6.hint">A person, a helpline, or a text. Any contact counts.</p>
+      <textarea id="q6" maxlength="300" placeholder="Name, number, or service..." data-i18n-ph="q6.ph"></textarea>
     </div>
 
     <div class="question">
-      <label class="question-label" for="q7">What can you do in the next 10 minutes to lower your risk?</label>
-      <p class="question-hint">Moving to a shared space, putting distance between you and anything harmful, texting someone. Any step helps.</p>
-      <textarea id="q7" maxlength="400" placeholder="Even moving rooms is a meaningful step..."></textarea>
+      <label class="question-label" for="q7" data-i18n="q7.label">What can you do in the next 10 minutes to lower your risk?</label>
+      <p class="question-hint" data-i18n="q7.hint">Moving to a shared space, putting distance between you and anything harmful, texting someone. Any step helps.</p>
+      <textarea id="q7" maxlength="400" placeholder="Even moving rooms is a meaningful step..." data-i18n-ph="q7.ph"></textarea>
     </div>
 
     <!-- SAFETY PLAN -->
-    <p class="card-title" style="margin-top:22px;">My safety plan (optional, fill in what you can)</p>
+    <p class="card-title" style="margin-top:22px;" data-i18n="sp.title">My safety plan (optional, fill in what you can)</p>
 
     <div class="question">
-      <label class="question-label" for="sp1">1. My warning signs</label>
-      <p class="question-hint">Thoughts, feelings or situations that tell me a crisis may be starting.</p>
+      <label class="question-label" for="sp1" data-i18n="sp1.label">1. My warning signs</label>
+      <p class="question-hint" data-i18n="sp1.hint">Thoughts, feelings or situations that tell me a crisis may be starting.</p>
       <textarea id="sp1" maxlength="500"></textarea>
     </div>
     <div class="question">
-      <label class="question-label" for="sp2">2. Things I can do on my own to calm down</label>
+      <label class="question-label" for="sp2" data-i18n="sp2.label">2. Things I can do on my own to calm down</label>
       <textarea id="sp2" maxlength="500"></textarea>
     </div>
     <div class="question">
-      <label class="question-label" for="sp3">3. People and places that help take my mind off things</label>
+      <label class="question-label" for="sp3" data-i18n="sp3.label">3. People and places that help take my mind off things</label>
       <textarea id="sp3" maxlength="500"></textarea>
     </div>
     <div class="question">
-      <label class="question-label" for="sp4">4. People I can ask for help</label>
-      <p class="question-hint">Names and phone numbers.</p>
+      <label class="question-label" for="sp4" data-i18n="sp4.label">4. People I can ask for help</label>
+      <p class="question-hint" data-i18n="sp4.hint">Names and phone numbers.</p>
       <textarea id="sp4" maxlength="500"></textarea>
     </div>
     <div class="question">
-      <label class="question-label" for="sp5">5. Professionals or services I can contact</label>
-      <p class="question-hint">Doctor, counsellor, clinic, helpline. The numbers for your country are shown near the top of this page.</p>
+      <label class="question-label" for="sp5" data-i18n="sp5.label">5. Professionals or services I can contact</label>
+      <p class="question-hint" data-i18n="sp5.hint">Doctor, counsellor, clinic, helpline. The numbers for your country are shown near the top of this page.</p>
       <textarea id="sp5" maxlength="500"></textarea>
     </div>
     <div class="question">
-      <label class="question-label" for="sp6">6. Making my space safer</label>
-      <p class="question-hint">Steps to put distance between me and anything I could use to harm myself.</p>
+      <label class="question-label" for="sp6" data-i18n="sp6.label">6. Making my space safer</label>
+      <p class="question-hint" data-i18n="sp6.hint">Steps to put distance between me and anything I could use to harm myself.</p>
       <textarea id="sp6" maxlength="500"></textarea>
     </div>
 
@@ -511,24 +525,24 @@
     <div class="result-box" id="resultBox" aria-live="polite"></div>
 
     <!-- ACTIONS -->
-    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="section-label" style="margin-top:18px;" data-i18n="act.label">Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="showSupportBtn">Show my support message</button>
-      <button type="button" class="btn btn-safe" id="copyPlanBtn">Copy my plan</button>
-      <button type="button" class="btn btn-outline" id="jumpCrisisBtn">Jump to crisis support</button>
+      <button type="button" class="btn btn-primary" id="showSupportBtn" data-i18n="btn.support">Show my support message</button>
+      <button type="button" class="btn btn-safe" id="copyPlanBtn" data-i18n="btn.copy">Copy my plan</button>
+      <button type="button" class="btn btn-outline" id="jumpCrisisBtn" data-i18n="btn.jump">Jump to crisis support</button>
     </div>
 
     <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" id="pdfBtn">Download PDF</button>
-      <button type="button" class="btn btn-outline" id="printBtn">Print my plan</button>
-      <button type="button" class="btn btn-danger" id="resetBtn">Reset and delete saved answers</button>
+      <button type="button" class="btn btn-primary" id="pdfBtn" data-i18n="btn.pdf">Download PDF</button>
+      <button type="button" class="btn btn-outline" id="printBtn" data-i18n="btn.print">Print my plan</button>
+      <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="btn.reset">Reset and delete saved answers</button>
     </div>
 
     <!-- SHARE -->
     <div id="shareSection">
-      <div class="section-label">Share this tool</div>
+      <div class="section-label" data-i18n="share.label">Share this tool</div>
       <div class="btn-row">
-        <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+        <button type="button" class="btn btn-share" id="copyLinkBtn" data-i18n="btn.link">Copy link</button>
         <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
         <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
@@ -539,21 +553,30 @@
   <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">Support this website</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" data-i18n="f.tools">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" data-i18n="f.books">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" data-i18n="f.help">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n="f.finder">Find a helpline</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" data-i18n="f.support">Support this website</a>
     </div>
     <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;&middot;&nbsp; This tool supports reflection only and is not a substitute for professional help. If you are in danger, please seek urgent help now.
+      <span data-i18n="f.by">Created by</span> <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;&middot;&nbsp; <span data-i18n="f.disc">This tool supports reflection only and is not a substitute for professional help. If you are in danger, please seek urgent help now.</span>
     </p>
   </footer>
 
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  <span data-i18n="credit.by">Created by Clive Ngwenya (M.C.N) for</span>
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  <span data-i18n="credit.mit">Free to use under the MIT License.</span>
+  <br>
+  <span style="font-size:12px;opacity:0.85;" data-i18n="credit.note">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -565,6 +588,350 @@
   var COUNTRY_KEY = 'eid_country';
 
   function $(id) { return document.getElementById(id); }
+
+  /* ------------------------------------------------------------
+     LANGUAGE (English / Espanol)
+     English text on the page is read from the page itself, so the
+     English version stays exactly as written. Spanish lives in the
+     list below. To add another language later, add one more list
+     with the same keys. Any missing key falls back to English.
+  ------------------------------------------------------------ */
+  var LANG_KEY = 'eid_lang';
+  var lang = 'en';
+  var I18N = {
+    en: {
+      "bar.find": "Find crisis lines by country",
+      "callPre": "Call ",
+      "emerg": "Emergency services",
+      "otherC": "Other countries",
+      "findLocal": "Find local lines by country",
+      "callEmerg": "Call emergency services",
+      "findNow": "Find a crisis line now",
+      "safe.a": "I feel emotionally overwhelmed, but not in immediate danger.",
+      "safe.b": "I am having thoughts of harming myself, but do not have a plan right now.",
+      "safe.c": "I might act on thoughts of harming myself soon.",
+      "sup.reach": "Please reach out for help right now.",
+      "sup.reachBody": "Call emergency services or a crisis line, or go to your nearest emergency department. You do not have to manage this alone.",
+      "sup.h3": "You are not broken. You are in pain, and pain can change.",
+      "sup.lblSafety": "Your safety check",
+      "sup.lblFeel": "How you are feeling",
+      "sup.lblThought": "The thought you named",
+      "sup.thoughtNote": "Thoughts like this are signs of distress. They are not facts about your worth or your future. They can feel very true when pain is high, but they are not the whole story.",
+      "sup.lblGentle": "A gentle thought",
+      "sup.gentle": "Wanting the pain to stop does not mean you want your life to end. Many people who have been through a crisis moment say the feeling eased with time and support. Getting support is how that can happen for you too.",
+      "sup.lblNext": "Your next 10 minutes",
+      "sup.next": "1. Move to a safer space, ideally where you are not alone.<br>2. Contact one person or helpline right now.<br>3. Put 10 more minutes between you and any harmful action. Just 10.<br>4. Breathe slowly while you wait.",
+      "sup.lblWords": "Words you can use right now",
+      "sup.script": "\"I am not okay and I need support right now. Can you stay with me?\"",
+      "sup.today": "If staying feels impossible, focus on one thing only: today. Just today.",
+      "plan.safety": "Safety check",
+      "plan.sp1": "Warning signs",
+      "plan.sp2": "Things I can do on my own to calm down",
+      "plan.sp3": "People and places that help take my mind off things",
+      "plan.sp4": "People I can ask for help",
+      "plan.sp5": "Professionals or services I can contact",
+      "plan.sp6": "Making my space safer",
+      "plan.q6": "Who I can contact in the next 10 minutes",
+      "plan.q7": "What I can do in the next 10 minutes",
+      "plan.q5": "One small reason to stay today",
+      "copy.title": "MY SAFETY PLAN",
+      "copy.nw": "(not written)",
+      "copy.risk": "If I feel at immediate risk, I will call emergency services.",
+      "copy.crisis": "Crisis support:",
+      "toast.copied": "Plan copied. You can paste it into a message.",
+      "toast.copyFail": "Could not copy. Please copy your answers by hand.",
+      "toast.saveOn": "Answers will be saved on this device only.",
+      "toast.saveDel": "Saved answers deleted from this device.",
+      "toast.cleared": "Cleared. Nothing is saved on this device.",
+      "toast.linkOk": "Link copied.",
+      "toast.linkFail": "Copy the link from your address bar.",
+      "toast.pdfNoLib": "The PDF tool did not load. Opening the print view instead.",
+      "toast.pdfPrep": "Preparing your PDF...",
+      "toast.pdfDone": "PDF downloaded.",
+      "toast.pdfFail": "The PDF could not be made. Opening the print view instead.",
+      "share.msg": "A free emotional support tool you might find useful: ",
+      "breath.ready": "Ready when you are",
+      "breath.start": "Start breathing",
+      "breath.stop": "Stop",
+      "ph.in": "Breathe in slowly (4)",
+      "ph.hold": "Hold gently (3)",
+      "ph.out": "Breathe out slowly (6)",
+      "g.intro": "A simple way to come back to the present moment.",
+      "g.start": "Start grounding",
+      "g.next": "Next",
+      "g.again": "Start again",
+      "g.1": "Look around. Name 5 things you can see.",
+      "g.2": "Name 4 things you can touch or feel.",
+      "g.3": "Name 3 things you can hear.",
+      "g.4": "Name 2 things you can smell, or like the smell of.",
+      "g.5": "Name 1 thing you can taste, or like the taste of.",
+      "g.6": "Well done. Take one slow breath out. You can come back and do this any time.",
+      "pdf.title": "You Matter: Personal Reflection",
+      "pdf.open": "This document captures this moment. You do not need to solve everything now. You can share it with someone you trust, or keep it as a reminder that you reached out for support.",
+      "pdf.h1": "My reflection",
+      "pdf.h2": "My safety plan",
+      "pdf.h3": "Understanding what you are experiencing",
+      "pdf.ns": "Not selected",
+      "pdf.nw": "Not written",
+      "pdf.loop": "Thought that keeps looping",
+      "pdf.q1": "What has been weighing on your mind",
+      "pdf.q2": "Strongest emotions right now",
+      "pdf.q3": "What has helped me get through hard moments before",
+      "pdf.q4": "What I would tell someone I love",
+      "pdf.t1": "What suicidal thoughts can mean",
+      "pdf.b1": "Suicidal thoughts are often a sign of pain that feels too big to carry, not always a wish to be dead. Many people who have had these thoughts find that they ease with time and support. The pain is real and deserves care, not judgment.",
+      "pdf.t2": "Why urges can pass",
+      "pdf.b2": "Strong urges often rise, peak and ease, a bit like a wave. Putting time and distance between yourself and the urge, even 10 minutes, can give it room to ease. You do not have to feel better right away. You only have to get through the next few minutes.",
+      "pdf.t3": "Connection helps",
+      "pdf.b3": "Talking to someone you trust can make a hard moment more bearable. You do not have to explain everything. A short message such as \"I am not okay, can you stay with me?\" is enough.",
+      "pdf.t4": "Making your space safer",
+      "pdf.b4": "Putting distance between yourself and anything you could use to harm yourself can lower risk in a hard moment. Asking someone you trust to help is a strong step.",
+      "pdf.t5": "What crisis lines are for",
+      "pdf.b5": "Crisis lines are for people who are struggling, not only for emergencies. Services differ by country, so check the number for your area and how it works.",
+      "pdf.t6": "Grounding and slow breathing",
+      "pdf.b6": "The 5-4-3-2-1 exercise (5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste) and slow breathing with a longer breath out can help many people feel a little steadier.",
+      "pdf.crisis": "Crisis support: ",
+      "pdf.more": "More free tools: ",
+      "pdf.foot": "For reflection support only. If you are in immediate danger, please seek urgent help now.",
+      "pdf.page": "Page ",
+      "pdf.of": " of ",
+      "pdf.file": "you-matter-reflection.pdf"
+    },
+    es: {
+      "title": "Tú importas | Apoyo emocional y chequeo de crisis | Emotional Intelligence Developer",
+      "logo.alt": "Logotipo de Emotional Intelligence Developer",
+      "bar.aria": "Apoyo de emergencia",
+      "bar.text": "Si crees que podrías hacerte daño, llama ahora a los servicios de emergencia.",
+      "bar.find": "Busca líneas de crisis por país",
+      "urg.title": "Ahora mismo, tu seguridad es lo primero.",
+      "urg.l1": "Llama ahora a los servicios de emergencia de tu zona.",
+      "urg.l2": "Aléjate de todo lo que podrías usar para hacerte daño.",
+      "urg.l3": "Escribe o llama a una persona de confianza: <em>\"Por favor, quédate conmigo ahora.\"</em>",
+      "urg.l4": "Si no puedes llamar, ve a urgencias del hospital más cercano.",
+      "h1": "Tú importas",
+      "tag": "Si estás aquí, algo pesa mucho. Este espacio es solo para los próximos minutos. Sin presión y sin juicios. <strong>No tienes que pasar este momento en soledad.</strong>",
+      "note": "Querer que el dolor pare no es lo mismo que querer que la vida termine. Lo que sientes ahora es una señal. No es un veredicto sobre tu valor ni sobre tu futuro.",
+      "danger": "<strong>Si estás en peligro inmediato:</strong> contacta ahora con los servicios de emergencia locales, o pide a alguien cercano que te ayude a llamar.",
+      "priv": "<strong>Privacidad por diseño.</strong> Lo que escribes se queda en tu navegador. No se envía a nosotros ni a nadie más. Solo se guarda en este dispositivo si marcas la casilla de guardar más abajo.",
+      "cc.title": "Apoyo en crisis, gratuito y confidencial",
+      "cc.sub": "Si hablar se hace difícil, puedes empezar con: \"Ahora mismo no estoy a salvo a solas.\"",
+      "cc.country": "Elige tu país para ver los números correctos",
+      "pause.aria": "Respiración y conexión con el presente",
+      "pause.title": "Antes de nada, un minuto con calma",
+      "pause.sub": "Inhala contando 4, mantén contando 3, exhala contando 6. Sigue el círculo.",
+      "pause.note": "Los impulsos fuertes suelen subir y bajar como las olas. Esperar, aunque sean 10 minutos, puede ayudar. No tienes que decidir nada ahora mismo.",
+      "ground.title": "Conectar con el presente: 5-4-3-2-1",
+      "breath.ready": "Cuando quieras",
+      "breath.start": "Empezar a respirar",
+      "breath.stop": "Parar",
+      "ph.in": "Inhala despacio (4)",
+      "ph.hold": "Mantén el aire (3)",
+      "ph.out": "Exhala despacio (6)",
+      "g.intro": "Una forma sencilla de volver al momento presente.",
+      "g.start": "Empezar el ejercicio",
+      "g.next": "Siguiente",
+      "g.again": "Empezar de nuevo",
+      "g.1": "Mira a tu alrededor. Nombra 5 cosas que puedes ver.",
+      "g.2": "Nombra 4 cosas que puedes tocar o sentir.",
+      "g.3": "Nombra 3 cosas que puedes oír.",
+      "g.4": "Nombra 2 cosas que puedes oler, o que te gusta oler.",
+      "g.5": "Nombra 1 cosa que puedes saborear, o cuyo sabor te gusta.",
+      "g.6": "Bien hecho. Suelta un respiro largo y lento. Puedes volver y hacer esto cuando quieras.",
+      "ci.title": "Tu chequeo con calma",
+      "save.label": "Guardar mis respuestas solo en este dispositivo, para que estén aquí si vuelvo. Nunca salen de este navegador. El botón de reiniciar las borra.",
+      "safe.label": "Chequeo de seguridad: ¿qué frase encaja mejor ahora mismo?",
+      "safe.hint": "Esto solo sirve para adaptar el apoyo que verás. Nadie te está juzgando.",
+      "safe.a": "Siento que todo me sobrepasa emocionalmente, pero no estoy en peligro inmediato.",
+      "safe.b": "Estoy teniendo pensamientos de hacerme daño, pero ahora mismo no tengo un plan.",
+      "safe.c": "Es posible que llegue a hacerme daño pronto.",
+      "safe.note": "Elijas lo que elijas, estar aquí ya es una buena decisión.",
+      "feel.label": "¿Cómo te sientes ahora mismo?",
+      "feel.hint": "Elige lo que más se acerque. No necesitas tener las palabras exactas.",
+      "feel.0": "Elige lo que mejor te describa...",
+      "feel.1": "Vacío o entumecimiento emocional",
+      "feel.2": "Tristeza abrumadora",
+      "feel.3": "Ansiedad o pánico",
+      "feel.4": "Rabia conmigo o con otras personas",
+      "feel.5": "Desesperanza o sensación de no tener salida",
+      "feel.6": "Cansancio de luchar",
+      "feel.7": "Solo necesito que alguien me escuche",
+      "th.label": "¿Qué pensamiento se repite una y otra vez ahora?",
+      "th.hint": "Ponerle nombre al pensamiento puede ayudarte a tomar algo de distancia.",
+      "th.0": "Elige uno si te encaja...",
+      "th.1": "\"Este dolor nunca va a terminar\"",
+      "th.2": "\"Soy una carga para los demás\"",
+      "th.3": "\"Nadie me entendería\"",
+      "th.4": "\"Ya lo he intentado todo\"",
+      "th.5": "\"No quiero morir, quiero que el dolor pare\"",
+      "q1.label": "¿Qué es lo que más te pesa en la mente?",
+      "q1.hint": "No hace falta explicarlo perfecto. Escribe lo que haya.",
+      "q1.ph": "Escribe con libertad. Esto es solo para ti...",
+      "q2.label": "¿Qué emociones sientes con más fuerza ahora mismo?",
+      "q2.ph": "Las palabras que necesites, muchas o pocas...",
+      "q3.label": "¿Qué te ha ayudado a superar momentos difíciles antes?",
+      "q3.hint": "Incluso cosas pequeñas: una persona, una canción, un lugar, un recuerdo.",
+      "q3.ph": "Ya has pasado por momentos difíciles antes...",
+      "q4.label": "Si alguien a quien quieres se sintiera así, ¿qué le dirías?",
+      "q4.hint": "Intenta ofrecerte a ti las mismas palabras.",
+      "q4.ph": "Háblate como le hablarías a alguien que te importa...",
+      "q5.label": "Una pequeña razón para seguir aquí hoy:",
+      "q5.hint": "No tiene que ser grande. Solo tiene que ser verdadera.",
+      "q5.ph": "Incluso una pequeña razón es suficiente por hoy...",
+      "q6.label": "¿Con quién puedes contactar en los próximos 10 minutos?",
+      "q6.hint": "Una persona, una línea de ayuda o un mensaje. Cualquier contacto cuenta.",
+      "q6.ph": "Nombre, número o servicio...",
+      "q7.label": "¿Qué puedes hacer en los próximos 10 minutos para reducir tu riesgo?",
+      "q7.hint": "Ir a un espacio compartido, alejarte de cualquier cosa que pueda hacerte daño, escribirle a alguien. Cualquier paso ayuda.",
+      "q7.ph": "Incluso cambiar de habitación es un paso importante...",
+      "sp.title": "Mi plan de seguridad (opcional, completa lo que puedas)",
+      "sp1.label": "1. Mis señales de alerta",
+      "sp1.hint": "Pensamientos, sentimientos o situaciones que me avisan de que puede empezar una crisis.",
+      "sp2.label": "2. Cosas que puedo hacer por mi cuenta para calmarme",
+      "sp3.label": "3. Personas y lugares que me ayudan a distraerme",
+      "sp4.label": "4. Personas a quienes puedo pedir ayuda",
+      "sp4.hint": "Nombres y números de teléfono.",
+      "sp5.label": "5. Profesionales o servicios con los que puedo contactar",
+      "sp5.hint": "Atención médica, terapia, clínica, línea de ayuda. Los números de tu país aparecen cerca del principio de esta página.",
+      "sp6.label": "6. Hacer mi espacio más seguro",
+      "sp6.hint": "Pasos para poner distancia entre yo y cualquier cosa con la que podría hacerme daño.",
+      "act.label": "Acciones",
+      "btn.support": "Ver mi mensaje de apoyo",
+      "btn.copy": "Copiar mi plan",
+      "btn.jump": "Ir al apoyo en crisis",
+      "btn.pdf": "Descargar PDF",
+      "btn.print": "Imprimir mi plan",
+      "btn.reset": "Reiniciar y borrar respuestas guardadas",
+      "share.label": "Compartir esta herramienta",
+      "btn.link": "Copiar enlace",
+      "share.msg": "Una herramienta gratuita de apoyo emocional que quizá te sirva: ",
+      "f.tools": "Más herramientas gratuitas",
+      "f.books": "Audiolibros recomendados",
+      "f.help": "Ayuda",
+      "f.finder": "Buscar una línea de ayuda",
+      "f.support": "Apoya este sitio web",
+      "f.by": "Creado por",
+      "f.disc": "Esta herramienta es solo para reflexionar y no sustituye la ayuda profesional. Si estás en peligro, busca ayuda urgente ahora.",
+      "credit.by": "Creado por Clive Ngwenya (M.C.N) para",
+      "credit.mit": "De uso libre bajo la Licencia MIT.",
+      "credit.note": "Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.",
+      "callPre": "Llama al ",
+      "emerg": "Servicios de emergencia",
+      "otherC": "Otros países",
+      "findLocal": "Busca líneas locales por país",
+      "callEmerg": "Llama a los servicios de emergencia",
+      "findNow": "Busca una línea de crisis ahora",
+      "sup.reach": "Por favor, pide ayuda ahora mismo.",
+      "sup.reachBody": "Llama a los servicios de emergencia o a una línea de crisis, o ve a urgencias del hospital más cercano. No tienes que afrontar esto a solas.",
+      "sup.h3": "No hay nada roto en ti. Sientes dolor, y el dolor puede cambiar.",
+      "sup.lblSafety": "Tu chequeo de seguridad",
+      "sup.lblFeel": "Cómo te sientes",
+      "sup.lblThought": "El pensamiento que nombraste",
+      "sup.thoughtNote": "Los pensamientos así son señales de sufrimiento. No son hechos sobre tu valor ni sobre tu futuro. Pueden parecer muy ciertos cuando el dolor es intenso, pero no son toda la historia.",
+      "sup.lblGentle": "Un pensamiento amable",
+      "sup.gentle": "Querer que el dolor pare no significa que quieras que tu vida termine. Muchas personas que han pasado por un momento de crisis dicen que esa sensación se fue aliviando con el tiempo y con apoyo. Recibir apoyo es la forma en que eso también puede pasarte a ti.",
+      "sup.lblNext": "Tus próximos 10 minutos",
+      "sup.next": "1. Ve a un lugar más seguro, mejor si no estás a solas.<br>2. Contacta ahora mismo con una persona o una línea de ayuda.<br>3. Deja pasar 10 minutos más antes de cualquier acción que pueda hacerte daño. Solo 10.<br>4. Respira despacio mientras esperas.",
+      "sup.lblWords": "Palabras que puedes usar ahora mismo",
+      "sup.script": "\"No estoy bien y necesito apoyo ahora mismo. ¿Puedes quedarte conmigo?\"",
+      "sup.today": "Si seguir aquí te parece imposible, concéntrate en una sola cosa: hoy. Solo hoy.",
+      "plan.safety": "Chequeo de seguridad",
+      "plan.sp1": "Señales de alerta",
+      "plan.sp2": "Cosas que puedo hacer por mi cuenta para calmarme",
+      "plan.sp3": "Personas y lugares que me ayudan a distraerme",
+      "plan.sp4": "Personas a quienes puedo pedir ayuda",
+      "plan.sp5": "Profesionales o servicios con los que puedo contactar",
+      "plan.sp6": "Hacer mi espacio más seguro",
+      "plan.q6": "Con quién puedo contactar en los próximos 10 minutos",
+      "plan.q7": "Qué puedo hacer en los próximos 10 minutos",
+      "plan.q5": "Una pequeña razón para seguir aquí hoy",
+      "copy.title": "MI PLAN DE SEGURIDAD",
+      "copy.nw": "(sin escribir)",
+      "copy.risk": "Si siento que estoy en riesgo inmediato, llamaré a los servicios de emergencia.",
+      "copy.crisis": "Apoyo en crisis:",
+      "toast.copied": "Plan copiado. Puedes pegarlo en un mensaje.",
+      "toast.copyFail": "No se pudo copiar. Copia tus respuestas a mano.",
+      "toast.saveOn": "Las respuestas se guardarán solo en este dispositivo.",
+      "toast.saveDel": "Se borraron las respuestas guardadas de este dispositivo.",
+      "toast.cleared": "Todo borrado. No hay nada guardado en este dispositivo.",
+      "toast.linkOk": "Enlace copiado.",
+      "toast.linkFail": "Copia el enlace desde la barra de direcciones.",
+      "toast.pdfNoLib": "La herramienta de PDF no cargó. Se abrirá la vista de impresión.",
+      "toast.pdfPrep": "Preparando tu PDF...",
+      "toast.pdfDone": "PDF descargado.",
+      "toast.pdfFail": "No se pudo crear el PDF. Se abrirá la vista de impresión.",
+      "pdf.title": "Tú importas: reflexión personal",
+      "pdf.open": "Este documento recoge este momento. No necesitas resolverlo todo ahora. Puedes compartirlo con alguien de confianza, o guardarlo como recordatorio de que pediste apoyo.",
+      "pdf.h1": "Mi reflexión",
+      "pdf.h2": "Mi plan de seguridad",
+      "pdf.h3": "Entender lo que estás viviendo",
+      "pdf.ns": "Sin seleccionar",
+      "pdf.nw": "Sin escribir",
+      "pdf.loop": "Pensamiento que se repite",
+      "pdf.q1": "Lo que más me pesa en la mente",
+      "pdf.q2": "Emociones más fuertes ahora mismo",
+      "pdf.q3": "Lo que me ha ayudado a superar momentos difíciles",
+      "pdf.q4": "Lo que le diría a alguien a quien quiero",
+      "pdf.t1": "Qué pueden significar los pensamientos suicidas",
+      "pdf.b1": "Los pensamientos suicidas suelen ser una señal de un dolor que parece demasiado grande para cargarlo, y no siempre un deseo de morir. Muchas personas que los han tenido descubren que se alivian con el tiempo y con apoyo. El dolor es real y merece cuidado, no juicio.",
+      "pdf.t2": "Por qué los impulsos pueden pasar",
+      "pdf.b2": "Los impulsos fuertes suelen subir, llegar a su punto más alto y bajar, un poco como una ola. Poner tiempo y distancia entre tú y el impulso, aunque sean 10 minutos, le da espacio para aliviarse. No tienes que sentirte mejor enseguida. Solo tienes que pasar los próximos minutos.",
+      "pdf.t3": "La conexión ayuda",
+      "pdf.b3": "Hablar con alguien de confianza puede hacer más llevadero un momento difícil. No tienes que explicarlo todo. Basta con un mensaje corto como \"No estoy bien, ¿puedes quedarte conmigo?\".",
+      "pdf.t4": "Hacer tu espacio más seguro",
+      "pdf.b4": "Poner distancia entre tú y cualquier cosa que podrías usar para hacerte daño puede reducir el riesgo en un momento difícil. Pedir ayuda a alguien de confianza es un paso valiente.",
+      "pdf.t5": "Para qué sirven las líneas de crisis",
+      "pdf.b5": "Las líneas de crisis son para personas que lo están pasando mal, no solo para emergencias. Los servicios cambian según el país, así que comprueba el número de tu zona y cómo funciona.",
+      "pdf.t6": "Conexión con el presente y respiración lenta",
+      "pdf.b6": "El ejercicio 5-4-3-2-1 (5 cosas que puedes ver, 4 que puedes tocar, 3 que puedes oír, 2 que puedes oler, 1 que puedes saborear) y la respiración lenta con una exhalación más larga pueden ayudar a muchas personas a sentirse un poco más estables.",
+      "pdf.crisis": "Apoyo en crisis: ",
+      "pdf.more": "Más herramientas gratuitas: ",
+      "pdf.foot": "Solo como apoyo para reflexionar. Si estás en peligro inmediato, busca ayuda urgente ahora.",
+      "pdf.page": "Página ",
+      "pdf.of": " de ",
+      "pdf.file": "tu-importas-reflexion.pdf"
+    }
+  };
+  I18N.es.hl = {
+      "SADAG suicide crisis line": "Línea de crisis suicida de SADAG",
+      "Call or text 988": "Llama o envía un mensaje al 988",
+      "988 Suicide and Crisis Lifeline": "988 Línea de Prevención del Suicidio y Crisis",
+      "988 Suicide Crisis Helpline": "Línea de ayuda 988 para crisis suicidas",
+      "Call or text 1737": "Llama o envía un mensaje al 1737",
+      "1737 Need to talk?": "1737 ¿Necesitas hablar?",
+      "112 from a mobile phone, or 10177 for an ambulance": "112 desde un teléfono móvil, o 10177 para una ambulancia",
+      "112 or 999": "112 o 999",
+      "No local crisis line is listed here yet. Please use the finder below, or contact your nearest clinic, hospital or emergency services.": "Todavía no hay una línea de crisis local en esta lista. Usa el buscador de abajo, o contacta con tu clínica, hospital o servicios de emergencia más cercanos.",
+      "Use the finder below to look up crisis lines in your country, or call your local emergency services.": "Usa el buscador de abajo para encontrar líneas de crisis en tu país, o llama a tus servicios de emergencia locales.",
+      "South Africa": "Sudáfrica",
+      "Zimbabwe": "Zimbabue",
+      "United States": "Estados Unidos",
+      "Canada": "Canadá",
+      "United Kingdom": "Reino Unido",
+      "Ireland": "Irlanda",
+      "Australia": "Australia",
+      "New Zealand": "Nueva Zelanda",
+      "Other country": "Otro país"
+};
+
+  function t(key) {
+    var d = I18N[lang];
+    if (d && d[key] !== undefined) return d[key];
+    return I18N.en[key] !== undefined ? I18N.en[key] : key;
+  }
+  function hl(s) {
+    var d = I18N[lang];
+    return (d && d.hl && d.hl[s]) || s;
+  }
+  function callLabel(display) {
+    if (lang === 'es' && /^Call or text/.test(display)) return hl(display);
+    return t('callPre') + hl(display);
+  }
+  function selLabel(id, stripQuotes) {
+    var s = $(id);
+    var o = s.options[s.selectedIndex];
+    if (!o || !o.value) return '';
+    return stripQuotes ? o.textContent.replace(/^"|"$/g, '') : o.textContent;
+  }
 
   /* ------------------------------------------------------------
      HELPLINE DATA
@@ -715,12 +1082,12 @@
 
     data.lines.forEach(function (line) {
       var item = make('div', 'resource-item');
-      item.appendChild(make('div', 'resource-item-title', line.label));
+      item.appendChild(make('div', 'resource-item-title', hl(line.label)));
       var body = make('div', 'resource-item-body');
       if (line.tel) {
-        body.appendChild(makeLink('tel:' + line.tel, line.display, 'call-link', false));
+        body.appendChild(makeLink('tel:' + line.tel, hl(line.display), 'call-link', false));
       } else {
-        body.appendChild(make('strong', '', line.display));
+        body.appendChild(make('strong', '', hl(line.display)));
       }
       if (line.url) {
         body.appendChild(document.createElement('br'));
@@ -732,54 +1099,54 @@
 
     if (data.emergency) {
       var em = make('div', 'resource-item');
-      em.appendChild(make('div', 'resource-item-title', 'Emergency services'));
+      em.appendChild(make('div', 'resource-item-title', t('emerg')));
       var emBody = make('div', 'resource-item-body');
-      emBody.appendChild(makeLink('tel:' + data.emergency.tel, data.emergency.display, 'call-link', false));
+      emBody.appendChild(makeLink('tel:' + data.emergency.tel, hl(data.emergency.display), 'call-link', false));
       em.appendChild(emBody);
       grid.appendChild(em);
     }
 
     var more = make('div', 'resource-item');
-    more.appendChild(make('div', 'resource-item-title', 'Other countries'));
+    more.appendChild(make('div', 'resource-item-title', t('otherC')));
     var moreBody = make('div', 'resource-item-body');
-    moreBody.appendChild(document.createTextNode('Find local lines by country'));
+    moreBody.appendChild(document.createTextNode(t('findLocal')));
     moreBody.appendChild(document.createElement('br'));
     moreBody.appendChild(makeLink(FINDER.url, FINDER.label, '', true));
     more.appendChild(moreBody);
     grid.appendChild(more);
 
-    $('resourceNote').textContent = data.note || '';
+    $('resourceNote').textContent = data.note ? hl(data.note) : '';
 
     // Sticky bar links
     var bar = $('crisisBarLinks');
     bar.innerHTML = '';
     if (data.lines.length && data.lines[0].tel) {
-      bar.appendChild(makeLink('tel:' + data.lines[0].tel, 'Call ' + data.lines[0].display, '', false));
+      bar.appendChild(makeLink('tel:' + data.lines[0].tel, callLabel(data.lines[0].display), '', false));
     } else if (data.emergency) {
-      bar.appendChild(makeLink('tel:' + data.emergency.tel, 'Call emergency services', '', false));
+      bar.appendChild(makeLink('tel:' + data.emergency.tel, t('callEmerg'), '', false));
     }
-    bar.appendChild(makeLink(FINDER.url, 'Find crisis lines by country', '', true));
+    bar.appendChild(makeLink(FINDER.url, t('bar.find'), '', true));
 
     // Urgent notice call buttons
     var urgent = $('urgentCall');
     urgent.innerHTML = '';
     if (data.lines.length && data.lines[0].tel) {
-      urgent.appendChild(makeLink('tel:' + data.lines[0].tel, 'Call ' + data.lines[0].display, 'btn btn-primary', false));
+      urgent.appendChild(makeLink('tel:' + data.lines[0].tel, callLabel(data.lines[0].display), 'btn btn-primary', false));
     }
     if (data.emergency) {
-      urgent.appendChild(makeLink('tel:' + data.emergency.tel, 'Call emergency services', 'btn btn-danger', false));
+      urgent.appendChild(makeLink('tel:' + data.emergency.tel, t('callEmerg'), 'btn btn-danger', false));
     }
     if (!urgent.children.length) {
-      urgent.appendChild(makeLink(FINDER.url, 'Find a crisis line now', 'btn btn-primary', true));
+      urgent.appendChild(makeLink(FINDER.url, t('findNow'), 'btn btn-primary', true));
     }
   }
 
   function crisisLinesAsText() {
     var data = HELPLINES[currentCountry];
     var out = [];
-    data.lines.forEach(function (l) { out.push(l.label + ': ' + l.display); });
-    if (data.emergency) out.push('Emergency services: ' + data.emergency.display);
-    out.push('Other countries: ' + FINDER.label);
+    data.lines.forEach(function (l) { out.push(hl(l.label) + ': ' + hl(l.display)); });
+    if (data.emergency) out.push(t('emerg') + ': ' + hl(data.emergency.display));
+    out.push(t('otherC') + ': ' + FINDER.label);
     return out;
   }
 
@@ -788,7 +1155,7 @@
     COUNTRY_ORDER.forEach(function (code) {
       var opt = document.createElement('option');
       opt.value = code;
-      opt.textContent = HELPLINES[code].name;
+      opt.textContent = hl(HELPLINES[code].name);
       sel.appendChild(opt);
     });
     var start = detectCountry();
@@ -810,9 +1177,9 @@
 
   function getSafetyLabel() {
     var v = getSafety();
-    if (v === 'overwhelmed') return 'I feel emotionally overwhelmed, but not in immediate danger.';
-    if (v === 'thoughts') return 'I am having thoughts of harming myself, but do not have a plan right now.';
-    if (v === 'mightact') return 'I might act on thoughts of harming myself soon.';
+    if (v === 'overwhelmed') return t('safe.a');
+    if (v === 'thoughts') return t('safe.b');
+    if (v === 'mightact') return t('safe.c');
     return '';
   }
 
@@ -834,64 +1201,64 @@
     var data = HELPLINES[currentCountry];
     var html = '<div class="urgent-actions" style="margin-top:10px;">';
     if (data.lines.length && data.lines[0].tel) {
-      html += '<a class="btn btn-primary" href="tel:' + data.lines[0].tel + '">Call ' + data.lines[0].display + '</a>';
+      html += '<a class="btn btn-primary" href="tel:' + data.lines[0].tel + '">' + callLabel(data.lines[0].display) + '</a>';
     }
     if (data.emergency) {
-      html += '<a class="btn btn-danger" href="tel:' + data.emergency.tel + '">Call emergency services</a>';
+      html += '<a class="btn btn-danger" href="tel:' + data.emergency.tel + '">' + t('callEmerg') + '</a>';
     }
     if (html === '<div class="urgent-actions" style="margin-top:10px;">') {
-      html += '<a class="btn btn-primary" href="' + FINDER.url + '" target="_blank" rel="noopener">Find a crisis line now</a>';
+      html += '<a class="btn btn-primary" href="' + FINDER.url + '" target="_blank" rel="noopener">' + t('findNow') + '</a>';
     }
     html += '</div>';
     return html;
   }
 
-  function showSupport() {
+  function showSupport(noScroll) {
     var safetyLabel = getSafetyLabel();
-    var feeling = $('feelingNow').value;
-    var thought = $('thoughtLoop').value;
+    var feeling = selLabel('feelingNow');
+    var thought = selLabel('thoughtLoop', true);
     var highRisk = getSafety() === 'mightact';
 
     var html = '';
 
     if (highRisk) {
       html += '<div class="urgent-inline">';
-      html += '<div style="font-weight:bold;margin-bottom:8px;">Please reach out for help right now.</div>';
-      html += '<div style="font-size:14px;">Call emergency services or a crisis line, or go to your nearest emergency department. You do not have to manage this alone.</div>';
+      html += '<div style="font-weight:bold;margin-bottom:8px;">' + t('sup.reach') + '</div>';
+      html += '<div style="font-size:14px;">' + t('sup.reachBody') + '</div>';
       html += callButtonsHtml();
       html += '</div>';
     }
 
-    html += '<h3>You are not broken. You are in pain, and pain can change.</h3>';
+    html += '<h3>' + t('sup.h3') + '</h3>';
 
     if (safetyLabel) {
-      html += '<div class="result-block"><div class="result-block-label">Your safety check</div><div>' + safetyLabel + '</div></div>';
+      html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblSafety') + '</div><div>' + safetyLabel + '</div></div>';
     }
 
     if (feeling) {
-      html += '<div class="result-block"><div class="result-block-label">How you are feeling</div><div>' + feeling + '</div></div>';
+      html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblFeel') + '</div><div>' + feeling + '</div></div>';
     }
 
     if (thought) {
-      html += '<div class="result-block"><div class="result-block-label">The thought you named</div><div style="font-style:italic;">"' + thought + '"</div>';
-      html += '<div style="font-size:14px;color:var(--muted);margin-top:6px;">Thoughts like this are signs of distress. They are not facts about your worth or your future. They can feel very true when pain is high, but they are not the whole story.</div></div>';
+      html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblThought') + '</div><div style="font-style:italic;">"' + thought + '"</div>';
+      html += '<div style="font-size:14px;color:var(--muted);margin-top:6px;">' + t('sup.thoughtNote') + '</div></div>';
     }
 
-    html += '<div class="result-block"><div class="result-block-label">A gentle thought</div>';
-    html += '<div>Wanting the pain to stop does not mean you want your life to end. Many people who have been through a crisis moment say the feeling eased with time and support. Getting support is how that can happen for you too.</div></div>';
+    html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblGentle') + '</div>';
+    html += '<div>' + t('sup.gentle') + '</div></div>';
 
-    html += '<div class="result-block"><div class="result-block-label">Your next 10 minutes</div>';
-    html += '<div>1. Move to a safer space, ideally where you are not alone.<br>2. Contact one person or helpline right now.<br>3. Put 10 more minutes between you and any harmful action. Just 10.<br>4. Breathe slowly while you wait.</div></div>';
+    html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblNext') + '</div>';
+    html += '<div>' + t('sup.next') + '</div></div>';
 
-    html += '<div class="result-block"><div class="result-block-label">Words you can use right now</div>';
-    html += '<div class="script-box">"I am not okay and I need support right now. Can you stay with me?"</div></div>';
+    html += '<div class="result-block"><div class="result-block-label">' + t('sup.lblWords') + '</div>';
+    html += '<div class="script-box">' + t('sup.script') + '</div></div>';
 
-    html += '<div style="font-size:14px;color:var(--safe-text);font-style:italic;margin-top:10px;">If staying feels impossible, focus on one thing only: today. Just today.</div>';
+    html += '<div style="font-size:14px;color:var(--safe-text);font-style:italic;margin-top:10px;">' + t('sup.today') + '</div>';
 
     var box = $('resultBox');
     box.innerHTML = html;
     box.style.display = 'block';
-    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!noScroll) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   /* ------------------------------------------------------------
@@ -901,33 +1268,33 @@
 
   function getPlanSections() {
     return [
-      ['Safety check', getSafetyLabel()],
-      ['Warning signs', val('sp1')],
-      ['Things I can do on my own to calm down', val('sp2')],
-      ['People and places that help take my mind off things', val('sp3')],
-      ['People I can ask for help', val('sp4')],
-      ['Professionals or services I can contact', val('sp5')],
-      ['Making my space safer', val('sp6')],
-      ['Who I can contact in the next 10 minutes', val('q6')],
-      ['What I can do in the next 10 minutes', val('q7')],
-      ['One small reason to stay today', val('q5')]
+      [t('plan.safety'), getSafetyLabel()],
+      [t('plan.sp1'), val('sp1')],
+      [t('plan.sp2'), val('sp2')],
+      [t('plan.sp3'), val('sp3')],
+      [t('plan.sp4'), val('sp4')],
+      [t('plan.sp5'), val('sp5')],
+      [t('plan.sp6'), val('sp6')],
+      [t('plan.q6'), val('q6')],
+      [t('plan.q7'), val('q7')],
+      [t('plan.q5'), val('q5')]
     ];
   }
 
   function copyPlan() {
-    var lines = ['MY SAFETY PLAN', ''];
+    var lines = [t('copy.title'), ''];
     getPlanSections().forEach(function (s) {
-      lines.push(s[0] + ': ' + (s[1] || '(not written)'));
+      lines.push(s[0] + ': ' + (s[1] || t('copy.nw')));
     });
     lines.push('');
-    lines.push('If I feel at immediate risk, I will call emergency services.');
+    lines.push(t('copy.risk'));
     lines.push('');
-    lines.push('Crisis support:');
+    lines.push(t('copy.crisis'));
     crisisLinesAsText().forEach(function (l) { lines.push('- ' + l); });
 
     copyText(lines.join('\n'))
-      .then(function () { showToast('Plan copied. You can paste it into a message.'); })
-      .catch(function () { showToast('Could not copy. Please copy your answers by hand.'); });
+      .then(function () { showToast(t('toast.copied')); })
+      .catch(function () { showToast(t('toast.copyFail')); });
   }
 
   /* ------------------------------------------------------------
@@ -961,10 +1328,10 @@
   $('saveLocal').addEventListener('change', function () {
     if ($('saveLocal').checked) {
       saveIfOn();
-      showToast('Answers will be saved on this device only.');
+      showToast(t('toast.saveOn'));
     } else {
       try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-      showToast('Saved answers deleted from this device.');
+      showToast(t('toast.saveDel'));
     }
   });
   document.querySelector('.card').addEventListener('input', saveIfOn);
@@ -985,7 +1352,7 @@
     $('saveLocal').checked = false;
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Cleared. Nothing is saved on this device.');
+    showToast(t('toast.cleared'));
   }
 
   /* ------------------------------------------------------------
@@ -993,7 +1360,7 @@
   ------------------------------------------------------------ */
   function updateShareLinks() {
     var url = encodeURIComponent(window.location.href);
-    var msg = encodeURIComponent('A free emotional support tool you might find useful: ');
+    var msg = encodeURIComponent(t('share.msg'));
     $('waShare').href = 'https://wa.me/?text=' + msg + url;
     $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
     $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
@@ -1004,9 +1371,9 @@
   ------------------------------------------------------------ */
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var PHASES = [
-    { text: 'Breathe in slowly (4)', ms: 4000, scale: 1 },
-    { text: 'Hold gently (3)', ms: 3000, scale: 1 },
-    { text: 'Breathe out slowly (6)', ms: 6000, scale: 0.6 }
+    { key: 'ph.in', ms: 4000, scale: 1 },
+    { key: 'ph.hold', ms: 3000, scale: 1 },
+    { key: 'ph.out', ms: 6000, scale: 0.6 }
   ];
   var breathOn = false;
   var breathTimer = null;
@@ -1015,7 +1382,7 @@
   function runBreath() {
     if (!breathOn) return;
     var p = PHASES[breathIndex % PHASES.length];
-    $('breathLabel').textContent = p.text;
+    $('breathLabel').textContent = t(p.key);
     var c = $('breathCircle');
     c.style.transition = reduceMotion ? 'none' : 'transform ' + p.ms + 'ms ease-in-out';
     c.style.transform = 'scale(' + p.scale + ')';
@@ -1031,12 +1398,12 @@
       var c = $('breathCircle');
       c.style.transition = 'transform 600ms ease-in-out';
       c.style.transform = 'scale(0.6)';
-      $('breathLabel').textContent = 'Ready when you are';
-      btn.textContent = 'Start breathing';
+      $('breathLabel').textContent = t('breath.ready');
+      btn.textContent = t('breath.start');
     } else {
       breathOn = true;
       breathIndex = 0;
-      btn.textContent = 'Stop';
+      btn.textContent = t('breath.stop');
       runBreath();
     }
   }
@@ -1044,21 +1411,14 @@
   /* ------------------------------------------------------------
      GROUNDING 5-4-3-2-1
   ------------------------------------------------------------ */
-  var GROUND_STEPS = [
-    'Look around. Name 5 things you can see.',
-    'Name 4 things you can touch or feel.',
-    'Name 3 things you can hear.',
-    'Name 2 things you can smell, or like the smell of.',
-    'Name 1 thing you can taste, or like the taste of.',
-    'Well done. Take one slow breath out. You can come back and do this any time.'
-  ];
+  var GROUND_STEPS = ['g.1', 'g.2', 'g.3', 'g.4', 'g.5', 'g.6'];
   var groundIndex = -1;
 
   function nextGround() {
     groundIndex++;
     if (groundIndex >= GROUND_STEPS.length) groundIndex = 0;
-    $('groundText').textContent = GROUND_STEPS[groundIndex];
-    $('groundBtn').textContent = groundIndex === GROUND_STEPS.length - 1 ? 'Start again' : 'Next';
+    $('groundText').textContent = t(GROUND_STEPS[groundIndex]);
+    $('groundBtn').textContent = groundIndex === GROUND_STEPS.length - 1 ? t('g.again') : t('g.next');
   }
 
   /* ------------------------------------------------------------
@@ -1091,11 +1451,11 @@
   async function downloadPDF() {
     var jsPDF = window.jspdf && window.jspdf.jsPDF;
     if (!jsPDF) {
-      showToast('The PDF tool did not load. Opening the print view instead.');
+      showToast(t('toast.pdfNoLib'));
       window.print();
       return;
     }
-    showToast('Preparing your PDF...');
+    showToast(t('toast.pdfPrep'));
 
     try {
       var doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -1129,7 +1489,7 @@
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(30, 42, 53);
-        var text = clean(value) || fallback || 'Not written';
+        var text = clean(value) || fallback || t('pdf.nw');
         doc.splitTextToSize(text, maxW).forEach(function (line) {
           ensure(14);
           doc.text(line, margin, y);
@@ -1166,7 +1526,7 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(15);
       doc.setTextColor(30, 42, 53);
-      doc.text('You Matter: Personal Reflection', margin + 76, y + 26);
+      doc.text(t('pdf.title'), margin + 76, y + 26);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       doc.setTextColor(90, 106, 118);
@@ -1178,7 +1538,7 @@
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(10);
       doc.setTextColor(45, 106, 79);
-      doc.splitTextToSize('This document captures this moment. You do not need to solve everything now. You can share it with someone you trust, or keep it as a reminder that you reached out for support.', maxW).forEach(function (line) {
+      doc.splitTextToSize(t('pdf.open'), maxW).forEach(function (line) {
         ensure(14);
         doc.text(line, margin, y);
         y += 13;
@@ -1186,41 +1546,41 @@
       y += 12;
 
       // Reflection
-      heading('My reflection');
-      block('Your safety check', getSafetyLabel(), 'Not selected');
-      block('How you are feeling', $('feelingNow').value, 'Not selected');
-      block('Thought that keeps looping', $('thoughtLoop').value, 'Not selected');
-      block('What has been weighing on your mind', $('q1').value);
-      block('Strongest emotions right now', $('q2').value);
-      block('What has helped me get through hard moments before', $('q3').value);
-      block('What I would tell someone I love', $('q4').value);
-      block('One small reason to stay today', $('q5').value);
+      heading(t('pdf.h1'));
+      block(t('sup.lblSafety'), getSafetyLabel(), t('pdf.ns'));
+      block(t('sup.lblFeel'), selLabel('feelingNow'), t('pdf.ns'));
+      block(t('pdf.loop'), selLabel('thoughtLoop', true), t('pdf.ns'));
+      block(t('pdf.q1'), $('q1').value);
+      block(t('pdf.q2'), $('q2').value);
+      block(t('pdf.q3'), $('q3').value);
+      block(t('pdf.q4'), $('q4').value);
+      block(t('plan.q5'), $('q5').value);
 
       // Plan
       y += 4;
-      heading('My safety plan');
-      block('Warning signs', $('sp1').value);
-      block('Things I can do on my own to calm down', $('sp2').value);
-      block('People and places that help take my mind off things', $('sp3').value);
-      block('People I can ask for help', $('sp4').value);
-      block('Professionals or services I can contact', $('sp5').value);
-      block('Making my space safer', $('sp6').value);
-      block('Who I can contact in the next 10 minutes', $('q6').value);
-      block('What I can do in the next 10 minutes', $('q7').value);
+      heading(t('pdf.h2'));
+      block(t('plan.sp1'), $('sp1').value);
+      block(t('plan.sp2'), $('sp2').value);
+      block(t('plan.sp3'), $('sp3').value);
+      block(t('plan.sp4'), $('sp4').value);
+      block(t('plan.sp5'), $('sp5').value);
+      block(t('plan.sp6'), $('sp6').value);
+      block(t('plan.q6'), $('q6').value);
+      block(t('plan.q7'), $('q7').value);
 
       // Education
       y += 4;
-      heading('Understanding what you are experiencing');
-      paragraph('What suicidal thoughts can mean', 'Suicidal thoughts are often a sign of pain that feels too big to carry, not always a wish to be dead. Many people who have had these thoughts find that they ease with time and support. The pain is real and deserves care, not judgment.');
-      paragraph('Why urges can pass', 'Strong urges often rise, peak and ease, a bit like a wave. Putting time and distance between yourself and the urge, even 10 minutes, can give it room to ease. You do not have to feel better right away. You only have to get through the next few minutes.');
-      paragraph('Connection helps', 'Talking to someone you trust can make a hard moment more bearable. You do not have to explain everything. A short message such as "I am not okay, can you stay with me?" is enough.');
-      paragraph('Making your space safer', 'Putting distance between yourself and anything you could use to harm yourself can lower risk in a hard moment. Asking someone you trust to help is a strong step.');
-      paragraph('What crisis lines are for', 'Crisis lines are for people who are struggling, not only for emergencies. Services differ by country, so check the number for your area and how it works.');
-      paragraph('Grounding and slow breathing', 'The 5-4-3-2-1 exercise (5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste) and slow breathing with a longer breath out can help many people feel a little steadier.');
+      heading(t('pdf.h3'));
+      paragraph(t('pdf.t1'), t('pdf.b1'));
+      paragraph(t('pdf.t2'), t('pdf.b2'));
+      paragraph(t('pdf.t3'), t('pdf.b3'));
+      paragraph(t('pdf.t4'), t('pdf.b4'));
+      paragraph(t('pdf.t5'), t('pdf.b5'));
+      paragraph(t('pdf.t6'), t('pdf.b6'));
 
       // Crisis lines
       y += 4;
-      heading('Crisis support: ' + HELPLINES[currentCountry].name);
+      heading(t('pdf.crisis') + hl(HELPLINES[currentCountry].name));
       crisisLinesAsText().forEach(function (line) {
         ensure(14);
         doc.setFont('helvetica', 'normal');
@@ -1233,7 +1593,7 @@
       });
       y += 6;
       ensure(14);
-      doc.text('More free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/', margin, y);
+      doc.text(t('pdf.more') + 'emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/', margin, y);
 
       // Footer on every page
       var pages = doc.getNumberOfPages();
@@ -1244,22 +1604,78 @@
         doc.setFont('helvetica', 'italic');
         doc.setFontSize(8.5);
         doc.setTextColor(110, 124, 135);
-        doc.text('For reflection support only. If you are in immediate danger, please seek urgent help now.', margin, pageH - 26);
-        doc.text('Page ' + i + ' of ' + pages, pageW - margin - 50, pageH - 26);
+        doc.text(t('pdf.foot'), margin, pageH - 26);
+        doc.text(t('pdf.page') + i + t('pdf.of') + pages, pageW - margin - (lang === 'en' ? 50 : 75), pageH - 26);
       }
 
-      doc.save('you-matter-reflection.pdf');
-      showToast('PDF downloaded.');
+      doc.save(t('pdf.file'));
+      showToast(t('toast.pdfDone'));
     } catch (err) {
-      showToast('The PDF could not be made. Opening the print view instead.');
+      showToast(t('toast.pdfFail'));
       window.print();
     }
+  }
+
+
+  /* ------------------------------------------------------------
+     LANGUAGE SWITCH (keeps every answer the person already gave)
+  ------------------------------------------------------------ */
+  function swapAttr(attrName, prop, read, write) {
+    document.querySelectorAll('[' + attrName + ']').forEach(function (el) {
+      if (el[prop] === undefined) el[prop] = read(el);
+      var v = lang === 'en' ? el[prop] : I18N[lang][el.getAttribute(attrName)];
+      write(el, v !== undefined ? v : el[prop]);
+    });
+  }
+
+  function refreshCountryNames() {
+    Array.prototype.forEach.call($('countrySelect').options, function (o) {
+      o.textContent = hl(HELPLINES[o.value].name);
+    });
+  }
+
+  function refreshDynamic() {
+    $('breathBtn').textContent = breathOn ? t('breath.stop') : t('breath.start');
+    $('breathLabel').textContent = breathOn ? t(PHASES[(breathIndex - 1 + PHASES.length) % PHASES.length].key) : t('breath.ready');
+    if (groundIndex < 0) {
+      $('groundText').textContent = t('g.intro');
+      $('groundBtn').textContent = t('g.start');
+    } else {
+      $('groundText').textContent = t(GROUND_STEPS[groundIndex]);
+      $('groundBtn').textContent = groundIndex === GROUND_STEPS.length - 1 ? t('g.again') : t('g.next');
+    }
+  }
+
+  function applyLang(code, persist) {
+    lang = I18N[code] ? code : 'en';
+    document.documentElement.lang = lang;
+    if (document._enTitle === undefined) document._enTitle = document.title;
+    document.title = lang === 'en' ? document._enTitle : (I18N[lang].title || document._enTitle);
+    swapAttr('data-i18n', '_enT', function (el) { return el.textContent; }, function (el, v) { el.textContent = v; });
+    swapAttr('data-i18n-html', '_enH', function (el) { return el.innerHTML; }, function (el, v) { el.innerHTML = v; });
+    swapAttr('data-i18n-ph', '_enP', function (el) { return el.getAttribute('placeholder'); }, function (el, v) { el.setAttribute('placeholder', v); });
+    swapAttr('data-i18n-aria', '_enA', function (el) { return el.getAttribute('aria-label'); }, function (el, v) { el.setAttribute('aria-label', v); });
+    swapAttr('data-i18n-alt', '_enL', function (el) { return el.getAttribute('alt'); }, function (el, v) { el.setAttribute('alt', v); });
+    $('langSelect').value = lang;
+    refreshCountryNames();
+    renderCountry(currentCountry);
+    refreshDynamic();
+    updateShareLinks();
+    if ($('resultBox').style.display === 'block') showSupport(true);
+    if (persist) { try { localStorage.setItem(LANG_KEY, lang); } catch (e) {} }
+  }
+
+  function initLang() {
+    $('langSelect').addEventListener('change', function () { applyLang($('langSelect').value, true); });
+    var saved = '';
+    try { saved = localStorage.getItem(LANG_KEY) || ''; } catch (e) {}
+    if (saved && saved !== 'en' && I18N[saved]) applyLang(saved, false);
   }
 
   /* ------------------------------------------------------------
      EVENTS AND START
   ------------------------------------------------------------ */
-  $('showSupportBtn').addEventListener('click', showSupport);
+  $('showSupportBtn').addEventListener('click', function () { showSupport(); });
   $('copyPlanBtn').addEventListener('click', copyPlan);
   $('pdfBtn').addEventListener('click', downloadPDF);
   $('printBtn').addEventListener('click', function () { window.print(); });
@@ -1271,13 +1687,14 @@
   });
   $('copyLinkBtn').addEventListener('click', function () {
     copyText(window.location.href)
-      .then(function () { showToast('Link copied.'); })
-      .catch(function () { showToast('Copy the link from your address bar.'); });
+      .then(function () { showToast(t('toast.linkOk')); })
+      .catch(function () { showToast(t('toast.linkFail')); });
   });
 
   initCountrySelect();
   loadSaved();
   updateShareLinks();
+  initLang();
 }());
 </script>
 </body>

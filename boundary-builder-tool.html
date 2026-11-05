@@ -333,10 +333,24 @@
     .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
+    /* LANGUAGE */
+    .lang-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px; }
+    .lang-bar label { font-size: 13px; color: var(--muted); }
+    .lang-bar select { width: auto; min-width: 150px; padding-top: 8px; padding-bottom: 8px; }
   </style>
 </head>
 <body>
 <div class="container">
+
+  <!-- LANGUAGE -->
+  <div class="lang-bar">
+    <label for="langSelect">Language / Idioma</label>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
 
   <!-- HEADER -->
   <header class="header">
@@ -530,6 +544,15 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  Created by Clive Ngwenya (M.C.N) for
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  Free to use under the MIT License.
+  <br>
+  <span style="font-size:12px;opacity:0.85;">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
+
 <script>
 var STORAGE_KEY = 'boundaryBuilderV6';
 var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
@@ -544,9 +567,318 @@ var checkins = [];
 
 function $(id) { return document.getElementById(id); }
 
+/* ---------- LANGUAGE (English / Espanol) ---------- */
+var LANG_KEY = 'boundaryBuilderLang';
+var currentLang = 'en';
+
+/* English text (left) -> Spanish text (right). English is read from the page itself,
+   so the English version stays exactly as written. */
+var D = {
+  /* page + header */
+  'Boundary Builder Tool | Emotional Intelligence Developer': 'Herramienta para Construir Límites | Emotional Intelligence Developer',
+  'Emotional Intelligence Developer logo': 'Logotipo de Emotional Intelligence Developer',
+  'Boundary Builder Tool': 'Herramienta para Construir Límites',
+  'A gentle space to name what you need, find your words, and practise setting boundaries with confidence.': 'Un espacio amable para nombrar lo que necesitas, encontrar tus palabras y practicar cómo poner límites con confianza.',
+  '1. Name it': '1. Nómbralo',
+  '2. Find your words': '2. Encuentra tus palabras',
+  '3. Practise': '3. Practica',
+  '4. Follow through': '4. Cúmplelo',
+  'Reflection and wellbeing support only. Not professional advice.': 'Solo apoyo para la reflexión y el bienestar. No es consejo profesional.',
+  'Setting a boundary is an act of self-respect. You are allowed to protect your energy.': 'Poner un límite es un acto de respeto por ti. Tienes derecho a proteger tu energía.',
+  'Your reflection': 'Tu reflexión',
+
+  /* safety note */
+  'A quick, caring note.': 'Una nota con cariño.',
+  'If you feel unsafe, or someone is hurting or threatening you, setting a boundary directly may not be the safest step. Please reach out to local emergency services or a trusted person, or find a helpline in your country at': 'Si no te sientes a salvo, o alguien te hace daño o te amenaza, poner un límite de forma directa puede no ser lo más seguro. Por favor, acude a los servicios de emergencia de tu zona o a una persona de confianza, o busca una línea de ayuda en tu país en',
+
+  /* saving + name */
+  'Save my reflection on this device': 'Guardar mi reflexión en este dispositivo',
+  'Stays in this browser only. Nothing is sent anywhere.': 'Se queda solo en este navegador. No se envía nada a ningún sitio.',
+  'Auto-save while I type': 'Guardar automáticamente mientras escribo',
+  'Works when saving is switched on above.': 'Funciona cuando el guardado está activado arriba.',
+  'Your first name (optional, shown in the PDF)': 'Tu nombre de pila (opcional, aparece en el PDF)',
+  'e.g. Alex': 'p. ej. Alex',
+
+  /* questions */
+  'What situation is draining your energy?': '¿Qué situación te está quitando energía?',
+  'Describe what is happening. No need to justify it.': 'Describe lo que está pasando. No tienes que justificarlo.',
+  'e.g. I feel pressured to answer messages late at night...': 'p. ej. Siento presión para contestar mensajes a altas horas de la noche...',
+  'What boundary do you need right now?': '¿Qué límite necesitas ahora mismo?',
+  'Try to name it simply and directly.': 'Intenta nombrarlo de forma simple y directa.',
+  'e.g. I need to reply only during daytime hours...': 'p. ej. Necesito responder solo en horario de día...',
+  'What type of boundary is this?': '¿Qué tipo de límite es?',
+  'Select all that apply.': 'Elige todos los que apliquen.',
+  'What are you feeling right now?': '¿Qué estás sintiendo ahora mismo?',
+  'Naming feelings helps clarify the boundary.': 'Nombrar lo que sientes ayuda a aclarar el límite.',
+
+  /* chips */
+  'Time': 'Tiempo', 'Emotional': 'Emocional', 'Physical': 'Físico', 'Digital': 'Digital', 'Money': 'Dinero',
+  'Work': 'Trabajo', 'Family': 'Familia', 'Relationships': 'Relaciones', 'Personal space': 'Espacio personal',
+  'Overwhelmed': 'Agobio', 'Resentful': 'Resentimiento', 'Guilty': 'Culpa', 'Anxious': 'Ansiedad',
+  'Drained': 'Agotamiento', 'Disrespected': 'Falta de respeto', 'Pressured': 'Presión', 'Unseen': 'Falta de reconocimiento',
+  'Take a walk': 'Dar un paseo', 'Deep breathing': 'Respirar hondo', 'Journal': 'Escribir en un diario',
+  'Message a trusted person': 'Escribir a alguien de confianza', 'Drink water and rest': 'Beber agua y descansar',
+  'Repeat an affirmation': 'Repetir una afirmación',
+
+  /* score */
+  'Boundary clarity score': 'Claridad de tu límite',
+  'Starting': 'Inicio', 'Building': 'Construyendo', 'Strong': 'Fuerte', 'Unshakeable': 'Inquebrantable',
+  'Start with the situation that is draining you.': 'Empieza por la situación que te está quitando energía.',
+  'Next, name the boundary you need in a simple sentence.': 'Ahora nombra el límite que necesitas en una frase simple.',
+  'Choose the type of boundary this is.': 'Elige el tipo de límite que es.',
+  'Name what you are feeling. It sharpens the boundary.': 'Nombra lo que sientes. Eso afina el límite.',
+  'Write your boundary statement, or use the build button.': 'Escribe tu frase de límite, o usa el botón de construir.',
+  'Add a calm consequence you can follow through on.': 'Añade una consecuencia tranquila que puedas cumplir.',
+  'Your boundary is clear. Practise saying it out loud.': 'Tu límite está claro. Practica decirlo en voz alta.',
+
+  /* tone */
+  'Choose your boundary tone': 'Elige el tono de tu límite',
+  'Boundary tone': 'Tono del límite',
+  'Warm': 'Cálido', 'Firm': 'Firme', 'Very firm': 'Muy firme',
+  'Warm and kind': 'Cálido y amable', 'Firm and clear': 'Firme y claro',
+  'Gentle': 'Suave', 'Direct': 'Directo',
+  'Tone level 1 to 5': 'Nivel de tono de 1 a 5',
+  'Live preview': 'Vista previa en vivo',
+  'Use this as my statement': 'Usar esto como mi frase',
+  'Build from my answers': 'Construir con mis respuestas',
+
+  /* statement */
+  'Write or edit your boundary statement': 'Escribe o edita tu frase de límite',
+  'Use the preview or the build button above as a starting point, or write your own.': 'Usa la vista previa o el botón de construir como punto de partida, o escribe la tuya.',
+  'e.g. I care about this relationship, and I need to stop calls after 9pm so I can rest...': 'p. ej. Me importa esta relación, y necesito dejar las llamadas después de las 9 de la noche para poder descansar...',
+  'Gentle suggestions': 'Sugerencias con cariño',
+  'This sounds like a demand. A boundary describes what <em>you</em> will do, such as "I will reply during the day."': 'Esto suena a una exigencia. Un límite describe lo que <em>tú</em> harás, como "Responderé durante el día."',
+  'Try starting with "I" so the focus stays on your needs and actions.': 'Prueba a empezar con "Yo" o "Necesito" para centrarte en tus necesidades y acciones.',
+  'Words like "sorry", "just" or "maybe" can soften the message more than you intend. Keep them only if they feel right.': 'Palabras como "perdón", "quizás" o "tal vez" pueden suavizar el mensaje más de lo que quieres. Déjalas solo si te parecen bien.',
+  'This is quite long. A shorter statement is often easier to say and to repeat calmly.': 'Esto es bastante largo. Una frase más corta suele ser más fácil de decir y de repetir con calma.',
+  'This reads as clear and within your control. Well done.': 'Se lee claro y depende de ti. Bien hecho.',
+
+  /* consequence + support + care */
+  'If this boundary is ignored, what will you do?': 'Si no se respeta este límite, ¿qué harás?',
+  'A calm, clear consequence, not a threat. Something you can actually follow through on.': 'Una consecuencia tranquila y clara, no una amenaza. Algo que de verdad puedas cumplir.',
+  'e.g. If this continues, I will pause responding until daytime...': 'p. ej. Si esto continúa, dejaré de responder hasta el día siguiente...',
+  'What support do you need to follow through?': '¿Qué apoyo necesitas para cumplirlo?',
+  'A friend check-in, a reminder, a quiet space. Anything that helps you stay consistent.': 'Alguien que te escriba para ver cómo vas, un recordatorio, un lugar tranquilo. Lo que te ayude a ser constante.',
+  'e.g. I need a friend to check in with me...': 'p. ej. Necesito que alguien de confianza me escriba para ver cómo voy...',
+  'Self-care after setting this boundary': 'Cuidado personal después de poner este límite',
+  'Choose what you will do to look after yourself.': 'Elige lo que harás para cuidarte.',
+
+  /* practice */
+  'Practice mode: how do they respond?': 'Modo práctica: ¿cómo responden?',
+  'Choose a scenario and get three suggested replies based on your tone and boundary.': 'Elige un escenario y recibe tres respuestas sugeridas según tu tono y tu límite.',
+  'They guilt trip me': 'Me hacen sentir culpa',
+  'They get angry': 'Se enfadan',
+  'They say I am too sensitive': 'Dicen que soy demasiado sensible',
+  'They ignore it': 'Lo ignoran',
+  'They test it again later': 'Lo ponen a prueba otra vez más tarde',
+  'They agree': 'Lo aceptan',
+  'Copy': 'Copiar',
+
+  /* check-in */
+  'Follow-through check-in': 'Seguimiento: ¿lo cumpliste?',
+  'After you set the boundary, come back and log how it went. Small, honest check-ins build trust in yourself.': 'Después de poner el límite, vuelve y anota cómo fue. Revisar con honestidad, poco a poco, genera confianza en ti.',
+  'I held it': 'Lo mantuve', 'Partly': 'En parte', 'Not this time': 'Esta vez no', 'Clear log': 'Borrar registro',
+  'No check-ins yet.': 'Aún no hay registros.',
+  'Recent check-ins': 'Registros recientes',
+
+  /* result + actions + share */
+  'Your reflection summary': 'Tu resumen de reflexión',
+  'Actions': 'Acciones',
+  'Update summary': 'Actualizar resumen',
+  'Download PDF': 'Descargar PDF',
+  'Copy summary': 'Copiar resumen',
+  'Reset': 'Reiniciar',
+  'Share this tool': 'Compartir esta herramienta',
+  'Copy link': 'Copiar enlace',
+  'This free Boundary Builder tool helped me find my words: ': 'Esta herramienta gratuita para construir límites me ayudó a encontrar mis palabras: ',
+
+  /* footer */
+  'Footer': 'Pie de página',
+  'This platform is free for everyone. If it helped you, consider supporting it.': 'Esta plataforma es gratuita para todos. Si te ayudó, considera apoyarla.',
+  '♥ Support this website': '♥ Apoya este sitio web',
+  'More free tools': 'Más herramientas gratuitas',
+  'Recommended audio books': 'Audiolibros recomendados',
+  'Help': 'Ayuda',
+  'Find a helpline': 'Encuentra una línea de ayuda',
+  'Created by': 'Creado por',
+  '· Reflection support only. Not professional advice.': '· Solo apoyo para la reflexión. No es consejo profesional.',
+  'Created by Clive Ngwenya (M.C.N) for': 'Creado por Clive Ngwenya (M.C.N) para',
+  '. Free to use under the MIT License.': '. Uso libre bajo la licencia MIT.',
+  'For reflection and self-support only. Not medical or crisis advice.': 'Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.',
+
+  /* toasts */
+  'Tool reset.': 'Herramienta reiniciada.',
+  'Reply copied.': 'Respuesta copiada.',
+  'Summary copied.': 'Resumen copiado.',
+  'Link copied.': 'Enlace copiado.',
+  'Could not copy. Please copy manually.': 'No se pudo copiar. Cópialo a mano.',
+  'PDF library is still loading. Please try again in a moment.': 'La biblioteca de PDF aún se está cargando. Inténtalo de nuevo en un momento.',
+  'Please add some reflection before downloading.': 'Añade algo de reflexión antes de descargar.',
+  'Preparing your PDF...': 'Preparando tu PDF...',
+  'PDF downloaded.': 'PDF descargado.',
+  'Add the boundary you need first.': 'Primero añade el límite que necesitas.',
+  'Added to your statement. Edit it to sound like you.': 'Añadido a tu frase. Edítala para que suene a ti.',
+  'Built from your answers. Edit it to sound like you.': 'Construido con tus respuestas. Edítalo para que suene a ti.',
+  'Check-in log cleared.': 'Registro de seguimiento borrado.',
+  'Saving on this device.': 'Guardando en este dispositivo.',
+  'Saved data removed from this device.': 'Datos guardados eliminados de este dispositivo.',
+  'Auto-save on.': 'Guardado automático activado.',
+  'Auto-save off.': 'Guardado automático desactivado.',
+  'Summary updated.': 'Resumen actualizado.',
+  'Well done for holding it.': 'Bien hecho por mantenerlo.',
+  'Partly is progress. Be kind to yourself.': 'En parte también es avance. Sé amable contigo.',
+  'It is okay. You can try again.': 'No pasa nada. Puedes intentarlo otra vez.',
+  'Logged.': 'Registrado.',
+
+  /* summary labels */
+  'Boundary reflection for ': 'Reflexión sobre límites de ',
+  'Boundary reflection': 'Reflexión sobre límites',
+  'Situation: ': 'Situación: ',
+  'Boundary needed: ': 'Límite que necesito: ',
+  'Category: ': 'Tipo: ',
+  'Feelings: ': 'Lo que siento: ',
+  'Tone: ': 'Tono: ',
+  ', level ': ', nivel ',
+  'Boundary statement: ': 'Frase de límite: ',
+  'If boundary is ignored: ': 'Si no se respeta el límite: ',
+  'Support needed: ': 'Apoyo que necesito: ',
+  'Self-care plan: ': 'Plan de cuidado personal: ',
+  'Practice scenario: ': 'Escenario de práctica: ',
+  'Suggested replies:': 'Respuestas sugeridas:',
+  'Follow-through: ': 'Seguimiento: ',
+  'Boundary clarity score: ': 'Claridad del límite: ',
+  'Not provided': 'No indicado',
+  'Not selected': 'No elegido',
+  'Not written yet': 'Aún sin escribir',
+  'Not written': 'Sin escribir',
+
+  /* PDF */
+  'Boundary Builder Reflection': 'Reflexión sobre mis límites',
+  'Personal reflection summary': 'Resumen de reflexión personal',
+  'Name: ': 'Nombre: ',
+  'Situation': 'Situación',
+  'Boundary needed': 'Límite que necesito',
+  'Type of boundary': 'Tipo de límite',
+  'Feelings identified': 'Sentimientos identificados',
+  'Tone': 'Tono',
+  'Boundary statement': 'Frase de límite',
+  'If boundary is ignored': 'Si no se respeta el límite',
+  'Support needed': 'Apoyo que necesito',
+  'Self-care plan': 'Plan de cuidado personal',
+  'Follow-through': 'Seguimiento',
+  'Clarity score': 'Claridad del límite',
+  'Practice replies': 'Respuestas de práctica',
+  'Scenario: ': 'Escenario: ',
+  ' (CONTINUED)': ' (CONTINUACIÓN)',
+  'Understanding boundaries': 'Entender los límites',
+  'What a boundary is': 'Qué es un límite',
+  'A boundary is a limit you set around what you will accept, do or allow in a relationship or situation. It protects your time, energy and wellbeing. Setting one is an act of self-respect, not rejection.': 'Un límite es una línea que pones sobre lo que aceptas, haces o permites en una relación o situación. Protege tu tiempo, tu energía y tu bienestar. Ponerlo es un acto de respeto por ti, no un rechazo.',
+  'Why boundaries can feel hard': 'Por qué los límites pueden costar',
+  'Many people find boundaries difficult because they worry about conflict, disappointing others or being seen as difficult. Feeling uncomfortable at first is common and does not mean you are doing something wrong.': 'Muchas personas encuentran difícil poner límites porque temen el conflicto, decepcionar a otros o parecer difíciles. Sentir incomodidad al principio es común y no significa que estés haciendo algo mal.',
+  'A boundary is not a demand': 'Un límite no es una exigencia',
+  'A boundary describes what you will do, such as "I will not answer calls after 9pm." A demand tries to control what someone else does, such as "You must stop calling me after 9pm." Boundaries stay within your control, whatever the other person decides.': 'Un límite describe lo que tú harás, como "No contestaré llamadas después de las 9 de la noche." Una exigencia intenta controlar lo que hace otra persona, como "Debes dejar de llamarme después de las 9 de la noche." Los límites dependen de ti, decida lo que decida la otra persona.',
+  'Holding a boundary when it is challenged': 'Mantener un límite cuando lo ponen a prueba',
+  'The DEAR MAN skill from Dialectical Behaviour Therapy, developed by Marsha Linehan, is a well-known way to ask for what you need. It stands for Describe, Express, Assert, Reinforce, stay Mindful, Appear confident and Negotiate. Calmly repeating your point without over-explaining is a core part of it.': 'La habilidad DEAR MAN de la Terapia Dialéctica Conductual, creada por Marsha Linehan, es una forma conocida de pedir lo que necesitas. Sus siglas en inglés significan Describir, Expresar, Afirmar, Reforzar, mantener la Atención plena, Aparentar confianza y Negociar. Repetir tu punto con calma, sin dar demasiadas explicaciones, es una parte central.',
+  'Following through': 'Cumplir lo que dijiste',
+  'A boundary works best when the consequence is something you can realistically do. Small, consistent follow-through, and kindness to yourself on the days it is hard, helps you trust your own words.': 'Un límite funciona mejor cuando la consecuencia es algo que de verdad puedes hacer. Cumplir poco a poco, con constancia, y ser amable contigo en los días difíciles, te ayuda a confiar en tus propias palabras.',
+  'More free wellbeing resources': 'Más recursos gratuitos de bienestar',
+  'Main site: emotionalintelligencedeveloper.com': 'Sitio principal: emotionalintelligencedeveloper.com',
+  'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/': 'Herramientas gratuitas: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+  'Audio books: emotionalintelligencedeveloper.com/recommended-books/': 'Audiolibros: emotionalintelligencedeveloper.com/recommended-books/',
+  'Support this project: emotionalintelligencedeveloper.com/support-this-website/': 'Apoya este proyecto: emotionalintelligencedeveloper.com/support-this-website/',
+  'Need urgent help? Find a helpline: findahelpline.com': '¿Necesitas ayuda urgente? Busca una línea de ayuda: findahelpline.com',
+  'This tool supports reflection and self-awareness. Not a substitute for professional advice.': 'Esta herramienta apoya la reflexión y el autoconocimiento. No sustituye el consejo profesional.',
+  'Page ': 'Página ',
+  ' of ': ' de ',
+  'boundary-builder-reflection.pdf': 'reflexion-sobre-limites.pdf'
+};
+
+/* Translate a string when Spanish is on. English passes through untouched. */
+function tr(s) {
+  return (currentLang === 'es' && Object.prototype.hasOwnProperty.call(D, s)) ? D[s] : s;
+}
+
+function normText(s) { return String(s).replace(/[\s ]+/g, ' ').trim(); }
+
+var origTextNodes = new WeakMap();
+var origAttrs = new WeakMap();
+var SKIP_SELECTOR = '#result, #tonePreview, #practiceReplies, #checkinLog, #clarityBadge, #clarityTip, #clarityScore, #statementCheck, #toast, .chip, script, style, textarea, #langSelect, .lang-bar';
+
+function applyStaticLanguage() {
+  var es = currentLang === 'es';
+  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  var node;
+  while ((node = walker.nextNode())) {
+    var parent = node.parentElement;
+    if (parent && parent.closest && parent.closest(SKIP_SELECTOR)) continue;
+    if (!origTextNodes.has(node)) origTextNodes.set(node, node.data);
+    var orig = origTextNodes.get(node);
+    var key = normText(orig);
+    if (es && key && Object.prototype.hasOwnProperty.call(D, key)) {
+      var lead = orig.match(/^[\s ]*/)[0];
+      var trail = orig.match(/[\s ]*$/)[0];
+      node.data = lead + D[key] + trail;
+    } else {
+      node.data = orig;
+    }
+  }
+  ['placeholder', 'aria-label', 'alt'].forEach(function (attr) {
+    document.querySelectorAll('[' + attr + ']').forEach(function (el) {
+      if (el.closest && el.closest('.lang-bar')) return;
+      var store = origAttrs.get(el);
+      if (!store) { store = {}; origAttrs.set(el, store); }
+      if (!(attr in store)) store[attr] = el.getAttribute(attr);
+      var key = normText(store[attr]);
+      el.setAttribute(attr, (es && Object.prototype.hasOwnProperty.call(D, key)) ? D[key] : store[attr]);
+    });
+  });
+  document.title = tr('Boundary Builder Tool | Emotional Intelligence Developer');
+  document.documentElement.lang = es ? 'es' : 'en';
+}
+
+function refreshChipLabels() {
+  document.querySelectorAll('.chip').forEach(function (chip) {
+    chip.textContent = tr(chip.dataset.value);
+  });
+}
+
+function setLanguage(lang, remember) {
+  currentLang = (lang === 'es') ? 'es' : 'en';
+  var sel = $('langSelect');
+  if (sel && sel.value !== currentLang) sel.value = currentLang;
+  if (remember) { try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) {} }
+  var toastEl = $('toast');
+  if (toastEl) { toastEl.classList.remove('show'); toastEl.textContent = ''; }
+  applyStaticLanguage();
+  refreshChipLabels();
+  updateShareLinks();
+  checkStatement();
+  updateAll();
+}
+
+function initLanguage() {
+  var saved = 'en';
+  try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { saved = 'en'; }
+  if (saved === 'es') setLanguage('es', false);
+}
+
+/* whole-word test that also works with accented letters */
+function wordTest(list) {
+  try {
+    var re = new RegExp('(^|[^\\p{L}])(?:' + list.join('|') + ')(?![\\p{L}])', 'u');
+    return function (text) { return re.test(text); };
+  } catch (e) {
+    return function () { return false; };
+  }
+}
+var esDemandTest = wordTest(['debes', 'tienes que', 'deberías', 'más te vale', 'tú siempre', 'tú nunca', 'tú debes']);
+var esFirstPersonTest = wordTest(['yo', 'me', 'mi', 'mis', 'necesito', 'voy', 'estoy', 'quiero', 'puedo', 'prefiero', 'pido', 'siento', 'dejo', 'dejaré', 'responderé', 'contestaré', 'respondo', 'contesto', 'cuido', 'haré', 'no voy']);
+var esHedgeTest = wordTest(['perdón', 'perdona', 'lo siento', 'quizás', 'quizá', 'tal vez', 'creo que', 'supongo', 'más o menos', 'como que']);
+var esRiskRe = /(maltrat|abus|me pega|me pegó|me golpe|golpea|me lastim|me hace daño|me hizo daño|violen|amenaz|acoso|acosa|no me siento segur|no estoy segur|no estoy a salvo|no me siento a salvo|en peligro|miedo por mi|me da miedo|me obliga|me obligó|me fuerza|me controla|controlador|persigue)/;
+
 function showToast(msg) {
   var el = $('toast');
-  el.textContent = msg;
+  el.textContent = tr(msg);
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
@@ -582,7 +914,8 @@ function setChipSelection(group, values) {
 }
 
 /* ---------- TONE ---------- */
-function getToneLabel() {
+function getToneLabel() { return tr(getToneLabelEn()); }
+function getToneLabelEn() {
   if (currentTone === 'firm') return 'Firm and clear';
   if (currentTone === 'very firm') return 'Very firm';
   return 'Warm and kind';
@@ -590,13 +923,24 @@ function getToneLabel() {
 
 function toneWording() {
   var level = parseInt($('toneSlider').value, 10);
-  var need = cleanEnd($('need').value.trim()) || 'I need this boundary';
-  var intros = {
+  var es = currentLang === 'es';
+  var need = cleanEnd($('need').value.trim()) || (es ? 'Necesito este límite' : 'I need this boundary');
+  var intros = es ? {
+    'warm': ['Valoro mucho nuestra conexión','Me importa esta relación','Te aprecio y quiero que esto funcione','Quiero que sigamos conectados','Necesito que esto quede claro'],
+    'firm': ['Te respeto y necesito que se respete esto','Necesito que esto quede claro','Este límite es importante para mí','Espero que se respete este límite','Te lo digo de forma directa'],
+    'very firm': ['Esto no es negociable para mí','Estoy poniendo un límite claro','Este límite debe respetarse','No voy a seguir si se cruza','Lo digo con total claridad']
+  } : {
     'warm': ['I really value our connection','I care about this relationship','I appreciate you and want this to work','I want to stay connected','I need this to be clear'],
     'firm': ['I respect you and I need this honoured','I need this to be clear','This boundary is important to me','I expect this boundary to be respected','I am being direct about this'],
     'very firm': ['This is non-negotiable for me','I am setting a clear limit','This boundary must be respected','I will not continue if this is crossed','I am stating this clearly']
   };
-  var ends = [
+  var ends = es ? [
+    'para sentirme a salvo y en equilibrio.',
+    'para cuidar mi bienestar.',
+    'para poder seguir tratándote con respeto.',
+    'y necesito constancia en esto.',
+    'y actuaré si no se respeta.'
+  ] : [
     'so I can feel safe and balanced.',
     'so I can protect my wellbeing.',
     'so I can keep showing up with respect.',
@@ -612,12 +956,17 @@ function buildStatementText() {
   var need = cleanEnd(d.need);
   if (!need) return '';
   var parts = [];
-  var feel = d.feelings.slice(0, 2).map(function (f) { return f.toLowerCase(); }).join(' and ');
-  if (d.situation && feel) parts.push('When this happens, I feel ' + feel + '.');
-  else if (feel) parts.push('I feel ' + feel + '.');
+  var es = currentLang === 'es';
+  var feel = d.feelings.slice(0, 2).map(function (f) { return (es ? tr(f) : f).toLowerCase(); }).join(es ? ' y ' : ' and ');
+  if (d.situation && feel) parts.push(es ? 'Cuando esto pasa, siento ' + feel + '.' : 'When this happens, I feel ' + feel + '.');
+  else if (feel) parts.push(es ? 'Siento ' + feel + '.' : 'I feel ' + feel + '.');
   parts.push(need + '.');
   if (d.consequence) parts.push(cleanEnd(d.consequence) + '.');
-  var closers = {
+  var closers = es ? {
+    'warm': 'Te valoro, y quiero que esto funcione para los dos.',
+    'firm': 'Necesito que esto se respete.',
+    'very firm': 'Esto no está en discusión.'
+  } : {
     'warm': 'I value you, and I want this to work for both of us.',
     'firm': 'I need this to be respected.',
     'very firm': 'This is not up for debate.'
@@ -633,13 +982,14 @@ function checkStatement() {
   if (text.length < 8) { box.className = 'statement-check'; box.innerHTML = ''; return; }
   var tips = [];
   var lower = text.toLowerCase();
-  if (/\byou (must|have to|need to|should|always|never|better)\b/.test(lower)) {
+  var es = currentLang === 'es';
+  if (es ? esDemandTest(lower) : /\byou (must|have to|need to|should|always|never|better)\b/.test(lower)) {
     tips.push('This sounds like a demand. A boundary describes what <em>you</em> will do, such as "I will reply during the day."');
   }
-  if (!/\b(i|i'm|i am|i will|i need|my)\b/.test(lower)) {
+  if (es ? !esFirstPersonTest(lower) : !/\b(i|i'm|i am|i will|i need|my)\b/.test(lower)) {
     tips.push('Try starting with "I" so the focus stays on your needs and actions.');
   }
-  if (/\b(sorry|just|maybe|i guess|kind of|sort of)\b/.test(lower)) {
+  if (es ? esHedgeTest(lower) : /\b(sorry|just|maybe|i guess|kind of|sort of)\b/.test(lower)) {
     tips.push('Words like "sorry", "just" or "maybe" can soften the message more than you intend. Keep them only if they feel right.');
   }
   if (text.length > 380) {
@@ -647,10 +997,10 @@ function checkStatement() {
   }
   if (tips.length) {
     box.className = 'statement-check show';
-    box.innerHTML = '<strong>Gentle suggestions</strong><ul>' + tips.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+    box.innerHTML = '<strong>' + tr('Gentle suggestions') + '</strong><ul>' + tips.map(function (t) { return '<li>' + tr(t) + '</li>'; }).join('') + '</ul>';
   } else {
     box.className = 'statement-check show good';
-    box.innerHTML = 'This reads as clear and within your control. Well done.';
+    box.innerHTML = tr('This reads as clear and within your control. Well done.');
   }
 }
 
@@ -658,14 +1008,16 @@ function checkStatement() {
 function checkSafety() {
   var all = ($('situation').value + ' ' + $('need').value + ' ' + $('script').value).toLowerCase();
   var risky = /(abus|hits me|hit me|hurt me|hurts me|violen|threaten|stalk|unsafe|afraid for my|scared for my|forces me|forced me|controls me|controlling)/.test(all);
+  if (!risky && currentLang === 'es') risky = esRiskRe.test(all);
   $('safetyNote').classList.toggle('show', risky);
 }
 
 /* ---------- PRACTICE ---------- */
 function getPracticeReplies() {
   var scenario = $('practiceScenario').value;
-  var need = cleanEnd($('need').value.trim()) || 'I need this boundary respected';
-  var consequence = cleanEnd($('consequence').value.trim()) || 'I will take space and revisit later';
+  var es = currentLang === 'es';
+  var need = cleanEnd($('need').value.trim()) || (es ? 'Necesito que se respete este límite' : 'I need this boundary respected');
+  var consequence = cleanEnd($('consequence').value.trim()) || (es ? 'me tomaré espacio y lo retomaré más tarde' : 'I will take space and revisit later');
 
   var map = {
     guilt: {
@@ -699,6 +1051,39 @@ function getPracticeReplies() {
       'very firm': ['Good. I expect this boundary to be maintained.', 'Thank you for confirming this clearly.', 'We will proceed with this boundary in place.']
     }
   };
+  var mapEs = {
+    guilt: {
+      'warm': ['Te escucho, y ' + need + '.', 'Me importas, y aun así necesito que se respete esto.', 'Entiendo que es difícil. Sigo con este límite.'],
+      'firm': ['Entiendo lo que sientes, y ' + need + '.', 'No voy a cambiar este límite.', 'Si esto continúa, ' + consequence + '.'],
+      'very firm': ['La culpa no va a cambiar mi límite. ' + need + '.', 'Este límite se queda.', 'Si vuelves a presionar con esto, ' + consequence + '.']
+    },
+    angry: {
+      'warm': ['Quiero hablar cuando haya más calma. ' + need + '.', 'Veo que hay enfado. Aun así necesito este límite.', 'Hagamos una pausa ahora y sigamos con respeto más tarde.'],
+      'firm': ['No voy a seguir si me gritan. ' + need + '.', 'Podemos seguir cuando el tono sea respetuoso.', 'Si continúa el enfado, ' + consequence + '.'],
+      'very firm': ['Termino esta conversación ahora.', 'Este límite no se discute.', 'Si sigues con esto, ' + consequence + '.']
+    },
+    sensitive: {
+      'warm': ['Tienes derecho a tu opinión, y ' + need + '.', 'Esto me importa, aunque a ti te parezca pequeño.', 'Aun así me gustaría que lo respetes.'],
+      'firm': ['Lo que siento es válido. ' + need + '.', 'No te pido que estés de acuerdo, solo que lo respetes.', 'Sigo con este límite.'],
+      'very firm': ['Que me llames sensible no cambia esto. ' + need + '.', 'No voy a discutir si mis necesidades son válidas.', 'Si esto continúa, ' + consequence + '.']
+    },
+    ignore: {
+      'warm': ['Noto que mi petición se pasó por alto. ' + need + '.', 'Repito mi límite para que quede claro.', 'Por favor, reconoce este límite.'],
+      'firm': ['Mi límite no se ha respetado. ' + need + '.', 'Necesito una respuesta clara para avanzar.', 'Si se ignora otra vez, ' + consequence + '.'],
+      'very firm': ['Ignorar este límite no es aceptable.', 'Estoy actuando según mi límite ahora.', consequence + '.']
+    },
+    again: {
+      'warm': ['Un recordatorio con cariño: ' + need + '.', 'Hablamos de esto y sigo con ello.', 'Gracias por ayudarme a mantenerlo.'],
+      'firm': ['Este es el límite del que hablamos. ' + need + '.', 'Necesito que se respete siempre, no solo una vez.', 'Si vuelve a pasar, ' + consequence + '.'],
+      'very firm': ['Ya lo dejé claro. ' + need + '.', 'Esto ya ha pasado antes, así que actúo ahora.', consequence + '.']
+    },
+    agree: {
+      'warm': ['Gracias por entender. Esto me ayuda a sentirme a salvo.', 'Agradezco que respetes este límite.', 'Gracias por trabajar conmigo en esto.'],
+      'firm': ['Gracias por aceptarlo. Necesito que se mantenga siempre.', 'Mantengamos este límite en su lugar.', 'Agradezco tu colaboración.'],
+      'very firm': ['Bien. Espero que este límite se mantenga.', 'Gracias por confirmarlo con claridad.', 'Seguimos adelante con este límite en vigor.']
+    }
+  };
+  if (es) map = mapEs;
   return (map[scenario] && map[scenario][currentTone]) || [];
 }
 
@@ -715,7 +1100,7 @@ function renderPracticeReplies() {
     var btn = document.createElement('button');
     btn.className = 'reply-copy';
     btn.type = 'button';
-    btn.textContent = 'Copy';
+    btn.textContent = tr('Copy');
     btn.addEventListener('click', function () { copyText(text, 'Reply copied.'); });
     card.appendChild(p);
     card.appendChild(btn);
@@ -725,8 +1110,8 @@ function renderPracticeReplies() {
 
 /* ---------- CHECK-INS ---------- */
 function addCheckin(status) {
-  var label = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
-  checkins.push({ date: label, status: status });
+  var label = new Date().toLocaleDateString(currentLang === 'es' ? 'es' : undefined, { day: 'numeric', month: 'short' });
+  checkins.push({ date: label, iso: new Date().toISOString(), status: status });
   if (checkins.length > 14) checkins = checkins.slice(-14);
   updateAll();
   maybeAutoSave();
@@ -742,18 +1127,20 @@ function checkinSummary() {
   if (!checkins.length) return '';
   var held = checkins.filter(function (c) { return c.status === 'held'; }).length;
   var partly = checkins.filter(function (c) { return c.status === 'partly'; }).length;
+  if (currentLang === 'es') return 'Lo mantuve ' + held + ', en parte ' + partly + ', de ' + checkins.length + ' registros';
   return 'Held ' + held + ', partly ' + partly + ' of ' + checkins.length + ' check-ins';
 }
 
 function renderCheckins() {
   var log = $('checkinLog');
-  if (!checkins.length) { log.textContent = 'No check-ins yet.'; return; }
+  if (!checkins.length) { log.textContent = tr('No check-ins yet.'); return; }
   var recent = checkins.slice(-7);
   var symbols = { held: '&#10003;', partly: '~', missed: '&middot;' };
   var dots = recent.map(function (c) {
-    return '<span class="dot ' + c.status + '" title="' + c.date + '">' + symbols[c.status] + '</span>';
+    var when = c.iso ? new Date(c.iso).toLocaleDateString(currentLang === 'es' ? 'es' : undefined, { day: 'numeric', month: 'short' }) : c.date;
+    return '<span class="dot ' + c.status + '" title="' + when + '">' + symbols[c.status] + '</span>';
   }).join('');
-  log.innerHTML = checkinSummary() + '.<div class="checkin-dots" aria-label="Recent check-ins">' + dots + '</div>';
+  log.innerHTML = checkinSummary() + '.<div class="checkin-dots" aria-label="' + tr('Recent check-ins') + '">' + dots + '</div>';
 }
 
 /* ---------- DATA ---------- */
@@ -768,14 +1155,16 @@ function scoreData(data) {
   return Math.min(100, score);
 }
 
-function scoreBadge(score) {
+function scoreBadge(score) { return tr(scoreBadgeEn(score)); }
+function scoreBadgeEn(score) {
   if (score >= 86) return 'Unshakeable';
   if (score >= 61) return 'Strong';
   if (score >= 31) return 'Building';
   return 'Starting';
 }
 
-function scoreTip(data) {
+function scoreTip(data) { return tr(scoreTipEn(data)); }
+function scoreTipEn(data) {
   if (!data.situation) return 'Start with the situation that is draining you.';
   if (!data.need) return 'Next, name the boundary you need in a simple sentence.';
   if (!data.categories.length) return 'Choose the type of boundary this is.';
@@ -814,25 +1203,25 @@ function buildSummary(data) {
   var score = scoreData(data);
   var replies = getPracticeReplies().map(function (r, i) { return '  ' + (i + 1) + '. ' + r; }).join('\n');
   var lines = [
-    data.name ? 'Boundary reflection for ' + data.name : 'Boundary reflection',
+    data.name ? tr('Boundary reflection for ') + data.name : tr('Boundary reflection'),
     '',
-    'Situation: ' + (data.situation || 'Not provided'),
-    'Boundary needed: ' + (data.need || 'Not provided'),
-    'Category: ' + (data.categories.length ? data.categories.join(', ') : 'Not selected'),
-    'Feelings: ' + (data.feelings.length ? data.feelings.join(', ') : 'Not selected'),
+    tr('Situation: ') + (data.situation || tr('Not provided')),
+    tr('Boundary needed: ') + (data.need || tr('Not provided')),
+    tr('Category: ') + (data.categories.length ? data.categories.map(function (c) { return tr(c); }).join(', ') : tr('Not selected')),
+    tr('Feelings: ') + (data.feelings.length ? data.feelings.map(function (f) { return tr(f); }).join(', ') : tr('Not selected')),
     '',
-    'Tone: ' + getToneLabel() + ', level ' + data.toneSlider + '/5',
-    'Boundary statement: ' + (data.script || 'Not written yet'),
+    tr('Tone: ') + getToneLabel() + tr(', level ') + data.toneSlider + '/5',
+    tr('Boundary statement: ') + (data.script || tr('Not written yet')),
     '',
-    'If boundary is ignored: ' + (data.consequence || 'Not provided'),
-    'Support needed: ' + (data.supportNeeded || 'Not provided'),
-    'Self-care plan: ' + (data.selfCare.length ? data.selfCare.join(', ') : 'Not selected'),
+    tr('If boundary is ignored: ') + (data.consequence || tr('Not provided')),
+    tr('Support needed: ') + (data.supportNeeded || tr('Not provided')),
+    tr('Self-care plan: ') + (data.selfCare.length ? data.selfCare.map(function (c) { return tr(c); }).join(', ') : tr('Not selected')),
     '',
-    'Practice scenario: ' + scenarioLabel(),
-    'Suggested replies:\n' + replies
+    tr('Practice scenario: ') + scenarioLabel(),
+    tr('Suggested replies:') + '\n' + replies
   ];
-  if (checkins.length) lines.push('', 'Follow-through: ' + checkinSummary());
-  lines.push('', 'Boundary clarity score: ' + score + '/100, ' + scoreBadge(score));
+  if (checkins.length) lines.push('', tr('Follow-through: ') + checkinSummary());
+  lines.push('', tr('Boundary clarity score: ') + score + '/100, ' + scoreBadge(score));
   return lines.join('\n');
 }
 
@@ -942,7 +1331,7 @@ function copyText(text, msg) {
 
 function updateShareLinks() {
   var url = encodeURIComponent(window.location.href);
-  var msg = encodeURIComponent('This free Boundary Builder tool helped me find my words: ');
+  var msg = encodeURIComponent(tr('This free Boundary Builder tool helped me find my words: '));
   $('waShare').href = 'https://wa.me/?text=' + msg + url;
   $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
   $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
@@ -986,7 +1375,7 @@ function pdfCard(doc, st, label, value) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.setTextColor(122, 92, 154);
-    doc.text(label.toUpperCase() + (first ? '' : ' (CONTINUED)'), st.margin + 10, st.y + 14);
+    doc.text(pdfSafe(label).toUpperCase() + (first ? '' : tr(' (CONTINUED)')), st.margin + 10, st.y + 14);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9.5);
     doc.setTextColor(30, 26, 46);
@@ -1037,11 +1426,11 @@ function downloadPDF() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(30, 26, 46);
-    doc.text('Boundary Builder Reflection', st.margin + 76, st.y + 26);
+    doc.text(pdfSafe(tr('Boundary Builder Reflection')), st.margin + 76, st.y + 26);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(90, 80, 112);
-    doc.text('Personal reflection summary', st.margin + 76, st.y + 41);
+    doc.text(pdfSafe(tr('Personal reflection summary')), st.margin + 76, st.y + 41);
     doc.text('emotionalintelligencedeveloper.com', st.margin + 76, st.y + 56);
     st.y += 86;
 
@@ -1049,29 +1438,29 @@ function downloadPDF() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(30, 26, 46);
-      doc.text(pdfSafe('Name: ' + data.name), st.margin, st.y);
+      doc.text(pdfSafe(tr('Name: ') + data.name), st.margin, st.y);
       st.y += 18;
     }
 
     var score = scoreData(data);
     var rows = [
-      ['Situation', data.situation || 'Not provided'],
-      ['Boundary needed', data.need || 'Not provided'],
-      ['Type of boundary', data.categories.length ? data.categories.join(', ') : 'Not selected'],
-      ['Feelings identified', data.feelings.length ? data.feelings.join(', ') : 'Not selected'],
-      ['Tone', getToneLabel() + ', level ' + data.toneSlider + '/5'],
-      ['Boundary statement', data.script || 'Not written'],
-      ['If boundary is ignored', data.consequence || 'Not provided'],
-      ['Support needed', data.supportNeeded || 'Not provided'],
-      ['Self-care plan', data.selfCare.length ? data.selfCare.join(', ') : 'Not selected']
+      [tr('Situation'), data.situation || tr('Not provided')],
+      [tr('Boundary needed'), data.need || tr('Not provided')],
+      [tr('Type of boundary'), data.categories.length ? data.categories.map(function (c) { return tr(c); }).join(', ') : tr('Not selected')],
+      [tr('Feelings identified'), data.feelings.length ? data.feelings.map(function (f) { return tr(f); }).join(', ') : tr('Not selected')],
+      [tr('Tone'), getToneLabel() + tr(', level ') + data.toneSlider + '/5'],
+      [tr('Boundary statement'), data.script || tr('Not written')],
+      [tr('If boundary is ignored'), data.consequence || tr('Not provided')],
+      [tr('Support needed'), data.supportNeeded || tr('Not provided')],
+      [tr('Self-care plan'), data.selfCare.length ? data.selfCare.map(function (c) { return tr(c); }).join(', ') : tr('Not selected')]
     ];
-    if (checkins.length) rows.push(['Follow-through', checkinSummary()]);
-    rows.push(['Clarity score', score + '/100, ' + scoreBadge(score)]);
+    if (checkins.length) rows.push([tr('Follow-through'), checkinSummary()]);
+    rows.push([tr('Clarity score'), score + '/100, ' + scoreBadge(score)]);
     rows.forEach(function (r) { pdfCard(doc, st, r[0], r[1]); });
 
     var replies = getPracticeReplies();
     if (replies.length) {
-      pdfCard(doc, st, 'Practice replies', 'Scenario: ' + scenarioLabel() + '\n' + replies.map(function (r, i) { return (i + 1) + '. ' + r; }).join('\n'));
+      pdfCard(doc, st, tr('Practice replies'), tr('Scenario: ') + scenarioLabel() + '\n' + replies.map(function (r, i) { return (i + 1) + '. ' + r; }).join('\n'));
     }
 
     if (st.y > st.pageH - 160) { doc.addPage(); st.y = st.margin; }
@@ -1082,7 +1471,7 @@ function downloadPDF() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(122, 92, 154);
-    doc.text('Understanding boundaries', st.margin, st.y);
+    doc.text(pdfSafe(tr('Understanding boundaries')), st.margin, st.y);
     st.y += 15;
 
     var educational = [
@@ -1097,7 +1486,7 @@ function downloadPDF() {
       ['Following through',
        'A boundary works best when the consequence is something you can realistically do. Small, consistent follow-through, and kindness to yourself on the days it is hard, helps you trust your own words.']
     ];
-    educational.forEach(function (e) { pdfPara(doc, st, e[0], e[1]); });
+    educational.forEach(function (e) { pdfPara(doc, st, tr(e[0]), tr(e[1])); });
 
     if (st.y > st.pageH - 110) { doc.addPage(); st.y = st.margin; }
     doc.setDrawColor(200, 176, 224);
@@ -1106,7 +1495,7 @@ function downloadPDF() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(122, 92, 154);
-    doc.text('More free wellbeing resources', st.margin, st.y);
+    doc.text(pdfSafe(tr('More free wellbeing resources')), st.margin, st.y);
     st.y += 13;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
@@ -1117,7 +1506,7 @@ function downloadPDF() {
       'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
       'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
       'Need urgent help? Find a helpline: findahelpline.com'
-    ].forEach(function (line) { doc.text(line, st.margin, st.y); st.y += 13; });
+    ].forEach(function (line) { doc.text(pdfSafe(tr(line)), st.margin, st.y); st.y += 13; });
 
     var total = doc.getNumberOfPages();
     for (var i = 1; i <= total; i++) {
@@ -1127,11 +1516,11 @@ function downloadPDF() {
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(8.5);
       doc.setTextColor(120, 110, 140);
-      doc.text('This tool supports reflection and self-awareness. Not a substitute for professional advice.', st.margin, st.pageH - 22);
-      doc.text('Page ' + i + ' of ' + total, st.pageW - st.margin, st.pageH - 22, { align: 'right' });
+      doc.text(pdfSafe(tr('This tool supports reflection and self-awareness. Not a substitute for professional advice.')), st.margin, st.pageH - 22);
+      doc.text(pdfSafe(tr('Page ') + i + tr(' of ') + total), st.pageW - st.margin, st.pageH - 22, { align: 'right' });
     }
 
-    doc.save('boundary-builder-reflection.pdf');
+    doc.save(tr('boundary-builder-reflection.pdf'));
     showToast('PDF downloaded.');
   });
 }
@@ -1218,6 +1607,9 @@ $('resetBtn').addEventListener('click', resetTool);
 $('copyOutput').addEventListener('click', function () { copyText($('result').textContent, 'Summary copied.'); });
 $('copyLink').addEventListener('click', function () { copyText(window.location.href, 'Link copied.'); });
 
+$('langSelect').addEventListener('change', function () { setLanguage($('langSelect').value, true); });
+
+initLanguage();
 updateShareLinks();
 loadLocal();
 checkStatement();

@@ -232,10 +232,23 @@
     .footer-link { font-size: 13px; color: var(--brand); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
+
+    /* Language option */
+    .lang-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--muted); }
+    .lang-bar select { width: auto; min-width: 140px; padding: 8px 34px 8px 12px; font-size: 14px; }
   </style>
 </head>
 <body>
 <div class="container">
+
+  <div class="lang-bar" data-noi18n>
+    <label for="langSelect">Language / Idioma</label>
+    <select id="langSelect" aria-label="Language / Idioma">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
 
   <header class="header">
     <div class="logo-wrap">
@@ -509,6 +522,351 @@
   var jsPDF = window.jspdf && window.jspdf.jsPDF;
   var $ = function (id) { return document.getElementById(id); };
 
+  /* ===== Language option: English (default) and Espanol. English stays in the page; Spanish is swapped in on top. ===== */
+  var LANG_KEY = 'eidLang_aiLifeFearV6_2027';
+  var lang = 'en';
+  var lastResultData = null;
+  var i18nNodes = [];
+  var i18nAttrs = [];
+  var i18nTitle = '';
+
+  var ES = {
+    /* page title and header */
+    'AI, Work and Life Fear Tool 2027 | Emotional Intelligence Developer': 'Herramienta sobre los miedos ante la IA, el trabajo y la vida 2027 | Emotional Intelligence Developer',
+    'Emotional Intelligence Developer logo': 'Logotipo de Emotional Intelligence Developer',
+    '2027 edition': 'Edición 2027',
+    'AI, Work and Life Fear Tool': 'Herramienta sobre los miedos ante la IA, el trabajo y la vida',
+    'AI is changing jobs, money, homes and family life. This is a calm space to sort worry from facts, see what is in your control, and take one grounded step this week.': 'La IA está cambiando el trabajo, el dinero, el hogar y la vida en familia. Este es un espacio de calma para separar la preocupación de los hechos, ver qué está en tus manos y dar un paso firme esta semana.',
+    'Reflection and wellbeing support only. Not a diagnosis, medical tool or financial advice.': 'Solo apoyo para la reflexión y el bienestar. No es un diagnóstico, una herramienta médica ni consejo financiero.',
+    'What you feel about AI and the future is real and shared by many people. You are not alone in this.': 'Lo que sientes sobre la IA y el futuro es real y lo viven muchas personas. No estás a solas en esto.',
+
+    /* top of the card */
+    'Your reflection': 'Tu reflexión',
+    'Save my reflection on this device': 'Guardar mi reflexión en este dispositivo',
+    'Your name (optional, shown in the PDF)': 'Tu nombre (opcional, aparece en el PDF)',
+    'e.g. Alex': 'p. ej. Alex',
+
+    /* step 1 */
+    'Where you are right now': 'Dónde estás ahora',
+    'Which best describes your situation?': '¿Qué describe mejor tu situación?',
+    'This helps the summary speak to your real life.': 'Así el resumen se acerca más a tu vida real.',
+    'Select one': 'Elige una opción',
+    'Employed, full time or part time': 'Con empleo, jornada completa o parcial',
+    'Self-employed or freelancer': 'Trabajo por cuenta propia o freelance',
+    'Business owner': 'Negocio propio',
+    'Looking for work': 'Buscando trabajo',
+    'Student or recent graduate': 'Estudiante o con estudios recién terminados',
+    'Caring for family or home': 'Cuidando de la familia o del hogar',
+    'Retired or close to retirement': 'Jubilación, o cerca de ella',
+    'Something else': 'Otra situación',
+    'Which parts of life does the AI worry touch? (up to 3)': '¿Qué partes de tu vida toca la preocupación por la IA? (hasta 3)',
+    'Choose the ones that feel most true today.': 'Elige las que sientas más ciertas hoy.',
+    'My job or income': 'Mi trabajo o mis ingresos',
+    'My money and savings': 'Mi dinero y mis ahorros',
+    'My home and family': 'Mi hogar y mi familia',
+    "My children's future": 'El futuro de mis hijos',
+    'My skills and relevance': 'Mis habilidades y mi lugar en el trabajo',
+    'My sense of purpose': 'Mi sentido de propósito',
+    'Scams and fake content': 'Estafas y contenido falso',
+    'My privacy and data': 'Mi privacidad y mis datos',
+
+    /* step 2 */
+    'The fear itself': 'El miedo en sí',
+    'What is weighing on you most?': '¿Qué es lo que más te pesa?',
+    'Choose the theme closest to what you are carrying.': 'Elige el tema más cercano a lo que llevas encima.',
+    'Select a theme': 'Elige un tema',
+    'Job loss or my role changing': 'Perder mi trabajo o que mi puesto cambie',
+    'Falling behind on skills': 'Quedarme atrás en habilidades',
+    'Money pressure and financial security': 'Presión por el dinero y seguridad económica',
+    'Not knowing what to prepare for': 'No saber para qué prepararme',
+    'What this means for my family and home': 'Lo que esto significa para mi familia y mi hogar',
+    "Fear for my children's future": 'Miedo por el futuro de mis hijos',
+    'Feeling left behind by technology': 'Sentir que la tecnología me deja atrás',
+    'Losing purpose or identity': 'Perder el propósito o la identidad',
+    'Information overload and doom scrolling': 'Exceso de información y revisar noticias malas sin parar',
+    'Scams, fake voices and fake videos': 'Estafas, voces falsas y videos falsos',
+    'General uncertainty about the future': 'Incertidumbre general sobre el futuro',
+    'How intense does it feel right now?': '¿Con qué intensidad lo sientes ahora?',
+    'Move the slider to where you are today. There is no wrong answer.': 'Mueve la barra hasta donde estás hoy. No hay respuestas equivocadas.',
+    'Low': 'Baja',
+    'High': 'Alta',
+    'Fear intensity 0 to 10': 'Intensidad del miedo de 0 a 10',
+    'Is it showing up in your body or daily life?': '¿Se nota en tu cuerpo o en tu día a día?',
+    'Tick any that apply. This is only for you.': 'Marca las que correspondan. Esto es solo para ti.',
+    'Sleep': 'Sueño',
+    'Focus and concentration': 'Enfoque y concentración',
+    'Mood': 'Ánimo',
+    'Relationships': 'Relaciones',
+    'Motivation': 'Motivación',
+    'Appetite or energy': 'Apetito o energía',
+    'What does this fear look like for you?': '¿Cómo es este miedo para ti?',
+    'What thoughts come up? What scenes do you imagine? Be as honest as you like.': '¿Qué pensamientos aparecen? ¿Qué escenas imaginas? Escribe con toda la sinceridad que quieras.',
+    'Write freely. This is a private space for you.': 'Escribe con libertad. Este es un espacio privado para ti.',
+
+    /* step 3 */
+    'Fear and facts': 'Miedo y hechos',
+    'The worst case your mind shows you': 'El peor caso que te muestra tu mente',
+    'Say it plainly. Fears lose some power once they are written down.': 'Dilo con claridad. Los miedos pierden fuerza cuando se escriben.',
+    'e.g. My role disappears and I cannot pay the bills.': 'p. ej. Mi puesto desaparece y no puedo pagar las cuentas.',
+    'What is most likely, if you are being fair?': '¿Qué es lo más probable, si lo miras con justicia?',
+    'Think of how change usually happens: slowly, unevenly, with time to adjust.': 'Piensa en cómo suele llegar el cambio: poco a poco, de forma desigual y con tiempo para adaptarse.',
+    'e.g. Parts of my work will change and I will need to learn new tools.': 'p. ej. Partes de mi trabajo cambiarán y tendré que aprender herramientas nuevas.',
+    'One balanced thought to hold next to the fear': 'Un pensamiento equilibrado para tener junto al miedo',
+    'Not to dismiss the fear, but to give it company. Something that is also true.': 'No para quitarle valor al miedo, sino para darle compañía. Algo que también es verdad.',
+    'e.g. I have adapted to change before. My judgement and people skills still matter.': 'p. ej. Ya me he adaptado a cambios antes. Mi criterio y mi trato con la gente siguen importando.',
+    'In my control': 'En mi control',
+    'Skills, habits, spending, who I talk to.': 'Habilidades, hábitos, gastos, con quién hablo.',
+    'What I can act on…': 'Lo que sí puedo cambiar…',
+    'Not in my control': 'Fuera de mi control',
+    'Headlines, company decisions, the pace of AI.': 'Los titulares, las decisiones de las empresas, el ritmo de la IA.',
+    'What I can set down…': 'Lo que puedo soltar…',
+
+    /* step 4 */
+    'Work, money and home': 'Trabajo, dinero y hogar',
+    'One AI or digital skill you could try this month': 'Una habilidad digital o de IA que podrías probar este mes',
+    'Small and practical. Using a tool for one real task teaches more than reading ten articles.': 'Algo pequeño y práctico. Usar una herramienta en una tarea real enseña más que leer diez artículos.',
+    'e.g. Use an AI assistant to draft one weekly report': 'p. ej. Usar un asistente de IA para redactar un informe semanal',
+    'One money step that would help you feel steadier': 'Un paso con el dinero que te ayudaría a sentirte más estable',
+    'Think buffer, a second income idea, trimming a cost, or learning where you stand. General reflection, not financial advice.': 'Piensa en un colchón de ahorro, una idea de segundo ingreso, recortar un gasto o saber en qué punto estás. Es una reflexión general, no consejo financiero.',
+    'e.g. Set aside a small amount each payday for a safety buffer': 'p. ej. Apartar una pequeña cantidad cada día de pago para un colchón de seguridad',
+    'One conversation or step for your home and family': 'Una conversación o un paso para tu hogar y tu familia',
+    'For example talking openly with a partner, agreeing a family code word against voice scams, or helping a child use AI wisely.': 'Por ejemplo, hablar con sinceridad con tu pareja, acordar una palabra clave familiar contra las estafas de voz, o ayudar a un menor a usar la IA con criterio.',
+    'e.g. Agree a family code word for urgent money requests': 'p. ej. Acordar una palabra clave familiar para peticiones urgentes de dinero',
+
+    /* step 5 */
+    'Care and boundaries': 'Cuidado y límites',
+    'What helps you feel grounded when worry rises?': '¿Qué te da calma y firmeza cuando sube la preocupación?',
+    'A person, a habit, a place, a reminder. Anything that steadies you.': 'Una persona, un hábito, un lugar, un recordatorio. Cualquier cosa que te sostenga.',
+    'Even small things count.': 'Hasta las cosas pequeñas cuentan.',
+    'One boundary around news or AI content': 'Un límite con las noticias o el contenido sobre IA',
+    'Protecting your attention is not avoidance. It is self-care.': 'Proteger tu atención no es evitar. Es cuidarte.',
+    'e.g. No AI news after 9pm': 'p. ej. Nada de noticias sobre IA después de las 9 p. m.',
+    'One kind thing to remind yourself this week': 'Algo amable para recordarte esta semana',
+    'Something true and gentle, the way you would speak to a friend.': 'Algo cierto y amable, como se lo dirías a alguien que quieres.',
+    'e.g. I am allowed to learn at a human pace': 'p. ej. Tengo derecho a aprender a un ritmo humano',
+
+    /* step 6 */
+    'Your week': 'Tu semana',
+    'Choose up to 3 small actions for this week': 'Elige hasta 3 acciones pequeñas para esta semana',
+    'Tiny, steady steps matter more than big sudden ones.': 'Los pasos pequeños y constantes valen más que los grandes y repentinos.',
+    'Schedule two 25 minute skill learning sessions': 'Agendar dos sesiones de 25 minutos para aprender una habilidad',
+    'Set a daily limit on AI and news content': 'Poner un límite diario al contenido de IA y de noticias',
+    'Talk with one trusted person about how I feel': 'Hablar con una persona de confianza sobre cómo me siento',
+    'Spend 20 minutes updating my CV or portfolio': 'Dedicar 20 minutos a actualizar mi CV o portafolio',
+    'Try one AI tool on one real task': 'Probar una herramienta de IA en una tarea real',
+    'Keep one calming non-tech routine': 'Mantener una rutina que me calme y no use tecnología',
+    'Review my monthly spending for 15 minutes': 'Revisar mis gastos del mes durante 15 minutos',
+    'Start or top up a small safety buffer': 'Empezar o ampliar un pequeño colchón de seguridad',
+    'Have one honest talk with my household about the future': 'Tener una conversación sincera con mi hogar sobre el futuro',
+    'Set a family code word against voice and video scams': 'Acordar una palabra clave familiar contra estafas de voz y video',
+    'Check privacy settings on my main apps': 'Revisar la privacidad de mis apps principales',
+    'Take a proper rest day from screens': 'Tomarme un día de descanso de verdad lejos de las pantallas',
+    'Or write your own action (optional)': 'O escribe tu propia acción (opcional)',
+    'e.g. Research short courses for 30 minutes': 'p. ej. Buscar cursos cortos durante 30 minutos',
+    'When will you check in with yourself again?': '¿Cuándo volverás a revisar cómo estás?',
+    'Things change fast. A regular check-in keeps you steady instead of reactive.': 'Las cosas cambian rápido. Revisar cada cierto tiempo te ayuda a mantener la calma en lugar de reaccionar.',
+    'In 7 days': 'En 7 días',
+    'In 14 days': 'En 14 días',
+    'In 30 days': 'En 30 días',
+    'At the start of next month': 'Al comienzo del próximo mes',
+
+    /* buttons and share */
+    'Actions': 'Acciones',
+    'See my reflection': 'Ver mi reflexión',
+    'Download PDF': 'Descargar PDF',
+    'Reset': 'Reiniciar',
+    'Share this tool': 'Compartir esta herramienta',
+    'Copy link': 'Copiar enlace',
+
+    /* footer */
+    'This platform is free for everyone. If it helped you, consider supporting it.': 'Esta plataforma es gratuita para todas las personas. Si te ayudó, piensa en apoyarla.',
+    '♥ Support this website': '♥ Apoya este sitio web',
+    'More free tools': 'Más herramientas gratuitas',
+    'Recommended audio books': 'Audiolibros recomendados',
+    'Help': 'Ayuda',
+    'Find a helpline': 'Encuentra una línea de ayuda',
+    'Created by': 'Creado por',
+    '· 2027 edition · If you feel unsafe, please reach out for support.': '· Edición 2027 · Si sientes que no estás a salvo, pide apoyo.',
+    'Created by Clive Ngwenya (M.C.N) for': 'Creado por Clive Ngwenya (M.C.N) para',
+    '. Free to use under the MIT License.': '. De uso libre bajo la licencia MIT.',
+    'For reflection and self-support only. Not medical or crisis advice.': 'Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.',
+
+    /* messages and toasts */
+    'Please fill in at least one field before creating your reflection.': 'Por favor, completa al menos un campo antes de crear tu reflexión.',
+    'You can choose up to': 'Puedes elegir hasta',
+    'Tool reset.': 'Herramienta reiniciada.',
+    'PDF library unavailable. Please retry.': 'La biblioteca del PDF no está disponible. Inténtalo de nuevo.',
+    'Preparing your PDF...': 'Preparando tu PDF...',
+    'PDF downloaded!': '¡PDF descargado!',
+    'Saving on this device is on.': 'El guardado en este dispositivo está activado.',
+    'Saving is off.': 'El guardado está desactivado.',
+    'Link copied!': '¡Enlace copiado!',
+    'Copy from your address bar.': 'Copia el enlace desde la barra de direcciones.',
+
+    /* results */
+    'Your reflection summary': 'Resumen de tu reflexión',
+    'A gentle reading': 'Una lectura amable',
+    'This is weighing on you heavily. Please talk to someone you trust, and consider speaking with a doctor or counsellor if sleep, mood or daily life are being affected. If you ever feel unsafe, you can find a helpline for your country at ': 'Esto te está pesando mucho. Por favor, habla con alguien de confianza y piensa en consultar con un médico o con un profesional de la salud mental si el sueño, el ánimo o tu día a día se están viendo afectados. Si alguna vez sientes que no estás a salvo, puedes encontrar una línea de ayuda de tu país en ',
+    'You do not need to have all the answers right now. Small, honest steps, taken with care, are enough. You are already doing something brave by reflecting.': 'No necesitas tener todas las respuestas ahora. Los pasos pequeños y sinceros, dados con cuidado, son suficientes. Ya estás haciendo algo valiente al reflexionar.',
+    'Your worry is light right now. This is a good moment to build habits that will keep you steady if things change.': 'Tu preocupación es ligera ahora. Es un buen momento para crear hábitos que te mantengan estable si las cosas cambian.',
+    'Your worry is real but workable. One or two small actions this week will probably help more than trying to solve everything.': 'Tu preocupación es real, pero se puede trabajar. Una o dos acciones pequeñas esta semana probablemente ayudarán más que intentar resolverlo todo.',
+    'Your worry is strong today. Please start with the basics: rest, food, a conversation with someone you trust. Big decisions can wait a few days.': 'Hoy tu preocupación es fuerte. Por favor, empieza por lo básico: descanso, comida, una conversación con alguien de confianza. Las decisiones grandes pueden esperar unos días.',
+    'Not provided': 'Sin respuesta',
+    'Your situation': 'Tu situación',
+    'Parts of life it touches': 'Partes de la vida que toca',
+    'What is weighing on you': 'Lo que te pesa',
+    'Fear intensity': 'Intensidad del miedo',
+    'Showing up in': 'Se nota en',
+    'What this fear looks like': 'Cómo es este miedo',
+    'The worst case your mind shows': 'El peor caso que muestra tu mente',
+    'What is most likely': 'Lo más probable',
+    'A balanced thought': 'Un pensamiento equilibrado',
+    'A skill to try this month': 'Una habilidad para probar este mes',
+    'A money step': 'Un paso con el dinero',
+    'A home and family step': 'Un paso para el hogar y la familia',
+    'What helps me feel grounded': 'Lo que me da calma y firmeza',
+    'My media boundary': 'Mi límite con los medios',
+    'My self-kindness reminder': 'Mi recordatorio de amabilidad conmigo',
+    'My actions this week': 'Mis acciones de esta semana',
+    'My next check-in': 'Mi próxima revisión',
+
+    /* PDF */
+    'AI, Work and Life Fear Reflection': 'Reflexión sobre los miedos: IA, trabajo y vida',
+    'Personal reflection summary - 2027 edition': 'Resumen de reflexión personal - Edición 2027',
+    'Name: ': 'Nombre: ',
+    'A GENTLE READING': 'UNA LECTURA AMABLE',
+    'Understanding AI, work and life anxiety': 'Entender la ansiedad ante la IA, el trabajo y la vida',
+    'More free wellbeing resources': 'Más recursos gratuitos de bienestar',
+    'Main site: emotionalintelligencedeveloper.com': 'Sitio principal: emotionalintelligencedeveloper.com',
+    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/': 'Herramientas gratuitas: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+    'Audio books: emotionalintelligencedeveloper.com/recommended-books/': 'Audiolibros: emotionalintelligencedeveloper.com/recommended-books/',
+    'Support this project: emotionalintelligencedeveloper.com/support-this-website/': 'Apoya este proyecto: emotionalintelligencedeveloper.com/support-this-website/',
+    'Find a helpline: findahelpline.com': 'Encuentra una línea de ayuda: findahelpline.com',
+    'This tool supports reflection and self-awareness. It is not medical or financial advice. If you feel unsafe, please seek urgent help.': 'Esta herramienta apoya la reflexión y el autoconocimiento. No es consejo médico ni financiero. Si no estás a salvo, busca ayuda urgente.'
+  };
+
+  var ES_INTENSITY = [
+    'Casi no está. Un murmullo suave de fondo.',
+    'Muy leve. Fácil de dejar a un lado por ahora.',
+    'Leve. Está presente, pero no abruma.',
+    'Se nota. Aparece más de lo que te gustaría.',
+    'Moderada. Está afectando cómo piensas y cómo te sientes.',
+    'Se nota. Está en tu mente, pero se puede llevar.',
+    'Importante. Te gasta mucha energía mental.',
+    'Bastante fuerte. Cuesta pensar en otra cosa.',
+    'Muy fuerte. Afecta tu día a día y tus decisiones.',
+    'Intensa. Sientes que todo te desborda ahora mismo.',
+    'Abrumadora. Por favor, sé muy amable contigo hoy.'
+  ];
+
+  var ES_THEME = {
+    'Job loss or my role changing': 'Casi siempre el cambio en el trabajo llega primero a las tareas, luego a los puestos, y suele tomar tiempo. A quienes mejor lo llevan se les ve aprender pronto las herramientas nuevas y cuidar la parte humana de su trabajo: el criterio, la confianza y la comunicación.',
+    'Falling behind on skills': 'No necesitas aprenderlo todo. Necesitas aprender una cosa útil a la vez. Usar una herramienta en una tarea real durante 25 minutos enseña más que horas de leer sobre ella.',
+    'Money pressure and financial security': 'El miedo por el dinero pesa menos cuando se convierte en cifras y pasos pequeños: saber dónde estás, formar un colchón poco a poco y evitar decisiones grandes tomadas por pánico.',
+    'Not knowing what to prepare for': 'Nadie puede predecir esto con claridad, ni siquiera los expertos. Prepararse para la flexibilidad funciona mejor que prepararse para un único futuro: habilidades amplias, algo de ahorro, buenas relaciones.',
+    'What this means for my family and home': 'El hogar es donde se construye la estabilidad. Una conversación sincera y tranquila con quienes viven contigo suele reducir el miedo más que cualquier cantidad de preocupación a solas.',
+    "Fear for my children's future": 'Tus hijos no necesitan que conozcas el futuro. Necesitan curiosidad, buen criterio, amabilidad y la confianza para adaptarse. Todo eso puedes enseñarlo en casa.',
+    'Feeling left behind by technology': 'Sentir que te quedas atrás es muy común y no es un defecto de carácter. La tecnología avanza rápido y casi todo el mundo siente que va un paso por detrás. Empezar poco a poco es suficiente.',
+    'Losing purpose or identity': 'Tu valor nunca fue solo lo que produces. Tus habilidades, tus valores, tu cuidado por los demás y tu forma de estar presente siguen siendo tuyos, cambien las herramientas que cambien.',
+    'Information overload and doom scrolling': 'Los titulares constantes mantienen encendida tu alarma sin darle ninguna respuesta. Poner un límite firme a lo que consumes es una de las formas más rápidas de sentirte más estable.',
+    'Scams, fake voices and fake videos': 'Las estafas hechas con IA son reales, y también lo son las defensas sencillas: detenerte antes de actuar, verificar por otro medio y acordar una palabra clave con tu familia para peticiones urgentes.',
+    'General uncertainty about the future': 'La incertidumbre se siente peor que muchos problemas conocidos porque la mente sigue buscando una respuesta. Enfócate en la próxima semana, no en la próxima década.'
+  };
+
+  var ES_EDU = [
+    ['Por qué es normal esta preocupación',
+     'La preocupación por la IA es una respuesta natural ante una incertidumbre real. La investigación sobre el estrés, incluido el trabajo de Richard Lazarus, muestra que las personas reaccionan con fuerza cuando sienten una posible amenaza para su sustento, su seguridad o su identidad, incluso antes de que haya pasado nada. Tu sistema de alarma está funcionando. Lo que no hace bien es calcular qué tan probable es algo o con qué rapidez llegará, y ahí es donde la preocupación suele crecer más que los hechos.'],
+    ['Cómo la IA está cambiando el trabajo, el dinero y el hogar',
+     'Economistas como David Autor, del MIT, describen un patrón visto en olas anteriores de tecnología: la automatización asume tareas concretas, aparecen nuevos tipos de trabajo y suele subir el valor de las habilidades humanas que funcionan junto a la tecnología. Sin embargo, el cambio no es parejo. Algunas personas y puestos se ven afectados antes y con más fuerza, y quienes tienen menos ahorros o menos acceso a formación corren más riesgo. Por eso ayuda actuar pronto, con pasos pequeños, en lugar de esperar. El mismo cambio está llegando a los hogares: las herramientas de IA ya ayudan con el presupuesto, el aprendizaje, la información de salud y las tareas de la casa, y también traen riesgos nuevos, como las estafas y la pérdida de privacidad. Nadie puede decir con exactitud cómo se desarrollará esto, y quien afirme lo contrario está adivinando.'],
+    ['La incertidumbre y el cuerpo',
+     'Una investigación del University College London encontró que no saber si algo malo va a ocurrir puede generar más estrés que saber que ocurrirá. Esto ayuda a explicar por qué la preocupación abierta por el futuro pesa tanto. La salida no es la certeza, que no está disponible, sino la estructura: un siguiente paso claro, una fecha fija para revisar cómo estás y un límite a la cantidad de noticias inciertas que consumes.'],
+    ['Cómo proteger tu hogar',
+     'Tres hábitos prácticos ayudan más. Primero, detente y verifica: la IA ya puede copiar voces y rostros, así que si una llamada, un mensaje o un video te pide dinero o una acción urgente, cuelga y confirma por un número o un canal en el que ya confíes. Segundo, acuerda una palabra clave familiar para peticiones urgentes. Tercero, revisa la privacidad de las apps que más usas y comparte menos datos personales. Con el dinero, mucha gente encuentra calma en lo básico: conocer los gastos del mes, formar un pequeño colchón poco a poco y evitar decisiones grandes tomadas por pánico. Esta es información general y no es consejo financiero. Para decisiones sobre ahorros, deudas o inversiones, consulta con una asesoría financiera profesional.'],
+    ['Cómo desarrollar la adaptabilidad',
+     'Mark Savickas, investigador del desarrollo profesional, describe tres capacidades que ayudan a atravesar grandes transiciones: el interés por tu futuro, la curiosidad por nuevas opciones y la confianza en que puedes adaptarte. Las tres se pueden practicar. Los pasos pequeños y regulares, como probar una herramienta, hablar con una persona de otro campo o hacer una lista de tus fortalezas transferibles, suelen funcionar mejor que revisar todo con ansiedad o evitar el tema.'],
+    ['Límites con la información',
+     'El psicólogo Graham Davey ha estudiado cómo una dieta constante de noticias negativas se relaciona con la ansiedad y el ánimo bajo. El problema no es que las noticias sean falsas, sino que las historias repetidas de amenaza, sin ninguna resolución, mantienen activa la alarma. La investigación sobre la restauración de la atención, de Rachel y Stephen Kaplan, añade que la mente necesita tiempo tranquilo y de baja exigencia para recuperar su enfoque. Poner límites a las noticias de IA y tecnología es una forma práctica de proteger ambas cosas.']
+  ];
+
+  function hasKey(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function T(s) {
+    if (lang !== 'es' || typeof s !== 'string') return s;
+    return hasKey(ES, s) ? ES[s] : s;
+  }
+  function IM(v) { return (lang === 'es' && ES_INTENSITY[v]) ? ES_INTENSITY[v] : intensityMeanings[v]; }
+  function TI(theme) { return (lang === 'es' && hasKey(ES_THEME, theme)) ? ES_THEME[theme] : themeInsights[theme]; }
+  function EDU() { return lang === 'es' ? ES_EDU : educational; }
+
+  function collectI18n() {
+    /* Give every option an explicit English value first, so saved choices survive a language switch. */
+    document.querySelectorAll('option').forEach(function (o) {
+      if (!o.hasAttribute('value')) o.setAttribute('value', o.text);
+    });
+    var skip = 'script,style,[data-noi18n],#resultSummary,#errorMsg,#toast,#intensityMeaning,#intensityVal';
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        if (p && p.closest && p.closest(skip)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var n;
+    while ((n = walker.nextNode())) {
+      var orig = n.nodeValue;
+      i18nNodes.push({
+        node: n,
+        orig: orig,
+        key: orig.replace(/\s+/g, ' ').trim(),
+        lead: orig.match(/^\s*/)[0],
+        trail: orig.match(/\s*$/)[0]
+      });
+    }
+    document.querySelectorAll('[placeholder],[aria-label],[alt]').forEach(function (el) {
+      if (el.closest('[data-noi18n]')) return;
+      ['placeholder', 'aria-label', 'alt'].forEach(function (a) {
+        if (el.hasAttribute(a)) i18nAttrs.push({ el: el, attr: a, en: el.getAttribute(a) });
+      });
+    });
+    i18nTitle = document.title;
+  }
+
+  function applyLanguage() {
+    var es = lang === 'es';
+    document.documentElement.lang = es ? 'es' : 'en';
+    document.title = (es && hasKey(ES, i18nTitle)) ? ES[i18nTitle] : i18nTitle;
+    i18nNodes.forEach(function (r) {
+      r.node.nodeValue = (es && hasKey(ES, r.key)) ? r.lead + ES[r.key] + r.trail : r.orig;
+    });
+    i18nAttrs.forEach(function (r) {
+      r.el.setAttribute(r.attr, (es && hasKey(ES, r.en)) ? ES[r.en] : r.en);
+    });
+  }
+
+  function setLanguage(l) {
+    lang = (l === 'es') ? 'es' : 'en';
+    try { localStorage.setItem(LANG_KEY, lang); } catch (_) {}
+    applyLanguage();
+    updateIntensity();
+    $('errorMsg').style.display = 'none';
+    if (lastResultData && $('resultBox').style.display === 'block') {
+      $('resultSummary').innerHTML = buildResultHTML(lastResultData);
+    }
+  }
+
+  function initLanguage() {
+    var sel = $('langSelect');
+    var saved = null;
+    try { saved = localStorage.getItem(LANG_KEY); } catch (_) {}
+    lang = (saved === 'es') ? 'es' : 'en';
+    sel.value = lang;
+    sel.addEventListener('change', function () { setLanguage(sel.value); });
+    /* Collect the page text once the whole page is loaded, so parts placed after this script (like the credit footer) are included. */
+    function ready() { collectI18n(); applyLanguage(); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
+    else ready();
+  }
+
   var TEXT_IDS = ['pdfName','situation','fearTheme','fearText','worst','likely','factCheck','control','letGo','skillStep','moneyStep','homeStep','grounding','boundary','kindness','customAction','checkin'];
 
   var intensityMeanings = [
@@ -542,7 +900,7 @@
   var toastTimer;
   function showToast(msg) {
     var el = $('toast');
-    el.textContent = msg;
+    el.textContent = T(msg);
     el.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
@@ -557,7 +915,7 @@
   function updateIntensity() {
     var v = parseInt(slider.value, 10);
     $('intensityVal').textContent = v;
-    $('intensityMeaning').textContent = intensityMeanings[v] || '';
+    $('intensityMeaning').textContent = IM(v) || '';
   }
   slider.addEventListener('input', function () { updateIntensity(); saveIfEnabled(); });
   updateIntensity();
@@ -579,7 +937,7 @@
       var checked = grid.querySelectorAll('input:checked');
       if (checked.length > max) {
         e.target.checked = false;
-        showToast('You can choose up to ' + max + '.');
+        showToast(T('You can choose up to') + ' ' + max + '.');
       }
       syncChips();
       saveIfEnabled();
@@ -608,7 +966,7 @@
     var has = d.fearTheme || d.fearText || d.worst || d.likely || d.factCheck || d.boundary || d.kindness || d.skillStep || d.moneyStep || d.homeStep || d.actions.length || d.customAction || d.areas.length;
     var err = $('errorMsg');
     if (!has) {
-      err.textContent = 'Please fill in at least one field before creating your reflection.';
+      err.textContent = T('Please fill in at least one field before creating your reflection.');
       err.style.display = 'block';
       err.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return null;
@@ -619,37 +977,37 @@
 
   function rowsFor(d, empty) {
     var e = empty || '-';
-    var acts = allActions(d);
+    var acts = allActions(d).map(function (a) { return T(a); });
     var rows = [];
-    if (d.situation) rows.push(['Your situation', d.situation]);
-    rows.push(['Parts of life it touches', d.areas.length ? d.areas.join(', ') : e]);
-    rows.push(['What is weighing on you', d.fearTheme || e]);
-    rows.push(['Fear intensity', d.intensity + ' / 10. ' + intensityMeanings[parseInt(d.intensity, 10)]]);
-    if (d.impacts.length) rows.push(['Showing up in', d.impacts.join(', ')]);
-    rows.push(['What this fear looks like', d.fearText || e]);
-    rows.push(['The worst case your mind shows', d.worst || e]);
-    rows.push(['What is most likely', d.likely || e]);
-    rows.push(['A balanced thought', d.factCheck || e]);
-    rows.push(['In my control', d.control || e]);
-    rows.push(['Not in my control', d.letGo || e]);
-    rows.push(['A skill to try this month', d.skillStep || e]);
-    rows.push(['A money step', d.moneyStep || e]);
-    rows.push(['A home and family step', d.homeStep || e]);
-    rows.push(['What helps me feel grounded', d.grounding || e]);
-    rows.push(['My media boundary', d.boundary || e]);
-    rows.push(['My self-kindness reminder', d.kindness || e]);
-    rows.push(['My actions this week', acts.length ? acts.join('; ') : e]);
-    if (d.checkin) rows.push(['My next check-in', d.checkin]);
+    if (d.situation) rows.push([T('Your situation'), T(d.situation)]);
+    rows.push([T('Parts of life it touches'), d.areas.length ? d.areas.map(function (a) { return T(a); }).join(', ') : e]);
+    rows.push([T('What is weighing on you'), T(d.fearTheme) || e]);
+    rows.push([T('Fear intensity'), d.intensity + ' / 10. ' + IM(parseInt(d.intensity, 10))]);
+    if (d.impacts.length) rows.push([T('Showing up in'), d.impacts.map(function (a) { return T(a); }).join(', ')]);
+    rows.push([T('What this fear looks like'), d.fearText || e]);
+    rows.push([T('The worst case your mind shows'), d.worst || e]);
+    rows.push([T('What is most likely'), d.likely || e]);
+    rows.push([T('A balanced thought'), d.factCheck || e]);
+    rows.push([T('In my control'), d.control || e]);
+    rows.push([T('Not in my control'), d.letGo || e]);
+    rows.push([T('A skill to try this month'), d.skillStep || e]);
+    rows.push([T('A money step'), d.moneyStep || e]);
+    rows.push([T('A home and family step'), d.homeStep || e]);
+    rows.push([T('What helps me feel grounded'), d.grounding || e]);
+    rows.push([T('My media boundary'), d.boundary || e]);
+    rows.push([T('My self-kindness reminder'), d.kindness || e]);
+    rows.push([T('My actions this week'), acts.length ? acts.join('; ') : e]);
+    if (d.checkin) rows.push([T('My next check-in'), T(d.checkin)]);
     return rows;
   }
 
   function insightFor(d) {
     var v = parseInt(d.intensity, 10);
     var parts = [];
-    if (d.fearTheme && themeInsights[d.fearTheme]) parts.push(themeInsights[d.fearTheme]);
-    if (v <= 3) parts.push('Your worry is light right now. This is a good moment to build habits that will keep you steady if things change.');
-    else if (v <= 6) parts.push('Your worry is real but workable. One or two small actions this week will probably help more than trying to solve everything.');
-    else parts.push('Your worry is strong today. Please start with the basics: rest, food, a conversation with someone you trust. Big decisions can wait a few days.');
+    if (d.fearTheme && themeInsights[d.fearTheme]) parts.push(TI(d.fearTheme));
+    if (v <= 3) parts.push(T('Your worry is light right now. This is a good moment to build habits that will keep you steady if things change.'));
+    else if (v <= 6) parts.push(T('Your worry is real but workable. One or two small actions this week will probably help more than trying to solve everything.'));
+    else parts.push(T('Your worry is strong today. Please start with the basics: rest, food, a conversation with someone you trust. Big decisions can wait a few days.'));
     return parts.join(' ');
   }
 
@@ -659,15 +1017,16 @@
   }
 
   function buildResultHTML(d) {
-    var html = '<div class="result-summary-title">Your reflection summary</div>';
-    html += '<div class="insight"><strong>A gentle reading</strong>' + esc(insightFor(d)) + '</div>';
+    lastResultData = d;
+    var html = '<div class="result-summary-title">' + T('Your reflection summary') + '</div>';
+    html += '<div class="insight"><strong>' + T('A gentle reading') + '</strong>' + esc(insightFor(d)) + '</div>';
     if (needsCareNote(d)) {
-      html += '<div class="care-note">This is weighing on you heavily. Please talk to someone you trust, and consider speaking with a doctor or counsellor if sleep, mood or daily life are being affected. If you ever feel unsafe, you can find a helpline for your country at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</div>';
+      html += '<div class="care-note">' + T('This is weighing on you heavily. Please talk to someone you trust, and consider speaking with a doctor or counsellor if sleep, mood or daily life are being affected. If you ever feel unsafe, you can find a helpline for your country at ') + '<a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</div>';
     }
     rowsFor(d).forEach(function (r) {
       html += '<div class="result-row"><div class="result-row-label">' + esc(r[0]) + '</div><div class="result-row-value">' + esc(r[1]) + '</div></div>';
     });
-    html += '<div class="result-closing">You do not need to have all the answers right now. Small, honest steps, taken with care, are enough. You are already doing something brave by reflecting.</div>';
+    html += '<div class="result-closing">' + T('You do not need to have all the answers right now. Small, honest steps, taken with care, are enough. You are already doing something brave by reflecting.') + '</div>';
     return html;
   }
 
@@ -787,11 +1146,11 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(15);
       doc.setTextColor(30, 42, 53);
-      doc.text('AI, Work and Life Fear Reflection', margin + 76, y + 26);
+      doc.text(T('AI, Work and Life Fear Reflection'), margin + 76, y + 26);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       doc.setTextColor(90, 106, 118);
-      doc.text('Personal reflection summary - 2027 edition', margin + 76, y + 41);
+      doc.text(T('Personal reflection summary - 2027 edition'), margin + 76, y + 41);
       doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
       y += 86;
 
@@ -799,7 +1158,7 @@
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
         doc.setTextColor(30, 42, 53);
-        doc.text('Name: ' + d.name, margin, y);
+        doc.text(T('Name: ') + d.name, margin, y);
         y += 18;
       }
 
@@ -811,14 +1170,14 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9);
       doc.setTextColor(58, 122, 88);
-      doc.text('A GENTLE READING', margin + 10, y + 14);
+      doc.text(T('A GENTLE READING'), margin + 10, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9.5);
       doc.setTextColor(30, 42, 53);
       doc.text(insightLines, margin + 10, y + 27);
       y += ih + 10;
 
-      rowsFor(d, 'Not provided').forEach(function (r) {
+      rowsFor(d, T('Not provided')).forEach(function (r) {
         ensure(80);
         var lines = doc.splitTextToSize(r[1], pageW - margin * 2 - 22);
         var bh = lines.length * 12 + 28;
@@ -837,7 +1196,7 @@
 
       ensure(80);
       y += 4;
-      var closing = doc.splitTextToSize('You do not need to have all the answers right now. Small, honest steps, taken with care, are enough. You are already doing something brave by reflecting.', pageW - margin * 2 - 20);
+      var closing = doc.splitTextToSize(T('You do not need to have all the answers right now. Small, honest steps, taken with care, are enough. You are already doing something brave by reflecting.'), pageW - margin * 2 - 20);
       var ch = closing.length * 12 + 20;
       doc.setFillColor(253, 246, 232);
       doc.roundedRect(margin, y, pageW - margin * 2, ch, 4, 4, 'F');
@@ -854,10 +1213,10 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(91, 143, 168);
-      doc.text('Understanding AI, work and life anxiety', margin, y);
+      doc.text(T('Understanding AI, work and life anxiety'), margin, y);
       y += 14;
 
-      educational.forEach(function (item) {
+      EDU().forEach(function (item) {
         ensure(90);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9.5);
@@ -883,17 +1242,17 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(91, 143, 168);
-      doc.text('More free wellbeing resources', margin, y);
+      doc.text(T('More free wellbeing resources'), margin, y);
       y += 13;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(30, 42, 53);
       [
-        'Main site: emotionalintelligencedeveloper.com',
-        'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-        'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
-        'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
-        'Find a helpline: findahelpline.com'
+        T('Main site: emotionalintelligencedeveloper.com'),
+        T('Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'),
+        T('Audio books: emotionalintelligencedeveloper.com/recommended-books/'),
+        T('Support this project: emotionalintelligencedeveloper.com/support-this-website/'),
+        T('Find a helpline: findahelpline.com')
       ].forEach(function (line) { doc.text(line, margin, y); y += 13; });
 
       var total = doc.getNumberOfPages();
@@ -904,7 +1263,7 @@
         doc.setFont('helvetica', 'italic');
         doc.setFontSize(8.3);
         doc.setTextColor(138, 154, 166);
-        doc.text('This tool supports reflection and self-awareness. It is not medical or financial advice. If you feel unsafe, please seek urgent help.', margin, pageH - 22);
+        doc.text(T('This tool supports reflection and self-awareness. It is not medical or financial advice. If you feel unsafe, please seek urgent help.'), margin, pageH - 22);
       }
 
       doc.save('ai-work-life-reflection-2027.pdf');
@@ -934,8 +1293,17 @@
   });
 
   updateShareLinks();
+  initLanguage();
   loadLocal();
 }());
 </script>
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  Created by Clive Ngwenya (M.C.N) for
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  Free to use under the MIT License.
+  <br>
+  <span style="font-size:12px;opacity:0.85;">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
 </body>
 </html>

@@ -198,21 +198,36 @@
       .card { border: none; padding: 0; }
       .result-box { display: block !important; }
     }
+
+    /* LANGUAGE BAR */
+    .lang-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px; }
+    .lang-bar label { font-size: 13px; color: var(--muted); font-style: italic; }
+    .lang-bar select { width: auto; min-width: 150px; padding-top: 8px; padding-bottom: 8px; }
+    @media print { .lang-bar { display: none !important; } }
   </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- LANGUAGE -->
+  <div class="lang-bar">
+    <label for="langSelect">Language / Idioma</label>
+    <select id="langSelect" onchange="setLang(this.value)">
+      <option value="en" selected>English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
   <!-- HEADER -->
   <header class="header">
     <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" data-i18n-alt="logoAlt" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h2 class="tool-title">I'm Stuck: Decision Support Tool</h2>
-    <p class="tagline">A gentle reflection space to help you untangle what feels difficult and find one small, clear step forward.</p>
-    <span class="disclaimer">Supportive reflection only. Not medical or professional advice.</span>
-    <p class="tool-note">Being stuck is not a failure. It usually means you care about getting it right. Let's slow it down together.</p>
+    <h2 class="tool-title" data-i18n="toolTitle">I'm Stuck: Decision Support Tool</h2>
+    <p class="tagline" data-i18n="tagline">A gentle reflection space to help you untangle what feels difficult and find one small, clear step forward.</p>
+    <span class="disclaimer" data-i18n="disclaimer">Supportive reflection only. Not medical or professional advice.</span>
+    <p class="tool-note" data-i18n="toolNote">Being stuck is not a failure. It usually means you care about getting it right. Let's slow it down together.</p>
     <div class="progress-wrap">
       <div class="progress-label" id="progressLabel">0 of 4 key questions answered</div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -221,29 +236,29 @@
 
   <!-- MAIN CARD -->
   <section class="card" aria-labelledby="reflect-heading">
-    <p class="card-title" id="reflect-heading">Your reflection</p>
+    <p class="card-title" id="reflect-heading" data-i18n="cardTitle">Your reflection</p>
 
     <label class="save-row">
       <input type="checkbox" id="saveToggle" onchange="onSaveToggle()" />
-      Save my reflection on this device
+      <span data-i18n="saveLabel">Save my reflection on this device</span>
     </label>
-    <p style="font-size:13px;color:var(--hint);margin-bottom:18px;font-style:italic;">Stored only on this device. Nothing is sent anywhere.</p>
+    <p style="font-size:13px;color:var(--hint);margin-bottom:18px;font-style:italic;" data-i18n="saveNote">Stored only on this device. Nothing is sent anywhere.</p>
 
     <div class="name-field">
-      <label for="userName">Your name (optional, shown in PDF)</label>
-      <input type="text" id="userName" maxlength="60" placeholder="e.g. Alex" oninput="onFieldChange()" />
+      <label for="userName" data-i18n="nameLabel">Your name (optional, shown in PDF)</label>
+      <input type="text" id="userName" maxlength="60" placeholder="e.g. Alex" data-i18n-ph="phName" oninput="onFieldChange()" />
     </div>
 
     <div class="decision-card">
-      <label class="decision-label" for="decisionType">What feels most stuck right now?</label>
-      <p class="decision-hint">Choosing a theme loads questions and step ideas tailored to your situation.</p>
+      <label class="decision-label" for="decisionType" data-i18n="decLabel">What feels most stuck right now?</label>
+      <p class="decision-hint" data-i18n="decHint">Choosing a theme loads questions and step ideas tailored to your situation.</p>
       <select id="decisionType" onchange="onThemeChange()">
-        <option value="">Choose one...</option>
-        <option value="Work or study decision">Work or study decision</option>
-        <option value="Relationship or family choice">Relationship or family choice</option>
-        <option value="Personal wellbeing routine">Personal wellbeing routine</option>
-        <option value="Money or practical planning">Money or practical planning</option>
-        <option value="Something else">Something else</option>
+        <option value="" data-i18n="optChoose">Choose one...</option>
+        <option value="Work or study decision" data-i18n="optWork">Work or study decision</option>
+        <option value="Relationship or family choice" data-i18n="optRel">Relationship or family choice</option>
+        <option value="Personal wellbeing routine" data-i18n="optWell">Personal wellbeing routine</option>
+        <option value="Money or practical planning" data-i18n="optMoney">Money or practical planning</option>
+        <option value="Something else" data-i18n="optElse">Something else</option>
       </select>
     </div>
 
@@ -264,66 +279,66 @@
     </div>
 
     <div class="question">
-      <label class="question-label" for="situation">What is happening?</label>
-      <p class="question-hint">Describe the situation briefly. Just enough to give it shape.</p>
-      <textarea id="situation" maxlength="700" oninput="onFieldChange()" placeholder="Briefly describe what is going on..."></textarea>
+      <label class="question-label" for="situation" data-i18n="sitLabel">What is happening?</label>
+      <p class="question-hint" data-i18n="sitHint">Describe the situation briefly. Just enough to give it shape.</p>
+      <textarea id="situation" maxlength="700" oninput="onFieldChange()" placeholder="Briefly describe what is going on..." data-i18n-ph="phSituation"></textarea>
       <div class="counter" id="count-situation">0 / 700</div>
     </div>
 
     <div class="question">
-      <label class="question-label" for="worry">What are you most worried about?</label>
-      <p class="question-hint">Name the fear underneath the stuckness if you can.</p>
-      <textarea id="worry" maxlength="600" oninput="onFieldChange()" placeholder="What is the worry underneath all of this?"></textarea>
+      <label class="question-label" for="worry" data-i18n="worryLabel">What are you most worried about?</label>
+      <p class="question-hint" data-i18n="worryHint">Name the fear underneath the stuckness if you can.</p>
+      <textarea id="worry" maxlength="600" oninput="onFieldChange()" placeholder="What is the worry underneath all of this?" data-i18n-ph="phWorry"></textarea>
       <div class="counter" id="count-worry">0 / 600</div>
     </div>
 
     <div class="question">
-      <label class="question-label" for="heaviness">How heavy does this feel right now?</label>
-      <p class="question-hint">There is no right answer. This just gives you something to compare against later.</p>
+      <label class="question-label" for="heaviness" data-i18n="heavyLabel">How heavy does this feel right now?</label>
+      <p class="question-hint" data-i18n="heavyHint">There is no right answer. This just gives you something to compare against later.</p>
       <div class="slider-row">
-        <input type="range" id="heaviness" min="1" max="10" value="5" oninput="onFieldChange()" aria-label="How heavy this feels, 1 to 10" />
+        <input type="range" id="heaviness" min="1" max="10" value="5" oninput="onFieldChange()" aria-label="How heavy this feels, 1 to 10" data-i18n-aria="ariaHeavy" />
         <span class="slider-value" id="heavinessValue">5 / 10</span>
       </div>
-      <div class="slider-ends"><span>Light</span><span>Very heavy</span></div>
+      <div class="slider-ends"><span data-i18n="endLight">Light</span><span data-i18n="endHeavy">Very heavy</span></div>
     </div>
 
     <div class="question">
-      <label class="question-label" for="bestOutcome">What would a good-enough outcome look like?</label>
-      <p class="question-hint">Not perfect, just good enough. Realistic and liveable.</p>
-      <textarea id="bestOutcome" maxlength="500" oninput="onFieldChange()" placeholder="It does not have to be perfect. What would feel okay?"></textarea>
+      <label class="question-label" for="bestOutcome" data-i18n="outLabel">What would a good-enough outcome look like?</label>
+      <p class="question-hint" data-i18n="outHint">Not perfect, just good enough. Realistic and liveable.</p>
+      <textarea id="bestOutcome" maxlength="500" oninput="onFieldChange()" placeholder="It does not have to be perfect. What would feel okay?" data-i18n-ph="phOutcome"></textarea>
       <div class="counter" id="count-bestOutcome">0 / 500</div>
     </div>
 
     <div class="question">
-      <label class="question-label" for="nextStep">What is one small next step you could take in under 15 minutes?</label>
-      <p class="question-hint">Something concrete, kind, and achievable today. Tap an idea below or write your own.</p>
+      <label class="question-label" for="nextStep" data-i18n="stepLabel">What is one small next step you could take in under 15 minutes?</label>
+      <p class="question-hint" data-i18n="stepHint">Something concrete, kind, and achievable today. Tap an idea below or write your own.</p>
       <div class="chips" id="stepChips"></div>
-      <textarea id="nextStep" maxlength="400" oninput="onFieldChange()" placeholder="e.g. Write 3 bullet points and message one trusted person"></textarea>
+      <textarea id="nextStep" maxlength="400" oninput="onFieldChange()" placeholder="e.g. Write 3 bullet points and message one trusted person" data-i18n-ph="phStep"></textarea>
       <div class="counter" id="count-nextStep">0 / 400</div>
     </div>
 
     <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
 
     <div class="care-note" id="careNote" role="note">
-      <strong>You matter, and you do not have to carry this alone.</strong><br>
-      If you are thinking about harming yourself or feel unsafe, please contact your local emergency number or someone you trust right now. You can also find a free helpline in your country at
+      <strong data-i18n="careTitle">You matter, and you do not have to carry this alone.</strong><br>
+      <span data-i18n="careBody">If you are thinking about harming yourself or feel unsafe, please contact your local emergency number or someone you trust right now. You can also find a free helpline in your country at</span>
       <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
 
     <div class="result-box" id="resultBox" aria-live="polite"></div>
 
-    <div class="section-label" style="margin-top:18px;">Actions</div>
+    <div class="section-label" style="margin-top:18px;" data-i18n="actionsLabel">Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
-      <button type="button" class="btn btn-primary" onclick="createReflection()">Create my reflection</button>
-      <button type="button" class="btn btn-secondary" onclick="downloadPDF()">Download PDF</button>
-      <button type="button" class="btn btn-outline" onclick="copySummary()">Copy as text</button>
-      <button type="button" class="btn btn-outline" onclick="window.print()">Print</button>
-      <button type="button" class="btn btn-danger" onclick="resetTool()">Reset</button>
+      <button type="button" class="btn btn-primary" onclick="createReflection()" data-i18n="btnCreate">Create my reflection</button>
+      <button type="button" class="btn btn-secondary" onclick="downloadPDF()" data-i18n="btnPdf">Download PDF</button>
+      <button type="button" class="btn btn-outline" onclick="copySummary()" data-i18n="btnCopy">Copy as text</button>
+      <button type="button" class="btn btn-outline" onclick="window.print()" data-i18n="btnPrint">Print</button>
+      <button type="button" class="btn btn-danger" onclick="resetTool()" data-i18n="btnReset">Reset</button>
     </div>
 
-    <div class="section-label">Share this tool</div>
+    <div class="section-label" data-i18n="shareLabel">Share this tool</div>
     <div class="btn-row">
-      <button type="button" class="btn btn-share" onclick="copyLink()">Copy link</button>
+      <button type="button" class="btn btn-share" onclick="copyLink()" data-i18n="btnCopyLink">Copy link</button>
       <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
       <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
@@ -332,17 +347,17 @@
 
   <!-- FOOTER -->
   <footer class="footer">
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+    <p class="footer-support-text" data-i18n="footSupport">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <a class="btn btn-support" data-i18n="supportBtn" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
     <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" data-i18n="lnkTools">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" data-i18n="lnkBooks">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" data-i18n="lnkHelp">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n="lnkHelpline">Find a helpline</a>
     </div>
     <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;&middot;&nbsp; Reflection support only. Not professional advice.
+      <span data-i18n="creditBy">Created by</span> <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;&middot;&nbsp; <span data-i18n="creditNote">Reflection support only. Not professional advice.</span>
     </p>
   </footer>
 
@@ -357,7 +372,7 @@ var OLD_STORAGE_KEY = 'decisionSupportV5';
 var LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
 var FIELD_IDS = ['userName', 'situation', 'worry', 'bestOutcome', 'nextStep', 'topicQ1', 'topicQ2', 'topicQ3'];
 var COUNTERS = { situation: 700, worry: 600, bestOutcome: 500, nextStep: 400 };
-var CRISIS_REGEX = /(kill myself|end my life|ending my life|suicid|want to die|wanna die|hurt myself|harm myself|self[\s-]?harm|no reason to live|better off dead|can'?t go on)/i;
+var CRISIS_REGEX = /(kill myself|end my life|ending my life|suicid|want to die|wanna die|hurt myself|harm myself|self[\s-]?harm|no reason to live|better off dead|can'?t go on|matarme|me voy a matar|acabar con mi vida|terminar con mi vida|quitarme la vida|quiero morir|quiero morirme|me quiero morir|quisiera morir|hacerme da[nñ]o|lastimarme|herirme|autolesi|autoagred|no quiero vivir|no tengo (?:raz[oó]n|motivos?) para vivir|no vale la pena vivir|mejor muert[oa]|no puedo m[aá]s|no aguanto m[aá]s|no puedo seguir)/i;
 
 // follow-up state (after taking the step)
 var followUp = { after: null, done: false };
@@ -457,16 +472,15 @@ function showToast(msg) {
 /* ---------- THEME ---------- */
 function updatePromptSet() {
   var selected = $('decisionType').value;
-  var guide = GUIDES[selected];
+  var guide = guideFor(selected);
   var chips = $('stepChips');
   chips.innerHTML = '';
 
   if (!guide) {
-    $('promptsIntro').textContent = 'Choose a theme above to load questions tailored to your situation.';
-    var words = ['first', 'second', 'third'];
+    $('promptsIntro').textContent = t('promptsIntroDefault');
     for (var i = 1; i <= 3; i++) {
-      $('topicLabel' + i).textContent = 'Question ' + (i === 1 ? 'one' : i === 2 ? 'two' : 'three');
-      $('topicQ' + i).placeholder = 'Choose a theme above to see your ' + words[i - 1] + ' question...';
+      $('topicLabel' + i).textContent = t('qLabel' + i);
+      $('topicQ' + i).placeholder = t('qPh' + i);
     }
     return;
   }
@@ -474,7 +488,7 @@ function updatePromptSet() {
   $('promptsIntro').textContent = guide.intro;
   for (var j = 1; j <= 3; j++) {
     $('topicLabel' + j).textContent = guide.prompts[j - 1];
-    $('topicQ' + j).placeholder = 'Type your thoughts here';
+    $('topicQ' + j).placeholder = t('typeHere');
   }
 
   guide.steps.forEach(function (s) {
@@ -499,7 +513,7 @@ function onThemeChange() {
 /* ---------- DATA ---------- */
 function getData() {
   var selected = $('decisionType').value;
-  var guide = GUIDES[selected];
+  var guide = guideFor(selected);
   return {
     name: $('userName').value.trim(),
     decisionType: selected,
@@ -523,16 +537,18 @@ function validate() {
   var d = getData();
   var errEl = $('errorMsg');
   var missing = [];
-  if (!d.situation) missing.push('what is happening');
-  if (!d.worry) missing.push('your main worry');
-  if (!d.nextStep) missing.push('one small next step');
+  if (!d.situation) missing.push('mSituation');
+  if (!d.worry) missing.push('mWorry');
+  if (!d.nextStep) missing.push('mStep');
   if (missing.length) {
-    errEl.textContent = 'Please complete ' + missing.join(', ') + ' before continuing.';
+    errMissing = missing;
+    renderErr();
     errEl.style.display = 'block';
     errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return null;
   }
   errEl.style.display = 'none';
+  errMissing = null;
   return d;
 }
 
@@ -550,7 +566,7 @@ function updateProgress() {
   if ($('situation').value.trim()) done++;
   if ($('worry').value.trim()) done++;
   if ($('nextStep').value.trim()) done++;
-  $('progressLabel').textContent = done + ' of 4 key questions answered';
+  $('progressLabel').textContent = t('progress', done);
   $('progressFill').style.width = (done * 25) + '%';
 }
 
@@ -568,17 +584,17 @@ function onFieldChange() {
 
 /* ---------- RESULT ---------- */
 function buildResultHTML(d) {
-  var html = '<div class="result-title">Your reflection summary</div>';
+  var html = '<div class="result-title">' + t('resTitle') + '</div>';
 
   if (d.decisionType) {
-    html += '<div class="result-row"><div class="result-row-label">Focus area</div><div class="result-row-value">' + esc(d.decisionType) + '</div></div>';
+    html += '<div class="result-row"><div class="result-row-label">' + t('lblFocus') + '</div><div class="result-row-value">' + esc(themeLabel(d.decisionType)) + '</div></div>';
   }
-  html += '<div class="result-row"><div class="result-row-label">What is happening</div><div class="result-row-value">' + esc(d.situation) + '</div></div>';
-  html += '<div class="result-row"><div class="result-row-label">Main worry</div><div class="result-row-value">' + esc(d.worry) + '</div></div>';
+  html += '<div class="result-row"><div class="result-row-label">' + t('lblSituation') + '</div><div class="result-row-value">' + esc(d.situation) + '</div></div>';
+  html += '<div class="result-row"><div class="result-row-label">' + t('lblWorry') + '</div><div class="result-row-value">' + esc(d.worry) + '</div></div>';
 
-  var guide = GUIDES[d.decisionType];
+  var guide = guideFor(d.decisionType);
   if (guide && (d.topicQ1 || d.topicQ2 || d.topicQ3)) {
-    html += '<div class="result-row"><div class="result-row-label">Guided responses</div><div class="result-row-value">';
+    html += '<div class="result-row"><div class="result-row-label">' + t('lblGuided') + '</div><div class="result-row-value">';
     var answers = [d.topicQ1, d.topicQ2, d.topicQ3];
     answers.forEach(function (a, i) {
       if (a) html += '<div style="margin-bottom:8px;"><span class="result-sub">' + esc(guide.prompts[i]) + '</span>' + esc(a) + '</div>';
@@ -586,22 +602,22 @@ function buildResultHTML(d) {
     html += '</div></div>';
   }
 
-  html += '<div class="result-row"><div class="result-row-label">How heavy it feels now</div><div class="result-row-value">' + esc(d.heaviness) + ' out of 10</div></div>';
+  html += '<div class="result-row"><div class="result-row-label">' + t('lblHeavy') + '</div><div class="result-row-value">' + esc(t('outOf', d.heaviness)) + '</div></div>';
 
   if (d.bestOutcome) {
-    html += '<div class="result-row"><div class="result-row-label">Good-enough outcome</div><div class="result-row-value">' + esc(d.bestOutcome) + '</div></div>';
+    html += '<div class="result-row"><div class="result-row-label">' + t('lblOutcome') + '</div><div class="result-row-value">' + esc(d.bestOutcome) + '</div></div>';
   }
-  html += '<div class="result-row"><div class="result-row-label">Your next step</div><div class="result-row-value">' + esc(d.nextStep) + '</div></div>';
-  html += '<div class="result-advice">' + esc(d.tailoredAdvice) + '</div>';
-  html += '<div class="result-closing">A small step done calmly is still meaningful progress. You do not have to solve everything today.</div>';
+  html += '<div class="result-row"><div class="result-row-label">' + t('lblStep') + '</div><div class="result-row-value">' + esc(d.nextStep) + '</div></div>';
+  html += '<div class="result-advice">' + esc(adviceFor(d)) + '</div>';
+  html += '<div class="result-closing">' + t('closing') + '</div>';
 
   // follow-up
   html += '<div class="followup">';
-  html += '<div class="followup-title">After you take your step, come back and check in</div>';
-  html += '<label class="save-row" style="margin-bottom:10px;"><input type="checkbox" id="stepDone" onchange="onStepDone()" ' + (d.done ? 'checked' : '') + ' /> I took my step</label>';
-  html += '<div class="slider-row"><input type="range" id="afterScore" min="1" max="10" value="' + (d.after || d.heaviness) + '" oninput="onAfterChange()" aria-label="How heavy it feels after the step, 1 to 10" />';
+  html += '<div class="followup-title">' + t('followTitle') + '</div>';
+  html += '<label class="save-row" style="margin-bottom:10px;"><input type="checkbox" id="stepDone" onchange="onStepDone()" ' + (d.done ? 'checked' : '') + ' /> ' + t('tookStep') + '</label>';
+  html += '<div class="slider-row"><input type="range" id="afterScore" min="1" max="10" value="' + (d.after || d.heaviness) + '" oninput="onAfterChange()" aria-label="' + t('afterAria') + '" />';
   html += '<span class="slider-value" id="afterValue">' + (d.after || d.heaviness) + ' / 10</span></div>';
-  html += '<div class="slider-ends"><span>Light</span><span>Very heavy</span></div>';
+  html += '<div class="slider-ends"><span>' + t('endLight') + '</span><span>' + t('endHeavy') + '</span></div>';
   html += '<div class="followup-msg" id="followupMsg">' + esc(followUpMessage(d)) + '</div>';
   html += '</div>';
 
@@ -609,11 +625,11 @@ function buildResultHTML(d) {
 }
 
 function followUpMessage(d) {
-  if (!d.done || !d.after) return 'Move the slider after your step to see how things have shifted.';
+  if (!d.done || !d.after) return t('fuNone');
   var diff = d.heaviness - d.after;
-  if (diff > 0) return 'It feels ' + diff + ' point' + (diff === 1 ? '' : 's') + ' lighter than before. That is real progress. Notice what helped.';
-  if (diff === 0) return 'It feels about the same, and that is okay. Taking the step still counts. Try another small one when you are ready.';
-  return 'It feels heavier right now. That can happen when we start facing things. Be gentle with yourself, and consider talking it through with someone you trust.';
+  if (diff > 0) return t('fuLighter', diff);
+  if (diff === 0) return t('fuSame');
+  return t('fuHeavier');
 }
 
 function onStepDone() {
@@ -639,6 +655,7 @@ function createReflection() {
   var d = validate();
   if (!d) return;
   var box = $('resultBox');
+  lastResult = d;
   box.innerHTML = buildResultHTML(d);
   box.style.display = 'block';
   box.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -648,24 +665,24 @@ function createReflection() {
 /* ---------- COPY AS TEXT ---------- */
 function buildPlainText(d) {
   var lines = [];
-  lines.push('DECISION SUPPORT REFLECTION');
-  if (d.name) lines.push('Name: ' + d.name);
+  lines.push(t('plTitle'));
+  if (d.name) lines.push(t('plName') + ': ' + d.name);
   lines.push('');
-  if (d.decisionType) lines.push('Focus area: ' + d.decisionType);
-  lines.push('What is happening: ' + d.situation);
-  lines.push('Main worry: ' + d.worry);
-  var guide = GUIDES[d.decisionType];
+  if (d.decisionType) lines.push(t('lblFocus') + ': ' + themeLabel(d.decisionType));
+  lines.push(t('lblSituation') + ': ' + d.situation);
+  lines.push(t('lblWorry') + ': ' + d.worry);
+  var guide = guideFor(d.decisionType);
   if (guide) {
     [d.topicQ1, d.topicQ2, d.topicQ3].forEach(function (a, i) {
       if (a) lines.push(guide.prompts[i] + ' ' + a);
     });
   }
-  lines.push('How heavy it feels now: ' + d.heaviness + '/10');
-  if (d.bestOutcome) lines.push('Good-enough outcome: ' + d.bestOutcome);
-  lines.push('My next step: ' + d.nextStep);
-  if (d.done && d.after) lines.push('After my step, it feels like: ' + d.after + '/10');
+  lines.push(t('lblHeavy') + ': ' + d.heaviness + '/10');
+  if (d.bestOutcome) lines.push(t('lblOutcome') + ': ' + d.bestOutcome);
+  lines.push(t('plStep') + ': ' + d.nextStep);
+  if (d.done && d.after) lines.push(t('plAfter') + ': ' + d.after + '/10');
   lines.push('');
-  lines.push('Made with the free tools at emotionalintelligencedeveloper.com');
+  lines.push(t('plFooter'));
   return lines.join('\n');
 }
 
@@ -675,11 +692,11 @@ function copySummary() {
   var text = buildPlainText(d);
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(
-      function () { showToast('Reflection copied!'); },
-      function () { showToast('Could not copy. Try the PDF instead.'); }
+      function () { showToast(t('toastCopied')); },
+      function () { showToast(t('toastCopyFail')); }
     );
   } else {
-    showToast('Copy is not supported here. Try the PDF.');
+    showToast(t('toastCopyNo'));
   }
 }
 
@@ -689,8 +706,8 @@ function saveLocal(d) {
 }
 
 function onSaveToggle() {
-  if ($('saveToggle').checked) { saveLocal(); showToast('Saving on this device.'); }
-  else { try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(OLD_STORAGE_KEY); } catch (e) {} showToast('Saving turned off.'); }
+  if ($('saveToggle').checked) { saveLocal(); showToast(t('toastSaveOn')); }
+  else { try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(OLD_STORAGE_KEY); } catch (e) {} showToast(t('toastSaveOff')); }
 }
 
 function loadLocal() {
@@ -709,7 +726,8 @@ function loadLocal() {
     onFieldChange();
     if (d.situation && d.worry && d.nextStep) {
       var box = $('resultBox');
-      box.innerHTML = buildResultHTML(getData());
+      lastResult = getData();
+      box.innerHTML = buildResultHTML(lastResult);
       box.style.display = 'block';
     }
   } catch (e) {
@@ -727,18 +745,20 @@ function resetTool() {
   $('careNote').style.display = 'none';
   $('resultBox').style.display = 'none';
   $('resultBox').innerHTML = '';
+  lastResult = null;
+  errMissing = null;
   updatePromptSet();
   updateCounters();
   updateProgress();
   try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(OLD_STORAGE_KEY); } catch (e) {}
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  showToast('Tool reset.');
+  showToast(t('toastReset'));
 }
 
 /* ---------- SHARE ---------- */
 function updateShareLinks() {
   var url = encodeURIComponent(window.location.href);
-  var msg = encodeURIComponent('This free decision support tool helped me find clarity and a next step: ');
+  var msg = encodeURIComponent(t('shareMsg'));
   $('waShare').href = 'https://wa.me/?text=' + msg + url;
   $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
   $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
@@ -747,11 +767,11 @@ function updateShareLinks() {
 function copyLink() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(window.location.href).then(
-      function () { showToast('Link copied!'); },
-      function () { showToast('Copy from your address bar.'); }
+      function () { showToast(t('toastLinkCopied')); },
+      function () { showToast(t('toastAddr')); }
     );
   } else {
-    showToast('Copy from your address bar.');
+    showToast(t('toastAddr'));
   }
 }
 
@@ -781,11 +801,11 @@ function loadLogo() {
 
 async function downloadPDF() {
   var jsPDFLib = window.jspdf && window.jspdf.jsPDF;
-  if (!jsPDFLib) { showToast('PDF library unavailable. Please retry.'); return; }
+  if (!jsPDFLib) { showToast(t('toastPdfLib')); return; }
   var d = validate();
   if (!d) return;
 
-  showToast('Preparing your PDF...');
+  showToast(t('toastPdfPrep'));
   var doc = new jsPDFLib({ unit: 'pt', format: 'a4' });
   var pageW = doc.internal.pageSize.getWidth();
   var pageH = doc.internal.pageSize.getHeight();
@@ -834,11 +854,11 @@ async function downloadPDF() {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
   doc.setTextColor(30, 45, 31);
-  doc.text('Decision Support Reflection', margin + 76, y + 27);
+  doc.text(t('pdfTitle'), margin + 76, y + 27);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.setTextColor(74, 94, 75);
-  doc.text('Personal reflection summary', margin + 76, y + 42);
+  doc.text(t('pdfSub'), margin + 76, y + 42);
   doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 57);
   y += 90;
 
@@ -846,28 +866,28 @@ async function downloadPDF() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(30, 45, 31);
-    doc.text('Name: ' + pdfSafe(d.name), margin, y);
+    doc.text(t('plName') + ': ' + pdfSafe(d.name), margin, y);
     y += 22;
   }
 
-  var guide = GUIDES[d.decisionType];
-  block('Focus area', d.decisionType || 'Not selected');
-  block('What is happening', d.situation);
-  block('Main worry', d.worry);
+  var guide = guideFor(d.decisionType);
+  block(t('lblFocus'), themeLabel(d.decisionType) || t('notSelected'));
+  block(t('lblSituation'), d.situation);
+  block(t('lblWorry'), d.worry);
   if (guide) {
     [d.topicQ1, d.topicQ2, d.topicQ3].forEach(function (a, i) {
       if (a) block(guide.prompts[i], a);
     });
   }
-  block('How heavy it feels now', d.heaviness + ' out of 10');
-  if (d.bestOutcome) block('Good-enough outcome', d.bestOutcome);
-  block('Your next step', d.nextStep);
+  block(t('lblHeavy'), t('outOf', d.heaviness));
+  if (d.bestOutcome) block(t('lblOutcome'), d.bestOutcome);
+  block(t('lblStep'), d.nextStep);
   if (d.done && d.after) {
-    block('After taking the step', 'I took my step. It now feels like ' + d.after + ' out of 10 (it was ' + d.heaviness + ').');
+    block(t('lblAfter'), t('pdfAfter', d.after, d.heaviness));
   }
 
   // Tailored advice
-  var advLines = doc.splitTextToSize(pdfSafe(d.tailoredAdvice), contentW - 20);
+  var advLines = doc.splitTextToSize(pdfSafe(adviceFor(d)), contentW - 20);
   var advH = advLines.length * 12 + 18;
   newPageIfNeeded(advH + 10);
   doc.setFillColor(247, 243, 232);
@@ -886,7 +906,7 @@ async function downloadPDF() {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(74, 122, 89);
-  writeText('Understanding why we get stuck, and how to move forward', margin, contentW, 14);
+  writeText(t('pdfEduHead'), margin, contentW, 14);
   y += 4;
 
   var educational = [
@@ -902,6 +922,7 @@ async function downloadPDF() {
      'Saying a problem out loud to a calm, trusted person, even if they offer no advice, can help us sort and prioritise what we are thinking. You do not need someone who has all the answers. You need someone who can listen without judgment while you find your own.']
   ];
 
+  if (LANG === 'es') educational = EDU_ES;
   educational.forEach(function (item) {
     newPageIfNeeded(50);
     doc.setFont('helvetica', 'bold');
@@ -923,7 +944,7 @@ async function downloadPDF() {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
   doc.setTextColor(74, 122, 89);
-  doc.text('More free wellbeing resources', margin, y);
+  doc.text(t('pdfResHead'), margin, y);
   y += 14;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
@@ -934,7 +955,7 @@ async function downloadPDF() {
     'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
     'Support this project: emotionalintelligencedeveloper.com/support-this-website/',
     'Need to talk to someone? Find a free helpline: findahelpline.com'
-  ].forEach(function (line) { doc.text(line, margin, y); y += 13; });
+  ].map(function (l, i) { return LANG === 'es' ? RES_ES[i] : l; }).forEach(function (line) { doc.text(line, margin, y); y += 13; });
 
   // Footer on every page
   var total = doc.internal.getNumberOfPages();
@@ -945,13 +966,403 @@ async function downloadPDF() {
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8.5);
     doc.setTextColor(107, 138, 108);
-    doc.text('This tool supports reflection and self-awareness. It is not a substitute for professional advice.', margin, pageH - 22);
-    doc.text('Page ' + p + ' of ' + total, pageW - margin, pageH - 22, { align: 'right' });
+    doc.text(t('pdfFoot'), margin, pageH - 22);
+    doc.text(t('pdfPage', p, total), pageW - margin, pageH - 22, { align: 'right' });
   }
 
-  var cleanName = (d.name || 'reflection').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'reflection';
-  doc.save('decision-support-' + cleanName + '.pdf');
-  showToast('PDF downloaded!');
+  var cleanName = (d.name || 'reflection').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'reflection';
+  doc.save(t('pdfFile') + cleanName + '.pdf');
+  showToast(t('toastPdfDone'));
+}
+
+/* ---------- LANGUAGE: English / Español ---------- */
+var LANG_KEY = 'eidLang';
+var LANG = 'en';
+var TITLE_EN = document.title;
+var lastResult = null;   // snapshot of the last reflection shown, so it can be re-drawn in the other language
+var errMissing = null;   // keys of the fields named in the current error message
+
+var DEFAULT_ADVICE_ES = 'Elige un paso pequeño que puedas completar hoy y luego mira cómo te sientes.';
+
+var GUIDES_ES = {
+  'Work or study decision': {
+    intro: 'Las decisiones de trabajo o estudios suelen verse más claras cuando separas la presión del momento de las prioridades a largo plazo.',
+    prompts: [
+      '¿Qué opción encaja mejor con tu energía, tu tiempo y tus prioridades de ahora?',
+      '¿Qué presión del momento se oye más fuerte y qué meta a largo plazo te importa más?',
+      '¿Quién podría darte una opinión sincera y práctica antes de dar tu próximo paso?'
+    ],
+    steps: [
+      'Escribir mis dos o tres opciones en una sola hoja',
+      'Mandar un mensaje a alguien cuya opinión valoro',
+      'Anotar una cosa que perdería y una que ganaría con cada opción'
+    ],
+    advice: 'Quédate con dos o tres opciones, compara sus beneficios y riesgos reales y comprométete con una pequeña prueba esta semana. No necesitas decidirlo todo de una vez.'
+  },
+  'Relationship or family choice': {
+    intro: 'Las decisiones sobre relaciones suelen verse más claras cuando te centras en lo que necesitas, no en encontrar las palabras perfectas.',
+    prompts: [
+      '¿Qué límite o necesidad quieres proteger más en esta situación?',
+      '¿Qué resultado de la conversación te parece realista esta semana? No perfecto, solo un avance.',
+      '¿Qué podrías decir en una o dos frases que sea sincero y respetuoso a la vez?'
+    ],
+    steps: [
+      'Escribir la frase que más quiero que escuchen',
+      'Elegir un momento de calma esta semana para hablar y apuntarlo en mi móvil',
+      'Anotar en una sola línea lo que necesito'
+    ],
+    advice: 'Elige un momento de calma, habla desde el "yo" y haz una petición clara. Avanzar en la comunicación importa más que ganar una discusión.'
+  },
+  'Personal wellbeing routine': {
+    intro: 'Las rutinas de bienestar se mantienen cuando son diminutas, repetibles y fáciles de empezar, sobre todo en los días difíciles.',
+    prompts: [
+      '¿Qué hábito de 5 a 10 minutos te daría más calma cada día?',
+      '¿Qué suele romper tu rutina y cuál sería un plan de respaldo sencillo?',
+      '¿Qué te indicaría, después de una semana, que esta rutina de verdad te ayuda?'
+    ],
+    steps: [
+      'Respirar despacio cinco veces ahora mismo',
+      'Elegir la hora y el lugar exactos para mi hábito de mañana',
+      'Dejar mis zapatillas, mi diario o mi botella de agua donde los vea'
+    ],
+    advice: 'Empieza con un ancla diaria: sueño, movimiento, respiración o escribir en un diario. La constancia importa más que la intensidad. Incluso dos minutos al día son un avance real.'
+  },
+  'Money or practical planning': {
+    intro: 'Las decisiones prácticas y de dinero abruman mucho menos cuando se dividen en pasos inmediatos, a corto plazo y para más adelante.',
+    prompts: [
+      '¿Cuál es la tarea práctica más urgente en las próximas 24 a 72 horas?',
+      '¿Cuál es el plan mínimo y seguro que aliviaría la presión este mes?',
+      '¿Qué información o apoyo haría que esta decisión te generara menos estrés?'
+    ],
+    steps: [
+      'Anotar mis tres pagos imprescindibles de este mes',
+      'Escribir el número que estoy evitando mirar',
+      'Hacerle una pregunta clara a una persona o a una oficina'
+    ],
+    advice: 'Separa lo esencial de lo opcional y prioriza una acción que te dé estabilidad antes de hacer cambios más grandes. Un poco de claridad con el dinero suma con el tiempo.'
+  },
+  'Something else': {
+    intro: 'Cuando la situación es compleja o cuesta ponerle nombre, empieza por reducir el agobio y luego busca algo que sí puedas controlar.',
+    prompts: [
+      '¿Qué parte de esta situación puedes influir de verdad ahora mismo?',
+      '¿Cómo sería "suficiente por hoy"? No perfecto, solo llevadero.',
+      '¿Qué apoyo, herramienta o persona haría que tu próximo paso se sintiera más posible?'
+    ],
+    steps: [
+      'Escribir todo lo que tengo en la cabeza durante dos minutos y parar',
+      'Rodear en esa lista lo único que puedo influir',
+      'Contarle a una persona de confianza que tengo un bloqueo'
+    ],
+    advice: 'Haz una lista sencilla de ventajas y cosas a tener en cuenta, elige un paso y mira cómo se siente antes de tomar decisiones más grandes. La claridad suele llegar actuando, no solo pensando.'
+  }
+};
+
+var EDU_ES = [
+  ['Por qué decidir cuesta tanto',
+   'La investigación sobre toma de decisiones, incluido el trabajo del psicólogo Barry Schwartz en "La paradoja de la elección", sugiere que tener demasiadas opciones, o que nos importe mucho el resultado, puede aumentar la ansiedad y bajar la calidad de nuestras decisiones. La incertidumbre puede sentirse como una amenaza, y por eso bloquearse cansa tanto. Poner nombre claro a la decisión y reducir tus opciones a dos o tres es una forma sencilla de aligerar esa carga.'],
+  ['El papel de los valores cuando nos bloqueamos',
+   'Solemos bloquearnos cuando una decisión toca algo que valoramos mucho, como nuestras relaciones, nuestra seguridad o la idea que tenemos de quiénes somos. Russ Harris, cuyo trabajo apoya la Terapia de Aceptación y Compromiso (ACT), propone que aclarar tus valores puede funcionar como una brújula. Preguntarte "¿qué tipo de persona quiero ser aquí?" puede ayudar más que preguntarte "¿cuál es la respuesta correcta?"'],
+  ['Por qué funcionan los pasos pequeños',
+   'La activación conductual, una técnica de la terapia cognitivo-conductual, se basa en la idea de que la acción suele llegar antes que la motivación. Solemos esperar a tener ganas, pero un paso pequeño y concreto puede crear el impulso y el cambio de ánimo que nos ayudan a seguir. No necesitas tener certeza para empezar. Solo necesitas empezar.'],
+  ['El coste de aplazar decisiones',
+   'Aplazar una decisión puede dar alivio en el momento, pero una decisión sin resolver suele seguir gastando nuestra energía mental en segundo plano. Incluso una decisión provisional, como "voy a probar esto dos semanas y luego lo reviso", puede aligerar esa carga y darte información real con la que trabajar.'],
+  ['Con quién hablar y por qué ayuda',
+   'Decir un problema en voz alta a una persona tranquila y de confianza, aunque no te dé consejos, puede ayudarnos a ordenar y priorizar lo que pensamos. No necesitas a alguien que tenga todas las respuestas. Necesitas a alguien que sepa escuchar sin juzgar mientras encuentras las tuyas.']
+];
+
+var RES_ES = [
+  'Sitio principal: emotionalintelligencedeveloper.com',
+  'Herramientas gratuitas: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+  'Audiolibros: emotionalintelligencedeveloper.com/recommended-books/',
+  'Apoya este proyecto: emotionalintelligencedeveloper.com/support-this-website/',
+  '¿Necesitas hablar con alguien? Encuentra una línea de ayuda gratuita: findahelpline.com'
+];
+
+/* Words used by the code (English). Static page text keeps its original English in the HTML itself. */
+var EN = {
+  docTitle: "I'm Stuck: Decision Support Tool | Emotional Intelligence Developer",
+  shareMsg: 'This free decision support tool helped me find clarity and a next step: ',
+  toastSaveOn: 'Saving on this device.',
+  toastSaveOff: 'Saving turned off.',
+  toastCopied: 'Reflection copied!',
+  toastCopyFail: 'Could not copy. Try the PDF instead.',
+  toastCopyNo: 'Copy is not supported here. Try the PDF.',
+  toastLinkCopied: 'Link copied!',
+  toastAddr: 'Copy from your address bar.',
+  toastReset: 'Tool reset.',
+  toastPdfLib: 'PDF library unavailable. Please retry.',
+  toastPdfPrep: 'Preparing your PDF...',
+  toastPdfDone: 'PDF downloaded!',
+  promptsIntroDefault: 'Choose a theme above to load questions tailored to your situation.',
+  qLabel1: 'Question one', qLabel2: 'Question two', qLabel3: 'Question three',
+  qPh1: 'Choose a theme above to see your first question...',
+  qPh2: 'Choose a theme above to see your second question...',
+  qPh3: 'Choose a theme above to see your third question...',
+  typeHere: 'Type your thoughts here',
+  progress: function (n) { return n + ' of 4 key questions answered'; },
+  errPre: 'Please complete ',
+  errPost: ' before continuing.',
+  mSituation: 'what is happening',
+  mWorry: 'your main worry',
+  mStep: 'one small next step',
+  resTitle: 'Your reflection summary',
+  lblFocus: 'Focus area',
+  lblSituation: 'What is happening',
+  lblWorry: 'Main worry',
+  lblGuided: 'Guided responses',
+  lblHeavy: 'How heavy it feels now',
+  outOf: function (n) { return n + ' out of 10'; },
+  lblOutcome: 'Good-enough outcome',
+  lblStep: 'Your next step',
+  closing: 'A small step done calmly is still meaningful progress. You do not have to solve everything today.',
+  followTitle: 'After you take your step, come back and check in',
+  tookStep: 'I took my step',
+  afterAria: 'How heavy it feels after the step, 1 to 10',
+  endLight: 'Light',
+  endHeavy: 'Very heavy',
+  fuNone: 'Move the slider after your step to see how things have shifted.',
+  fuLighter: function (n) { return 'It feels ' + n + ' point' + (n === 1 ? '' : 's') + ' lighter than before. That is real progress. Notice what helped.'; },
+  fuSame: 'It feels about the same, and that is okay. Taking the step still counts. Try another small one when you are ready.',
+  fuHeavier: 'It feels heavier right now. That can happen when we start facing things. Be gentle with yourself, and consider talking it through with someone you trust.',
+  plTitle: 'DECISION SUPPORT REFLECTION',
+  plName: 'Name',
+  plStep: 'My next step',
+  plAfter: 'After my step, it feels like',
+  plFooter: 'Made with the free tools at emotionalintelligencedeveloper.com',
+  pdfTitle: 'Decision Support Reflection',
+  pdfSub: 'Personal reflection summary',
+  notSelected: 'Not selected',
+  lblAfter: 'After taking the step',
+  pdfAfter: function (after, before) { return 'I took my step. It now feels like ' + after + ' out of 10 (it was ' + before + ').'; },
+  pdfEduHead: 'Understanding why we get stuck, and how to move forward',
+  pdfResHead: 'More free wellbeing resources',
+  pdfFoot: 'This tool supports reflection and self-awareness. It is not a substitute for professional advice.',
+  pdfPage: function (p, total) { return 'Page ' + p + ' of ' + total; },
+  pdfFile: 'decision-support-'
+};
+
+var ES = {
+  docTitle: 'Tengo un bloqueo: Herramienta de apoyo para decidir | Emotional Intelligence Developer',
+  shareMsg: 'Esta herramienta gratuita de apoyo para decidir me ayudó a encontrar claridad y un próximo paso: ',
+  toastSaveOn: 'Guardando en este dispositivo.',
+  toastSaveOff: 'Guardado desactivado.',
+  toastCopied: '¡Reflexión copiada!',
+  toastCopyFail: 'No se pudo copiar. Prueba con el PDF.',
+  toastCopyNo: 'Copiar no funciona aquí. Prueba el PDF.',
+  toastLinkCopied: '¡Enlace copiado!',
+  toastAddr: 'Cópialo desde la barra de direcciones.',
+  toastReset: 'Herramienta reiniciada.',
+  toastPdfLib: 'PDF no disponible. Reinténtalo.',
+  toastPdfPrep: 'Preparando tu PDF...',
+  toastPdfDone: '¡PDF descargado!',
+  promptsIntroDefault: 'Elige un tema arriba para cargar preguntas pensadas para tu situación.',
+  qLabel1: 'Primera pregunta', qLabel2: 'Segunda pregunta', qLabel3: 'Tercera pregunta',
+  qPh1: 'Elige un tema arriba para ver tu primera pregunta...',
+  qPh2: 'Elige un tema arriba para ver tu segunda pregunta...',
+  qPh3: 'Elige un tema arriba para ver tu tercera pregunta...',
+  typeHere: 'Escribe aquí lo que piensas',
+  progress: function (n) { return n + ' de 4 preguntas clave respondidas'; },
+  errPre: 'Antes de continuar, completa: ',
+  errPost: '.',
+  mSituation: 'qué está pasando',
+  mWorry: 'tu preocupación principal',
+  mStep: 'un paso pequeño',
+  resTitle: 'Resumen de tu reflexión',
+  lblFocus: 'Área de enfoque',
+  lblSituation: 'Qué está pasando',
+  lblWorry: 'Preocupación principal',
+  lblGuided: 'Respuestas guiadas',
+  lblHeavy: 'Cuánto pesa ahora',
+  outOf: function (n) { return n + ' de 10'; },
+  lblOutcome: 'Resultado lo bastante bueno',
+  lblStep: 'Tu próximo paso',
+  closing: 'Un paso pequeño dado con calma sigue siendo un avance con sentido. No tienes que resolverlo todo hoy.',
+  followTitle: 'Cuando des tu paso, vuelve y mira cómo vas',
+  tookStep: 'Ya di mi paso',
+  afterAria: 'Cuánto pesa después del paso, de 1 a 10',
+  endLight: 'Poco peso',
+  endHeavy: 'Mucho peso',
+  fuNone: 'Mueve la barra después de tu paso para ver cómo han cambiado las cosas.',
+  fuLighter: function (n) { return 'Pesa ' + n + ' punto' + (n === 1 ? '' : 's') + ' menos que antes. Es un avance real. Fíjate en lo que ayudó.'; },
+  fuSame: 'Se siente casi igual, y está bien. Dar el paso cuenta igualmente. Prueba otro pequeño cuando quieras.',
+  fuHeavier: 'Ahora pesa más. Puede pasar cuando empezamos a mirar las cosas de frente. Sé amable contigo y piensa en hablarlo con alguien de confianza.',
+  plTitle: 'REFLEXIÓN DE APOYO PARA DECIDIR',
+  plName: 'Nombre',
+  plStep: 'Mi próximo paso',
+  plAfter: 'Después de mi paso, pesa',
+  plFooter: 'Hecho con las herramientas gratuitas de emotionalintelligencedeveloper.com',
+  pdfTitle: 'Reflexión de apoyo para decidir',
+  pdfSub: 'Resumen de reflexión personal',
+  notSelected: 'Sin seleccionar',
+  lblAfter: 'Después de dar el paso',
+  pdfAfter: function (after, before) { return 'Di mi paso. Ahora pesa ' + after + ' de 10 (antes pesaba ' + before + ').'; },
+  pdfEduHead: 'Entender por qué nos bloqueamos y cómo avanzar',
+  pdfResHead: 'Más recursos gratuitos de bienestar',
+  pdfFoot: 'Esta herramienta apoya la reflexión y el autoconocimiento. No sustituye el consejo profesional.',
+  pdfPage: function (p, total) { return 'Página ' + p + ' de ' + total; },
+  pdfFile: 'apoyo-para-decidir-'
+};
+
+/* Spanish text for the fixed page elements, keyed by their data-i18n / data-i18n-ph / -aria / -alt values */
+var ES_STATIC = {
+  toolTitle: 'Tengo un bloqueo: Herramienta de apoyo para decidir',
+  tagline: 'Un espacio de reflexión amable para ayudarte a desenredar lo que se siente difícil y encontrar un paso pequeño y claro hacia delante.',
+  disclaimer: 'Solo reflexión de apoyo. No es consejo médico ni profesional.',
+  toolNote: 'Bloquearse no es un fracaso. Suele significar que te importa acertar. Vamos a ir más despacio, con calma.',
+  cardTitle: 'Tu reflexión',
+  saveLabel: 'Guardar mi reflexión en este dispositivo',
+  saveNote: 'Se guarda solo en este dispositivo. No se envía nada a ningún sitio.',
+  nameLabel: 'Tu nombre (opcional, aparece en el PDF)',
+  phName: 'p. ej., Alex',
+  decLabel: '¿Dónde sientes más bloqueo ahora mismo?',
+  decHint: 'Al elegir un tema se cargan preguntas e ideas de pasos pensadas para tu situación.',
+  optChoose: 'Elige una opción...',
+  optWork: 'Decisión de trabajo o estudios',
+  optRel: 'Decisión sobre relaciones o familia',
+  optWell: 'Rutina de bienestar personal',
+  optMoney: 'Dinero o planes prácticos',
+  optElse: 'Otra cosa',
+  sitLabel: '¿Qué está pasando?',
+  sitHint: 'Describe la situación en pocas palabras. Solo lo justo para darle forma.',
+  phSituation: 'Cuenta brevemente qué está pasando...',
+  worryLabel: '¿Qué es lo que más te preocupa?',
+  worryHint: 'Si puedes, ponle nombre al miedo que hay debajo del bloqueo.',
+  phWorry: '¿Cuál es la preocupación que hay debajo de todo esto?',
+  heavyLabel: '¿Cuánto pesa esto ahora mismo?',
+  heavyHint: 'No hay respuesta correcta. Esto solo te da algo con lo que comparar más adelante.',
+  ariaHeavy: 'Cuánto pesa esto, de 1 a 10',
+  endLight: 'Poco peso',
+  endHeavy: 'Mucho peso',
+  outLabel: '¿Cómo sería un resultado lo bastante bueno?',
+  outHint: 'No perfecto, solo lo bastante bueno. Realista y llevadero.',
+  phOutcome: 'No tiene que ser perfecto. ¿Qué te parecería bien?',
+  stepLabel: '¿Cuál es un paso pequeño que podrías dar en menos de 15 minutos?',
+  stepHint: 'Algo concreto, amable y posible hoy. Toca una idea de abajo o escribe la tuya.',
+  phStep: 'p. ej., Escribir 3 puntos y mandar un mensaje a una persona de confianza',
+  careTitle: 'Importas, y no tienes que cargar con esto a solas.',
+  careBody: 'Si estás pensando en hacerte daño o no te sientes a salvo, contacta ahora con tu número de emergencias local o con alguien de confianza. También puedes encontrar una línea de ayuda gratuita en tu país en',
+  actionsLabel: 'Acciones',
+  btnCreate: 'Crear mi reflexión',
+  btnPdf: 'Descargar PDF',
+  btnCopy: 'Copiar como texto',
+  btnPrint: 'Imprimir',
+  btnReset: 'Reiniciar',
+  shareLabel: 'Compartir esta herramienta',
+  btnCopyLink: 'Copiar enlace',
+  footSupport: 'Esta plataforma es gratuita para todo el mundo. Si te ayudó, piensa en apoyarla.',
+  supportBtn: '♥ Apoya este sitio web',
+  lnkTools: 'Más herramientas gratuitas',
+  lnkBooks: 'Audiolibros recomendados',
+  lnkHelp: 'Ayuda',
+  lnkHelpline: 'Encontrar una línea de ayuda',
+  creditBy: 'Creado por',
+  creditNote: 'Solo reflexión de apoyo. No es consejo profesional.',
+  eidBy: 'Creado por Clive Ngwenya (M.C.N) para',
+  eidLic: '. Uso gratuito bajo la licencia MIT.',
+  eidNote: 'Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.',
+  logoAlt: 'Logotipo de Emotional Intelligence Developer'
+};
+
+function t(k) {
+  var v = (LANG === 'es' && ES[k] !== undefined) ? ES[k] : EN[k];
+  if (typeof v === 'function') return v.apply(null, Array.prototype.slice.call(arguments, 1));
+  return v;
+}
+
+function guideFor(key) { return (LANG === 'es' ? GUIDES_ES : GUIDES)[key]; }
+
+function adviceFor(d) {
+  var g = guideFor(d.decisionType);
+  return g ? g.advice : (LANG === 'es' ? DEFAULT_ADVICE_ES : DEFAULT_ADVICE);
+}
+
+// Shows the theme name in the current language (the stored value stays English)
+function themeLabel(value) {
+  var opts = $('decisionType').options;
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].value === value) return opts[i].textContent;
+  }
+  return value;
+}
+
+function renderErr() {
+  if (!errMissing) return;
+  $('errorMsg').textContent = t('errPre') + errMissing.map(function (k) { return t(k); }).join(', ') + t('errPost');
+}
+
+function rerenderResult() {
+  var box = $('resultBox');
+  if (!lastResult || box.style.display !== 'block') return;
+  box.innerHTML = buildResultHTML(Object.assign({}, lastResult, { after: followUp.after, done: followUp.done }));
+}
+
+function swapAttr(attr, enAttr, target) {
+  var list = document.querySelectorAll('[' + attr + ']');
+  for (var i = 0; i < list.length; i++) {
+    var el = list[i];
+    if (!el.hasAttribute(enAttr)) el.setAttribute(enAttr, el.getAttribute(target) || '');
+    var key = el.getAttribute(attr);
+    el.setAttribute(target, LANG === 'es' ? ES_STATIC[key] : el.getAttribute(enAttr));
+  }
+}
+
+function applyLang() {
+  document.documentElement.lang = LANG;
+  $('langSelect').value = LANG;
+  document.title = LANG === 'es' ? t('docTitle') : TITLE_EN;
+
+  var list = document.querySelectorAll('[data-i18n]');
+  for (var i = 0; i < list.length; i++) {
+    var el = list[i];
+    if (!el.hasAttribute('data-en')) el.setAttribute('data-en', el.textContent);
+    el.textContent = LANG === 'es' ? ES_STATIC[el.getAttribute('data-i18n')] : el.getAttribute('data-en');
+  }
+  swapAttr('data-i18n-ph', 'data-en-ph', 'placeholder');
+  swapAttr('data-i18n-aria', 'data-en-aria', 'aria-label');
+  swapAttr('data-i18n-alt', 'data-en-alt', 'alt');
+
+  updatePromptSet();
+  updateCounters();
+  updateProgress();
+  updateShareLinks();
+  renderErr();
+  rerenderResult();
+}
+
+function setLang(code) {
+  var next = code === 'es' ? 'es' : 'en';
+  if (next === LANG) { $('langSelect').value = LANG; return; }
+
+  // If the person tapped one of the step ideas, keep that same idea in the new language
+  var theme = $('decisionType').value;
+  var from = (LANG === 'es' ? GUIDES_ES : GUIDES)[theme];
+  var to = (next === 'es' ? GUIDES_ES : GUIDES)[theme];
+  var ns = $('nextStep');
+  if (from && to) {
+    var idx = from.steps.indexOf(ns.value.trim());
+    if (idx > -1) ns.value = to.steps[idx];
+  }
+  // Same for the reflection that is already on screen
+  if (lastResult) {
+    var f2 = (LANG === 'es' ? GUIDES_ES : GUIDES)[lastResult.decisionType];
+    var t2 = (next === 'es' ? GUIDES_ES : GUIDES)[lastResult.decisionType];
+    if (f2 && t2) {
+      var i2 = f2.steps.indexOf(lastResult.nextStep);
+      if (i2 > -1) lastResult.nextStep = t2.steps[i2];
+    }
+  }
+
+  LANG = next;
+  applyLang();
+  try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+  if ($('saveToggle').checked) saveLocal();
+}
+
+function initLang() {
+  var saved = null;
+  try { saved = localStorage.getItem(LANG_KEY); } catch (e) {}
+  if (saved === 'es') { LANG = 'es'; applyLang(); }
+  $('langSelect').value = LANG;
 }
 
 /* ---------- INIT ---------- */
@@ -960,6 +1371,15 @@ updatePromptSet();
 updateCounters();
 updateProgress();
 loadLocal();
+initLang();
 </script>
+
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  <span data-i18n="eidBy">Created by Clive Ngwenya (M.C.N) for</span>
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a><span data-i18n="eidLic">. Free to use under the MIT License.</span>
+  <br>
+  <span style="font-size:12px;opacity:0.85;" data-i18n="eidNote">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
 </body>
 </html>

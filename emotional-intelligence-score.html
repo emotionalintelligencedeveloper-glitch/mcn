@@ -163,6 +163,14 @@
 <body>
 <div class="container">
 
+  <div class="eid-lang">
+    <label for="eqLang">Language / Idioma</label>
+    <select id="eqLang">
+      <option value="en" selected>English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
   <!-- HEADER -->
   <header class="card">
     <div class="logo-wrap">
@@ -296,6 +304,425 @@
 
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===== LANGUAGE / IDIOMA BLOCK (English default, Spanish option). Choice is remembered if the browser allows it. ===== -->
+<style>
+  .eid-lang { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 0 0 12px; font-family: Georgia, "Times New Roman", serif; font-size: 14px; color: var(--muted); }
+  .eid-lang select { font-family: inherit; font-size: 16px; color: var(--text); background: #fff; border: 1px solid var(--border); border-radius: 99px; padding: 8px 14px; min-height: 44px; cursor: pointer; }
+  .eid-lang select:focus-visible { outline: 3px solid var(--brand-mid); outline-offset: 2px; }
+</style>
+<script>
+var EQ_LANG = 'en';
+var EQ_LANG_KEY = 'eid_eq_quiz_lang';
+
+/* Spanish for text built in code. The English text is the key, so English stays exactly as written. */
+var EQ_ES_STR = {
+  'Please tap an answer to continue.': 'Toca una respuesta para continuar.',
+  'Quiz reset. Start fresh whenever you are ready.': 'Cuestionario reiniciado. Empieza de nuevo cuando quieras.',
+  'Link copied!': '¡Enlace copiado!',
+  'Copy the link from your address bar.': 'Copia el enlace desde la barra de direcciones.',
+  'Score copied!': '¡Puntuación copiada!',
+  'Could not copy. Please try again.': 'No se pudo copiar. Inténtalo de nuevo.',
+  'PDF tool is still loading. Please try again.': 'La herramienta de PDF aún se está cargando. Inténtalo de nuevo.',
+  'Preparing your PDF...': 'Preparando tu PDF...',
+  'PDF downloaded!': '¡PDF descargado!',
+  'Question ': 'Pregunta ',
+  ' of ': ' de ',
+  'Area ': 'Área ',
+  ' of 4 done': ' de 4 completada',
+  'Quick lesson': 'Lección rápida',
+  'Quick lesson: ': 'Lección rápida: ',
+  'Try it:': 'Pruébalo:',
+  'See my results': 'Ver mis resultados',
+  'Continue': 'Continuar',
+  'Well done, ': 'Felicidades, ',
+  'Well done for finishing': 'Felicidades por terminar',
+  ' out of 100': ' de 100',
+  'Learn more about ': 'Saber más sobre ',
+  'What this means': 'Qué significa',
+  'What it can look like': 'Cómo puede verse',
+  'Why it matters': 'Por qué importa',
+  'Try this': 'Prueba esto',
+  'Your 7 day starter plan: ': 'Tu plan inicial de 7 días: ',
+  'Day ': 'Día ',
+  'You have a very strong emotional intelligence': 'Tienes una inteligencia emocional muy fuerte',
+  'You have a strong emotional intelligence': 'Tienes una inteligencia emocional fuerte',
+  'You have a solid base to build on': 'Tienes una buena base para seguir construyendo',
+  'You are building your emotional intelligence': 'Estás desarrollando tu inteligencia emocional',
+  'You have plenty of room to grow, and that is good news': 'Tienes mucho margen para crecer, y eso es una buena noticia',
+  'You seem aware, thoughtful and steady. You likely understand your own feelings and other people\'s, and it shows in how you communicate.': 'Se nota conciencia, reflexión y estabilidad en ti. Probablemente entiendes tus sentimientos y los de los demás, y se ve en cómo te comunicas.',
+  'You do well in most areas. A few small habits could take you from good to great.': 'Te va bien en la mayoría de las áreas. Unos pocos hábitos pequeños podrían llevarte de bien a muy bien.',
+  'Some of the habits are already there. With a little regular practice you can feel more confident with emotions, conflict and connection.': 'Algunos de los hábitos ya están ahí. Con un poco de práctica regular puedes sentir más confianza con las emociones, el conflicto y la conexión.',
+  'You may be in a season of learning or stress. This is not a pass or fail. It simply shows where small steps can help most.': 'Puede que estés en una etapa de aprendizaje o de estrés. Esto no es aprobar ni suspender. Solo muestra dónde los pasos pequeños pueden ayudar más.',
+  'Things may feel heavy right now. Emotional skills can be learned at any age, and small steps add up over time.': 'Puede que las cosas se sientan pesadas ahora mismo. Las habilidades emocionales se pueden aprender a cualquier edad, y los pasos pequeños se van sumando con el tiempo.',
+  'EI Score of ': 'Puntuación de IE de ',
+  'Overall: ': 'Total: ',
+  'Take the quiz: ': 'Haz el cuestionario: ',
+  'Find out your emotional intelligence score with this free 20 question quiz: ': 'Descubre tu puntuación de inteligencia emocional con este cuestionario gratuito de 20 preguntas: ',
+  'Emotional Intelligence Score Report': 'Informe de inteligencia emocional',
+  'Strongest area: ': 'Área más fuerte: ',
+  'Best area to grow: ': 'Mejor área para crecer: ',
+  'Words to know': 'Palabras clave',
+  'More free wellbeing resources': 'Más recursos gratuitos de bienestar',
+  'Main site: emotionalintelligencedeveloper.com': 'Sitio principal: emotionalintelligencedeveloper.com',
+  'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/': 'Herramientas gratis: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+  'Audio books: emotionalintelligencedeveloper.com/recommended-books/': 'Audiolibros: emotionalintelligencedeveloper.com/recommended-books/',
+  'Support this project: emotionalintelligencedeveloper.com/support-this-website/': 'Apoya este proyecto: emotionalintelligencedeveloper.com/support-this-website/',
+  'This report is for reflection and self-awareness. It is not a diagnosis or professional assessment.': 'Este informe es para reflexión y autoconocimiento. No es un diagnóstico ni una evaluación profesional.',
+  'emotional-intelligence-score-report.pdf': 'informe-inteligencia-emocional.pdf'
+};
+
+/* Area names are used as keys in the scoring, so they stay in English inside the code and only change on screen. */
+var EQ_ES_AREAS = { 'Self-Awareness': 'Autoconciencia', 'Empathy': 'Empatía', 'Regulation': 'Regulación', 'Communication': 'Comunicación' };
+
+function eqS(k) {
+  if (EQ_LANG !== 'es') return k;
+  if (Object.prototype.hasOwnProperty.call(EQ_ES_STR, k)) return EQ_ES_STR[k];
+  (window.__eqMiss = window.__eqMiss || []).push(k);
+  return k;
+}
+function eqArea(a) { return (EQ_LANG === 'es' && EQ_ES_AREAS[a]) ? EQ_ES_AREAS[a] : a; }
+
+/* Spanish for the questions, answer scale and all the lesson and result texts. */
+var EQ_ES = {
+  q: [
+    'Por lo general, noto lo que siento antes de que mi ánimo afecte mi conducta.',
+    'Cuando algo me altera, puedo ponerle nombre a la emoción en vez de decir solo que me siento mal.',
+    'Noto qué suele provocarme estrés, frustración o desánimo.',
+    'Me doy cuenta cuando mi cuerpo me dice que necesito descanso, espacio o apoyo.',
+    'Miro mis propias reacciones en vez de suponer que siempre tengo la razón.',
+    'Trato de entender lo que otra persona puede estar sintiendo antes de juzgar su reacción.',
+    'Las personas suelen sentirse escuchadas y comprendidas cuando hablan conmigo.',
+    'Por lo general, noto un cambio en el tono o en el lenguaje corporal de alguien.',
+    'Aunque no esté de acuerdo con alguien, respeto lo que siente.',
+    'Dejo espacio para los sentimientos de los demás sin que todo gire en torno a mí.',
+    'Puedo calmarme lo suficiente para responder con reflexión en momentos tensos.',
+    'Cuando algo me duele, me enoja o me desborda, no siempre reacciono de inmediato.',
+    'Tengo al menos una forma sana de sobrellevar el estrés cuando se acumula.',
+    'Me recupero bien después de una conversación difícil o de un momento decepcionante.',
+    'Un mal momento no se apodera del resto de mi día.',
+    'Puedo decir cómo me siento con sinceridad sin herir de forma innecesaria.',
+    'Les digo a los demás lo que necesito en vez de esperar que lo adivinen.',
+    'Puedo recibir comentarios sin cerrarme ni ponerme a la defensiva cada vez.',
+    'Trato de aclarar los malentendidos en vez de evitarlos durante demasiado tiempo.',
+    'En las conversaciones difíciles, trato de mantener el respeto y la claridad.'
+  ],
+  scale: [
+    ['Casi nunca', 'No suele ser cierto en mí'],
+    ['A veces', 'Es cierto de vez en cuando'],
+    ['Con frecuencia', 'Es cierto bastante seguido'],
+    ['Por lo general', 'Es cierto en casi todas las situaciones'],
+    ['Casi siempre', 'Me describe muy bien']
+  ],
+  data: {
+    'Self-Awareness': {
+      lesson: {
+        title: 'Ponle nombre para calmarte',
+        body: 'Una investigación de UCLA encontró que poner un sentimiento en palabras puede ayudar a calmar la parte del cerebro que da la alarma. Una palabra clara como "decepción" o "ansiedad" funciona mejor que "mal".',
+        tryit: 'La próxima vez que sientas tensión, completa esta frase en voz alta o por escrito: "Siento ___ porque ___."'
+      },
+      word: ['Autoconciencia', 'Notar lo que sientes y por qué, idealmente mientras ocurre.'],
+      week: [
+        'Nombra cómo te sientes ahora mismo con una sola palabra.',
+        'Nota dónde se asienta el estrés en tu cuerpo (mandíbula, pecho, estómago).',
+        'Escribe una cosa que te provocó una reacción hoy.',
+        'Cambia "bien" por una palabra más exacta durante todo el día.',
+        'Busca un patrón: ¿a qué hora o en qué situación sueles alterarte?',
+        'Pregunta a alguien de confianza cómo te ve cuando estás bajo estrés.',
+        'Mira atrás en la semana. ¿Qué aprendiste sobre ti?'
+      ],
+      tiers: {
+        high: {
+          level: 'Fuerte',
+          brief: 'Notas lo que sientes y por qué, muchas veces mientras ocurre.',
+          what: 'Puedes nombrar tus emociones y detectar qué las provoca. Por lo general sabes cómo está tu ánimo antes de que influya en lo que haces.',
+          example: 'Piensas: "Estoy contestando mal por el cansancio, no por lo que dijeron", y te ajustas.',
+          practice: 'Cada mañana, nombra un sentimiento con una palabra exacta, como "inquietud" o "esperanza". Luego pregunta qué te está diciendo.',
+          why: 'Cuanto más exacta es la palabra, más opciones tienes sobre qué hacer después.'
+        },
+        mid: {
+          level: 'En desarrollo',
+          brief: 'Te conoces bastante bien, pero muchas veces solo cuando el momento ya pasó.',
+          what: 'Puedes explicar tus reacciones después. En el momento, todavía pueden tomarte por sorpresa.',
+          example: 'De camino a casa te das cuenta de que contestaste de forma cortante a alguien del trabajo porque te preocupaba otra cosa.',
+          practice: 'Dos veces al día pregúntate: "¿Qué siento ahora mismo?" Usa una palabra más exacta que bien, cansancio o estrés.',
+          why: 'Revisar cómo estás con frecuencia entrena tu mente para notarlo antes.'
+        },
+        low: {
+          level: 'En crecimiento',
+          brief: 'Puede que ahora te cueste leer lo que sientes, y eso se puede practicar.',
+          what: 'Esto no significa que no sientas. Suele significar que ha habido poca práctica para notar los sentimientos, o que has tenido que callarlos durante mucho tiempo.',
+          example: 'Sientes tensión pero no sabes si es enojo, preocupación o cansancio.',
+          practice: 'Cada noche escribe una frase: "El sentimiento más fuerte que tuve hoy fue ___ cuando ___." Un minuto basta.',
+          why: 'Las notas pequeñas de cada día crean el hábito de notar sin que parezca un esfuerzo.'
+        }
+      }
+    },
+    'Empathy': {
+      lesson: {
+        title: 'La empatía es una habilidad que se puede desarrollar',
+        body: 'El psicólogo Jamil Zaki, de Stanford, sostiene que la empatía no es un rasgo fijo. Tiene dos partes: entender lo que alguien siente e importarte lo que siente. Las dos pueden crecer con la práctica.',
+        tryit: 'En tu próxima conversación real, pregunta "¿Cómo es eso para ti?" y escucha la respuesta completa antes de responder.'
+      },
+      word: ['Empatía', 'Entender lo que siente otra persona y que te importe, sin perder tu propio punto de vista.'],
+      week: [
+        'En una conversación de hoy, escucha sin planear tu respuesta.',
+        'Pregunta a una persona "¿Cómo estás de verdad?" y espera.',
+        'Nota el cambio de tono o de cara de alguien y pregúntate con calma por qué.',
+        'Dile "Suena difícil" a alguien, sin añadir consejos.',
+        'Piensa en alguien con quien no estás de acuerdo. ¿Qué podría estar sintiendo?',
+        'Repite lo que alguien dijo antes de responder ("Entonces dices que...").',
+        'Piensa en quién, en tu vida, casi nunca tiene a alguien que le escuche, y dale 5 minutos.'
+      ],
+      tiers: {
+        high: {
+          level: 'Fuerte',
+          brief: 'Notas lo que sienten los demás y las personas suelen sentirse comprendidas contigo.',
+          what: 'Notas los cambios emocionales y puedes ponerte en el punto de vista de otra persona sin perder el tuyo.',
+          example: 'Alguien cercano dice "estoy bien" y notas que no es cierto, así que le haces espacio con suavidad.',
+          practice: 'Antes de una conversación importante, tómate 30 segundos para pensar qué podría estar cargando la otra persona hoy.',
+          why: 'Llegar con esa conciencia ayuda a que las personas se abran y reduce el riesgo de conflicto.'
+        },
+        mid: {
+          level: 'En desarrollo',
+          brief: 'Te importan las personas, y hacer un poco más de pausa lo haría notar más a menudo.',
+          what: 'Te importan, pero puede que pases a dar consejos u opiniones antes de haber captado del todo cómo se siente la otra persona.',
+          example: 'Alguien comparte un problema y enseguida ofreces una solución, cuando solo necesitaba desahogarse.',
+          practice: 'Escucha 30 segundos más de lo que te sale natural. Luego repite lo que oíste: "Parece que..."',
+          why: 'Que te escuchen es muchas veces lo que más se necesita, y a ti te cuesta solo unos segundos.'
+        },
+        low: {
+          level: 'En crecimiento',
+          brief: 'Frenar para escuchar podría cambiar mucho para ti y para quienes te rodean.',
+          what: 'El estrés, centrarse en los hechos o un entorno donde no se hablaba de sentimientos pueden hacer más difícil la empatía. No es algo fijo.',
+          example: 'Notas que a veces te dicen "no me estás escuchando", aunque estabas intentando ayudar.',
+          practice: 'Antes de dar tu opinión, haz una pregunta sobre su experiencia y escucha la respuesta completa.',
+          why: 'Este solo hábito suele mejorar las relaciones más rápido que casi cualquier otra cosa.'
+        }
+      }
+    },
+    'Regulation': {
+      lesson: {
+        title: 'El poder de la pausa',
+        body: 'Entre lo que pasa y cómo respondes hay un pequeño espacio. Puedes hacerlo más largo. Respirar despacio, con una exhalación más larga que la inhalación, ayuda al cuerpo a calmarse para que tu mente pensante pueda unirse.',
+        tryit: 'Inhala contando 4 y exhala contando 6. Hazlo tres veces antes de responder a algo que te altere.'
+      },
+      word: ['Regulación emocional', 'Manejar la intensidad de tu reacción y cómo expresas un sentimiento, sin rechazarlo.'],
+      week: [
+        'Prueba 3 respiraciones lentas (inhala 4, exhala 6) cuando notes un pico de estrés.',
+        'Nota tu señal de aviso temprana: calor, mandíbula tensa, corazón más rápido.',
+        'Retrasa una respuesta 10 segundos hoy.',
+        'Da un paseo de 5 minutos o estírate después de algo estresante.',
+        'Prueba "5 cosas que veo, 4 que siento, 3 que oigo" cuando todo te desborde.',
+        'Escribe una cosa que te ayudó a calmarte esta semana.',
+        'Planea tu hábito de calma para los días difíciles y cuéntaselo a alguien.'
+      ],
+      tiers: {
+        high: {
+          level: 'Fuerte',
+          brief: 'Te estabilizas bien y te recuperas después de momentos difíciles.',
+          what: 'Puedes sentir emociones fuertes sin que te dominen. Puedes hacer una pausa, elegir tu respuesta y volver a la calma.',
+          example: 'Una reunión tensa termina mal, pero te reajustas en menos de una hora y sigues con tu día.',
+          practice: 'Mantén tu ventaja con una respiración lenta antes de cualquier momento de presión: inhala 4, exhala 6.',
+          why: 'Una exhalación más larga ayuda a tu cuerpo a salir del modo estrés.'
+        },
+        mid: {
+          level: 'En desarrollo',
+          brief: 'Tienes buenas herramientas, pero el estrés todavía puede sacarte del equilibrio.',
+          what: 'Tus herramientas funcionan con presión leve. Con más estrés, las emociones fuertes pueden tomar el volante.',
+          example: 'Dices algo hiriente en el calor del momento y después te arrepientes.',
+          practice: 'Elige una señal física para pausar, como una mano en el pecho o una respiración lenta, y úsala toda la semana.',
+          why: 'La señal crea la pausa, y la pausa te da opciones.'
+        },
+        low: {
+          level: 'En crecimiento',
+          brief: 'Puede que ahora te cueste manejar las emociones grandes, y hay herramientas sencillas que ayudan.',
+          what: 'Una carga alta de estrés o no haber visto nunca herramientas para sobrellevarlo puede hacerlo más difícil. No es un defecto tuyo.',
+          example: 'Algo pequeño te desborda, y tardas mucho en calmarte después.',
+          practice: 'Prueba "5-4-3-2-1": nombra 5 cosas que ves, 4 que sientes, 3 que oyes. Frena la espiral.',
+          why: 'Enfocarte en tus sentidos saca la atención de la tormenta y la trae de vuelta al presente.'
+        }
+      }
+    },
+    'Communication': {
+      lesson: {
+        title: 'Empieza con suavidad',
+        body: 'El investigador de relaciones John Gottman descubrió que cómo empieza una conversación difícil suele marcar cómo termina. Empezar con culpa pone a las personas en guardia. Empezar con los hechos y con lo que necesitas las mantiene escuchando.',
+        tryit: 'Usa esta frase sencilla: "Cuando pasa ___, siento ___. Lo que me gustaría es ___."'
+      },
+      word: ['Comunicación emocional', 'Decir lo que sientes y necesitas con claridad y amabilidad, y escuchar a los demás de la misma manera.'],
+      week: [
+        'Di en voz alta una pequeña necesidad en vez de insinuarla ("Necesito 10 minutos de silencio").',
+        'Cambia hoy un "tú siempre" por un "yo sentí".',
+        'Da las gracias a alguien por algo concreto.',
+        'Cuando recibas comentarios, di "Gracias, lo voy a pensar" antes de reaccionar.',
+        'Elige una conversación que has estado evitando y planea 2 frases para ella.',
+        'Ten esa conversación con: "Cuando..., siento..., me gustaría..."',
+        'Revisa después: ¿cómo fue y qué harías la próxima vez?'
+      ],
+      tiers: {
+        high: {
+          level: 'Fuerte',
+          brief: 'Dices lo que piensas con cuidado, y las personas confían en tu sinceridad.',
+          what: 'Puedes compartir sentimientos y necesidades con claridad, manejar conversaciones difíciles sin cerrarte ni explotar, y ajustarte mientras escuchas.',
+          example: 'Le dices algo difícil a alguien cercano de una forma que mantiene fuerte la amistad.',
+          practice: 'Si hay una conversación que has dejado para después, usa esta fortaleza ahora: di lo que notaste y lo que necesitas.',
+          why: 'Cada conversación sincera y amable construye confianza y hace más fácil la siguiente.'
+        },
+        mid: {
+          level: 'En desarrollo',
+          brief: 'Te comunicas bien en el día a día, pero las conversaciones acaloradas o emotivas pueden costar más.',
+          what: 'Hablas con claridad en los momentos de calma. Cuando sube la tensión, pueden aparecer la vaguedad, la actitud defensiva o el silencio.',
+          example: 'Aceptas en el momento y luego sientes resentimiento porque nunca dijiste lo que necesitabas.',
+          practice: 'Prueba un mensaje en primera persona esta semana: "Cuando ___, siento ___. Lo que me gustaría es ___."',
+          why: 'Esta forma sencilla mantiene la conversación en el tema y no en atacarse.'
+        },
+        low: {
+          level: 'En crecimiento',
+          brief: 'Decir lo que necesitas puede parecer difícil, y unas frases sencillas pueden ayudar mucho.',
+          what: 'A mucha gente nunca le enseñaron a hablar de sentimientos. Evitar, insinuar o guardarse todo son hábitos aprendidos que se pueden desaprender.',
+          example: 'Tus necesidades quedan sin cubrir porque esperabas que los demás lo notaran sin que se lo dijeras.',
+          practice: 'Una vez al día, di una necesidad con claridad: "Necesito unos minutos de silencio" o "Me gustaría más aviso."',
+          why: 'Las frases pequeñas y claras dan confianza más rápido que esperar el momento perfecto.'
+        }
+      }
+    }
+  }
+};
+
+/* Fixed words on the page: [selector, which match, which text piece, Spanish]. Links and buttons keep their markup, only the words change. */
+var EQ_STATIC = [
+  ['h2.main-title', 0, 0, '¿Cuál es tu puntuación de inteligencia emocional?'],
+  ['.tagline', 0, 0, 'Responde 20 preguntas cortas y mira cómo te va en cuatro áreas. También aprendes algo pequeño por el camino.'],
+  ['.chips .chip', 0, 0, 'Unos 4 minutos'],
+  ['.chips .chip', 1, 0, 'Gratis'],
+  ['.chips .chip', 2, 0, 'Privado, no se guarda nada'],
+  ['#startScreen .card-title', 0, 0, 'Cómo funciona'],
+  ['.step-box strong', 0, 0, '1. Toca una respuesta'],
+  ['.step-box strong', 1, 0, '2. Aprende un poco'],
+  ['.step-box strong', 2, 0, '3. Recibe tu plan'],
+  ['.step-box span', 0, 0, 'Una pregunta a la vez'],
+  ['.step-box span', 1, 0, 'Un consejo rápido tras cada área'],
+  ['.step-box span', 2, 0, 'Puntuación, consejos y un plan de 7 días'],
+  ['#startScreen .card-intro', 0, 0, 'No hay respuestas correctas ni incorrectas. Piensa en cómo has estado últimamente y elige lo que sientas más cierto.'],
+  ['.field-label', 0, 0, 'Tu nombre (opcional, se usa en tus resultados y en el PDF)'],
+  ['button[onclick="eqStart()"]', 0, 0, 'Empezar el cuestionario'],
+  ['.q-hint', 0, 0, 'Lee cada opción y toca la que sientas más cierta últimamente. El orden cambia cada vez.'],
+  ['#backBtn', 0, 0, 'Atrás'],
+  ['#lessonBox .btn-outline', 0, 0, 'Atrás'],
+  ['.ring .num span', 0, 0, 'DE 100'],
+  ['.duo-box .k', 0, 0, 'Tu área más fuerte'],
+  ['.duo-box .k', 1, 0, 'La mejor área para crecer'],
+  ['.section-label', 0, 0, 'Tus cuatro áreas (toca "Saber más" para abrir cada una)'],
+  ['.section-label', 2, 0, 'Palabras clave'],
+  ['.section-label', 3, 0, 'Guarda y comparte'],
+  ['.section-label', 4, 0, 'Comparte este cuestionario con alguien'],
+  ['button[onclick="eqPdf()"]', 0, 0, 'Descargar informe en PDF'],
+  ['button[onclick="eqCopyScore()"]', 0, 0, 'Copiar mi puntuación'],
+  ['button[onclick="eqRetake()"]', 0, 0, 'Repetir el cuestionario'],
+  ['button[onclick="eqCopyLink()"]', 0, 0, 'Copiar enlace'],
+  ['button[onclick="eqCopyLink()"]', 1, 0, 'Copiar enlace'],
+  ['.note', 0, 0, 'Este cuestionario es para reflexionar, no es un diagnóstico. Si la vida se siente pesada ahora mismo, no tienes que cargarla a solas. Puedes encontrar una línea de ayuda en tu país en el enlace de abajo.'],
+  ['.footer-support-text', 0, 0, 'Esta plataforma es gratis para todo el mundo. Si te ayudó, considera apoyarla.'],
+  ['.btn-support', 0, 0, '♥ Apoya este sitio web'],
+  ['.footer-links .footer-link', 0, 0, 'Más herramientas gratis'],
+  ['.footer-links .footer-link', 1, 0, 'Audiolibros recomendados'],
+  ['.footer-links .footer-link', 2, 0, 'Ayuda'],
+  ['.footer-links .footer-link', 3, 0, 'Encuentra una línea de ayuda'],
+  ['.footer-credit', 0, 0, 'Creado por'],
+  ['.eid-credit', 0, 0, 'Creado por Clive Ngwenya (M.C.N) para'],
+  ['.eid-credit', 0, 1, '. De uso libre bajo la Licencia MIT.'],
+  ['.eid-credit span', 0, 0, 'Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.']
+];
+var EQ_STATIC_ATTRS = [
+  ['.logo', 'alt', 'Logotipo de Emotional Intelligence Developer'],
+  ['#userName', 'placeholder', 'Escribe tu nombre'],
+  ['#optBox', 'aria-label', 'Opciones de respuesta']
+];
+var EQ_TITLE_ES = '¿Cuál es tu puntuación de inteligencia emocional? | Emotional Intelligence Developer';
+
+var EQ_EN = null;
+
+function eqSnapshotEnglish() {
+  EQ_EN = { q: EQ_QUESTIONS.map(function (x) { return x.q; }), scale: EQ_SCALE.map(function (x) { return [x.t, x.d]; }), data: {}, title: document.title };
+  EQ_AREAS.forEach(function (a) {
+    var d = EQ_DATA[a];
+    EQ_EN.data[a] = JSON.parse(JSON.stringify({ lesson: d.lesson, word: d.word, week: d.week, tiers: d.tiers }));
+  });
+}
+
+function eqApplyData() {
+  var src = (EQ_LANG === 'es') ? EQ_ES : EQ_EN;
+  EQ_QUESTIONS.forEach(function (x, i) { x.q = src.q[i]; });
+  EQ_SCALE.forEach(function (x, i) { x.t = src.scale[i][0]; x.d = src.scale[i][1]; });
+  EQ_AREAS.forEach(function (a) {
+    var s = src.data[a];
+    EQ_DATA[a].lesson = s.lesson; EQ_DATA[a].word = s.word; EQ_DATA[a].week = s.week; EQ_DATA[a].tiers = s.tiers;
+  });
+}
+
+function eqTextNodes(el) {
+  var out = [];
+  for (var c = el.firstChild; c; c = c.nextSibling) { if (c.nodeType === 3 && c.nodeValue.trim()) out.push(c); }
+  return out;
+}
+
+function eqApplyStatic() {
+  var es = (EQ_LANG === 'es');
+  EQ_STATIC.forEach(function (row) {
+    var el = document.querySelectorAll(row[0])[row[1]];
+    if (!el) return;
+    var n = eqTextNodes(el)[row[2]];
+    if (!n) return;
+    if (n.__eqOrig === undefined) n.__eqOrig = n.nodeValue;
+    if (es) {
+      var o = n.__eqOrig;
+      n.nodeValue = o.match(/^\s*/)[0] + row[3] + o.match(/\s*$/)[0];
+    } else {
+      n.nodeValue = n.__eqOrig;
+    }
+  });
+  EQ_STATIC_ATTRS.forEach(function (row) {
+    var el = document.querySelector(row[0]);
+    if (!el) return;
+    if (!el.hasAttribute('data-eq-orig-' + row[1])) el.setAttribute('data-eq-orig-' + row[1], el.getAttribute(row[1]) || '');
+    el.setAttribute(row[1], es ? row[2] : el.getAttribute('data-eq-orig-' + row[1]));
+  });
+  document.title = es ? EQ_TITLE_ES : EQ_EN.title;
+  document.documentElement.setAttribute('lang', es ? 'es' : 'en');
+}
+
+function eqSetLang(lang, save) {
+  EQ_LANG = (lang === 'es') ? 'es' : 'en';
+  var sel = document.getElementById('eqLang');
+  if (sel && sel.value !== EQ_LANG) sel.value = EQ_LANG;
+  eqApplyData();
+  eqApplyStatic();
+  eqShareLinks();
+
+  /* Redraw whatever is on screen. Answers, the name and the ticked plan days are kept. */
+  if (document.getElementById('quizScreen').classList.contains('active')) {
+    eqRender();
+  } else if (document.getElementById('resultScreen').classList.contains('active')) {
+    var opens = Array.prototype.map.call(document.querySelectorAll('#domainCards details'), function (d) { return d.open; });
+    var ticks = Array.prototype.map.call(document.querySelectorAll('#planBox input'), function (c) { return c.checked; });
+    eqBuildResults();
+    Array.prototype.forEach.call(document.querySelectorAll('#domainCards details'), function (d, i) { if (opens[i] !== undefined) d.open = opens[i]; });
+    Array.prototype.forEach.call(document.querySelectorAll('#planBox input'), function (c, i) { if (ticks[i] !== undefined) c.checked = ticks[i]; });
+  }
+
+  if (save) { try { localStorage.setItem(EQ_LANG_KEY, EQ_LANG); } catch (e) {} }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  eqSnapshotEnglish();
+  var saved = 'en';
+  try { saved = localStorage.getItem(EQ_LANG_KEY) || 'en'; } catch (e) {}
+  var sel = document.getElementById('eqLang');
+  if (sel) sel.addEventListener('change', function () { eqSetLang(sel.value, true); });
+  if (saved === 'es') eqSetLang('es', false);
+});
+</script>
 
 <script>
 var EQ_LOGO = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
@@ -542,7 +969,7 @@ function eqEl(id) { return document.getElementById(id); }
 
 function eqToast(msg) {
   var el = eqEl('toast');
-  el.textContent = msg;
+  el.textContent = eqS(msg);
   el.classList.add('show');
   clearTimeout(eqToastTimer);
   eqToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
@@ -574,10 +1001,10 @@ function eqRender() {
     var item = EQ_QUESTIONS[s.i];
     qBox.style.display = 'block';
     lBox.style.display = 'none';
-    eqEl('progLabel').textContent = 'Question ' + (s.i + 1) + ' of ' + EQ_QUESTIONS.length;
-    eqEl('progArea').textContent = item.cat;
+    eqEl('progLabel').textContent = eqS('Question ') + (s.i + 1) + eqS(' of ') + EQ_QUESTIONS.length;
+    eqEl('progArea').textContent = eqArea(item.cat);
     eqEl('progFill').style.width = Math.max(3, Math.round((s.i / EQ_QUESTIONS.length) * 100)) + '%';
-    eqEl('catTag').textContent = item.cat;
+    eqEl('catTag').textContent = eqArea(item.cat);
     eqEl('qText').textContent = item.q;
 
     var box = eqEl('optBox');
@@ -597,14 +1024,14 @@ function eqRender() {
     var d = EQ_DATA[s.cat].lesson;
     qBox.style.display = 'none';
     lBox.style.display = 'block';
-    eqEl('progLabel').textContent = 'Area ' + s.n + ' of 4 done';
-    eqEl('progArea').textContent = 'Quick lesson';
+    eqEl('progLabel').textContent = eqS('Area ') + s.n + eqS(' of 4 done');
+    eqEl('progArea').textContent = eqS('Quick lesson');
     eqEl('progFill').style.width = Math.round((s.n / 4) * 100) + '%';
-    eqEl('lessonKicker').textContent = 'Quick lesson: ' + s.cat;
+    eqEl('lessonKicker').textContent = eqS('Quick lesson: ') + eqArea(s.cat);
     eqEl('lessonTitle').textContent = d.title;
     eqEl('lessonBody').textContent = d.body;
-    eqEl('lessonTry').innerHTML = '<b>Try it:</b> ' + d.tryit;
-    eqEl('lessonNext').textContent = (s.n === 4) ? 'See my results' : 'Continue';
+    eqEl('lessonTry').innerHTML = '<b>' + eqS('Try it:') + '</b> ' + d.tryit;
+    eqEl('lessonNext').textContent = (s.n === 4) ? eqS('See my results') : eqS('Continue');
   }
 }
 
@@ -668,26 +1095,26 @@ function eqTier(score) {
 }
 
 function eqHeadline(score) {
-  if (score >= 80) return 'You have a very strong emotional intelligence';
-  if (score >= 65) return 'You have a strong emotional intelligence';
-  if (score >= 50) return 'You have a solid base to build on';
-  if (score >= 35) return 'You are building your emotional intelligence';
-  return 'You have plenty of room to grow, and that is good news';
+  if (score >= 80) return eqS('You have a very strong emotional intelligence');
+  if (score >= 65) return eqS('You have a strong emotional intelligence');
+  if (score >= 50) return eqS('You have a solid base to build on');
+  if (score >= 35) return eqS('You are building your emotional intelligence');
+  return eqS('You have plenty of room to grow, and that is good news');
 }
 
 function eqSummary(score) {
-  if (score >= 80) return 'You seem aware, thoughtful and steady. You likely understand your own feelings and other people\'s, and it shows in how you communicate.';
-  if (score >= 65) return 'You do well in most areas. A few small habits could take you from good to great.';
-  if (score >= 50) return 'Some of the habits are already there. With a little regular practice you can feel more confident with emotions, conflict and connection.';
-  if (score >= 35) return 'You may be in a season of learning or stress. This is not a pass or fail. It simply shows where small steps can help most.';
-  return 'Things may feel heavy right now. Emotional skills can be learned at any age, and small steps add up over time.';
+  if (score >= 80) return eqS('You seem aware, thoughtful and steady. You likely understand your own feelings and other people\'s, and it shows in how you communicate.');
+  if (score >= 65) return eqS('You do well in most areas. A few small habits could take you from good to great.');
+  if (score >= 50) return eqS('Some of the habits are already there. With a little regular practice you can feel more confident with emotions, conflict and connection.');
+  if (score >= 35) return eqS('You may be in a season of learning or stress. This is not a pass or fail. It simply shows where small steps can help most.');
+  return eqS('Things may feel heavy right now. Emotional skills can be learned at any age, and small steps add up over time.');
 }
 
 function eqBuildResults() {
   var r = eqScores();
   var name = eqEl('userName').value.trim();
 
-  eqEl('hello').textContent = name ? ('Well done, ' + name) : 'Well done for finishing';
+  eqEl('hello').textContent = name ? (eqS('Well done, ') + name) : eqS('Well done for finishing');
   eqEl('overallScore').textContent = r.overall;
   eqEl('scoreHeadline').textContent = eqHeadline(r.overall);
   eqEl('scoreSummary').textContent = eqSummary(r.overall);
@@ -695,10 +1122,10 @@ function eqBuildResults() {
     eqEl('ringArc').setAttribute('stroke-dashoffset', String(326.7 * (1 - r.overall / 100)));
   }, 80);
 
-  eqEl('bestName').textContent = r.best;
-  eqEl('bestScore').textContent = r.scaled[r.best] + ' out of 100';
-  eqEl('growName').textContent = r.grow;
-  eqEl('growScore').textContent = r.scaled[r.grow] + ' out of 100';
+  eqEl('bestName').textContent = eqArea(r.best);
+  eqEl('bestScore').textContent = r.scaled[r.best] + eqS(' out of 100');
+  eqEl('growName').textContent = eqArea(r.grow);
+  eqEl('growScore').textContent = r.scaled[r.grow] + eqS(' out of 100');
 
   var wrap = eqEl('domainCards');
   wrap.innerHTML = '';
@@ -709,25 +1136,25 @@ function eqBuildResults() {
     var card = document.createElement('div');
     card.className = 'domain';
     card.innerHTML =
-      '<div class="domain-head"><span class="domain-name">' + cat + '</span><span class="domain-score">' + score + '/100</span></div>' +
+      '<div class="domain-head"><span class="domain-name">' + eqArea(cat) + '</span><span class="domain-score">' + score + '/100</span></div>' +
       '<div class="bar"><div style="width:' + score + '%;background:' + data.color + ';"></div></div>' +
       '<div class="level">' + t.level + '</div>' +
       '<p class="brief">' + t.brief + '</p>' +
-      '<details' + (cat === r.grow ? ' open' : '') + '><summary>Learn more about ' + cat + '</summary>' +
-        '<div class="ins"><div class="k">What this means</div><div class="t">' + t.what + '</div></div>' +
-        '<div class="ins"><div class="k">What it can look like</div><div class="t">' + t.example + '</div></div>' +
-        '<div class="ins"><div class="k">Why it matters</div><div class="t">' + t.why + '</div></div>' +
-        '<div class="ins gold"><div class="k">Try this</div><div class="t">' + t.practice + '</div></div>' +
+      '<details' + (cat === r.grow ? ' open' : '') + '><summary>' + eqS('Learn more about ') + eqArea(cat) + '</summary>' +
+        '<div class="ins"><div class="k">' + eqS('What this means') + '</div><div class="t">' + t.what + '</div></div>' +
+        '<div class="ins"><div class="k">' + eqS('What it can look like') + '</div><div class="t">' + t.example + '</div></div>' +
+        '<div class="ins"><div class="k">' + eqS('Why it matters') + '</div><div class="t">' + t.why + '</div></div>' +
+        '<div class="ins gold"><div class="k">' + eqS('Try this') + '</div><div class="t">' + t.practice + '</div></div>' +
       '</details>';
     wrap.appendChild(card);
   });
 
-  eqEl('planLabel').textContent = 'Your 7 day starter plan: ' + r.grow;
+  eqEl('planLabel').textContent = eqS('Your 7 day starter plan: ') + eqArea(r.grow);
   var plan = eqEl('planBox');
   plan.innerHTML = '';
   EQ_DATA[r.grow].week.forEach(function (txt, i) {
     var l = document.createElement('label');
-    l.innerHTML = '<input type="checkbox" /><span><b>Day ' + (i + 1) + '</b> ' + txt + '</span>';
+    l.innerHTML = '<input type="checkbox" /><span><b>' + eqS('Day ') + (i + 1) + '</b> ' + txt + '</span>';
     plan.appendChild(l);
   });
 
@@ -743,18 +1170,18 @@ function eqBuildResults() {
 function eqScoreText() {
   var r = eqScores();
   var name = eqEl('userName').value.trim();
-  return (name ? name + '\'s EI Score\n' : '') +
-    'Overall: ' + r.overall + '/100\n' +
-    'Self-Awareness: ' + r.scaled['Self-Awareness'] + '/100\n' +
-    'Empathy: ' + r.scaled['Empathy'] + '/100\n' +
-    'Regulation: ' + r.scaled['Regulation'] + '/100\n' +
-    'Communication: ' + r.scaled['Communication'] + '/100\n' +
-    'Take the quiz: ' + window.location.href;
+  return (name ? (EQ_LANG === 'es' ? eqS('EI Score of ') + name : name + '\'s EI Score') + '\n' : '') +
+    eqS('Overall: ') + r.overall + '/100\n' +
+    eqArea('Self-Awareness') + ': ' + r.scaled['Self-Awareness'] + '/100\n' +
+    eqArea('Empathy') + ': ' + r.scaled['Empathy'] + '/100\n' +
+    eqArea('Regulation') + ': ' + r.scaled['Regulation'] + '/100\n' +
+    eqArea('Communication') + ': ' + r.scaled['Communication'] + '/100\n' +
+    eqS('Take the quiz: ') + window.location.href;
 }
 
 function eqShareLinks() {
   var url = encodeURIComponent(window.location.href);
-  var msg = encodeURIComponent('Find out your emotional intelligence score with this free 20 question quiz: ');
+  var msg = encodeURIComponent(eqS('Find out your emotional intelligence score with this free 20 question quiz: '));
   ['waShare', 'waShareResult'].forEach(function (id) { eqEl(id).href = 'https://wa.me/?text=' + msg + url; });
   ['fbShare', 'fbShareResult'].forEach(function (id) { eqEl(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
   ['xShare', 'xShareResult'].forEach(function (id) { eqEl(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
@@ -816,10 +1243,10 @@ async function eqPdf() {
     doc.addImage(logo, 'JPEG', m + 10, st.y + 8, 54, 54);
   } catch (e) {}
   doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(dark[0], dark[1], dark[2]);
-  doc.text('Emotional Intelligence Score Report', m + 76, st.y + 28);
+  doc.text(eqS('Emotional Intelligence Score Report'), m + 76, st.y + 28);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(muted[0], muted[1], muted[2]);
   if (name) doc.text(name, m + 76, st.y + 43);
-  doc.text('emotionalintelligencedeveloper.com   |   ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), m + 76, name ? st.y + 57 : st.y + 43);
+  doc.text('emotionalintelligencedeveloper.com   |   ' + new Date().toLocaleDateString(EQ_LANG === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), m + 76, name ? st.y + 57 : st.y + 43);
   st.y += 90;
 
   doc.setFillColor(232, 246, 245);
@@ -832,7 +1259,7 @@ async function eqPdf() {
   doc.text(doc.splitTextToSize(eqSummary(r.overall), st.w - 120).slice(0, 3), m + 112, st.y + 40);
   st.y += 92;
 
-  eqPdfText(doc, st, 'Strongest area: ' + r.best + ' (' + r.scaled[r.best] + '/100).   Best area to grow: ' + r.grow + ' (' + r.scaled[r.grow] + '/100).', 10, 'bold', dark, 14);
+  eqPdfText(doc, st, eqS('Strongest area: ') + eqArea(r.best) + ' (' + r.scaled[r.best] + '/100).   ' + eqS('Best area to grow: ') + eqArea(r.grow) + ' (' + r.scaled[r.grow] + '/100).', 10, 'bold', dark, 14);
   st.y += 8;
 
   EQ_AREAS.forEach(function (cat) {
@@ -842,7 +1269,7 @@ async function eqPdf() {
     doc.setDrawColor(208, 221, 226);
     doc.line(m, st.y, pageW - m, st.y);
     st.y += 16;
-    eqPdfText(doc, st, cat + ':  ' + score + '/100  (' + t.level + ')', 12, 'bold', teal, 15);
+    eqPdfText(doc, st, eqArea(cat) + ':  ' + score + '/100  (' + t.level + ')', 12, 'bold', teal, 15);
     doc.setFillColor(232, 240, 241);
     doc.roundedRect(m, st.y - 4, st.w, 8, 4, 4, 'F');
     doc.setFillColor(42, 122, 120);
@@ -850,7 +1277,7 @@ async function eqPdf() {
     st.y += 18;
     eqPdfText(doc, st, t.brief, 10, 'italic', muted, 13);
     st.y += 4;
-    [['What this means', t.what], ['What it can look like', t.example], ['Why it matters', t.why], ['Try this', t.practice]].forEach(function (p) {
+    [[eqS('What this means'), t.what], [eqS('What it can look like'), t.example], [eqS('Why it matters'), t.why], [eqS('Try this'), t.practice]].forEach(function (p) {
       eqPdfText(doc, st, p[0].toUpperCase(), 8.5, 'bold', muted, 12);
       eqPdfText(doc, st, p[1], 9.5, 'normal', dark, 12.5);
       st.y += 5;
@@ -862,14 +1289,14 @@ async function eqPdf() {
   doc.setDrawColor(160, 200, 198);
   doc.line(m, st.y, pageW - m, st.y);
   st.y += 16;
-  eqPdfText(doc, st, 'Your 7 day starter plan: ' + r.grow, 12, 'bold', teal, 16);
+  eqPdfText(doc, st, eqS('Your 7 day starter plan: ') + eqArea(r.grow), 12, 'bold', teal, 16);
   EQ_DATA[r.grow].week.forEach(function (txt, i) {
-    eqPdfText(doc, st, '[  ]  Day ' + (i + 1) + ':  ' + txt, 10, 'normal', dark, 14);
+    eqPdfText(doc, st, '[  ]  ' + eqS('Day ') + (i + 1) + ':  ' + txt, 10, 'normal', dark, 14);
   });
   st.y += 10;
 
   if (st.y > pageH - 140) { doc.addPage(); st.y = m; }
-  eqPdfText(doc, st, 'Words to know', 12, 'bold', teal, 16);
+  eqPdfText(doc, st, eqS('Words to know'), 12, 'bold', teal, 16);
   EQ_AREAS.forEach(function (cat) {
     var w = EQ_DATA[cat].word;
     eqPdfText(doc, st, w[0] + ': ' + w[1], 9.5, 'normal', dark, 12.5);
@@ -878,13 +1305,13 @@ async function eqPdf() {
   st.y += 10;
 
   if (st.y > pageH - 120) { doc.addPage(); st.y = m; }
-  eqPdfText(doc, st, 'More free wellbeing resources', 11, 'bold', teal, 15);
+  eqPdfText(doc, st, eqS('More free wellbeing resources'), 11, 'bold', teal, 15);
   [
     'Main site: emotionalintelligencedeveloper.com',
     'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
     'Audio books: emotionalintelligencedeveloper.com/recommended-books/',
     'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-  ].forEach(function (line) { eqPdfText(doc, st, line, 9.5, 'normal', dark, 13); });
+  ].forEach(function (line) { eqPdfText(doc, st, eqS(line), 9.5, 'normal', dark, 13); });
 
   var pages = doc.getNumberOfPages();
   for (var p = 1; p <= pages; p++) {
@@ -892,15 +1319,24 @@ async function eqPdf() {
     doc.setDrawColor(160, 200, 198);
     doc.line(m, pageH - 36, pageW - m, pageH - 36);
     doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(125, 147, 155);
-    doc.text('This report is for reflection and self-awareness. It is not a diagnosis or professional assessment.', m, pageH - 22);
+    doc.text(eqS('This report is for reflection and self-awareness. It is not a diagnosis or professional assessment.'), m, pageH - 22);
     doc.text(p + ' / ' + pages, pageW - m - 24, pageH - 22);
   }
 
-  doc.save('emotional-intelligence-score-report.pdf');
+  doc.save(eqS('emotional-intelligence-score-report.pdf'));
   eqToast('PDF downloaded!');
 }
 
 eqShareLinks();
 </script>
+
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  Created by Clive Ngwenya (M.C.N) for
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  Free to use under the MIT License.
+  <br>
+  <span style="font-size:12px;opacity:0.85;">For reflection and self-support only. Not medical or crisis advice.</span>
+</div>
 </body>
 </html>

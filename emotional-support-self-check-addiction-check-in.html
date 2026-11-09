@@ -71,6 +71,11 @@
     }
     .safety-header a { color: var(--risk-text); font-weight: bold; }
 
+    /* LANGUAGE */
+    .lang-bar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+    .lang-bar select { font-family: inherit; font-size: 14px; padding: 7px 10px; min-height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; color: var(--text); cursor: pointer; }
+    .lang-bar select:focus { outline: none; border-color: var(--brand); }
+
     /* PROGRESS */
     .progress { margin-bottom: 14px; padding: 0 4px; }
     .progress-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
@@ -212,20 +217,29 @@
 <body>
 <div class="container">
 
+  <!-- LANGUAGE -->
+  <div class="lang-bar">
+    <label for="langSelect">Language / Idioma</label>
+    <select id="langSelect">
+      <option value="en" selected>English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
   <!-- HEADER -->
   <header class="header">
     <div class="logo-wrap">
-      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" loading="lazy" />
+      <img class="logo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" data-i18n-attr="alt:logoAlt" loading="lazy" />
       <div class="brand-name">Emotional Intelligence<br>Developer</div>
     </div>
-    <h1>Emotional Support Self-Check</h1>
-    <p class="tagline">A kind check-in for habits, urges and social anxiety. Understand what is pulling at you, what you need, and take one honest next step.</p>
+    <h1 data-i18n="h1">Emotional Support Self-Check</h1>
+    <p class="tagline" data-i18n="tagline">A kind check-in for habits, urges and social anxiety. Understand what is pulling at you, what you need, and take one honest next step.</p>
     <div class="notice">
-      <strong>Private:</strong> Your answers stay on your device. This tool is not medical advice, not a diagnosis, and not a replacement for professional care.
+      <strong data-i18n="priv">Private:</strong> <span data-i18n="privText">Your answers stay on your device. This tool is not medical advice, not a diagnosis, and not a replacement for professional care.</span>
     </div>
     <div class="safety-header">
-      <strong>If you feel unsafe or at risk of harming yourself or others, contact emergency services now.</strong>
-      Find support at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>
+      <strong data-i18n="sh1">If you feel unsafe or at risk of harming yourself or others, contact emergency services now.</strong>
+      <span data-i18n="sh2">Find support at</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>
     </div>
   </header>
 
@@ -233,202 +247,211 @@
   <div class="progress">
     <div class="progress-top">
       <span id="stepLabel">Step 1 of 6</span>
-      <button type="button" class="linkbtn" id="startOverTop">Start over</button>
+      <button type="button" class="linkbtn" id="startOverTop" data-i18n="startOver">Start over</button>
     </div>
     <div class="bar"><div class="fill" id="barFill"></div></div>
   </div>
 
   <!-- STEP 1: WELCOME -->
   <section class="step active" data-step="0">
-    <div class="step-label">Step 1 of 6</div>
-    <h2 class="step-title">Let us begin</h2>
+    <div class="step-label" data-i18n="step1">Step 1 of 6</div>
+    <h2 class="step-title" data-i18n="t1">Let us begin</h2>
     <div class="scene-wrap" id="welcomeScene"></div>
-    <p class="step-intro">This takes about five minutes. There are no right or wrong answers. At the end you can download a personal PDF with reflections, a plan and trusted websites to read more.</p>
+    <p class="step-intro" data-i18n="in1">This takes about five minutes. There are no right or wrong answers. At the end you can download a personal PDF with reflections, a plan and trusted websites to read more.</p>
 
     <div class="field">
-      <label class="field-label" for="userName">Your name (optional)</label>
-      <span class="field-hint">It will appear on your PDF. Use a first name or a nickname.</span>
+      <label class="field-label" for="userName" data-i18n="nameLbl">Your name (optional)</label>
+      <span class="field-hint" data-i18n="nameHint">It will appear on your PDF. Use a first name or a nickname.</span>
       <input type="text" id="userName" maxlength="40" autocomplete="off" />
     </div>
 
-    <p class="sub-title">What would you like to check in on?</p>
-    <div class="chip-grid two" id="focusGrid" role="radiogroup" aria-label="Check-in focus"></div>
+    <p class="sub-title" data-i18n="focusQ">What would you like to check in on?</p>
+    <div class="chip-grid two" id="focusGrid" role="radiogroup" aria-label="Check-in focus" data-i18n-attr="aria-label:focusAria"></div>
 
     <div class="btn-row between">
       <span></span>
-      <button type="button" class="btn btn-primary" data-to="1">Next</button>
+      <button type="button" class="btn btn-primary" data-to="1" data-i18n="next">Next</button>
     </div>
   </section>
 
   <!-- STEP 2: SIGNALS -->
   <section class="step" data-step="1">
-    <div class="step-label">Step 2 of 6</div>
-    <h2 class="step-title">How are things right now?</h2>
-    <p class="step-intro">Move each slider to where you are today.</p>
+    <div class="step-label" data-i18n="step2">Step 2 of 6</div>
+    <h2 class="step-title" data-i18n="t2">How are things right now?</h2>
+    <p class="step-intro" data-i18n="in2">Move each slider to where you are today.</p>
 
     <div class="slider-group">
-      <div class="slider-label"><span>Intensity today (0 to 10)</span><span class="slider-val" id="intensityVal">5</span></div>
-      <input type="range" id="intensity" min="0" max="10" value="5" aria-label="Intensity today 0 to 10" />
+      <div class="slider-label"><span data-i18n="sl1">Intensity today (0 to 10)</span><span class="slider-val" id="intensityVal">5</span></div>
+      <input type="range" id="intensity" min="0" max="10" value="5" aria-label="Intensity today 0 to 10" data-i18n-attr="aria-label:sl1a" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Urge or craving (0 to 10)</span><span class="slider-val" id="urgeVal">5</span></div>
-      <input type="range" id="urge" min="0" max="10" value="5" aria-label="Urge or craving level 0 to 10" />
+      <div class="slider-label"><span data-i18n="sl2">Urge or craving (0 to 10)</span><span class="slider-val" id="urgeVal">5</span></div>
+      <input type="range" id="urge" min="0" max="10" value="5" aria-label="Urge or craving level 0 to 10" data-i18n-attr="aria-label:sl2a" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Time lost or impact (0 to 10)</span><span class="slider-val" id="impactVal">5</span></div>
-      <input type="range" id="impact" min="0" max="10" value="5" aria-label="Time lost or impact 0 to 10" />
+      <div class="slider-label"><span data-i18n="sl3">Time lost or impact (0 to 10)</span><span class="slider-val" id="impactVal">5</span></div>
+      <input type="range" id="impact" min="0" max="10" value="5" aria-label="Time lost or impact 0 to 10" data-i18n-attr="aria-label:sl3a" />
     </div>
     <div class="slider-group">
-      <div class="slider-label"><span>Control (higher means more in control)</span><span class="slider-val" id="controlVal">5</span></div>
-      <input type="range" id="control" min="0" max="10" value="5" aria-label="Control level 0 to 10" />
+      <div class="slider-label"><span data-i18n="sl4">Control (higher means more in control)</span><span class="slider-val" id="controlVal">5</span></div>
+      <input type="range" id="control" min="0" max="10" value="5" aria-label="Control level 0 to 10" data-i18n-attr="aria-label:sl4a" />
     </div>
 
-    <p class="sub-title">What is your mood?</p>
+    <p class="sub-title" data-i18n="moodQ">What is your mood?</p>
     <div class="scene-wrap"><div id="moodScene"></div></div>
-    <div class="mood-grid" id="moodGrid" role="radiogroup" aria-label="Mood"></div>
+    <div class="mood-grid" id="moodGrid" role="radiogroup" aria-label="Mood" data-i18n-attr="aria-label:moodAria"></div>
 
     <div class="crisis-box">
-      <label><input type="checkbox" id="crisis" /> <span>Right now I am having thoughts of harming myself or someone else.</span></label>
+      <label><input type="checkbox" id="crisis" /> <span data-i18n="crisisLbl">Right now I am having thoughts of harming myself or someone else.</span></label>
       <div class="crisis-note" id="crisisNote" role="alert">
-        <strong>Thank you for being honest. Your safety comes first.</strong> Please contact your local emergency services now, or reach someone you trust and stay with them. You can find a helpline in your country at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
+        <strong data-i18n="cn1">Thank you for being honest. Your safety comes first.</strong> <span data-i18n="cn2">Please contact your local emergency services now, or reach someone you trust and stay with them. You can find a helpline in your country at</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
       </div>
     </div>
 
     <div class="btn-row between">
-      <button type="button" class="btn btn-outline" data-to="0">Back</button>
-      <button type="button" class="btn btn-primary" data-to="2">Next</button>
+      <button type="button" class="btn btn-outline" data-to="0" data-i18n="back">Back</button>
+      <button type="button" class="btn btn-primary" data-to="2" data-i18n="next">Next</button>
     </div>
   </section>
 
   <!-- STEP 3: CONNECTION -->
   <section class="step" data-step="2">
-    <div class="step-label">Step 3 of 6</div>
-    <h2 class="step-title">People and connection</h2>
-    <p class="step-intro">Social worry and habits often feed each other. Choose the answer that fits you best.</p>
+    <div class="step-label" data-i18n="step3">Step 3 of 6</div>
+    <h2 class="step-title" data-i18n="t3">People and connection</h2>
+    <p class="step-intro" data-i18n="in3">Social worry and habits often feed each other. Choose the answer that fits you best.</p>
     <div id="connQs"></div>
     <div class="btn-row between">
-      <button type="button" class="btn btn-outline" data-to="1">Back</button>
-      <button type="button" class="btn btn-primary" data-to="3">Next</button>
+      <button type="button" class="btn btn-outline" data-to="1" data-i18n="back">Back</button>
+      <button type="button" class="btn btn-primary" data-to="3" data-i18n="next">Next</button>
     </div>
   </section>
 
   <!-- STEP 4: REFLECT -->
   <section class="step" data-step="3">
-    <div class="step-label">Step 4 of 6</div>
-    <h2 class="step-title">A few gentle questions</h2>
-    <p class="step-intro">Short answers are fine. You can skip any of them.</p>
+    <div class="step-label" data-i18n="step4">Step 4 of 6</div>
+    <h2 class="step-title" data-i18n="t4">A few gentle questions</h2>
+    <p class="step-intro" data-i18n="in4">Short answers are fine. You can skip any of them.</p>
 
     <div class="field">
-      <label class="field-label" for="trigger">What usually triggers it?</label>
-      <span class="field-hint">Bedtime scrolling, arguments, loneliness, stress after work, being around people</span>
+      <label class="field-label" for="trigger" data-i18n="f1l">What usually triggers it?</label>
+      <span class="field-hint" data-i18n="f1h">Bedtime scrolling, arguments, loneliness, stress after work, being around people</span>
       <textarea id="trigger" maxlength="500" rows="2"></textarea>
     </div>
     <div class="field">
-      <label class="field-label" for="need">What need is it trying to meet?</label>
-      <span class="field-hint">Escape, comfort, excitement, connection, relief, feeling safe</span>
+      <label class="field-label" for="need" data-i18n="f2l">What need is it trying to meet?</label>
+      <span class="field-hint" data-i18n="f2h">Escape, comfort, excitement, connection, relief, feeling safe</span>
       <textarea id="need" maxlength="500" rows="2"></textarea>
     </div>
     <div class="field">
-      <label class="field-label" for="alternative">What is one small thing you can do in the next 10 minutes instead?</label>
-      <span class="field-hint">Drink water, step outside, breathe slowly, shower</span>
+      <label class="field-label" for="alternative" data-i18n="f3l">What is one small thing you can do in the next 10 minutes instead?</label>
+      <span class="field-hint" data-i18n="f3h">Drink water, step outside, breathe slowly, shower</span>
       <textarea id="alternative" maxlength="500" rows="2"></textarea>
     </div>
     <div class="field">
-      <label class="field-label" for="safePerson">Who is one safe person you could reach out to?</label>
-      <span class="field-hint">A friend, family member, counsellor, group leader</span>
+      <label class="field-label" for="safePerson" data-i18n="f4l">Who is one safe person you could reach out to?</label>
+      <span class="field-hint" data-i18n="f4h">A friend, family member, counsellor, group leader</span>
       <input type="text" id="safePerson" maxlength="120" autocomplete="off" />
     </div>
 
     <div class="btn-row between">
-      <button type="button" class="btn btn-outline" data-to="2">Back</button>
-      <button type="button" class="btn btn-primary" data-to="4">See my results</button>
+      <button type="button" class="btn btn-outline" data-to="2" data-i18n="back">Back</button>
+      <button type="button" class="btn btn-primary" data-to="4" data-i18n="seeRes">See my results</button>
     </div>
   </section>
 
   <!-- STEP 5: RESULTS -->
   <section class="step" data-step="4" aria-live="polite">
-    <div class="step-label">Step 5 of 6</div>
-    <h2 class="step-title" id="greet">Your results</h2>
+    <div class="step-label" data-i18n="step5">Step 5 of 6</div>
+    <h2 class="step-title" id="greet" data-i18n="greet">Your results</h2>
     <div class="scene-wrap" id="levelScene"></div>
     <div class="risk-pill" id="riskPill"></div>
     <div class="score-line" id="scoreLine"></div>
 
     <div class="result-safety" id="resultSafety">
-      <strong>Please be gentle with yourself today.</strong> If you feel unsafe or at risk of harming yourself or others, contact local emergency services now or find a helpline at <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
+      <strong data-i18n="rs1">Please be gentle with yourself today.</strong> <span data-i18n="rs2">If you feel unsafe or at risk of harming yourself or others, contact local emergency services now or find a helpline at</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
 
     <div class="msg-box" id="connMsg"></div>
 
-    <div class="section-label">Suggested next steps</div>
+    <div class="section-label" data-i18n="sugLbl">Suggested next steps</div>
     <ul class="list" id="suggestionsList"></ul>
-    <p class="step-intro" style="margin-top:10px;font-size:13px;">Your PDF has every step, reflection questions for your focus area and trusted websites to read more.</p>
+    <p class="step-intro" style="margin-top:10px;font-size:13px;" data-i18n="pdfNote">Your PDF has every step, reflection questions for your focus area and trusted websites to read more.</p>
 
     <div class="btn-row between">
-      <button type="button" class="btn btn-outline" data-to="3">Back</button>
-      <button type="button" class="btn btn-primary" data-to="5">Get my PDF and next steps</button>
+      <button type="button" class="btn btn-outline" data-to="3" data-i18n="back">Back</button>
+      <button type="button" class="btn btn-primary" data-to="5" data-i18n="getPdf">Get my PDF and next steps</button>
     </div>
   </section>
 
   <!-- STEP 6: KEEP GOING -->
   <section class="step" data-step="5">
-    <div class="step-label">Step 6 of 6</div>
-    <h2 class="step-title">Well done. Now keep going.</h2>
-    <p class="step-intro">Your PDF includes reflections, a craving plan, a 7 day follow up sheet and websites you can trust. Share it with a counsellor or a safe person if you want to.</p>
+    <div class="step-label" data-i18n="step6">Step 6 of 6</div>
+    <h2 class="step-title" data-i18n="t6">Well done. Now keep going.</h2>
+    <p class="step-intro" data-i18n="in6">Your PDF includes reflections, a craving plan, a 7 day follow up sheet and websites you can trust. Share it with a counsellor or a safe person if you want to.</p>
 
     <div class="btn-row">
-      <button type="button" class="btn btn-teal" id="pdfBtn">Download my PDF</button>
-      <button type="button" class="btn btn-outline" id="saveBtn">Save on this device</button>
-      <button type="button" class="btn btn-outline" id="fileBtn">Save as .txt file</button>
+      <button type="button" class="btn btn-teal" id="pdfBtn" data-i18n="dlPdf">Download my PDF</button>
+      <button type="button" class="btn btn-outline" id="saveBtn" data-i18n="saveDev">Save on this device</button>
+      <button type="button" class="btn btn-outline" id="fileBtn" data-i18n="saveTxt">Save as .txt file</button>
     </div>
 
-    <div class="section-label">Your plan for the next 24 hours</div>
+    <div class="section-label" data-i18n="planLbl">Your plan for the next 24 hours</div>
     <div class="plan-box"><ul class="list plain-list" id="planList"></ul></div>
 
-    <div class="section-label">Share this tool</div>
+    <div class="section-label" data-i18n="shareLbl">Share this tool</div>
     <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn">Copy link</button>
+      <button type="button" class="btn btn-share" id="copyLinkBtn" data-i18n="copyLink">Copy link</button>
       <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
       <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
     </div>
 
     <details>
-      <summary>Last 7 check-ins on this device</summary>
+      <summary data-i18n="histSum">Last 7 check-ins on this device</summary>
       <ul class="history-list" id="historyList"></ul>
-      <p style="font-size:12px;color:var(--hint);margin-top:8px;">No accounts, no logins, nothing sent anywhere.</p>
+      <p style="font-size:12px;color:var(--hint);margin-top:8px;" data-i18n="histNote">No accounts, no logins, nothing sent anywhere.</p>
     </details>
 
     <div class="btn-row between">
-      <button type="button" class="btn btn-outline" data-to="4">Back</button>
-      <button type="button" class="btn btn-primary" id="restartBtn">Start a new check-in</button>
+      <button type="button" class="btn btn-outline" data-to="4" data-i18n="back">Back</button>
+      <button type="button" class="btn btn-primary" id="restartBtn" data-i18n="newCheck">Start a new check-in</button>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <div class="scene-wrap" id="supportScene"></div>
-    <p class="footer-support-text">This platform is free for everyone. If it helped you, consider supporting it.</p>
+    <p class="footer-support-text" data-i18n="ftSupport">This platform is free for everyone. If it helped you, consider supporting it.</p>
     <div class="btn-row">
-      <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; Support this website</a>
+      <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" data-i18n="supportBtn">&#9829; Support this website</a>
     </div>
     <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkFooter">Copy link</button>
+      <button type="button" class="btn btn-share" id="copyLinkFooter" data-i18n="copyLink">Copy link</button>
       <a class="btn btn-share" id="waShareFooter" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-share" id="fbShareFooter" target="_blank" rel="noopener">Facebook</a>
       <a class="btn btn-share" id="xShareFooter" target="_blank" rel="noopener">X</a>
     </div>
     <div class="footer-links">
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener">More free tools</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener">Recommended audio books</a>
-      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener">Help</a>
-      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener">Find a helpline</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" data-i18n="fl1">More free tools</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" data-i18n="fl2">Recommended audio books</a>
+      <a class="footer-link" href="https://emotionalintelligencedeveloper.com/help-page/" target="_blank" rel="noopener" data-i18n="fl3">Help</a>
+      <a class="footer-link" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n="fl4">Find a helpline</a>
     </div>
     <p class="footer-credit">
-      Created by <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
-      &nbsp;&middot;&nbsp; Reflection support only. Not a substitute for professional care.
+      <span data-i18n="fcBy">Created by</span> <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a>
+      &nbsp;&middot;&nbsp; <span data-i18n="fcRest">Reflection support only. Not a substitute for professional care.</span>
     </p>
   </footer>
 
+</div>
+
+<!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
+<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+  <span data-i18n="ec1">Created by Clive Ngwenya (M.C.N) for</span>
+  <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
+  <span data-i18n="ec2">Free to use under the MIT License.</span>
+  <br>
+  <span style="font-size:12px;opacity:0.85;" data-i18n="ec3">For reflection and self-support only. Not medical or crisis advice.</span>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -680,6 +703,444 @@
      'Self reflection tools like this one help you build awareness. For moderate or strong patterns, support from a counsellor, doctor, peer group or structured programme helps many people more than going it alone. If your pattern keeps harming your relationships, health, work or money, reaching out is a wise next step.']
   ];
 
+  /* ---------------- LANGUAGE (English / Espanol) ---------------- */
+  /* English stays in the code and the page exactly as written. Spanish lives only in the tables below. */
+
+  var LANG_KEY = 'eidToolLang';
+  var lang = 'en';
+
+  function x(en, es) { return lang === 'es' ? es : en; }
+
+  /* Static words on the page. Each key matches a data-i18n hook in the HTML. */
+  var ES_UI = {
+    title: 'Chequeo personal de apoyo emocional (revisión de adicciones y ansiedad social) | Emotional Intelligence Developer',
+    logoAlt: 'Logotipo de Emotional Intelligence Developer',
+    h1: 'Chequeo personal de apoyo emocional',
+    tagline: 'Un chequeo amable sobre hábitos, impulsos y ansiedad social. Entiende qué tira de ti, qué necesitas y da un próximo paso honesto.',
+    priv: 'Privado:',
+    privText: 'Tus respuestas se quedan en tu dispositivo. Esta herramienta no es consejo médico, ni un diagnóstico, ni reemplaza la atención profesional.',
+    sh1: 'Si sientes que no estás a salvo o que corres riesgo de hacerte daño a ti o a otras personas, llama ahora a los servicios de emergencia.',
+    sh2: 'Encuentra apoyo en',
+    startOver: 'Empezar de nuevo',
+    step1: 'Paso 1 de 6', step2: 'Paso 2 de 6', step3: 'Paso 3 de 6', step4: 'Paso 4 de 6', step5: 'Paso 5 de 6', step6: 'Paso 6 de 6',
+    next: 'Siguiente',
+    back: 'Atrás',
+
+    t1: 'Empecemos',
+    in1: 'Esto toma unos cinco minutos. No hay respuestas buenas ni malas. Al final puedes descargar un PDF personal con reflexiones, un plan y sitios web de confianza para leer más.',
+    nameLbl: 'Tu nombre (opcional)',
+    nameHint: 'Aparecerá en tu PDF. Puedes usar tu nombre o un apodo.',
+    focusQ: '¿Qué te gustaría revisar?',
+    focusAria: 'Tema del chequeo',
+
+    t2: '¿Cómo estás ahora mismo?',
+    in2: 'Mueve cada barra hasta donde estás hoy.',
+    sl1: 'Intensidad hoy (0 a 10)',
+    sl2: 'Impulso o ansia (0 a 10)',
+    sl3: 'Tiempo perdido o impacto (0 a 10)',
+    sl4: 'Control (más alto significa más control)',
+    sl1a: 'Intensidad hoy, de 0 a 10',
+    sl2a: 'Nivel de impulso o ansia, de 0 a 10',
+    sl3a: 'Tiempo perdido o impacto, de 0 a 10',
+    sl4a: 'Nivel de control',
+    moodQ: '¿Cuál es tu estado de ánimo?',
+    moodAria: 'Estado de ánimo',
+    crisisLbl: 'Ahora mismo tengo pensamientos de hacerme daño o de hacer daño a otra persona.',
+    cn1: 'Gracias por tu sinceridad. Tu seguridad es lo primero.',
+    cn2: 'Por favor, llama ahora a los servicios de emergencia de tu zona, o busca a una persona de confianza y quédate con ella. Puedes encontrar una línea de ayuda en tu país en',
+
+    t3: 'Personas y conexión',
+    in3: 'La preocupación social y los hábitos suelen alimentarse entre sí. Elige la respuesta que mejor te describa.',
+
+    t4: 'Unas preguntas suaves',
+    in4: 'Con respuestas cortas basta. Puedes saltarte cualquiera.',
+    f1l: '¿Qué suele activarlo?',
+    f1h: 'Pasar tiempo en el teléfono antes de dormir, discusiones, soledad, estrés después del trabajo, estar con gente',
+    f2l: '¿Qué necesidad intenta cubrir?',
+    f2h: 'Escape, consuelo, emoción, conexión, alivio, seguridad',
+    f3l: '¿Qué pequeña cosa puedes hacer en los próximos 10 minutos en su lugar?',
+    f3h: 'Beber agua, salir afuera, respirar despacio, ducharte',
+    f4l: '¿Con qué persona de confianza podrías ponerte en contacto?',
+    f4h: 'Una amistad, alguien de tu familia, una persona de consejería, quien guía un grupo',
+    seeRes: 'Ver mis resultados',
+
+    greet: 'Tus resultados',
+    rs1: 'Sé amable contigo hoy.',
+    rs2: 'Si sientes que no estás a salvo o que corres riesgo de hacerte daño a ti o a otras personas, llama ahora a los servicios de emergencia de tu zona o busca una línea de ayuda en',
+    sugLbl: 'Próximos pasos sugeridos',
+    pdfNote: 'Tu PDF incluye todos los pasos, preguntas de reflexión para tu tema y sitios web de confianza para leer más.',
+    getPdf: 'Obtener mi PDF y próximos pasos',
+
+    t6: 'Bien hecho. Ahora sigue adelante.',
+    in6: 'Tu PDF incluye reflexiones, un plan para los impulsos, una hoja de seguimiento de 7 días y sitios web de confianza. Compártelo con una persona de consejería o con alguien de confianza si quieres.',
+    dlPdf: 'Descargar mi PDF',
+    saveDev: 'Guardar en este dispositivo',
+    saveTxt: 'Guardar como archivo .txt',
+    planLbl: 'Tu plan para las próximas 24 horas',
+    shareLbl: 'Comparte esta herramienta',
+    copyLink: 'Copiar enlace',
+    histSum: 'Últimos 7 chequeos en este dispositivo',
+    histNote: 'Sin cuentas, sin inicios de sesión, no se envía nada a ningún sitio.',
+    newCheck: 'Empezar un chequeo nuevo',
+
+    ftSupport: 'Esta plataforma es gratuita para todas las personas. Si te ayudó, piensa en apoyarla.',
+    supportBtn: '\u2665 Apoya este sitio web',
+    fl1: 'Más herramientas gratuitas',
+    fl2: 'Audiolibros recomendados',
+    fl3: 'Ayuda',
+    fl4: 'Encuentra una línea de ayuda',
+    fcBy: 'Creado por',
+    fcRest: 'Solo apoyo para reflexionar. No reemplaza la atención profesional.',
+
+    ec1: 'Creado por Clive Ngwenya (M.C.N) para',
+    ec2: 'Uso libre bajo la licencia MIT.',
+    ec3: 'Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.'
+  };
+
+  /* Words and content that the code builds. Keys are the English keys used by the tool. */
+  var ES = {
+    focusName: {
+      'Social anxiety': 'Ansiedad social',
+      'Social media / phone': 'Redes sociales / teléfono',
+      'Drugs & alcohol': 'Drogas y alcohol',
+      'Sex': 'Sexo',
+      'Porn': 'Porno',
+      'Gaming / gambling': 'Videojuegos / apuestas',
+      'Other / not sure': 'Otra cosa / no lo sé'
+    },
+
+    focus: {
+      'Social anxiety': {
+        blurb: 'Miedo a que te juzguen, evitar a la gente o usar hábitos para sobrellevar los momentos sociales',
+        intro: 'La ansiedad social es un miedo fuerte a que te juzguen, a pasar vergüenza o a que te rechacen cuando estás con otras personas. Es muy común y tiene tratamiento. Muchas personas recurren a pasar tiempo en el teléfono, beber, jugar u otros hábitos para sentirse más a salvo con la gente, o para recuperarse después. Eso ayuda por un momento, pero puede mantener vivo el miedo.',
+        research: 'La investigación muestra que evitar a la gente da un alivio corto, pero con el tiempo hace más fuerte el miedo. La terapia cognitivo conductual (TCC) y los pasos pequeños y planeados hacia las situaciones que temes están entre los tratamientos con más respaldo para la ansiedad social.',
+        tips: [
+          'Elige un paso social pequeño para esta semana, como saludar primero o hacer una llamada de dos minutos. Pequeño y seguido vale más que grande y raro.',
+          'Cuando pienses "me están juzgando", pregúntate cuál es la prueba real. La mayoría de la gente está ocupada pensando en sí misma.',
+          'Antes de salir, ponte una meta que dependa de ti y no de la reacción de los demás. Por ejemplo: "Voy a hacer una pregunta."'
+        ],
+        reflections: [
+          '¿Qué situaciones con gente me dan más nervios, y qué temo exactamente que pase?',
+          '¿Qué hago antes, durante o después de esos momentos para sentirme más a salvo? ¿De verdad me ayuda, o mantiene vivo el miedo?',
+          '¿Qué le diría a una amistad que se sintiera como me siento yo?',
+          '¿Con qué persona me siento aunque sea un poco a salvo? ¿Qué podría compartirle esta semana?',
+          '¿Qué pequeño paso puedo dar esta semana, y qué haré si me resulta incómodo?'
+        ],
+        refs: [
+          'Guías claras sobre ansiedad social y opciones de tratamiento.',
+          'Información basada en investigación sobre el trastorno de ansiedad social.',
+          'Consejos de autoayuda e información sobre la ansiedad.',
+          'Guías en lenguaje sencillo sobre ansiedad y dónde encontrar apoyo.',
+          'Apoyo y líneas de ayuda para personas del sur de África.'
+        ]
+      },
+      'Social media / phone': {
+        blurb: 'Pasar horas en redes, notificaciones, compararte, perder horas o sueño',
+        intro: 'Los teléfonos y las redes sociales están hechos para atrapar tu atención. Pasar el rato en ellos puede volverse una forma de escapar del estrés, la soledad o el aburrimiento, y sin que lo notes puede quitarte horas, sueño y conversaciones reales.',
+        research: 'Muchas apps usan recompensas que llegan sin avisar, el mismo patrón que hace difícil soltar un hábito. Hay estudios que relacionan el uso intenso, sobre todo cuando reemplaza el sueño o el tiempo con personas, con peor ánimo en algunas personas. Los cambios pequeños en tu entorno suelen funcionar mejor que la fuerza de voluntad sola.',
+        tips: [
+          'Apaga las notificaciones que no necesitas y saca las apps que distraen de tu primera pantalla.',
+          'Esta noche carga el teléfono fuera del dormitorio y usa un despertador normal si puedes.',
+          'Elige un momento al día sin teléfono, como los primeros 30 minutos después de despertar o las comidas con otras personas.'
+        ],
+        reflections: [
+          '¿Cuándo tomo más el teléfono? ¿Qué sentimiento suele aparecer justo antes?',
+          '¿Qué espero que me den las redes: consuelo, escape, compañía, un descanso?',
+          '¿Qué me cuesta el uso del teléfono: sueño, concentración, tiempo con personas, mi ánimo?',
+          '¿Qué haría con una hora extra al día? ¿Qué me gustaría recuperar?',
+          '¿A quién podría escribir o llamar, en vez de mirar el teléfono, cuando siento tristeza o soledad?'
+        ],
+        refs: [
+          'Investigación psicológica y guías prácticas sobre tecnología y bienestar.',
+          'Explica cómo se diseñan las apps para atrapar la atención y cómo recuperar el control.',
+          'Consejos sobre sueño, estrés y rutinas saludables.',
+          'Información mundial de salud sobre salud mental y bienestar.',
+          'Guías sobre salud mental y dónde encontrar apoyo.'
+        ]
+      },
+      'Drugs & alcohol': {
+        blurb: 'Consumir para relajarte, sobrellevar, sentir menos timidez o sentir algo',
+        intro: 'Muchas personas consumen alcohol o drogas para relajarse, sobrellevar el estrés o el dolor, sentir menos timidez con la gente, o para sentir algo cuando todo se siente apagado. Consumir por estas razones es común. Se vuelve un problema cuando sientes que no puedes parar, o cuando empieza a costarte salud, dinero, trabajo o relaciones.',
+        research: 'Las ganas intensas vienen de los sistemas de recompensa y de estrés del cerebro. Normalmente suben, llegan a su punto máximo y bajan en unos minutos o hasta una hora si no actúas sobre ellas. Importante: dejar de golpe el alcohol después de un uso intenso, o algunas drogas, puede ser peligroso para la salud. Habla con un centro de salud o una clínica antes de reducir rápido.',
+        tips: [
+          'Si has consumido mucho, habla con un centro de salud o una clínica antes de parar de golpe.',
+          'Planea tu salida antes de ir a un lugar donde podrías consumir. Ten claro cómo te irás y a quién llamarás.',
+          'Quita o evita lo que hoy te queda fácil de alcanzar, y cuéntale tu plan a una persona de confianza.'
+        ],
+        reflections: [
+          '¿Qué espero que hagan por mí el alcohol o las drogas: calmarme, ayudarme con la gente, adormecer el dolor, darme energía?',
+          '¿Qué momentos, lugares o personas me dan más ganas de consumir?',
+          '¿Qué me ha costado consumir hasta ahora, y qué quiero proteger?',
+          '¿Qué me ha ayudado a pasar un impulso, aunque sea una vez?',
+          '¿A quién podría decirle la verdad esta semana, y qué ayuda profesional hay cerca de mí?'
+        ],
+        refs: [
+          'Información sobre el alcohol, los riesgos y cómo buscar ayuda.',
+          'Información basada en investigación sobre drogas y adicción.',
+          'Información sobre tratamiento y una línea de ayuda nacional para personas en Estados Unidos.',
+          'Apoyo gratuito de otras personas que quieren dejar de beber.',
+          'Grupos gratuitos de apoyo para personas que se recuperan del consumo de drogas.',
+          'Apoyo y líneas de ayuda para personas del sur de África.'
+        ]
+      },
+      'Sex': {
+        blurb: 'Patrones que se sienten fuera de control o te dejan con arrepentimiento',
+        intro: 'El sexo es una parte normal de la vida. Este chequeo es solo para patrones que se sienten fuera de control, te dejan con arrepentimiento o riesgo, o se usan para escapar de sentimientos dolorosos. La conducta sexual puede volverse una forma de buscar consuelo, cercanía, emoción o alivio, y luego dejarte peor.',
+        research: 'La investigación sobre la conducta sexual compulsiva muestra que suele estar ligada al estrés, la soledad, la vergüenza y la dificultad con las emociones fuertes. Las terapias de conversación, sobre todo la TCC y los enfoques que desarrollan habilidades emocionales, se usan mucho y muchas personas mejoran con apoyo. La vergüenza mantiene el patrón oculto, y el apoyo sincero ayuda a romperlo.',
+        tips: [
+          'Pon un límite claro a las horas, los lugares o las apps que te llevan a decisiones de las que luego te arrepientes.',
+          'Cuida tu salud: usa protección y hazte pruebas con regularidad si tienes vida sexual activa.',
+          'Cuando llegue el impulso, nombra primero el sentimiento que hay debajo: soledad, estrés, aburrimiento, rechazo. Luego elige una forma segura de cubrir esa necesidad.'
+        ],
+        reflections: [
+          '¿Qué sentimiento suelo intentar evitar o cubrir justo antes del impulso?',
+          '¿De qué decisiones me he arrepentido, y qué necesitaba yo en ese momento?',
+          '¿Cómo quiero que sean mi vida íntima y mis relaciones?',
+          '¿Dónde siento vergüenza, y cómo sería hablarlo con alguien de confianza o con una persona de consejería con formación?',
+          '¿Cuáles son tres formas de sentirme cerca de la gente sin sexo?'
+        ],
+        refs: [
+          'Grupo de apoyo entre personas que luchan con la conducta sexual compulsiva.',
+          'Encuentra una persona terapeuta sexual o de consejería con formación.',
+          'Información de salud confiable, incluida la salud sexual y la salud mental.',
+          'Guías sobre salud mental y dónde encontrar apoyo.'
+        ]
+      },
+      'Porn': {
+        blurb: 'Un uso que se siente fuera de control o sirve para escapar de sentimientos',
+        intro: 'Aquí la pregunta no es si ver porno está bien o mal. La pregunta es si se siente fuera de tu control, si daña tus relaciones, tu trabajo o la forma en que te valoras, o si lo usas sobre todo para escapar del estrés, la soledad o el aburrimiento.',
+        research: 'Quienes investigan no coinciden del todo en cómo definir el uso problemático del porno, pero muchas personas dicen que se siente compulsivo y que después llega la vergüenza. Lo que ayuda: bloquear el acceso fácil, crear rutinas nuevas para los momentos vulnerables, aprender a dejar pasar los impulsos y hablar con una persona de consejería. El aislamiento y el secreto suelen hacer más fuerte el patrón.',
+        tips: [
+          'Pon filtros o bloqueadores, mantén los dispositivos fuera de los espacios privados por la noche y evita usarlos a solas en la cama.',
+          'Escribe una lista de cambio para los impulsos: mueve el cuerpo, agua fría, una caminata corta, una tarea que use las manos.',
+          'Fíjate en tus horas de más riesgo, como la noche tarde, después del estrés o después de un rechazo, y planea algo distinto para esas horas exactas.'
+        ],
+        reflections: [
+          '¿Cuándo lo uso más: a qué hora, dónde, y qué sentimiento llega antes?',
+          '¿Qué obtengo en el momento, y qué me cuesta después?',
+          '¿Cómo afecta la imagen que tengo de mí, mi pareja o mis relaciones?',
+          '¿Qué me gustaría sentir en su lugar, y dónde más podría encontrarlo?',
+          '¿Con quién puedo hablar con honestidad, o a qué persona de consejería podría acudir?'
+        ],
+        refs: [
+          'Grupo de apoyo entre personas que luchan con la conducta sexual compulsiva.',
+          'Encuentra una persona terapeuta sexual o de consejería con formación.',
+          'Encuentra una persona de consejería con formación (con sede en el Reino Unido, con opciones en línea).',
+          'Información de salud confiable, incluida la salud mental.',
+          'Guías sobre salud mental y dónde encontrar apoyo.'
+        ]
+      },
+      'Gaming / gambling': {
+        blurb: 'Perder tiempo o dinero, perseguir la próxima victoria o el próximo nivel',
+        intro: 'Los videojuegos y las apuestas están diseñados con recompensas, casi victorias y avisos constantes para que sigas. Para algunas personas se vuelven una forma de escapar del estrés o la soledad, y el tiempo y el dinero pueden desaparecer rápido.',
+        research: 'La Organización Mundial de la Salud reconoce el trastorno por videojuegos y el trastorno por apuestas como condiciones de salud. Las apuestas en especial pueden causar daños serios al dinero y a las relaciones, y perseguir las pérdidas es una señal de alerta. Ayuda fijar límites antes de empezar, bloquear el acceso y buscar apoyo pronto.',
+        tips: [
+          'Fija un límite de tiempo o de dinero antes de empezar, y usa herramientas de bloqueo o autoexclusión si apuestas.',
+          'Quita hoy el acceso fácil: borra las tarjetas guardadas, cierra sesión y elimina las apps por ahora.',
+          'Planea algo que reemplace tu hora habitual de juego, algo activo o social.'
+        ],
+        reflections: [
+          '¿Qué obtengo al jugar o apostar: emoción, escape, sensación de control, compañía?',
+          '¿Cuánto tiempo o dinero he perdido, y cómo me siento cuando lo pienso con honestidad?',
+          '¿Cuándo persigo una victoria o un nivel más, y qué intento no sentir?',
+          '¿Qué haría con el tiempo y el dinero si me alejara?',
+          '¿Con quién puedo hablar de esto, y quién puede ayudarme con las preocupaciones de dinero?'
+        ],
+        refs: [
+          'Apoyo gratuito, consejos y chat en vivo sobre el daño de las apuestas.',
+          'Apoyo de otras personas que quieren dejar de apostar.',
+          'Información y datos de líneas de ayuda sobre el juego problemático.',
+          'Apoyo gratuito en línea disponible en todo el mundo.',
+          'Información mundial de salud sobre los trastornos por videojuegos y apuestas.'
+        ]
+      },
+      'Other / not sure': {
+        blurb: 'Algo tira de ti y quieres entenderlo',
+        intro: 'No necesitas una etiqueta para merecer apoyo. Si algo tira de ti, te quita tiempo o energía que quieres usar en otra cosa, o lo haces para evitar sentimientos difíciles, este chequeo puede ayudarte a entenderlo.',
+        research: 'La mayoría de los hábitos que cuesta controlar intentan cubrir una necesidad, como alivio, consuelo, conexión o un descanso del dolor. Cuando encuentras la necesidad que hay debajo, es más fácil cubrirla de maneras que cuesten menos.',
+        tips: [
+          'Registra el patrón durante 24 horas sin juzgarte. ¿Qué pasó justo antes?',
+          'Elige un límite pequeño para hoy y revisa esta noche cómo te fue.',
+          'Cuéntale a una persona de confianza lo que notas. Hablar con honestidad le quita fuerza al hábito.'
+        ],
+        reflections: [
+          '¿Cuál es el hábito o patrón que me preocupa, con mis propias palabras?',
+          '¿Qué pasa en mi cuerpo y en mi mente justo antes?',
+          '¿Qué necesidad está cubriendo, y qué más podría cubrirla?',
+          '¿Qué me está costando, y cómo quiero que sea mi vida en su lugar?',
+          '¿En quién puedo confiar con esto, y cuál es mi próximo paso pequeño?'
+        ],
+        refs: [
+          'Líneas de apoyo gratuitas y confidenciales en tu país.',
+          'Guías en lenguaje sencillo sobre salud mental y dónde encontrar apoyo.',
+          'Consejos de autoayuda e información de salud confiable.',
+          'Información mundial de salud sobre salud mental y bienestar.',
+          'Busca terapeutas y lee artículos sobre salud mental.',
+          'Apoyo y líneas de ayuda para personas del sur de África.'
+        ]
+      }
+    },
+
+    helplineDesc: 'Líneas de apoyo gratuitas y confidenciales en tu país.',
+
+    connQ: [
+      'Evito a la gente o ciertos lugares por miedo a que me juzguen.',
+      'Uso mi hábito para sobrellevar el rato antes, durante o después de estar con gente.',
+      'Siento soledad, incluso cuando hay gente a mi alrededor.',
+      'Escondo esta parte de mi vida a las personas cercanas.'
+    ],
+    connOpts: ['Casi nunca', 'A veces', 'A menudo', 'Casi siempre'],
+
+    moods: { anxious: 'ansiedad', stressed: 'estrés', numb: 'entumecimiento', sad: 'tristeza', lonely: 'soledad', angry: 'enojo', okay: 'calma' },
+
+    moodTips: {
+      anxious: 'Para la ansiedad: inhala 4 segundos y exhala 6 segundos, durante 2 minutos.',
+      stressed: 'Para el estrés: afloja la mandíbula, baja los hombros y ve más despacio durante un minuto.',
+      numb: 'Para el entumecimiento: ancla tu atención. Sostén algo fresco, nombra 5 cosas que ves y 4 cosas que sientes.',
+      sad: 'Para la tristeza: un gesto de cuidado hacia ti es suficiente ahora mismo.',
+      lonely: 'Para la soledad: envía hoy un mensaje corto a una persona de confianza.',
+      angry: 'Para el enojo: aléjate y deja las decisiones grandes para cuando tu cuerpo se calme.',
+      okay: 'Te sientes bien. Protege eso con un límite claro hoy.'
+    },
+
+    connInfo: {
+      Light: {
+        msg: 'Tu conexión con las personas se siente bastante estable ahora. Mantenla así con contactos pequeños y regulares.',
+        tip: 'Mantén un contacto regular y sin presión cada semana, como una charla corta o una caminata con alguien de confianza.'
+      },
+      Some: {
+        msg: 'Aparece algo de preocupación social o de esconderte. Es común. Los pasos pequeños con personas de confianza pueden ayudar mucho.',
+        tip: 'Elige un paso social pequeño para esta semana y planéalo, como una llamada corta o saludar primero.'
+      },
+      Strong: {
+        msg: 'El miedo a la gente, o esconder esta parte de tu vida, te está pesando. Mereces apoyo. Hablar con una persona de consejería o con alguien de confianza puede marcar una diferencia real.',
+        tip: 'Cuéntale a una persona de confianza lo que estás viviendo, o pide una cita con una persona de consejería. No tienes que cargar con esto a solas.'
+      }
+    },
+    connName: { Light: 'Leve', Some: 'Media', Strong: 'Fuerte' },
+    levelName: { Low: 'Bajo', Moderate: 'Moderado', High: 'Alto' },
+
+    core: [
+      'Usa la regla de los 10 minutos: pausa el impulso 10 minutos y luego revisa cómo estás antes de actuar.',
+      'Prueba surfear el impulso: respira despacio y observa cómo el ansia sube, llega a su punto máximo y pasa.',
+      'Cámbialo por una acción pequeña: una caminata corta, agua, una ducha o un mensaje a una persona de confianza.'
+    ],
+    heavy: 'Es un día pesado. Baja tus exigencias, toma agua y acércate hoy a una persona o a una línea de ayuda.',
+
+    edu: [
+      ['Por qué aparecen las conductas compulsivas: las necesidades de fondo',
+       'La investigación sobre adicciones, incluido el trabajo de Gabor Mate, un médico que ha escrito mucho sobre trauma, dolor emocional y adicción, sugiere que las conductas compulsivas suelen tener menos que ver con la sustancia o la actividad y más con el alivio que dan frente al dolor emocional o a necesidades sin cubrir. Preguntarte "¿qué necesidad estoy cubriendo?" es una de las preguntas más útiles, porque abre la puerta a cubrir esa necesidad de formas que cuestan menos.'],
+      ['Los impulsos y las ansias son eventos del cerebro, no defectos de carácter',
+       'Las ansias son eventos neurológicos. Una conducta con recompensa que se repite crea caminos en el cerebro que se encienden cuando encuentras señales ligadas a esa conducta, muchas veces antes de que lo notes. Por eso los impulsos pueden sentirse repentinos y fuertes. Surfear el impulso, desarrollado a partir del trabajo del psicólogo Alan Marlatt, significa observar cómo un impulso sube, llega a su punto máximo y pasa sin actuar. Con práctica frecuente, puede reducir el poder que los impulsos tienen sobre ti.'],
+      ['Regular las emociones es una habilidad que puedes desarrollar',
+       'La dificultad para manejar sentimientos fuertes o incómodos es uno de los factores más ligados a la conducta compulsiva. La Terapia Dialéctico Conductual (DBT), creada por Marsha Linehan, enseña habilidades de tolerancia al malestar y de regulación emocional, y los estudios sugieren que estas habilidades pueden reducir la conducta impulsiva. La recuperación tiene menos que ver con la fuerza de voluntad y más con tener más formas de sobrellevar los momentos difíciles.'],
+      ['La conexión te protege',
+       'Quienes escriben e investigan sobre la recuperación, como Johann Hari y los estudios de Bruce Alexander sobre el entorno y la adicción, señalan que la conexión, la actividad con sentido y la pertenencia son factores fuertes de protección. El aislamiento es a la vez un detonante y un resultado de muchos hábitos. Incluso una sola persona de confianza con quien puedas hablar con la verdad puede marcar una diferencia real.'],
+      ['Buscar apoyo profesional es una fortaleza, no un fracaso',
+       'Las herramientas de reflexión como esta te ayudan a tomar conciencia. Para patrones moderados o fuertes, el apoyo de una persona de consejería, un profesional de la salud, un grupo de apoyo o un programa estructurado ayuda a muchas personas más que ir en solitario. Si tu patrón sigue dañando tus relaciones, tu salud, tu trabajo o tu dinero, pedir ayuda es un paso sabio.']
+    ],
+
+    scenes: {
+      'Two stick figures greeting each other': 'Dos figuras de palitos que se saludan',
+      'Two stick figures cheering': 'Dos figuras de palitos celebrando',
+      'Two stick figures walking together': 'Dos figuras de palitos caminando juntas',
+      'A stick figure sitting while a friend comforts them': 'Una figura de palitos sentada mientras una amistad la consuela',
+      'Two stick figures holding a heart together': 'Dos figuras de palitos sosteniendo juntas un corazón',
+      'A stick figure showing how you feel': 'Una figura de palitos que muestra cómo te sientes'
+    }
+  };
+
+  /* Lookups. In English they hand back the original data untouched. */
+  function focusName(k) { return lang === 'es' && ES.focusName[k] ? ES.focusName[k] : k; }
+  function moodName(m) { return lang === 'es' && ES.moods[m] ? ES.moods[m] : m; }
+  function connName(c) { return lang === 'es' && ES.connName[c] ? ES.connName[c] : c; }
+  function levelName(l) { return lang === 'es' && ES.levelName[l] ? ES.levelName[l] : l; }
+  function moodTip(m) { return lang === 'es' ? ES.moodTips[m] : MOOD_TIPS[m]; }
+  function connInfo(c) { return lang === 'es' ? ES.connInfo[c] : CONN_INFO[c]; }
+  function eduList() { return lang === 'es' ? ES.edu : EDU; }
+  function sceneLabel(l) { return lang === 'es' && ES.scenes[l] ? ES.scenes[l] : l; }
+  function fmtDate(d) { return lang === 'es' ? d.toLocaleString('es') : d.toLocaleString(); }
+
+  /* Focus data. Names, links and book titles always come from the English data, so links never change. */
+  function fd(key) {
+    var base = FOCUS[key] || FOCUS['Other / not sure'];
+    if (lang !== 'es') return base;
+    var k = FOCUS[key] ? key : 'Other / not sure';
+    var e = ES.focus[k];
+    return {
+      blurb: e.blurb, intro: e.intro, research: e.research, tips: e.tips, reflections: e.reflections,
+      refs: base.refs.map(function (r, i) { return { n: r.n, u: r.u, d: e.refs[i] }; }),
+      books: base.books
+    };
+  }
+  function genRefs() {
+    return GENERAL_REFS.map(function (g) { return lang === 'es' ? { n: g.n, u: g.u, d: ES.helplineDesc } : g; });
+  }
+
+  /* Swap the words. Only text and labels change. Inputs, answers, links and IDs stay as they are. */
+  function applyLang() {
+    var es = lang === 'es';
+
+    if (applyLang.title0 === undefined) applyLang.title0 = document.title;
+    document.title = es ? ES_UI.title : applyLang.title0;
+
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      if (el._en === undefined) el._en = el.textContent;
+      var k = el.getAttribute('data-i18n');
+      el.textContent = (es && ES_UI[k] !== undefined) ? ES_UI[k] : el._en;
+    });
+
+    document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+      if (!el._enAttr) el._enAttr = {};
+      el.getAttribute('data-i18n-attr').split(';').forEach(function (pair) {
+        var p = pair.split(':');
+        if (el._enAttr[p[0]] === undefined) el._enAttr[p[0]] = el.getAttribute(p[0]);
+        el.setAttribute(p[0], (es && ES_UI[p[1]] !== undefined) ? ES_UI[p[1]] : el._enAttr[p[0]]);
+      });
+    });
+
+    $('stepLabel').textContent = x('Step ' + (cur + 1) + ' of ' + STEP_COUNT, 'Paso ' + (cur + 1) + ' de ' + STEP_COUNT);
+
+    // Focus, mood and connection options: only the words change, the chosen answer stays selected
+    document.querySelectorAll('#focusGrid label').forEach(function (lab) {
+      var key = lab.querySelector('input').value;
+      lab.querySelector('span').firstChild.nodeValue = focusName(key);
+      lab.querySelector('small').textContent = fd(key).blurb;
+    });
+    document.querySelectorAll('#moodGrid label').forEach(function (lab) {
+      lab.lastChild.nodeValue = moodName(lab.querySelector('input').value);
+    });
+    document.querySelectorAll('#connQs .q').forEach(function (wrap, i) {
+      wrap.querySelector('p').textContent = x(CONN_Q[i].t, ES.connQ[i]);
+      wrap.querySelectorAll('label').forEach(function (lab, j) {
+        lab.lastChild.nodeValue = x(CONN_OPTS[j][1], ES.connOpts[j]);
+      });
+    });
+
+    $('welcomeScene').innerHTML = renderScene(SCENES.welcome, 'wide');
+    $('supportScene').innerHTML = renderScene(SCENES.support, 'wide');
+    $('moodScene').innerHTML = renderScene(moodScene(valueOf('mood') || 'numb'), 'small');
+
+    updateShareLinks();
+    renderHistory();
+
+    // Results and plan: rebuild the words from the same saved answers
+    if (latest) {
+      latest.date = fmtDate(latest.when);
+      latest.suggestions = getSuggestions(latest.focus, latest.level, latest.mood, latest.conn);
+      renderResults(latest);
+    }
+  }
+
+  function setLang(l, save) {
+    lang = (l === 'es') ? 'es' : 'en';
+    var sel = $('langSelect');
+    if (sel && sel.value !== lang) sel.value = lang;
+    document.documentElement.lang = lang;
+    applyLang();
+    if (save) { try { localStorage.setItem(LANG_KEY, lang); } catch (_) {} }
+  }
+
   /* ---------------- STICKMEN ---------------- */
 
   var POSES = {
@@ -737,7 +1198,7 @@
   }
 
   function renderScene(sc, cls) {
-    var s = '<svg class="scene ' + (cls || '') + '" viewBox="0 0 ' + sc.w + ' 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + sc.label + '">';
+    var s = '<svg class="scene ' + (cls || '') + '" viewBox="0 0 ' + sc.w + ' 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + sceneLabel(sc.label) + '">';
     sc.figs.forEach(function (f) { s += figureSVG(f); });
     if (sc.heart) {
       s += '<path transform="translate(' + sc.heart[0] + ',' + sc.heart[1] + ')" d="M0 8 C-14 -2 -10 -14 0 -6 C10 -14 14 -2 0 8Z" fill="#e8702a"/>';
@@ -796,11 +1257,12 @@
       'Try urge surfing: breathe slowly and watch the craving rise, peak and pass.',
       'Replace it with one small action: a short walk, water, a shower, or a message to a safe person.'
     ];
-    var f = FOCUS[focus] || FOCUS['Other / not sure'];
+    if (lang === 'es') core = ES.core;
+    var f = fd(focus);
     var list = core.concat(f.tips.slice(0, 2));
-    if (MOOD_TIPS[mood]) list.push(MOOD_TIPS[mood]);
-    list.push(CONN_INFO[conn].tip);
-    if (level === 'High') list.push('It is a heavy day. Lower your demands, drink water, and reach out to a person or a helpline today.');
+    if (MOOD_TIPS[mood]) list.push(moodTip(mood));
+    list.push(connInfo(conn).tip);
+    if (level === 'High') list.push(x('It is a heavy day. Lower your demands, drink water, and reach out to a person or a helpline today.', ES.heavy));
     return list.slice(0, 8);
   }
 
@@ -809,7 +1271,7 @@
   function go(n) {
     cur = n;
     steps.forEach(function (s, i) { s.classList.toggle('active', i === n); });
-    $('stepLabel').textContent = 'Step ' + (n + 1) + ' of ' + STEP_COUNT;
+    $('stepLabel').textContent = x('Step ' + (n + 1) + ' of ' + STEP_COUNT, 'Paso ' + (n + 1) + ' de ' + STEP_COUNT);
     $('barFill').style.width = ((n + 1) / STEP_COUNT * 100) + '%';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -828,9 +1290,11 @@
     var connScore = 0;
     CONN_Q.forEach(function (q) { connScore += parseInt(valueOf(q.id) || '0', 10); });
     var conn = connLevel(connScore);
+    var when = new Date();
 
     return {
-      date: new Date().toLocaleString(),
+      when: when,
+      date: fmtDate(when),
       name: trim($('userName').value, 40),
       focus: focus,
       mood: mood,
@@ -847,16 +1311,18 @@
   }
 
   function renderResults(r) {
-    $('greet').textContent = r.name ? 'Thank you for checking in, ' + r.name : 'Thank you for checking in';
+    $('greet').textContent = r.name ? x('Thank you for checking in, ', 'Gracias por hacer este chequeo, ') + r.name : x('Thank you for checking in', 'Gracias por hacer este chequeo');
 
     var pill = $('riskPill');
     var cls = r.level === 'Low' ? 'pill-low' : r.level === 'Moderate' ? 'pill-moderate' : 'pill-high';
     pill.className = 'risk-pill ' + cls;
-    pill.textContent = "Today's strain level: " + r.level;
+    pill.textContent = x("Today's strain level: " + r.level, 'Nivel de tensión de hoy: ' + levelName(r.level));
 
-    $('scoreLine').textContent = 'Score ' + r.score + ' / 40  \u00b7  Focus: ' + r.focus + '  \u00b7  Mood: ' + r.mood + '  \u00b7  Connection: ' + r.conn + ' (' + r.connScore + ' / 12)';
+    $('scoreLine').textContent = x(
+      'Score ' + r.score + ' / 40  \u00b7  Focus: ' + r.focus + '  \u00b7  Mood: ' + r.mood + '  \u00b7  Connection: ' + r.conn + ' (' + r.connScore + ' / 12)',
+      'Puntuación ' + r.score + ' / 40  \u00b7  Tema: ' + focusName(r.focus) + '  \u00b7  Estado de ánimo: ' + moodName(r.mood) + '  \u00b7  Conexión: ' + connName(r.conn) + ' (' + r.connScore + ' / 12)');
     $('resultSafety').classList.toggle('show', r.level === 'High');
-    $('connMsg').textContent = CONN_INFO[r.conn].msg;
+    $('connMsg').textContent = connInfo(r.conn).msg;
     $('levelScene').innerHTML = renderScene(SCENES[r.level.toLowerCase()], 'wide');
 
     var list = $('suggestionsList');
@@ -878,10 +1344,10 @@
       li.appendChild(document.createTextNode(val));
       plan.appendChild(li);
     }
-    addPlan('When it gets hard:', r.trigger || 'Notice what happens just before the urge.');
-    addPlan('My first small action:', r.alternative || 'Pause for 10 minutes and breathe slowly.');
-    addPlan('Who I will reach out to:', r.safePerson || 'One safe person or a helpline.');
-    addPlan('Tomorrow:', 'Come back at the same time and check in again.');
+    addPlan(x('When it gets hard:', 'Cuando se pone difícil:'), r.trigger || x('Notice what happens just before the urge.', 'Fíjate en lo que pasa justo antes del impulso.'));
+    addPlan(x('My first small action:', 'Mi primera acción pequeña:'), r.alternative || x('Pause for 10 minutes and breathe slowly.', 'Haz una pausa de 10 minutos y respira despacio.'));
+    addPlan(x('Who I will reach out to:', 'A quién acudiré:'), r.safePerson || x('One safe person or a helpline.', 'Una persona de confianza o una línea de ayuda.'));
+    addPlan(x('Tomorrow:', 'Mañana:'), x('Come back at the same time and check in again.', 'Vuelve a la misma hora y haz otro chequeo.'));
   }
 
   /* ---------------- HISTORY ---------------- */
@@ -901,19 +1367,19 @@
     var entries = readEntries();
     el.innerHTML = '';
     if (!entries.length) {
-      var li0 = document.createElement('li'); li0.textContent = 'No saved check-ins yet.'; el.appendChild(li0);
+      var li0 = document.createElement('li'); li0.textContent = x('No saved check-ins yet.', 'Aún no hay chequeos guardados.'); el.appendChild(li0);
       return;
     }
     entries.forEach(function (e) {
       var li = document.createElement('li');
-      li.textContent = e.date + ' | ' + e.focus + ' | ' + e.level;
+      li.textContent = e.date + ' | ' + focusName(e.focus) + ' | ' + levelName(e.level);
       el.appendChild(li);
     });
   }
 
   function ensureLatest() {
     if (!latest) {
-      if (!valueOf('focus')) { showToast('Please choose your check-in focus first.'); go(0); return false; }
+      if (!valueOf('focus')) { showToast(x('Please choose your check-in focus first.', 'Primero elige el tema de tu chequeo.')); go(0); return false; }
       latest = buildResult();
     }
     return true;
@@ -924,33 +1390,36 @@
   function downloadTxt() {
     if (!ensureLatest()) return;
     var r = latest;
+    var np = x('Not provided', 'No indicado');
     var lines = [
-      'Emotional Support Self-Check',
-      r.name ? 'Prepared for: ' + r.name : '',
-      'Generated: ' + r.date,
+      x('Emotional Support Self-Check', 'Chequeo personal de apoyo emocional'),
+      r.name ? x('Prepared for: ', 'Para: ') + r.name : '',
+      x('Generated: ', 'Generado: ') + r.date,
       '',
-      'Strain level: ' + r.level + ' | Score: ' + r.score + '/40',
-      'Focus: ' + r.focus + ' | Mood: ' + r.mood,
-      'Intensity: ' + r.intensity + '/10 | Urge: ' + r.urge + '/10 | Impact: ' + r.impact + '/10 | Control: ' + r.control + '/10',
-      'Connection: ' + r.conn + ' (' + r.connScore + '/12)',
+      x('Strain level: ' + r.level + ' | Score: ' + r.score + '/40', 'Nivel de tensión: ' + levelName(r.level) + ' | Puntuación: ' + r.score + '/40'),
+      x('Focus: ' + r.focus + ' | Mood: ' + r.mood, 'Tema: ' + focusName(r.focus) + ' | Estado de ánimo: ' + moodName(r.mood)),
+      x('Intensity: ' + r.intensity + '/10 | Urge: ' + r.urge + '/10 | Impact: ' + r.impact + '/10 | Control: ' + r.control + '/10',
+        'Intensidad: ' + r.intensity + '/10 | Impulso: ' + r.urge + '/10 | Impacto: ' + r.impact + '/10 | Control: ' + r.control + '/10'),
+      x('Connection: ' + r.conn + ' (' + r.connScore + '/12)', 'Conexión: ' + connName(r.conn) + ' (' + r.connScore + '/12)'),
       '',
-      'Triggers: ' + (r.trigger || 'Not provided'),
-      'Need behind it: ' + (r.need || 'Not provided'),
-      '10 minute alternative: ' + (r.alternative || 'Not provided'),
-      'Safe person: ' + (r.safePerson || 'Not provided'),
+      x('Triggers: ', 'Lo que lo activa: ') + (r.trigger || np),
+      x('Need behind it: ', 'Necesidad de fondo: ') + (r.need || np),
+      x('10 minute alternative: ', 'Alternativa de 10 minutos: ') + (r.alternative || np),
+      x('Safe person: ', 'Persona de confianza: ') + (r.safePerson || np),
       '',
-      'Suggested next steps:'
+      x('Suggested next steps:', 'Próximos pasos sugeridos:')
     ].concat(r.suggestions.map(function (s, i) { return (i + 1) + '. ' + s; }), [
       '',
-      'This tool is not medical advice. If you feel unsafe, seek urgent help now: https://findahelpline.com',
-      'Use this free tool again: ' + TOOL_URL
+      x('This tool is not medical advice. If you feel unsafe, seek urgent help now: https://findahelpline.com',
+        'Esta herramienta no es consejo médico. Si no te sientes a salvo, busca ayuda urgente ahora: https://findahelpline.com'),
+      x('Use this free tool again: ', 'Usa de nuevo esta herramienta gratuita: ') + TOOL_URL
     ]);
-    var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    var blob = new Blob([(lang === 'es' ? '\uFEFF' : '') + lines.join('\n')], { type: 'text/plain;charset=utf-8' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url; a.download = 'emotional-support-check-in.txt';
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    showToast('.txt file downloaded.');
+    showToast(x('.txt file downloaded.', 'Archivo .txt descargado.'));
   }
 
   /* ---------------- RESTART ---------------- */
@@ -965,14 +1434,14 @@
     $('moodScene').innerHTML = renderScene(moodScene('numb'), 'small');
     latest = null;
     go(0);
-    showToast('Ready for a new check-in.');
+    showToast(x('Ready for a new check-in.', 'Nuevo chequeo en marcha.'));
   }
 
   /* ---------------- SHARE ---------------- */
 
   function updateShareLinks() {
     var url = encodeURIComponent(TOOL_URL);
-    var msg = encodeURIComponent('A free, kind check-in tool for habits, urges and social anxiety: ');
+    var msg = encodeURIComponent(x('A free, kind check-in tool for habits, urges and social anxiety: ', 'Una herramienta gratuita y amable para revisar hábitos, impulsos y ansiedad social: '));
     ['waShare', 'waShareFooter'].forEach(function (id) { $(id).href = 'https://wa.me/?text=' + msg + url; });
     ['fbShare', 'fbShareFooter'].forEach(function (id) { $(id).href = 'https://www.facebook.com/sharer/sharer.php?u=' + url; });
     ['xShare', 'xShareFooter'].forEach(function (id) { $(id).href = 'https://twitter.com/intent/tweet?text=' + msg + url; });
@@ -980,9 +1449,9 @@
 
   function copyLink() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(TOOL_URL).then(function () { showToast('Link copied!'); }, function () { showToast('Could not copy. Please copy the link manually.'); });
+      navigator.clipboard.writeText(TOOL_URL).then(function () { showToast(x('Link copied!', '¡Enlace copiado!')); }, function () { showToast(x('Could not copy. Please copy the link manually.', 'No se pudo copiar. Copia el enlace a mano.')); });
     } else {
-      showToast('Could not copy. Please copy the link manually.');
+      showToast(x('Could not copy. Please copy the link manually.', 'No se pudo copiar. Copia el enlace a mano.'));
     }
   }
 
@@ -1051,7 +1520,7 @@
     var BRAND = [58, 106, 138];
     var INK = [26, 37, 48];
     var LINK = [30, 90, 160];
-    var data = FOCUS[r.focus] || FOCUS['Other / not sure'];
+    var data = fd(r.focus);
 
     try { doc.setLineCap('round'); doc.setLineJoin('round'); } catch (_) {}
 
@@ -1089,12 +1558,12 @@
     doc.roundedRect(L, y, W, 78, 6, 6, 'F');
     if (logoData) { try { doc.addImage(logoData, 'JPEG', L + 10, y + 12, 54, 54); } catch (_) {} }
     doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(INK[0], INK[1], INK[2]);
-    doc.text('Emotional Support Self-Check', L + 76, y + 24);
+    doc.text(x('Emotional Support Self-Check', 'Chequeo personal de apoyo emocional'), L + 76, y + 24);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 90, 104);
-    doc.text(r.name ? 'Prepared for: ' + r.name : 'Personal check-in summary', L + 76, y + 40);
-    doc.text(r.date + '  |  Focus: ' + r.focus, L + 76, y + 54);
+    doc.text(r.name ? x('Prepared for: ', 'Resumen para: ') + r.name : x('Personal check-in summary', 'Resumen personal del chequeo'), L + 76, y + 40);
+    doc.text(r.date + x('  |  Focus: ' + r.focus, '  |  Tema: ' + focusName(r.focus)), L + 76, y + 54);
     doc.setFontSize(7.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
-    doc.textWithLink('Free tool: ' + TOOL_URL, L + 76, y + 68, { url: TOOL_URL });
+    doc.textWithLink(x('Free tool: ', 'Herramienta: ') + TOOL_URL, L + 76, y + 68, { url: TOOL_URL });
     y += 92;
 
     // Level box with stickmen
@@ -1103,15 +1572,15 @@
     doc.setFillColor(lc[0], lc[1], lc[2]);
     doc.roundedRect(L, y, W, 88, 6, 6, 'F');
     doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5); doc.setTextColor(lt[0], lt[1], lt[2]);
-    doc.text("Today's strain level: " + r.level, L + 14, y + 26);
+    doc.text(x("Today's strain level: " + r.level, 'Nivel de tensión de hoy: ' + levelName(r.level)), L + 14, y + 26);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-    doc.text('Score ' + r.score + ' / 40', L + 14, y + 44);
-    doc.text('Connection: ' + r.conn + ' (' + r.connScore + ' / 12)', L + 14, y + 60);
+    doc.text(x('Score ', 'Puntuación ') + r.score + ' / 40', L + 14, y + 44);
+    doc.text(x('Connection: ' + r.conn, 'Conexión: ' + connName(r.conn)) + ' (' + r.connScore + ' / 12)', L + 14, y + 60);
     pdfScene(doc, r.level.toLowerCase(), L + W - 118, y + 6, 0.68, lt);
     y += 100;
 
     if (r.crisis || r.level === 'High') {
-      var cmsg = 'If you feel unsafe or at risk of harming yourself or someone else, contact local emergency services now. Find a helpline in your country at findahelpline.com.';
+      var cmsg = x('If you feel unsafe or at risk of harming yourself or someone else, contact local emergency services now. Find a helpline in your country at findahelpline.com.', 'Si sientes que no estás a salvo o que corres riesgo de hacerte daño a ti o a otra persona, llama ahora a los servicios de emergencia de tu zona. Encuentra una línea de ayuda en tu país en findahelpline.com.');
       doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
       var cl = doc.splitTextToSize(cmsg, W - 24);
       var ch = cl.length * 13 + 16;
@@ -1124,35 +1593,36 @@
     }
 
     // Check-in snapshot
-    heading('Your check-in');
-    para('Mood: ' + r.mood + '   |   Intensity: ' + r.intensity + '/10   |   Urge: ' + r.urge + '/10   |   Impact: ' + r.impact + '/10   |   Control: ' + r.control + '/10', 9.5, 'normal', INK, 8);
-    para('Connection check: ' + CONN_INFO[r.conn].msg, 9.5, 'normal', INK, 8);
+    heading(x('Your check-in', 'Tu chequeo'));
+    para(x('Mood: ' + r.mood + '   |   Intensity: ' + r.intensity + '/10   |   Urge: ' + r.urge + '/10   |   Impact: ' + r.impact + '/10   |   Control: ' + r.control + '/10',
+      'Estado de ánimo: ' + moodName(r.mood) + '   |   Intensidad: ' + r.intensity + '/10   |   Impulso: ' + r.urge + '/10   |   Impacto: ' + r.impact + '/10   |   Control: ' + r.control + '/10'), 9.5, 'normal', INK, 8);
+    para(x('Connection check: ', 'Chequeo de conexión: ') + connInfo(r.conn).msg, 9.5, 'normal', INK, 8);
 
     var words = [
-      ['What usually triggers it', r.trigger],
-      ['The need it is trying to meet', r.need],
-      ['One small thing I can do in 10 minutes', r.alternative],
-      ['A safe person I can reach out to', r.safePerson]
+      [x('What usually triggers it', 'Lo que suele activarlo'), r.trigger],
+      [x('The need it is trying to meet', 'La necesidad que intenta cubrir'), r.need],
+      [x('One small thing I can do in 10 minutes', 'Una cosa pequeña que puedo hacer en 10 minutos'), r.alternative],
+      [x('A safe person I can reach out to', 'Una persona de confianza a quien puedo acudir'), r.safePerson]
     ];
     words.forEach(function (w) {
       para(w[0], 9, 'bold', BRAND, 1);
-      para(w[1] || 'Not provided', 9.5, 'normal', INK, 7);
+      para(w[1] || x('Not provided', 'No indicado'), 9.5, 'normal', INK, 7);
     });
 
     // Suggestions
-    heading('Suggested next steps');
+    heading(x('Suggested next steps', 'Próximos pasos sugeridos'));
     r.suggestions.forEach(function (tip, i) { para((i + 1) + '. ' + tip, 9.5, 'normal', INK, 4); });
 
     // About focus
-    heading('About ' + r.focus);
+    heading(x('About ' + r.focus, 'Sobre el tema: ' + focusName(r.focus)));
     para(data.intro, 9.5, 'normal', INK, 6);
     para(data.research, 9.5, 'normal', INK, 6);
-    para('More ideas for this area', 9.5, 'bold', BRAND, 2);
+    para(x('More ideas for this area', 'Más ideas para esta área'), 9.5, 'bold', BRAND, 2);
     data.tips.forEach(function (t) { para('- ' + t, 9.5, 'normal', INK, 3); });
 
     // Reflections
-    heading('Reflections that help');
-    para('Take your time. Write short answers below, or think them through and talk them over with someone you trust.', 9, 'italic', [74, 90, 104], 6);
+    heading(x('Reflections that help', 'Reflexiones que ayudan'));
+    para(x('Take your time. Write short answers below, or think them through and talk them over with someone you trust.', 'Tómate tu tiempo. Escribe respuestas cortas abajo, o piénsalas y habla de ellas con alguien de confianza.'), 9, 'italic', [74, 90, 104], 6);
     data.reflections.forEach(function (q, i) {
       need(70);
       para((i + 1) + '. ' + q, 9.5, 'bold', INK, 0);
@@ -1160,11 +1630,11 @@
     });
 
     // Craving plan
-    heading('My craving plan');
+    heading(x('My craving plan', 'Mi plan para los impulsos'));
     var plan = [
-      ['When it gets hard, my trigger is:', r.trigger],
-      ['My first action, within 10 minutes:', r.alternative],
-      ['The person I will reach out to:', r.safePerson]
+      [x('When it gets hard, my trigger is:', 'Cuando se pone difícil, lo que lo activa es:'), r.trigger],
+      [x('My first action, within 10 minutes:', 'Mi primera acción, en los próximos 10 minutos:'), r.alternative],
+      [x('The person I will reach out to:', 'La persona a quien acudiré:'), r.safePerson]
     ];
     plan.forEach(function (p) {
       need(50);
@@ -1173,19 +1643,20 @@
     });
 
     // Understanding
-    heading('Understanding compulsive patterns: what research tells us');
-    EDU.forEach(function (e) {
+    heading(x('Understanding compulsive patterns: what research tells us', 'Entender los patrones compulsivos: lo que dice la investigación'));
+    eduList().forEach(function (e) {
       need(60);
       para(e[0], 9.5, 'bold', BRAND, 2);
       para(e[1], 9.2, 'normal', INK, 8);
     });
 
     // 7 day follow up
-    heading('My 7 day follow up');
-    para('Fill this in each day. It takes two minutes and shows you what is really helping.', 9, 'normal', INK, 6);
-    var cols = [{ t: 'Day', w: 46 }, { t: 'Urge (0 to 10)', w: 84 }];
-    cols.push({ t: 'What helped', w: W - 46 - 84 - 150 });
-    cols.push({ t: 'One small win', w: 150 });
+    heading(x('My 7 day follow up', 'Mi seguimiento de 7 días'));
+    para(x('Fill this in each day. It takes two minutes and shows you what is really helping.', 'Completa esto cada día. Toma dos minutos y te muestra qué te está ayudando de verdad.'), 9, 'normal', INK, 6);
+    var urgeW = x(84, 100);
+    var cols = [{ t: x('Day', 'Día'), w: 46 }, { t: x('Urge (0 to 10)', 'Impulso (0 a 10)'), w: urgeW }];
+    cols.push({ t: x('What helped', 'Qué ayudó'), w: W - 46 - urgeW - 150 });
+    cols.push({ t: x('One small win', 'Un pequeño logro'), w: 150 });
     var rowH = 24;
     need(rowH * 8 + 6);
     var cx0 = L;
@@ -1200,14 +1671,14 @@
     var vx = L;
     cols.forEach(function (c, i) { if (i > 0) doc.line(vx, y, vx, y + rowH * 8); vx += c.w; });
     doc.setFont('helvetica', 'normal'); doc.setTextColor(INK[0], INK[1], INK[2]);
-    for (var k = 1; k <= 7; k++) { doc.text('Day ' + k, L + 6, y + k * rowH + 15); }
+    for (var k = 1; k <= 7; k++) { doc.text(x('Day ', 'Día ') + k, L + 6, y + k * rowH + 15); }
     y += rowH * 8 + 12;
 
     // Keep learning
-    heading('Keep learning: trusted websites');
-    para('These sites are independent and are listed so you can read more from credible sources. Some are based in other countries, so check what is available where you live.', 9, 'italic', [74, 90, 104], 6);
+    heading(x('Keep learning: trusted websites', 'Sigue aprendiendo: sitios web de confianza'));
+    para(x('These sites are independent and are listed so you can read more from credible sources. Some are based in other countries, so check what is available where you live.', 'Estos sitios son independientes y se incluyen para que puedas leer más en fuentes confiables. Algunos están en otros países, así que revisa qué hay disponible donde vives.'), 9, 'italic', [74, 90, 104], 6);
     var seen = {};
-    var refs = data.refs.concat(GENERAL_REFS).filter(function (x) {
+    var refs = data.refs.concat(genRefs()).filter(function (x) {
       if (seen[x.u]) return false; seen[x.u] = true; return true;
     });
     refs.forEach(function (ref) {
@@ -1223,20 +1694,20 @@
 
     if (data.books && data.books.length) {
       need(50);
-      para('Books you may find helpful', 9.5, 'bold', BRAND, 2);
+      para(x('Books you may find helpful', 'Libros que podrían ayudarte'), 9.5, 'bold', BRAND, 2);
       data.books.forEach(function (b) { para('- ' + b, 9.5, 'normal', INK, 2); });
       y += 6;
     }
 
     // More from Emotional Intelligence Developer
-    heading('More free wellbeing resources from Emotional Intelligence Developer');
+    heading(x('More free wellbeing resources from Emotional Intelligence Developer', 'Más recursos gratuitos de bienestar de Emotional Intelligence Developer'));
     var eidLinks = [
-      ['Main website', 'https://emotionalintelligencedeveloper.com', 'Free articles, podcast, videos and wellbeing guides.'],
-      ['Free wellbeing and self help tools', 'https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/', 'More free tools like this one.'],
-      ['Recommended audio books', 'https://emotionalintelligencedeveloper.com/recommended-books/', 'Audio books chosen to support your growth and healing.'],
-      ['Help page', 'https://emotionalintelligencedeveloper.com/help-page/', 'Where to find help and how to use the site.'],
-      ['Find a helpline', 'https://findahelpline.com', 'Free, confidential support lines in your country.'],
-      ['Support this website', SUPPORT_URL, 'This platform is free for everyone. Your support keeps it that way.']
+      [x('Main website', 'Sitio web principal'), 'https://emotionalintelligencedeveloper.com', x('Free articles, podcast, videos and wellbeing guides.', 'Artículos, podcast, videos y guías de bienestar gratuitos.')],
+      [x('Free wellbeing and self help tools', 'Herramientas gratuitas de bienestar y autoayuda'), 'https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/', x('More free tools like this one.', 'Más herramientas gratuitas como esta.')],
+      [x('Recommended audio books', 'Audiolibros recomendados'), 'https://emotionalintelligencedeveloper.com/recommended-books/', x('Audio books chosen to support your growth and healing.', 'Audiolibros elegidos para apoyar tu crecimiento y tu sanación.')],
+      [x('Help page', 'Página de ayuda'), 'https://emotionalintelligencedeveloper.com/help-page/', x('Where to find help and how to use the site.', 'Dónde encontrar ayuda y cómo usar el sitio.')],
+      [x('Find a helpline', 'Encuentra una línea de ayuda'), 'https://findahelpline.com', x('Free, confidential support lines in your country.', ES.helplineDesc)],
+      [x('Support this website', 'Apoya este sitio web'), SUPPORT_URL, x('This platform is free for everyone. Your support keeps it that way.', 'Esta plataforma es gratuita para todas las personas. Tu apoyo hace que siga así.')]
     ];
     eidLinks.forEach(function (ref) {
       need(44);
@@ -1255,9 +1726,9 @@
     doc.roundedRect(L, y, W, 120, 6, 6, 'F');
     pdfScene(doc, 'support', L + 14, y + 10, 0.85, BRAND);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(INK[0], INK[1], INK[2]);
-    doc.text('You are not alone in this.', L + 140, y + 30);
+    doc.text(x('You are not alone in this.', 'No estás a solas en esto.'), L + 140, y + 30);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
-    var sl = doc.splitTextToSize('This tool is free for everyone. Come back and check in again any time. If it helped you, you can support the website here:', W - 156);
+    var sl = doc.splitTextToSize(x('This tool is free for everyone. Come back and check in again any time. If it helped you, you can support the website here:', 'Esta herramienta es gratuita para todas las personas. Vuelve a hacer un chequeo cuando quieras. Si te ayudó, puedes apoyar el sitio web aquí:'), W - 156);
     doc.text(sl, L + 140, y + 46);
     doc.setFontSize(8.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
     doc.textWithLink(SUPPORT_URL, L + 140, y + 46 + sl.length * 12 + 6, { url: SUPPORT_URL });
@@ -1270,30 +1741,32 @@
       doc.setDrawColor(160, 192, 216); doc.setLineWidth(0.8);
       doc.line(L, pageH - 50, pageW - margin, pageH - 50);
       doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(INK[0], INK[1], INK[2]);
-      doc.text('Use this free tool again:', L, pageH - 38);
+      var again = x('Use this free tool again:', 'Herramienta gratuita:');
+      doc.text(again, L, pageH - 38);
+      var againW = lang === 'es' ? doc.getTextWidth(again) + 6 : 100;
       doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(LINK[0], LINK[1], LINK[2]);
-      doc.textWithLink(TOOL_URL, L + 100, pageH - 38, { url: TOOL_URL });
+      doc.textWithLink(TOOL_URL, L + againW, pageH - 38, { url: TOOL_URL });
       doc.setFontSize(7.5); doc.setTextColor(138, 154, 170);
-      doc.text('Reflection support only. Not medical advice or a replacement for professional care. If you feel unsafe, seek urgent help.', L, pageH - 26);
-      doc.text('Page ' + p + ' of ' + total, pageW - margin, pageH - 38, { align: 'right' });
+      doc.text(x('Reflection support only. Not medical advice or a replacement for professional care. If you feel unsafe, seek urgent help.', 'Solo apoyo para reflexionar. No es consejo médico ni reemplaza la atención profesional. Si no te sientes a salvo, busca ayuda urgente.'), L, pageH - 26);
+      doc.text(x('Page ' + p + ' of ' + total, 'Pág. ' + p + ' de ' + total), pageW - margin, pageH - 38, { align: 'right' });
     }
   }
 
   function downloadPDF() {
     if (!ensureLatest()) return;
     var lib = window.jspdf && window.jspdf.jsPDF;
-    if (!lib) { showToast('PDF library is not ready. Please try again in a moment.'); return; }
-    showToast('Preparing your PDF...');
+    if (!lib) { showToast(x('PDF library is not ready. Please try again in a moment.', 'La biblioteca del PDF aún no está lista. Inténtalo de nuevo en un momento.')); return; }
+    showToast(x('Preparing your PDF...', 'Preparando tu PDF...'));
     var r = latest;
     imageToDataUrl(LOGO_URL).catch(function () { return null; }).then(function (logoData) {
       try {
         var doc = new lib({ unit: 'pt', format: 'a4' });
-        doc.setProperties({ title: 'Emotional Support Self-Check', subject: TOOL_URL });
+        doc.setProperties({ title: x('Emotional Support Self-Check', 'Chequeo personal de apoyo emocional'), subject: TOOL_URL });
         buildPDF(doc, r, logoData);
         doc.save('emotional-support-check-in.pdf');
-        showToast('PDF downloaded!');
+        showToast(x('PDF downloaded!', '¡PDF descargado!'));
       } catch (err) {
-        showToast('Something went wrong making the PDF. Please try again.');
+        showToast(x('Something went wrong making the PDF. Please try again.', 'Algo salió mal al crear el PDF. Inténtalo de nuevo.'));
       }
     });
   }
@@ -1373,7 +1846,7 @@
       var b = e.target.closest ? e.target.closest('[data-to]') : null;
       if (!b) return;
       var to = parseInt(b.getAttribute('data-to'), 10);
-      if (cur === 0 && to > 0 && !valueOf('focus')) { showToast('Please choose what you want to check in on.'); return; }
+      if (cur === 0 && to > 0 && !valueOf('focus')) { showToast(x('Please choose what you want to check in on.', 'Por favor, elige qué quieres revisar.')); return; }
       if (to === 4) { latest = buildResult(); renderResults(latest); }
       if (to === 5 && !latest) { latest = buildResult(); renderResults(latest); }
       go(to);
@@ -1389,20 +1862,27 @@
       var entries = readEntries();
       entries.unshift({ date: latest.date, focus: latest.focus, level: latest.level });
       if (!writeEntries(entries.slice(0, 7))) {
-        showToast('Could not save. Private browsing may be blocking local storage.');
+        showToast(x('Could not save. Private browsing may be blocking local storage.', 'No se pudo guardar. Puede que la navegación privada esté bloqueando el almacenamiento local.'));
         return;
       }
       renderHistory();
-      showToast('Saved on this device.');
+      showToast(x('Saved on this device.', 'Guardado en este dispositivo.'));
     });
 
     $('copyLinkBtn').addEventListener('click', copyLink);
     $('copyLinkFooter').addEventListener('click', copyLink);
 
+    // Language: English by default, remember the choice if the browser allows it
+    var langSel = $('langSelect');
+    langSel.addEventListener('change', function () { setLang(langSel.value, true); });
+    var savedLang = '';
+    try { savedLang = localStorage.getItem(LANG_KEY) || ''; } catch (_) {}
+
     renderHistory();
     updateShareLinks();
     go(0);
-    if (!storageOk()) showToast('Private browsing detected. Saving on this device is unavailable. Use the .txt file instead.');
+    setLang(savedLang === 'es' ? 'es' : 'en', false);
+    if (!storageOk()) showToast(x('Private browsing detected. Saving on this device is unavailable. Use the .txt file instead.', 'Se detectó navegación privada. Guardar en este dispositivo no está disponible. Usa el archivo .txt.'));
   }
 
   init();

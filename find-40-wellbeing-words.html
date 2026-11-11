@@ -233,6 +233,13 @@ body.land .actions{grid-template-columns:repeat(2,1fr)}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* language chooser */
+.langbox{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 10px;font-size:.88rem;font-weight:700;color:var(--muted)}
+.langbox select{border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-weight:700;min-height:38px;cursor:pointer}
+.langbox select:focus-visible{outline:3px solid #0f5ed9;outline-offset:2px}
+.sheet .langbox{margin:4px 0 8px}
+@media (max-width:380px){:root[lang=es] .rtitle{font-size:.86rem}:root[lang=es] .topbar .btn.wide{padding:4px 5px;font-size:.76rem}}
 </style>
 </head>
 <body>
@@ -240,6 +247,7 @@ body.land .actions{grid-template-columns:repeat(2,1fr)}
 <!-- HOME -->
 <div id="home" class="screen">
   <div class="home-in">
+    <div class="langbox"><label for="langSel">Language / Idioma</label><select id="langSel"><option value="en">English</option><option value="es">Español</option></select></div>
     <img class="logo" id="homeLogo" src="https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg" alt="Emotional Intelligence Developer logo" width="64" height="64">
     <div class="title">Find 40 Wellbeing Words</div>
     <p class="sub">A free game that teaches emotional intelligence. Find a word, learn what it means, and take it into your real life. Pick any round you like.</p>
@@ -410,6 +418,7 @@ body.land .actions{grid-template-columns:repeat(2,1fr)}
 <div class="modal" id="mMore" role="dialog" aria-modal="true" aria-labelledby="moTitle">
   <div class="sheet">
     <div class="mtitle" id="moTitle">Help and more</div>
+    <div class="langbox"><label for="langSel2">Language / Idioma</label><select id="langSel2"><option value="en">English</option><option value="es">Español</option></select></div>
     <div class="linklist">
       <a class="supportbtn" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener" aria-label="Support Us"><span class="sp-art" aria-hidden="true"></span><span class="sp-text"><b>Support Us</b><small>Help keep this game free for everyone</small></span><span class="sp-heart" aria-hidden="true">&#10084;&#65039;</span></a>
       <button class="btn primary" id="moSee" type="button">&#128196; See what you get</button>
@@ -759,13 +768,527 @@ function buildPuzzle(words){
         place[w] = { r: best[0], c: best[1], d: best[2] };
       }
       if (ok){
-        for (r = 0; r < N; r++) for (c = 0; c < N; c++) if (!g[r][c]) g[r][c] = letters[rand(26)];
+        for (r = 0; r < N; r++) for (c = 0; c < N; c++) if (!g[r][c]) g[r][c] = (LANG === "es" && Math.random() < 0.012) ? "\u00D1" : letters[rand(26)];
         return { N: N, grid: g, place: place };
       }
     }
   }
   return null;
 }
+</script>
+<script>
+/* ============================== LANGUAGE / IDIOMA ============================== */
+/* English is the default and stays exactly as written above. Spanish only swaps the visible words. */
+var LANG = "en";
+var ES_WORDS = [
+`CONCIENCIA|Darte cuenta de lo que piensas, sientes y haces, y de lo que pasa a tu alrededor.
+EMPATÍA|Entender lo que siente otra persona y mostrarle que te importa.
+RESILIENCIA|La capacidad de recuperarte después de los momentos difíciles y seguir adelante.
+ATENCIÓN|Prestar atención tranquila a este momento, sin juzgarlo.
+COMPASIÓN|Sentir por alguien que sufre y querer ayudar.
+GRATITUD|Notar lo bueno de tu vida y agradecerlo.
+CALMA|Una sensación tranquila y estable en tu mente y en tu cuerpo.
+EQUILIBRIO|Dar el tiempo y la energía justos a cada parte de tu vida.
+CLARIDAD|Ver con claridad lo que importa para pensar y elegir bien.
+VALOR|Hacer lo correcto aunque tengas miedo.
+PACIENCIA|Mantener la calma mientras esperas o mientras las cosas toman tiempo.
+BONDAD|Tratar con cuidado, generosidad y atención a los demás y a ti.
+CRECIMIENTO|Aprender y cambiar para ser un poco mejor cada día.
+SANACIÓN|El proceso lento de volver a estar bien en el cuerpo, la mente o el corazón.
+ESPERANZA|Creer que todavía son posibles las cosas buenas.
+ALEGRÍA|Un sentimiento profundo de felicidad y disfrute.
+SEGURIDAD|Confiar en tu propia capacidad para manejar lo que venga.
+CONFIANZA|Creer que alguien o algo es honesto y fiable.
+LÍMITES|Fronteras claras que protegen tu tiempo, tu energía y tus sentimientos.
+PRESENCIA|Estar del todo aquí, con la mente y el cuerpo en el mismo lugar.
+ESCUCHA|Darle toda tu atención a otra persona para oírla de verdad.
+PERDÓN|Soltar la rabia hacia alguien que te hizo daño, o hacia ti.
+ACEPTACIÓN|Dejar que las cosas sean como son, sin pelear contra ellas.
+FLEXIBILIDAD|Disposición para adaptarte cuando los planes o las situaciones cambian.
+INTEGRIDAD|Hacer lo correcto y cumplir tu palabra, aunque nadie te vea.
+HUMILDAD|Conocer tu valor sin necesitar ser mejor que los demás.
+AMOR PROPIO|Tratarte con el mismo cuidado que das a las personas que quieres.
+OPTIMISMO|Esperar que puedan pasar cosas buenas y trabajar para lograrlas.
+PROPÓSITO|La razón por la que te levantas cada día, lo que le da sentido a la vida.
+PERTENENCIA|Sentir que te aceptan y te dan la bienvenida como parte de un grupo.
+FORTALEZA|La fuerza para seguir adelante en lo difícil, con el cuerpo y el espíritu.
+ENFOQUE|Mantener tu atención en una sola cosa a la vez.
+PAZ|Un estado de calma, sin preocupación ni conflicto.
+SABIDURÍA|Usar lo que has aprendido para tomar buenas decisiones.
+HONESTIDAD|Decir la verdad y mostrarte tal como eres contigo y con los demás.
+RESPETO|Tratar a las personas como valiosas y escuchar sus puntos de vista.
+CONEXIÓN|La sensación de estar cerca de otras personas, de una forma cariñosa.
+ALTRUISMO|Ayudar a los demás sin esperar nada a cambio.
+RESPIRACIÓN|El aire que entra y sale, una forma sencilla de calmarte.
+LUZ|Calidez y brillo que traen esperanza y te ayudan a ver.`,
+`CONSTANCIA|Seguir avanzando hacia una meta aunque sea difícil.
+DISCIPLINA|Hacer lo que hay que hacer, aunque no tengas ganas.
+TENACIDAD|No rendirte, ni siquiera después de un tropiezo.
+RESOLUCIÓN|Una decisión firme de hacer algo y mantenerla.
+GARRA|Pasión y esfuerzo fuertes por una meta a largo plazo.
+VALENTÍA|Enfrentar el peligro, el dolor o el miedo con un corazón fuerte.
+FIRMEZA|Mantener la calma y el ritmo, sin que nada te sacuda con facilidad.
+ESTABILIDAD|Sentir que estás firme y en contacto con el presente, sin que las emociones te arrastren.
+CENTRO|Sentir equilibrio y calma por dentro, con una idea clara de quién eres.
+RELAJACIÓN|Estar libre de tensión y de preocupación.
+SERENIDAD|Un estado de paz mental, con calma y sin inquietud.
+SOSIEGO|Quietud, calma y silencio.
+QUIETUD|Una pausa sin prisa ni ruido, por dentro o por fuera.
+DESCANSO|Parar para que tu cuerpo y tu mente se recuperen.
+SUEÑO|Tu reinicio de cada noche, que renueva el cuerpo y la mente.
+ENERGÍA|La fuerza y las ganas que necesitas para hacer cosas.
+VITALIDAD|Una sensación viva de salud y fuerza.
+SALUD|Estar bien de cuerpo y de mente.
+NUTRIR|Alimentar y cuidar tu cuerpo, tu mente o tu espíritu para que pueda crecer.
+MOVIMIENTO|Usar tu cuerpo al caminar, estirarte o jugar para sentirte mejor.
+ESTIRAR|Alargar los músculos con suavidad para soltar la tensión.
+CAMINAR|Un movimiento diario sencillo que despeja la mente y sube el ánimo.
+NATURALEZA|Árboles, agua, cielo y animales, que nos calman y nos renuevan.
+JARDÍN|Un lugar donde cultivas plantas y que te recuerda que el cuidado trae crecimiento.
+DIARIO|Un cuaderno donde escribes tus pensamientos y sentimientos.
+REFLEXIONAR|Pensar con calma en lo que pasó y en lo que te enseñó.
+MEDITAR|Sentarte en silencio y entrenar tu atención, muchas veces siguiendo tu respiración.
+SOLTAR|Dejar ir un sentimiento, una preocupación o una herida.
+AFLOJAR|Bajar el ritmo y dejar que tu cuerpo y tu mente se aflojen.
+REENFOCAR|Mirar un problema desde otro ángulo para que se sienta más ligero.
+ELECCIÓN|El poder de decidir qué haces después.
+CONTROL|Enfocarte en lo que puedes cambiar y soltar el resto.
+RUTINA|Un conjunto de hábitos diarios que dan forma y calma a tu día.
+HÁBITOS|Cosas que haces tan seguido que se vuelven automáticas.
+PAUSA|Un alto breve antes de reaccionar, para poder elegir bien.
+VOZ INTERNA|Las palabras que te dices en la mente.
+AUTOESTIMA|Saber que importas simplemente porque eres tú.
+RECUPERAR|Volver a tener tu fuerza y tu salud después de algo difícil.
+RENOVAR|Volver a empezar con energía fresca.
+CALMAR|Dar consuelo y alivio a un sentimiento que duele o inquieta.`,
+`AMISTAD|Un lazo cercano basado en la confianza, el cariño y el tiempo compartido.
+FAMILIA|Las personas cercanas a ti, por sangre o por amor.
+COMUNIDAD|Un grupo de personas que comparten un lugar o un propósito y se cuidan entre sí.
+EQUIPO|Trabajar juntos para que el esfuerzo de todos sume más.
+APOYO|Ayudar a alguien estando presente, escuchando o echando una mano.
+DIÁLOGO|Una conversación real de dos vías, en la que ambas partes hablan y escuchan.
+COMPARTIR|Dar a otros una parte de lo que tienes: cosas, tiempo o sentimientos.
+GENEROSIDAD|Dar con libertad y con el corazón abierto.
+DONAR|Ofrecer tu tiempo, tu ayuda o tus cosas para el bien de otra persona.
+GRACIAS|Palabras que muestran que valoras lo que alguien hizo.
+DISCULPA|Decir lo siento y sentirlo de verdad después de herir a alguien.
+LEALTAD|Seguir fiel y apoyar a las personas, incluso en los momentos duros.
+TERNURA|Un cuidado suave y delicado hacia alguien.
+CALIDEZ|Un trato cercano y amable que hace que otros se sientan seguros.
+BIENVENIDA|Saludar a alguien de una forma que le haga sentir que su presencia importa.
+INCLUSIÓN|Asegurarte de que todos tengan un lugar y una voz.
+COMPRENDER|Ver por qué alguien piensa o siente como lo hace.
+APERTURA|Disposición a escuchar ideas nuevas y a compartir con sinceridad.
+CURIOSIDAD|Un deseo real de aprender sobre las personas y el mundo.
+EQUIDAD|Tratar a las personas con igualdad y honestidad.
+JUSTICIA|Arreglar lo que está mal y proteger los derechos de todos.
+SERVICIO|Ayudar a otros con tu trabajo, tu tiempo o tus habilidades.
+MENTOR|Una persona sabia que te guía mientras creces.
+ORIENTACIÓN|Consejo y dirección que te ayudan a encontrar tu camino.
+ANIMAR|Darle a alguien valor y esperanza para seguir adelante.
+CONSUELO|Aliviar el dolor de alguien con cuidado y calma.
+CUIDADO|Mostrar interés y cuidar de los demás.
+DULZURA|Suavidad y buen trato en tu forma de hablar y de actuar.
+SONRISA|Un gesto sencillo que puede alegrarle el día a alguien.
+RISAS|Un sonido alegre que libera el estrés y junta a las personas.
+CELEBRAR|Marcar los buenos momentos con otros y disfrutarlos.
+UNIÓN|Personas que se juntan como una sola para lograr una meta común.
+PUENTE|Algo que conecta a personas que están lejos o que son distintas.
+COMPAÑÍA|Estar cerca de otras personas, sin soledad.
+VECINDARIO|Las personas que viven cerca de ti y a quienes puedes cuidar.
+VÍNCULO|Un lazo fuerte que une a las personas.
+IGUALDAD|Que todas las personas sean tratadas con el mismo valor.
+ABRAZOS|Gestos cálidos que muestran cariño y alivian el estrés.
+COOPERAR|Trabajar con otros hacia un mismo objetivo.
+SINTONÍA|Un entendimiento amistoso y fácil entre las personas.`,
+`AMBICIÓN|Un fuerte deseo de lograr algo que tenga sentido.
+VISIÓN|Una imagen clara del futuro que quieres.
+METAS|Objetivos que te pones y por los que trabajas.
+SUEÑOS|Esperanzas para el futuro que te inspiran.
+PASIÓN|Un amor fuerte por algo que te impulsa.
+CREATIVIDAD|Usar la imaginación para crear o resolver algo nuevo.
+INSPIRAR|Llenar a alguien de ganas de hacer algo bueno.
+IMAGINAR|Ver en tu mente algo que todavía no tienes delante.
+INNOVAR|Probar ideas nuevas y mejores formas de hacer las cosas.
+APRENDIZAJE|Adquirir conocimientos o habilidades nuevas.
+MAESTRÍA|Habilidad profunda que se gana con práctica constante.
+HABILIDAD|Algo que haces bien porque lo aprendiste y lo practicaste.
+PRÁCTICA|Hacer algo una y otra vez para mejorar.
+PROGRESO|Avanzar, aunque sea con pasos pequeños.
+DESCUBRIR|Encontrar algo nuevo sobre el mundo o sobre ti.
+EXPLORAR|Buscar y aprender con curiosidad.
+AVENTURA|Una experiencia nueva y emocionante que te reta.
+ASOMBRO|Un sentimiento de sorpresa y curiosidad.
+JUEGO|Tener el ánimo ligero y ganas de divertirte.
+HUMOR|Ver el lado gracioso de la vida, que alivia el estrés.
+ENTUSIASMO|Energía ilusionada por algo que te importa.
+PLENITUD|Sentir que tu vida tiene sentido y te satisface.
+ABUNDANCIA|Tener de sobra y notar la riqueza que ya tienes.
+LEGADO|Lo que dejas en la vida de otras personas.
+IMPACTO|La diferencia que hacen tus acciones.
+LIDERAZGO|Guiar a otros con el ejemplo, el cuidado y una dirección clara.
+INICIATIVA|Empezar algo bueno sin esperar a que te lo pidan.
+ASUMIR|Hacerte responsable de tus decisiones y de sus resultados.
+RUMBO|El camino que eliges seguir.
+SENTIDO|La sensación de que tu vida y tus actos importan.
+VALORES|Las creencias que guían cómo vives.
+COMPROMISO|Mantener una promesa o una meta en las buenas y en las malas.
+CAMBIAR|Cambiar a fondo para bien.
+FLORECER|Crecer y mostrar lo mejor de ti.
+BRILLAR|Dejar que se vean tus dones y llevar luz a otras personas.
+LIBERTAD|El poder de elegir cómo vives y piensas.
+ESENCIA|Ser fiel a quien de verdad eres.
+EVOLUCIÓN|Crecer y cambiar paso a paso con el tiempo.
+CUMBRE|La parte más alta de una subida, y una gran meta lograda.
+VIAJE|El camino de aprender y crecer, no solo el destino.`
+];
+
+
+function esKey(d){
+  return d.replace(/\s+/g, "").toUpperCase().replace(/Ñ/g, "\u0001").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\u0001/g, "Ñ");
+}
+function parseWordsES(txt){
+  return txt.trim().split("\n").map(function(l){
+    var i = l.indexOf("|"), d = l.slice(0, i).trim().toUpperCase();
+    return { w: esKey(d), d: d, m: l.slice(i + 1).trim() };
+  });
+}
+
+var ES_LEVELS = [
+{ name: "Fundamentos", tag: "Los cimientos de la inteligencia emocional",
+  plan: [
+    { t: "Conócete", k: "Pon un temporizador de tres minutos. Siéntate en silencio, respira despacio y nota cómo te sientes. Luego haz una tarea con toda tu atención y sin el teléfono.", q: "¿Qué noté de mí hoy?" },
+    { t: "Sé amable con los demás", k: "Hoy escucha a una persona sin interrumpir. Di algo amable y haz un pequeño gesto de ayuda sin pensar en una recompensa.", q: "¿A quién le mostré respeto hoy?" },
+    { t: "Agradece y ten esperanza", k: "Escribe tres cosas que agradeces. Busca un punto de luz en un momento difícil y comparte una sonrisa o un chiste con alguien.", q: "¿Qué me dio esperanza hoy?" },
+    { t: "Mantente firme", k: "Haz algo que has estado posponiendo porque te da miedo. Ten paciencia contigo mientras lo haces y anota algo que aprendiste.", q: "¿Qué hice hoy que requirió valor?" },
+    { t: "Di la verdad", k: "Di la verdad con amabilidad en una situación. Cumple una promesa que hiciste. Reconoce algo que no sabes y pide a alguien que te lo enseñe.", q: "¿Dónde cumplí mi palabra hoy?" },
+    { t: "Cuídate", k: "Di que no a algo que te agota. Haz una actividad que te llene de energía. Háblate como le hablarías a alguien que quieres.", q: "¿Qué hice hoy para cuidarme?" },
+    { t: "Suelta y pertenece", k: "Perdona una herida pequeña o perdónate por un error. Cambia un plan sin estrés. Dile a una amistad o a un grupo por qué son importantes para ti.", q: "¿Qué solté y con quién conecté?" }
+  ] },
+{ name: "Fortaleza interior", tag: "Mantén la calma, descansa bien y sigue adelante",
+  plan: [
+    { t: "Sigue adelante", k: "Elige una meta y da hoy un pequeño paso hacia ella, aunque no tengas ganas. Anota lo que harás mañana para seguir adelante.", q: "¿Qué pequeño paso di aunque fue difícil?" },
+    { t: "Encuentra tu calma", k: "Respira despacio cinco veces, siente tus pies en el suelo y nombra cinco cosas que puedes ver. Mantén la calma cuando algo te moleste hoy.", q: "¿Cuándo sentí más calma hoy?" },
+    { t: "Descansa y renueva", k: "Acuéstate 30 minutos antes. Planea una pausa corta en tu día para descansar. Haz algo que te calme, como un té caliente o música suave.", q: "¿Qué me ayudó a recuperarme hoy?" },
+    { t: "Cuida tu cuerpo", k: "Toma agua, come una comida nutritiva y estírate durante cinco minutos. Haz algún movimiento que te dé energía.", q: "¿Cómo se sintió mi cuerpo después de cuidarlo?" },
+    { t: "Sal fuera, mira dentro", k: "Da un paseo de diez minutos al aire libre, de preferencia cerca de árboles, plantas o cielo. Escribe en tu diario durante cinco minutos cómo te sientes y luego siéntate en silencio dos minutos.", q: "¿Qué aprendí al quedarme con mis pensamientos?" },
+    { t: "Suéltalo", k: "Nota un pensamiento estresante y reenfócalo en uno más amable. Haz una pausa de tres respiraciones antes de responder algo tenso. Afloja esta noche y suelta el día.", q: "¿Qué palabras más amables me dije hoy?" },
+    { t: "Elige con intención", k: "Elige un hábito para crear, como una rutina de mañana. Enfócate solo en lo que puedes controlar hoy. Repítete: Yo importo. Soy suficiente.", q: "¿Qué decisión de hoy me hizo sentir orgullo?" }
+  ] },
+{ name: "Conexión", tag: "Crea relaciones cálidas, honestas y justas",
+  plan: [
+    { t: "Amistades y familia", k: "Escribe o llama a una amistad o a alguien de tu familia solo para decirle que piensas en esa persona. Saluda por su nombre a alguien de tu vecindario.", q: "¿Con quién me comuniqué hoy?" },
+    { t: "Habla y escucha", k: "Ten una conversación en la que hagas preguntas y escuches más de lo que hablas. Intenta comprender antes de responder y pide un consejo a alguien.", q: "¿Qué aprendí de alguien al escuchar?" },
+    { t: "Da y comparte", k: "Comparte algo con alguien hoy, como comida, tiempo o una habilidad. Ayuda a una persona sin que te lo pidan.", q: "¿Cómo se sintió dar hoy?" },
+    { t: "Dilo con calidez", k: "Da las gracias a tres personas y pide perdón a alguien si se lo debes. Saluda con una voz cálida y un tono suave.", q: "¿A quién le di la bienvenida hoy?" },
+    { t: "Equidad para todos", k: "Procura que se escuche a una persona callada en un grupo. Defiende la equidad de una forma pequeña y cumple una promesa a alguien.", q: "¿Dónde defendí la equidad hoy?" },
+    { t: "Anima a los demás", k: "Anima a alguien que lo esté pasando mal y ofrece un abrazo o una palabra amable. Agradece a quien te sirvió de mentor, o sé mentor para alguien compartiendo lo que sabes. Ayuda a dos personas a conocerse.", q: "¿A quién animé hoy?" },
+    { t: "Disfruta la compañía", k: "Sonríe a las personas que encuentres, comparte una risa y celebra el logro de alguien. Haz una actividad en equipo con tu familia, tus amistades o tu equipo de trabajo.", q: "¿Qué me hizo reír con alguien hoy?" }
+  ] },
+{ name: "Vida plena", tag: "Sueña en grande, aprende, crece y deja tu huella",
+  plan: [
+    { t: "Sueña", k: "Escribe un gran sueño y una meta que puedas lograr este mes. Cierra los ojos e imagínalo con claridad durante dos minutos.", q: "¿Qué es lo que más me ilusiona de mi sueño?" },
+    { t: "Crea y juega", k: "Crea o prueba algo nuevo, como un dibujo, una receta o una canción. Haz algo divertido y encuentra algo gracioso de lo que reírte.", q: "¿Qué cosa nueva probé hoy?" },
+    { t: "Aprende y practica", k: "Elige una habilidad y practícala durante 20 minutos. Anota algo que aprendiste y un pequeño avance.", q: "¿En qué mejoré hoy?" },
+    { t: "Explora y brilla", k: "Ve a un lugar nuevo o toma una ruta distinta. Comparte tu entusiasmo con alguien y dale ánimo. Haz algo que te permita brillar.", q: "¿Dónde dejé ver mi luz hoy?" },
+    { t: "Vive tus valores", k: "Escribe tus tres valores principales. Toma hoy una decisión que vaya con ellos, muéstrate tal como eres y renueva una promesa.", q: "¿Qué decisión de hoy fue acorde a mis valores?" },
+    { t: "Toma la iniciativa", k: "Empieza algo que has estado esperando comenzar, sin que te lo pidan. Asume la responsabilidad de un resultado, bueno o malo. Lidera con el ejemplo de una forma pequeña.", q: "¿Qué empecé o asumí hoy?" },
+    { t: "Deja tu huella", k: "Escribe cómo quieres que te recuerden. Haz hoy algo que ayude a otra persona. Haz una lista de lo que ya tienes y celebra lo lejos que has llegado.", q: "¿Qué diferencia hice hoy?" }
+  ] }
+];
+
+/* keep the English data safe, then swap by language */
+var EN_LV = LEVELS.map(function(lv){ return { name: lv.name, tag: lv.tag, words: lv.words, plan: lv.plan }; });
+ES_LEVELS.forEach(function(lv, i){
+  lv.words = parseWordsES(ES_WORDS[i]);
+  lv.plan = lv.plan.map(function(p, j){ return { t: p.t, w: EN_LV[i].plan[j].w, k: p.k, q: p.q }; });
+});
+function applyLevelData(){
+  LEVELS.forEach(function(lv, i){
+    var src = LANG === "es" ? ES_LEVELS[i] : EN_LV[i];
+    lv.name = src.name; lv.tag = src.tag; lv.words = src.words; lv.plan = src.plan;
+  });
+}
+/* plan lists words by their English key; show them in the chosen language */
+function planWords(str, round){
+  var en = EN_LV[round - 1].words, cur = LEVELS[round - 1].words;
+  return str.split(" ").map(function(k){
+    for (var i = 0; i < en.length; i++) if (en[i].w === k) return cur[i].d || cur[i].w;
+    return k;
+  }).join(", ");
+}
+
+/* ---------- text swap for phrases used inside the code ---------- */
+var ES = {
+  "Round {n}": "Ronda {n}",
+  "Round {n} complete!": "¡Ronda {n} completa!",
+  "Round {n}: your progress": "Ronda {n}: tu progreso",
+  "Done|level": "Completada",
+  "Best": "Mejor",
+  "Not played yet": "Aún sin jugar",
+  "Drag across the letters to find a word. I will cheer you on!": "Arrastra sobre las letras para encontrar una palabra. ¡Yo te animo!",
+  "Great find!": "¡Gran hallazgo!", "Brilliant!": "¡Genial!", "You got it!": "¡Lo lograste!", "Well done!": "¡Bien hecho!",
+  "Wonderful!": "¡Maravilla!", "Yes! Keep going!": "¡Sí! ¡Sigue así!", "Sharp eyes!": "¡Qué buena vista!", "Amazing!": "¡Increíble!",
+  "Superb!": "¡Excelente!", "Nailed it!": "¡Justo en el blanco!",
+  "Nice one! Keep that streak going.": "¡Muy bien! Mantén esa racha.", "You are on fire!": "¡Vas con todo!", "Another one down!": "¡Una más!",
+  "Your eyes are sharp today.": "Hoy tienes muy buena vista.", "Look at you go!": "¡Mírate, cómo avanzas!", "That word is yours now.": "Esa palabra ya es tuya.",
+  "10 down, 30 to go!": "¡10 listas, faltan 30!", "Halfway there!": "¡Vas por la mitad!", "Only 10 left!": "¡Solo faltan 10!",
+  "One more word!": "¡Solo una palabra más!", "You found them all!": "¡Las encontraste todas!", "Remember this one": "Recuerda esta palabra",
+  "{n} of {t} found": "{n} de {t} encontradas",
+  "Back to game": "Volver al juego", "See my results": "Ver mis resultados", "Next word": "Siguiente palabra", "Stay here": "Quedarme aquí",
+  "You already found that one.": "Ya encontraste esa.",
+  "Look for the glowing letter. It starts {w}.": "Busca la letra que brilla. Así empieza {w}.",
+  "Go back to the levels? Your progress in this round will be lost.": "¿Volver a los niveles? Perderás tu progreso en esta ronda.",
+  "Make a fresh grid? You will lose your progress in this round.": "¿Crear una sopa de letras nueva? Perderás tu progreso en esta ronda.",
+  "Fresh grid ready!": "¡Sopa de letras nueva lista!",
+  "Link copied!": "¡Enlace copiado!", "Message copied!": "¡Mensaje copiado!", "Could not copy. Please copy it by hand.": "No se pudo copiar. Cópialo a mano.",
+  "Could not make the picture.": "No se pudo crear la imagen.", "Picture saved!": "¡Imagen guardada!", "PDF saved!": "¡PDF guardado!",
+  "Making your PDF...": "Creando tu PDF...",
+  "The PDF tool did not load. Check your connection and try again.": "La herramienta del PDF no cargó. Revisa tu conexión e inténtalo de nuevo.",
+  "Sorry, the PDF could not be made. Please try again.": "Lo siento, no se pudo crear el PDF. Inténtalo de nuevo.",
+  "I found all 40 words in Round {n}: {name} in {time} {stars}. Can you beat me? Play free:": "Encontré las 40 palabras de la Ronda {n}: {name} en {time} {stars}. ¿Puedes superarme? Juega gratis:",
+  "I am playing Round {n}: {name} and have found {f} of 40 wellbeing words so far. Try it free:": "Estoy jugando la Ronda {n}: {name} y llevo {f} de 40 palabras de bienestar. Pruébalo gratis:",
+  "Find 40 wellbeing words, learn what each one means and get a 7 day plan. Free game with 4 rounds:": "Encuentra 40 palabras de bienestar, aprende qué significa cada una y recibe un plan de 7 días. Juego gratis con 4 rondas:",
+  "Find 40 Wellbeing Words": "Encuentra 40 palabras de bienestar",
+  "Find 40": "Encuentra 40", "Wellbeing Words": "palabras de bienestar",
+  "A wellbeing word finder": "Un buscador de palabras de bienestar",
+  "words found in": "palabras encontradas en",
+  "Can you beat me? Play free:": "¿Puedes superarme? Juega gratis:",
+  "Eye comfort": "Comodidad visual",
+  "Standard": "Estándar", "Soft cream": "Crema suave", "Dark": "Oscuro",
+  "Easy read": "Lectura fácil", "Wide and calm": "Amplia y calma",
+  "Clean and familiar.": "Limpia y conocida.",
+  "Made to help tell similar letters apart, like I and L.": "Hecha para distinguir letras parecidas, como la I y la L.",
+  "Wider letters with calm spacing to ease reading.": "Letras más anchas con espacio tranquilo para leer con más facilidad.",
+  /* PDF */
+  "Well done, {name}!": "¡Bien hecho, {name}!", "Name:": "Nombre:", "Name: {name}": "Nombre: {name}",
+  "Words found": "Palabras encontradas", "Time": "Tiempo", "Stars": "Estrellas", "Date": "Fecha",
+  "{a} of {b}": "{a} de {b}", "Not finished": "Sin terminar",
+  "My reflection": "Mi reflexión",
+  "The {n} words and what they mean": "Las {n} palabras y lo que significan",
+  "Found": "Encontrada", "Not found yet": "Aún sin encontrar",
+  "Your 7 Day Plan": "Tu plan de 7 días",
+  "Take one day at a time. Each day gives you a few of your words to use in real life. Do the action, answer the question, and tick the box when you are done.": "Ve un día a la vez. Cada día te da algunas de tus palabras para usar en la vida real. Haz la acción, responde la pregunta y marca la casilla cuando termines.",
+  "Day {n}: {t}": "Día {n}: {t}", "Done|pdf": "Hecho",
+  "Words for today: ": "Palabras de hoy: ", "Ask yourself: ": "Pregúntate: ",
+  "Ready for Round {n}: {name}?": "¿Vamos a la Ronda {n}: {name}?",
+  "Want to play the rounds again?": "¿Quieres jugar las rondas otra vez?",
+  "There are four free rounds with 40 new words each. Come back to the link below and choose any level you like. Share it with someone who could use a little more calm and kindness today.": "Hay cuatro rondas gratis con 40 palabras nuevas cada una. Vuelve al enlace de abajo y elige el nivel que quieras. Compártelo con alguien que hoy necesite un poco más de calma y amabilidad.",
+  "Play free: ": "Juega gratis: ", "Page {a} of {b}": "Página {a} de {b}",
+  "Emotional Intelligence Developer. For reflection and self-support only. Not medical or crisis advice.": "Emotional Intelligence Developer. Solo para reflexión y apoyo personal. No es consejo médico ni de crisis.",
+  "wellbeing-words-round-": "palabras-de-bienestar-ronda-",
+  "my-wellbeing-words-round-": "mis-palabras-de-bienestar-ronda-"
+};
+var ES_MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function tr(en, v){
+  var s = (LANG === "es" && ES[en] !== undefined) ? ES[en] : String(en).split("|")[0];
+  if (v) s = s.replace(/\{(\w+)\}/g, function(m, k){ return v[k] !== undefined ? v[k] : m; });
+  return s;
+}
+
+/* ---------- text swap for the page itself ---------- */
+/* m: "text" = first text node, "each" = one value per match, "nodes" = text nodes in order, or an attribute name */
+var STATIC = [
+  { s: "#home .title", es: "Encuentra 40 palabras de bienestar" },
+  { s: "#home .sub", es: "Un juego gratis que enseña inteligencia emocional. Encuentra una palabra, aprende qué significa y llévala a tu vida real. Elige la ronda que quieras." },
+  { s: "#homeLogo", m: "alt", es: "Logo de Emotional Intelligence Developer" },
+  { s: "label[for=nameHome]", es: "Tu nombre (se imprimirá en tu PDF)" },
+  { s: "#nameHome", m: "placeholder", es: "Escribe tu nombre" },
+  { s: "#home .chk", es: "Recordar mi nombre en este dispositivo" },
+  { s: "#home .fb-title", es: "Elige un tipo de letra cómodo para tus ojos" },
+  { s: "#home .sectionlabel", es: "Elige tu nivel" },
+  { s: ".supportbtn", m: "aria-label", es: "Apóyanos" },
+  { s: ".supportbtn b", es: "Apóyanos" },
+  { s: ".supportbtn small", es: "Ayuda a que este juego siga siendo gratis para todos" },
+  { s: "#homeHow", es: "Cómo jugar" },
+  { s: "#homeSee", es: "Mira qué recibes" },
+  { s: "#homeShare", es: "Compartir este juego" },
+  { s: "#homeMore", es: "Ayuda y más" },
+  { s: "#homeTheme", es: "Comodidad visual" },
+  { s: "#homeTheme", m: "aria-label", es: "Cambiar el modo de comodidad visual" },
+  { s: "#btnLevels", es: "Niveles" },
+  { s: "#btnLevels", m: "aria-label", es: "Volver a elegir nivel" },
+  { s: "#timer", m: "aria-label", es: "Tiempo" },
+  { s: "#btnTheme", m: "aria-label", es: "Cambiar el modo de comodidad visual" },
+  { s: "#btnSound", m: "aria-label", es: "Activar o desactivar el sonido" },
+  { s: "#btnMore", m: "aria-label", es: "Más opciones" },
+  { s: "#board", m: "aria-label", es: "Sopa de letras. Arrastra sobre las letras en línea recta para encontrar una palabra." },
+  { s: "#chips", m: "aria-label", es: "Lista de palabras" },
+  { s: "#btnHint", es: "Pista" },
+  { s: "#btnNew", es: "Nueva sopa" },
+  { s: "#btnShare", es: "Compartir" },
+  { s: "#btnResults", es: "Resultados" },
+  { s: "#rsFound + span", es: "Palabras encontradas" },
+  { s: "#rsTime + span", es: "Tiempo" },
+  { s: "#rsHints + span", es: "Pistas usadas" },
+  { s: "label[for=nameRes]", es: "Tu nombre para el PDF" },
+  { s: "#nameRes", m: "placeholder", es: "Escribe tu nombre" },
+  { s: "label[for=reflection]", es: "¿Qué te llamó la atención? (opcional, va en tu PDF)" },
+  { s: "#reflection", m: "placeholder", es: "Ejemplo: VALOR me recordó dar un pequeño paso aunque sienta nervios." },
+  { s: "#rsPdf", es: "Descargar PDF" },
+  { s: "#rsCard", es: "Imagen del resultado" },
+  { s: "#rsShare", es: "Compartir" },
+  { s: "#rsLevels", es: "Elegir nivel" },
+  { s: "#shTitle", es: "Compartir este juego" },
+  { s: "#shCopy", es: "Copiar enlace" },
+  { s: "#shCopy", m: "aria-label", es: "Copiar enlace" },
+  { s: "#shWa", m: "aria-label", es: "Compartir en WhatsApp" },
+  { s: "#shFb", m: "aria-label", es: "Compartir en Facebook" },
+  { s: "#shX", m: "aria-label", es: "Compartir en X" },
+  { s: "#shNative", es: "Más formas de compartir" },
+  { s: "#shMsg", es: "Copiar mensaje" },
+  { s: "#shClose", es: "Cerrar" },
+  { s: "#hwTitle", es: "Cómo jugar" },
+  { s: "#mHow .how li", m: "each", es: [
+    "Pulsa la primera letra de una palabra y arrastra en línea recta. Las palabras van hacia delante, hacia atrás, arriba, abajo y en diagonal. Las letras de la sopa no llevan tilde.",
+    "Cuando encuentras una palabra, vuela el confeti y una tarjeta te dice qué significa.",
+    "Toca Siguiente palabra y sigue hasta encontrar las 40.",
+    "¿Te atascaste? Toca Pista y la primera letra de una palabra brillará.",
+    "Agrega tu nombre, descarga tu PDF con todos los significados y un plan de 7 días, y comparte el juego.",
+    "Luego elige la siguiente ronda. Hay cuatro, cada una con 40 palabras nuevas."
+  ] },
+  { s: "#hwClose", es: "A jugar" },
+  { s: "#cfTitle", es: "Comodidad visual" },
+  { s: "#mComfort .seetext", es: "Cada persona ve distinto. Elige el tipo de letra y los colores que mejor te sienten. Tu elección se recuerda en este dispositivo." },
+  { s: "#mComfort .cf-h", m: "each", es: ["Tipo de letra", "Colores"] },
+  { s: "#cfClose", es: "Listo" },
+  { s: "#seTitle", es: "Mira qué recibes" },
+  { s: "#mSee .seetext", m: "each", es: [
+    "Cuando juegas, construyes tu bienestar una palabra a la vez. Cada palabra que encuentras trae un significado sencillo que puedes llevar a tu día.",
+    "Al final recibes un PDF con tu nombre, las 40 palabras, lo que significan y un plan de 7 días para usarlas en la vida real. Toca el botón de abajo para ver un ejemplo.",
+    "Este juego está hecho para computadora y teléfono. Es gratis y sin pagos, porque EID se centra en el bienestar mental."
+  ] },
+  { s: "#mSee .seelist li", m: "each", es: [
+    "Comparte este juego con tu familia y tus amistades para que también jueguen.",
+    "Juega en la escuela. Sirve para todas las edades.",
+    "Jugar es una mejor forma de entrenar tu cerebro que ver videos todo el tiempo."
+  ] },
+  { s: "#seLink", es: "Ver un PDF de ejemplo" },
+  { s: "#seLink", m: "aria-label", es: "Ver un PDF de ejemplo" },
+  { s: "#seClose", es: "Cerrar" },
+  { s: "#moTitle", es: "Ayuda y más" },
+  { s: "#moSee", es: "Mira qué recibes" },
+  { s: "#mMore a[href$='/help-page/']", es: "Ayuda" },
+  { s: "#mMore a[href$='/help-page/']", m: "aria-label", es: "Ayuda" },
+  { s: "#mMore a[href$='/recommended-books/']", es: "Audiolibros recomendados" },
+  { s: "#mMore a[href$='/recommended-books/']", m: "aria-label", es: "Audiolibros recomendados" },
+  { s: "#mMore a[href$='/wellbeing-and-self-help-tools/']", es: "Explora más herramientas gratis" },
+  { s: "#mMore a[href$='/wellbeing-and-self-help-tools/']", m: "aria-label", es: "Explora más herramientas gratis" },
+  { s: "#moHow", es: "Cómo jugar" },
+  { s: "#mMore .safety", m: "nodes", es: [
+    "Este juego es para reflexionar y apoyarte. Si no te sientes a salvo o estás en riesgo, por favor pide ayuda.",
+    "Encuentra una línea de ayuda externa"
+  ] },
+  { s: "#mMore .safety a", m: "aria-label", es: "Encuentra una línea de ayuda externa" },
+  { s: "#mMore .eid-credit", m: "nodes", es: [
+    "Creado por Clive Ngwenya (M.C.N) para",
+    null,
+    ". De uso libre bajo la licencia MIT.",
+    "Solo para reflexión y apoyo personal. No es consejo médico ni de crisis."
+  ] },
+  { s: "#moClose", es: "Cerrar" }
+];
+var ES_TITLE = "Encuentra 40 palabras de bienestar | Juego gratis de inteligencia emocional";
+var ES_DESC = "Un juego gratis que enseña inteligencia emocional. Encuentra 40 palabras de bienestar, aprende qué significa cada una y recibe un PDF con un plan de 7 días para usarlas en la vida real. Cuatro rondas para jugar.";
+
+var ORIG = new Map();
+function textNodes(el){
+  var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), a = [], n;
+  while ((n = w.nextNode())) if (/\S/.test(n.nodeValue)) a.push(n);
+  return a;
+}
+function swapNode(n, orig, es){
+  /* keep any symbol or emoji in front and any spacing around the words */
+  var pre = /^[\s\W_]*/.exec(orig)[0];
+  if (/[A-Za-zÀ-ɏ]/.test(pre)) pre = /^\s*/.exec(orig)[0];
+  var post = /\s*$/.exec(orig)[0];
+  n.nodeValue = pre + es + post;
+}
+var ORIG_TITLE = document.title;
+var ORIG_DESC = (document.querySelector('meta[name="description"]') || {}).content;
+function applyStatic(){
+  STATIC.forEach(function(r, ri){
+    document.querySelectorAll(r.s).forEach(function(el, ei){
+      var rec = ORIG.get(el); if (!rec){ rec = {}; ORIG.set(el, rec); }
+      var m = r.m || "text";
+      if (m !== "text" && m !== "each" && m !== "nodes"){
+        if (rec[ri] === undefined) rec[ri] = el.getAttribute(m);
+        if (LANG === "es") el.setAttribute(m, r.es); else if (rec[ri] !== null) el.setAttribute(m, rec[ri]);
+        return;
+      }
+      var nodes = textNodes(el);
+      if (rec[ri] === undefined) rec[ri] = nodes.map(function(n){ return n.nodeValue; });
+      var o = rec[ri];
+      if (m === "nodes"){
+        nodes.forEach(function(n, i){
+          if (o[i] === undefined) return;
+          if (LANG === "es" && r.es[i] !== null && r.es[i] !== undefined) swapNode(n, o[i], r.es[i]); else n.nodeValue = o[i];
+        });
+      } else {
+        var es = m === "each" ? r.es[ei] : r.es;
+        if (!nodes[0] || o[0] === undefined) return;
+        if (LANG === "es" && es) swapNode(nodes[0], o[0], es); else nodes[0].nodeValue = o[0];
+      }
+    });
+  });
+  document.title = LANG === "es" ? ES_TITLE : ORIG_TITLE;
+  var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute("content", LANG === "es" ? ES_DESC : ORIG_DESC);
+}
+/* take a snapshot of the English page before anything else touches it */
+applyStatic();
+
+function setRTitle(){
+  var lv = LEVELS[S.round - 1];
+  $("rtitle").innerHTML = tr("Round {n}", { n: S.round }) + '<span class="rn">: ' + lv.name + "</span>";
+}
+function setBubble(en){ S.bubbleEn = en; $("bubble").textContent = tr(en); }
+
+function rebuildForLang(){
+  var keep = [];
+  S.words.forEach(function(w, i){ if (S.found[w.w]) keep[i] = S.found[w.w]; });
+  S.words = LEVELS[S.round - 1].words;
+  var res = buildPuzzle(S.words.map(function(x){ return x.w; }));
+  S.N = res.N; S.grid = res.grid; S.place = res.place;
+  S.found = {}; S.sel = null; S.selCells = [];
+  renderBoard(); renderChips();
+  S.words.forEach(function(w, i){
+    var f = keep[i]; if (!f) return;
+    S.found[w.w] = f;
+    var p = S.place[w.w];
+    for (var k = 0; k < w.w.length; k++){
+      var el = S.cells[p.r + p.d[1] * k][p.c + p.d[0] * k];
+      el.classList.add("found"); el.style.setProperty("--fc", f.color);
+    }
+    var chip = $("chips").querySelector('[data-w="' + w.w + '"]');
+    if (chip){ chip.classList.add("found"); chip.style.setProperty("--fc", f.color); }
+  });
+}
+
+function setLang(l, save, initial){
+  LANG = l === "es" ? "es" : "en";
+  document.documentElement.setAttribute("lang", LANG);
+  applyLevelData();
+  applyStatic();
+  var a = document.getElementById("langSel"), b = document.getElementById("langSel2");
+  if (a) a.value = LANG; if (b) b.value = LANG;
+  if (save){ store.lang = LANG; saveStore(); }
+  if (initial) return;
+  var tt = document.getElementById("toast"); if (tt) tt.classList.remove("show");
+  /* redraw the parts that were built by the code, keeping everything the person did */
+  renderChoices();
+  applyTheme(document.documentElement.getAttribute("data-theme") || "standard", false);
+  renderLevels();
+  if (S.screen === "game"){
+    setRTitle();
+    rebuildForLang();
+    if (S.bubbleEn) $("bubble").textContent = tr(S.bubbleEn);
+    layout();
+  }
+  if ($("mResults").classList.contains("open")) renderResults();
+}
+document.addEventListener("change", function(e){
+  if (e.target && (e.target.id === "langSel" || e.target.id === "langSel2")) setLang(e.target.value, true);
+});
 </script>
 <script>
 /* ============================== APP ============================== */
@@ -849,15 +1372,15 @@ function renderChoices(){
   var f = document.documentElement.getAttribute("data-font") || "std";
   var t = document.documentElement.getAttribute("data-theme") || "standard";
   var fh = FONTS.map(function(k){
-    return '<button type="button" class="fontbtn f-' + k + '" data-f="' + k + '" aria-pressed="' + (k === f) + '"><span class="fa">Aa</span><span class="fn">' + FONT_INFO[k].name + '</span></button>';
+    return '<button type="button" class="fontbtn f-' + k + '" data-f="' + k + '" aria-pressed="' + (k === f) + '"><span class="fa">Aa</span><span class="fn">' + tr(FONT_INFO[k].name) + '</span></button>';
   }).join("");
   document.querySelectorAll("[data-fontrow]").forEach(function(el){ el.innerHTML = fh; });
   var th = THEMES.map(function(k){
     var bg = k === "standard" ? "#fefdfa" : (k === "soft" ? "#f3ead3" : "#13233a");
-    return '<button type="button" class="fontbtn" data-t="' + k + '" aria-pressed="' + (k === t) + '"><span class="sw" style="background:' + bg + '"></span><span class="fn">' + THEME_NAMES[k] + '</span></button>';
+    return '<button type="button" class="fontbtn" data-t="' + k + '" aria-pressed="' + (k === t) + '"><span class="sw" style="background:' + bg + '"></span><span class="fn">' + tr(THEME_NAMES[k]) + '</span></button>';
   }).join("");
   document.querySelectorAll("[data-themerow]").forEach(function(el){ el.innerHTML = th; });
-  var note = $("cfNote"); if (note) note.textContent = FONT_INFO[f].note;
+  var note = $("cfNote"); if (note) note.textContent = tr(FONT_INFO[f].note);
 }
 function applyFont(f, save){
   if (FONTS.indexOf(f) < 0) f = "std";
@@ -870,7 +1393,7 @@ function applyTheme(t, save){
   if (THEMES.indexOf(t) < 0) t = "standard";
   document.documentElement.setAttribute("data-theme", t);
   var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", THEME_META[t]);
-  $("btnTheme").setAttribute("title", "Eye comfort: " + THEME_NAMES[t]);
+  $("btnTheme").setAttribute("title", tr("Eye comfort") + ": " + tr(THEME_NAMES[t]));
   if (save){ store.theme = t; saveStore(); }
   renderChoices();
   return t;
@@ -1000,9 +1523,9 @@ function show(screen){
 function renderLevels(){
   $("levels").innerHTML = LEVELS.map(function(lv){
     var d = store.done[lv.n];
-    var st = d ? ("Done " + "\u2605".repeat(d.stars) + "  Best " + fmt(d.best)) : "Not played yet";
+    var st = d ? (tr("Done|level") + " " + "\u2605".repeat(d.stars) + "  " + tr("Best") + " " + fmt(d.best)) : tr("Not played yet");
     return '<button type="button" class="lvl" data-n="' + lv.n + '" style="--c:' + lv.color + '">' +
-      '<span class="lvn">Round ' + lv.n + '</span><span class="lvname">' + lv.name + '</span>' +
+      '<span class="lvn">' + tr("Round {n}", { n: lv.n }) + '</span><span class="lvname">' + lv.name + '</span>' +
       '<span class="lvtag">' + lv.tag + '</span><span class="lvst">' + st + '</span></button>';
   }).join("");
 }
@@ -1011,7 +1534,7 @@ function startRound(n){
   var lv = LEVELS[n - 1];
   S.round = n; S.words = lv.words;
   document.documentElement.style.setProperty("--accent", lv.color);
-  $("rtitle").innerHTML = "Round " + n + '<span class="rn">: ' + lv.name + "</span>";
+  setRTitle();
   $("walker").innerHTML = stick(lv.color, "idle");
   $("coachStick").innerHTML = stick(lv.color, "dance");
   newGrid();
@@ -1025,7 +1548,7 @@ function newGrid(){
   S.found = {}; S.foundCount = 0; S.elapsed = 0; S.hints = 0; S.stars = 0;
   S.complete = false; S.shownFinish = false; S.locked = false; S.sel = null; S.selCells = [];
   renderBoard(); renderChips(); updateProgress(); renderTimer();
-  $("bubble").textContent = "Drag across the letters to find a word. I will cheer you on!";
+  setBubble("Drag across the letters to find a word. I will cheer you on!");
   layout();
 }
 
@@ -1046,7 +1569,7 @@ function renderBoard(){
 
 function renderChips(){
   $("chips").innerHTML = S.words.map(function(w){
-    return '<button type="button" class="chip" data-w="' + w.w + '">' + w.w + "</button>";
+    return '<button type="button" class="chip" data-w="' + w.w + '">' + (w.d || w.w) + "</button>";
   }).join("");
 }
 
@@ -1156,7 +1679,7 @@ function finalizePath(path){
     if (w.w === s || w.w === rs){ if (S.found[w.w]) already = true; else hit = w; }
   });
   if (hit){ onFound(hit, path); return; }
-  if (already){ toast("You already found that one."); return; }
+  if (already){ toast(tr("You already found that one.")); return; }
   playMiss();
   path.forEach(function(p){
     var el = S.cells[p[0]][p[1]]; el.classList.add("miss");
@@ -1183,7 +1706,7 @@ function onFound(w, path){
   burst(rect.left + 2 + (mid[1] + 0.5) * cell, rect.top + 2 + (mid[0] + 0.5) * cell, 120, 1);
   initAudio(); playFound();
   if (navigator.vibrate) { try { navigator.vibrate(30); } catch (e) {} }
-  $("bubble").textContent = COACH[rand(COACH.length)];
+  setBubble(COACH[rand(COACH.length)]);
   if (S.foundCount === S.words.length){
     S.complete = true; recordResult(); updateRunning();
   }
@@ -1203,11 +1726,11 @@ function showMeaning(word, replay){
   } else cheer = "Remember this one";
   S.meaningReplay = !!replay;
   crew($("mwCrew"), 3, "dance");
-  $("mwCheer").textContent = cheer;
-  $("mwWord").textContent = w.w;
+  $("mwCheer").textContent = tr(cheer);
+  $("mwWord").textContent = w.d || w.w;
   $("mwMeaning").textContent = w.m;
-  $("mwCount").textContent = replay ? "" : (n + " of " + S.words.length + " found");
-  $("mwNext").textContent = replay ? "Back to game" : (S.complete ? "See my results" : "Next word");
+  $("mwCount").textContent = replay ? "" : tr("{n} of {t} found", { n: n, t: S.words.length });
+  $("mwNext").textContent = replay ? tr("Back to game") : (S.complete ? tr("See my results") : tr("Next word"));
   openModal("mMeaning");
 }
 function meaningNext(){
@@ -1240,7 +1763,7 @@ function recordResult(){
 function renderResults(){
   var lv = LEVELS[S.round - 1];
   crew($("rsCrew"), 4, S.complete ? "dance" : "idle");
-  $("rsTitle").textContent = S.complete ? ("Round " + S.round + " complete!") : ("Round " + S.round + ": your progress");
+  $("rsTitle").textContent = S.complete ? tr("Round {n} complete!", { n: S.round }) : tr("Round {n}: your progress", { n: S.round });
   $("rsStars").textContent = S.complete ? ("\u2605".repeat(S.stars) + "\u2606".repeat(3 - S.stars)) : "";
   $("rsFound").textContent = S.foundCount + "/" + S.words.length;
   $("rsTime").textContent = fmt(S.elapsed / 1000);
@@ -1248,8 +1771,8 @@ function renderResults(){
   $("nameRes").value = S.name;
   $("reflection").value = S.reflection;
   $("rsNext").classList.toggle("hidden", !(S.complete && S.round < LEVELS.length));
-  $("rsNext").textContent = "Round " + (S.round + 1) + " \u203A";
-  $("rsClose").textContent = S.complete ? "Stay here" : "Back to game";
+  $("rsNext").textContent = tr("Round {n}", { n: S.round + 1 }) + " \u203A";
+  $("rsClose").textContent = S.complete ? tr("Stay here") : tr("Back to game");
 }
 function openResults(){ renderResults(); openModal("mResults"); }
 $("nameHome").addEventListener("input", function(e){ setName(e.target.value, "home"); });
@@ -1261,10 +1784,10 @@ function shareUrl(){ return S.screen === "game" ? BASE_URL + "#round-" + S.round
 function shareText(){
   var lv = LEVELS[S.round - 1];
   if (S.screen === "game" && S.complete)
-    return "I found all 40 words in Round " + S.round + ": " + lv.name + " in " + fmt(S.elapsed / 1000) + " " + "\u2B50".repeat(S.stars) + ". Can you beat me? Play free:";
+    return tr("I found all 40 words in Round {n}: {name} in {time} {stars}. Can you beat me? Play free:", { n: S.round, name: lv.name, time: fmt(S.elapsed / 1000), stars: "\u2B50".repeat(S.stars) });
   if (S.screen === "game" && S.foundCount > 0)
-    return "I am playing Round " + S.round + ": " + lv.name + " and have found " + S.foundCount + " of 40 wellbeing words so far. Try it free:";
-  return "Find 40 wellbeing words, learn what each one means and get a 7 day plan. Free game with 4 rounds:";
+    return tr("I am playing Round {n}: {name} and have found {f} of 40 wellbeing words so far. Try it free:", { n: S.round, name: lv.name, f: S.foundCount });
+  return tr("Find 40 wellbeing words, learn what each one means and get a 7 day plan. Free game with 4 rounds:");
 }
 function openShare(){
   var url = shareUrl(), text = shareText();
@@ -1279,14 +1802,14 @@ function copyText(txt, okMsg){
   function fallback(){
     var t = document.createElement("textarea"); t.value = txt; t.style.position = "fixed"; t.style.opacity = "0";
     document.body.appendChild(t); t.select();
-    try { document.execCommand("copy"); toast(okMsg); } catch (e) { toast("Could not copy. Please copy it by hand."); }
+    try { document.execCommand("copy"); toast(okMsg); } catch (e) { toast(tr("Could not copy. Please copy it by hand.")); }
     t.remove();
   }
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ toast(okMsg); }, fallback);
   else fallback();
 }
-$("shCopy").addEventListener("click", function(){ copyText(shareUrl(), "Link copied!"); });
-$("shMsg").addEventListener("click", function(){ copyText(shareText() + " " + shareUrl(), "Message copied!"); });
+$("shCopy").addEventListener("click", function(){ copyText(shareUrl(), tr("Link copied!")); });
+$("shMsg").addEventListener("click", function(){ copyText(shareText() + " " + shareUrl(), tr("Message copied!")); });
 $("shNative").addEventListener("click", function(){
   if (navigator.share) navigator.share({ title: "Find 40 Wellbeing Words", text: shareText(), url: shareUrl() }).catch(function(){});
 });
@@ -1323,22 +1846,22 @@ function makeCard(){
   c.globalAlpha = 1;
   c.fillStyle = "#fff"; roundRect(c, 70, 150, 940, 1050, 44); c.fill();
   c.textAlign = "center"; c.fillStyle = lv.color;
-  c.font = "800 34px system-ui, Arial, sans-serif"; c.fillText("ROUND " + S.round + ": " + lv.name.toUpperCase(), 540, 235);
-  c.fillStyle = "#17324d"; c.font = "900 70px system-ui, Arial, sans-serif"; c.fillText("Find 40", 540, 330);
-  c.fillText("Wellbeing Words", 540, 410);
+  c.font = "800 34px system-ui, Arial, sans-serif"; c.fillText(tr("Round {n}", { n: S.round }).toUpperCase() + ": " + lv.name.toUpperCase(), 540, 235, 900);
+  c.fillStyle = "#17324d"; c.font = "900 70px system-ui, Arial, sans-serif"; c.fillText(tr("Find 40"), 540, 330, 880);
+  c.fillText(tr("Wellbeing Words"), 540, 410, 880);
   var nm = clean(S.name);
   c.font = "700 46px system-ui, Arial, sans-serif"; c.fillStyle = "#27455f";
-  var line = nm ? nm : "A wellbeing word finder";
+  var line = nm ? nm : tr("A wellbeing word finder");
   if (c.measureText(line).width > 820) line = line.slice(0, 22) + "...";
   c.fillText(line, 540, 500);
   c.fillStyle = lv.color; c.font = "900 190px system-ui, Arial, sans-serif";
   c.fillText(S.foundCount + "/" + S.words.length, 540, 700);
   c.fillStyle = "#27455f"; c.font = "700 40px system-ui, Arial, sans-serif";
-  c.fillText("words found in " + fmt(S.elapsed / 1000), 540, 770);
+  c.fillText(tr("words found in") + " " + fmt(S.elapsed / 1000), 540, 770, 900);
   if (S.complete){ c.fillStyle = "#f2b01e"; c.font = "900 90px system-ui, Arial, sans-serif"; c.fillText("\u2605".repeat(S.stars) + "\u2606".repeat(3 - S.stars), 540, 880); }
   [250, 420, 540, 660, 830].forEach(function(x, k){ drawStickCanvas(c, x, 1030 + (k % 2) * 8, 1, STICK_COLORS[k % 5]); });
   c.fillStyle = "#fff"; c.font = "700 34px system-ui, Arial, sans-serif";
-  c.fillText("Can you beat me? Play free:", 540, 1262);
+  c.fillText(tr("Can you beat me? Play free:"), 540, 1262, 900);
   c.font = "600 26px system-ui, Arial, sans-serif";
   c.fillText("emotionalintelligencedeveloper-glitch.github.io/mcn/find-40-wellbeing-words.html", 540, 1306, 980);
   return cvs;
@@ -1346,17 +1869,17 @@ function makeCard(){
 function saveCard(){
   var cvs = makeCard();
   cvs.toBlob(function(blob){
-    if (!blob){ toast("Could not make the picture."); return; }
+    if (!blob){ toast(tr("Could not make the picture.")); return; }
     var file = null;
-    try { file = new File([blob], "my-wellbeing-words-round-" + S.round + ".png", { type: "image/png" }); } catch (e) {}
+    try { file = new File([blob], tr("my-wellbeing-words-round-") + S.round + ".png", { type: "image/png" }); } catch (e) {}
     if (file && navigator.canShare && navigator.canShare({ files: [file] })){
       navigator.share({ files: [file], text: shareText(), url: shareUrl() }).catch(function(){});
     } else {
       var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-      a.download = "my-wellbeing-words-round-" + S.round + ".png";
+      a.download = tr("my-wellbeing-words-round-") + S.round + ".png";
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
-      toast("Picture saved!");
+      toast(tr("Picture saved!"));
     }
   }, "image/png");
 }
@@ -1403,9 +1926,11 @@ async function buildPdf(logo){
   /* header band */
   doc.setFillColor(rgb[0], rgb[1], rgb[2]); doc.rect(0, 0, W, 96, "F");
   doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(25);
-  doc.text("Find 40 Wellbeing Words", M, 44);
+  var ttl = tr("Find 40 Wellbeing Words"), tfs = 25;
+  while (tfs > 14 && doc.getTextWidth(ttl) > W - 2 * M - 100){ tfs--; doc.setFontSize(tfs); }
+  doc.text(ttl, M, 44);
   doc.setFont("helvetica", "normal"); doc.setFontSize(13);
-  doc.text("Round " + S.round + ": " + lv.name, M, 66);
+  doc.text(tr("Round {n}", { n: S.round }) + ": " + lv.name, M, 66);
   doc.setFontSize(9); doc.text("Emotional Intelligence Developer", M, 82);
   if (logo){
     try {
@@ -1417,20 +1942,20 @@ async function buildPdf(logo){
 
   /* name */
   if (name){
-    lines("Well done, " + name + "!", 22, "bold", DARK, M, CW, 30);
+    lines(tr("Well done, {name}!", { name: name }), 22, "bold", DARK, M, CW, 30);
   } else {
     doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
-    doc.text("Name:", M, y + 13);
-    doc.setDrawColor(150, 170, 190); doc.setLineWidth(0.8); doc.line(M + 46, y + 14, M + 300, y + 14);
+    doc.text(tr("Name:"), M, y + 13);
+    doc.setDrawColor(150, 170, 190); doc.setLineWidth(0.8); doc.line(M + (LANG === "es" ? 62 : 46), y + 14, M + 300, y + 14);
     y += 30;
   }
 
   /* summary box */
   var boxH = 56;
   doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, boxH, 8, 8, "F");
-  var stars = S.complete ? (S.stars + " of 3") : "Not finished";
-  var d = new Date(), dateStr = d.getDate() + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()] + " " + d.getFullYear();
-  var cols = [["Words found", S.foundCount + " of " + S.words.length], ["Time", fmt(S.elapsed / 1000)], ["Stars", stars], ["Date", dateStr]];
+  var stars = S.complete ? tr("{a} of {b}", { a: S.stars, b: 3 }) : tr("Not finished");
+  var d = new Date(), dateStr = d.getDate() + " " + (LANG === "es" ? ES_MONTHS : ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])[d.getMonth()] + " " + d.getFullYear();
+  var cols = [[tr("Words found"), tr("{a} of {b}", { a: S.foundCount, b: S.words.length })], [tr("Time"), fmt(S.elapsed / 1000)], [tr("Stars"), stars], [tr("Date"), dateStr]];
   cols.forEach(function(cc, i){
     var x = M + 14 + i * (CW / 4);
     doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(GREY[0], GREY[1], GREY[2]); doc.text(cc[0], x, y + 21);
@@ -1439,23 +1964,23 @@ async function buildPdf(logo){
   y += boxH + 16;
 
   if (refl){
-    heading("My reflection");
+    heading(tr("My reflection"));
     lines(refl, 11, "italic", DARK, M, CW, 15);
     y += 6;
   }
 
   /* words and meanings */
-  heading("The " + S.words.length + " words and what they mean");
+  heading(tr("The {n} words and what they mean", { n: S.words.length }));
   S.words.forEach(function(w){
     var found = !!S.found[w.w];
     doc.setFont("helvetica", "normal"); doc.setFontSize(10);
     var ml = doc.splitTextToSize(w.m, CW - 12);
     ensure(18 + ml.length * 13 + 6);
     doc.setFont("helvetica", "bold"); doc.setFontSize(11.5); doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-    doc.text(w.w, M, y + 11);
+    doc.text(w.d || w.w, M, y + 11);
     doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
-    if (found){ doc.setTextColor(46, 125, 85); doc.text("Found", W - M - 28, y + 11); }
-    else { doc.setTextColor(150, 150, 150); doc.text("Not found yet", W - M - 56, y + 11); }
+    if (found){ doc.setTextColor(46, 125, 85); if (LANG === "es") doc.text(tr("Found"), W - M, y + 11, { align: "right" }); else doc.text("Found", W - M - 28, y + 11); }
+    else { doc.setTextColor(150, 150, 150); if (LANG === "es") doc.text(tr("Not found yet"), W - M, y + 11, { align: "right" }); else doc.text("Not found yet", W - M - 56, y + 11); }
     y += 16;
     doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
     ml.forEach(function(l){ doc.text(l, M + 12, y + 9); y += 13; });
@@ -1465,22 +1990,22 @@ async function buildPdf(logo){
 
   /* 7 day plan */
   doc.addPage(); y = M;
-  heading("Your 7 Day Plan");
-  lines("Take one day at a time. Each day gives you a few of your words to use in real life. Do the action, answer the question, and tick the box when you are done.", 10.5, "normal", GREY, M, CW, 14);
+  heading(tr("Your 7 Day Plan"));
+  lines(tr("Take one day at a time. Each day gives you a few of your words to use in real life. Do the action, answer the question, and tick the box when you are done."), 10.5, "normal", GREY, M, CW, 14);
   y += 8;
   lv.plan.forEach(function(p, i){
     doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
     var tl = doc.splitTextToSize(p.k, CW - 24);
     doc.setFont("helvetica", "bold"); doc.setFontSize(9.5);
-    var wl = doc.splitTextToSize("Words for today: " + p.w.split(" ").join(", "), CW - 24);
-    var ql = doc.splitTextToSize("Ask yourself: " + p.q, CW - 24);
+    var wl = doc.splitTextToSize(tr("Words for today: ") + planWords(p.w, S.round), CW - 24);
+    var ql = doc.splitTextToSize(tr("Ask yourself: ") + p.q, CW - 24);
     var need = 30 + wl.length * 13 + tl.length * 14 + ql.length * 13 + 24;
     ensure(need);
     doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, 26, 6, 6, "F");
     doc.setFont("helvetica", "bold"); doc.setFontSize(12.5); doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-    doc.text("Day " + (i + 1) + ": " + p.t, M + 10, y + 17);
+    doc.text(tr("Day {n}: {t}", { n: i + 1, t: p.t }), M + 10, y + 17);
     doc.setDrawColor(rgb[0], rgb[1], rgb[2]); doc.setLineWidth(1); doc.rect(W - M - 62, y + 7, 12, 12);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.text("Done", W - M - 44, y + 17);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.text(tr("Done|pdf"), W - M - 44, y + 17);
     y += 34;
     doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
     wl.forEach(function(l){ doc.text(l, M + 12, y + 8); y += 13; });
@@ -1497,10 +2022,10 @@ async function buildPdf(logo){
   ensure(110); y += 6;
   doc.setFillColor(tint[0], tint[1], tint[2]); doc.roundedRect(M, y, CW, 92, 10, 10, "F");
   doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(DARK[0], DARK[1], DARK[2]);
-  var next = S.round < LEVELS.length ? ("Ready for Round " + (S.round + 1) + ": " + LEVELS[S.round].name + "?") : "Want to play the rounds again?";
+  var next = S.round < LEVELS.length ? tr("Ready for Round {n}: {name}?", { n: S.round + 1, name: LEVELS[S.round].name }) : tr("Want to play the rounds again?");
   doc.text(next, M + 14, y + 24);
   doc.setFont("helvetica", "normal"); doc.setFontSize(10);
-  doc.splitTextToSize("There are four free rounds with 40 new words each. Come back to the link below and choose any level you like. Share it with someone who could use a little more calm and kindness today.", CW - 28)
+  doc.splitTextToSize(tr("There are four free rounds with 40 new words each. Come back to the link below and choose any level you like. Share it with someone who could use a little more calm and kindness today."), CW - 28)
     .forEach(function(l, i){ doc.text(l, M + 14, y + 42 + i * 13); });
   doc.setTextColor(30, 100, 160); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
   doc.textWithLink(BASE_URL, M + 14, y + 82, { url: BASE_URL });
@@ -1512,31 +2037,31 @@ async function buildPdf(logo){
     doc.setPage(pg);
     if (name && pg > 1){
       doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-      doc.text("Name: " + name, W - M, 28, { align: "right" });
+      doc.text(tr("Name: {name}", { name: name }), W - M, 28, { align: "right" });
       doc.setDrawColor(210, 224, 240); doc.setLineWidth(0.5); doc.line(M, 34, W - M, 34);
     }
     doc.setDrawColor(210, 224, 240); doc.setLineWidth(0.5); doc.line(M, H - 48, W - M, H - 48);
     doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(30, 100, 160);
-    doc.textWithLink("Play free: " + BASE_URL, M, H - 33, { url: BASE_URL });
+    doc.textWithLink(tr("Play free: ") + BASE_URL, M, H - 33, { url: BASE_URL });
     doc.setFont("helvetica", "normal"); doc.setTextColor(GREY[0], GREY[1], GREY[2]);
-    doc.text("Page " + pg + " of " + total, W - M - 44, H - 33);
+    if (LANG === "es") doc.text(tr("Page {a} of {b}", { a: pg, b: total }), W - M, H - 33, { align: "right" }); else doc.text("Page " + pg + " of " + total, W - M - 44, H - 33);
     doc.setFontSize(7.5);
-    doc.text("Emotional Intelligence Developer. For reflection and self-support only. Not medical or crisis advice.", M, H - 20);
+    doc.text(tr("Emotional Intelligence Developer. For reflection and self-support only. Not medical or crisis advice."), M, H - 20);
   }
   return doc;
 }
 
 async function downloadPdf(){
   var btn = $("rsPdf"), old = btn.innerHTML;
-  btn.disabled = true; btn.textContent = "Making your PDF...";
+  btn.disabled = true; btn.textContent = tr("Making your PDF...");
   try {
     var logo = await loadLogo();
     var doc = await buildPdf(logo);
-    var who = clean(S.name).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    doc.save("wellbeing-words-round-" + S.round + (who ? "-" + who : "") + ".pdf");
-    toast("PDF saved!");
+    var who = (LANG === "es" ? clean(S.name).normalize("NFD").replace(/[\u0300-\u036f]/g, "") : clean(S.name)).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    doc.save(tr("wellbeing-words-round-") + S.round + (who ? "-" + who : "") + ".pdf");
+    toast(tr("PDF saved!"));
   } catch (e) {
-    toast(e && e.message === "nopdf" ? "The PDF tool did not load. Check your connection and try again." : "Sorry, the PDF could not be made. Please try again.", 3000);
+    toast(e && e.message === "nopdf" ? tr("The PDF tool did not load. Check your connection and try again.") : tr("Sorry, the PDF could not be made. Please try again."), 3000);
   }
   btn.disabled = false; btn.innerHTML = old;
 }
@@ -1551,7 +2076,7 @@ function giveHint(){
   S.hints++;
   el.classList.add("hint");
   setTimeout(function(){ el.classList.remove("hint"); }, 2500);
-  toast("Look for the glowing letter. It starts " + w.w + ".", 2600);
+  toast(tr("Look for the glowing letter. It starts {w}.", { w: w.d || w.w }), 2600);
 }
 
 /* ---------- wiring ---------- */
@@ -1560,7 +2085,7 @@ $("levels").addEventListener("click", function(e){
   initAudio(); startRound(parseInt(b.dataset.n, 10));
 });
 $("btnLevels").addEventListener("click", function(){
-  if (S.foundCount > 0 && !S.complete && !confirm("Go back to the levels? Your progress in this round will be lost.")) return;
+  if (S.foundCount > 0 && !S.complete && !confirm(tr("Go back to the levels? Your progress in this round will be lost."))) return;
   show("home");
 });
 $("btnTheme").addEventListener("click", function(){ openModal("mComfort"); });
@@ -1577,8 +2102,8 @@ $("btnSound").addEventListener("click", function(){
 });
 $("btnHint").addEventListener("click", giveHint);
 $("btnNew").addEventListener("click", function(){
-  if (S.foundCount > 0 && !confirm("Make a fresh grid? You will lose your progress in this round.")) return;
-  newGrid(); toast("Fresh grid ready!");
+  if (S.foundCount > 0 && !confirm(tr("Make a fresh grid? You will lose your progress in this round."))) return;
+  newGrid(); toast(tr("Fresh grid ready!"));
 });
 $("btnShare").addEventListener("click", openShare);
 $("btnResults").addEventListener("click", openResults);
@@ -1606,6 +2131,7 @@ $("homeLogo").addEventListener("error", function(){ this.style.display = "none";
 /* ---------- start ---------- */
 (function init(){
   var osDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+  setLang(store.lang, false, true);
   applyFont(store.font || "std", false);
   applyTheme(store.theme || (osDark ? "dark" : "standard"), false);
   S.muted = !!store.muted;

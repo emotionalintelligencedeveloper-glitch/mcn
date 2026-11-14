@@ -1457,5 +1457,299 @@ dtcInit();
   <br>
   <span style="font-size:12px;opacity:0.85;" data-i18n>For reflection and self-support only. Not medical or crisis advice.</span>
 </div>
+<!-- ===== EID "Explore All 26 Tools" button and popup (add-on) =====
+     Place this whole block at the very end of the tool, just before the closing body line or the end-of-tool comment line.
+     It does not touch any existing tool code. It finds the footer, adds one button above the support area,
+     and opens a popup of all 26 tools grouped by category. English and Spanish follow the tool's own language switcher. =====
+-->
+<script>
+(function(){
+  if(window.__eidHubLoaded) return;
+  window.__eidHubLoaded = true;
+
+  /* ---------- Settings for this tool ---------- */
+var CFG = {
+    quiet: true,             /* crisis tool: quiet text link instead of a filled button */
+    spots: ['.dtc-footer-text'], /* the link goes above the support message */
+    accent: '#3a6a98', light: '#e8eff8', ink: '#1a2030',
+    cat: '#3a6a98', tipBg: '#e8eff8', tipBorder: '#a8c0d8', here: '#3a6a98', hereBg: '#e8eff8',
+    quietColor: '#3a6a98', line: 'var(--border,#d0d8e8)',
+    supportBlock: false,
+    wrapSupport: '.dtc-btn-support',  /* this tool already has an orange Support button: stick men are added on each side of it */
+    figures: ['cheer', 'heart'], figColor: 'var(--brand,#3a6a98)', supColor: '#4a5568',
+    extraCss: '.dtc-footer .dtc-footer-text{margin:22px 0 16px;}'
+            + '.eidhub-sup-row .dtc-btn-support{white-space:normal;flex:1 1 auto;width:auto;max-width:300px;line-height:1.3;text-align:center;}'
+  };
+
+  var BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+  var SUPPORT_URL = 'https://emotionalintelligencedeveloper.com/support-this-website/';
+
+  /* ---------- The 26 tools, by category ---------- */
+  var CATS = [
+    {en:'Crisis and Safety', es:'Crisis y seguridad', tools:[
+      ['Suicide Prevention and Emotional Support','Prevención del suicidio y apoyo emocional', BASE+'Suicide-Prevention-and-Emotional-Support-Tool.html'],
+      ['Domestic Violence Awareness and Safety','Violencia doméstica: conciencia y seguridad', BASE+'domestic-violence-warning-and-safety-tool.html'],
+      ['Grief After Violence Support','Apoyo en el duelo tras la violencia', BASE+'grief-after-violence-support-tool.html'],
+      ['Gun Violence Awareness and Support (teen section)','Violencia armada: conciencia y apoyo (sección para adolescentes)', BASE+'gun-violence-awareness-support-tool.html']
+    ]},
+    {en:'Calm and Regulation', es:'Calma y regulación', tools:[
+      ['Distress Tolerance Coping Tool','Herramienta de tolerancia al malestar', BASE+'distress-tolerance-coping-tool.html'],
+      ['Threat and Emotional Regulation','Amenaza y regulación emocional', BASE+'threat-and-emotional-regulation-tool.html'],
+      ['Visual Grounding and Emotional Reset','Anclaje visual y reinicio emocional', BASE+'visual-grounding-emotional-reset-tool.html'],
+      ['Inner Peace Quiz','Test de paz interior', BASE+'inner-peace-quiz.html']
+    ]},
+    {en:'Relationships and Boundaries', es:'Relaciones y límites', tools:[
+      ['Boundary Builder','Constructor de límites', BASE+'boundary-builder-tool.html'],
+      ['Hard Conversation Preparation','Preparación para conversaciones difíciles', BASE+'hard-conversation-preparation-tool.html'],
+      ['Prepare For Hard Conversations 2.0','Prepárate para conversaciones difíciles 2.0', BASE+'hard-conversations-preparation-tool.html'],
+      ['People-Pleaser Recovery','Recuperarte de complacer a todos', BASE+'people-pleaser-recovery-tool.html']
+    ]},
+    {en:'Know Yourself', es:'Conocerte', tools:[
+      ['Emotional Trigger Mapping','Mapa de desencadenantes emocionales', BASE+'emotional-trigger-mapping-tool.html'],
+      ['Inner vs Outer Alignment Reflection','Reflexión: alineación interior y exterior', BASE+'inner-outer-alignment-tool.html'],
+      ['Values Quiz and Growth Report','Test de valores e informe de crecimiento', BASE+'values-quiz-widget.html'],
+      ['Finding Yourself (Identity Reflection)','Encontrarte a ti (reflexión sobre identidad)', BASE+'Finding-Yourself-Gender-Identity-Reflection-Tool.html']
+    ]},
+    {en:'Strength and Courage', es:'Fortaleza y valentía', tools:[
+      ['Courage in the Face of Fear','Valentía ante el miedo', BASE+'courage-in-the-face-of-fear-tool.html'],
+      ['Inner Strength Snapshot','Instantánea de tu fortaleza interior', BASE+'inner-strength-snapshot-tool.html'],
+      ['Positive Strengths Map','Mapa de fortalezas positivas', BASE+'positive-strengths-map-tool.html'],
+      ['A.I. Work and Life Reflection (2027)','Reflexión sobre la IA, el trabajo y la vida (2027)', BASE+'ai-bubble-fear-2026-tool.html']
+    ]},
+    {en:'Check-ins and Mood', es:'Chequeos y ánimo', tools:[
+      ['Free EI Test Score (20 questions)','Test gratis de inteligencia emocional (20 preguntas)', BASE+'emotional-intelligence-score.html'],
+      ['Emotional Support Self-Check','Autochequeo de apoyo emocional', BASE+'emotional-support-self-check-addiction-check-in.html'],
+      ['Wellbeing Journey: Quick Check and Reset','Camino de bienestar: chequeo rápido y reinicio', BASE+'wellbeing-journey-tool.html'],
+      ['Teens Glow-Up Mood Tracker and Growth Journal','Seguimiento de ánimo y diario de crecimiento para adolescentes', 'https://emotionalintelligencedeveloper.com/teens-glow-up-mood-tracker-growth-journal/']
+    ]},
+    {en:'Games and Learning', es:'Juegos y aprendizaje', tools:[
+      ['Feelings Detective Course (EI Mental Course)','Curso Detective de sentimientos (curso mental de IE)', BASE+'index.html'],
+      ['Mental Game: Find 40 Wellbeing Words','Juego mental: encuentra 40 palabras de bienestar', BASE+'find-40-wellbeing-words.html']
+    ]}
+  ];
+
+  var UI = {
+    en:{btn:'Explore All 26 Tools', title:'26 Free Wellbeing Tools', sub:'No app and no sign-up needed. Works on your phone and computer.',
+        note:'Your support keeps these tools free and means they keep being updated and upgraded. It is our free way of fighting back against a world that harms our wellbeing, from the pressure on young people to social media addiction and more. If these tools help you, please use the support button at the bottom of the page.',
+        tip:'Tip: bookmark the tool you like most. You can open this menu from it any time to find all 26.',
+        close:'Close', here:'You are here', open:'Opens in a new tab',
+        supText:'This platform is free for everyone. If it helped you, consider supporting it.', supBtn:'♥ Support this website'},
+    es:{btn:'Explorar las 26 herramientas', title:'26 herramientas gratuitas de bienestar', sub:'Sin app y sin registro. Funcionan en tu teléfono y en tu computadora.',
+        note:'Tu apoyo mantiene estas herramientas gratis y hace que se sigan actualizando y mejorando. Es nuestra forma gratuita de hacer frente a un mundo que daña nuestro bienestar, desde la presión sobre los jóvenes hasta la adicción a las redes sociales y más. Si estas herramientas te ayudan, usa el botón de apoyo al final de la página.',
+        tip:'Consejo: guarda en favoritos la herramienta que más te guste. Desde ella puedes abrir este menú cuando quieras para encontrar las 26.',
+        close:'Cerrar', here:'Estás aquí', open:'Se abre en una pestaña nueva',
+        supText:'Esta plataforma es gratis para todos. Si te ayudó, considera apoyarla.', supBtn:'♥ Apoya este sitio web'}
+  };
+
+  function lang(){
+    var l = '';
+    try{
+      var sel = document.querySelector('select[id*="ang" i]');
+      if(sel && UI[sel.value]) l = sel.value;
+      if(!l){ var d = (document.documentElement.getAttribute('lang') || '').slice(0,2); if(UI[d] && d !== 'en') l = d; }
+      if(!l){ var s = localStorage.getItem('eidToolLang') || localStorage.getItem('eid_lang'); if(s && UI[s]) l = s; }
+    }catch(e){}
+    return l || 'en';
+  }
+
+  /* ---------- Styles ---------- */
+  var FF = 'Georgia,"Times New Roman",serif';
+  var css = ''
+  + '.eidhub-wrap{text-align:center;margin:6px 0 0;padding-bottom:22px;border-bottom:1px solid ' + CFG.line + ';}'
+  + '.eidhub-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:' + FF + ';font-size:15px;line-height:1.3;cursor:pointer;min-height:46px;padding:10px 20px;border-radius:99px;background:#fff;color:' + CFG.ink + ';border:1.5px solid ' + CFG.accent + ';-webkit-tap-highlight-color:transparent;transition:background .15s,transform .1s;max-width:100%;}'
+  + '.eidhub-btn:hover{background:' + CFG.light + ';}'
+  + '.eidhub-btn:active{transform:scale(.97);}'
+  + '.eidhub-btn:focus-visible,.eidhub-x:focus-visible,.eidhub-link:focus-visible,.eidhub-sup-btn:focus-visible{outline:3px solid ' + CFG.here + ';outline-offset:2px;}'
+  + '.eidhub-btn svg{flex-shrink:0;}'
+  + '.eidhub-quiet .eidhub-btn{background:none;border:none;min-height:40px;padding:6px 8px;font-size:13px;text-decoration:underline;color:' + CFG.quietColor + ';}'
+  + '.eidhub-quiet .eidhub-btn:hover{background:none;}'
+  + '.eidhub-ov{display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:99999;background:rgba(26,30,42,.6);align-items:center;justify-content:center;padding:12px;font-family:' + FF + ';}'
+  + '.eidhub-ov.eidhub-show{display:flex;}'
+  + '.eidhub-box{background:#f2f4f8;color:#1a1e2a;width:100%;max-width:680px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:16px;border:1px solid #d0d8e8;box-shadow:0 10px 40px rgba(0,0,0,.3);line-height:1.6;font-size:15px;}'
+  + '.eidhub-head{position:sticky;top:0;background:' + CFG.accent + ';color:#fff;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border-radius:16px 16px 0 0;z-index:1;}'
+  + '.eidhub-head-t{flex:1;}'
+  + '.eidhub-title{font-size:1.2rem;line-height:1.3;margin:0;font-weight:normal;color:#fff;}'
+  + '.eidhub-sub{font-size:13px;opacity:.92;margin:2px 0 0;color:#fff;}'
+  + '.eidhub-x{flex-shrink:0;min-width:44px;min-height:44px;border-radius:99px;border:1.5px solid rgba(255,255,255,.7);background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer;font-family:Arial,sans-serif;}'
+  + '.eidhub-x:hover{background:rgba(255,255,255,.15);}'
+  + '.eidhub-body{padding:14px 14px 18px;}'
+  + '.eidhub-note{background:#fff4ea;border:1px solid #f0c8a0;border-radius:12px;padding:12px 14px;font-size:14px;color:#5a3a1a;margin-bottom:10px;}'
+  + '.eidhub-tip{background:' + CFG.tipBg + ';border:1px solid ' + CFG.tipBorder + ';border-radius:12px;padding:10px 14px;font-size:13px;color:' + CFG.ink + ';font-style:italic;margin-bottom:14px;}'
+  + '.eidhub-cat{font-size:12px;font-weight:bold;color:' + CFG.cat + ';text-transform:uppercase;letter-spacing:.07em;margin:16px 0 8px;}'
+  + '.eidhub-grid{display:grid;grid-template-columns:1fr;gap:8px;}'
+  + '.eidhub-link{display:flex;align-items:center;min-height:48px;padding:10px 14px;background:#fff;border:1.5px solid #d0d8e8;border-radius:12px;color:#1a1e2a;text-decoration:none;font-size:14px;line-height:1.4;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s;}'
+  + '.eidhub-link:hover{border-color:' + CFG.accent + ';background:' + CFG.light + ';}'
+  + '.eidhub-link.eidhub-here{border-color:' + CFG.here + ';background:' + CFG.hereBg + ';}'
+  + '.eidhub-badge{margin-left:auto;padding-left:10px;font-size:11px;color:' + CFG.cat + ';white-space:nowrap;font-style:italic;}'
+  + '@media(min-width:560px){.eidhub-grid{grid-template-columns:1fr 1fr;}.eidhub-body{padding:16px 18px 22px;}}'
+  + '@media(prefers-reduced-motion:no-preference){.eidhub-box{animation:eidhubIn .2s ease-out;}@keyframes eidhubIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}}'
+  + '@media print{.eidhub-ov,.eidhub-wrap,.eidhub-sup{display:none !important;}}';
+  if(CFG.supportBlock || CFG.wrapSupport){
+    css += '.eidhub-sup-row{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:10px 0;}'
+        + '.eidhub-sup-fig{flex-shrink:0;line-height:0;color:' + CFG.figColor + ';}'
+        + '@media(max-width:400px){.eidhub-sup-fig svg{width:44px;height:51px;}}';
+  }
+  if(CFG.supportBlock){
+    css += '.eidhub-sup{text-align:center;padding-bottom:18px;margin-bottom:16px;border-bottom:1px solid ' + CFG.line + ';}'
+        + '.eidhub-sup-t{font-family:' + FF + ';font-size:14px;font-style:italic;line-height:1.6;color:' + CFG.supColor + ';margin:22px 0 16px;}'
+        + '.eidhub-sup-btn{display:flex;align-items:center;justify-content:center;flex:1 1 auto;max-width:300px;min-height:52px;padding:16px 24px;border-radius:99px;background:#e8702a;color:#fff;border:1.5px solid #e8702a;font-family:' + FF + ';font-size:16px;line-height:1.3;text-decoration:none;text-align:center;-webkit-tap-highlight-color:transparent;transition:opacity .15s,transform .1s;}'
+        + '.eidhub-sup-btn:hover{opacity:.88;}'
+        + '.eidhub-sup-btn:active{transform:scale(.97);}';
+  }
+  css += '.eidhub-ov,.eidhub-ov *,.eidhub-wrap,.eidhub-wrap *,.eidhub-sup,.eidhub-sup-t,.eidhub-sup-btn{box-sizing:border-box;}'; /* keeps the popup sized right even when a tool only resets its own inner area */
+  css += CFG.extraCss || '';
+  var st = document.createElement('style'); st.id = 'eidhub-style'; st.appendChild(document.createTextNode(css));
+  document.head.appendChild(st);
+
+  /* ---------- Button ---------- */
+  var wrap = document.createElement('div');
+  wrap.className = 'eidhub-wrap' + (CFG.quiet ? ' eidhub-quiet' : '');
+  wrap.setAttribute('data-noi18n', '');
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'eidhub-btn';
+  btn.setAttribute('aria-haspopup', 'dialog');
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg><span class="eidhub-btn-t"></span>';
+  wrap.appendChild(btn);
+
+  var placed = false;
+  for(var i = 0; i < CFG.spots.length && !placed; i++){
+    var spot = document.querySelector(CFG.spots[i]);
+    if(spot && spot.parentNode){ spot.parentNode.insertBefore(wrap, spot); placed = true; }
+  }
+  if(!placed) document.body.appendChild(wrap);
+
+  /* ---------- Support block (only for tools that have no orange Support button of their own) ---------- */
+  var supT = null, supB = null;
+  function fig(kind){
+    var ARMS = {
+      cheer:[[[60,62],[44,52],[36,36]],[[60,62],[76,52],[84,36]]],
+      hopeful:[[[60,62],[48,76],[44,92]],[[60,62],[78,52],[88,38]]],
+      heart:[[[60,62],[46,72],[62,76]],[[60,62],[74,72],[58,76]]]
+    };
+    var s = '<svg viewBox="0 0 120 140" width="60" height="70" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'
+      + '<line x1="30" y1="132" x2="90" y2="132" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>'
+      + '<g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<line x1="60" y1="52" x2="60" y2="92"/><polyline points="60,92 46,126"/><polyline points="60,92 74,126"/>';
+    ARMS[kind].forEach(function(a){ s += '<polyline points="' + a.map(function(p){ return p.join(','); }).join(' ') + '"/>'; });
+    s += '<circle cx="60" cy="34" r="18"/>';
+    if(kind === 'heart'){
+      s += '<path d="M49 31 Q53 35 57 31" stroke-width="2.4"/><path d="M63 31 Q67 35 71 31" stroke-width="2.4"/>';
+    } else {
+      s += '<circle cx="53" cy="31" r="2.2" fill="currentColor" stroke="none"/><circle cx="67" cy="31" r="2.2" fill="currentColor" stroke="none"/>';
+    }
+    s += '<path d="M52 40 Q60 48 68 40" stroke-width="2.6"/></g>';
+    if(kind === 'heart') s += '<text x="82" y="20" font-size="16" font-style="italic" font-family="Georgia,serif" fill="currentColor" stroke="none">&lt;3</text>';
+    if(kind === 'hopeful') s += '<text x="92" y="26" font-size="16" font-style="italic" font-family="Georgia,serif" fill="currentColor" stroke="none">*</text>';
+    return s + '</svg>';
+  }
+  if(CFG.supportBlock){
+    var sup = document.createElement('div');
+    sup.className = 'eidhub-sup';
+    sup.setAttribute('data-noi18n', '');
+    sup.innerHTML = '<p class="eidhub-sup-t"></p><div class="eidhub-sup-row"><span class="eidhub-sup-fig">' + fig(CFG.figures[0]) + '</span>'
+      + '<a class="eidhub-sup-btn" target="_blank" rel="noopener"></a><span class="eidhub-sup-fig">' + fig(CFG.figures[1]) + '</span></div>';
+    supT = sup.querySelector('.eidhub-sup-t'); supB = sup.querySelector('.eidhub-sup-btn');
+    supB.href = SUPPORT_URL;
+    wrap.parentNode.insertBefore(sup, wrap.nextSibling);
+  }
+
+  /* ---------- Stick men around the tool's own Support button (button itself is only moved into a row, never changed) ---------- */
+  function figEl(kind){
+    var f = document.createElement('span');
+    f.className = 'eidhub-sup-fig'; f.setAttribute('data-noi18n', ''); f.innerHTML = fig(kind);
+    return f;
+  }
+  if(CFG.wrapSupport){
+    var ex = document.querySelector(CFG.wrapSupport);
+    if(ex && ex.parentNode){
+      var row = document.createElement('div');
+      row.className = 'eidhub-sup-row';
+      ex.parentNode.insertBefore(row, ex);
+      row.appendChild(figEl(CFG.figures[0])); row.appendChild(ex); row.appendChild(figEl(CFG.figures[1]));
+    }
+  }
+
+  /* ---------- Popup ---------- */
+  var ov = document.createElement('div');
+  ov.className = 'eidhub-ov';
+  ov.setAttribute('data-noi18n', '');
+  ov.innerHTML = '<div class="eidhub-box" role="dialog" aria-modal="true" aria-labelledby="eidhubTitle">'
+    + '<div class="eidhub-head"><div class="eidhub-head-t"><h2 class="eidhub-title" id="eidhubTitle"></h2><p class="eidhub-sub"></p></div>'
+    + '<button type="button" class="eidhub-x"></button></div><div class="eidhub-body"></div></div>';
+  document.body.appendChild(ov);
+  var box = ov.querySelector('.eidhub-box'), xBtn = ov.querySelector('.eidhub-x'), bodyEl = ov.querySelector('.eidhub-body');
+
+  function here(url){
+    var f = url.split('/').pop();
+    return f && location.href.indexOf(f) > -1 && f.length > 12;
+  }
+  function labelButton(){
+    var U = UI[lang()];
+    btn.querySelector('.eidhub-btn-t').textContent = U.btn;
+    if(supT){ supT.textContent = U.supText; supB.textContent = U.supBtn; }
+  }
+  function render(){
+    var L = lang(), U = UI[L];
+    ov.querySelector('.eidhub-title').textContent = U.title;
+    ov.querySelector('.eidhub-sub').textContent = U.sub;
+    xBtn.setAttribute('aria-label', U.close); xBtn.innerHTML = '&times;';
+    var h = '<div class="eidhub-note"></div><div class="eidhub-tip"></div>';
+    CATS.forEach(function(c, ci){
+      h += '<div class="eidhub-cat" data-c="' + ci + '"></div><div class="eidhub-grid">';
+      c.tools.forEach(function(t, ti){ h += '<a class="eidhub-link" data-c="' + ci + '" data-t="' + ti + '" target="_blank" rel="noopener"></a>'; });
+      h += '</div>';
+    });
+    bodyEl.innerHTML = h;
+    bodyEl.querySelector('.eidhub-note').textContent = U.note;
+    bodyEl.querySelector('.eidhub-tip').textContent = U.tip;
+    Array.prototype.forEach.call(bodyEl.querySelectorAll('.eidhub-cat'), function(el){ el.textContent = CATS[el.getAttribute('data-c')][L]; });
+    Array.prototype.forEach.call(bodyEl.querySelectorAll('.eidhub-link'), function(a){
+      var t = CATS[a.getAttribute('data-c')].tools[a.getAttribute('data-t')];
+      a.href = t[2];
+      a.title = U.open;
+      a.appendChild(document.createTextNode(L === 'es' ? t[1] : t[0]));
+      if(here(t[2])){ a.className += ' eidhub-here'; var b = document.createElement('span'); b.className = 'eidhub-badge'; b.textContent = U.here; a.appendChild(b); }
+    });
+  }
+
+  var lastFocus = null;
+  function openHub(){
+    lastFocus = document.activeElement;
+    render();
+    ov.className = 'eidhub-ov eidhub-show';
+    box.scrollTop = 0;
+    document.documentElement.style.overflow = 'hidden';
+    xBtn.focus();
+  }
+  function closeHub(){
+    ov.className = 'eidhub-ov';
+    document.documentElement.style.overflow = '';
+    if(lastFocus && lastFocus.focus) lastFocus.focus(); else btn.focus();
+  }
+  btn.addEventListener('click', openHub);
+  xBtn.addEventListener('click', closeHub);
+  ov.addEventListener('click', function(e){ if(e.target === ov) closeHub(); });
+  document.addEventListener('keydown', function(e){
+    if(ov.className.indexOf('eidhub-show') < 0) return;
+    if(e.key === 'Escape' || e.key === 'Esc'){ e.preventDefault(); closeHub(); return; }
+    if(e.key === 'Tab'){
+      var f = box.querySelectorAll('a[href],button');
+      if(!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* keep the button text in step with the tool's language switcher */
+  document.addEventListener('change', function(){ setTimeout(function(){ labelButton(); if(ov.className.indexOf('eidhub-show') > -1) render(); }, 60); });
+  labelButton();
+  setTimeout(labelButton, 400); /* in case the tool restores a saved language just after load */
+  window.addEventListener('load', function(){ setTimeout(labelButton, 100); });
+  try{ new MutationObserver(function(){ labelButton(); if(ov.className.indexOf('eidhub-show') > -1) render(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']}); }catch(e){}
+})();
+</script>
+<!-- ===== End "Explore All 26 Tools" add-on ===== -->
+
 </body>
 </html>

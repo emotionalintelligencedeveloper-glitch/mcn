@@ -2145,10 +2145,10 @@ $("homeLogo").addEventListener("error", function(){ this.style.display = "none";
   if (m) startRound(parseInt(m[1], 10)); else show("home");
 })();
 </script>
-<!-- ===== EID "Explore All 26 Tools" button and popup (add-on) =====
+<!-- ===== EID "Explore All 27 Tools" button and popup (add-on) =====
      Place this whole block at the very end of the tool, just before the closing body line or the end-of-tool comment line.
      It does not touch any existing tool code. It finds the footer, adds one button above the support area,
-     and opens a popup of all 26 tools grouped by category. English and Spanish follow the tool's own language switcher. =====
+     and opens a popup of all 27 tools grouped by category. English and Spanish follow the tool's own language switcher. =====
 -->
 <script>
 (function(){
@@ -2158,20 +2158,25 @@ $("homeLogo").addEventListener("error", function(){ this.style.display = "none";
   /* ---------- Settings for this tool ---------- */
 var CFG = {
     quiet: false,
-    spots: ['.home-in > a.supportbtn'],  /* Home screen: the button goes just above the game's own Support Us button */
+    spots: ['.home-in > a.supportbtn'],  /* Home screen: the button goes just above the Support area */
     extraSpots: ['#mMore .linklist a[href*="wellbeing-and-self-help-tools"]'], /* also inside "Help and more", so it can be reached during a game */
     escStops: true,          /* the game closes its own menus with Escape, so closing the popup must not also close the menu behind it */
     accent: 'var(--accent,#2f80ed)', light: 'var(--hover,#f3f8ff)', ink: 'var(--ink,#17324d)',
     cat: 'var(--ink2,#27455f)', tipBg: 'var(--hover,#f3f8ff)', tipBorder: 'var(--line,#d6e4f3)', here: '#2f80ed', hereBg: 'var(--hover,#f3f8ff)',
     quietColor: '#2f80ed', line: 'var(--line,#d6e4f3)',
-    supportBlock: false,
-    wrapSupport: '',         /* the game's own Support Us button (with its own stick men) is left exactly as it is */
+    supportBlock: true,      /* Home screen: the standard Support area (message, orange button, still stick men), like the other tools */
+    wrapSupport: '',
     theme: {                 /* follows the game's font choice and its dark and soft eye-comfort themes */
       font: 'var(--font)', btnBg: 'var(--card,#fff)', boxBg: 'var(--bg1,#f2f4f8)', boxInk: 'var(--ink,#1a1e2a)', boxBorder: 'var(--bd,#d0d8e8)',
       linkBg: 'var(--card,#fff)', linkBorder: 'var(--bd,#d0d8e8)', noteBg: 'var(--warnbg,#fff4ea)', noteBorder: 'var(--warnbd,#f0c8a0)',
       noteInk: 'var(--ink2,#5a3a1a)', headBg: '#2f80ed'
     },
-    extraCss: '.home-in .eidhub-wrap{margin:18px 0 18px;}'
+    figures: ['cheer', 'heart'], figColor: 'var(--accent,#2f80ed)', supColor: 'var(--muted,#52708d)',
+    extraCss: '.home-in .eidhub-wrap{margin:18px 0 0;}'
+            + '.home-in .eidhub-sup{margin-bottom:6px;}'
+            + '.home-in > a.supportbtn{display:none !important;}'  /* the game\'s own Home Support button is replaced by the standard area above it */
+            + '.supportbtn{background:#e8702a !important;border-color:#e8702a !important;box-shadow:none !important;}' /* the other Support buttons (end of round, Help) become orange and still */
+            + '.sp-heart,.sp-piece,.sp-a,.sp-b{animation:none !important;}'
             + '.linklist .eidhub-wrap{margin:0;}'
             + '.linklist .eidhub-btn{width:100%;border-radius:12px;font-weight:700;min-height:44px;}'
   };
@@ -2179,7 +2184,7 @@ var CFG = {
   var BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
   var SUPPORT_URL = 'https://emotionalintelligencedeveloper.com/support-this-website/';
 
-  /* ---------- The 26 tools, by category ---------- */
+  /* ---------- The 27 tools, by category ---------- */
   var CATS = [
     {en:'Crisis and Safety', es:'Crisis y seguridad', tools:[
       ['Suicide Prevention and Emotional Support','Prevención del suicidio y apoyo emocional', BASE+'Suicide-Prevention-and-Emotional-Support-Tool.html'],
@@ -2203,7 +2208,8 @@ var CFG = {
       ['Emotional Trigger Mapping','Mapa de desencadenantes emocionales', BASE+'emotional-trigger-mapping-tool.html'],
       ['Inner vs Outer Alignment Reflection','Reflexión: alineación interior y exterior', BASE+'inner-outer-alignment-tool.html'],
       ['Values Quiz and Growth Report','Test de valores e informe de crecimiento', BASE+'values-quiz-widget.html'],
-      ['Finding Yourself (Identity Reflection)','Encontrarte a ti (reflexión sobre identidad)', BASE+'Finding-Yourself-Gender-Identity-Reflection-Tool.html']
+      ['Finding Yourself (Identity Reflection)','Encontrarte a ti (reflexión sobre identidad)', BASE+'Finding-Yourself-Gender-Identity-Reflection-Tool.html'],
+      ['I\'m Stuck: Decision Support','Tengo un bloqueo: apoyo para decidir', BASE+'decision-support-tool.html']
     ]},
     {en:'Strength and Courage', es:'Fortaleza y valentía', tools:[
       ['Courage in the Face of Fear','Valentía ante el miedo', BASE+'courage-in-the-face-of-fear-tool.html'],
@@ -2224,14 +2230,14 @@ var CFG = {
   ];
 
   var UI = {
-    en:{btn:'Explore All 26 Tools', title:'26 Free Wellbeing Tools', sub:'No app and no sign-up needed. Works on your phone and computer.',
+    en:{btn:'Explore All 27 Tools', title:'27 Free Wellbeing Tools', sub:'No app and no sign-up needed. Works on your phone and computer.',
         note:'Your support keeps these tools free and means they keep being updated and upgraded. It is our free way of fighting back against a world that harms our wellbeing, from the pressure on young people to social media addiction and more. If these tools help you, please use the support button at the bottom of the page.',
-        tip:'Tip: bookmark the tool you like most. You can open this menu from it any time to find all 26.',
+        tip:'Tip: bookmark the tool you like most. You can open this menu from it any time to find all 27.',
         close:'Close', here:'You are here', open:'Opens in a new tab',
         supText:'This platform is free for everyone. If it helped you, consider supporting it.', supBtn:'♥ Support this website'},
-    es:{btn:'Explorar las 26 herramientas', title:'26 herramientas gratuitas de bienestar', sub:'Sin app y sin registro. Funcionan en tu teléfono y en tu computadora.',
+    es:{btn:'Explorar las 27 herramientas', title:'27 herramientas gratuitas de bienestar', sub:'Sin app y sin registro. Funcionan en tu teléfono y en tu computadora.',
         note:'Tu apoyo mantiene estas herramientas gratis y hace que se sigan actualizando y mejorando. Es nuestra forma gratuita de hacer frente a un mundo que daña nuestro bienestar, desde la presión sobre los jóvenes hasta la adicción a las redes sociales y más. Si estas herramientas te ayudan, usa el botón de apoyo al final de la página.',
-        tip:'Consejo: guarda en favoritos la herramienta que más te guste. Desde ella puedes abrir este menú cuando quieras para encontrar las 26.',
+        tip:'Consejo: guarda en favoritos la herramienta que más te guste. Desde ella puedes abrir este menú cuando quieras para encontrar las 27.',
         close:'Cerrar', here:'Estás aquí', open:'Se abre en una pestaña nueva',
         supText:'Esta plataforma es gratis para todos. Si te ayudó, considera apoyarla.', supBtn:'♥ Apoya este sitio web'}
   };
@@ -2390,6 +2396,7 @@ var CFG = {
 
   function here(url){
     var f = url.split('/').pop();
+    if(f === 'index.html') return /\/mcn\/(index\.html)?([?#].*)?$/.test(location.href);
     return f && location.href.indexOf(f) > -1 && f.length > 12;
   }
   function labelButton(){
@@ -2459,7 +2466,7 @@ var CFG = {
   try{ new MutationObserver(function(){ labelButton(); if(ov.className.indexOf('eidhub-show') > -1) render(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']}); }catch(e){}
 })();
 </script>
-<!-- ===== End "Explore All 26 Tools" add-on ===== -->
+<!-- ===== End "Explore All 27 Tools" add-on ===== -->
 
 </body>
 </html>

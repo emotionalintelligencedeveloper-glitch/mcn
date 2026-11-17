@@ -139,22 +139,56 @@ fieldset.q legend{
 .result h3{margin:0 0 6px;font-size:22px}
 .lead{color:var(--muted);line-height:1.6;margin:0 0 16px}
 
-.tops{display:grid;gap:12px;margin:16px 0 20px}
+/* Strength style banner */
+.stylebox{
+  background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 60%,#38bdf8 100%);
+  color:#fff;
+  border-radius:14px;
+  padding:18px 20px;
+  margin:0 0 20px;
+}
+.stylebox .sl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.stylebox .sn{font-size:22px;font-weight:800;line-height:1.25;margin:4px 0 6px}
+.stylebox .sv{margin:0;line-height:1.55;opacity:.95}
+
+.tops{display:grid;gap:14px;margin:16px 0 20px}
 .top{
   background:#fff;
   border-radius:12px;
-  padding:14px 16px;
+  padding:16px 18px;
   border-left:6px solid var(--accent);
 }
-.top b{font-size:17px}
-.top .pct{float:right;color:var(--muted);font-weight:600}
+.top .pct{float:right;color:var(--muted);font-weight:700;font-size:18px}
+.top .nick{font-size:19px;font-weight:800;line-height:1.25}
+.top .sname{display:inline-block;margin:4px 0 8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .top p{margin:6px 0 0;line-height:1.55}
+.top .vibe{font-style:italic;color:#374151}
+.top .mini{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:14px 0 4px}
+.top ul.adv{margin:0;padding-left:18px;line-height:1.55}
+.top ul.adv li{margin:4px 0}
+.top .warn{margin-top:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px;line-height:1.55;font-size:14px}
+.top .warn b{display:block;color:#b45309;margin-bottom:2px}
+.top .bal{margin-top:10px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:10px 12px;line-height:1.55;font-size:14px}
+.top .bal b{display:block;color:#047857;margin-bottom:2px}
 .top .tip{color:var(--muted);font-size:14px}
 
 .chartbox{max-width:380px;margin:10px auto 4px}
 canvas{max-width:100%}
 
-.rowbtns{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.quiet{margin:22px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{background:#fff;border:1px solid #bfdbfe;border-radius:99px;padding:8px 14px;font-size:14px;line-height:1.4}
+.chip b{margin-right:4px}
+.sub{color:var(--muted);line-height:1.55;margin:0 0 6px;font-size:14px}
+
+.plan{margin:24px 0 0}
+.day{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.day input{margin-top:3px;width:20px;height:20px;accent-color:var(--safe);flex-shrink:0}
+.day .dh{font-weight:800;font-size:15px}
+.day .dk{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.day p{margin:4px 0 0;line-height:1.55}
+
+.rowbtns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
 
 footer{
   margin-top:22px;
@@ -189,6 +223,7 @@ footer{
   .head h2{font-size:23px}
   .body{padding:20px 16px 6px}
   .head{padding:24px 18px 20px}
+  .result{padding:16px}
 }
 
 /* LANGUAGE */
@@ -243,11 +278,21 @@ footer{
     <h3 id="resultTitle">Your Inner Strength Snapshot</h3>
     <p class="lead" data-i18n>Everyone's mix is different. This reflects how you show up right now.</p>
 
+    <div id="styleBox"></div>
+
     <div class="section-title" data-i18n>Your top strengths</div>
     <div id="tops" class="tops"></div>
 
     <div class="section-title" data-i18n>Your full mix</div>
     <div class="chartbox"><canvas id="pieChart" width="420" height="420"></canvas></div>
+
+    <div id="quiet" class="quiet"></div>
+
+    <div class="plan">
+      <div class="section-title" data-i18n>Your 7 Day Inner Strength Plan</div>
+      <p class="sub" data-i18n>One small task a day, about ten minutes each. Tick the box when you do it.</p>
+      <div id="plan"></div>
+    </div>
 
     <div class="rowbtns">
       <button type="button" class="btn green" onclick="downloadPDF()" data-i18n>Download My Snapshot (PDF)</button>
@@ -336,24 +381,6 @@ var SIS_ES = {
  "Authenticity": "Autenticidad",
  "Connection": "Conexión",
  "Awareness": "Conciencia",
- "You can point your attention at what matters and keep going when distractions show up.": "Puedes dirigir tu atención a lo que importa y seguir adelante cuando aparecen distracciones.",
- "Pick one priority each morning and protect an hour for it.": "Elige una prioridad cada mañana y protege una hora para ella.",
- "You listen to your own judgment and feel steady in the choices you make.": "Escuchas tu propio criterio y te sientes firme en las decisiones que tomas.",
- "Notice one decision this week that you made well, and name why.": "Fíjate en una decisión de esta semana que tomaste bien y explica por qué.",
- "You are moved by purpose, and you enjoy seeing real progress.": "Te mueve el propósito y disfrutas viendo avances reales.",
- "Write down why your next goal matters to you, in one sentence.": "Escribe por qué te importa tu próxima meta, en una frase.",
- "You bring steadiness to a room and can slow things down when others rush.": "Aportas serenidad a cualquier lugar y puedes bajar el ritmo cuando los demás se aceleran.",
- "Take three slow breaths before your next important conversation.": "Respira despacio tres veces antes de tu próxima conversación importante.",
- "You recover after setbacks and keep moving, even when things feel hard.": "Te recuperas después de los tropiezos y sigues adelante, incluso cuando todo se siente difícil.",
- "After a tough day, write down one thing you handled better than before.": "Después de un día difícil, escribe una cosa que manejaste mejor que antes.",
- "You are curious about becoming better and treat mistakes as lessons.": "Tienes curiosidad por mejorar y tratas los errores como lecciones.",
- "Choose one small skill to practise for ten minutes a day.": "Elige una habilidad pequeña para practicar diez minutos al día.",
- "You show up as yourself, and that helps others feel safe to do the same.": "Te muestras tal como eres, y eso ayuda a los demás a sentirse seguros para hacer lo mismo.",
- "Say one honest thing this week that you would normally hold back.": "Di esta semana una cosa honesta que normalmente te callarías.",
- "You build real bonds and help people feel seen and heard.": "Creas vínculos reales y ayudas a las personas a sentirse vistas y escuchadas.",
- "Reach out to someone you have been meaning to check in on.": "Escríbele a alguien con quien querías ponerte en contacto desde hace tiempo.",
- "You notice your thoughts, feelings and patterns, which helps you choose how to respond.": "Notas tus pensamientos, sentimientos y patrones, y eso te ayuda a elegir cómo responder.",
- "Pause once a day and ask yourself what you are feeling right now.": "Haz una pausa una vez al día y pregúntate qué sientes ahora mismo.",
  "When starting something important, you usually...": "Cuando empiezas algo importante, normalmente...",
  "When challenges appear, you tend to...": "Cuando aparecen desafíos, sueles...",
  "Your energy is strongest when you feel...": "Tu energía es más fuerte cuando sientes...",
@@ -362,7 +389,24 @@ var SIS_ES = {
  "You feel most confident when you...": "Sientes más confianza cuando...",
  "Your motivation comes mainly from...": "Tu motivación viene sobre todo de...",
  "You feel most connected when you...": "Sientes más conexión cuando...",
- "Personal growth for you looks like...": "Para ti, el crecimiento personal se ve como..."
+ "Personal growth for you looks like...": "Para ti, el crecimiento personal se ve como...",
+ "Your Strength Style": "Tu estilo de fortaleza",
+ "Your advantages": "Tus ventajas",
+ "Watch out: your demeanour": "Ojo: tu actitud con los demás",
+ "Watch out: your lifestyle": "Ojo: tu estilo de vida",
+ "Balance it": "Equilíbrala",
+ "Use it": "Úsala",
+ "Share it": "Compártela",
+ "Reflect": "Reflexiona",
+ "Day {n}": "Día {n}",
+ "Quiet strengths, ready to wake up": "Fortalezas tranquilas, listas para despertar",
+ "These are resting right now, not missing. One small step can wake each one up.": "Ahora descansan, no te faltan. Un paso pequeño puede despertar cada una.",
+ "Your 7 Day Inner Strength Plan": "Tu plan de 7 días de fortaleza interior",
+ "One small task a day, about ten minutes each. Tick the box when you do it.": "Una tarea pequeña al día, de unos diez minutos. Marca la casilla cuando la hagas.",
+ "Look back at your week. Write what you enjoyed, what was hard and one habit you will keep.": "Mira tu semana. Escribe qué disfrutaste, qué fue difícil y un hábito que te quedarás.",
+ "My week in three lines": "Mi semana en tres líneas",
+ "Your Strength Style: {x}": "Tu estilo de fortaleza: {x}",
+ "How to use this page: do one task a day and tick it off.": "Cómo usar esta página: haz una tarea al día y márcala."
 };
 function sTr(s) { return (sisLang === 'es' && typeof s === 'string' && Object.prototype.hasOwnProperty.call(SIS_ES, s)) ? SIS_ES[s] : s; }
 function sTp(s, v) { return sTr(s).replace(/\{(\w+)\}/g, function (m, k) { return Object.prototype.hasOwnProperty.call(v, k) ? String(v[k]) : m; }); }
@@ -424,44 +468,283 @@ var colors = {
   "Awareness":"#64748b"
 };
 
+/* n = fun nickname, v = fun one liner, d = description, t = quick tip,
+   a = 3 advantages (productive, emotionally aware, lifestyle),
+   o = how overuse affects your demeanour, l = how it affects your lifestyle,
+   b = balance tip, k = 3 tasks for the 7 day plan (use it, balance it, share it) */
 var info = {
   "Focus":{
-    d:"You can point your attention at what matters and keep going when distractions show up.",
-    t:"Pick one priority each morning and protect an hour for it."
+    en:{
+      n:"The Laser Beam", v:"You can switch the noise off and get it done.",
+      d:"You can point your attention at what matters and keep going when distractions show up.",
+      t:"Pick one priority each morning and protect an hour for it.",
+      a:["Productive: you finish what you start while others are still planning.",
+         "Emotionally aware: you notice when something is pulling your attention away, and you name it.",
+         "Lifestyle: your days have a clear shape, so you waste less energy deciding."],
+      o:"When Focus runs too hot, you can seem distant or short with people who interrupt you. Others may feel like a task on your list.",
+      l:"You may skip meals, rest or messages when you are in the zone, then feel drained or behind on your relationships.",
+      b:"Set a timer for deep work, then take a real break and check in with someone.",
+      k:["Do one 25 minute block on your top priority with your phone in another room.",
+         "Stop mid task once today, drink water and ask your body how it feels.",
+         "Tell one person what you are working on and ask about theirs."]
+    },
+    es:{
+      n:"El rayo láser", v:"Puedes apagar el ruido y hacerlo.",
+      d:"Puedes dirigir tu atención a lo que importa y seguir adelante cuando aparecen distracciones.",
+      t:"Elige una prioridad cada mañana y protege una hora para ella.",
+      a:["Productividad: terminas lo que empiezas mientras otros aún lo planean.",
+         "Conciencia emocional: notas cuándo algo te distrae y lo nombras.",
+         "Estilo de vida: tus días tienen una forma clara, así gastas menos energía en decidir."],
+      o:"Cuando el Enfoque se pasa de intenso, puedes parecer distante o seco con quien te interrumpe. Los demás pueden sentirse como una tarea más de tu lista.",
+      l:"Puedes saltarte comidas, descanso o mensajes cuando estás concentrado, y luego sentirte agotado o con las relaciones descuidadas.",
+      b:"Pon un temporizador para el trabajo profundo, luego haz una pausa real y habla con alguien.",
+      k:["Haz un bloque de 25 minutos en tu prioridad principal con el teléfono en otra habitación.",
+         "Detente a mitad de una tarea una vez hoy, bebe agua y pregúntale a tu cuerpo cómo está.",
+         "Cuéntale a una persona en qué trabajas y pregúntale por lo suyo."]
+    }
   },
   "Self-Trust":{
-    d:"You listen to your own judgment and feel steady in the choices you make.",
-    t:"Notice one decision this week that you made well, and name why."
+    en:{
+      n:"The Inner Compass", v:"Your gut has a good track record.",
+      d:"You listen to your own judgment and feel steady in the choices you make.",
+      t:"Notice one decision this week that you made well, and name why.",
+      a:["Productive: you decide quickly and do not lose days second guessing.",
+         "Emotionally aware: you treat your feelings as useful information, not noise.",
+         "Lifestyle: you say no more easily, which protects your time and energy."],
+      o:"Too much self trust can sound like certainty. People may feel you are not listening or that your mind is already made up.",
+      l:"You might ignore advice that would help, repeat the same mistake, or carry things alone.",
+      b:"Before a big decision, ask one trusted person what they see that you might miss.",
+      k:["Make one small decision fast today and do not go back on it.",
+         "Ask someone you trust for honest feedback and listen without defending.",
+         "Tell someone about a choice you are proud of and why."]
+    },
+    es:{
+      n:"La brújula interior", v:"Tu intuición tiene buen historial.",
+      d:"Escuchas tu propio criterio y te sientes firme en las decisiones que tomas.",
+      t:"Fíjate en una decisión de esta semana que tomaste bien y explica por qué.",
+      a:["Productividad: decides rápido y no pierdes días dudando.",
+         "Conciencia emocional: tratas tus sentimientos como información útil, no como ruido.",
+         "Estilo de vida: dices que no con más facilidad, y eso protege tu tiempo y tu energía."],
+      o:"Demasiada confianza en ti puede sonar a certeza total. Los demás pueden sentir que no los escuchas o que ya decidiste.",
+      l:"Puedes ignorar consejos que te ayudarían, repetir el mismo error o cargar las cosas a solas.",
+      b:"Antes de una decisión grande, pregunta a alguien de confianza qué ve que tú podrías pasar por alto.",
+      k:["Toma hoy una decisión pequeña con rapidez y no la reconsideres.",
+         "Pide a alguien de confianza una opinión sincera y escucha sin defenderte.",
+         "Cuéntale a alguien una decisión de la que estás orgulloso y por qué."]
+    }
   },
   "Motivation":{
-    d:"You are moved by purpose, and you enjoy seeing real progress.",
-    t:"Write down why your next goal matters to you, in one sentence."
+    en:{
+      n:"The Spark", v:"Give you a reason and you will move mountains.",
+      d:"You are moved by purpose, and you enjoy seeing real progress.",
+      t:"Write down why your next goal matters to you, in one sentence.",
+      a:["Productive: you start strong and pull others along with your energy.",
+         "Emotionally aware: you know what you care about, which makes your choices clearer.",
+         "Lifestyle: you keep your dreams alive, so life rarely feels flat."],
+      o:"When Motivation is overused you can seem restless, impatient or always chasing the next thing. Others may feel they cannot keep your pace.",
+      l:"Burnout, skipped rest and a pile of half finished goals are the usual price.",
+      b:"Celebrate what you finished before you start the next goal.",
+      k:["Write your next goal and the first tiny step, then do that step.",
+         "Finish or drop one half done thing from your list.",
+         "Share one goal with a friend and ask them to check in on you."]
+    },
+    es:{
+      n:"La chispa", v:"Dale un motivo y moverás montañas.",
+      d:"Te mueve el propósito y disfrutas viendo avances reales.",
+      t:"Escribe por qué te importa tu próxima meta, en una frase.",
+      a:["Productividad: arrancas con fuerza y arrastras a otros con tu energía.",
+         "Conciencia emocional: sabes lo que te importa, y eso aclara tus decisiones.",
+         "Estilo de vida: mantienes vivos tus sueños, así que la vida rara vez se siente plana."],
+      o:"Si te pasas con la Motivación puedes parecer inquieto, impaciente o siempre tras lo siguiente. Los demás pueden sentir que no alcanzan tu ritmo.",
+      l:"Lo habitual es pagar con agotamiento, descanso saltado y una pila de metas a medias.",
+      b:"Celebra lo que terminaste antes de empezar la siguiente meta.",
+      k:["Escribe tu próxima meta y el primer paso diminuto, y haz ese paso.",
+         "Termina o suelta una cosa a medias de tu lista.",
+         "Comparte una meta con un amigo y pídele que te pregunte cómo vas."]
+    }
   },
   "Calm Presence":{
-    d:"You bring steadiness to a room and can slow things down when others rush.",
-    t:"Take three slow breaths before your next important conversation."
+    en:{
+      n:"The Anchor", v:"People relax when you walk in.",
+      d:"You bring steadiness to a room and can slow things down when others rush.",
+      t:"Take three slow breaths before your next important conversation.",
+      a:["Productive: you think clearly under pressure and keep a team steady.",
+         "Emotionally aware: you can feel big emotions without being run by them.",
+         "Lifestyle: your sleep, health and relationships gain from a low stress rhythm."],
+      o:"Too much calm can look like you do not care. You may hold back feelings or avoid conflict to keep the peace.",
+      l:"Problems can pile up quietly, and the people close to you may not know what you really need.",
+      b:"Say one real feeling out loud today, even a small one.",
+      k:["Take three slow breaths before your next important talk or task.",
+         "Name one thing that bothers you and say it kindly to the right person.",
+         "Offer someone ten minutes of calm listening."]
+    },
+    es:{
+      n:"El ancla", v:"La gente se relaja cuando entras.",
+      d:"Aportas serenidad a cualquier lugar y puedes bajar el ritmo cuando los demás se aceleran.",
+      t:"Respira despacio tres veces antes de tu próxima conversación importante.",
+      a:["Productividad: piensas con claridad bajo presión y mantienes firme al equipo.",
+         "Conciencia emocional: puedes sentir emociones fuertes sin que te dominen.",
+         "Estilo de vida: tu sueño, tu salud y tus relaciones se benefician de un ritmo con poco estrés."],
+      o:"Demasiada calma puede parecer que no te importa. Puedes guardarte lo que sientes o evitar el conflicto para mantener la paz.",
+      l:"Los problemas pueden acumularse en silencio, y quienes están cerca quizá no sepan lo que de verdad necesitas.",
+      b:"Di hoy un sentimiento real en voz alta, aunque sea pequeño.",
+      k:["Respira despacio tres veces antes de tu próxima charla o tarea importante.",
+         "Nombra algo que te molesta y díselo con cariño a la persona indicada.",
+         "Ofrece a alguien diez minutos de escucha tranquila."]
+    }
   },
   "Resilience":{
-    d:"You recover after setbacks and keep moving, even when things feel hard.",
-    t:"After a tough day, write down one thing you handled better than before."
+    en:{
+      n:"The Bounce Back", v:"You fall down and get back up with a plan.",
+      d:"You recover after setbacks and keep moving, even when things feel hard.",
+      t:"After a tough day, write down one thing you handled better than before.",
+      a:["Productive: setbacks cost you hours, not weeks.",
+         "Emotionally aware: you know hard feelings pass, so you can sit with them.",
+         "Lifestyle: you handle change well, which makes you the person others call in a crisis."],
+      o:"When overused, resilience becomes pushing through. You can look tough but closed, and people may not see that you need help.",
+      l:"You may ignore tiredness, stress or pain until your body forces a stop.",
+      b:"Resting is part of being strong. Plan recovery, not just comebacks.",
+      k:["Write one thing that went wrong lately and one thing it taught you.",
+         "Take a proper rest today without feeling guilty.",
+         "Tell someone about a hard time you got through, to give them hope."]
+    },
+    es:{
+      n:"El que rebota", v:"Te caes y te levantas con un plan.",
+      d:"Te recuperas después de los tropiezos y sigues adelante, incluso cuando todo se siente difícil.",
+      t:"Después de un día difícil, escribe una cosa que manejaste mejor que antes.",
+      a:["Productividad: los tropiezos te cuestan horas, no semanas.",
+         "Conciencia emocional: sabes que lo difícil pasa, y por eso puedes quedarte con ello.",
+         "Estilo de vida: manejas bien el cambio, y por eso te llaman en una crisis."],
+      o:"Cuando te pasas, la resiliencia se vuelve aguantar sin parar. Puedes verte fuerte pero cerrado, y los demás quizá no vean que necesitas ayuda.",
+      l:"Puedes ignorar el cansancio, el estrés o el dolor hasta que tu cuerpo te obligue a parar.",
+      b:"Descansar es parte de ser fuerte. Planea la recuperación, no solo los regresos.",
+      k:["Escribe algo que salió mal últimamente y algo que te enseñó.",
+         "Descansa de verdad hoy, sin culpa.",
+         "Cuéntale a alguien un momento difícil que superaste, para darle esperanza."]
+    }
   },
   "Growth":{
-    d:"You are curious about becoming better and treat mistakes as lessons.",
-    t:"Choose one small skill to practise for ten minutes a day."
+    en:{
+      n:"The Explorer", v:"Every mistake is a free lesson.",
+      d:"You are curious about becoming better and treat mistakes as lessons.",
+      t:"Choose one small skill to practise for ten minutes a day.",
+      a:["Productive: you improve fast because you ask questions and test things.",
+         "Emotionally aware: you stay open to feedback instead of getting defensive.",
+         "Lifestyle: life stays interesting because you are always learning something."],
+      o:"Too much focus on growth can make you feel you are never good enough. Others may feel you see them as projects to improve.",
+      l:"You may collect courses and plans but struggle to enjoy where you are right now.",
+      b:"Stop and say what is already good before you improve it.",
+      k:["Spend ten minutes learning one small new skill.",
+         "Write three things about yourself that are already enough.",
+         "Teach someone one thing you learned recently."]
+    },
+    es:{
+      n:"El explorador", v:"Cada error es una lección gratis.",
+      d:"Tienes curiosidad por mejorar y tratas los errores como lecciones.",
+      t:"Elige una habilidad pequeña para practicar diez minutos al día.",
+      a:["Productividad: mejoras rápido porque preguntas y pruebas.",
+         "Conciencia emocional: te mantienes abierto a la crítica en vez de ponerte a la defensiva.",
+         "Estilo de vida: la vida sigue interesante porque siempre aprendes algo."],
+      o:"Demasiado foco en crecer puede hacerte sentir que nunca es suficiente. Los demás pueden sentir que los ves como proyectos por mejorar.",
+      l:"Puedes juntar cursos y planes pero costarte disfrutar de dónde estás ahora.",
+      b:"Detente y di qué ya está bien antes de mejorarlo.",
+      k:["Dedica diez minutos a aprender una habilidad nueva y pequeña.",
+         "Escribe tres cosas de ti que ya son suficientes.",
+         "Enséñale a alguien algo que aprendiste hace poco."]
+    }
   },
   "Authenticity":{
-    d:"You show up as yourself, and that helps others feel safe to do the same.",
-    t:"Say one honest thing this week that you would normally hold back."
+    en:{
+      n:"The Real Deal", v:"What people see is what they get, and they trust you for it.",
+      d:"You show up as yourself, and that helps others feel safe to do the same.",
+      t:"Say one honest thing this week that you would normally hold back.",
+      a:["Productive: you waste no energy pretending, so you work with honesty and clarity.",
+         "Emotionally aware: you spot fake behaviour fast and you value truth in feelings.",
+         "Lifestyle: your friendships go deeper because they are real."],
+      o:"Too much unfiltered honesty can come across as blunt or careless. Others may feel hurt or judged.",
+      l:"You may leave jobs or friendships quickly when something feels off, and stand out in ways that cost you.",
+      b:"Be honest and kind. Ask yourself if it is true, needed and said with care.",
+      k:["Say one honest thing you would normally hold back.",
+         "Before you speak your truth today, pause and add one kind sentence.",
+         "Thank someone for being real with you."]
+    },
+    es:{
+      n:"El auténtico", v:"Lo que la gente ve es lo que hay, y confía en ti por eso.",
+      d:"Te muestras tal como eres, y eso ayuda a los demás a sentirse seguros para hacer lo mismo.",
+      t:"Di esta semana una cosa honesta que normalmente te callarías.",
+      a:["Productividad: no gastas energía fingiendo, así trabajas con honestidad y claridad.",
+         "Conciencia emocional: detectas rápido lo falso y valoras la verdad en los sentimientos.",
+         "Estilo de vida: tus amistades son más profundas porque son reales."],
+      o:"Demasiada honestidad sin filtro puede sonar brusca o descuidada. Los demás pueden sentirse heridos o juzgados.",
+      l:"Puedes dejar trabajos o amistades rápido cuando algo no encaja, y destacar de formas que cuestan.",
+      b:"Sé honesto y amable. Pregúntate si es verdad, si hace falta y si lo dices con cuidado.",
+      k:["Di una cosa honesta que normalmente te callarías.",
+         "Antes de decir tu verdad hoy, haz una pausa y añade una frase amable.",
+         "Agradece a alguien por ser sincero contigo."]
+    }
   },
   "Connection":{
-    d:"You build real bonds and help people feel seen and heard.",
-    t:"Reach out to someone you have been meaning to check in on."
+    en:{
+      n:"The Heart Builder", v:"You remember the little things that make people feel special.",
+      d:"You build real bonds and help people feel seen and heard.",
+      t:"Reach out to someone you have been meaning to check in on.",
+      a:["Productive: people want to work with you, so doors and teams open for you.",
+         "Emotionally aware: you read moods quickly and respond with care.",
+         "Lifestyle: you have a support network that carries you through hard times."],
+      o:"Too much connection can turn into people pleasing. You may take on other people's feelings and find it hard to say no.",
+      l:"Your own needs, sleep and goals can slide down the list while you look after everyone else.",
+      b:"Keep one hour a day that belongs only to you.",
+      k:["Message someone you have been meaning to check in on.",
+         "Say no to one request that drains you, kindly and clearly.",
+         "Tell a friend one thing you appreciate about them."]
+    },
+    es:{
+      n:"El constructor de vínculos", v:"Recuerdas los detalles que hacen sentir especial a la gente.",
+      d:"Creas vínculos reales y ayudas a las personas a sentirse vistas y escuchadas.",
+      t:"Escríbele a alguien con quien querías ponerte en contacto desde hace tiempo.",
+      a:["Productividad: la gente quiere trabajar contigo, y se te abren puertas y equipos.",
+         "Conciencia emocional: lees los ánimos rápido y respondes con cariño.",
+         "Estilo de vida: tienes una red de apoyo que te sostiene en los momentos duros."],
+      o:"Demasiada conexión puede volverse complacer a todos. Puedes cargar con los sentimientos ajenos y costarte decir que no.",
+      l:"Tus propias necesidades, tu sueño y tus metas pueden bajar en la lista mientras cuidas a todos.",
+      b:"Guarda una hora al día que sea solo tuya.",
+      k:["Escríbele a alguien con quien querías ponerte en contacto.",
+         "Di que no a una petición que te agota, con amabilidad y claridad.",
+         "Dile a un amigo algo que aprecias de él."]
+    }
   },
   "Awareness":{
-    d:"You notice your thoughts, feelings and patterns, which helps you choose how to respond.",
-    t:"Pause once a day and ask yourself what you are feeling right now."
+    en:{
+      n:"The Inner Detective", v:"You notice what others walk right past.",
+      d:"You notice your thoughts, feelings and patterns, which helps you choose how to respond.",
+      t:"Pause once a day and ask yourself what you are feeling right now.",
+      a:["Productive: you spot patterns early, so you fix problems before they grow.",
+         "Emotionally aware: you know what you feel and why, which is the heart of emotional intelligence.",
+         "Lifestyle: you choose your responses instead of reacting, which keeps life calmer."],
+      o:"Too much awareness can turn into overthinking. You may seem quiet, distracted or stuck in your head.",
+      l:"You may replay conversations, delay action and feel tired from analysing everything.",
+      b:"After you notice something, choose one small action and take it.",
+      k:["Pause three times today and ask what you are feeling right now.",
+         "Give one worry a five minute limit, then do something active.",
+         "Tell someone about a pattern you noticed in yourself."]
+    },
+    es:{
+      n:"El detective interior", v:"Notas lo que otros pasan por alto.",
+      d:"Notas tus pensamientos, sentimientos y patrones, y eso te ayuda a elegir cómo responder.",
+      t:"Haz una pausa una vez al día y pregúntate qué sientes ahora mismo.",
+      a:["Productividad: ves patrones a tiempo y arreglas los problemas antes de que crezcan.",
+         "Conciencia emocional: sabes qué sientes y por qué, que es el corazón de la inteligencia emocional.",
+         "Estilo de vida: eliges tus respuestas en vez de reaccionar, y eso mantiene la vida más tranquila."],
+      o:"Demasiada conciencia puede volverse darle vueltas a todo. Puedes verte callado, distraído o atrapado en tu cabeza.",
+      l:"Puedes repetir conversaciones en tu mente, posponer la acción y cansarte de analizarlo todo.",
+      b:"Cuando notes algo, elige una acción pequeña y hazla.",
+      k:["Haz tres pausas hoy y pregúntate qué sientes ahora mismo.",
+         "Ponle cinco minutos de límite a una preocupación y luego haz algo activo.",
+         "Cuéntale a alguien un patrón que notaste en ti."]
+    }
   }
 };
+function inf(name){ return info[name][sisLang]; }
 
 var questions = [
   "When starting something important, you usually...",
@@ -557,20 +840,82 @@ function showResults(){
   sRenderView(false);
 }
 
+/* names of strengths that scored zero (quiet strengths) */
+function getQuiet(){
+  var have = lastRanked.map(function(x){ return x.name; });
+  return strengths.filter(function(s){ return have.indexOf(s) === -1; });
+}
+
+/* the strength style title, built from the top two nicknames */
+function getStyleName(){
+  var a = lastRanked.slice(0, 2).map(function(x){ return inf(x.name).n; });
+  return a.join(" + ");
+}
+
+/* the 7 day plan, built from the top three strengths */
+function buildPlan(){
+  var tops = lastRanked.slice(0, 3).map(function(x){ return x.name; });
+  var map = [[0,0,"Use it"],[0,1,"Balance it"],[1,0,"Use it"],[1,1,"Balance it"],[2,0,"Use it"],[0,2,"Share it"]];
+  var plan = map.map(function(m, i){
+    var s = tops[m[0] % tops.length];
+    return {day:i + 1, kind:m[2], s:s, text:inf(s).k[m[1]]};
+  });
+  plan.push({day:7, kind:"Reflect", s:null, text:sTr("Look back at your week. Write what you enjoyed, what was hard and one habit you will keep.")});
+  return plan;
+}
+function planHead(p){
+  return sTp("Day {n}", {n:p.day}) + ": " + sTr(p.kind) + (p.s ? " (" + sTr(p.s) + ")" : "");
+}
+
 function sRenderView(noScroll){
   var name = getName();
   document.getElementById("resultTitle").textContent = name ? sTp("{x}, here is your Inner Strength Snapshot", { x: name }) : sTr("Your Inner Strength Snapshot");
 
+  /* style banner */
+  var top1 = inf(lastRanked[0].name);
+  document.getElementById("styleBox").innerHTML =
+    "<div class=\"stylebox\"><div class=\"sl\">" + sTr("Your Strength Style") + "</div>" +
+    "<div class=\"sn\">" + getStyleName() + "</div>" +
+    "<p class=\"sv\">" + top1.v + "</p></div>";
+
+  /* top 3 cards, fully expanded */
   var tops = lastRanked.slice(0, 3);
   var html = "";
-  tops.forEach(function(t){
+  tops.forEach(function(t, idx){
+    var D = inf(t.name);
     var pct = Math.round(t.n / questions.length * 100);
     html += "<div class=\"top\" style=\"border-left-color:" + colors[t.name] + "\">" +
-            "<span class=\"pct\">" + pct + "%</span><b>" + sTr(t.name) + "</b>" +
-            "<p>" + sTr(info[t.name].d) + "</p>" +
-            "<p class=\"tip\">" + sTp("Try this: {x}", { x: sTr(info[t.name].t) }) + "</p></div>";
+            "<span class=\"pct\">" + pct + "%</span>" +
+            "<div class=\"nick\">" + (idx + 1) + ". " + D.n + "</div>" +
+            "<span class=\"sname\">" + sTr(t.name) + "</span>" +
+            "<p class=\"vibe\">" + D.v + "</p>" +
+            "<p>" + D.d + "</p>" +
+            "<div class=\"mini\">" + sTr("Your advantages") + "</div><ul class=\"adv\">" +
+            D.a.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>" +
+            "<div class=\"warn\"><b>" + sTr("Watch out: your demeanour") + "</b>" + D.o + "</div>" +
+            "<div class=\"warn\"><b>" + sTr("Watch out: your lifestyle") + "</b>" + D.l + "</div>" +
+            "<div class=\"bal\"><b>" + sTr("Balance it") + "</b>" + D.b + "</div>" +
+            "<p class=\"tip\">" + sTp("Try this: {x}", { x: D.t }) + "</p></div>";
   });
   document.getElementById("tops").innerHTML = html;
+
+  /* quiet strengths */
+  var q = getQuiet();
+  var qb = document.getElementById("quiet");
+  if (q.length){
+    qb.innerHTML = "<div class=\"section-title\">" + sTr("Quiet strengths, ready to wake up") + "</div>" +
+      "<p class=\"sub\">" + sTr("These are resting right now, not missing. One small step can wake each one up.") + "</p>" +
+      "<div class=\"chips\">" + q.map(function(s){
+        return "<div class=\"chip\"><b>" + inf(s).n + "</b> " + inf(s).t + "</div>";
+      }).join("") + "</div>";
+  } else {
+    qb.innerHTML = "";
+  }
+
+  /* 7 day plan */
+  document.getElementById("plan").innerHTML = buildPlan().map(function(p){
+    return "<label class=\"day\"><input type=\"checkbox\"><div><div class=\"dh\">" + planHead(p) + "</div><p>" + p.text + "</p></div></label>";
+  }).join("");
 
   document.getElementById("result").style.display = "block";
 
@@ -610,90 +955,192 @@ function downloadPDF(){
 
   var jsPDF = window.jspdf.jsPDF;
   var doc = new jsPDF({unit:"mm", format:"a4"});
-  var left = 20;
-  var textW = 170;
-  var y = 24;
+  var left = 18, textW = 174, bottom = 272, y = 0;
   var name = getName();
+  var BLUE = [37, 99, 235], INK = [17, 24, 39], GREY = [107, 114, 128], BODY = [55, 65, 81];
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.setTextColor(37, 99, 235);
-  doc.text(sTr("Your Inner Strength Snapshot"), left, y);
-  y += 4;
-  doc.setDrawColor(37, 99, 235);
-  doc.setLineWidth(0.8);
-  doc.line(left, y, left + textW, y);
-  y += 10;
-
-  if (name){
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.setTextColor(17, 24, 39);
-    doc.text(sTp("Prepared for {x}", { x: name }), left, y);
-    y += 8;
+  function hex(c){ return [parseInt(c.substr(1, 2), 16), parseInt(c.substr(3, 2), 16), parseInt(c.substr(5, 2), 16)]; }
+  function newPage(){ doc.addPage(); y = 22; }
+  function need(h){ if (y + h > bottom){ newPage(); } }
+  function txt(s, size, style, color, indent, gap){
+    doc.setFont("helvetica", style);
+    doc.setFontSize(size);
+    doc.setTextColor(color[0], color[1], color[2]);
+    var lines = doc.splitTextToSize(s, textW - indent);
+    var lh = size * 0.5;
+    lines.forEach(function(ln){ need(lh); doc.text(ln, left + indent, y); y += lh; });
+    y += (gap || 0);
+  }
+  function label(s, color){
+    need(10);
+    y += 2;
+    txt(s.toUpperCase(), 9.5, "bold", color || BLUE, 0, 1.5);
   }
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.setTextColor(107, 114, 128);
-  var intro = doc.splitTextToSize(sTr("Everyone's mix is different. This reflects how you show up right now."), textW);
-  doc.text(intro, left, y);
-  y += intro.length * 5 + 6;
+  /* ---------- Page 1: cover ---------- */
+  doc.setFillColor(37, 99, 235);
+  doc.rect(0, 0, 210, 46, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(24);
+  doc.setTextColor(255, 255, 255);
+  doc.text(sTr("Your Inner Strength Snapshot"), left, 22);
+  if (name){
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "normal");
+    doc.text(sTp("Prepared for {x}", { x: name }), left, 33);
+  }
+  y = 60;
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  doc.setTextColor(37, 99, 235);
-  doc.text(sTr("YOUR TOP STRENGTHS"), left, y);
-  y += 7;
+  doc.setTextColor(BLUE[0], BLUE[1], BLUE[2]);
+  doc.text(sTr("Your Strength Style").toUpperCase(), left, y);
+  y += 8;
+  txt(getStyleName(), 18, "bold", INK, 0, 2);
+  txt(inf(lastRanked[0].name).v, 12, "italic", BODY, 0, 3);
+  txt(sTr("Everyone's mix is different. This reflects how you show up right now."), 11, "normal", GREY, 0, 6);
 
-  lastRanked.slice(0, 3).forEach(function(t){
-    var pct = Math.round(t.n / questions.length * 100);
-    var c = colors[t.name];
-    var r = parseInt(c.substr(1, 2), 16), g = parseInt(c.substr(3, 2), 16), b = parseInt(c.substr(5, 2), 16);
+  label(sTr("YOUR FULL MIX"));
+  y += 2;
+  var img = document.getElementById("pieChart").toDataURL("image/png");
+  var rowY = y + 6;
+  doc.addImage(img, "PNG", left, y, 74, 74);
 
-    doc.setFillColor(r, g, b);
-    doc.rect(left, y - 4.5, 2.2, 5.5, "F");
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.setTextColor(17, 24, 39);
-    doc.text(sTr(t.name) + "  (" + pct + "%)", left + 6, y);
-    y += 6;
-
+  var scoreMap = {};
+  strengths.forEach(function(s){ scoreMap[s] = 0; });
+  lastRanked.forEach(function(r){ scoreMap[r.name] = r.n; });
+  var all = strengths.slice().sort(function(a, b){ return (scoreMap[b] - scoreMap[a]) || (strengths.indexOf(a) - strengths.indexOf(b)); });
+  var maxN = Math.max(1, lastRanked[0].n);
+  var x0 = left + 82;
+  all.forEach(function(s, i){
+    var ry = rowY + i * 7.6;
+    var rgb = hex(colors[s]);
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+    doc.circle(x0, ry - 1.2, 1.7, "F");
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
-    doc.setTextColor(55, 65, 81);
-    var dl = doc.splitTextToSize(sTr(info[t.name].d), textW - 6);
-    doc.text(dl, left + 6, y);
-    y += dl.length * 5 + 1;
+    doc.setFontSize(10);
+    doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(sTr(s), x0 + 4, ry);
+    doc.setFillColor(229, 231, 235);
+    doc.rect(x0 + 38, ry - 3.2, 38, 3.4, "F");
+    if (scoreMap[s] > 0){
+      doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+      doc.rect(x0 + 38, ry - 3.2, 38 * scoreMap[s] / maxN, 3.4, "F");
+    }
+    doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+    doc.text(Math.round(scoreMap[s] / questions.length * 100) + "%", x0 + 79, ry);
+  });
+  y += 82;
 
-    doc.setTextColor(107, 114, 128);
-    var tl = doc.splitTextToSize(sTp("Try this: {x}", { x: sTr(info[t.name].t) }), textW - 6);
-    doc.text(tl, left + 6, y);
-    y += tl.length * 5 + 7;
+  /* ---------- Top strengths ---------- */
+  lastRanked.slice(0, 3).forEach(function(t, idx){
+    var D = inf(t.name);
+    var rgb = hex(colors[t.name]);
+    var pct = Math.round(t.n / questions.length * 100);
+
+    if (idx === 0){ newPage(); } else { need(60); }
+    if (idx === 0){
+      txt(sTr("YOUR TOP STRENGTHS"), 10, "bold", BLUE, 0, 3);
+    }
+
+    need(16);
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+    doc.roundedRect(left, y - 5.5, textW, 11, 2, 2, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(255, 255, 255);
+    doc.text((idx + 1) + ". " + D.n, left + 4, y + 1.6);
+    doc.setFontSize(11);
+    doc.text(sTr(t.name) + "  " + pct + "%", left + textW - 4, y + 1.6, {align:"right"});
+    y += 12;
+
+    txt(D.v, 11.5, "italic", BODY, 0, 2);
+    txt(D.d, 11, "normal", BODY, 0, 1);
+
+    label(sTr("Your advantages"));
+    D.a.forEach(function(a){ txt("- " + a, 10.5, "normal", BODY, 2, 1); });
+
+    label(sTr("Watch out: your demeanour"), [180, 83, 9]);
+    txt(D.o, 10.5, "normal", BODY, 0, 1);
+
+    label(sTr("Watch out: your lifestyle"), [180, 83, 9]);
+    txt(D.l, 10.5, "normal", BODY, 0, 1);
+
+    label(sTr("Balance it"), [4, 120, 87]);
+    txt(D.b, 10.5, "normal", BODY, 0, 1);
+
+    txt(sTp("Try this: {x}", { x: D.t }), 10.5, "italic", GREY, 0, 8);
   });
 
+  /* ---------- Quiet strengths ---------- */
+  var quiet = getQuiet();
+  if (quiet.length){
+    need(30);
+    txt(sTr("Quiet strengths, ready to wake up").toUpperCase(), 10, "bold", BLUE, 0, 1);
+    txt(sTr("These are resting right now, not missing. One small step can wake each one up."), 10.5, "normal", GREY, 0, 3);
+    quiet.forEach(function(s){
+      var D = inf(s);
+      txt(D.n + " (" + sTr(s) + ")", 11, "bold", INK, 0, 0.5);
+      txt(D.t, 10.5, "normal", BODY, 2, 3);
+    });
+  }
+
+  /* ---------- 7 day plan ---------- */
+  newPage();
+  doc.setFillColor(16, 185, 129);
+  doc.roundedRect(left, y - 6, textW, 16, 2.5, 2.5, "F");
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.setTextColor(37, 99, 235);
-  doc.text(sTr("YOUR FULL MIX"), left, y);
+  doc.setFontSize(16);
+  doc.setTextColor(255, 255, 255);
+  doc.text(sTr("Your 7 Day Inner Strength Plan"), left + 5, y + 4.5);
+  y += 18;
+  txt(sTr("One small task a day, about ten minutes each. Tick the box when you do it."), 10.5, "normal", GREY, 0, 4);
+
+  buildPlan().forEach(function(p){
+    var lines = doc.splitTextToSize(p.text, textW - 20);
+    var h = 14 + lines.length * 5;
+    need(h + 4);
+    doc.setDrawColor(209, 213, 219);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(left, y - 5, textW, h, 2, 2, "S");
+    doc.setDrawColor(16, 185, 129);
+    doc.setLineWidth(0.6);
+    doc.rect(left + 4, y - 1.5, 6, 6, "S");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    doc.setTextColor(INK[0], INK[1], INK[2]);
+    doc.text(planHead(p), left + 15, y + 2.5);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    doc.setTextColor(BODY[0], BODY[1], BODY[2]);
+    doc.text(lines, left + 15, y + 9);
+    y += h + 3;
+  });
+
+  need(46);
   y += 4;
+  txt(sTr("My week in three lines").toUpperCase(), 10, "bold", BLUE, 0, 6);
+  for (var li = 0; li < 3; li++){
+    doc.setDrawColor(209, 213, 219);
+    doc.setLineWidth(0.3);
+    doc.line(left, y, left + textW, y);
+    y += 11;
+  }
 
-  var canvas = document.getElementById("pieChart");
-  var img = canvas.toDataURL("image/png");
-  var size = 88;
-  var maxBottom = 270;
-  if (y + size > maxBottom){ size = maxBottom - y; }
-  doc.addImage(img, "PNG", (210 - size) / 2, y, size, size);
-
-  doc.setDrawColor(229, 231, 235);
-  doc.setLineWidth(0.3);
-  doc.line(left, 280, left + textW, 280);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(107, 114, 128);
-  doc.text(sTr("Created by Emotional Intelligence Developer"), 105, 286, {align:"center"});
-  doc.text("emotionalintelligencedeveloper.com", 105, 291, {align:"center"});
+  /* ---------- Footer on every page ---------- */
+  var total = doc.internal.getNumberOfPages();
+  for (var p = 1; p <= total; p++){
+    doc.setPage(p);
+    doc.setDrawColor(229, 231, 235);
+    doc.setLineWidth(0.3);
+    doc.line(left, 280, left + textW, 280);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(GREY[0], GREY[1], GREY[2]);
+    doc.text(sTr("Created by Emotional Intelligence Developer"), 105, 286, {align:"center"});
+    doc.text("emotionalintelligencedeveloper.com", 105, 291, {align:"center"});
+    doc.text(p + " / " + total, left + textW, 286, {align:"right"});
+  }
 
   var safe = name ? name.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() : "";
   doc.save(safe ? ("inner-strength-snapshot-" + safe + ".pdf") : "inner-strength-snapshot.pdf");

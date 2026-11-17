@@ -280,6 +280,66 @@
     .footer-link:hover { text-decoration: underline; }
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 10px; }
 
+
+    /* STEP FLOW */
+    .steps-on .step { display: none; }
+    .steps-on .step.active { display: block; }
+    .step:focus { outline: none; }
+    .step-head { margin-bottom: 14px; scroll-margin-top: 80px; }
+    .step-count { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .dots { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--brand-mid); display: inline-block; transition: background 0.2s; }
+    .dot.done { background: var(--brand); }
+    .dot.cur { background: var(--brand); box-shadow: 0 0 0 3px var(--brand-mid); }
+    .step-nav { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin: 6px 0 4px; }
+    .step-nav .btn { width: auto; flex: 0 1 auto; min-width: 120px; }
+    .step-skip-end { display: block; margin: 8px auto 4px; background: none; border: none; color: var(--brand-text); text-decoration: underline; cursor: pointer; font-family: "Georgia", serif; font-size: 13px; min-height: 40px; padding: 6px 10px; }
+    .step-nav + .step-skip-end + .save-row { margin-top: 14px; }
+
+    /* FEELING SCALE (0 to 10) */
+    .scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; }
+    .scale-opt { position: relative; display: block; }
+    .scale-opt input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+    .scale-opt span { display: flex; align-items: center; justify-content: center; min-height: 46px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--field); font-size: 15px; color: var(--text); transition: border-color 0.15s; }
+    .scale-opt:hover span { border-color: var(--brand); }
+    .scale-opt input:checked + span { background: var(--btn-primary-bg); color: var(--on-btn); border-color: var(--btn-primary-bg); font-weight: bold; }
+    .scale-opt input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 2px; }
+    .scale-ends { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+    @media (max-width: 480px) { .scale { grid-template-columns: repeat(6, 1fr); } }
+
+    .shift-box { padding: 14px 16px; border-radius: var(--radius-md); background: var(--safe-bg); border: 1px solid var(--safe-border); color: var(--safe-text); font-size: 15px; margin-bottom: 14px; }
+    .shift-box.steady { background: var(--pause-bg); border-color: var(--pause-border); color: var(--pause-text); }
+    .shift-box .urgent-actions { margin-top: 10px; }
+    .shift-box .btn-danger { background: var(--field); }
+
+    .plan-view { background: var(--safe-bg); border: 1px solid var(--safe-border); border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 16px; font-size: 15px; }
+    .plan-view .section-label { color: var(--safe-text); }
+    .plan-view .result-block { white-space: pre-wrap; }
+    .plan-view .result-block-label { white-space: normal; }
+    .next-block { margin-bottom: 18px; }
+    .next-tools { display: grid; gap: 8px; grid-template-columns: 1fr; }
+    @media (min-width: 560px) { .next-tools { grid-template-columns: 1fr 1fr; } }
+    .next-tool { display: flex; align-items: center; min-height: 52px; padding: 12px 14px; border: 1px solid var(--brand-mid); background: var(--brand-light); border-radius: var(--radius-md); color: var(--brand-text); text-decoration: none; font-size: 14px; line-height: 1.4; transition: border-color 0.15s; }
+    .next-tool:hover { border-color: var(--brand); }
+
+    /* WELCOME BACK */
+    .welcome-card { display: none; background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; }
+    .welcome-card.show { display: block; }
+    .welcome-title { font-size: 1.05rem; color: var(--brand-text); margin-bottom: 6px; }
+    .welcome-sub { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+    .welcome-sub:empty { display: none; }
+
+    /* QUICK EXIT */
+    .quick-exit { background: #ffffff; color: #1a1f2e; border: none; border-radius: 99px; padding: 8px 16px; font-weight: bold; font-size: 13px; font-family: "Georgia", serif; cursor: pointer; min-height: 40px; white-space: nowrap; }
+    .quick-exit:hover { opacity: 0.9; }
+    .quick-exit:focus-visible { outline: 3px solid var(--crisis-link); outline-offset: 2px; }
+    @media (max-width: 600px) {
+      .crisis-bar { row-gap: 8px; }
+      .crisis-bar > strong { flex: 1 1 0; min-width: 0; }
+      .quick-exit { order: 2; flex: 0 0 auto; padding: 8px 14px; }
+      .crisis-bar-links { order: 3; flex-basis: 100%; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       * { transition: none !important; }
@@ -297,6 +357,8 @@
       body { background: #fff; color: #000; }
       .crisis-bar, .pause-box, .btn-row, .section-label, #shareSection, .footer,
       .urgent-notice, .toast, .country-row, .save-row, .privacy-note, .result-box { display: none !important; }
+      .step-head, .step-nav, .step-skip-end, .welcome-card, .quick-exit, .plan-view, .next-block, .shift-box, .step-rating { display: none !important; }
+      .steps-on .step { display: block !important; }
       .card, .question, .crisis-card { border: 1px solid #999; background: #fff; }
       textarea { border: 1px solid #999; background: #fff; color: #000; min-height: 60px; }
       .resource-item { background: #fff; border: 1px solid #999; }
@@ -311,6 +373,7 @@
   <div class="crisis-bar-links" id="crisisBarLinks">
     <a href="https://findahelpline.com" target="_blank" rel="noopener">Find crisis lines by country</a>
   </div>
+  <button type="button" class="quick-exit" id="quickExit" aria-label="Leave this page now" data-i18n-aria="qe.aria" data-i18n="qe.label">Quick exit</button>
 </div>
 
 <div class="container">
@@ -356,6 +419,17 @@
     </div>
   </header>
 
+  <!-- WELCOME BACK (only shown when a saved plan exists on this device) -->
+  <div class="welcome-card" id="welcomeCard" role="region" aria-labelledby="welcomeTitle">
+    <p class="welcome-title" id="welcomeTitle" data-i18n="wb.title">Welcome back</p>
+    <p class="welcome-sub" data-i18n="wb.sub">Your plan is saved on this device. It never left this browser.</p>
+    <p class="welcome-sub" id="welcomeSaved"></p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="welcomeOpen" data-i18n="wb.open">Open my plan</button>
+      <button type="button" class="btn btn-outline" id="welcomeFresh" data-i18n="wb.fresh">Start fresh</button>
+    </div>
+  </div>
+
   <!-- CRISIS SUPPORT -->
   <div class="crisis-card" id="crisisSection" aria-labelledby="crisis-heading">
     <p class="crisis-title" id="crisis-heading" data-i18n="cc.title">Crisis support, free and confidential</p>
@@ -385,15 +459,16 @@
   </div>
 
   <!-- CHECK-IN CARD -->
-  <section class="card" aria-labelledby="checkin-heading">
+  <section class="card" id="checkinCard" aria-labelledby="checkin-heading">
     <p class="card-title" id="checkin-heading" data-i18n="ci.title">Your gentle check-in</p>
 
-    <div class="save-row">
-      <input type="checkbox" id="saveLocal" />
-      <label for="saveLocal" data-i18n="save.label">Save my answers on this device only, so they are here if I come back. They never leave this browser. The Reset button deletes them.</label>
+    <div class="step-head" id="stepHead" hidden>
+      <p class="step-count" id="stepCount" aria-live="polite"></p>
+      <div class="dots" id="dots" aria-hidden="true"></div>
     </div>
 
-    <!-- SAFETY CHECK -->
+    <!-- STEP 1: SAFETY CHECK -->
+    <div class="step" tabindex="-1">
     <div class="question">
       <span class="question-label" id="safetyLabel" data-i18n="safe.label">Safety check: which statement fits best right now?</span>
       <p class="question-hint" data-i18n="safe.hint">This only helps tailor the support shown to you. You are not being judged.</p>
@@ -413,8 +488,17 @@
       </div>
       <p class="question-note" data-i18n="safe.note">Whatever you selected, you made the right choice by being here.</p>
     </div>
-
-    <!-- FEELING NOW -->
+    </div>
+    <!-- STEP 2: HOW HEAVY RIGHT NOW (0 to 10, before) -->
+    <div class="step" tabindex="-1">
+    <div class="question step-rating">
+      <span class="question-label" id="heavyBeforeLabel" data-i18n="hb.label">How heavy does it feel right now?</span>
+      <p class="question-hint" data-i18n="hb.hint">0 is calm and 10 is the hardest it has been. Any number is okay. This is only for you.</p>
+      <div class="scale" id="scaleBefore" role="radiogroup" aria-labelledby="heavyBeforeLabel"></div>
+      <div class="scale-ends"><span data-i18n="sc.low">0 = calm</span><span data-i18n="sc.high">10 = hardest</span></div>
+    </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="feelingNow" data-i18n="feel.label">How are you feeling right now?</label>
       <p class="question-hint" data-i18n="feel.hint">Choose what fits closest. You do not have to have the exact words.</p>
@@ -429,8 +513,8 @@
         <option value="I just need someone to listen" data-i18n="feel.7">I just need someone to listen</option>
       </select>
     </div>
-
-    <!-- THOUGHT LOOP -->
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="thoughtLoop" data-i18n="th.label">Which thought keeps looping right now?</label>
       <p class="question-hint" data-i18n="th.hint">Naming the thought can help you create a little distance from it.</p>
@@ -443,81 +527,108 @@
         <option value="I do not want to die, I want the pain to stop" data-i18n="th.5">"I do not want to die, I want the pain to stop"</option>
       </select>
     </div>
-
-    <!-- OPEN QUESTIONS -->
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q1" data-i18n="q1.label">What has been weighing most heavily on your mind?</label>
       <p class="question-hint" data-i18n="q1.hint">You do not need to explain it perfectly. Just write what is there.</p>
       <textarea id="q1" maxlength="700" placeholder="Write freely. This is only for you..." data-i18n-ph="q1.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q2" data-i18n="q2.label">What emotions feel strongest right now?</label>
       <textarea id="q2" maxlength="500" placeholder="As many or as few words as you need..." data-i18n-ph="q2.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q3" data-i18n="q3.label">What has helped you get through hard moments before?</label>
       <p class="question-hint" data-i18n="q3.hint">Even small things: a person, a song, a place, a memory.</p>
       <textarea id="q3" maxlength="500" placeholder="You have been through difficult moments before..." data-i18n-ph="q3.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q4" data-i18n="q4.label">If someone you love felt this way, what would you tell them?</label>
       <p class="question-hint" data-i18n="q4.hint">Try to offer yourself the same words.</p>
       <textarea id="q4" maxlength="500" placeholder="Speak to yourself as you would to someone you care about..." data-i18n-ph="q4.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q5" data-i18n="q5.label">One small reason you could stay today:</label>
       <p class="question-hint" data-i18n="q5.hint">It does not have to be big. It just has to be true.</p>
       <textarea id="q5" maxlength="400" placeholder="Even one small reason is enough for today..." data-i18n-ph="q5.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q6" data-i18n="q6.label">Who can you contact in the next 10 minutes?</label>
       <p class="question-hint" data-i18n="q6.hint">A person, a helpline, or a text. Any contact counts.</p>
       <textarea id="q6" maxlength="300" placeholder="Name, number, or service..." data-i18n-ph="q6.ph"></textarea>
     </div>
-
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="q7" data-i18n="q7.label">What can you do in the next 10 minutes to lower your risk?</label>
       <p class="question-hint" data-i18n="q7.hint">Moving to a shared space, putting distance between you and anything harmful, texting someone. Any step helps.</p>
       <textarea id="q7" maxlength="400" placeholder="Even moving rooms is a meaningful step..." data-i18n-ph="q7.ph"></textarea>
     </div>
-
-    <!-- SAFETY PLAN -->
-    <p class="card-title" style="margin-top:22px;" data-i18n="sp.title">My safety plan (optional, fill in what you can)</p>
-
+    </div>
+    <div class="step" tabindex="-1">
+    <p class="card-title" data-i18n="sp.title">My safety plan (optional, fill in what you can)</p>
     <div class="question">
       <label class="question-label" for="sp1" data-i18n="sp1.label">1. My warning signs</label>
       <p class="question-hint" data-i18n="sp1.hint">Thoughts, feelings or situations that tell me a crisis may be starting.</p>
       <textarea id="sp1" maxlength="500"></textarea>
     </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="sp2" data-i18n="sp2.label">2. Things I can do on my own to calm down</label>
       <textarea id="sp2" maxlength="500"></textarea>
     </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="sp3" data-i18n="sp3.label">3. People and places that help take my mind off things</label>
       <textarea id="sp3" maxlength="500"></textarea>
     </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="sp4" data-i18n="sp4.label">4. People I can ask for help</label>
       <p class="question-hint" data-i18n="sp4.hint">Names and phone numbers.</p>
       <textarea id="sp4" maxlength="500"></textarea>
     </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="sp5" data-i18n="sp5.label">5. Professionals or services I can contact</label>
       <p class="question-hint" data-i18n="sp5.hint">Doctor, counsellor, clinic, helpline. The numbers for your country are shown near the top of this page.</p>
       <textarea id="sp5" maxlength="500"></textarea>
     </div>
+    </div>
+    <div class="step" tabindex="-1">
     <div class="question">
       <label class="question-label" for="sp6" data-i18n="sp6.label">6. Making my space safer</label>
       <p class="question-hint" data-i18n="sp6.hint">Steps to put distance between me and anything I could use to harm myself.</p>
       <textarea id="sp6" maxlength="500"></textarea>
     </div>
-
+    </div>
+    <!-- FINAL STEP: HOW HEAVY NOW, MY PLAN, NEXT STEPS, ACTIONS -->
+    <div class="step" tabindex="-1" data-final="1">
+      <p class="card-title" data-i18n="fin.title">Before you go</p>
+      <div class="question step-rating">
+        <span class="question-label" id="heavyAfterLabel" data-i18n="ha.label">And how heavy does it feel now?</span>
+        <p class="question-hint" data-i18n="ha.hint">Pick the number that fits right now. It can be the same, lower or higher.</p>
+        <div class="scale" id="scaleAfter" role="radiogroup" aria-labelledby="heavyAfterLabel"></div>
+        <div class="scale-ends"><span data-i18n="sc.low">0 = calm</span><span data-i18n="sc.high">10 = hardest</span></div>
+      </div>
+      <div id="shiftBox" aria-live="polite"></div>
+      <div class="plan-view" id="planView"></div>
+      <div class="next-block" id="nextBlock"></div>
     <!-- ERROR -->
     <div id="errorMsg" style="display:none; color:var(--danger-text); font-size:14px; font-style:italic; margin-bottom:14px;" role="alert" aria-live="polite"></div>
 
@@ -548,6 +659,19 @@
         <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
       </div>
     </div>
+    </div>
+
+    <div class="step-nav" id="stepNav" hidden>
+      <button type="button" class="btn btn-outline" id="stepBack" data-i18n="nav.back">Back</button>
+      <button type="button" class="btn btn-primary" id="stepNext">Next</button>
+    </div>
+    <button type="button" class="step-skip-end" id="toEnd" data-i18n="nav.end" hidden>Go to my summary</button>
+
+    <div class="save-row">
+      <input type="checkbox" id="saveLocal" />
+      <label for="saveLocal" data-i18n="save.label">Save my answers on this device only, so they are here if I come back. They never leave this browser. The Reset button deletes them.</label>
+    </div>
+
   </section>
 
   <!-- FOOTER -->
@@ -891,6 +1015,71 @@
       "pdf.file": "tu-importas-reflexion.pdf"
     }
   };
+
+  /* New strings for the step flow, feeling check, welcome back, next steps and quick exit */
+  function extend(a, b) { for (var k in b) { if (Object.prototype.hasOwnProperty.call(b, k)) a[k] = b[k]; } }
+  extend(I18N.en, {
+    "qe.label": "Quick exit",
+    "qe.aria": "Leave this page now",
+    "wb.title": "Welcome back",
+    "wb.sub": "Your plan is saved on this device. It never left this browser.",
+    "wb.open": "Open my plan",
+    "wb.fresh": "Start fresh",
+    "wb.saved": "Last saved on {d}",
+    "wb.confirm": "Delete your saved plan from this device and start again?",
+    "step.of": "Step {n} of {t}",
+    "nav.back": "Back",
+    "nav.next": "Next",
+    "nav.skip": "Skip",
+    "nav.end": "Go to my summary",
+    "hb.label": "How heavy does it feel right now?",
+    "hb.hint": "0 is calm and 10 is the hardest it has been. Any number is okay. This is only for you.",
+    "sc.low": "0 = calm",
+    "sc.high": "10 = hardest",
+    "ha.label": "And how heavy does it feel now?",
+    "ha.hint": "Pick the number that fits right now. It can be the same, lower or higher.",
+    "shift.only": "Right now it feels like a {a} out of 10.",
+    "shift.down": "You moved from {b} to {a}. Small shifts count.",
+    "shift.same": "It is still a {a}. That is okay. Some moments take longer, and talking to someone can help.",
+    "shift.up": "It feels heavier now ({b} to {a}). That can happen and it does not mean you did anything wrong. Please reach out to someone now.",
+    "fin.title": "Before you go",
+    "pv.title": "My plan so far",
+    "pv.empty": "Nothing is written in your plan yet. That is okay. You can go back to any step whenever you like.",
+    "next.title": "Your next step",
+    "next.sub": "These free tools fit what you shared. They open in a new tab, so your answers here stay put.",
+    "next.later": "Reaching out to someone comes first. When you feel steadier, these tools may help."
+  });
+  extend(I18N.es, {
+    "qe.label": "Salida rápida",
+    "qe.aria": "Salir de esta página ahora",
+    "wb.title": "Qué bueno verte de nuevo",
+    "wb.sub": "Tu plan está guardado en este dispositivo. Nunca salió de este navegador.",
+    "wb.open": "Abrir mi plan",
+    "wb.fresh": "Empezar de cero",
+    "wb.saved": "Guardado por última vez el {d}",
+    "wb.confirm": "¿Borrar tu plan guardado de este dispositivo y empezar de nuevo?",
+    "step.of": "Paso {n} de {t}",
+    "nav.back": "Atrás",
+    "nav.next": "Siguiente",
+    "nav.skip": "Saltar",
+    "nav.end": "Ir a mi resumen",
+    "hb.label": "¿Qué tan pesado se siente ahora mismo?",
+    "hb.hint": "0 es calma y 10 es lo más difícil que ha sido. Cualquier número está bien. Esto es solo para ti.",
+    "sc.low": "0 = calma",
+    "sc.high": "10 = lo más difícil",
+    "ha.label": "¿Y qué tan pesado se siente ahora?",
+    "ha.hint": "Elige el número que encaje ahora mismo. Puede ser igual, más bajo o más alto.",
+    "shift.only": "Ahora mismo se siente como un {a} de 10.",
+    "shift.down": "Pasaste de {b} a {a}. Los cambios pequeños cuentan.",
+    "shift.same": "Sigue en {a}. Está bien. Algunos momentos tardan más, y hablar con alguien puede ayudar.",
+    "shift.up": "Ahora se siente más pesado ({b} a {a}). Puede pasar y no significa que hayas hecho algo mal. Por favor, contacta con alguien ahora.",
+    "fin.title": "Antes de irte",
+    "pv.title": "Mi plan hasta ahora",
+    "pv.empty": "Todavía no hay nada escrito en tu plan. Está bien. Puedes volver a cualquier paso cuando quieras.",
+    "next.title": "Tu siguiente paso",
+    "next.sub": "Estas herramientas gratuitas encajan con lo que compartiste. Se abren en una pestaña nueva, así que tus respuestas aquí se quedan donde están.",
+    "next.later": "Primero está contactar con alguien. Cuando te sientas más estable, estas herramientas pueden ayudarte."
+  });
   I18N.es.hl = {
       "SADAG suicide crisis line": "Línea de crisis suicida de SADAG",
       "Call or text 988": "Llama o envía un mensaje al 988",
@@ -954,6 +1143,7 @@
       name: 'Zimbabwe',
       lines: [],
       emergency: null,
+      finder: 'https://findahelpline.com/countries/zw',
       note: 'No local crisis line is listed here yet. Please use the finder below, or contact your nearest clinic, hospital or emergency services.'
     },
     US: {
@@ -1075,6 +1265,7 @@
   function renderCountry(code) {
     currentCountry = HELPLINES[code] ? code : 'OTHER';
     var data = HELPLINES[currentCountry];
+    var finderUrl = data.finder || FINDER.url;
 
     // Resource grid
     var grid = $('resourceGrid');
@@ -1111,7 +1302,7 @@
     var moreBody = make('div', 'resource-item-body');
     moreBody.appendChild(document.createTextNode(t('findLocal')));
     moreBody.appendChild(document.createElement('br'));
-    moreBody.appendChild(makeLink(FINDER.url, FINDER.label, '', true));
+    moreBody.appendChild(makeLink(finderUrl, FINDER.label, '', true));
     more.appendChild(moreBody);
     grid.appendChild(more);
 
@@ -1125,7 +1316,7 @@
     } else if (data.emergency) {
       bar.appendChild(makeLink('tel:' + data.emergency.tel, t('callEmerg'), '', false));
     }
-    bar.appendChild(makeLink(FINDER.url, t('bar.find'), '', true));
+    bar.appendChild(makeLink(finderUrl, t('bar.find'), '', true));
 
     // Urgent notice call buttons
     var urgent = $('urgentCall');
@@ -1137,7 +1328,7 @@
       urgent.appendChild(makeLink('tel:' + data.emergency.tel, t('callEmerg'), 'btn btn-danger', false));
     }
     if (!urgent.children.length) {
-      urgent.appendChild(makeLink(FINDER.url, t('findNow'), 'btn btn-primary', true));
+      urgent.appendChild(makeLink(finderUrl, t('findNow'), 'btn btn-primary', true));
     }
   }
 
@@ -1207,7 +1398,7 @@
       html += '<a class="btn btn-danger" href="tel:' + data.emergency.tel + '">' + t('callEmerg') + '</a>';
     }
     if (html === '<div class="urgent-actions" style="margin-top:10px;">') {
-      html += '<a class="btn btn-primary" href="' + FINDER.url + '" target="_blank" rel="noopener">' + t('findNow') + '</a>';
+      html += '<a class="btn btn-primary" href="' + (data.finder || FINDER.url) + '" target="_blank" rel="noopener">' + t('findNow') + '</a>';
     }
     html += '</div>';
     return html;
@@ -1305,7 +1496,7 @@
   function saveIfOn() {
     if (!$('saveLocal').checked) return;
     try {
-      var data = { safety: getSafety() };
+      var data = { safety: getSafety(), savedAt: Date.now() };
       FIELD_IDS.forEach(function (id) { data[id] = $(id).value; });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {}
@@ -1322,6 +1513,8 @@
         if (radio) { radio.checked = true; updateHighRiskState(); }
       }
       $('saveLocal').checked = true;
+      var hasContent = !!data.safety || FIELD_IDS.some(function (id) { return typeof data[id] === 'string' && data[id].trim(); });
+      if (hasContent) showWelcome(data);
     } catch (e) {}
   }
 
@@ -1351,6 +1544,7 @@
     $('shareSection').hidden = false;
     $('saveLocal').checked = false;
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    resetStepsUi();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     showToast(t('toast.cleared'));
   }
@@ -1660,6 +1854,7 @@
     refreshCountryNames();
     renderCountry(currentCountry);
     refreshDynamic();
+    refreshSteps();
     updateShareLinks();
     if ($('resultBox').style.display === 'block') showSupport(true);
     if (persist) { try { localStorage.setItem(LANG_KEY, lang); } catch (e) {} }
@@ -1670,6 +1865,251 @@
     var saved = '';
     try { saved = localStorage.getItem(LANG_KEY) || ''; } catch (e) {}
     if (saved && saved !== 'en' && I18N[saved]) applyLang(saved, false);
+  }
+
+
+  /* ------------------------------------------------------------
+     STEP FLOW, FEELING CHECK, WELCOME BACK, NEXT STEPS, QUICK EXIT
+  ------------------------------------------------------------ */
+  var steps = [];
+  var stepIdx = 0;
+  var welcomeTs = 0;
+  var lastEsc = 0;
+  var TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+
+  var NEXT_TOOLS = {
+    courage:   { en: 'Courage in the Face of Fear', es: 'Valentía ante el miedo', file: 'courage-in-the-face-of-fear-tool.html' },
+    distress:  { en: 'Distress Tolerance Coping Tool', es: 'Herramienta de tolerancia al malestar', file: 'distress-tolerance-coping-tool.html' },
+    grounding: { en: 'Visual Grounding and Emotional Reset', es: 'Anclaje visual y reinicio emocional', file: 'visual-grounding-emotional-reset-tool.html' },
+    threat:    { en: 'Threat and Emotional Regulation', es: 'Amenaza y regulación emocional', file: 'threat-and-emotional-regulation-tool.html' },
+    wellbeing: { en: 'Wellbeing Journey: Quick Check and Reset', es: 'Camino de bienestar: chequeo rápido y reinicio', file: 'wellbeing-journey-tool.html' },
+    triggers:  { en: 'Emotional Trigger Mapping', es: 'Mapa de desencadenantes emocionales', file: 'emotional-trigger-mapping-tool.html' },
+    strength:  { en: 'Inner Strength Snapshot', es: 'Instantánea de tu fortaleza interior', file: 'inner-strength-snapshot-tool.html' },
+    hardconv:  { en: 'Hard Conversation Preparation', es: 'Preparación para conversaciones difíciles', file: 'hard-conversation-preparation-tool.html' },
+    selfcheck: { en: 'Emotional Support Self-Check', es: 'Autochequeo de apoyo emocional', file: 'emotional-support-self-check-addiction-check-in.html' }
+  };
+  var NEXT_BY_FEELING = {
+    'Empty or numb': ['grounding', 'wellbeing'],
+    'Overwhelming sadness': ['distress', 'wellbeing'],
+    'Anxious or panicked': ['grounding', 'threat'],
+    'Angry at myself or others': ['triggers', 'threat'],
+    'Hopeless or trapped': ['courage', 'distress'],
+    'Tired of fighting': ['strength', 'courage'],
+    'I just need someone to listen': ['hardconv', 'selfcheck']
+  };
+
+  function buildScale(boxId, name) {
+    var box = $(boxId);
+    box.innerHTML = '';
+    for (var i = 0; i <= 10; i++) {
+      var label = make('label', 'scale-opt');
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = name;
+      input.value = String(i);
+      input.setAttribute('aria-label', String(i));
+      label.appendChild(input);
+      label.appendChild(make('span', '', String(i)));
+      box.appendChild(label);
+    }
+  }
+
+  function getScale(name) {
+    var c = document.querySelector('input[name="' + name + '"]:checked');
+    return c ? parseInt(c.value, 10) : null;
+  }
+
+  function stepHasAnswer(step) {
+    var f = step.querySelectorAll('textarea, select');
+    for (var i = 0; i < f.length; i++) { if (String(f[i].value).trim()) return true; }
+    return !!step.querySelector('input[type="radio"]:checked');
+  }
+
+  function isFinal(i) { return !!(steps[i] && steps[i].hasAttribute('data-final')); }
+
+  function updateNav() {
+    if (!steps.length) return;
+    var last = stepIdx === steps.length - 1;
+    $('stepBack').style.visibility = stepIdx === 0 ? 'hidden' : 'visible';
+    $('stepNext').hidden = last;
+    $('toEnd').hidden = last;
+    if (!last) {
+      var has = stepHasAnswer(steps[stepIdx]);
+      $('stepNext').textContent = has ? t('nav.next') : t('nav.skip');
+      $('stepNext').className = 'btn ' + (has ? 'btn-primary' : 'btn-outline');
+    }
+  }
+
+  function updateShift() {
+    var box = $('shiftBox');
+    box.innerHTML = '';
+    box.className = '';
+    var b = getScale('heavyBefore');
+    var a = getScale('heavyAfter');
+    if (a === null) return;
+    var msg;
+    var cls = 'shift-box';
+    var showCalls = false;
+    if (b === null) {
+      msg = t('shift.only');
+    } else if (a < b) {
+      msg = t('shift.down');
+    } else if (a === b) {
+      msg = t('shift.same');
+      cls += ' steady';
+    } else {
+      msg = t('shift.up');
+      cls += ' steady';
+      showCalls = true;
+    }
+    if (a >= 9) showCalls = true;
+    msg = msg.replace('{a}', a).replace('{b}', b);
+    box.className = cls;
+    box.innerHTML = '<div></div>' + (showCalls ? callButtonsHtml() : '');
+    box.firstChild.textContent = msg;
+  }
+
+  function renderPlanView() {
+    var box = $('planView');
+    box.innerHTML = '';
+    box.appendChild(make('div', 'section-label', t('pv.title')));
+    var any = false;
+    getPlanSections().forEach(function (sec) {
+      if (!sec[1]) return;
+      any = true;
+      var block = make('div', 'result-block');
+      block.appendChild(make('div', 'result-block-label', sec[0]));
+      block.appendChild(make('div', '', sec[1]));
+      box.appendChild(block);
+    });
+    if (!any) box.appendChild(make('p', 'question-hint', t('pv.empty')));
+  }
+
+  function renderNextTools() {
+    var box = $('nextBlock');
+    box.innerHTML = '';
+    var high = getSafety() === 'mightact';
+    var keys = NEXT_BY_FEELING[$('feelingNow').value] || ['distress', 'grounding'];
+    box.appendChild(make('div', 'section-label', t('next.title')));
+    if (high) {
+      var urgent = make('div', 'urgent-inline');
+      urgent.innerHTML = '<div style="font-weight:bold;margin-bottom:8px;">' + t('sup.reach') + '</div>'
+        + '<div style="font-size:14px;">' + t('sup.reachBody') + '</div>' + callButtonsHtml();
+      box.appendChild(urgent);
+      box.appendChild(make('p', 'question-hint', t('next.later')));
+    } else {
+      box.appendChild(make('p', 'question-hint', t('next.sub')));
+    }
+    var grid = make('div', 'next-tools');
+    keys.forEach(function (k) {
+      var tl = NEXT_TOOLS[k];
+      grid.appendChild(makeLink(TOOL_BASE + tl.file, lang === 'es' ? tl.es : tl.en, 'next-tool', true));
+    });
+    box.appendChild(grid);
+  }
+
+  function renderFinal() {
+    renderPlanView();
+    updateShift();
+    renderNextTools();
+  }
+
+  function updateWelcomeDate() {
+    var el = $('welcomeSaved');
+    if (!el) return;
+    var d = '';
+    if (welcomeTs) {
+      try {
+        d = new Date(welcomeTs).toLocaleDateString(lang === 'es' ? 'es' : 'en', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch (e) {}
+    }
+    el.textContent = d ? t('wb.saved').replace('{d}', d) : '';
+  }
+
+  function refreshSteps() {
+    if (!steps.length) return;
+    $('stepCount').textContent = t('step.of').replace('{n}', stepIdx + 1).replace('{t}', steps.length);
+    updateNav();
+    if (isFinal(stepIdx)) renderFinal();
+    updateWelcomeDate();
+  }
+
+  function showStep(i, o) {
+    o = o || {};
+    stepIdx = Math.max(0, Math.min(steps.length - 1, i));
+    steps.forEach(function (st, k) { st.classList.toggle('active', k === stepIdx); });
+    var dots = $('dots').children;
+    for (var k = 0; k < dots.length; k++) {
+      dots[k].className = 'dot' + (k < stepIdx ? ' done' : (k === stepIdx ? ' cur' : ''));
+    }
+    refreshSteps();
+    if (!o.noScroll) $('stepHead').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    if (o.focus) { try { steps[stepIdx].focus({ preventScroll: true }); } catch (e) {} }
+  }
+
+  function showWelcome(data) {
+    welcomeTs = (data && typeof data.savedAt === 'number') ? data.savedAt : 0;
+    $('welcomeCard').classList.add('show');
+    updateWelcomeDate();
+  }
+
+  function resetStepsUi() {
+    document.querySelectorAll('.scale input').forEach(function (r) { r.checked = false; });
+    $('shiftBox').innerHTML = '';
+    $('shiftBox').className = '';
+    $('welcomeCard').classList.remove('show');
+    welcomeTs = 0;
+    if (steps.length) showStep(0, { noScroll: true });
+  }
+
+  function quickExit() {
+    try {
+      document.documentElement.style.background = '#ffffff';
+      document.body.innerHTML = '';
+    } catch (e) {}
+    window.location.replace('https://www.google.com');
+  }
+
+  function initSteps() {
+    buildScale('scaleBefore', 'heavyBefore');
+    buildScale('scaleAfter', 'heavyAfter');
+    steps = Array.prototype.slice.call(document.querySelectorAll('#checkinCard .step'));
+    var dots = $('dots');
+    dots.innerHTML = '';
+    steps.forEach(function () { dots.appendChild(make('span', 'dot')); });
+    $('checkinCard').classList.add('steps-on');
+    $('stepHead').hidden = false;
+    $('stepNav').hidden = false;
+
+    $('stepBack').addEventListener('click', function () { showStep(stepIdx - 1, { focus: true }); });
+    $('stepNext').addEventListener('click', function () { showStep(stepIdx + 1, { focus: true }); });
+    $('toEnd').addEventListener('click', function () { showStep(steps.length - 1, { focus: true }); });
+
+    var card = $('checkinCard');
+    card.addEventListener('input', updateNav);
+    card.addEventListener('change', function (e) {
+      updateNav();
+      if (e.target && e.target.name === 'heavyAfter') updateShift();
+    });
+
+    $('welcomeOpen').addEventListener('click', function () {
+      $('welcomeCard').classList.remove('show');
+      showStep(steps.length - 1, { focus: true });
+    });
+    $('welcomeFresh').addEventListener('click', function () {
+      if (window.confirm(t('wb.confirm'))) resetTool();
+    });
+
+    $('quickExit').addEventListener('click', quickExit);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' && e.key !== 'Esc') return;
+      if (document.querySelector('.eidhub-ov.eidhub-show')) return;
+      var now = Date.now();
+      if (now - lastEsc < 1500) quickExit();
+      lastEsc = now;
+    });
+
+    showStep(0, { noScroll: true });
   }
 
   /* ------------------------------------------------------------
@@ -1692,6 +2132,7 @@
   });
 
   initCountrySelect();
+  initSteps();
   loadSaved();
   updateShareLinks();
   initLang();

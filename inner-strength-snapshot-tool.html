@@ -282,6 +282,7 @@ footer{
 
     <div class="section-title" data-i18n>Your top strengths</div>
     <div id="tops" class="tops"></div>
+    <div id="supporting"></div>
 
     <div class="section-title" data-i18n>Your full mix</div>
     <div class="chartbox"><canvas id="pieChart" width="420" height="420"></canvas></div>
@@ -405,6 +406,8 @@ var SIS_ES = {
  "One small task a day, about ten minutes each. Tick the box when you do it.": "Una tarea pequeña al día, de unos diez minutos. Marca la casilla cuando la hagas.",
  "Look back at your week. Write what you enjoyed, what was hard and one habit you will keep.": "Mira tu semana. Escribe qué disfrutaste, qué fue difícil y un hábito que te quedarás.",
  "My week in three lines": "Mi semana en tres líneas",
+ "Supporting strengths": "Fortalezas de apoyo",
+ "These also showed up in your mix. They back up your top strengths every day.": "Estas también aparecieron en tu mezcla. Apoyan tus fortalezas principales cada día.",
  "Your Strength Style: {x}": "Tu estilo de fortaleza: {x}",
  "How to use this page: do one task a day and tick it off.": "Cómo usar esta página: haz una tarea al día y márcala."
 };
@@ -841,6 +844,9 @@ function showResults(){
 }
 
 /* names of strengths that scored zero (quiet strengths) */
+function getSupporting(){
+  return lastRanked.slice(3);
+}
 function getQuiet(){
   var have = lastRanked.map(function(x){ return x.name; });
   return strengths.filter(function(s){ return have.indexOf(s) === -1; });
@@ -899,6 +905,31 @@ function sRenderView(noScroll){
   });
   document.getElementById("tops").innerHTML = html;
 
+  /* supporting strengths: scored above zero but not in the top 3 */
+  var sup = getSupporting();
+  var sb = document.getElementById("supporting");
+  if (sup.length){
+    var sh = "<div class=\"section-title\">" + sTr("Supporting strengths") + "</div>" +
+      "<p class=\"sub\">" + sTr("These also showed up in your mix. They back up your top strengths every day.") + "</p><div class=\"tops\">";
+    sup.forEach(function(t){
+      var D = inf(t.name);
+      var pct = Math.round(t.n / questions.length * 100);
+      sh += "<div class=\"top\" style=\"border-left-color:" + colors[t.name] + "\">" +
+            "<span class=\"pct\">" + pct + "%</span>" +
+            "<div class=\"nick\">" + D.n + "</div>" +
+            "<span class=\"sname\">" + sTr(t.name) + "</span>" +
+            "<p class=\"vibe\">" + D.v + "</p>" +
+            "<p>" + D.d + "</p>" +
+            "<div class=\"mini\">" + sTr("Your advantages") + "</div><ul class=\"adv\">" +
+            D.a.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>" +
+            "<div class=\"warn\"><b>" + sTr("Watch out: your demeanour") + "</b>" + D.o + "</div>" +
+            "<div class=\"bal\"><b>" + sTr("Balance it") + "</b>" + D.b + "</div></div>";
+    });
+    sb.innerHTML = sh + "</div>";
+  } else {
+    sb.innerHTML = "";
+  }
+
   /* quiet strengths */
   var q = getQuiet();
   var qb = document.getElementById("quiet");
@@ -906,7 +937,8 @@ function sRenderView(noScroll){
     qb.innerHTML = "<div class=\"section-title\">" + sTr("Quiet strengths, ready to wake up") + "</div>" +
       "<p class=\"sub\">" + sTr("These are resting right now, not missing. One small step can wake each one up.") + "</p>" +
       "<div class=\"chips\">" + q.map(function(s){
-        return "<div class=\"chip\"><b>" + inf(s).n + "</b> " + inf(s).t + "</div>";
+        var Dq = inf(s);
+        return "<div class=\"chip\"><b>" + Dq.n + " (" + sTr(s) + ")</b><br>" + Dq.a[0] + "<br>" + sTr("Balance it") + ": " + Dq.b + "<br>" + sTp("Try this: {x}", { x: Dq.t }) + "</div>";
       }).join("") + "</div>";
   } else {
     qb.innerHTML = "";
@@ -1073,6 +1105,36 @@ function downloadPDF(){
   });
 
   /* ---------- Quiet strengths ---------- */
+  var supporting = getSupporting();
+  if (supporting.length){
+    need(40);
+    txt(sTr("Supporting strengths").toUpperCase(), 10, "bold", BLUE, 0, 1);
+    txt(sTr("These also showed up in your mix. They back up your top strengths every day."), 10.5, "normal", GREY, 0, 4);
+    supporting.forEach(function(t){
+      var D = inf(t.name);
+      var rgb = hex(colors[t.name]);
+      var pct = Math.round(t.n / questions.length * 100);
+      need(30);
+      doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+      doc.roundedRect(left, y - 5, textW, 9, 2, 2, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(255, 255, 255);
+      doc.text(D.n, left + 4, y + 1);
+      doc.setFontSize(10.5);
+      doc.text(sTr(t.name) + "  " + pct + "%", left + textW - 4, y + 1, {align:"right"});
+      y += 10;
+      txt(D.v, 11, "italic", BODY, 0, 1.5);
+      txt(D.d, 10.5, "normal", BODY, 0, 1);
+      label(sTr("Your advantages"));
+      D.a.forEach(function(a){ txt("- " + a, 10.5, "normal", BODY, 2, 1); });
+      label(sTr("Watch out: your demeanour"), [180, 83, 9]);
+      txt(D.o, 10.5, "normal", BODY, 0, 1);
+      label(sTr("Balance it"), [4, 120, 87]);
+      txt(D.b, 10.5, "normal", BODY, 0, 7);
+    });
+  }
+
   var quiet = getQuiet();
   if (quiet.length){
     need(30);
@@ -1080,8 +1142,11 @@ function downloadPDF(){
     txt(sTr("These are resting right now, not missing. One small step can wake each one up."), 10.5, "normal", GREY, 0, 3);
     quiet.forEach(function(s){
       var D = inf(s);
+      need(24);
       txt(D.n + " (" + sTr(s) + ")", 11, "bold", INK, 0, 0.5);
-      txt(D.t, 10.5, "normal", BODY, 2, 3);
+      txt(D.a[0], 10.5, "normal", BODY, 2, 1);
+      txt(sTr("Balance it") + ": " + D.b, 10.5, "normal", BODY, 2, 1);
+      txt(sTp("Try this: {x}", { x: D.t }), 10.5, "italic", GREY, 2, 3);
     });
   }
 

@@ -8,10 +8,10 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f3f5f8; --card: #ffffff; --text: #1a2030; --muted: #4a5568; --hint: #6b7a94;
+      --bg: #f3f5f8; --card: #ffffff; --text: #1a2030; --muted: #4a5568; --hint: #566480;
       --border: #d0d8e8; --brand: #4a6080; --brand-light: #eaeff8; --brand-mid: #b0c0d8;
-      --accent-light: #e4edf8; --teal: #3a7a68; --teal-light: #e4f0ec; --teal-mid: #a0c8bc;
-      --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --support: #c85a1a;
+      --accent-light: #e4edf8; --teal: #2f6b5a; --teal-light: #e4f0ec; --teal-mid: #a0c8bc;
+      --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --support: #b8501a;
       --danger-bg: #fff0f0; --danger-border: #f5a0a0; --danger-text: #8b1a1a;
       --warn-bg: #fff8ec; --warn-border: #f0c878; --warn-text: #7a4a0a;
     }
@@ -20,7 +20,7 @@
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
     body { font-family: Georgia, "Times New Roman", serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; padding-bottom: 90px; }
     :focus-visible { outline: 3px solid #2f6fd0; outline-offset: 2px; }
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
+    .container { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
 
     .header, .card, .footer { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 16px; }
     .header { padding: 24px 20px 20px; }
@@ -113,6 +113,46 @@
     .cover h2 { font-size: 1.4rem; font-weight: normal; margin-bottom: 14px; }
     .cover p { font-size: 15px; color: #666; margin-bottom: 8px; }
     .cover .tiny { position: absolute; bottom: 20px; left: 24px; font-size: 12px; color: #aaa; }
+
+    /* ---------- added: safety check, steps, scale, danger signs, next tools ---------- */
+    .gate-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+    .gate-btn { flex: 1 1 200px; background: var(--brand-light); border: 1.5px solid var(--brand-mid); border-radius: var(--radius-md); padding: 12px 16px; min-height: 48px; font-family: Georgia, serif; font-size: 14px; color: var(--text); cursor: pointer; text-align: left; line-height: 1.4; }
+    .gate-btn:hover { border-color: var(--brand); }
+    .safer-panel { display: none; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; color: var(--warn-text); font-size: 14px; line-height: 1.65; }
+    .safer-panel .card-title { color: var(--warn-text); margin-bottom: 8px; }
+    .safer-panel .btn-row { margin-top: 12px; }
+    .safer .hide-safer { display: none !important; }
+
+    .rstep { display: none; }
+    .rstep.on { display: block; }
+    .scale { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .scale label { position: relative; }
+    .scale input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    .scale span { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; min-height: 42px; border: 1.5px solid var(--brand-mid); border-radius: var(--radius-sm); background: #fff; font-size: 15px; color: var(--muted); }
+    .scale input:checked + span { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .scale input:focus-visible + span { outline: 3px solid #2f6fd0; outline-offset: 2px; }
+    .scale-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 10px; max-width: 520px; }
+    .soft-note { display: none; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-md); padding: 12px 14px; font-size: 14px; color: var(--warn-text); line-height: 1.6; margin: 10px 0; }
+    .soft-note .btn { margin: 10px 8px 0 0; }
+    .wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+    .wiz-mid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .wdots { display: flex; gap: 8px; }
+    .wdot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand-mid); opacity: .55; }
+    .wdot.past { background: var(--teal); opacity: .85; }
+    .wdot.on { background: var(--brand); opacity: 1; transform: scale(1.25); }
+    .wiz-count { font-size: 12px; color: var(--hint); letter-spacing: .04em; }
+    .linkbtn { background: none; border: 0; padding: 6px 0; font-family: Georgia, serif; font-size: 13px; color: var(--brand); text-decoration: underline; cursor: pointer; min-height: 36px; }
+    .danger-note { display: none; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 12px; color: var(--warn-text); font-size: 14px; line-height: 1.6; }
+    .danger-note p { margin-bottom: 8px; }
+    .danger-note .danger-fact { font-size: 13px; font-style: italic; }
+    .helpline-list a { color: var(--brand); text-decoration: underline; }
+    .next-box { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--brand-mid); }
+    .next-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .next-link { display: inline-flex; align-items: center; background: #fff; border: 1.5px solid var(--brand-mid); border-radius: 99px; padding: 8px 16px; font-size: 14px; color: var(--brand); text-decoration: none; line-height: 1.3; min-height: 40px; }
+    .next-link:hover { border-color: var(--brand); text-decoration: underline; }
+    .next-quiet { font-size: 13px; color: var(--muted); margin-top: 10px; }
+    .next-quiet a { color: var(--brand); text-decoration: underline; }
+    @media (max-width: 480px) { .wiz-nav .btn { padding: 10px 14px; } .gate-btn { flex-basis: 100%; } }
   </style>
 </head>
 <body>
@@ -148,17 +188,37 @@
       <button type="button" class="btn btn-reset" id="coverBtn">Cover screen</button>
       <button type="button" class="btn btn-reset" id="hideResetBtn">Clear everything</button>
     </div>
-    <label class="save-row">
+    <label class="save-row hide-safer">
       <input type="checkbox" id="saveToggle" />
       Save on this device
     </label>
-    <p class="privacy-note">Save uses this browser only. Not recommended on shared or monitored devices.</p>
+    <p class="privacy-note hide-safer">Save uses this browser only. Not recommended on shared or monitored devices.</p>
     <p class="shortcut-note">Shortcut: press the Escape key 3 times to exit fast.</p>
   </header>
 
-  <section class="card" aria-labelledby="abuse-heading">
+  <section class="safer-panel" id="saferPanel" aria-labelledby="safer-heading">
+    <p class="card-title" id="safer-heading">Safer mode is on</p>
+    <p>Because your device may be watched, the writing sections are hidden and nothing here can be saved. If you can, use a device the other person cannot reach, such as a library computer or a trusted friend's phone. The helplines and the device safety tips are still below.</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-teal" id="saferHelp">Open the helplines</button>
+      <button type="button" class="btn btn-reset" id="saferShowAll">Show the full tool anyway</button>
+    </div>
+  </section>
+
+  <section class="card" id="gateCard" aria-labelledby="gate-heading">
+    <p class="card-title" id="gate-heading">Is it safe to use this device?</p>
+    <p class="card-intro">Take a moment. Choose what fits. Nothing you choose here is saved.</p>
+    <div class="gate-options">
+      <button type="button" class="gate-btn" id="gateSafe">I am safe to continue</button>
+      <button type="button" class="gate-btn" id="gateScreen">Someone might see my screen</button>
+      <button type="button" class="gate-btn" id="gateWatched">My device may be watched</button>
+    </div>
+  </section>
+
+  <section class="card hide-safer" aria-labelledby="abuse-heading">
     <p class="card-title" id="abuse-heading">I am not sure if it is abuse</p>
     <p class="card-intro">If any of these feel familiar, your feelings are valid. You are not overreacting for wanting safety and respect.</p>
+    <p class="card-intro">Abuse can happen to anyone, of any gender or age, in any kind of relationship.</p>
     <div class="check-grid" role="group" aria-label="Abuse recognition checklist">
       <label class="check-item"><input type="checkbox" class="abuse-check" value="controlling behaviour" /> Controlling behaviour: who you see, where you go</label>
       <label class="check-item"><input type="checkbox" class="abuse-check" value="isolation" /> Isolation from friends, family, or support</label>
@@ -173,37 +233,74 @@
     </div>
   </section>
 
-  <section class="card" aria-labelledby="reflect-heading">
+  <section class="card hide-safer" aria-labelledby="reflect-heading">
     <p class="card-title" id="reflect-heading">Guided reflection</p>
 
-    <div class="step-label">Step 1: How are you feeling right now?</div>
-    <div class="chip-wrap" id="feelingChips" role="group" aria-label="Feeling options"></div>
-    <label class="field-label" for="feelingOther">Other feeling (optional)</label>
-    <input type="text" id="feelingOther" maxlength="100" placeholder="Describe in your own words" />
+    <div id="wiz">
+      <div class="rstep on" data-step="1">
+        <div class="step-label">How safe do I feel right now?</div>
+        <p class="field-label">0 means not safe at all. 10 means very safe. Your rating is never saved.</p>
+        <div class="scale" role="radiogroup" aria-label="How safe I feel right now, from 0 to 10"><label><input type="radio" name="safeBefore" value="0" /><span>0</span></label><label><input type="radio" name="safeBefore" value="1" /><span>1</span></label><label><input type="radio" name="safeBefore" value="2" /><span>2</span></label><label><input type="radio" name="safeBefore" value="3" /><span>3</span></label><label><input type="radio" name="safeBefore" value="4" /><span>4</span></label><label><input type="radio" name="safeBefore" value="5" /><span>5</span></label><label><input type="radio" name="safeBefore" value="6" /><span>6</span></label><label><input type="radio" name="safeBefore" value="7" /><span>7</span></label><label><input type="radio" name="safeBefore" value="8" /><span>8</span></label><label><input type="radio" name="safeBefore" value="9" /><span>9</span></label><label><input type="radio" name="safeBefore" value="10" /><span>10</span></label></div>
+        <div class="scale-ends"><span>0 = not safe</span><span>10 = very safe</span></div>
+        <div class="soft-note" id="beforeNote" role="status"></div>
+      </div>
 
-    <div class="step-label">Step 2: What has been happening?</div>
-    <label class="field-label" for="recentEvent">What happened most recently that brought you here?</label>
-    <textarea id="recentEvent" maxlength="800" placeholder="Write as little or as much as feels safe"></textarea>
-    <label class="field-label" for="wishUnderstood" style="margin-top:10px;">What do you wish someone understood?</label>
-    <textarea id="wishUnderstood" maxlength="600" placeholder="You can keep this short"></textarea>
+      <div class="rstep" data-step="2">
+        <div class="step-label">How are you feeling right now?</div>
+        <div class="chip-wrap" id="feelingChips" role="group" aria-label="Feeling options"></div>
+        <label class="field-label" for="feelingOther">Other feeling (optional)</label>
+        <input type="text" id="feelingOther" maxlength="100" placeholder="Describe in your own words" />
+      </div>
 
-    <div class="step-label">Step 3: What feels hardest about reaching out?</div>
-    <div class="chip-wrap" id="barrierChips" role="group" aria-label="Barrier options"></div>
+      <div class="rstep" data-step="3">
+        <div class="step-label">What has been happening?</div>
+        <label class="field-label" for="recentEvent">What happened most recently that brought you here?</label>
+        <textarea id="recentEvent" maxlength="800" placeholder="Write as little or as much as feels safe"></textarea>
+        <label class="field-label" for="wishUnderstood" style="margin-top:10px;">What do you wish someone understood?</label>
+        <textarea id="wishUnderstood" maxlength="600" placeholder="You can keep this short"></textarea>
+      </div>
 
-    <div class="step-label">Step 4: One small safe step today</div>
-    <div class="chip-wrap" id="smallStepChips" role="group" aria-label="Small step options"></div>
+      <div class="rstep" data-step="4">
+        <div class="step-label">What feels hardest about reaching out?</div>
+        <div class="chip-wrap" id="barrierChips" role="group" aria-label="Barrier options"></div>
+      </div>
+
+      <div class="rstep" data-step="5">
+        <div class="step-label">One small safe step today</div>
+        <div class="chip-wrap" id="smallStepChips" role="group" aria-label="Small step options"></div>
+      </div>
+
+      <div class="rstep" data-step="6">
+        <div class="step-label">How safe do I feel now?</div>
+        <p class="field-label">After this reflection, rate it again. 0 means not safe at all. 10 means very safe. Your rating is never saved.</p>
+        <div class="scale" role="radiogroup" aria-label="How safe I feel now, from 0 to 10"><label><input type="radio" name="safeAfter" value="0" /><span>0</span></label><label><input type="radio" name="safeAfter" value="1" /><span>1</span></label><label><input type="radio" name="safeAfter" value="2" /><span>2</span></label><label><input type="radio" name="safeAfter" value="3" /><span>3</span></label><label><input type="radio" name="safeAfter" value="4" /><span>4</span></label><label><input type="radio" name="safeAfter" value="5" /><span>5</span></label><label><input type="radio" name="safeAfter" value="6" /><span>6</span></label><label><input type="radio" name="safeAfter" value="7" /><span>7</span></label><label><input type="radio" name="safeAfter" value="8" /><span>8</span></label><label><input type="radio" name="safeAfter" value="9" /><span>9</span></label><label><input type="radio" name="safeAfter" value="10" /><span>10</span></label></div>
+        <div class="scale-ends"><span>0 = not safe</span><span>10 = very safe</span></div>
+        <div class="soft-note" id="shiftBox" role="status"></div>
+      </div>
+    </div>
+
+    <div class="wiz-nav">
+      <button type="button" class="btn btn-reset" id="wizBack"><span>Back</span></button>
+      <div class="wiz-mid"><div class="wdots" id="wizDots" aria-hidden="true"></div><span class="wiz-count" id="wizCount" aria-live="polite"></span></div>
+      <button type="button" class="btn btn-primary" id="wizNext">Next</button>
+    </div>
+    <div id="toSummaryWrap" style="text-align:center;margin-top:6px;"><button type="button" class="linkbtn" id="toSummary">Skip to my summary</button></div>
 
     <div class="result-box" id="resultBox" aria-live="polite"></div>
 
+    <div id="actionsBlock">
     <div class="section-label" style="margin-top:18px;">Actions</div>
     <div class="btn-row">
       <button type="button" class="btn btn-primary" id="buildSummaryBtn">Create my gentle summary</button>
       <button type="button" class="btn btn-teal" id="pdfBtn">Download PDF</button>
     </div>
     <p class="privacy-note" style="margin-top:10px;">The PDF downloads with a neutral file name. If your device is shared, delete it from your downloads after you use it.</p>
+    <label class="save-row" style="margin-top:10px;"><input type="checkbox" id="discreetPdf" /> Make this PDF discreet</label>
+    <p class="privacy-note">A discreet PDF has a neutral title, no logo, and lists phone numbers without words that show why you made it. Your own written words still appear in it.</p>
+    </div>
   </section>
 
-  <section class="card" aria-labelledby="draft-heading">
+  <section class="card hide-safer" aria-labelledby="draft-heading">
     <p class="card-title" id="draft-heading">Create a reach-out message</p>
     <p class="card-intro">Choose a template, edit it freely, and copy it when you are ready. No pressure.</p>
     <div class="draft-card">
@@ -224,6 +321,24 @@
   <section class="card" aria-labelledby="safety-heading">
     <p class="card-title" id="safety-heading">Quiet safety planning</p>
     <p class="card-intro">Only do what feels safe in your situation. These are options, not requirements.</p>
+
+    <div class="toggle-item" id="dangerItem">
+      <button type="button" class="toggle-head" aria-expanded="false"><span>Signs things may be getting more dangerous (optional)</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
+      <div class="toggle-body">
+        <p>Professionals who assess danger often look for signs like these. Tick any that are true. This is not a prediction, and you know your situation best.</p>
+        <div class="check-grid" role="group" aria-label="Signs of increased danger" style="margin-top:10px;">
+        <label class="check-item"><input type="checkbox" class="danger-check" value="choking or strangling" /> They have choked, strangled or blocked my breathing</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="threats to kill" /> They have threatened to kill me, themselves or someone else</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="weapon" /> There is a weapon in the home, or they have threatened me with one</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="getting worse" /> The violence or threats are getting worse or happening more often</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="reacts to leaving" /> They became more angry or controlling when I tried to leave or talked about leaving</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="forced sex" /> They force me to have sex or sexual acts</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="following or tracking" /> They follow, watch or track me</label>
+        <label class="check-item"><input type="checkbox" class="danger-check" value="extreme jealousy and control" /> They are extremely jealous, or they control most of my daily life</label>
+        </div>
+        <div class="danger-note" id="dangerNote" role="status"></div>
+      </div>
+    </div>
 
     <div class="toggle-item">
       <button type="button" class="toggle-head" aria-expanded="false"><span>Identify a safe contact</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
@@ -265,11 +380,14 @@
     <div class="toggle-item">
       <button type="button" class="toggle-head" aria-expanded="false"><span>Some helplines (please check they are current)</span><span class="toggle-arrow" aria-hidden="true">&#9660;</span></button>
       <div class="toggle-body">
-        <ul>
-          <li>South Africa: GBV Command Centre, 0800 428 428 (free, 24 hours)</li>
-          <li>Zimbabwe: national GBV hotline, 575</li>
-          <li>United Kingdom: National Domestic Abuse Helpline, 0808 2000 247</li>
-          <li>United States: National Domestic Violence Hotline, 1-800-799-7233</li>
+        <ul class="helpline-list">
+          <li><a href="tel:0800428428">South Africa: GBV Command Centre, 0800 428 428 (free, 24 hours)</a></li>
+          <li>South Africa, other ways to reach the same centre: SMS HELP to 31531, or send a Please Call Me to 1207867#.</li>
+          <li><a href="tel:575">Zimbabwe: national GBV call centre, 575 (toll free)</a></li>
+          <li><a href="tel:08082000247">United Kingdom: National Domestic Abuse Helpline, 0808 2000 247 (free, 24 hours)</a></li>
+          <li>United Kingdom: live chat and a British Sign Language video service are at nationaldahelpline.org.uk. In an emergency call 999.</li>
+          <li><a href="tel:18007997233">United States: National Domestic Violence Hotline, 1-800-799-7233</a></li>
+          <li>United States: you can also text START to 88788, or use the live chat at thehotline.org.</li>
         </ul>
         <p style="margin-top:8px;">Numbers can change. Use the button below to confirm the right one for your country.</p>
       </div>
@@ -280,13 +398,13 @@
     </div>
   </section>
 
-  <section class="card" aria-labelledby="course-heading">
-    <p class="card-title" id="course-heading">Build emotional strength and boundaries: free course</p>
+  <section class="card hide-safer" aria-labelledby="course-heading">
+    <p class="card-title" id="course-heading">Build emotional resilience and boundaries: free course</p>
     <p class="card-intro">This free course supports emotional intelligence skills including boundaries, self-trust, safer decision-making, and communication. A certificate is available on completion.</p>
     <a class="btn btn-primary" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/index.html" target="_blank" rel="noopener noreferrer">Start the free course</a>
   </section>
 
-  <section class="card" aria-labelledby="share-heading">
+  <section class="card hide-safer" aria-labelledby="share-heading">
     <p class="card-title" id="share-heading">Share this tool</p>
     <p class="card-intro">If this helped you, you can share it with someone who may need a private starting point.</p>
     <div class="btn-row">
@@ -325,7 +443,7 @@
   <button type="button" class="btn btn-exit" id="quickExitBtn2" aria-label="Quick Exit">Quick Exit</button>
   <button type="button" class="btn btn-reset" id="coverBtn2">Cover</button>
   <a class="btn btn-teal" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Helpline</a>
-  <button type="button" class="btn btn-primary" id="copyDraftBtn2">Copy draft</button>
+  <button type="button" class="btn btn-primary hide-safer" id="copyDraftBtn2">Copy draft</button>
 </div>
 
 <div class="cover" id="cover" role="button" tabindex="0" aria-label="Screen covered. Tap to return">
@@ -399,7 +517,6 @@
 
     /* Guided reflection */
     "Guided reflection": "Reflexión guiada",
-    "Step 1: How are you feeling right now?": "Paso 1: ¿Cómo te sientes ahora?",
     "Feeling options": "Opciones de sentimientos",
     "Scared": "Miedo",
     "Numb": "Entumecimiento",
@@ -411,12 +528,10 @@
     "Exhausted": "Agotamiento",
     "Other feeling (optional)": "Otro sentimiento (opcional)",
     "Describe in your own words": "Descríbelo con tus palabras",
-    "Step 2: What has been happening?": "Paso 2: ¿Qué ha estado pasando?",
     "What happened most recently that brought you here?": "¿Qué pasó más recientemente que te trajo aquí?",
     "Write as little or as much as feels safe": "Escribe poco o mucho, lo que te dé seguridad",
     "What do you wish someone understood?": "¿Qué te gustaría que alguien entendiera?",
     "You can keep this short": "Puedes dejarlo breve",
-    "Step 3: What feels hardest about reaching out?": "Paso 3: ¿Qué es lo más difícil de pedir ayuda?",
     "Barrier options": "Opciones de dificultades",
     "Fear of not being believed": "Miedo a que no me crean",
     "Fear of consequences": "Miedo a las consecuencias",
@@ -426,7 +541,6 @@
     "Nowhere to go": "No tengo adónde ir",
     "Still love them": "Todavía siento amor",
     "Unsure it is bad enough": "No sé si es tan grave",
-    "Step 4: One small safe step today": "Paso 4: Un pequeño paso seguro hoy",
     "Small step options": "Opciones de pasos pequeños",
     "Save a helpline": "Guardar una línea de ayuda",
     "Talk to one trusted person": "Hablar con una persona de confianza",
@@ -490,15 +604,10 @@
     "Find support in your country": "Encuentra apoyo en tu país",
     "Free, confidential helplines are available in most countries. You do not need to be ready to leave. You can just call to talk.": "Hay líneas de ayuda gratuitas y confidenciales en la mayoría de los países. No necesitas haber decidido irte. Puedes llamar solo para hablar.",
     "Some helplines (please check they are current)": "Algunas líneas de ayuda (confirma que estén vigentes)",
-    "South Africa: GBV Command Centre, 0800 428 428 (free, 24 hours)": "Sudáfrica: GBV Command Centre (Centro de Mando contra la Violencia de Género), 0800 428 428 (gratis, 24 horas)",
-    "Zimbabwe: national GBV hotline, 575": "Zimbabue: línea nacional contra la violencia de género (GBV), 575",
-    "United Kingdom: National Domestic Abuse Helpline, 0808 2000 247": "Reino Unido: National Domestic Abuse Helpline (Línea Nacional de Ayuda contra el Abuso Doméstico), 0808 2000 247",
-    "United States: National Domestic Violence Hotline, 1-800-799-7233": "Estados Unidos: National Domestic Violence Hotline (Línea Nacional de Violencia Doméstica), 1-800-799-7233",
     "Numbers can change. Use the button below to confirm the right one for your country.": "Los números pueden cambiar. Usa el botón de abajo para confirmar el correcto para tu país.",
     "Find a helpline in your country": "Busca una línea de ayuda en tu país",
 
     /* Course */
-    "Build emotional strength and boundaries: free course": "Construye fortaleza emocional y límites: curso gratuito",
     "This free course supports emotional intelligence skills including boundaries, self-trust, safer decision-making, and communication. A certificate is available on completion.": "Este curso gratuito apoya habilidades de inteligencia emocional, como los límites, la confianza en ti, decisiones más seguras y la comunicación. Al terminar puedes obtener un certificado.",
     "Start the free course": "Empezar el curso gratis",
 
@@ -571,7 +680,155 @@
     "Find a helpline in your country: findahelpline.com": "Busca una línea de ayuda en tu país: findahelpline.com",
     "Main site: emotionalintelligencedeveloper.com": "Sitio principal: emotionalintelligencedeveloper.com",
     "Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/": "Herramientas gratuitas: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
-    "If you are in immediate danger, please contact emergency services now.": "Si estás en peligro inmediato, llama ahora a los servicios de emergencia."
+    "If you are in immediate danger, please contact emergency services now.": "Si estás en peligro inmediato, llama ahora a los servicios de emergencia.",
+
+    /* ===== Added in the safety upgrade ===== */
+    "Safer mode is on": "El modo más seguro está activado",
+    "Because your device may be watched, the writing sections are hidden and nothing here can be saved. If you can, use a device the other person cannot reach, such as a library computer or a trusted friend's phone. The helplines and the device safety tips are still below.": "Como tu dispositivo puede estar vigilado, las secciones para escribir están ocultas y aquí no se puede guardar nada. Si puedes, usa un dispositivo al que la otra persona no tenga acceso, como uno de una biblioteca o el teléfono de una amistad de confianza. Las líneas de ayuda y los consejos de seguridad del dispositivo siguen más abajo.",
+    "Open the helplines": "Abrir las líneas de ayuda",
+    "Show the full tool anyway": "Mostrar la herramienta completa de todos modos",
+    "Is it safe to use this device?": "¿Es seguro usar este dispositivo?",
+    "Take a moment. Choose what fits. Nothing you choose here is saved.": "Tómate un momento. Elige lo que encaje. Nada de lo que elijas aquí se guarda.",
+    "I am safe to continue": "Puedo continuar con seguridad",
+    "Someone might see my screen": "Alguien podría ver mi pantalla",
+    "My device may be watched": "Mi dispositivo puede estar vigilado",
+    "Quiet mode is on. The screen covers itself after 1 minute without activity. Press Escape 3 times to leave fast.": "El modo discreto está activado. La pantalla se cubre sola tras 1 minuto sin actividad. Pulsa Esc 3 veces para salir rápido.",
+    "Abuse can happen to anyone, of any gender or age, in any kind of relationship.": "El abuso le puede pasar a cualquier persona, de cualquier género o edad, en cualquier tipo de relación.",
+
+    "How safe do I feel right now?": "¿Cuánta seguridad siento ahora mismo?",
+    "0 means not safe at all. 10 means very safe. Your rating is never saved.": "0 significa nada de seguridad. 10 significa mucha seguridad. Tu valoración nunca se guarda.",
+    "How safe I feel right now, from 0 to 10": "Cuánta seguridad siento ahora mismo, de 0 a 10",
+    "0 = not safe": "0 = sin seguridad",
+    "10 = very safe": "10 = mucha seguridad",
+    "How are you feeling right now?": "¿Cómo te sientes ahora?",
+    "What has been happening?": "¿Qué ha estado pasando?",
+    "What feels hardest about reaching out?": "¿Qué es lo más difícil de pedir ayuda?",
+    "One small safe step today": "Un pequeño paso seguro hoy",
+    "How safe do I feel now?": "¿Cuánta seguridad siento ahora?",
+    "After this reflection, rate it again. 0 means not safe at all. 10 means very safe. Your rating is never saved.": "Después de esta reflexión, valóralo de nuevo. 0 significa nada de seguridad. 10 significa mucha seguridad. Tu valoración nunca se guarda.",
+    "How safe I feel now, from 0 to 10": "Cuánta seguridad siento ahora, de 0 a 10",
+    "Back": "Atrás",
+    "Next": "Siguiente",
+    "Skip": "Omitir",
+    "Skip to my summary": "Ir directo a mi resumen",
+    "Step {0} of {1}": "Paso {0} de {1}",
+    "Show helplines": "Mostrar líneas de ayuda",
+    "If you are in danger right now, call your local emergency number. You can open the helplines below at any time.": "Si estás en peligro ahora mismo, llama al número de emergencias de tu zona. Puedes abrir las líneas de ayuda de abajo cuando quieras.",
+    "You rated how safe you feel now at {0}. A rating is only a snapshot, and you can come back to this tool at any time.": "Valoraste tu seguridad actual en {0}. Una valoración es solo una instantánea, y puedes volver a esta herramienta cuando quieras.",
+    "Your rating went from {0} to {1}. Small shifts count. Your situation is what it is, so please keep your plan close.": "Tu valoración pasó de {0} a {1}. Los cambios pequeños cuentan. Tu situación sigue siendo la que es, así que mantén tu plan a mano.",
+    "Your rating stayed at {0}. That is okay. A reflection cannot change your situation, but a helpline can talk it through with you at any time.": "Tu valoración se mantuvo en {0}. Está bien. Una reflexión no puede cambiar tu situación, pero una línea de ayuda puede hablarlo contigo cuando quieras.",
+    "Your rating went from {0} to {1}. If you feel less safe, please reach out for support now, or call your local emergency number if you are in danger.": "Tu valoración pasó de {0} a {1}. Si sientes menos seguridad, busca apoyo ahora, o llama al número de emergencias de tu zona si estás en peligro.",
+    "Make this PDF discreet": "Hacer este PDF discreto",
+    "A discreet PDF has a neutral title, no logo, and lists phone numbers without words that show why you made it. Your own written words still appear in it.": "Un PDF discreto tiene un título neutro, no lleva logotipo y muestra los teléfonos sin palabras que revelen por qué lo hiciste. Lo que tú escribiste sí aparece en él.",
+
+    "Signs things may be getting more dangerous (optional)": "Señales de que las cosas pueden volverse más peligrosas (opcional)",
+    "Professionals who assess danger often look for signs like these. Tick any that are true. This is not a prediction, and you know your situation best.": "Quienes evalúan el peligro suelen buscar señales como estas. Marca las que sean ciertas. No es una predicción, y tú conoces mejor tu situación.",
+    "Signs of increased danger": "Señales de mayor peligro",
+    "They have choked, strangled or blocked my breathing": "Me han ahogado, estrangulado o impedido respirar",
+    "They have threatened to kill me, themselves or someone else": "Han amenazado con matarme, con quitarse la vida o con matar a otra persona",
+    "There is a weapon in the home, or they have threatened me with one": "Hay un arma en casa, o me han amenazado con una",
+    "The violence or threats are getting worse or happening more often": "La violencia o las amenazas empeoran o son más frecuentes",
+    "They became more angry or controlling when I tried to leave or talked about leaving": "Se pusieron más furiosos o controladores cuando intenté irme o hablé de irme",
+    "They force me to have sex or sexual acts": "Me obligan a tener sexo o actos sexuales",
+    "They follow, watch or track me": "Me siguen, me vigilan o me rastrean",
+    "They are extremely jealous, or they control most of my daily life": "Son extremadamente celosos, o controlan casi toda mi vida diaria",
+    "choking or strangling": "ahogamiento o estrangulamiento",
+    "threats to kill": "amenazas de muerte",
+    "weapon": "arma",
+    "getting worse": "empeora",
+    "reacts to leaving": "reacciona cuando quiero irme",
+    "forced sex": "sexo forzado",
+    "following or tracking": "seguimiento o rastreo",
+    "extreme jealousy and control": "celos extremos y control",
+    "If any of these are true, please think about reaching out for support soon. A helpline or advocate can help you plan. You do not have to be ready to leave.": "Si algo de esto es cierto, piensa en buscar apoyo pronto. Una línea de ayuda o una persona de apoyo puede ayudarte a planear. No tienes que haber decidido irte.",
+    "Being strangled can cause serious harm even when there are no marks. Please see a doctor or go to an emergency room if it happens.": "Que te estrangulen puede causar daños graves aunque no queden marcas. Si ocurre, acude a un médico o a urgencias.",
+    "In one large study of abused women, about 4 in 10 of those who were killed or nearly killed had been strangled before, compared with 1 in 10 of the other abused women.": "En un estudio grande con mujeres maltratadas, cerca de 4 de cada 10 de las que fueron asesinadas o estuvieron a punto de serlo habían sido estranguladas antes, frente a 1 de cada 10 de las demás mujeres maltratadas.",
+
+    "South Africa: GBV Command Centre, 0800 428 428 (free, 24 hours)": "Sudáfrica: GBV Command Centre (Centro de Mando contra la Violencia de Género), 0800 428 428 (gratis, 24 horas)",
+    "South Africa, other ways to reach the same centre: SMS HELP to 31531, or send a Please Call Me to 1207867#.": "Sudáfrica, otras formas de contactar el mismo centro: envía un SMS con HELP al 31531, o manda un Please Call Me (llámame) al 1207867#.",
+    "Zimbabwe: national GBV call centre, 575 (toll free)": "Zimbabue: centro nacional de atención contra la violencia de género (GBV), 575 (llamada gratuita)",
+    "United Kingdom: National Domestic Abuse Helpline, 0808 2000 247 (free, 24 hours)": "Reino Unido: National Domestic Abuse Helpline (Línea Nacional de Ayuda contra el Abuso Doméstico), 0808 2000 247 (gratis, 24 horas)",
+    "United Kingdom: live chat and a British Sign Language video service are at nationaldahelpline.org.uk. In an emergency call 999.": "Reino Unido: el chat en vivo y un servicio de videollamada en lengua de signos británica están en nationaldahelpline.org.uk. En una emergencia, llama al 999.",
+    "United States: National Domestic Violence Hotline, 1-800-799-7233": "Estados Unidos: National Domestic Violence Hotline (Línea Nacional de Violencia Doméstica), 1-800-799-7233",
+    "United States: you can also text START to 88788, or use the live chat at thehotline.org.": "Estados Unidos: también puedes enviar un texto con START al 88788, o usar el chat en vivo en thehotline.org.",
+    "Build emotional resilience and boundaries: free course": "Construye resiliencia emocional y límites: curso gratuito",
+
+    "Where to go next": "A dónde ir después",
+    "Free tools that match how you feel. Pick one, or none. There is no rush.": "Herramientas gratuitas que encajan con cómo te sientes. Elige una, o ninguna. No hay prisa.",
+    "If you are having thoughts of ending your life:": "Si estás teniendo pensamientos de quitarte la vida:",
+    "Suicide Prevention and Emotional Support Tool": "Herramienta de prevención del suicidio y apoyo emocional",
+    "Distress Tolerance Coping Tool": "Herramienta de afrontamiento y tolerancia al malestar",
+    "Emotional Trigger Mapping Tool": "Mapa de desencadenantes emocionales",
+    "Positive Strength Map Tool": "Mapa de fortalezas positivas",
+    "Visual Grounding and Emotional Reset Tool": "Anclaje visual y reinicio emocional",
+    "Wellbeing Journey: Quick Check and Reset": "Camino de bienestar: revisión y reinicio",
+    "How safe I feel": "Cuánta seguridad siento",
+    "{0} / 10 at the start, {1} / 10 now": "{0} / 10 al empezar, {1} / 10 ahora",
+    "{0} / 10 at the start": "{0} / 10 al empezar",
+    "{0} / 10 now": "{0} / 10 ahora",
+
+    /* PDF */
+    "My notes": "Mis notas",
+    "Personal notes": "Notas personales",
+    "Support contacts": "Contactos de apoyo",
+    "Talk to someone right now": "Habla con alguien ahora mismo",
+    "Free and private. You can just talk. In an emergency, call your local emergency number.": "Gratis y privado. Puedes simplemente hablar. En una emergencia, llama al número de emergencias de tu zona.",
+    "If you are in immediate danger, call your local emergency number now. You do not need to be ready to leave to call a helpline. You can just talk.": "Si estás en peligro inmediato, llama ahora al número de emergencias de tu zona. No necesitas haber decidido irte para llamar a una línea de ayuda. Puedes simplemente hablar.",
+    "South Africa: GBV Command Centre 0800 428 428 (24 hours). SMS HELP to 31531.": "Sudáfrica: GBV Command Centre 0800 428 428 (24 horas). SMS con HELP al 31531.",
+    "Zimbabwe: national GBV call centre 575 (toll free).": "Zimbabue: centro nacional contra la violencia de género (GBV) 575 (llamada gratuita).",
+    "United Kingdom: National Domestic Abuse Helpline 0808 2000 247 (24 hours).": "Reino Unido: National Domestic Abuse Helpline 0808 2000 247 (24 horas).",
+    "United States: National Domestic Violence Hotline 1-800-799-7233, or text START to 88788.": "Estados Unidos: National Domestic Violence Hotline 1-800-799-7233, o texto START al 88788.",
+    "Other countries: findahelpline.com": "Otros países: findahelpline.com",
+    "South Africa: 0800 428 428": "Sudáfrica: 0800 428 428",
+    "Zimbabwe: 575": "Zimbabue: 575",
+    "United Kingdom: 0808 2000 247": "Reino Unido: 0808 2000 247",
+    "United States: 1-800-799-7233 (text START to 88788)": "Estados Unidos: 1-800-799-7233 (texto START al 88788)",
+    "Numbers can change. Please check they are current.": "Los números pueden cambiar. Confirma que estén vigentes.",
+    "If you need urgent help, call your local emergency number.": "Si necesitas ayuda urgente, llama al número de emergencias de tu zona.",
+    "How safe I felt": "Cuánta seguridad sentí",
+    "Before": "Antes",
+    "After": "Después",
+    "Not rated": "Sin valorar",
+    "Page {0} of {1}": "Página {0} de {1}",
+    "My quiet safety plan": "Mi plan de seguridad en silencio",
+    "Only do what feels safe. Keep this page somewhere only you can reach, or do not print it.": "Haz solo lo que sea seguro. Guarda esta página donde solo tú puedas alcanzarla, o no la imprimas.",
+    "1. My safe contact": "1. Mi contacto seguro",
+    "Name:": "Nombre:",
+    "Number:": "Número:",
+    "2. Things I could keep ready (only if safe)": "2. Cosas que podría tener listas (solo si es seguro)",
+    "ID and important papers": "Documentos de identidad y papeles importantes",
+    "Keys": "Llaves",
+    "Medications": "Medicamentos",
+    "Some cash or a bank card": "Algo de efectivo o una tarjeta bancaria",
+    "Phone charger": "Cargador del teléfono",
+    "Items for my children": "Cosas para mis hijos e hijas",
+    "Spare clothes": "Ropa de repuesto",
+    "Other:": "Otros:",
+    "3. My code word": "3. Mi palabra clave",
+    "My code word:": "Mi palabra clave:",
+    "When my safe contact hears it, they will:": "Cuando mi contacto seguro la oiga, hará esto:",
+    "4. Device and browser safety": "4. Seguridad del dispositivo y del navegador",
+    "I will clear my browsing history after I use this tool.": "Borraré mi historial de navegación después de usar esta herramienta.",
+    "I will sign out of shared accounts.": "Cerraré sesión en las cuentas compartidas.",
+    "I can use a safer device, such as a library computer or a trusted friend's phone.": "Puedo usar un dispositivo más seguro, como el de una biblioteca o el teléfono de una amistad de confianza.",
+    "I know how to leave this page fast: press Escape 3 times.": "Sé cómo salir rápido de esta página: pulsar Esc 3 veces.",
+    "5. If things escalate": "5. Si la situación empeora",
+    "My safest room, one with an exit:": "Mi habitación más segura, una con salida:",
+    "Where I could go:": "Adónde podría ir:",
+    "People I could call:": "Personas a las que podría llamar:",
+    "My next 10 minutes": "Mis próximos 10 minutos",
+    "Take 3 slow breaths, breathing out for longer than in.": "Respirar lento 3 veces, exhalando más largo que al inhalar.",
+    "Drink some water.": "Beber un poco de agua.",
+    "Keep this page and my phone somewhere safe.": "Guardar esta página y mi teléfono en un lugar seguro.",
+    "Message or call my safe contact, or a helpline.": "Escribir o llamar a mi contacto seguro, o a una línea de ayuda.",
+    "Do one small thing that is only for me.": "Hacer una cosa pequeña solo para mí.",
+    "Rate how safe I feel from 0 to 10 again: ____": "Volver a valorar cuánta seguridad siento de 0 a 10: ____",
+    "It can happen to anyone": "Le puede pasar a cualquier persona",
+    "Domestic violence can happen to people of any gender, age, culture or income, in any kind of relationship, including same-sex relationships and between family members. Many people are surprised to find that what they are living with has a name. You are not alone.": "La violencia doméstica puede ocurrirle a personas de cualquier género, edad, cultura o nivel de ingresos, en cualquier tipo de relación, incluidas las relaciones entre personas del mismo sexo y entre familiares. A muchas personas les sorprende descubrir que lo que viven tiene nombre. No estás solo ni sola.",
+    "Signs things may be getting more dangerous": "Señales de que las cosas pueden volverse más peligrosas",
+    "Professionals who assess danger often look for signs such as strangulation, threats to kill, a weapon in the home, violence getting worse, extreme jealousy, forced sex, stalking, and a strong reaction when you try to leave. These signs are not a prediction. They are a reason to reach out for support and to plan. Being strangled can cause serious harm even when there are no marks, so please see a doctor if it happens. In one large study of abused women, about 4 in 10 of those who were killed or nearly killed had been strangled before, compared with 1 in 10 of the other abused women.": "Quienes evalúan el peligro suelen buscar señales como estrangulamiento, amenazas de muerte, un arma en casa, violencia que empeora, celos extremos, sexo forzado, acoso y una reacción fuerte cuando intentas irte. Estas señales no son una predicción. Son un motivo para buscar apoyo y para planear. Que te estrangulen puede causar daños graves aunque no queden marcas, así que si ocurre, acude a un médico. En un estudio grande con mujeres maltratadas, cerca de 4 de cada 10 de las que fueron asesinadas o estuvieron a punto de serlo habían sido estranguladas antes, frente a 1 de cada 10 de las demás mujeres maltratadas.",
+    "Where this comes from": "De dónde viene esto"
+
   };
 
   function norm(s) { return String(s).replace(/\s+/g, ' ').trim(); }
@@ -588,7 +845,7 @@
   var attrOrig = new WeakMap();   // element -> { attribute: original English }
   var ATTRS = ['placeholder', 'aria-label', 'alt', 'title'];
   var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, SELECT: 1, OPTION: 1 };
-  var SKIP_SEL = '#eidLangBar, #resultBox, #toast';   // these are written in the right language by the tool itself
+  var SKIP_SEL = '#eidLangBar, #resultBox, #toast, #dangerNote, #shiftBox, #beforeNote, #wizCount, #wizNext';   // these are written in the right language by the tool itself
 
   function swapTextNodes() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
@@ -661,7 +918,7 @@
 
   const STORAGE_KEY = 'dvSupportV5';
   const LOGO_URL = 'https://emotionalintelligencedeveloper.com/wp-content/uploads/2025/01/Lumii_20230622_095126214.jpg';
-  const IDLE_MS = 5 * 60 * 1000;
+  let IDLE_MS = 5 * 60 * 1000;
   const $ = id => document.getElementById(id);
   const jsPDF = () => window.jspdf && window.jspdf.jsPDF;
   const tr = k => (window.EIDLang ? window.EIDLang.t(k) : k);
@@ -716,7 +973,8 @@
       smallSteps: selectedChips('smallStepChips'),
       recentEvent: $('recentEvent').value.trim(),
       wishUnderstood: $('wishUnderstood').value.trim(),
-      reachOutDraft: $('reachOutDraft').value.trim()
+      reachOutDraft: $('reachOutDraft').value.trim(),
+      dangers: Array.from(document.querySelectorAll('.danger-check:checked')).map(c => c.value)
     };
   }
 
@@ -728,6 +986,7 @@
     $('wishUnderstood').value = d.wishUnderstood || '';
     $('reachOutDraft').value = d.reachOutDraft || '';
     document.querySelectorAll('.abuse-check').forEach(c => { c.checked = (d.checks || []).includes(c.value); });
+    document.querySelectorAll('.danger-check').forEach(c => { c.checked = (d.dangers || []).includes(c.value); });
     [['feelingChips', d.feelings], ['barrierChips', d.barriers], ['smallStepChips', d.smallSteps]].forEach(([id, list]) => {
       document.querySelectorAll('#' + id + ' .chip').forEach(c => {
         const on = (list || []).includes(c.dataset.value);
@@ -750,7 +1009,13 @@
     document.querySelectorAll('.chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
     $('resultBox').style.display = 'none';
     $('resultBox').innerHTML = '';
+    document.querySelectorAll('.danger-check').forEach(c => { c.checked = false; });
+    document.querySelectorAll('.scale input').forEach(i => { i.checked = false; });
+    $('discreetPdf').checked = false;
+    wizSkipped = false;
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+    refreshDynamic();
+    setWiz(1, false);
   }
 
   function quickExit() {
@@ -791,26 +1056,54 @@
     btn.addEventListener('click', () => { $('reachOutDraft').value = tr(btn.dataset.template); persistIfEnabled(); });
   });
 
-  function summaryRows(d, empty) {
+  function summaryRows(d, empty, withSigns) {
     const T = list => list.map(tr);
     const feelingsList = [...T(d.feelings), d.feelingOther].filter(Boolean).join(', ') || tr('Not selected');
-    return [
+    const rows = [
       [tr('How you are feeling'), feelingsList],
       [tr('What has been happening'), d.recentEvent || tr(empty)],
       [tr('What you wish was understood'), d.wishUnderstood || tr(empty)],
       [tr('Hardest part of reaching out'), T(d.barriers).join(', ') || tr('Not selected')],
-      [tr('One small step today'), T(d.smallSteps).join(', ') || tr('Not selected')],
-      [tr('Warning signs noticed'), T(d.checks).join(', ') || tr('None selected')]
+      [tr('One small step today'), T(d.smallSteps).join(', ') || tr('Not selected')]
     ];
+    if (withSigns !== false) {
+      rows.push([tr('Warning signs noticed'), T(d.checks).join(', ') || tr('None selected')]);
+      rows.push([tr('Signs of increased danger'), T(d.dangers || []).join(', ') || tr('None selected')]);
+    }
+    return rows;
+  }
+
+  function safetyLine() {
+    const b = ratingOf('safeBefore'), a = ratingOf('safeAfter');
+    if (b === null && a === null) return null;
+    if (b !== null && a !== null) return tf('{0} / 10 at the start, {1} / 10 now', b, a);
+    if (b !== null) return tf('{0} / 10 at the start', b);
+    return tf('{0} / 10 now', a);
+  }
+
+  function nextBoxHtml(d) {
+    let html = '<div class="next-box"><div class="result-row-label">' + esc(tr('Where to go next')) + '</div>';
+    html += '<div style="font-size:14px;color:var(--muted);">' + esc(tr('Free tools that match how you feel. Pick one, or none. There is no rush.')) + '</div>';
+    html += '<div class="next-links">';
+    nextToolKeys(d).forEach(k => {
+      html += '<a class="next-link" href="' + TOOL_BASE + TOOLS[k][0] + '" target="_blank" rel="noopener noreferrer">' + esc(tr(TOOLS[k][1])) + '</a>';
+    });
+    html += '</div>';
+    html += '<div class="next-quiet">' + esc(tr('If you are having thoughts of ending your life:')) + ' <a href="' + TOOL_BASE + TOOLS.t1[0] + '" target="_blank" rel="noopener noreferrer">' + esc(tr(TOOLS.t1[1])) + '</a></div>';
+    html += '</div>';
+    return html;
   }
 
   function renderSummary(scroll) {
     const d = gatherState();
     let html = '<div class="result-title">' + esc(tr('Your gentle summary')) + '</div>';
+    const sl = safetyLine();
+    if (sl) html += '<div class="result-row"><div class="result-row-label">' + esc(tr('How safe I feel')) + '</div><div class="result-row-value">' + esc(sl) + '</div></div>';
     summaryRows(d, 'Not provided').forEach(([label, value]) => {
       html += '<div class="result-row"><div class="result-row-label">' + esc(label) + '</div><div class="result-row-value">' + esc(value) + '</div></div>';
     });
     html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">' + esc(tr('You can take one small step. You do not have to explain everything today. You deserve safety and support.')) + '</div>';
+    html += nextBoxHtml(d);
     const box = $('resultBox');
     box.innerHTML = html;
     box.style.display = 'block';
@@ -853,95 +1146,447 @@
     const PDF = jsPDF();
     if (!PDF) { showToast('PDF tool did not load. Please try again.'); return; }
     const d = gatherState();
+    const discreet = $('discreetPdf').checked;
+    const before = ratingOf('safeBefore'), after = ratingOf('safeAfter');
     showToast('Preparing your PDF');
 
     const doc = new PDF({ unit: 'pt', format: 'a4' });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
+    const margin = 40, W = pageW - margin * 2;
     let y = margin;
+    const BRAND = [74, 96, 128], TEAL = [47, 107, 90], INK = [26, 32, 48], MUTED = [74, 85, 104], LINE = [176, 192, 216];
 
-    doc.setFillColor(234, 239, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    let textX = margin + 14;
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
-      textX = margin + 76;
-    } catch (_) {}
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(26, 32, 48);
-    doc.text(tr('Safety and Support Notes'), textX, y + 28);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 85, 104);
-    doc.text(tr('Gentle personal reflection summary'), textX, y + 43);
-    doc.text('emotionalintelligencedeveloper.com', textX, y + 57);
-    y += 86;
+    const safe = s => String(s).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-').replace(/…/g, '...');
+    const color = c => doc.setTextColor(c[0], c[1], c[2]);
+    const ensure = need => { if (y > pageH - 50 - need) { doc.addPage(); y = margin; } };
 
-    const rows = summaryRows(d, 'Not provided');
-    rows.push([tr('Message draft'), d.reachOutDraft || tr('Not written')]);
-
-    rows.forEach(([label, value]) => {
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
-      const bh = lines.length * 12 + 28;
-      if (y + bh > pageH - 60) { doc.addPage(); y = margin; }
+    function heading(t, need) {
+      ensure(need || 70);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.6);
+      doc.line(margin, y, pageW - margin, y);
+      y += 15;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); color(BRAND);
+      doc.text(safe(t), margin, y);
+      y += 14;
+    }
+    function para(t, size, c, gap, bold) {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); color(c);
+      const lines = doc.splitTextToSize(safe(t), W);
+      const lh = size * 1.32;
+      ensure(lines.length * lh + 4);
+      doc.text(lines, margin, y);
+      y += lines.length * lh + (gap === undefined ? 6 : gap);
+    }
+    function row(label, value) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+      const lines = doc.splitTextToSize(safe(value), W - 20);
+      const bh = lines.length * 12 + 23;
+      ensure(bh + 8);
       doc.setFillColor(234, 239, 248);
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(74, 96, 128);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(26, 32, 48);
-      doc.text(lines, margin + 10, y + 26);
-      y += bh + 8;
-    });
-
-    function block(title, body) {
-      const lines = doc.splitTextToSize(tr(body), pageW - margin * 2);
-      if (y + lines.length * 11.5 + 30 > pageH - 50) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(74, 96, 128);
-      doc.text(tr(title), margin, y); y += 12;
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(26, 32, 48);
-      doc.text(lines, margin, y); y += lines.length * 11.5 + 12;
+      doc.roundedRect(margin, y, W, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); color(BRAND);
+      doc.text(safe(label).toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); color(INK);
+      doc.text(lines, margin + 10, y + 24);
+      y += bh + 4;
+    }
+    function checkLine(text, x, w) {
+      const left = x === undefined ? margin : x, width = w || W;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.6);
+      const lines = doc.splitTextToSize(safe(text), width - 24);
+      ensure(lines.length * 12.5 + 8);
+      doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.8);
+      doc.rect(left + 2, y - 8, 9, 9, 'S');
+      color(INK);
+      doc.text(lines, left + 20, y);
+      return lines.length * 12.5 + 5;
+    }
+    function checkList(items) { items.forEach(t => { y += checkLine(t); }); y += 2; }
+    function checkGrid(items) {
+      const colW = W / 2;
+      for (let i = 0; i < items.length; i += 2) {
+        ensure(30);
+        const h1 = checkLine(items[i], margin, colW);
+        let h2 = 0;
+        if (items[i + 1]) h2 = checkLine(items[i + 1], margin + colW, colW);
+        y += Math.max(h1, h2);
+      }
+      y += 2;
+    }
+    function fillLine(label) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.6); color(INK);
+      ensure(24);
+      const text = safe(label);
+      doc.text(text, margin, y);
+      const lw = doc.getTextWidth(text);
+      doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.5);
+      doc.line(margin + lw + 6, y + 1.5, pageW - margin, y + 1.5);
+      y += 22;
+    }
+    function bar(label, val, rgb) {
+      const x0 = margin + 70, tw = W - 70 - 64;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); color(INK);
+      doc.text(safe(label), margin, y + 10);
+      doc.setFillColor(226, 232, 242);
+      doc.roundedRect(x0, y, tw, 14, 7, 7, 'F');
+      if (val !== null) {
+        doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+        doc.roundedRect(x0, y, Math.max(8, tw * (val / 10)), 14, 7, 7, 'F');
+      }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); color(INK);
+      doc.text(val === null ? safe(tr('Not rated')) : (val + ' / 10'), x0 + tw + 8, y + 11);
+      y += 22;
     }
 
-    if (y > pageH - 120) { doc.addPage(); y = margin; }
-    doc.setFont('helvetica', 'italic'); doc.setFontSize(9.5); doc.setTextColor(74, 96, 128);
-    const closing = doc.splitTextToSize(tr('You can take one small step. You do not have to explain everything today. You deserve safety and support.'), pageW - margin * 2);
-    doc.text(closing, margin, y); y += closing.length * 12 + 16;
+    /* ----- Header (title moves left if the logo cannot load; discreet has no logo) ----- */
+    doc.setFillColor(234, 239, 248);
+    doc.roundedRect(margin, y, W, 70, 6, 6, 'F');
+    let textX = margin + 14;
+    if (!discreet) {
+      try {
+        const logoData = await imageToDataUrl(LOGO_URL);
+        doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
+        textX = margin + 76;
+      } catch (_) {}
+    }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(26, 32, 48);
+    doc.text(safe(tr(discreet ? 'My notes' : 'Safety and Support Notes')), textX, y + 28);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); color(MUTED);
+    doc.text(safe(tr(discreet ? 'Personal notes' : 'Gentle personal reflection summary')), textX, y + 43);
+    doc.text('emotionalintelligencedeveloper.com', textX, y + 57);
+    y += 84;
 
-    doc.setDrawColor(176, 192, 216); doc.line(margin, y, pageW - margin, y); y += 16;
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(74, 96, 128);
-    doc.text(tr('Understanding domestic violence'), margin, y); y += 16;
+    /* ----- Talk to someone right now (top of page 1) ----- */
+    const stripTitle = tr(discreet ? 'Support contacts' : 'Talk to someone right now');
+    const stripIntro = tr(discreet
+      ? 'Free and private. You can just talk. In an emergency, call your local emergency number.'
+      : 'If you are in immediate danger, call your local emergency number now. You do not need to be ready to leave to call a helpline. You can just talk.');
+    const stripLines = (discreet ? [
+      'South Africa: 0800 428 428',
+      'Zimbabwe: 575',
+      'United Kingdom: 0808 2000 247',
+      'United States: 1-800-799-7233 (text START to 88788)',
+      'Other countries: findahelpline.com'
+    ] : [
+      'South Africa: GBV Command Centre 0800 428 428 (24 hours). SMS HELP to 31531.',
+      'Zimbabwe: national GBV call centre 575 (toll free).',
+      'United Kingdom: National Domestic Abuse Helpline 0808 2000 247 (24 hours).',
+      'United States: National Domestic Violence Hotline 1-800-799-7233, or text START to 88788.',
+      'Other countries: findahelpline.com'
+    ]).map(l => tr(l));
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    const introL = doc.splitTextToSize(safe(stripIntro), W - 24);
+    let listL = [];
+    stripLines.forEach(l => { listL = listL.concat(doc.splitTextToSize(safe(l), W - 30)); });
+    const noteL = discreet ? [] : doc.splitTextToSize(safe(tr('Numbers can change. Please check they are current.')), W - 24);
+    const sh = 32 + introL.length * 12 + 4 + listL.length * 12 + (noteL.length ? noteL.length * 12 + 4 : 0) + 6;
+    doc.setFillColor(255, 240, 240); doc.setDrawColor(245, 160, 160); doc.setLineWidth(0.8);
+    doc.roundedRect(margin, y, W, sh, 5, 5, 'FD');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(139, 26, 26);
+    doc.text(safe(stripTitle), margin + 12, y + 18);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(110, 20, 20);
+    let sy = y + 33;
+    doc.text(introL, margin + 12, sy); sy += introL.length * 12 + 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text(listL, margin + 12, sy); sy += listL.length * 12 + 4;
+    doc.setFont('helvetica', 'normal');
+    if (noteL.length) doc.text(noteL, margin + 12, sy);
+    y += sh + 14;
 
-    block('What it is',
-      'Domestic violence is not only physical. It can include emotional, financial, digital, sexual and psychological abuse. What defines it is a pattern of behaviour used to gain power and control over another person, not a single bad moment. Many people do not recognise their own experience as abuse because it does not look like what they expected. Fear, control and coercion are the main signs.');
-    block('Why leaving is not simple',
-      'People stay for many real reasons: fear of what the other person might do, money, children, housing, love, shame, or not being believed. Many support services note that the time around leaving can carry extra risk, which is why planning and support matter. Asking "why do they not just leave" misses how hard and how dangerous the situation can be.');
-    block('Why it can feel confusing',
-      'Abuse often comes with kind or calm periods. The mix of fear and relief can make it hard to see clearly and can create a strong emotional bond. This is a common human response to an unpredictable situation. It is not a weakness and it is not your fault.');
-    block('Words and control can hurt too',
-      'Constant criticism, isolation, monitoring and control over money can wear down your confidence and your trust in your own judgement, even when there is no physical harm. If you feel afraid, small or on edge in your own home, that matters.');
-    block('Support helps',
-      'Having one person who believes you and does not pressure you can make a big difference. Calling a helpline does not commit you to anything. You do not need to be ready to leave. You can simply talk.');
+    /* ----- How safe I felt ----- */
+    if (before !== null || after !== null) {
+      heading(tr('How safe I felt'));
+      bar(tr('Before'), before, BRAND);
+      bar(tr('After'), after, TEAL);
+      const sl = safetyLine();
+      if (sl) para(sl, 10, INK, 10);
+    }
 
-    if (y > pageH - 110) { doc.addPage(); y = margin; }
-    doc.setDrawColor(176, 192, 216); doc.line(margin, y, pageW - margin, y); y += 14;
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(74, 96, 128);
-    doc.text(tr('Support resources'), margin, y); y += 13;
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(26, 32, 48);
-    [
-      'Find a helpline in your country: findahelpline.com',
-      'Main site: emotionalintelligencedeveloper.com',
-      'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
-    ].forEach(line => { doc.text(tr(line), margin, y); y += 13; });
+    /* ----- Summary ----- */
+    const rows = summaryRows(d, 'Not provided', !discreet);
+    rows.push([tr('Message draft'), d.reachOutDraft || tr('Not written')]);
+    rows.forEach(([label, value]) => row(label, value));
+    y += 4;
 
+    if (!discreet) {
+      /* ----- My quiet safety plan ----- */
+      doc.addPage(); y = margin;
+      heading(tr('My quiet safety plan'), 100);
+      para(tr('Only do what feels safe. Keep this page somewhere only you can reach, or do not print it.'), 9.5, MUTED, 8);
+
+      para(tr('1. My safe contact'), 10.5, BRAND, 6, true);
+      fillLine(tr('Name:') + ' ');
+      fillLine(tr('Number:') + ' ');
+
+      para(tr('2. Things I could keep ready (only if safe)'), 10.5, BRAND, 6, true);
+      checkGrid([
+        tr('ID and important papers'), tr('Keys'), tr('Medications'), tr('Some cash or a bank card'),
+        tr('Phone charger'), tr('Items for my children'), tr('Spare clothes'), tr('Other:') + ' ______________'
+      ]);
+
+      para(tr('3. My code word'), 10.5, BRAND, 6, true);
+      fillLine(tr('My code word:') + ' ');
+      fillLine(tr('When my safe contact hears it, they will:') + ' ');
+
+      para(tr('4. Device and browser safety'), 10.5, BRAND, 6, true);
+      checkList([
+        tr('I will clear my browsing history after I use this tool.'),
+        tr('I will sign out of shared accounts.'),
+        tr('I can use a safer device, such as a library computer or a trusted friend\'s phone.'),
+        tr('I know how to leave this page fast: press Escape 3 times.')
+      ]);
+
+      para(tr('5. If things escalate'), 10.5, BRAND, 6, true);
+      fillLine(tr('My safest room, one with an exit:') + ' ');
+      fillLine(tr('Where I could go:') + ' ');
+      fillLine(tr('People I could call:') + ' ');
+      y += 4;
+    }
+
+    /* ----- My next 10 minutes ----- */
+    heading(tr('My next 10 minutes'), 120);
+    checkList([
+      tr('Take 3 slow breaths, breathing out for longer than in.'),
+      tr('Drink some water.'),
+      tr('Keep this page and my phone somewhere safe.'),
+      tr('Message or call my safe contact, or a helpline.'),
+      tr('Do one small thing that is only for me.'),
+      tr('Rate how safe I feel from 0 to 10 again: ____')
+    ]);
+    y += 4;
+
+    if (!discreet) {
+      /* ----- Where to go next ----- */
+      heading(tr('Where to go next'), 110);
+      para(tr('Free tools that match how you feel. Pick one, or none. There is no rush.'), 9.5, MUTED, 8);
+      const keys = nextToolKeys(d).concat(['t1']);
+      keys.forEach(k => {
+        ensure(36);
+        const url = TOOL_BASE + TOOLS[k][0];
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9.8); doc.setTextColor(58, 106, 152);
+        const label = k === 't1' ? (tr('If you are having thoughts of ending your life:') + ' ' + tr(TOOLS[k][1])) : tr(TOOLS[k][1]);
+        doc.textWithLink(safe(label), margin, y, { url });
+        y += 12;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); color(MUTED);
+        const ul = doc.splitTextToSize(url, W);
+        doc.text(ul, margin, y);
+        y += ul.length * 10 + 5;
+      });
+      y += 4;
+
+      /* ----- Understanding ----- */
+      function block(title, body) {
+        const lines = doc.splitTextToSize(safe(tr(body)), W);
+        ensure(lines.length * 11.5 + 30);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9.8); color(BRAND);
+        doc.text(safe(tr(title)), margin, y); y += 12;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); color(INK);
+        doc.text(lines, margin, y); y += lines.length * 11.5 + 9;
+      }
+      heading(tr('Understanding domestic violence'), 120);
+      block('What it is',
+        'Domestic violence is not only physical. It can include emotional, financial, digital, sexual and psychological abuse. What defines it is a pattern of behaviour used to gain power and control over another person, not a single bad moment. Many people do not recognise their own experience as abuse because it does not look like what they expected. Fear, control and coercion are the main signs.');
+      block('It can happen to anyone',
+        'Domestic violence can happen to people of any gender, age, culture or income, in any kind of relationship, including same-sex relationships and between family members. Many people are surprised to find that what they are living with has a name. You are not alone.');
+      block('Why leaving is not simple',
+        'People stay for many real reasons: fear of what the other person might do, money, children, housing, love, shame, or not being believed. Many support services note that the time around leaving can carry extra risk, which is why planning and support matter. Asking "why do they not just leave" misses how hard and how dangerous the situation can be.');
+      block('Why it can feel confusing',
+        'Abuse often comes with kind or calm periods. The mix of fear and relief can make it hard to see clearly and can create a strong emotional bond. This is a common human response to an unpredictable situation. It is not a weakness and it is not your fault.');
+      block('Words and control can hurt too',
+        'Constant criticism, isolation, monitoring and control over money can wear down your confidence and your trust in your own judgement, even when there is no physical harm. If you feel afraid, small or on edge in your own home, that matters.');
+      block('Signs things may be getting more dangerous',
+        'Professionals who assess danger often look for signs such as strangulation, threats to kill, a weapon in the home, violence getting worse, extreme jealousy, forced sex, stalking, and a strong reaction when you try to leave. These signs are not a prediction. They are a reason to reach out for support and to plan. Being strangled can cause serious harm even when there are no marks, so please see a doctor if it happens. In one large study of abused women, about 4 in 10 of those who were killed or nearly killed had been strangled before, compared with 1 in 10 of the other abused women.');
+      block('Support helps',
+        'Having one person who believes you and does not pressure you can make a big difference. Calling a helpline does not commit you to anything. You do not need to be ready to leave. You can simply talk.');
+
+      heading(tr('Where this comes from'), 70);
+      para('Glass, N., et al. (2008). Non-fatal strangulation is an important risk factor for homicide of women. Journal of Emergency Medicine, 35(3), 329-335.', 8.4, MUTED, 4);
+      y += 4;
+
+      heading(tr('Support resources'), 60);
+      [
+        'Find a helpline in your country: findahelpline.com',
+        'Main site: emotionalintelligencedeveloper.com',
+        'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'
+      ].forEach(line => para(tr(line), 9, INK, 3));
+    }
+
+    /* ----- Footer on every page ----- */
     const total = doc.getNumberOfPages();
     for (let i = 1; i <= total; i++) {
       doc.setPage(i);
-      doc.setDrawColor(176, 192, 216); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-      doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(106, 122, 148);
-      doc.text(tr('If you are in immediate danger, please contact emergency services now.'), margin, pageH - 22);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.6);
+      doc.line(margin, pageH - 44, pageW - margin, pageH - 44);
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(8.3); doc.setTextColor(86, 100, 128);
+      doc.text(safe(tr(discreet ? 'If you need urgent help, call your local emergency number.' : 'If you are in immediate danger, please contact emergency services now.')), margin, pageH - 31);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(58, 106, 152);
+      doc.text('emotionalintelligencedeveloper.com', margin, pageH - 17);
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(86, 100, 128);
+      const pg = safe(tf('Page {0} of {1}', i, total));
+      doc.text(pg, pageW - margin - doc.getTextWidth(pg), pageH - 17);
     }
 
     doc.save('my-notes.pdf');
     showToast('Saved as my-notes.pdf. Delete it from downloads if your device is shared.');
+  }
+
+  /* ======== Added: safety check, steps, safety scale, danger signs, next tools ======== */
+  const TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+  const TOOLS = {
+    t1: ['Suicide-Prevention-and-Emotional-Support-Tool.html', 'Suicide Prevention and Emotional Support Tool'],
+    t5: ['distress-tolerance-coping-tool.html', 'Distress Tolerance Coping Tool'],
+    t8: ['emotional-trigger-mapping-tool.html', 'Emotional Trigger Mapping Tool'],
+    t18: ['positive-strengths-map-tool.html', 'Positive Strength Map Tool'],
+    t21: ['visual-grounding-emotional-reset-tool.html', 'Visual Grounding and Emotional Reset Tool'],
+    t25: ['wellbeing-journey-tool.html', 'Wellbeing Journey: Quick Check and Reset']
+  };
+  const NEXT_BY_FEELING = {
+    Scared: ['t21', 't5'], Anxious: ['t21', 't5'], Numb: ['t21', 't25'], Exhausted: ['t21', 't25'],
+    Ashamed: ['t25', 't18'], Angry: ['t5', 't8'], Confused: ['t25', 't8'], Hopeful: ['t25', 't18']
+  };
+
+  const tf = (k, ...a) => a.reduce((s, v, i) => s.split('{' + i + '}').join(v), tr(k));
+  const ratingOf = name => { const r = document.querySelector('input[name="' + name + '"]:checked'); return r ? parseInt(r.value, 10) : null; };
+
+  function nextToolKeys(d) {
+    const out = [];
+    (d.feelings || []).forEach(f => (NEXT_BY_FEELING[f] || []).forEach(k => { if (!out.includes(k)) out.push(k); }));
+    return out.length ? out.slice(0, 3) : ['t21', 't5', 't25'];
+  }
+
+  function openHelplines() {
+    const item = document.getElementById('help-heading').parentElement.querySelector('.toggle-item');
+    if (!item) return;
+    item.classList.add('open');
+    item.querySelector('.toggle-head').setAttribute('aria-expanded', 'true');
+    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ----- Danger signs (optional) ----- */
+  function renderDanger() {
+    const box = $('dangerNote');
+    if (!box) return;
+    const checked = Array.from(document.querySelectorAll('.danger-check:checked')).map(c => c.value);
+    if (!checked.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    let h = '<p>' + esc(tr('If any of these are true, please think about reaching out for support soon. A helpline or advocate can help you plan. You do not have to be ready to leave.')) + '</p>';
+    if (checked.includes('choking or strangling')) {
+      h += '<p>' + esc(tr('Being strangled can cause serious harm even when there are no marks. Please see a doctor or go to an emergency room if it happens.')) + '</p>';
+      h += '<p class="danger-fact">' + esc(tr('In one large study of abused women, about 4 in 10 of those who were killed or nearly killed had been strangled before, compared with 1 in 10 of the other abused women.')) + '</p>';
+    }
+    h += '<button type="button" class="btn btn-teal" id="dangerHelpBtn">' + esc(tr('Show helplines')) + '</button>';
+    box.innerHTML = h;
+    box.style.display = 'block';
+    $('dangerHelpBtn').addEventListener('click', openHelplines);
+  }
+
+  /* ----- Step by step reflection ----- */
+  const WIZ_N = 6;
+  let wizStep = 1, wizSkipped = false;
+
+  function wizStepEmpty(n) {
+    const d = gatherState();
+    if (n === 1) return ratingOf('safeBefore') === null;
+    if (n === 2) return !d.feelings.length && !d.feelingOther;
+    if (n === 3) return !d.recentEvent && !d.wishUnderstood;
+    if (n === 4) return !d.barriers.length;
+    if (n === 5) return !d.smallSteps.length;
+    return false;
+  }
+
+  function renderWiz() {
+    document.querySelectorAll('.rstep').forEach(s => s.classList.toggle('on', parseInt(s.dataset.step, 10) === wizStep));
+    $('wizBack').style.visibility = wizStep === 1 ? 'hidden' : 'visible';
+    const nx = $('wizNext');
+    nx.style.display = wizStep >= WIZ_N ? 'none' : '';
+    nx.textContent = tr(wizStepEmpty(wizStep) ? 'Skip' : 'Next');
+    $('wizCount').textContent = tf('Step {0} of {1}', wizStep, WIZ_N);
+    document.querySelectorAll('#wizDots .wdot').forEach((dot, i) => {
+      dot.classList.toggle('on', i + 1 === wizStep);
+      dot.classList.toggle('past', i + 1 < wizStep);
+    });
+    const done = wizStep >= WIZ_N || wizSkipped;
+    $('actionsBlock').style.display = done ? 'block' : 'none';
+    $('toSummaryWrap').style.display = done ? 'none' : 'block';
+  }
+
+  function setWiz(n, scroll) {
+    wizStep = Math.max(1, Math.min(WIZ_N, n));
+    renderWiz();
+    if (scroll) $('reflect-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderBeforeNote() {
+    const b = ratingOf('safeBefore'), box = $('beforeNote');
+    if (b === null || b > 2) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    box.innerHTML = esc(tr('If you are in danger right now, call your local emergency number. You can open the helplines below at any time.')) + '<br><button type="button" class="btn btn-teal" id="beforeHelpBtn">' + esc(tr('Show helplines')) + '</button>';
+    box.style.display = 'block';
+    $('beforeHelpBtn').addEventListener('click', openHelplines);
+  }
+
+  function renderShift() {
+    const b = ratingOf('safeBefore'), a = ratingOf('safeAfter'), box = $('shiftBox');
+    box.innerHTML = '';
+    if (a === null) { box.style.display = 'none'; return; }
+    let msg;
+    if (b === null) msg = tf('You rated how safe you feel now at {0}. A rating is only a snapshot, and you can come back to this tool at any time.', a);
+    else if (a > b) msg = tf('Your rating went from {0} to {1}. Small shifts count. Your situation is what it is, so please keep your plan close.', b, a);
+    else if (a === b) msg = tf('Your rating stayed at {0}. That is okay. A reflection cannot change your situation, but a helpline can talk it through with you at any time.', a);
+    else msg = tf('Your rating went from {0} to {1}. If you feel less safe, please reach out for support now, or call your local emergency number if you are in danger.', b, a);
+    const p = document.createElement('div');
+    p.textContent = msg;
+    box.appendChild(p);
+    if (a <= 2 || (b !== null && a < b)) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'btn btn-teal'; btn.textContent = tr('Show helplines');
+      btn.addEventListener('click', openHelplines);
+      box.appendChild(btn);
+      const link = document.createElement('a');
+      link.className = 'btn btn-reset'; link.href = 'https://findahelpline.com/'; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = tr('Find a helpline in your country');
+      box.appendChild(link);
+    }
+    box.style.display = 'block';
+  }
+
+  function refreshDynamic() {
+    renderDanger(); renderBeforeNote(); renderShift(); renderWiz();
+  }
+
+  function initWiz() {
+    const dots = $('wizDots');
+    for (let i = 0; i < WIZ_N; i++) { const s = document.createElement('span'); s.className = 'wdot'; dots.appendChild(s); }
+    $('wizBack').addEventListener('click', () => setWiz(wizStep - 1, true));
+    $('wizNext').addEventListener('click', () => setWiz(wizStep + 1, true));
+    $('toSummary').addEventListener('click', () => { wizSkipped = true; renderWiz(); showSummary(); });
+    document.querySelectorAll('.scale input').forEach(i => i.addEventListener('change', () => { renderBeforeNote(); renderShift(); renderWiz(); }));
+    ['feelingOther', 'recentEvent', 'wishUnderstood'].forEach(id => $(id).addEventListener('input', renderWiz));
+    ['feelingChips', 'barrierChips', 'smallStepChips'].forEach(id => $(id).addEventListener('click', renderWiz));
+    document.querySelectorAll('.danger-check').forEach(c => c.addEventListener('change', () => { renderDanger(); persistIfEnabled(); }));
+    renderWiz();
+  }
+
+  /* ----- "Is it safe to use this device?" ----- */
+  function setSafer(on) {
+    document.body.classList.toggle('safer', on);
+    $('saferPanel').style.display = on ? 'block' : 'none';
+    $('gateCard').style.display = 'none';
+    $('saveToggle').disabled = on;
+    if (on) { clearAll(); refreshDynamic(); IDLE_MS = 60 * 1000; window.scrollTo(0, 0); }
+    else { IDLE_MS = 5 * 60 * 1000; }
+    resetIdle();
+  }
+
+  function initGate() {
+    $('gateSafe').addEventListener('click', () => { $('gateCard').style.display = 'none'; });
+    $('gateScreen').addEventListener('click', () => {
+      IDLE_MS = 60 * 1000; resetIdle();
+      $('gateCard').style.display = 'none';
+      showToast('Quiet mode is on. The screen covers itself after 1 minute without activity. Press Escape 3 times to leave fast.');
+    });
+    $('gateWatched').addEventListener('click', () => setSafer(true));
+    $('saferShowAll').addEventListener('click', () => setSafer(false));
+    $('saferHelp').addEventListener('click', openHelplines);
   }
 
   // Auto save listeners
@@ -979,6 +1624,7 @@
       if (cur === en || cur === window.EIDLang.t(en, 'es')) ta.value = tr(en);
     });
     updateShareLinks();
+    refreshDynamic();
     if ($('resultBox').style.display === 'block') renderSummary(false);
     persistIfEnabled();
   });
@@ -988,12 +1634,14 @@
   buildChips('barrierChips', barriers);
   buildChips('smallStepChips', smallSteps);
   if (window.EIDLang) window.EIDLang.apply();
+  initWiz();
+  initGate();
   updateShareLinks();
   resetIdle();
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) applyState(JSON.parse(raw));
+    if (raw) { applyState(JSON.parse(raw)); renderDanger(); renderWiz(); }
   } catch (_) {
     try { localStorage.removeItem(STORAGE_KEY); } catch (__) {}
   }

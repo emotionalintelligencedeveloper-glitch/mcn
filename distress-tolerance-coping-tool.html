@@ -7,20 +7,20 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 .dtc-root{
-  --bg:#f0f4f8;--card:#ffffff;--text:#1a2030;--muted:#4a5568;--hint:#6b7a94;--border:#d0d8e8;
+  --bg:#f0f4f8;--card:#ffffff;--text:#1a2030;--muted:#4a5568;--hint:#566480;--border:#d0d8e8;
   --brand:#3a6a98;--brand-light:#e8eff8;--brand-mid:#a8c0d8;
-  --teal:#3a7a7a;--teal-light:#e4f0f0;--teal-mid:#a0c8c8;
+  --teal:#2f6b6b;--teal-light:#e4f0f0;--teal-mid:#a0c8c8;
   --rose:#8a4a60;--rose-light:#f7eaee;--rose-mid:#d0a0b0;
   --gold:#7a6a30;--gold-light:#f7f2e4;--gold-mid:#d8c878;
   --radius-sm:10px;--radius-md:14px;--radius-lg:20px;
-  --support:#e8702a;--danger-bg:#fff0f0;--danger-border:#f5a0a0;--danger-text:#8b1a1a;
+  --support:#b8501a;--danger-bg:#fff0f0;--danger-border:#f5a0a0;--danger-text:#8b1a1a;
   font-family:Georgia,"Times New Roman",serif;color:var(--text);line-height:1.7;font-size:16px;
   background:var(--bg);padding:20px 16px 40px;border-radius:var(--radius-lg);
 }
 .dtc-root *,.dtc-root *::before,.dtc-root *::after{box-sizing:border-box}
 .dtc-root p,.dtc-root h2,.dtc-root h3,.dtc-root ul,.dtc-root li{margin:0;padding:0}
 .dtc-root ul{list-style:none}
-.dtc-wrap{max-width:680px;margin:0 auto}
+.dtc-wrap{max-width:920px;margin:0 auto}
 
 .dtc-header{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px 20px 20px;margin-bottom:16px}
 .dtc-logo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:16px}
@@ -69,6 +69,7 @@
 
 .dtc-skills{display:grid;gap:12px;grid-template-columns:1fr}
 @media(min-width:540px){.dtc-skills{grid-template-columns:1fr 1fr}}
+@media(min-width:860px){.dtc-skills{grid-template-columns:1fr 1fr 1fr}}
 .dtc-skill{border:1px solid var(--border);border-radius:var(--radius-md);background:#fff;padding:14px 16px;transition:border-color .15s,background .15s;display:flex;flex-direction:column}
 .dtc-skill.selected{border-color:var(--brand);background:var(--brand-light)}
 .dtc-skill-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
@@ -146,6 +147,29 @@
 @media(prefers-reduced-motion:reduce){
   .dtc-circle,.dtc-bar-fill,.dtc-toast,.dtc-btn{transition:none}
 }
+
+/* ---------- added: steps, quick start, go-to skills, next tools ---------- */
+.dtc-off{display:none!important}
+.dtc-quick{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:14px}
+.dtc-quick-note{font-size:13px;color:var(--muted);font-style:italic}
+.dtc-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+.dtc-nav-mid{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.dtc-dots{display:flex;gap:8px}
+.dtc-dot{width:10px;height:10px;border-radius:50%;background:var(--brand-mid);opacity:.55}
+.dtc-dot.past{background:var(--teal);opacity:.8}
+.dtc-dot.on{background:var(--brand);opacity:1;transform:scale(1.25)}
+.dtc-step-count{font-size:12px;color:var(--hint);letter-spacing:.04em}
+.dtc-goto{display:none;align-items:center;flex-wrap:wrap;gap:8px 12px;background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:14px;font-size:14px}
+.dtc-unrated{display:none;background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;margin-bottom:14px;line-height:1.6}
+.dtc-unrated .dtc-btn{margin-top:8px}
+.dtc-nexttools{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-md);padding:16px 18px;margin:16px 0 4px}
+.dtc-root .dtc-nexttools h4{margin:0 0 6px;font-size:1rem;font-weight:normal;color:var(--brand)}
+.dtc-next-list{display:flex;flex-wrap:wrap;gap:8px}
+.dtc-next-tool{display:inline-flex;align-items:center;background:#fff;border:1.5px solid var(--brand-mid);border-radius:99px;padding:8px 16px;font-size:14px;color:var(--brand);text-decoration:none;line-height:1.3}
+.dtc-next-tool:hover{border-color:var(--brand);text-decoration:underline}
+.dtc-next-crisis{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;color:var(--danger-text);font-size:14px;line-height:1.6}
+.dtc-next-crisis .dtc-next-tool{margin-top:8px;color:var(--danger-text);border-color:var(--danger-border);font-weight:bold}
+@media(max-width:480px){.dtc-nav .dtc-btn{padding:10px 14px}.dtc-quick .dtc-btn{width:100%}}
 </style>
 </head>
 <body>
@@ -169,8 +193,10 @@
     <p class="dtc-tagline" data-i18n>A quick, practical check-in to help you get through intense moments safely. Choose what feels most doable right now.</p>
     <div class="dtc-disclaimer" data-i18n>This is a reflection and coping support tool. It is not diagnosis or therapy. If you feel unsafe or in immediate danger, contact local emergency services.</div>
     <div class="dtc-btn-row" style="margin-top:14px;">
+      <button type="button" class="dtc-btn dtc-btn-primary" id="dtcQuick"><span data-i18n>I need help right now</span></button>
       <button type="button" class="dtc-btn dtc-btn-danger" id="dtcOpenHelp" aria-expanded="false" aria-controls="dtcHelpPanel"><span data-i18n>Get help now</span></button>
     </div>
+    <p class="dtc-quick-note" style="margin-top:8px;" data-i18n>Starts slow breathing for 90 seconds. No questions first.</p>
   </header>
 
   <div class="dtc-help" id="dtcHelpPanel" role="region" aria-label="Get help now" data-i18n-attr="aria-label">
@@ -182,9 +208,10 @@
   </div>
 
   <!-- SECTION A -->
-  <section class="dtc-card" aria-labelledby="dtcHeadA">
-    <div class="dtc-step" data-i18n>Section A</div>
-    <h3 class="dtc-card-title" id="dtcHeadA" data-i18n>Right now check-in</h3>
+  <section class="dtc-card" id="dtcStep1" aria-labelledby="dtcHeadA">
+    <div class="dtc-step" data-i18n>Step 1</div>
+    <h3 class="dtc-card-title" id="dtcHeadA" data-i18n>How strong is it right now?</h3>
+    <p class="dtc-intro" data-i18n>Move the slider to match how it feels. There is no wrong answer.</p>
 
     <div class="dtc-slider-card">
       <p class="dtc-slider-label" data-i18n>Distress level right now (0 = calm, 10 = overwhelming)</p>
@@ -200,6 +227,11 @@
       <div class="dtc-btn-row"><button type="button" class="dtc-btn dtc-btn-danger dtc-btn-small" onclick="dtcOpenHelp(true)"><span data-i18n>Get help now</span></button></div>
     </div>
 
+  </section>
+
+  <section class="dtc-card" id="dtcStep2" aria-labelledby="dtcHeadA2">
+    <div class="dtc-step" data-i18n>Step 2</div>
+    <h3 class="dtc-card-title" id="dtcHeadA2" data-i18n>What is happening, and how much time do you have?</h3>
     <p class="dtc-intro" data-i18n>What is happening right now? Choose any that apply.</p>
     <div class="dtc-chip-wrap" id="dtcChips" role="group" aria-label="Situation options" data-i18n-attr="aria-label"></div>
 
@@ -218,10 +250,12 @@
   </section>
 
   <!-- SECTION B -->
-  <section class="dtc-card" aria-labelledby="dtcHeadB">
-    <div class="dtc-step" data-i18n>Section B</div>
+  <section class="dtc-card" id="dtcStep3" aria-labelledby="dtcHeadB">
+    <div class="dtc-step" data-i18n>Step 3</div>
     <h3 class="dtc-card-title" id="dtcHeadB" data-i18n>Pick 1 to 3 coping skills</h3>
     <p class="dtc-intro" data-i18n>Not sure where to start? Choose your situation above, then tap "Suggest skills for me". Each skill has its own timer. It ticks "done" for you when the timer ends.</p>
+
+    <div class="dtc-goto" id="dtcGoto"><span id="dtcGotoText"></span><button type="button" class="dtc-btn dtc-btn-teal dtc-btn-small" id="dtcGotoBtn"><span data-i18n>Use my go-to skills</span></button></div>
 
     <div class="dtc-btn-row" style="margin-bottom:16px;">
       <button type="button" class="dtc-btn dtc-btn-teal" id="dtcSuggestBtn"><span data-i18n>Suggest skills for me</span></button>
@@ -238,8 +272,10 @@
 
   <!-- SECTION C -->
   <section class="dtc-card" id="dtcSummarySection" aria-live="polite" style="display:none;">
-    <div class="dtc-step" data-i18n>Section C</div>
+    <div class="dtc-step" data-i18n>Step 4</div>
     <h3 class="dtc-card-title" data-i18n>My coping plan summary</h3>
+
+    <div class="dtc-unrated" id="dtcUnrated"><span data-i18n>You have not set how strong it felt at the start. Go back to step 1 to set it, so your change is accurate.</span><br><button type="button" class="dtc-btn dtc-btn-outline dtc-btn-small" id="dtcToStep1"><span data-i18n>Go to step 1</span></button></div>
 
     <div class="dtc-summary">
       <div class="dtc-summary-title" data-i18n>Your check-in summary</div>
@@ -282,6 +318,11 @@
       <input type="text" id="dtcContact" maxlength="120" placeholder="e.g. my sister, a close friend, my counsellor" data-i18n-attr="placeholder" />
     </div>
 
+    <div class="dtc-field">
+      <label class="dtc-label" for="dtcName" data-i18n>Your name (optional, prints on your PDF only)</label>
+      <input type="text" id="dtcName" maxlength="60" placeholder="e.g. Alex" autocomplete="given-name" data-i18n-attr="placeholder" />
+    </div>
+
     <div class="dtc-btn-row">
       <button type="button" class="dtc-btn dtc-btn-primary" id="dtcSaveBtn"><span data-i18n>Save this check-in</span></button>
       <button type="button" class="dtc-btn dtc-btn-teal" id="dtcPdfBtn2"><span data-i18n>Download PDF</span></button>
@@ -289,10 +330,22 @@
     </div>
     <p class="dtc-privacy" data-i18n>Saving keeps a short note on this device only. It is not sent anywhere. Your typed words are never saved, only your ratings and the skills you chose.</p>
 
+    <div class="dtc-nexttools" id="dtcNextBlock">
+      <h4 data-i18n>Where to go next</h4>
+      <p class="dtc-intro" style="margin-bottom:10px;" data-i18n>Tools that match what you are feeling. Pick one, or none. There is no rush.</p>
+      <div id="dtcNextTools"></div>
+    </div>
+
     <div class="dtc-safety">
       <span data-i18n>If you feel unsafe, please seek urgent help now. Visit </span><a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a><span data-i18n> or contact local emergency services immediately.</span>
     </div>
   </section>
+
+  <div class="dtc-nav" id="dtcNav">
+    <button type="button" class="dtc-btn dtc-btn-outline" id="dtcBack"><span data-i18n>Back</span></button>
+    <div class="dtc-nav-mid"><div class="dtc-dots" id="dtcDots" aria-hidden="true"></div><span class="dtc-step-count" id="dtcStepCount" aria-live="polite"></span></div>
+    <button type="button" class="dtc-btn dtc-btn-primary" id="dtcNextBtn"><span>Next</span></button>
+  </div>
 
   <!-- HISTORY -->
   <section class="dtc-card" id="dtcHistoryCard" style="display:none;" aria-labelledby="dtcHeadH">
@@ -359,7 +412,7 @@ var DTC_SKILLS = [
     text: 'Breathe in for 4, hold for 4, breathe out for 4, hold for 4. Repeat slowly and gently.' },
   { id: 'exhale', name: 'Long Exhale Breathing', seconds: 90, body: true, breath: DTC_EXHALE,
     tags: ['panic', 'anger', 'overwhelmed', 'conflict', 'shame'],
-    text: 'Breathe in for 4, then breathe out slowly for 6. A longer out-breath helps your body settle.' },
+    text: 'Breathe in for 4, then breathe out slowly for 6. A longer out-breath helps many people settle.' },
   { id: 'cold', name: 'Temperature Shift', seconds: 60, body: true,
     tags: ['panic', 'anger', 'overwhelmed', 'cravings'],
     text: 'Cool water on your face and hands, or hold a cool cloth. Stop if you feel dizzy.',
@@ -593,7 +646,7 @@ function dtcSetSelected(ids) {
 
 function dtcSuggest() {
   var keys = dtcGetSituationKeys();
-  if (!keys.length) { dtcToast(dtcT('Choose at least one situation first.')); return; }
+  if (!keys.length) { dtcToast(dtcT('Choose at least one situation first.')); dtcGoStep(2, true); return; }
   var high = dtcSliderVal() >= 7;
   var t = dtcTimeSeconds();
   var scored = DTC_SKILLS.map(function (s, idx) {
@@ -641,7 +694,8 @@ function dtcPauseAll(exceptId) {
 function dtcStartTimer(id) {
   var s = dtcSkill(id);
   dtcPauseAll(id);
-  if (dtcBefore === null) dtcBefore = dtcSliderVal();
+  if (dtcBefore === null && dtcSliderTouched) dtcBefore = dtcSliderVal();
+  if (dtcSliderTouched) dtcBeforeLocked = true;
   if (dtcRemaining[id] === undefined || dtcRemaining[id] <= 0) dtcRemaining[id] = s.seconds;
   dtcUpdateTimerUI(id);
   dtcEl('dtcGo-' + id).textContent = dtcT('Pause');
@@ -727,6 +781,7 @@ function dtcRenderSummary() {
   dtcEl('dtcSummary').innerHTML = rows.map(function (r) {
     return '<div class="dtc-row"><div class="dtc-row-label">' + dtcEsc(r[0]) + '</div><div>' + dtcEsc(r[1]) + '</div></div>';
   }).join('');
+  dtcRenderNext();
 }
 
 function dtcBuildSummary() {
@@ -749,7 +804,8 @@ function dtcBuildSummary() {
   var sec = dtcEl('dtcSummarySection');
   sec.style.display = 'block';
   dtcUpdateChange();
-  sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  dtcRenderNext();
+  dtcGoStep(4, true);
 }
 
 function dtcAfterVal() { return parseInt(dtcEl('dtcAfter').value, 10); }
@@ -796,6 +852,7 @@ function dtcOnAfter() {
   dtcAfterTouched = true;
   dtcEl('dtcAfterVal').textContent = dtcAfterVal();
   dtcUpdateChange();
+  dtcRenderNext();
 }
 
 function dtcNewCheckin() {
@@ -816,9 +873,12 @@ function dtcNewCheckin() {
   dtcEl('dtcNext').value = '';
   dtcEl('dtcPlan').value = '';
   dtcEl('dtcContact').value = '';
+  dtcEl('dtcName').value = '';
+  dtcSliderTouched = false;
+  dtcBeforeLocked = false;
   dtcEl('dtcSummarySection').style.display = 'none';
   dtcSnap = null;
-  dtcEl('dtcRoot').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  dtcGoStep(1, true);
 }
 
 /* ---------- HISTORY (this device only) ---------- */
@@ -862,7 +922,7 @@ function dtcSaveCheckin() {
 function dtcRenderHistory() {
   var hist = dtcLoadHistory();
   var card = dtcEl('dtcHistoryCard');
-  if (!hist.length) { card.style.display = 'none'; return; }
+  if (!hist.length) { card.style.display = 'none'; dtcGotoIds = []; dtcRenderGoto(); return; }
   card.style.display = 'block';
 
   var list = dtcEl('dtcHistoryList');
@@ -891,6 +951,8 @@ function dtcRenderHistory() {
   });
   var ids = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 3);
   var helped = dtcEl('dtcHelped');
+  dtcGotoIds = ids;
+  dtcRenderGoto();
   if (ids.length) {
     helped.style.display = 'block';
     helped.textContent = dtcT('Skills that have helped you most: ') + dtcNames(ids).join(', ') + '.';
@@ -967,15 +1029,60 @@ var DTC_EDU = [
    'Distress tolerance is the ability to get through intense emotional pain without making things worse through impulsive or avoiding behaviour. It was developed as a core part of Dialectical Behaviour Therapy (DBT) by Marsha Linehan for moments when emotions are too strong to solve problems or think things through. The goal is not to make the distress disappear. The goal is to get through it safely.'],
   ['Why intense emotions feel unbearable',
    'When emotions peak, the thinking part of the brain (the prefrontal cortex, which helps with reasoning, planning and holding back impulses) has less influence than the brain\'s alarm system (the amygdala and limbic system). This is why calm, clear thinking feels almost impossible at the height of distress. Distress tolerance skills work through the body and senses instead of through reasoning, so they can still work when thinking is hard.'],
-  ['Why a longer out-breath helps',
-   'Breathing out for longer than you breathe in is widely used in breathing practices to help the body shift toward its calming response. Slow breathing can lower heart rate and ease the feeling of panic. This is why skills like Long Exhale Breathing and Box Breathing are often the first thing to try.'],
+  ['Slow breathing can help you settle',
+   'Slow, steady breathing with a long out-breath is one of the most widely used ways to calm down in the moment. A 2023 review of 12 trials found small to moderate drops in self-reported stress, anxiety and low mood. It does not work the same for everyone and it is not a cure. It is a simple first thing to try, which is why Long Exhale Breathing and Box Breathing are often suggested first. If slow breathing makes you feel dizzy or more anxious, stop and try a different skill.'],
   ['Temperature and the body',
-   'Cool water or a cool cloth on the face can trigger the dive reflex, a natural body response that slows the heart rate within seconds. DBT uses this as a fast tool for panic, rage and overwhelming urges. People with heart conditions or a medical reason to avoid cold should skip it.'],
+   'Many people find that cool water or a cool cloth on the face helps them shift out of a spike of panic or anger, because it gives the body a strong new sensation to focus on. DBT teaches it as a quick skill for intense moments. It is a fast way to change how your body feels, not a treatment. People with heart conditions or a medical reason to avoid cold should skip it.'],
   ['Urge surfing and the wave idea',
-   'Urge surfing means noticing an urge without acting on it. Research on urges and cravings shows they tend to rise, peak and then fall if they are not fed. Practising observing the urge, rather than obeying it or fighting it, can reduce how strong it feels over time. The wave picture is a good one: urges do not climb forever. They pass.'],
+   'Urge surfing means noticing an urge without acting on it straight away. In one early study of student smokers, people who practised urge surfing smoked fewer cigarettes over the next 7 days, although they did not report weaker urges. The research is still early. The wave picture is still a helpful one: an urge is a moment you can ride out, and it does not have to run the show.'],
   ['Self-compassion as a calming skill',
-   'Research by Kristin Neff and others shows that treating yourself with the kindness you would offer a friend can reduce distress, shame and harsh self-criticism, and can help people recover faster after hard events. Self-compassion is not self-indulgence. It is a practical way to calm the body and mind.']
+   'Research on self-compassion, including the work of Kristin Neff, links treating yourself with the kindness you would offer a friend to lower distress, less shame and less harsh self-criticism. Self-compassion is not self-indulgence. It is a practical way to calm the body and mind.']
 ];
+
+var DTC_SOURCES = [
+  'Linehan, M. M. (2015). DBT Skills Training Manual (2nd ed.). Guilford Press.',
+  'Fincham, G. W., Strauss, C., Montero-Marin, J., & Cavanagh, K. (2023). Effect of breathwork on stress and mental health: a meta-analysis of randomised controlled trials. Scientific Reports, 13, 432.',
+  'Bowen, S., & Marlatt, A. (2009). Surfing the urge: brief mindfulness-based intervention for college student smokers. Psychology of Addictive Behaviors, 23(4), 666-671.',
+  'Neff, K. D. (2003). Self-compassion: an alternative conceptualization of a healthy attitude toward oneself. Self and Identity, 2(2), 85-101.'
+];
+
+var DTC_STEPS = {
+  en: {
+    grounding: ['Pause and take one slow breath.', 'Look around and name 5 things you can see.', 'Notice 4 things you can feel, like your feet on the floor or the chair under you.', 'Listen for 3 sounds, near or far.', 'Notice 2 things you can smell, or remember 2 smells you like.', 'Name 1 thing you can taste. Take one more slow breath.'],
+    box: ['Sit with your back supported and your shoulders low.', 'Breathe in through your nose for 4 counts.', 'Hold gently for 4 counts.', 'Breathe out slowly for 4 counts.', 'Hold for 4 counts, then repeat for about 2 minutes.', 'If holding your breath feels uncomfortable, skip the holds and just breathe slowly.'],
+    exhale: ['Sit or stand with your shoulders relaxed.', 'Breathe in gently through your nose for 4 counts.', 'Breathe out slowly through your mouth for 6 counts, like blowing out a candle.', 'Keep going for about 90 seconds.', 'If you feel dizzy, breathe a little less deeply and go slower.'],
+    cold: ['Run cool (not icy) water over your hands, or wet a cloth.', 'Hold the cloth on your cheeks and around your eyes for 15 to 30 seconds.', 'Breathe slowly while you do it.', 'Dry off and notice how your body feels.', 'Stop if you feel dizzy or unwell.'],
+    tense: ['Squeeze both fists tight for 5 seconds, then let go.', 'Lift your shoulders to your ears for 5 seconds, then drop them.', 'Press your legs and feet down for 5 seconds, then release.', 'Notice how different loose feels from tight.', 'Breathe out once, slowly.'],
+    body: ['Drop your shoulders away from your ears.', 'Unclench your jaw and let your tongue rest.', 'Open your hands and relax your fingers.', 'Breathe out slowly, a little longer than you breathe in.', 'Scan from head to toes and soften one more spot.'],
+    move: ['Stand up and shake out your hands and arms.', 'Walk briskly for a minute, or do slow jumping jacks, or push your palms against a wall.', 'Let your breath come fast, then slow it down.', 'Finish by standing still and noticing your heartbeat settle.', 'Stop if you feel pain, dizziness or unwell.'],
+    name: ['Pause and ask yourself: what am I feeling right now?', 'Say quietly: "I notice ___ is here."', 'Add where you feel it in your body.', 'Say it once more, without trying to fix it or argue with it.', 'Take a slow breath.'],
+    compassion: ['Put a hand on your chest or your arm, if that feels okay.', 'Say: "This is hard."', 'Say: "I am not alone. Other people feel this too."', 'Say: "I can be kind to myself in this moment."', 'Breathe and stay with the kindness for a few breaths.'],
+    accept: ['Say: "This is happening right now."', 'Say: "I do not have to like it."', 'Say: "I can get through this moment."', 'Soften your face, shoulders and hands as you say it.', 'Let the feeling be there without pushing it away.'],
+    urge: ['Notice the urge and say: "This is an urge. It is not an order."', 'Notice where you feel it in your body.', 'Picture it as a wave that rises, peaks and falls.', 'Breathe slowly and wait 1 to 2 minutes before you decide anything.', 'If it is still strong, wait a few more minutes, or try another skill.'],
+    distract: ['Choose one: count backward from 100 by 7s, name an animal for each letter of the alphabet, or tidy one small spot.', 'Give it your full attention for 3 minutes.', 'If your mind wanders back, gently return to the task.', 'Check in: has the feeling changed, even a little?'],
+    safeplace: ['Close your eyes or soften your gaze.', 'Picture a place where you feel calm. It can be real or imagined.', 'See the colours and shapes there.', 'Hear the sounds and feel the air on your skin.', 'Stay for a few slow breaths. You can come back here any time.']
+  },
+  es: {
+    grounding: ['Haz una pausa y respira lento una vez.', 'Mira a tu alrededor y nombra 5 cosas que ves.', 'Nota 4 cosas que sientes al tacto, como tus pies en el suelo o la silla bajo tu cuerpo.', 'Escucha 3 sonidos, cerca o lejos.', 'Nota 2 cosas que hueles, o recuerda 2 olores que te gustan.', 'Nombra 1 cosa que saboreas. Respira lento una vez más.'],
+    box: ['Siéntate con la espalda apoyada y los hombros bajos.', 'Inhala por la nariz contando 4.', 'Sostén con suavidad contando 4.', 'Exhala despacio contando 4.', 'Sostén contando 4 y repite durante unos 2 minutos.', 'Si sostener el aire te incomoda, omite las pausas y solo respira lento.'],
+    exhale: ['Siéntate o ponte de pie con los hombros relajados.', 'Inhala suavemente por la nariz contando 4.', 'Exhala despacio por la boca contando 6, como si apagaras una vela.', 'Sigue así durante unos 90 segundos.', 'Si sientes mareo, respira con menos profundidad y más despacio.'],
+    cold: ['Deja correr agua fresca (no helada) sobre tus manos, o moja un paño.', 'Sostén el paño sobre tus mejillas y alrededor de los ojos de 15 a 30 segundos.', 'Respira despacio mientras lo haces.', 'Sécate y nota cómo se siente tu cuerpo.', 'Para si sientes mareo o malestar.'],
+    tense: ['Aprieta ambos puños con fuerza 5 segundos y suelta.', 'Sube los hombros hacia las orejas 5 segundos y déjalos caer.', 'Presiona piernas y pies contra el suelo 5 segundos y suelta.', 'Nota la diferencia entre soltar y estar tenso.', 'Exhala una vez, despacio.'],
+    body: ['Baja los hombros, lejos de las orejas.', 'Afloja la mandíbula y deja descansar la lengua.', 'Abre las manos y relaja los dedos.', 'Exhala despacio, un poco más largo que al inhalar.', 'Recorre el cuerpo de la cabeza a los pies y suaviza un punto más.'],
+    move: ['Ponte de pie y sacude manos y brazos.', 'Camina a paso rápido un minuto, haz saltos lentos o empuja una pared con las palmas.', 'Deja que la respiración se acelere y luego aminórala.', 'Termina quieto y nota cómo se calma tu corazón.', 'Para si sientes dolor, mareo o malestar.'],
+    name: ['Haz una pausa y pregúntate: ¿qué estoy sintiendo ahora mismo?', 'Di en voz baja: "Noto que ___ está aquí."', 'Añade en qué parte del cuerpo lo sientes.', 'Dilo una vez más, sin intentar arreglarlo ni discutir con ello.', 'Respira lento.'],
+    compassion: ['Pon una mano en el pecho o en el brazo, si te resulta cómodo.', 'Di: "Esto es difícil."', 'Di: "No estoy solo. Otras personas también sienten esto."', 'Di: "Puedo tratarme con amabilidad en este momento."', 'Respira y quédate con esa amabilidad unas cuantas respiraciones.'],
+    accept: ['Di: "Esto está pasando ahora mismo."', 'Di: "No tiene que gustarme."', 'Di: "Puedo atravesar este momento."', 'Suaviza la cara, los hombros y las manos mientras lo dices.', 'Deja que la sensación esté ahí, sin empujarla lejos.'],
+    urge: ['Nota el impulso y di: "Esto es un impulso. No es una orden."', 'Nota en qué parte del cuerpo lo sientes.', 'Imagínalo como una ola que sube, llega a su punto máximo y baja.', 'Respira despacio y espera de 1 a 2 minutos antes de decidir nada.', 'Si sigue fuerte, espera unos minutos más o prueba otra habilidad.'],
+    distract: ['Elige una: contar hacia atrás desde 100 de 7 en 7, decir un animal por cada letra del abecedario u ordenar un rincón pequeño.', 'Dale toda tu atención durante 3 minutos.', 'Si tu mente se va, vuelve a la tarea con suavidad.', 'Revisa: ¿cambió la sensación, aunque sea un poco?'],
+    safeplace: ['Cierra los ojos o suaviza la mirada.', 'Imagina un lugar donde sientas calma. Puede ser real o inventado.', 'Mira los colores y las formas que hay ahí.', 'Escucha los sonidos y siente el aire en la piel.', 'Quédate unas cuantas respiraciones lentas. Puedes volver aquí cuando quieras.']
+  }
+};
+
+function dtcSteps(id) {
+  var o = DTC_STEPS[DTC_LANG === 'es' ? 'es' : 'en'];
+  return o[id] || [];
+}
 
 async function dtcDownloadPDF() {
   var PDF;
@@ -984,158 +1091,284 @@ async function dtcDownloadPDF() {
   dtcToast(dtcT('Preparing your PDF...'));
 
   var situations = dtcGetSituations();
+  var keys = dtcGetSituationKeys();
   var ids = dtcGetSelectedIds();
   var skillObjs = ids.map(dtcSkill).filter(Boolean);
   var done = dtcNames(dtcGetDoneIds());
   var before = (dtcBefore === null) ? dtcSliderVal() : dtcBefore;
-  var nextStep = dtcEl('dtcNext').value.trim() || dtcT('Not entered');
-  var plan = dtcEl('dtcPlan').value.trim() || dtcT('Not entered');
-  var contact = dtcEl('dtcContact').value.trim() || dtcT('Not entered');
+  var after = dtcAfterTouched ? dtcAfterVal() : null;
+  var nextRaw = dtcEl('dtcNext').value.trim();
+  var planRaw = dtcEl('dtcPlan').value.trim();
+  var contactRaw = dtcEl('dtcContact').value.trim();
+  var nextStep = nextRaw || dtcT('Not entered');
+  var plan = planRaw || dtcT('Not entered');
+  var contact = contactRaw || dtcT('Not entered');
   var rating = dtcEl('dtcRating').value || dtcT('Not rated yet');
+  var userName = dtcEl('dtcName') ? dtcEl('dtcName').value.trim() : '';
 
   var doc = new PDF({ unit: 'pt', format: 'a4' });
   var pageW = doc.internal.pageSize.getWidth();
   var pageH = doc.internal.pageSize.getHeight();
   var margin = 40;
+  var W = pageW - margin * 2;
   var y = margin;
+  var BRAND = [58, 106, 152], TEAL = [47, 107, 107], INK = [26, 32, 48], MUTED = [74, 85, 104], LINE = [168, 192, 216];
 
-  function ensure(need) { if (y > pageH - need) { doc.addPage(); y = margin; } }
+  function safe(s) { return dtcPdfSafe(s); }
+  function ensure(need) { if (y > pageH - 50 - need) { doc.addPage(); y = margin; } }
+  function color(c) { doc.setTextColor(c[0], c[1], c[2]); }
+  function heading(t, need) {
+    ensure(need || 70);
+    doc.setDrawColor(LINE[0], LINE[1], LINE[2]);
+    doc.setLineWidth(0.6);
+    doc.line(margin, y, pageW - margin, y);
+    y += 15;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); color(BRAND);
+    doc.text(safe(t), margin, y);
+    y += 14;
+  }
+  function para(t, size, c, after2, indent) {
+    var ind = indent || 0;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(size); color(c);
+    var lines = doc.splitTextToSize(safe(t), W - ind);
+    var lh = size * 1.32;
+    ensure(lines.length * lh + 4);
+    doc.text(lines, margin + ind, y);
+    y += lines.length * lh + (after2 === undefined ? 6 : after2);
+  }
+  function row(label, value) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    var lines = doc.splitTextToSize(safe(value), W - 20);
+    var bh = lines.length * 12 + 23;
+    ensure(bh + 8);
+    doc.setFillColor(232, 239, 248);
+    doc.roundedRect(margin, y, W, bh, 4, 4, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); color(BRAND);
+    doc.text(safe(label).toUpperCase(), margin + 10, y + 14);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); color(INK);
+    doc.text(lines, margin + 10, y + 24);
+    y += bh + 4;
+  }
+  function checkLine(text) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.8);
+    var lines = doc.splitTextToSize(safe(text), W - 26);
+    ensure(lines.length * 13 + 8);
+    doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.8);
+    doc.rect(margin + 2, y - 8, 9, 9, 'S');
+    color(INK);
+    doc.text(lines, margin + 20, y);
+    y += lines.length * 13 + 4;
+  }
+  function bar(label, val, rgb) {
+    var x0 = margin + 92, tw = W - 92 - 70;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); color(INK);
+    doc.text(safe(label), margin, y + 10);
+    doc.setFillColor(226, 232, 242);
+    doc.roundedRect(x0, y, tw, 14, 7, 7, 'F');
+    if (val !== null) {
+      var fw = Math.max(8, tw * (val / 10));
+      doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+      doc.roundedRect(x0, y, fw, 14, 7, 7, 'F');
+    }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); color(INK);
+    doc.text(val === null ? safe(dtcT('Not rated yet')) : (val + ' / 10'), x0 + tw + 8, y + 11);
+    y += 22;
+  }
 
-  // Header
+  /* ----- Header (title moves left if the logo cannot load) ----- */
   doc.setFillColor(232, 239, 248);
-  doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
+  doc.roundedRect(margin, y, W, 70, 6, 6, 'F');
+  var textX = margin + 14;
   try {
     var logoData = await dtcImageToDataUrl(DTC_LOGO);
-    doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+    doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
+    textX = margin + 76;
   } catch (e) {}
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(14); color(INK);
+  doc.text(safe(dtcT('Distress Tolerance Coping Plan')), textX, y + 26);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); color(MUTED);
+  doc.text(safe(dtcT('Personal coping summary - ')) + new Date().toLocaleString(dtcLocale()), textX, y + 41);
+  doc.text(safe(userName ? (dtcT('Prepared for: ') + userName) : 'emotionalintelligencedeveloper.com'), textX, y + 56);
+  y += 84;
+
+  /* ----- Talk to someone right now (gentle strip, top of page 1) ----- */
+  var stripText = dtcT('If you feel unsafe, or think you might hurt yourself, contact your local emergency number now. For a free helpline in your country, visit findahelpline.com. You can also tell someone near you what is happening. You do not have to handle this alone.');
+  var crisis = dtcNeedsCrisisTool();
+  var stripExtra = crisis ? dtcT('Your distress was very high. If you are having thoughts of ending your life, please reach out today and open the Suicide Prevention and Emotional Support Tool from emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/') : '';
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+  var sl = doc.splitTextToSize(safe(stripText), W - 24);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.setTextColor(26, 32, 48);
-  doc.text(dtcPdfSafe(dtcT('Distress Tolerance Coping Plan')), margin + 76, y + 26);
+  var sx = stripExtra ? doc.splitTextToSize(safe(stripExtra), W - 28) : [];
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(74, 85, 104);
-  doc.text(dtcPdfSafe(dtcT('Personal coping summary - ')) + new Date().toLocaleString(dtcLocale()), margin + 76, y + 41);
-  doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
-  y += 86;
+  var sh = 30 + sl.length * 12 + (sx.length ? sx.length * 12 + 6 : 0);
+  doc.setFillColor(255, 240, 240);
+  doc.setDrawColor(245, 160, 160);
+  doc.setLineWidth(0.8);
+  doc.roundedRect(margin, y, W, sh, 5, 5, 'FD');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(139, 26, 26);
+  doc.text(safe(dtcT('Talk to someone right now')), margin + 12, y + 18);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(110, 20, 20);
+  doc.text(sl, margin + 12, y + 33);
+  if (sx.length) { doc.setFont('helvetica', 'bold'); doc.text(sx, margin + 12, y + 33 + sl.length * 12 + 6); }
+  y += sh + 14;
 
-  var rows = [
-    [dtcT('Distress before'), before + ' / 10'],
-    [dtcT('Distress after'), dtcAfterTouched ? (dtcAfterVal() + ' / 10') : dtcT('Not rated yet')],
-    [dtcT('Change'), dtcChangeText()],
-    [dtcT('What is happening'), situations.length ? situations.join(', ') : dtcT('Not selected')],
-    [dtcT('Time available'), dtcTimeLabel()],
-    [dtcT('Skills chosen'), skillObjs.length ? skillObjs.map(function (s) { return dtcT(s.name); }).join(', ') : dtcT('Not selected')],
-    [dtcT('Completed'), done.length ? done.join(', ') : dtcT('Not marked')],
-    [dtcT('What helped'), rating],
-    [dtcT('One kind next step'), nextStep],
-    [dtcT('If distress rises again, I will'), plan],
-    [dtcT('One person I can reach out to'), contact]
-  ];
+  /* ----- Before and after ----- */
+  heading(dtcT('How your distress changed'));
+  bar(dtcT('Before'), before, [176, 80, 80]);
+  bar(dtcT('After'), after, [47, 107, 107]);
+  para(dtcChangeText(), 10, INK, 10);
 
-  rows.forEach(function (r) {
-    ensure(80);
-    var lines = doc.splitTextToSize(dtcPdfSafe(r[1]), pageW - margin * 2 - 22);
-    var bh = lines.length * 12 + 28;
-    doc.setFillColor(232, 239, 248);
-    doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(58, 106, 152);
-    doc.text(dtcPdfSafe(r[0]).toUpperCase(), margin + 10, y + 14);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(26, 32, 48);
-    doc.text(lines, margin + 10, y + 26);
-    y += bh + 8;
-  });
+  /* ----- Check-in summary ----- */
+  row(dtcT('What is happening'), situations.length ? situations.join(', ') : dtcT('Not selected'));
+  row(dtcT('Time available'), dtcTimeLabel());
+  row(dtcT('Skills chosen'), skillObjs.length ? skillObjs.map(function (s) { return dtcT(s.name); }).join(', ') : dtcT('Not selected'));
+  row(dtcT('Completed'), done.length ? done.join(', ') : dtcT('Not marked'));
+  row(dtcT('What helped'), rating);
 
-  // Skill guidance
-  ensure(100);
-  y += 4;
-  doc.setDrawColor(168, 192, 216);
-  doc.line(margin, y, pageW - margin, y);
-  y += 14;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(58, 106, 152);
-  doc.text(dtcPdfSafe(dtcT('Coping skill guidance')), margin, y);
-  y += 14;
+  /* ----- My plan ----- */
+  heading(dtcT('My plan'));
+  row(dtcT('One kind next step'), nextStep);
+  row(dtcT('If distress rises again, I will'), plan);
+  row(dtcT('One person I can reach out to'), contact);
 
-  var guide = skillObjs.length ? skillObjs : DTC_SKILLS.slice(0, 3);
+  /* ----- Step by step skill guide ----- */
+  var guide = skillObjs.length ? skillObjs : ['exhale', 'grounding', 'name'].map(dtcSkill);
+  heading(dtcT('Step by step skill guide'), 120);
+  para(dtcT('Use these steps the next time distress rises. Go slowly. You can stop any time.'), 9.5, MUTED, 8);
   guide.forEach(function (s, i) {
-    ensure(70);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(58, 106, 152);
-    doc.text((i + 1) + '. ' + dtcPdfSafe(dtcT(s.name)) + ' (' + s.seconds + 's)', margin, y);
-    y += 12;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.2);
-    doc.setTextColor(26, 32, 48);
-    var txt = dtcT(s.text) + (s.caution ? dtcT(' Note: ') + dtcT(s.caution) : '');
-    var lines = doc.splitTextToSize(dtcPdfSafe(txt), pageW - margin * 2);
-    doc.text(lines, margin, y);
-    y += lines.length * 12 + 10;
+    var steps = dtcSteps(s.id);
+    ensure(30 + Math.min(steps.length, 2) * 14);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); color(BRAND);
+    doc.text((i + 1) + '. ' + safe(dtcT(s.name)) + '  (' + dtcT('about {0} min', Math.max(1, Math.round(s.seconds / 60))) + ')', margin, y);
+    y += 14;
+    steps.forEach(function (st, k) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+      var lines = doc.splitTextToSize(safe((k + 1) + '. ' + st), W - 16);
+      ensure(lines.length * 12.5 + 3);
+      color(INK);
+      doc.text(lines, margin + 12, y);
+      y += lines.length * 12.5 + 2;
+    });
+    if (s.caution) {
+      y += 2;
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(9);
+      var cl = doc.splitTextToSize(safe(dtcT('Note: ') + dtcT(s.caution)), W - 16);
+      ensure(cl.length * 12 + 4);
+      doc.setTextColor(122, 106, 48);
+      doc.text(cl, margin + 12, y);
+      y += cl.length * 12;
+    }
+    y += 10;
   });
 
-  // Education
-  ensure(160);
-  doc.setDrawColor(168, 192, 216);
-  doc.line(margin, y, pageW - margin, y);
-  y += 14;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(58, 106, 152);
-  doc.text(dtcPdfSafe(dtcT('Understanding distress tolerance')), margin, y);
-  y += 14;
+  /* ----- My next 10 minutes ----- */
+  heading(dtcT('My next 10 minutes'));
+  var firstSkill = guide[0] ? dtcT(guide[0].name) : dtcT('Long Exhale Breathing');
+  checkLine(dtcT('Do {0} once more, for about 2 minutes.', firstSkill));
+  checkLine(dtcT('Drink a glass of water and sit somewhere comfortable.'));
+  checkLine(nextRaw ? dtcT('My kind next step: {0}', nextRaw) : dtcT('Choose one kind next step, such as a snack, fresh air or a short rest.'));
+  checkLine(contactRaw ? dtcT('Reach out to {0}.', contactRaw) : dtcT('Tell one person you trust how your day is going.'));
+  checkLine(dtcT('Step away from whatever made it worse, if you can.'));
+  checkLine(dtcT('Rate how you feel from 0 to 10 again: ____'));
+  y += 6;
 
+  /* ----- 7 day practice plan ----- */
+  heading(dtcT('My 7 day practice plan'), 120);
+  para(dtcT('Skills work best when you have practised them while calm. A few minutes a day is enough. Tick each day when it is done, and write how you felt from 0 to 10.'), 9.5, MUTED, 8);
+  var pool = guide.map(function (s) { return s; });
+  var A = pool[0], B = pool[1] || pool[0], C = pool[2] || pool[1] || pool[0];
+  var best = (dtcGotoIds.length && dtcSkill(dtcGotoIds[0])) ? dtcSkill(dtcGotoIds[0]) : A;
+  var fresh = null;
+  var poolIds = pool.map(function (s) { return s.id; });
+  DTC_SKILLS.forEach(function (s) {
+    if (fresh || poolIds.indexOf(s.id) !== -1) return;
+    for (var q = 0; q < keys.length; q++) { if (s.tags.indexOf(keys[q]) !== -1) { fresh = s; return; } }
+  });
+  if (!fresh) { DTC_SKILLS.forEach(function (s) { if (!fresh && poolIds.indexOf(s.id) === -1) fresh = s; }); }
+  if (!fresh) fresh = DTC_SKILLS[DTC_SKILLS.length - 1];
+  var days = [
+    dtcT('Practise {0} for 2 minutes while you are calm.', dtcT(A.name)),
+    dtcT('Practise {0} for 2 minutes.', dtcT(B.name)),
+    dtcT('Practise {0} for 2 minutes.', dtcT(C.name)),
+    dtcT('Use {0} once during the day, even if you feel okay.', dtcT(best.name)),
+    dtcT('Try one new skill: {0}.', dtcT(fresh.name)),
+    dtcT('Practise {0}, then reach out to {1}.', dtcT(A.name), contactRaw || dtcT('someone you trust')),
+    dtcT('Look back: which skill helped most? Write it on your plan above.')
+  ];
+  days.forEach(function (d, i) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    var lines = doc.splitTextToSize(safe(d), W - 218);
+    var rh = Math.max(22, lines.length * 12 + 10);
+    ensure(rh + 4);
+    doc.setFillColor(i % 2 ? 247 : 232, i % 2 ? 249 : 239, i % 2 ? 252 : 248);
+    doc.roundedRect(margin, y, W, rh, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); color(BRAND);
+    doc.text(safe(dtcT('Day {0}', i + 1)), margin + 8, y + 15);
+    doc.setFont('helvetica', 'normal'); color(INK);
+    doc.text(lines, margin + 56, y + 15);
+    doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.8);
+    doc.rect(pageW - margin - 150, y + rh / 2 - 5, 10, 10, 'S');
+    doc.setFontSize(8.5); color(MUTED);
+    doc.text(safe(dtcT('Felt: ___ / 10')), pageW - margin - 132, y + rh / 2 + 3);
+    y += rh + 3;
+  });
+  y += 4;
+
+  /* ----- Where to go next ----- */
+  heading(dtcT('Where to go next'), 110);
+  para(dtcT('Free tools that match what you are feeling. Pick one, or none. There is no rush.'), 9.5, MUTED, 8);
+  var nextKeys = dtcNextToolKeys();
+  if (crisis) nextKeys.unshift('t1');
+  nextKeys.forEach(function (k) {
+    ensure(36);
+    var nm = safe(dtcT(DTC_TOOLS[k][1]));
+    var url = DTC_TOOL_BASE + DTC_TOOLS[k][0];
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.8); doc.setTextColor(58, 106, 152);
+    doc.textWithLink(nm, margin, y, { url: url });
+    y += 12;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); color(MUTED);
+    var ul = doc.splitTextToSize(url, W);
+    doc.text(ul, margin, y);
+    y += ul.length * 10 + 4;
+  });
+  y += 0;
+
+  /* ----- Understanding distress tolerance ----- */
+  heading(dtcT('Understanding distress tolerance'));
   DTC_EDU.forEach(function (e) {
-    ensure(80);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(58, 106, 152);
-    doc.text(dtcPdfSafe(dtcT(e[0])), margin, y);
-    y += 12;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.2);
-    doc.setTextColor(26, 32, 48);
-    var lines = doc.splitTextToSize(dtcPdfSafe(dtcT(e[1])), pageW - margin * 2);
-    doc.text(lines, margin, y);
-    y += lines.length * 11.5 + 12;
+    ensure(70);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); color(BRAND);
+    doc.text(safe(dtcT(e[0])), margin, y);
+    y += 13;
+    para(dtcT(e[1]), 9.3, INK, 5);
   });
 
-  // Resources
-  ensure(100);
-  doc.setDrawColor(168, 192, 216);
-  doc.line(margin, y, pageW - margin, y);
-  y += 14;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(58, 106, 152);
-  doc.text(dtcPdfSafe(dtcT('Support resources')), margin, y);
-  y += 13;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(26, 32, 48);
+  /* ----- Sources ----- */
+  heading(dtcT('Where this comes from'));
+  DTC_SOURCES.forEach(function (s) { para(s, 8.4, MUTED, 3); });
+
+  /* ----- Resources and share ----- */
+  heading(dtcT('Support resources'), 50);
   [
     'Find a helpline: findahelpline.com',
-    'Main site: emotionalintelligencedeveloper.com',
-    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
     'Support this project: emotionalintelligencedeveloper.com/support-this-website/'
-  ].forEach(function (line) { doc.text(dtcPdfSafe(dtcT(line)), margin, y); y += 13; });
+  ].forEach(function (line) { para(dtcT(line), 9, INK, 3); });
+  para(dtcT('Know someone who could use this? Share the free tool: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/'), 9, MUTED, 4);
 
-  // Footer on every page
+  /* ----- Footer on every page ----- */
   var total = doc.getNumberOfPages();
   for (var p = 1; p <= total; p++) {
     doc.setPage(p);
-    doc.setDrawColor(168, 192, 216);
-    doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(107, 122, 148);
-    doc.text(dtcPdfSafe(dtcT('This tool supports coping and reflection. If you are in immediate danger, please contact emergency services now.')), margin, pageH - 22);
-    doc.text(dtcT('Page {0} of {1}', p, total), pageW - margin - (DTC_LANG === 'es' ? 64 : 50), pageH - 10);
+    doc.setDrawColor(LINE[0], LINE[1], LINE[2]);
+    doc.setLineWidth(0.6);
+    doc.line(margin, pageH - 44, pageW - margin, pageH - 44);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(8.3); doc.setTextColor(86, 100, 128);
+    doc.text(safe(dtcT('This tool supports coping and reflection. If you are in immediate danger, please contact emergency services now.')), margin, pageH - 31);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(58, 106, 152);
+    doc.text('emotionalintelligencedeveloper.com', margin, pageH - 17);
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(86, 100, 128);
+    var pg = safe(dtcT('Page {0} of {1}', p, total));
+    doc.text(pg, pageW - margin - doc.getTextWidth(pg), pageH - 17);
   }
 
   doc.save(dtcT('distress-tolerance-coping-plan.pdf'));
@@ -1153,7 +1386,6 @@ var DTC_ES = {
   "Box Breathing": "Respiración cuadrada",
   "Breathe in for 4, hold for 4, breathe out for 4, hold for 4. Repeat slowly and gently.": "Inhala contando 4, sostén 4, exhala contando 4, sostén 4. Repite despacio y con suavidad.",
   "Long Exhale Breathing": "Respiración con exhalación larga",
-  "Breathe in for 4, then breathe out slowly for 6. A longer out-breath helps your body settle.": "Inhala contando 4 y exhala despacio contando 6. Una exhalación más larga ayuda a tu cuerpo a calmarse.",
   "Temperature Shift": "Cambio de temperatura",
   "Cool water on your face and hands, or hold a cool cloth. Stop if you feel dizzy.": "Agua fresca en la cara y las manos, o sostén un paño frío. Para si sientes mareo.",
   "Skip this one if you have a heart condition or a doctor has told you to avoid cold exposure.": "Sáltate esta si tienes un problema de corazón o si te han indicado evitar el frío por motivos médicos.",
@@ -1180,14 +1412,9 @@ var DTC_ES = {
   "Distress tolerance is the ability to get through intense emotional pain without making things worse through impulsive or avoiding behaviour. It was developed as a core part of Dialectical Behaviour Therapy (DBT) by Marsha Linehan for moments when emotions are too strong to solve problems or think things through. The goal is not to make the distress disappear. The goal is to get through it safely.": "La tolerancia al malestar es la capacidad de atravesar un dolor emocional intenso sin empeorar las cosas con conductas impulsivas o de evitación. Se desarrolló como parte central de la Terapia Dialéctica Conductual (DBT), creada por Marsha Linehan, para los momentos en que las emociones son demasiado fuertes para resolver problemas o pensar con calma. La meta no es que el malestar desaparezca. La meta es atravesarlo con seguridad.",
   "Why intense emotions feel unbearable": "Por qué las emociones intensas se sienten insoportables",
   "When emotions peak, the thinking part of the brain (the prefrontal cortex, which helps with reasoning, planning and holding back impulses) has less influence than the brain's alarm system (the amygdala and limbic system). This is why calm, clear thinking feels almost impossible at the height of distress. Distress tolerance skills work through the body and senses instead of through reasoning, so they can still work when thinking is hard.": "Cuando las emociones llegan a su punto máximo, la parte del cerebro que piensa (la corteza prefrontal, que ayuda a razonar, planificar y frenar impulsos) tiene menos influencia que el sistema de alarma del cerebro (la amígdala y el sistema límbico). Por eso pensar con calma y claridad parece casi imposible en lo más alto del malestar. Las habilidades de tolerancia al malestar funcionan a través del cuerpo y los sentidos, no del razonamiento, así que pueden servir incluso cuando pensar cuesta.",
-  "Why a longer out-breath helps": "Por qué ayuda alargar la exhalación",
-  "Breathing out for longer than you breathe in is widely used in breathing practices to help the body shift toward its calming response. Slow breathing can lower heart rate and ease the feeling of panic. This is why skills like Long Exhale Breathing and Box Breathing are often the first thing to try.": "Exhalar durante más tiempo del que inhalas se usa mucho en las prácticas de respiración para ayudar al cuerpo a pasar a su respuesta de calma. La respiración lenta puede bajar el ritmo cardíaco y aliviar la sensación de pánico. Por eso habilidades como la Respiración con exhalación larga y la Respiración cuadrada suelen ser lo primero que conviene probar.",
   "Temperature and the body": "La temperatura y el cuerpo",
-  "Cool water or a cool cloth on the face can trigger the dive reflex, a natural body response that slows the heart rate within seconds. DBT uses this as a fast tool for panic, rage and overwhelming urges. People with heart conditions or a medical reason to avoid cold should skip it.": "El agua fresca o un paño fresco en la cara puede activar el reflejo de inmersión, una respuesta natural del cuerpo que frena el ritmo cardíaco en pocos segundos. La DBT lo usa como herramienta rápida para el pánico, la rabia y los impulsos abrumadores. Quien tenga problemas de corazón o un motivo médico para evitar el frío debe saltarse esta habilidad.",
   "Urge surfing and the wave idea": "Surfear el impulso y la idea de la ola",
-  "Urge surfing means noticing an urge without acting on it. Research on urges and cravings shows they tend to rise, peak and then fall if they are not fed. Practising observing the urge, rather than obeying it or fighting it, can reduce how strong it feels over time. The wave picture is a good one: urges do not climb forever. They pass.": "Surfear el impulso significa notar un impulso sin actuar sobre él. Las investigaciones sobre impulsos y ansias muestran que suelen subir, llegar a un punto máximo y luego bajar si no se alimentan. Practicar observar el impulso, en lugar de obedecerlo o pelear contra él, puede reducir su fuerza con el tiempo. La imagen de la ola es buena: los impulsos no suben para siempre. Pasan.",
   "Self-compassion as a calming skill": "La autocompasión como habilidad para calmarte",
-  "Research by Kristin Neff and others shows that treating yourself with the kindness you would offer a friend can reduce distress, shame and harsh self-criticism, and can help people recover faster after hard events. Self-compassion is not self-indulgence. It is a practical way to calm the body and mind.": "Las investigaciones de Kristin Neff y otras personas muestran que tratarte con la amabilidad que le darías a una amistad puede reducir el malestar, la vergüenza y la autocrítica dura, y ayudar a recuperarte más rápido tras momentos difíciles. La autocompasión no es complacencia. Es una forma práctica de calmar el cuerpo y la mente.",
   "Emotional Intelligence Developer logo": "Logo de Emotional Intelligence Developer",
   "Distress Tolerance Coping Tool": "Herramienta de Afrontamiento y Tolerancia al Malestar",
   "Distress Tolerance Coping Tool | Emotional Intelligence Developer": "Herramienta de Afrontamiento y Tolerancia al Malestar | Emotional Intelligence Developer",
@@ -1340,6 +1567,81 @@ var DTC_ES = {
   "Support this project: emotionalintelligencedeveloper.com/support-this-website/": "Apoya este proyecto: emotionalintelligencedeveloper.com/support-this-website/",
   "This tool supports coping and reflection. If you are in immediate danger, please contact emergency services now.": "Esta herramienta apoya el afrontamiento y la reflexión. Si estás en peligro inmediato, llama ya a emergencias.",
   "Page {0} of {1}": "Página {0} de {1}",
+  "Step 1": "Paso 1",
+  "Step 2": "Paso 2",
+  "Step 3": "Paso 3",
+  "Step 4": "Paso 4",
+  "Step {0} of {1}": "Paso {0} de {1}",
+  "Back": "Atrás",
+  "Next": "Siguiente",
+  "Skip": "Omitir",
+  "How strong is it right now?": "¿Qué tan fuerte es ahora mismo?",
+  "Move the slider to match how it feels. There is no wrong answer.": "Mueve el control para que coincida con lo que sientes. No hay respuestas incorrectas.",
+  "What is happening, and how much time do you have?": "¿Qué está pasando y cuánto tiempo tienes?",
+  "I need help right now": "Necesito ayuda ahora mismo",
+  "Starts slow breathing for 90 seconds. No questions first.": "Empieza una respiración lenta de 90 segundos. Sin preguntas antes.",
+  "Slow breathing started. You can change skills any time.": "Empezó la respiración lenta. Puedes cambiar de habilidad cuando quieras.",
+  "Your go-to skills: ": "Tus habilidades de confianza: ",
+  "Use my go-to skills": "Usar mis habilidades de confianza",
+  "Your go-to skills are selected. You can change them.": "Se eligieron tus habilidades de confianza. Puedes cambiarlas.",
+  "Where to go next": "A dónde ir después",
+  "Tools that match what you are feeling. Pick one, or none. There is no rush.": "Herramientas que encajan con lo que sientes. Elige una, o ninguna. No hay prisa.",
+  "Free tools that match what you are feeling. Pick one, or none. There is no rush.": "Herramientas gratuitas que encajan con lo que sientes. Elige una, o ninguna. No hay prisa.",
+  "If you are having thoughts of ending your life, please open this tool or contact a helpline now.": "Si estás teniendo pensamientos de quitarte la vida, abre esta herramienta o contacta ahora con una línea de ayuda.",
+  "You have not set how strong it felt at the start. Go back to step 1 to set it, so your change is accurate.": "No has indicado qué tan fuerte era al principio. Vuelve al paso 1 para indicarlo y que el cambio sea exacto.",
+  "Go to step 1": "Ir al paso 1",
+  "Your name (optional, prints on your PDF only)": "Tu nombre (opcional, solo aparece en tu PDF)",
+  "e.g. Alex": "p. ej., Alex",
+  "Prepared for: ": "Preparado para: ",
+  "Suicide Prevention and Emotional Support Tool": "Herramienta de prevención del suicidio y apoyo emocional",
+  "Boundary Builder Tool": "Constructor de límites",
+  "Courage in the Face of Fear Tool": "Valentía ante el miedo",
+  "Emotional Trigger Mapping Tool": "Mapa de desencadenantes emocionales",
+  "Hard Conversation Preparation Tool": "Preparar una conversación difícil",
+  "Positive Strength Map Tool": "Mapa de fortalezas positivas",
+  "Threat and Emotional Regulation Tool": "Amenaza y regulación emocional",
+  "Visual Grounding and Emotional Reset Tool": "Anclaje visual y reinicio emocional",
+  "Emotional Support Self-Check Tool": "Autoevaluación de apoyo emocional",
+  "Wellbeing Journey: Quick Check and Reset": "Camino de bienestar: revisión y reinicio",
+  "Slow breathing can help you settle": "La respiración lenta puede ayudarte a calmarte",
+  "Slow, steady breathing with a long out-breath is one of the most widely used ways to calm down in the moment. A 2023 review of 12 trials found small to moderate drops in self-reported stress, anxiety and low mood. It does not work the same for everyone and it is not a cure. It is a simple first thing to try, which is why Long Exhale Breathing and Box Breathing are often suggested first. If slow breathing makes you feel dizzy or more anxious, stop and try a different skill.": "Respirar de forma lenta y constante, con una exhalación larga, es una de las formas más usadas para calmarse en el momento. Una revisión de 2023 con 12 estudios encontró descensos pequeños o moderados del estrés, la ansiedad y el ánimo bajo que las personas reportaban. No funciona igual para todo el mundo y no es una cura. Es algo sencillo para probar primero, y por eso suelen sugerirse primero la Respiración con exhalación larga y la Respiración cuadrada. Si respirar despacio te marea o te pone más ansioso, para y prueba otra habilidad.",
+  "Many people find that cool water or a cool cloth on the face helps them shift out of a spike of panic or anger, because it gives the body a strong new sensation to focus on. DBT teaches it as a quick skill for intense moments. It is a fast way to change how your body feels, not a treatment. People with heart conditions or a medical reason to avoid cold should skip it.": "Mucha gente siente que el agua fresca o un paño fresco en la cara ayuda a salir de un pico de pánico o de enojo, porque le da al cuerpo una sensación nueva e intensa en la que concentrarse. La DBT la enseña como una habilidad rápida para momentos intensos. Es una forma rápida de cambiar cómo se siente tu cuerpo, no un tratamiento. Quien tenga problemas de corazón o un motivo médico para evitar el frío debe saltarse esta habilidad.",
+  "Urge surfing means noticing an urge without acting on it straight away. In one early study of student smokers, people who practised urge surfing smoked fewer cigarettes over the next 7 days, although they did not report weaker urges. The research is still early. The wave picture is still a helpful one: an urge is a moment you can ride out, and it does not have to run the show.": "Surfear el impulso significa notar un impulso sin actuar de inmediato. En un estudio inicial con estudiantes fumadores, quienes practicaron surfear el impulso fumaron menos cigarrillos durante los siguientes 7 días, aunque no dijeron sentir impulsos más débiles. La investigación aún es temprana. La imagen de la ola sigue siendo útil: un impulso es un momento que puedes atravesar y no tiene que mandar sobre ti.",
+  "Research on self-compassion, including the work of Kristin Neff, links treating yourself with the kindness you would offer a friend to lower distress, less shame and less harsh self-criticism. Self-compassion is not self-indulgence. It is a practical way to calm the body and mind.": "Las investigaciones sobre la autocompasión, incluido el trabajo de Kristin Neff, relacionan tratarte con la amabilidad que le darías a una amistad con menos malestar, menos vergüenza y menos autocrítica dura. La autocompasión no es complacencia. Es una forma práctica de calmar el cuerpo y la mente.",
+  "Breathe in for 4, then breathe out slowly for 6. A longer out-breath helps many people settle.": "Inhala contando 4 y exhala despacio contando 6. Una exhalación más larga ayuda a mucha gente a calmarse.",
+  "How your distress changed": "Cómo cambió tu malestar",
+  "Before": "Antes",
+  "After": "Después",
+  "Talk to someone right now": "Habla con alguien ahora mismo",
+  "If you feel unsafe, or think you might hurt yourself, contact your local emergency number now. For a free helpline in your country, visit findahelpline.com. You can also tell someone near you what is happening. You do not have to handle this alone.": "Si sientes que no estás a salvo, o crees que podrías hacerte daño, llama ahora al número de emergencias de tu zona. Para una línea de ayuda gratuita en tu país, visita findahelpline.com. También puedes contarle a alguien cercano lo que está pasando. No tienes que pasar por esto a solas.",
+  "Your distress was very high. If you are having thoughts of ending your life, please reach out today and open the Suicide Prevention and Emotional Support Tool from emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/": "Tu malestar fue muy alto. Si estás teniendo pensamientos de quitarte la vida, busca ayuda hoy y abre la Herramienta de prevención del suicidio y apoyo emocional en emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
+  "My plan": "Mi plan",
+  "Step by step skill guide": "Guía paso a paso de las habilidades",
+  "Use these steps the next time distress rises. Go slowly. You can stop any time.": "Usa estos pasos la próxima vez que suba el malestar. Ve despacio. Puedes parar cuando quieras.",
+  "about {0} min": "unos {0} min",
+  "Note: ": "Nota: ",
+  "My next 10 minutes": "Mis próximos 10 minutos",
+  "Do {0} once more, for about 2 minutes.": "Haz {0} una vez más, durante unos 2 minutos.",
+  "Drink a glass of water and sit somewhere comfortable.": "Bebe un vaso de agua y siéntate en un lugar cómodo.",
+  "My kind next step: {0}": "Mi siguiente paso amable: {0}",
+  "Choose one kind next step, such as a snack, fresh air or a short rest.": "Elige un siguiente paso amable, como algo de comer, aire fresco o un descanso corto.",
+  "Reach out to {0}.": "Acércate a {0}.",
+  "Tell one person you trust how your day is going.": "Cuéntale a una persona de confianza cómo va tu día.",
+  "Step away from whatever made it worse, if you can.": "Aléjate de lo que lo empeoró, si puedes.",
+  "Rate how you feel from 0 to 10 again: ____": "Vuelve a valorar cómo te sientes de 0 a 10: ____",
+  "My 7 day practice plan": "Mi plan de práctica de 7 días",
+  "Skills work best when you have practised them while calm. A few minutes a day is enough. Tick each day when it is done, and write how you felt from 0 to 10.": "Las habilidades funcionan mejor cuando las has practicado estando en calma. Bastan unos minutos al día. Marca cada día cuando lo hagas y anota cómo te sentiste de 0 a 10.",
+  "Day {0}": "Día {0}",
+  "Felt: ___ / 10": "Sentí: ___ / 10",
+  "Practise {0} for 2 minutes while you are calm.": "Practica {0} durante 2 minutos mientras estás en calma.",
+  "Practise {0} for 2 minutes.": "Practica {0} durante 2 minutos.",
+  "Use {0} once during the day, even if you feel okay.": "Usa {0} una vez durante el día, aunque te sientas bien.",
+  "Try one new skill: {0}.": "Prueba una habilidad nueva: {0}.",
+  "Practise {0}, then reach out to {1}.": "Practica {0} y luego acércate a {1}.",
+  "someone you trust": "alguien de confianza",
+  "Look back: which skill helped most? Write it on your plan above.": "Mira atrás: ¿qué habilidad ayudó más? Anótala en tu plan de arriba.",
+  "Where this comes from": "De dónde viene esto",
+  "Know someone who could use this? Share the free tool: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/": "¿Conoces a alguien a quien le pueda servir? Comparte la herramienta gratuita: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/",
   "distress-tolerance-coping-plan.pdf": "plan-tolerancia-al-malestar.pdf"
 };
 
@@ -1401,6 +1703,9 @@ function dtcRefreshDynamic() {
   dtcRenderSummary();
   dtcRenderHistory();
   dtcUpdateShare();
+  dtcUpdateNav();
+  dtcRenderGoto();
+  dtcRenderNext();
 }
 
 function dtcLoadLang() {
@@ -1418,6 +1723,154 @@ function dtcSetLang(lang, persist) {
   if (persist) {
     try { window.localStorage.setItem(DTC_LANG_STORE, DTC_LANG); } catch (e) {}
   }
+}
+
+/* ---------- STEP FLOW (added) ---------- */
+var dtcStepNow = 1;
+var dtcSliderTouched = false;
+var dtcBeforeLocked = false;
+var dtcGotoIds = [];
+var DTC_STEP_IDS = ['dtcStep1', 'dtcStep2', 'dtcStep3', 'dtcSummarySection'];
+var DTC_TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+var DTC_TOOLS = {
+  t1: ['Suicide-Prevention-and-Emotional-Support-Tool.html', 'Suicide Prevention and Emotional Support Tool'],
+  t3: ['boundary-builder-tool.html', 'Boundary Builder Tool'],
+  t4: ['courage-in-the-face-of-fear-tool.html', 'Courage in the Face of Fear Tool'],
+  t8: ['emotional-trigger-mapping-tool.html', 'Emotional Trigger Mapping Tool'],
+  t11: ['hard-conversation-preparation-tool.html', 'Hard Conversation Preparation Tool'],
+  t18: ['positive-strengths-map-tool.html', 'Positive Strength Map Tool'],
+  t19: ['threat-and-emotional-regulation-tool.html', 'Threat and Emotional Regulation Tool'],
+  t21: ['visual-grounding-emotional-reset-tool.html', 'Visual Grounding and Emotional Reset Tool'],
+  t24: ['emotional-support-self-check-addiction-check-in.html', 'Emotional Support Self-Check Tool'],
+  t25: ['wellbeing-journey-tool.html', 'Wellbeing Journey: Quick Check and Reset']
+};
+var DTC_NEXT_BY_SIT = {
+  panic: ['t21', 't19'], anger: ['t8', 't11'], sadness: ['t25', 't4'], shame: ['t18', 't4'],
+  numb: ['t21', 't25'], overwhelmed: ['t21', 't19'], cravings: ['t24', 't25'],
+  conflict: ['t11', 't3'], other: ['t25', 't19']
+};
+
+function dtcNextToolKeys() {
+  var out = [];
+  dtcGetSituationKeys().forEach(function (k) {
+    (DTC_NEXT_BY_SIT[k] || []).forEach(function (t) { if (out.indexOf(t) === -1) out.push(t); });
+  });
+  if (!out.length) out = ['t21', 't19', 't25'];
+  return out.slice(0, 3);
+}
+
+function dtcNeedsCrisisTool() {
+  var b = (dtcBefore === null) ? dtcSliderVal() : dtcBefore;
+  return b >= 9 || (dtcAfterTouched && dtcAfterVal() >= 9);
+}
+
+function dtcToolLink(key) {
+  var a = document.createElement('a');
+  a.className = 'dtc-next-tool';
+  a.href = DTC_TOOL_BASE + DTC_TOOLS[key][0];
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = dtcT(DTC_TOOLS[key][1]);
+  return a;
+}
+
+function dtcRenderNext() {
+  var box = dtcEl('dtcNextTools');
+  if (!box) return;
+  box.innerHTML = '';
+  if (dtcNeedsCrisisTool()) {
+    var c = document.createElement('div');
+    c.className = 'dtc-next-crisis';
+    var p = document.createElement('p');
+    p.textContent = dtcT('If you are having thoughts of ending your life, please open this tool or contact a helpline now.');
+    c.appendChild(p);
+    c.appendChild(dtcToolLink('t1'));
+    box.appendChild(c);
+  }
+  var wrap = document.createElement('div');
+  wrap.className = 'dtc-next-list';
+  dtcNextToolKeys().forEach(function (k) { wrap.appendChild(dtcToolLink(k)); });
+  box.appendChild(wrap);
+  var un = dtcEl('dtcUnrated');
+  if (un) un.style.display = (!dtcSliderTouched) ? 'block' : 'none';
+}
+
+function dtcRenderGoto() {
+  var box = dtcEl('dtcGoto');
+  if (!box) return;
+  if (!dtcGotoIds.length) { box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  dtcEl('dtcGotoText').textContent = dtcT('Your go-to skills: ') + dtcNames(dtcGotoIds).join(', ') + '.';
+}
+
+function dtcUpdateNav() {
+  var n = dtcStepNow;
+  var back = dtcEl('dtcBack');
+  if (!back) return;
+  back.style.visibility = (n === 1) ? 'hidden' : 'visible';
+  var nx = dtcEl('dtcNextBtn');
+  nx.style.display = (n >= 3) ? 'none' : '';
+  var skipping = (n === 2 && !dtcGetSituationKeys().length);
+  nx.querySelector('span').textContent = dtcT(skipping ? 'Skip' : 'Next');
+  dtcEl('dtcStepCount').textContent = dtcT('Step {0} of {1}', n, 4);
+  var dots = document.querySelectorAll('#dtcDots .dtc-dot');
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].classList.toggle('on', i + 1 === n);
+    dots[i].classList.toggle('past', i + 1 < n);
+  }
+}
+
+function dtcGoStep(n, scroll) {
+  dtcStepNow = n;
+  DTC_STEP_IDS.forEach(function (id, i) {
+    var el = dtcEl(id);
+    if (el) el.classList.toggle('dtc-off', i + 1 !== n);
+  });
+  var hist = dtcEl('dtcHistoryCard');
+  if (hist) hist.classList.toggle('dtc-off', !(n === 1 || n === 4));
+  dtcUpdateNav();
+  if (scroll) {
+    var card = dtcEl(DTC_STEP_IDS[n - 1]);
+    var h = card ? card.querySelector('.dtc-card-title') : null;
+    if (h) { h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) {} }
+    dtcEl('dtcRoot').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function dtcBuildNav() {
+  var dots = dtcEl('dtcDots');
+  for (var i = 1; i <= 4; i++) {
+    var d = document.createElement('span');
+    d.className = 'dtc-dot';
+    dots.appendChild(d);
+  }
+  dtcEl('dtcBack').addEventListener('click', function () { dtcGoStep(Math.max(1, dtcStepNow - 1), true); });
+  dtcEl('dtcNextBtn').addEventListener('click', function () { dtcGoStep(Math.min(3, dtcStepNow + 1), true); });
+  dtcEl('dtcChips').addEventListener('click', dtcUpdateNav);
+  dtcEl('dtcSlider').addEventListener('input', function () {
+    dtcSliderTouched = true;
+    /* The starting score follows the slider until a skill timer has been started with it set */
+    if (!dtcBeforeLocked) {
+      dtcBefore = dtcSliderVal();
+      if (dtcSnap) { dtcSnap.before = dtcBefore; dtcRenderSummary(); dtcUpdateChange(true); }
+    }
+  });
+  dtcEl('dtcToStep1').addEventListener('click', function () { dtcGoStep(1, true); });
+  dtcEl('dtcQuick').addEventListener('click', dtcQuickStart);
+  dtcEl('dtcGotoBtn').addEventListener('click', function () {
+    dtcSetSelected(dtcGotoIds.slice(0, 3));
+    dtcToast(dtcT('Your go-to skills are selected. You can change them.'));
+  });
+}
+
+/* One tap: slow breathing for 90 seconds, no questions first */
+function dtcQuickStart() {
+  dtcSetSelected(['exhale']);
+  dtcGoStep(3, true);
+  if (!dtcTimers['exhale']) dtcStartTimer('exhale');
+  var card = dtcEl('dtcSkill-exhale');
+  if (card) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350);
+  dtcToast(dtcT('Slow breathing started. You can change skills any time.'));
 }
 
 /* ---------- INIT ---------- */
@@ -1443,6 +1896,8 @@ function dtcInit() {
   var radios = document.querySelectorAll('input[name="dtcTime"]');
   for (var i = 0; i < radios.length; i++) radios[i].addEventListener('change', dtcUpdateFit);
   dtcEl('dtcLang').addEventListener('change', function () { dtcSetLang(this.value, true); });
+  dtcBuildNav();
+  dtcGoStep(1, false);
   dtcSetLang(dtcLoadLang(), false);
 }
 

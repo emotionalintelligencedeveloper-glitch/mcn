@@ -11,7 +11,7 @@
       --card: #ffffff;
       --text: #1a2018;
       --muted: #4a5848;
-      --hint: #6f8a6c;
+      --hint: #566a54;
       --border: #ccd8c0;
       --brand: #5a7a50;
       --brand-light: #eaf2e8;
@@ -28,7 +28,7 @@
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --support: #e8702a;
+      --support: #b8501a;
       --danger-bg: #fff0f0;
       --danger-border: #f5a0a0;
       --danger-text: #8b1a1a;
@@ -46,7 +46,7 @@
     }
 
     .container {
-      max-width: 680px;
+      max-width: 860px;
       margin: 0 auto;
       padding: 20px 16px 40px;
     }
@@ -583,6 +583,43 @@
     .footer-credit { font-size: 12px; color: var(--hint); margin-top: 12px; }
 
     .hidden { display: none; }
+
+    /* ---------- added: safe-device check, quick exit, heaviness scale, next steps ---------- */
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .btn-exit { background: var(--danger-text); color: #fff; border-color: var(--danger-text); }
+    .gate-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+    .gate-btn { flex: 1 1 200px; background: var(--brand-light); border: 1.5px solid var(--brand-mid); border-radius: var(--radius-md); padding: 12px 16px; min-height: 48px; font-family: Georgia, serif; font-size: 14px; color: var(--text); cursor: pointer; text-align: left; line-height: 1.4; }
+    .gate-btn:hover { border-color: var(--brand); }
+    .safer-panel { display: none; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; color: var(--danger-text); font-size: 14px; line-height: 1.65; }
+    .safer-panel .card-title { color: var(--danger-text); margin-bottom: 8px; }
+    .safer-panel .btn-row { margin-top: 12px; }
+    .safer .hide-safer { display: none !important; }
+    .scale { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .scale label { position: relative; }
+    .scale input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    .scale span { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; min-height: 42px; border: 1.5px solid var(--brand-mid); border-radius: var(--radius-sm); background: #fff; font-size: 15px; color: var(--muted); }
+    .scale input:checked + span { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .scale input:focus-visible + span { outline: 3px solid var(--slate); outline-offset: 2px; }
+    .scale-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 10px; max-width: 520px; }
+    .soft-note { display: none; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-md); padding: 12px 14px; font-size: 14px; color: var(--danger-text); line-height: 1.6; margin: 10px 0; }
+    .soft-note .btn { margin: 10px 8px 0 0; }
+    .next-box { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--brand-mid); }
+    .next-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .next-link { display: inline-flex; align-items: center; background: #fff; border: 1.5px solid var(--brand-mid); border-radius: 99px; padding: 8px 16px; font-size: 14px; color: var(--brand); text-decoration: none; line-height: 1.3; min-height: 40px; }
+    .next-link:hover { border-color: var(--brand); text-decoration: underline; }
+    .next-quiet { font-size: 13px; color: var(--muted); margin-top: 10px; }
+    .next-quiet a, .helpline-list a { color: var(--brand); text-decoration: underline; }
+    .helpline-list { list-style: none; margin: 0 0 12px; padding: 0; font-size: 14px; color: var(--muted); }
+    .helpline-list li { padding: 5px 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .helpline-list li:last-child { border-bottom: 0; }
+    .help-sub { font-size: 14px; color: var(--text); font-weight: bold; margin: 12px 0 4px; }
+    .help-flash { box-shadow: 0 0 0 3px var(--brand-mid); }
+    .cover { display: none; position: fixed; inset: 0; background: #fff; z-index: 1000; padding: 40px 24px; color: #333; font-family: Arial, sans-serif; cursor: pointer; }
+    .cover.on { display: block; }
+    .cover h2 { font-size: 1.4rem; font-weight: normal; margin-bottom: 14px; }
+    .cover p { font-size: 15px; color: #666; margin-bottom: 8px; }
+    .cover .tiny { position: absolute; bottom: 20px; left: 24px; font-size: 12px; color: #aaa; }
+    @media (max-width: 480px) { .gate-btn { flex-basis: 100%; } }
   </style>
 </head>
 <body>
@@ -609,10 +646,53 @@
       <strong data-i18n>If you are in immediate danger, contact local emergency services now.</strong>
       <span data-i18n>If you are having thoughts of ending your life or hurting yourself, please reach out to a crisis line or someone near you right away. You can find one for your country at</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.
     </div>
+    <div class="quick-actions">
+      <button type="button" class="btn btn-exit" id="quickExitBtn" data-i18n>Quick Exit</button>
+      <button type="button" class="btn btn-outline" id="coverBtn" data-i18n>Cover screen</button>
+    </div>
   </header>
 
+  <section class="safer-panel" id="saferPanel" aria-labelledby="safer-heading">
+    <p class="card-title" id="safer-heading" data-i18n>Safer mode is on</p>
+    <p data-i18n>Because your device may be watched, the writing sections are hidden and nothing here can be saved. If you can, use a device the other person cannot reach, such as a library computer or a trusted friend's phone. The helplines and the grounding pause are still below.</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-slate" id="saferHelp" data-i18n>Open the helplines</button>
+      <button type="button" class="btn btn-outline" id="saferShowAll" data-i18n>Show the full tool anyway</button>
+    </div>
+  </section>
+
+  <section class="card" id="gateCard" aria-labelledby="gate-heading">
+    <p class="card-title" id="gate-heading" data-i18n>Is it safe to use this device?</p>
+    <p class="card-intro" data-i18n>Take a moment. Choose what fits. Nothing you choose here is saved.</p>
+    <div class="gate-options">
+      <button type="button" class="gate-btn" id="gateSafe" data-i18n>I am safe to continue</button>
+      <button type="button" class="gate-btn" id="gateScreen" data-i18n>Someone might see my screen</button>
+      <button type="button" class="gate-btn" id="gateWatched" data-i18n>My device may be watched</button>
+    </div>
+  </section>
+
+  <section class="card hide-safer" aria-labelledby="heavy-before-heading">
+    <p class="card-title" id="heavy-before-heading" data-i18n>How heavy does this feel right now?</p>
+    <p class="card-intro" data-i18n>You can skip this. 0 means light. 10 means very heavy. Your rating is never saved.</p>
+    <div class="scale" role="radiogroup" aria-label="How heavy it feels right now, from 0 to 10" data-i18n-attr="aria-label">
+      <label><input type="radio" name="heavyBefore" value="0"><span>0</span></label>
+      <label><input type="radio" name="heavyBefore" value="1"><span>1</span></label>
+      <label><input type="radio" name="heavyBefore" value="2"><span>2</span></label>
+      <label><input type="radio" name="heavyBefore" value="3"><span>3</span></label>
+      <label><input type="radio" name="heavyBefore" value="4"><span>4</span></label>
+      <label><input type="radio" name="heavyBefore" value="5"><span>5</span></label>
+      <label><input type="radio" name="heavyBefore" value="6"><span>6</span></label>
+      <label><input type="radio" name="heavyBefore" value="7"><span>7</span></label>
+      <label><input type="radio" name="heavyBefore" value="8"><span>8</span></label>
+      <label><input type="radio" name="heavyBefore" value="9"><span>9</span></label>
+      <label><input type="radio" name="heavyBefore" value="10"><span>10</span></label>
+    </div>
+    <div class="scale-ends"><span data-i18n>0 = light</span><span data-i18n>10 = very heavy</span></div>
+    <div class="soft-note" id="beforeNote" role="status"></div>
+  </section>
+
   <!-- NEEDS CHIPS -->
-  <section class="card" aria-labelledby="needs-heading">
+  <section class="card hide-safer" aria-labelledby="needs-heading">
     <p class="card-title" id="needs-heading" data-i18n>Right now, I need...</p>
     <p class="card-intro" data-i18n>Choose any that feel true. You can pick more than one. These will shape your support plan.</p>
     <div class="chip-wrap" id="needsChips" role="group" aria-label="What I need right now" data-i18n-attr="aria-label"></div>
@@ -640,7 +720,7 @@
   </section>
 
   <!-- REFLECTION STEPPER -->
-  <section class="card" aria-labelledby="reflection-heading">
+  <section class="card hide-safer" aria-labelledby="reflection-heading">
     <p class="card-title" id="reflection-heading" data-i18n>Gentle reflection</p>
     <p class="card-intro" data-i18n>Eight short questions, one at a time. Every question can be skipped. There are no right or wrong answers here.</p>
 
@@ -667,15 +747,41 @@
   </section>
 
   <!-- SUPPORT PLAN (hidden until generated) -->
-  <section class="card hidden" id="planSection" aria-labelledby="plan-heading" aria-live="polite">
+  <section class="card hidden hide-safer" id="planSection" aria-labelledby="plan-heading" aria-live="polite">
     <p class="card-title" id="plan-heading" data-i18n>My support plan for today</p>
     <div class="plan-card" id="planContent"></div>
+
+    <div class="after-scale" style="margin-top:16px;">
+      <p class="plan-row-label" data-i18n>How heavy does it feel now?</p>
+      <p class="card-intro" data-i18n>After this reflection, rate it again. 0 means light. 10 means very heavy. Your rating is never saved.</p>
+      <div class="scale" role="radiogroup" aria-label="How heavy it feels now, from 0 to 10" data-i18n-attr="aria-label">
+        <label><input type="radio" name="heavyAfter" value="0"><span>0</span></label>
+        <label><input type="radio" name="heavyAfter" value="1"><span>1</span></label>
+        <label><input type="radio" name="heavyAfter" value="2"><span>2</span></label>
+        <label><input type="radio" name="heavyAfter" value="3"><span>3</span></label>
+        <label><input type="radio" name="heavyAfter" value="4"><span>4</span></label>
+        <label><input type="radio" name="heavyAfter" value="5"><span>5</span></label>
+        <label><input type="radio" name="heavyAfter" value="6"><span>6</span></label>
+        <label><input type="radio" name="heavyAfter" value="7"><span>7</span></label>
+        <label><input type="radio" name="heavyAfter" value="8"><span>8</span></label>
+        <label><input type="radio" name="heavyAfter" value="9"><span>9</span></label>
+        <label><input type="radio" name="heavyAfter" value="10"><span>10</span></label>
+      </div>
+      <div class="scale-ends"><span data-i18n>0 = light</span><span data-i18n>10 = very heavy</span></div>
+      <div class="soft-note" id="shiftBox" role="status"></div>
+    </div>
 
     <div class="name-field">
       <label for="pdfName" class="name-label" data-i18n>Add your first name to the PDF (optional)</label>
       <input type="text" id="pdfName" maxlength="40" autocomplete="given-name" placeholder="Your first name" data-i18n-attr="placeholder" />
       <p class="name-note" data-i18n>Your name is only used on the PDF. It is not saved and not sent anywhere.</p>
     </div>
+
+    <label class="save-row" style="margin-top:14px;">
+      <input type="checkbox" id="discreetPdf" />
+      <span data-i18n>Make this PDF discreet</span>
+    </label>
+    <p class="name-note" data-i18n>A discreet PDF has a neutral title, no logo, and lists phone numbers without words that show why you made it. Your own written words still appear in it.</p>
 
     <div class="section-label" style="margin-top:18px;" data-i18n>Actions</div>
     <div class="btn-row" style="margin-bottom:18px;">
@@ -685,7 +791,7 @@
   </section>
 
   <!-- SAVE TOGGLE -->
-  <section class="card" aria-labelledby="save-heading">
+  <section class="card hide-safer" aria-labelledby="save-heading">
     <p class="card-title" id="save-heading" data-i18n>Continue later</p>
     <label class="save-row">
       <input type="checkbox" id="saveToggle" />
@@ -698,6 +804,21 @@
   <section class="card" aria-labelledby="help-heading">
     <p class="card-title" id="help-heading" data-i18n>Get help now</p>
     <p style="font-size:14px;color:var(--muted);margin-bottom:12px;" data-i18n>If you need urgent help or local support, these resources are free and available in most countries. If you are in immediate danger, contact emergency services first.</p>
+    <ul class="helpline-list">
+      <li><span data-i18n>Anywhere in the world:</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">findahelpline.com</a></li>
+      <li><span data-i18n>South Africa, grief and loss:</span> <a href="https://findahelpline.com/countries/za/topics/grief-loss" target="_blank" rel="noopener noreferrer">findahelpline.com</a></li>
+      <li><span data-i18n>South Africa, trauma:</span> <a href="https://findahelpline.com/countries/za/topics/trauma-ptsd" target="_blank" rel="noopener noreferrer">findahelpline.com</a></li>
+    </ul>
+    <p class="help-sub" data-i18n>If the violence was in a home or relationship</p>
+    <ul class="helpline-list">
+      <li><span data-i18n>South Africa, GBV Command Centre (free, 24 hours):</span> <a href="tel:0800428428">0800 428 428</a></li>
+      <li data-i18n>South Africa, other ways to reach the same centre: SMS HELP to 31531, or send a Please Call Me to 1207867#.</li>
+      <li><span data-i18n>Zimbabwe, national GBV call centre (toll free):</span> <a href="tel:575">575</a></li>
+      <li><span data-i18n>United Kingdom, National Domestic Abuse Helpline (free, 24 hours):</span> <a href="tel:08082000247">0808 2000 247</a></li>
+      <li data-i18n>United Kingdom: live chat and a British Sign Language video service are at nationaldahelpline.org.uk. In an emergency call 999.</li>
+      <li><span data-i18n>United States, National Domestic Violence Hotline:</span> <a href="tel:18007997233">1-800-799-7233</a></li>
+      <li data-i18n>United States: you can also text START to 88788, or use the live chat at thehotline.org.</li>
+    </ul>
     <div class="btn-row">
       <a class="btn btn-slate" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline in your country</a>
     </div>
@@ -731,6 +852,14 @@
     </p>
   </footer>
 
+</div>
+
+<div class="cover" id="cover" role="button" tabindex="0" aria-label="Screen covered. Tap to return" data-i18n-attr="aria-label">
+  <h2 data-i18n>Notes</h2>
+  <p data-i18n>Shopping list</p>
+  <p data-i18n>Milk, bread, eggs, rice</p>
+  <p data-i18n>Call about the appointment on Monday</p>
+  <div class="tiny" data-i18n>Tap anywhere to return</div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -919,7 +1048,108 @@
     'Support this project:': 'Apoya este proyecto:',
     'This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.': 'Esta herramienta apoya la reflexión y la conciencia. Si estás en peligro inmediato, busca ayuda urgente ahora.',
     'Page': 'Página',
-    'of': 'de'
+    'of': 'de',
+    "Quick Exit": "Salida rápida",
+    "Cover screen": "Cubrir pantalla",
+    "Safer mode is on": "El modo más seguro está activado",
+    "Because your device may be watched, the writing sections are hidden and nothing here can be saved. If you can, use a device the other person cannot reach, such as a library computer or a trusted friend's phone. The helplines and the grounding pause are still below.": "Como tu dispositivo puede estar vigilado, las secciones para escribir están ocultas y aquí no se puede guardar nada. Si puedes, usa un dispositivo al que la otra persona no tenga acceso, como uno de una biblioteca o el teléfono de una amistad de confianza. Las líneas de ayuda y la pausa para centrarte siguen más abajo.",
+    "Open the helplines": "Abrir las líneas de ayuda",
+    "Show the full tool anyway": "Mostrar la herramienta completa de todos modos",
+    "Is it safe to use this device?": "¿Es seguro usar este dispositivo?",
+    "Take a moment. Choose what fits. Nothing you choose here is saved.": "Tómate un momento. Elige lo que encaje. Nada de lo que elijas aquí se guarda.",
+    "I am safe to continue": "Puedo continuar con seguridad",
+    "Someone might see my screen": "Alguien podría ver mi pantalla",
+    "My device may be watched": "Mi dispositivo puede estar vigilado",
+    "Quiet mode is on. The screen covers itself after 1 minute without activity. Press Escape 3 times to leave fast.": "El modo discreto está activado. La pantalla se cubre sola tras 1 minuto sin actividad. Pulsa Esc 3 veces para salir rápido.",
+    "Notes": "Notas",
+    "Shopping list": "Lista de la compra",
+    "Milk, bread, eggs, rice": "Leche, pan, huevos, arroz",
+    "Call about the appointment on Monday": "Llamar por la cita del lunes",
+    "Tap anywhere to return": "Toca en cualquier parte para volver",
+    "Screen covered. Tap to return": "Pantalla cubierta. Toca para volver",
+
+    "How heavy does this feel right now?": "¿Cuánto pesa esto ahora mismo?",
+    "You can skip this. 0 means light. 10 means very heavy. Your rating is never saved.": "Puedes omitirlo. 0 significa liviano. 10 significa muy pesado. Tu valoración nunca se guarda.",
+    "How heavy it feels right now, from 0 to 10": "Cuánto pesa ahora mismo, de 0 a 10",
+    "0 = light": "0 = liviano",
+    "10 = very heavy": "10 = muy pesado",
+    "How heavy does it feel now?": "¿Cuánto pesa ahora?",
+    "After this reflection, rate it again. 0 means light. 10 means very heavy. Your rating is never saved.": "Después de esta reflexión, valóralo de nuevo. 0 significa liviano. 10 significa muy pesado. Tu valoración nunca se guarda.",
+    "How heavy it feels now, from 0 to 10": "Cuánto pesa ahora, de 0 a 10",
+    "How heavy it feels": "Cuánto pesa",
+    "How heavy it felt": "Cuánto pesó",
+    "Show helplines": "Mostrar líneas de ayuda",
+    "This feels very heavy right now, and that makes sense. You do not have to carry it alone. If you are in danger, call your local emergency number. A helpline can listen at any time.": "Esto pesa muchísimo ahora, y tiene sentido. No tienes que cargarlo en soledad. Si estás en peligro, llama al número de emergencias de tu zona. Una línea de ayuda puede escucharte a cualquier hora.",
+    "You rated how heavy it feels now at {0}. A rating is only a snapshot, and you can come back to this tool at any time.": "Valoraste el peso actual en {0}. Una valoración es solo una instantánea, y puedes volver a esta herramienta cuando quieras.",
+    "It went from {0} to {1}. Small shifts count. Heavy days can still come back, and that is not a failure.": "Pasó de {0} a {1}. Los cambios pequeños cuentan. Los días pesados pueden volver, y eso no es un fracaso.",
+    "It stayed at {0}. That is okay. Grief does not follow a timetable, and a helpline or someone you trust can sit with it with you.": "Se mantuvo en {0}. Está bien. El duelo no sigue un calendario, y una línea de ayuda o alguien de confianza puede acompañarte en esto.",
+    "It went from {0} to {1}. Thank you for being honest. Please reach out to someone you trust or a helpline today, or call your local emergency number if you are in danger.": "Pasó de {0} a {1}. Gracias por ser sincero o sincera. Busca hoy a alguien de confianza o a una línea de ayuda, o llama al número de emergencias de tu zona si estás en peligro.",
+    "{0} / 10 at the start, {1} / 10 now": "{0} / 10 al empezar, {1} / 10 ahora",
+    "{0} / 10 at the start": "{0} / 10 al empezar",
+    "{0} / 10 now": "{0} / 10 ahora",
+    "Make this PDF discreet": "Hacer este PDF discreto",
+    "A discreet PDF has a neutral title, no logo, and lists phone numbers without words that show why you made it. Your own written words still appear in it.": "Un PDF discreto tiene un título neutro, no lleva logotipo y muestra los teléfonos sin palabras que revelen por qué lo hiciste. Lo que tú escribiste sí aparece en él.",
+
+    "Anywhere in the world:": "En cualquier parte del mundo:",
+    "South Africa, grief and loss:": "Sudáfrica, duelo y pérdida:",
+    "South Africa, trauma:": "Sudáfrica, trauma:",
+    "If the violence was in a home or relationship": "Si la violencia fue en el hogar o en una relación",
+    "South Africa, GBV Command Centre (free, 24 hours):": "Sudáfrica, GBV Command Centre (Centro de Mando contra la Violencia de Género) (gratis, 24 horas):",
+    "South Africa, other ways to reach the same centre: SMS HELP to 31531, or send a Please Call Me to 1207867#.": "Sudáfrica, otras formas de contactar el mismo centro: envía un SMS con HELP al 31531, o manda un Please Call Me (llámame) al 1207867#.",
+    "Zimbabwe, national GBV call centre (toll free):": "Zimbabue, centro nacional de atención contra la violencia de género (llamada gratuita):",
+    "United Kingdom, National Domestic Abuse Helpline (free, 24 hours):": "Reino Unido, National Domestic Abuse Helpline (Línea Nacional de Ayuda contra el Abuso Doméstico) (gratis, 24 horas):",
+    "United Kingdom: live chat and a British Sign Language video service are at nationaldahelpline.org.uk. In an emergency call 999.": "Reino Unido: el chat en vivo y un servicio de videollamada en lengua de signos británica están en nationaldahelpline.org.uk. En una emergencia, llama al 999.",
+    "United States, National Domestic Violence Hotline:": "Estados Unidos, National Domestic Violence Hotline (Línea Nacional de Violencia Doméstica):",
+    "United States: you can also text START to 88788, or use the live chat at thehotline.org.": "Estados Unidos: también puedes enviar un texto con START al 88788, o usar el chat en vivo en thehotline.org.",
+
+    "Where to go next": "A dónde ir después",
+    "Free tools that match what you need. Pick one, or none. There is no rush.": "Herramientas gratuitas que encajan con lo que necesitas. Elige una, o ninguna. No hay prisa.",
+    "If you are having thoughts of ending your life:": "Si estás teniendo pensamientos de quitarte la vida:",
+    "Suicide Prevention and Emotional Support Tool": "Herramienta de prevención del suicidio y apoyo emocional",
+    "Distress Tolerance Coping Tool": "Herramienta de afrontamiento y tolerancia al malestar",
+    "Emotional Trigger Mapping Tool": "Mapa de desencadenantes emocionales",
+    "Hard Conversation Preparation Tool": "Herramienta para preparar conversaciones difíciles",
+    "Positive Strength Map Tool": "Mapa de fortalezas positivas",
+    "Visual Grounding and Emotional Reset Tool": "Anclaje visual y reinicio emocional",
+    "Wellbeing Journey: Quick Check and Reset": "Camino de bienestar: revisión y reinicio",
+    "My next 10 minutes": "Mis próximos 10 minutos",
+    "Take 3 slow breaths, breathing out for longer than in.": "Respirar lento 3 veces, exhalando más largo que al inhalar.",
+    "Drink some water.": "Beber un poco de agua.",
+    "Message or call someone I trust, or a helpline.": "Escribir o llamar a alguien de confianza, o a una línea de ayuda.",
+    "Do one small thing that is only for me.": "Hacer una cosa pequeña solo para mí.",
+    "Rate how heavy it feels from 0 to 10 again: ____": "Volver a valorar cuánto pesa de 0 a 10: ____",
+
+    "My notes": "Mis notas",
+    "Personal notes": "Notas personales",
+    "Support contacts": "Contactos de apoyo",
+    "Talk to someone right now": "Habla con alguien ahora mismo",
+    "Free and private. You can just talk. In an emergency, call your local emergency number.": "Gratis y privado. Puedes simplemente hablar. En una emergencia, llama al número de emergencias de tu zona.",
+    "Free and private. You can just talk. If you are in immediate danger, call your local emergency number now.": "Gratis y privado. Puedes simplemente hablar. Si estás en peligro inmediato, llama ahora al número de emergencias de tu zona.",
+    "Any country: findahelpline.com (choose grief, loss or trauma).": "Cualquier país: findahelpline.com (elige duelo, pérdida o trauma).",
+    "Any country: findahelpline.com": "Cualquier país: findahelpline.com",
+    "If the violence was in a home or relationship:": "Si la violencia fue en el hogar o en una relación:",
+    "South Africa: GBV Command Centre 0800 428 428 (24 hours). SMS HELP to 31531.": "Sudáfrica: GBV Command Centre 0800 428 428 (24 horas). SMS con HELP al 31531.",
+    "Zimbabwe: national GBV call centre 575 (toll free).": "Zimbabue: centro nacional contra la violencia de género (GBV) 575 (llamada gratuita).",
+    "United Kingdom: National Domestic Abuse Helpline 0808 2000 247 (24 hours).": "Reino Unido: National Domestic Abuse Helpline 0808 2000 247 (24 horas).",
+    "United States: National Domestic Violence Hotline 1-800-799-7233, or text START to 88788.": "Estados Unidos: National Domestic Violence Hotline 1-800-799-7233, o texto START al 88788.",
+    "South Africa: 0800 428 428": "Sudáfrica: 0800 428 428",
+    "Zimbabwe: 575": "Zimbabue: 575",
+    "United Kingdom: 0808 2000 247": "Reino Unido: 0808 2000 247",
+    "United States: 1-800-799-7233 (text START to 88788)": "Estados Unidos: 1-800-799-7233 (texto START al 88788)",
+    "Numbers can change. Please check they are current.": "Los números pueden cambiar. Confirma que estén vigentes.",
+    "Before": "Antes",
+    "After": "Después",
+    "Not rated": "Sin valorar",
+    "Who I could tell": "A quién podría contárselo",
+    "One honest line to one person is enough. You do not need to explain everything.": "Una frase sincera a una persona es suficiente. No necesitas explicarlo todo.",
+    "Name:": "Nombre:",
+    "Number:": "Número:",
+    "What I could say:": "Lo que podría decir:",
+    "This week: one small thing each day": "Esta semana: una cosa pequeña cada día",
+    "Keep it tiny. A walk to the gate, a glass of water, one message. Tick it when it is done.": "Que sea pequeña. Un paseo hasta la puerta, un vaso de agua, un mensaje. Márcala cuando la hagas.",
+    "Day": "Día",
+    "Where this comes from": "De dónde viene esto"
+
   };
 
   var NEEDS_MAP_ES = {
@@ -964,7 +1194,11 @@
     ['Qué puede ayudar',
      'Mantener el contacto con otras personas, conservar pequeñas rutinas, descansar y moverte con suavidad se relacionan con una mejor manera de sobrellevar una pérdida. Cuando los síntomas de duelo o de trauma siguen siendo intensos e incapacitantes con el tiempo, terapias estructuradas como la Terapia para el Trastorno de Duelo Prolongado y las terapias centradas en el trauma han mostrado beneficios en la investigación. Un profesional de la salud o de la psicología puede ayudarte a decidir qué te conviene.'],
     ['No tienes que hacer esto sin compañía',
-     'Los estudios sobre duelo y trauma relacionan el apoyo social con una mejor manera de sobrellevarlo, incluso cuando el apoyo es pequeño, como un mensaje o una conversación. Si acercarte te cuesta, una línea sincera dirigida a una sola persona es un buen comienzo.']
+     'Los estudios sobre duelo y trauma relacionan el apoyo social con una mejor manera de sobrellevarlo, incluso cuando el apoyo es pequeño, como un mensaje o una conversación. Si acercarte te cuesta, una línea sincera dirigida a una sola persona es un buen comienzo.'],
+    ['Mantener el vínculo con la persona que perdiste',
+     'Muchas personas conservan un vínculo interior con alguien que han perdido, a través de recuerdos, rituales o conversando con esa persona en su mente. Quienes investigan el duelo lo llaman vínculos continuos (Klass, Silverman y Nickman, 1996). Para muchas personas es una parte normal y reconfortante del duelo. Si el vínculo trae más dolor que consuelo, o la pérdida fue violenta y los recuerdos asustan, un profesional de la consejería puede ayudar.'],
+    ['Cuando el duelo no cede',
+     'El trastorno de duelo prolongado es ahora un diagnóstico reconocido tanto en el DSM-5-TR como en la CIE-11. Describe un duelo que sigue siendo muy intenso e incapacitante durante mucho tiempo, hasta el punto de dificultar la vida diaria. Tenerlo no es un fracaso, y existen terapias diseñadas para ello. Un médico o un profesional de la consejería puede ayudarte a distinguir entre un duelo muy pesado y algo que necesita apoyo adicional.']
   ];
 
   function t(s) {
@@ -1254,6 +1488,7 @@
       html += '<div class="safety-flag"><strong>' + esc(t('Your safety comes first.')) + '</strong> ' + esc(t('You said you feel unsafe right now. If you are in immediate danger, please contact local emergency services now. For support in your country,')) + ' <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a> ' + esc(t('can help. If you can, be near someone you trust today.')) + '</div>';
     }
 
+    html += heavyRowHtml();
     html += '<div class="plan-row"><div class="plan-row-label">' + esc(t('What I need right now')) + '</div><div class="plan-row-value">' +
       (p.needs.length ? esc(p.needs.join(', ')) : esc(t('Not selected, and that is okay.'))) + '</div></div>';
 
@@ -1279,8 +1514,10 @@
     html += '<div class="plan-row"><div class="plan-row-label">' + esc(t('When it may help to talk to a professional')) + '</div><div class="plan-row-value">' +
       listHtml(whenToTalkList()) + '<p style="margin-top:6px;">' + esc(t('A doctor, counsellor, or trauma-informed therapist can help. You can find support near you at')) + ' <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>.</p></div></div>';
 
+    html += next10Html();
     html += '<div class="plan-closing">' + esc(t('You reached out for support today. That matters.')) + '</div>';
 
+    html += nextBoxHtml();
     $('planContent').innerHTML = html;
     $('planSection').classList.remove('hidden');
     if (quiet) return;
@@ -1366,6 +1603,9 @@
     clearInterval(groundingTimer);
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
     renderNeeds();
+    clearScales();
+    renderBeforeNote();
+    renderShift();
     renderStep(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     showToast(t('Reset complete.'));
@@ -1423,7 +1663,11 @@
     ['What can help',
      'Staying connected to people, keeping small routines, resting, and moving gently are all linked with better coping after loss. When grief or trauma symptoms stay intense and disabling over time, structured therapies such as Prolonged Grief Disorder Therapy and trauma-focused therapies have shown benefit in research. A doctor or counsellor can help you decide what suits you.'],
     ['You do not have to do this alone',
-     'Studies of bereavement and trauma link social support with better coping, even when the support is small, such as one message or one conversation. If reaching out feels hard, one honest line to one person is a good place to start.']
+     'Studies of bereavement and trauma link social support with better coping, even when the support is small, such as one message or one conversation. If reaching out feels hard, one honest line to one person is a good place to start.'],
+    ['Staying connected to the person you lost',
+     'Many people keep an inner bond with someone they have lost, through memories, rituals, or talking to them in their mind. Researchers call these continuing bonds (Klass, Silverman and Nickman, 1996). For many people this is a normal, comforting part of grief. If the bond brings more pain than comfort, or the loss was violent and the memories feel frightening, a counsellor can help.'],
+    ['When grief does not ease',
+     'Prolonged grief disorder is now a recognised diagnosis in both the DSM-5-TR and the ICD-11. It describes grief that stays very intense and disabling for a long time, to the point where daily life is hard. Having it is not a failure, and there are therapies designed for it. A doctor or counsellor can help you tell the difference between very heavy grief and something that needs extra support.']
   ];
 
   async function downloadPDF() {
@@ -1432,6 +1676,8 @@
     showToast(t('Preparing your PDF...'));
 
     var p = getPlanData();
+    var discreet = $('discreetPdf').checked;
+    var before = ratingOf('heavyBefore'), after = ratingOf('heavyAfter');
     var firstName = pdfSafe($('pdfName').value).replace(/\s+/g, ' ').trim().slice(0, 40);
     var doc = new PDF({ unit: 'pt', format: 'a4' });
     var pageW = doc.internal.pageSize.getWidth();
@@ -1440,24 +1686,24 @@
     var bottomLimit = pageH - 56;
     var contentW = pageW - margin * 2;
     var y = margin;
+    var BRAND = [74, 106, 64], TEAL = [47, 107, 90], INK = [26, 32, 24], MUTED = [74, 88, 72], LINE = [176, 200, 168];
 
+    function setC(c) { doc.setTextColor(c[0], c[1], c[2]); }
     function ensure(h) {
       if (y + h > bottomLimit) { doc.addPage(); y = margin; }
     }
-
-    function heading(text) {
-      ensure(30);
+    function heading(text, need) {
+      ensure(need || 34);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
-      doc.setTextColor(90, 122, 80);
+      setC(BRAND);
       doc.text(pdfSafe(text), margin, y);
       y += 15;
     }
-
-    function para(text, size, style) {
+    function para(text, size, style, c) {
       doc.setFont('helvetica', style || 'normal');
       doc.setFontSize(size || 9.5);
-      doc.setTextColor(26, 32, 24);
+      setC(c || INK);
       var lines = doc.splitTextToSize(pdfSafe(text), contentW);
       var lh = (size || 9.5) * 1.25;
       lines.forEach(function (ln) {
@@ -1465,52 +1711,131 @@
         doc.text(ln, margin, y);
         y += lh;
       });
-      y += 6;
+      y += 4;
     }
-
     function rule() {
       ensure(20);
-      doc.setDrawColor(176, 200, 168);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]);
       doc.line(margin, y, pageW - margin, y);
-      y += 16;
+      y += 11;
+    }
+    function checkLine(text) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.6);
+      var lines = doc.splitTextToSize(pdfSafe(text), contentW - 24);
+      ensure(lines.length * 12.5 + 8);
+      doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.8);
+      doc.rect(margin + 2, y - 8, 9, 9, 'S');
+      setC(INK);
+      doc.text(lines, margin + 20, y);
+      y += lines.length * 12.5 + 5;
+    }
+    function fillLine(label) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.6); setC(INK);
+      ensure(24);
+      var text = pdfSafe(label);
+      doc.text(text, margin, y);
+      var lw = doc.getTextWidth(text);
+      doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.5);
+      doc.line(margin + lw + 6, y + 1.5, pageW - margin, y + 1.5);
+      y += 22;
+    }
+    function bar(label, val, rgb) {
+      var x0 = margin + 70, tw = contentW - 70 - 64;
+      ensure(24);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); setC(INK);
+      doc.text(pdfSafe(label), margin, y + 10);
+      doc.setFillColor(226, 236, 222);
+      doc.roundedRect(x0, y, tw, 14, 7, 7, 'F');
+      if (val !== null) {
+        doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+        doc.roundedRect(x0, y, Math.max(8, tw * (val / 10)), 14, 7, 7, 'F');
+      }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); setC(INK);
+      doc.text(val === null ? pdfSafe(t('Not rated')) : (val + ' / 10'), x0 + tw + 8, y + 11);
+      y += 22;
     }
 
-    // Header
+    /* ----- Header (no logo and a neutral title in discreet mode) ----- */
     doc.setFillColor(234, 242, 232);
     doc.roundedRect(margin, y, contentW, 70, 6, 6, 'F');
-    try {
-      var logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch (_) {}
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(26, 32, 24);
-    doc.text(pdfSafe(t('Grief After Violence: Support Plan for Today')), margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(74, 88, 72);
-    doc.text(firstName ? t('Prepared for') + ' ' + firstName : t('Personal reflection summary'), margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    var textX = margin + 14;
+    if (!discreet) {
+      try {
+        var logoData = await imageToDataUrl(LOGO_URL);
+        doc.addImage(logoData, 'JPEG', margin + 10, y + 8, 54, 54);
+        textX = margin + 76;
+      } catch (_) {}
+    }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(14); setC(INK);
+    doc.text(pdfSafe(t(discreet ? 'My notes' : 'Grief After Violence: Support Plan for Today')), textX, y + 26);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); setC(MUTED);
+    doc.text(pdfSafe(firstName ? t('Prepared for') + ' ' + firstName : t(discreet ? 'Personal notes' : 'Personal reflection summary')), textX, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', textX, y + 56);
     y += 86;
 
-    // Safety first, if flagged
-    if (p.unsafe) {
-      var sLines = doc.splitTextToSize(pdfSafe(t('You said you feel unsafe right now. If you are in immediate danger, contact local emergency services now. For support in your country, visit findahelpline.com. If you can, be near someone you trust today.')), contentW - 20);
-      var sh = sLines.length * 12 + 26;
-      ensure(sh + 8);
+    /* ----- Talk to someone right now (top of page 1) ----- */
+    var stripTitle = t(discreet ? 'Support contacts' : 'Talk to someone right now');
+    var stripIntro = t(discreet
+      ? 'Free and private. You can just talk. In an emergency, call your local emergency number.'
+      : 'Free and private. You can just talk. If you are in immediate danger, call your local emergency number now.');
+    var stripLines = (discreet ? [
+      'Any country: findahelpline.com',
+      'South Africa: 0800 428 428',
+      'Zimbabwe: 575',
+      'United Kingdom: 0808 2000 247',
+      'United States: 1-800-799-7233 (text START to 88788)'
+    ] : [
+      'Any country: findahelpline.com (choose grief, loss or trauma).',
+      'If the violence was in a home or relationship:',
+      'South Africa: GBV Command Centre 0800 428 428 (24 hours). SMS HELP to 31531.',
+      'Zimbabwe: national GBV call centre 575 (toll free).',
+      'United Kingdom: National Domestic Abuse Helpline 0808 2000 247 (24 hours).',
+      'United States: National Domestic Violence Hotline 1-800-799-7233, or text START to 88788.'
+    ]).map(function (l) { return t(l); });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    var introL = doc.splitTextToSize(pdfSafe(stripIntro), contentW - 24);
+    var listL = [];
+    stripLines.forEach(function (l) { listL = listL.concat(doc.splitTextToSize(pdfSafe(l), contentW - 30)); });
+    var noteL = discreet ? [] : doc.splitTextToSize(pdfSafe(t('Numbers can change. Please check they are current.')), contentW - 24);
+    var sh = 32 + introL.length * 12 + 4 + listL.length * 12 + (noteL.length ? noteL.length * 12 + 4 : 0) + 6;
+    doc.setFillColor(255, 240, 240); doc.setDrawColor(245, 160, 160); doc.setLineWidth(0.8);
+    doc.roundedRect(margin, y, contentW, sh, 5, 5, 'FD');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(139, 26, 26);
+    doc.text(pdfSafe(stripTitle), margin + 12, y + 18);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(110, 20, 20);
+    var sy = y + 33;
+    doc.text(introL, margin + 12, sy); sy += introL.length * 12 + 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text(listL, margin + 12, sy); sy += listL.length * 12 + 4;
+    doc.setFont('helvetica', 'normal');
+    if (noteL.length) doc.text(noteL, margin + 12, sy);
+    y += sh + 14;
+    doc.setLineWidth(0.6);
+
+    /* ----- Safety flag, if they said they feel unsafe ----- */
+    if (p.unsafe && !discreet) {
+      var sLines = doc.splitTextToSize(pdfSafe(t('You said you feel unsafe right now. If you are in immediate danger, contact local emergency services now. For support in your country, visit findahelpline.com. If you can, move to a safer place or be near someone you trust.')), contentW - 20);
+      var fh = sLines.length * 12 + 26;
+      ensure(fh + 8);
       doc.setFillColor(255, 240, 240);
-      doc.roundedRect(margin, y, contentW, sh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(139, 26, 26);
+      doc.roundedRect(margin, y, contentW, fh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(139, 26, 26);
       doc.text(pdfSafe(t('YOUR SAFETY COMES FIRST')), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.3);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3);
       doc.text(sLines, margin + 10, y + 27);
-      y += sh + 12;
+      y += fh + 12;
     }
 
-    // Summary rows
+    /* ----- How heavy it felt ----- */
+    if (before !== null || after !== null) {
+      heading(t('How heavy it felt'));
+      bar(t('Before'), before, BRAND);
+      bar(t('After'), after, TEAL);
+      var hl = heavyLine();
+      if (hl) { y += 2; para(hl, 10, 'normal'); }
+    }
+
+    /* ----- Summary rows ----- */
     var rows = [
       [t('What I need right now'), p.needs.length ? p.needs.join(', ') : t('Not selected')],
       [t('What I noticed'), p.noticed.length ? p.noticed.join('\n') : t('Not provided')],
@@ -1519,80 +1844,130 @@
       [t('Support that might help'), state.answers.q6 ? t(state.answers.q6) : t('Not answered')],
       [t('Reaching out today'), state.answers.q8 ? t(state.answers.q8) : t('Not answered')]
     ];
-
     rows.forEach(function (r) {
       var lines = doc.splitTextToSize(pdfSafe(r[1]), contentW - 22);
       var bh = lines.length * 12 + 28;
       ensure(bh + 8);
       doc.setFillColor(234, 242, 232);
       doc.roundedRect(margin, y, contentW, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(90, 122, 80);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); setC(BRAND);
       doc.text(pdfSafe(r[0]).toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 32, 24);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); setC(INK);
       doc.text(lines, margin + 10, y + 27);
       y += bh + 8;
     });
-
     y += 4;
+
+    if (!discreet) {
+      rule();
+      heading(t('Three gentle next steps'));
+      p.steps.forEach(function (s, i) { para((i + 1) + '. ' + s, 9.5); });
+      if (p.body) { heading(t('For my body today')); para(p.body, 9.5); }
+      if (p.support) { heading(t('Support that might help')); para(p.support, 9.5); }
+      heading(t('Self-kindness reminders'));
+      para('- ' + t('My grief is real, and my pace matters.'), 9.5, 'italic');
+      para('- ' + t('Small steps still count, especially today.'), 9.5, 'italic');
+      heading(t('Reaching out'));
+      para(p.reachOut, 9.5);
+    }
+
+    /* ----- My next 10 minutes ----- */
     rule();
+    heading(t('My next 10 minutes'), 90);
+    NEXT_10.forEach(function (s) { checkLine(t(s)); });
+    checkLine(t('Rate how heavy it feels from 0 to 10 again: ____'));
+    y += 4;
 
-    heading(t('Three gentle next steps'));
-    p.steps.forEach(function (s, i) { para((i + 1) + '. ' + s, 9.5); });
+    if (!discreet) {
+      /* ----- Who I could tell ----- */
+      rule();
+      heading(t('Who I could tell'), 110);
+      para(t('One honest line to one person is enough. You do not need to explain everything.'), 9.3, 'italic', MUTED);
+      fillLine(t('Name:') + ' ');
+      fillLine(t('Number:') + ' ');
+      fillLine(t('What I could say:') + ' ');
 
-    if (p.body) { heading(t('For my body today')); para(p.body, 9.5); }
-    if (p.support) { heading(t('Support that might help')); para(p.support, 9.5); }
+      /* ----- This week ----- */
+      rule();
+      heading(t('This week: one small thing each day'), 150);
+      para(t('Keep it tiny. A walk to the gate, a glass of water, one message. Tick it when it is done.'), 9.3, 'italic', MUTED);
+      for (var d = 1; d <= 7; d++) {
+        ensure(26);
+        doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.8);
+        doc.rect(margin + 2, y - 8, 9, 9, 'S');
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9.6); setC(INK);
+        var dl = t('Day') + ' ' + d + ':';
+        doc.text(pdfSafe(dl), margin + 20, y);
+        var lw2 = doc.getTextWidth(pdfSafe(dl));
+        doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.5);
+        doc.line(margin + 26 + lw2, y + 1.5, pageW - margin, y + 1.5);
+        y += 22;
+      }
+      y += 4;
 
-    heading(t('Self-kindness reminders'));
-    para('- ' + t('My grief is real, and my pace matters.'), 9.5, 'italic');
-    para('- ' + t('Small steps still count, especially today.'), 9.5, 'italic');
+      /* ----- When to talk to a professional ----- */
+      rule();
+      heading(t('When it may help to talk to a professional'), 90);
+      whenToTalkList().forEach(function (w) { para('- ' + w, 9.2); });
 
-    heading(t('Reaching out'));
-    para(p.reachOut, 9.5);
+      /* ----- Where to go next ----- */
+      rule();
+      heading(t('Where to go next'), 100);
+      para(t('Free tools that match what you need. Pick one, or none. There is no rush.'), 9.3, 'italic', MUTED);
+      nextToolKeys().forEach(function (k) {
+        para(t(TOOLS[k][1]) + ': ' + TOOL_BASE.replace('https://', '') + TOOLS[k][0], 9, 'normal');
+      });
+      para(t('If you are having thoughts of ending your life:') + ' ' + t(TOOLS.t1[1]) + ': ' + TOOL_BASE.replace('https://', '') + TOOLS.t1[0], 9, 'normal');
 
-    rule();
-    heading(t('When it may help to talk to a professional'));
-    whenToTalkList().forEach(function (w) { para('- ' + w, 9.2); });
+      /* ----- Understanding ----- */
+      rule();
+      heading(t('Understanding grief after violence: what research tells us'), 70);
+      (lang === 'es' ? EDUCATION_ES : EDUCATION).forEach(function (e) {
+        ensure(40);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); setC(BRAND);
+        doc.text(pdfSafe(e[0]), margin, y);
+        y += 12;
+        para(e[1], 9.2);
+      });
 
-    rule();
-    heading(t('Understanding grief after violence: what research tells us'));
-    (lang === 'es' ? EDUCATION_ES : EDUCATION).forEach(function (e) {
-      ensure(40);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(90, 122, 80);
-      doc.text(pdfSafe(e[0]), margin, y);
-      y += 12;
-      para(e[1], 9.2);
-    });
+      /* ----- Where this comes from ----- */
+      rule();
+      heading(t('Where this comes from'), 90);
+      [
+        'Bonanno, G. A. (2004). Loss, trauma, and human resilience. American Psychologist, 59(1), 20-28.',
+        'Herman, J. L. (1992). Trauma and Recovery. Basic Books.',
+        'Klass, D., Silverman, P. R., & Nickman, S. L. (Eds.). (1996). Continuing Bonds: New Understandings of Grief. Taylor & Francis.',
+        'van der Kolk, B. (2014). The Body Keeps the Score. Viking.',
+        'American Psychiatric Association (2022). DSM-5-TR. World Health Organization (2022). ICD-11.'
+      ].forEach(function (line) { para(line, 8.6, 'normal', MUTED); });
 
-    rule();
-    heading(t('Support resources'));
-    [
-      t('Find a helpline:') + ' findahelpline.com',
-      t('Main site:') + ' emotionalintelligencedeveloper.com',
-      t('Free tools:') + ' emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      t('Support this project:') + ' emotionalintelligencedeveloper.com/support-this-website/'
-    ].forEach(function (line) { para(line, 9); });
+      rule();
+      heading(t('Support resources'));
+      [
+        t('Find a helpline:') + ' findahelpline.com',
+        t('Free tools:') + ' emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+        t('Support this project:') + ' emotionalintelligencedeveloper.com/support-this-website/'
+      ].forEach(function (line) { para(line, 9); });
+    }
 
-    // Footer and page numbers on every page
+    /* ----- Footer on every page ----- */
     var total = doc.getNumberOfPages();
     for (var i = 1; i <= total; i++) {
       doc.setPage(i);
-      doc.setDrawColor(176, 200, 168);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]);
+      doc.setLineWidth(0.6);
       doc.line(margin, pageH - 38, pageW - margin, pageH - 38);
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(8);
-      doc.setTextColor(110, 130, 108);
-      doc.text(pdfSafe(t('This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.')), margin, pageH - 24);
-      doc.text(t('Page') + ' ' + i + ' ' + t('of') + ' ' + total, pageW - margin, pageH - 24, { align: 'right' });
+      setC(MUTED);
+      doc.text(pdfSafe(t('This tool supports reflection and awareness. If you are in immediate danger, please seek urgent help now.')), margin, pageH - 26);
+      doc.setFont('helvetica', 'normal');
+      doc.text('emotionalintelligencedeveloper.com', margin, pageH - 14);
+      doc.text(t('Page') + ' ' + i + ' ' + t('of') + ' ' + total, pageW - margin, pageH - 14, { align: 'right' });
     }
 
     var fileTag = firstName.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    doc.save('grief-after-violence-support' + (fileTag ? '-' + fileTag : '') + '.pdf');
+    doc.save((discreet ? 'my-notes' : 'grief-after-violence-support') + (fileTag ? '-' + fileTag : '') + '.pdf');
     showToast(t('PDF downloaded.'));
   }
 
@@ -1606,6 +1981,8 @@
     renderNeeds();
     renderStep(false);
     renderGround();
+    renderBeforeNote();
+    renderShift();
     updateShareLinks();
     if (!$('planSection').classList.contains('hidden')) buildPlan(true);
   }
@@ -1614,6 +1991,189 @@
     applyLang($('langSelect').value);
     try { localStorage.setItem(LANG_KEY, lang); } catch (_) {}
   });
+
+  /* ======== Added: safe-device check, quick exit, heaviness scale, next tools ======== */
+  var TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+  var TOOLS = {
+    t1: ['Suicide-Prevention-and-Emotional-Support-Tool.html', 'Suicide Prevention and Emotional Support Tool'],
+    t5: ['distress-tolerance-coping-tool.html', 'Distress Tolerance Coping Tool'],
+    t8: ['emotional-trigger-mapping-tool.html', 'Emotional Trigger Mapping Tool'],
+    t11: ['hard-conversation-preparation-tool.html', 'Hard Conversation Preparation Tool'],
+    t18: ['positive-strengths-map-tool.html', 'Positive Strength Map Tool'],
+    t21: ['visual-grounding-emotional-reset-tool.html', 'Visual Grounding and Emotional Reset Tool'],
+    t25: ['wellbeing-journey-tool.html', 'Wellbeing Journey: Quick Check and Reset']
+  };
+  var NEXT_BY_NEED = {
+    'to breathe': ['t21', 't5'],
+    'to feel less alone': ['t25', 't18'],
+    'to make sense of my feelings': ['t8', 't25'],
+    'to sleep': ['t21', 't5'],
+    'to talk to someone': ['t11', 't25'],
+    'to honour what happened': ['t18', 't25']
+  };
+  var NEXT_10 = [
+    'Take 3 slow breaths, breathing out for longer than in.',
+    'Drink some water.',
+    'Message or call someone I trust, or a helpline.',
+    'Do one small thing that is only for me.'
+  ];
+
+  function tf2(k) {
+    var a = Array.prototype.slice.call(arguments, 1);
+    return a.reduce(function (s, v, i) { return s.split('{' + i + '}').join(v); }, t(k));
+  }
+  function ratingOf(name) {
+    var r = document.querySelector('input[name="' + name + '"]:checked');
+    return r ? parseInt(r.value, 10) : null;
+  }
+  function nextToolKeys() {
+    var out = [];
+    state.needs.forEach(function (n) { (NEXT_BY_NEED[n] || []).forEach(function (k) { if (out.indexOf(k) === -1) out.push(k); }); });
+    return out.length ? out.slice(0, 3) : ['t21', 't5', 't25'];
+  }
+  function nextBoxHtml() {
+    var h = '<div class="next-box"><div class="plan-row-label">' + esc(t('Where to go next')) + '</div>';
+    h += '<div style="font-size:14px;color:var(--muted);">' + esc(t('Free tools that match what you need. Pick one, or none. There is no rush.')) + '</div>';
+    h += '<div class="next-links">';
+    nextToolKeys().forEach(function (k) {
+      h += '<a class="next-link" href="' + TOOL_BASE + TOOLS[k][0] + '" target="_blank" rel="noopener noreferrer">' + esc(t(TOOLS[k][1])) + '</a>';
+    });
+    h += '</div><div class="next-quiet">' + esc(t('If you are having thoughts of ending your life:')) + ' <a href="' + TOOL_BASE + TOOLS.t1[0] + '" target="_blank" rel="noopener noreferrer">' + esc(t(TOOLS.t1[1])) + '</a></div></div>';
+    return h;
+  }
+  function next10Html() {
+    return '<div class="plan-row"><div class="plan-row-label">' + esc(t('My next 10 minutes')) + '</div><div class="plan-row-value">' + listHtml(NEXT_10.map(function (s) { return t(s); })) + '</div></div>';
+  }
+  function heavyLine() {
+    var b = ratingOf('heavyBefore'), a = ratingOf('heavyAfter');
+    if (b === null && a === null) return null;
+    if (b !== null && a !== null) return tf2('{0} / 10 at the start, {1} / 10 now', b, a);
+    if (b !== null) return tf2('{0} / 10 at the start', b);
+    return tf2('{0} / 10 now', a);
+  }
+  function heavyRowHtml() {
+    var l = heavyLine();
+    if (!l) return '';
+    return '<div class="plan-row"><div class="plan-row-label">' + esc(t('How heavy it feels')) + '</div><div class="plan-row-value">' + esc(l) + '</div></div>';
+  }
+
+  function openHelplines() {
+    var h = $('help-heading');
+    var card = h.parentElement;
+    card.classList.add('help-flash');
+    setTimeout(function () { card.classList.remove('help-flash'); }, 2200);
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function renderBeforeNote() {
+    var b = ratingOf('heavyBefore'), box = $('beforeNote');
+    if (b === null || b < 8) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    box.innerHTML = esc(t('This feels very heavy right now, and that makes sense. You do not have to carry it alone. If you are in danger, call your local emergency number. A helpline can listen at any time.')) + '<br><button type="button" class="btn btn-slate" id="beforeHelpBtn">' + esc(t('Show helplines')) + '</button>';
+    box.style.display = 'block';
+    $('beforeHelpBtn').addEventListener('click', openHelplines);
+  }
+
+  function renderShift() {
+    var b = ratingOf('heavyBefore'), a = ratingOf('heavyAfter'), box = $('shiftBox');
+    box.innerHTML = '';
+    if (a === null) { box.style.display = 'none'; return; }
+    var msg;
+    if (b === null) msg = tf2('You rated how heavy it feels now at {0}. A rating is only a snapshot, and you can come back to this tool at any time.', a);
+    else if (a < b) msg = tf2('It went from {0} to {1}. Small shifts count. Heavy days can still come back, and that is not a failure.', b, a);
+    else if (a === b) msg = tf2('It stayed at {0}. That is okay. Grief does not follow a timetable, and a helpline or someone you trust can sit with it with you.', a);
+    else msg = tf2('It went from {0} to {1}. Thank you for being honest. Please reach out to someone you trust or a helpline today, or call your local emergency number if you are in danger.', b, a);
+    var p = document.createElement('div');
+    p.textContent = msg;
+    box.appendChild(p);
+    if (a >= 8 || (b !== null && a > b)) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'btn btn-slate'; btn.textContent = t('Show helplines');
+      btn.addEventListener('click', openHelplines);
+      box.appendChild(btn);
+      var link = document.createElement('a');
+      link.className = 'btn btn-outline'; link.href = 'https://findahelpline.com/'; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = t('Find a helpline in your country');
+      box.appendChild(link);
+    }
+    box.style.display = 'block';
+  }
+
+  function refreshNotes() {
+    renderBeforeNote();
+    renderShift();
+    if (!$('planSection').classList.contains('hidden')) buildPlan(true);
+  }
+
+  function clearScales() {
+    document.querySelectorAll('.scale input').forEach(function (i) { i.checked = false; });
+  }
+
+  /* ----- Quick exit, cover screen, triple Escape ----- */
+  var IDLE_MS = 5 * 60 * 1000, idleTimer = null;
+  function wipeEverything() {
+    state = { needs: [], answers: {}, step: 0, grounded: false, saveOn: false };
+    $('saveToggle').checked = false;
+    $('groundingFill').style.width = '0%';
+    setGround('Press start when you are ready.');
+    $('planSection').classList.add('hidden');
+    $('planContent').innerHTML = '';
+    $('pdfName').value = '';
+    clearInterval(groundingTimer);
+    clearScales();
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+    renderNeeds();
+    renderStep(false);
+    renderBeforeNote();
+    renderShift();
+  }
+  function quickExit() {
+    wipeEverything();
+    window.location.replace('https://www.google.com');
+  }
+  function coverOn() { $('cover').classList.add('on'); }
+  function coverOff() { $('cover').classList.remove('on'); resetIdle(); }
+  function resetIdle() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(coverOn, IDLE_MS);
+  }
+  var escCount = 0, escTimer;
+  document.addEventListener('keydown', function (e) {
+    resetIdle();
+    if (e.key !== 'Escape') return;
+    escCount++;
+    clearTimeout(escTimer);
+    escTimer = setTimeout(function () { escCount = 0; }, 1500);
+    if (escCount >= 3) quickExit();
+  });
+  ['pointerdown', 'scroll', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, resetIdle, { passive: true }); });
+
+  /* ----- "Is it safe to use this device?" ----- */
+  function setSafer(on) {
+    document.body.classList.toggle('safer', on);
+    $('saferPanel').style.display = on ? 'block' : 'none';
+    $('gateCard').style.display = 'none';
+    $('saveToggle').disabled = on;
+    if (on) { wipeEverything(); IDLE_MS = 60 * 1000; window.scrollTo(0, 0); }
+    else { IDLE_MS = 5 * 60 * 1000; }
+    resetIdle();
+  }
+  function initGate() {
+    $('gateSafe').addEventListener('click', function () { $('gateCard').style.display = 'none'; });
+    $('gateScreen').addEventListener('click', function () {
+      IDLE_MS = 60 * 1000; resetIdle();
+      $('gateCard').style.display = 'none';
+      showToast(t('Quiet mode is on. The screen covers itself after 1 minute without activity. Press Escape 3 times to leave fast.'));
+    });
+    $('gateWatched').addEventListener('click', function () { setSafer(true); });
+    $('saferShowAll').addEventListener('click', function () { setSafer(false); });
+    $('saferHelp').addEventListener('click', openHelplines);
+    $('quickExitBtn').addEventListener('click', quickExit);
+    $('coverBtn').addEventListener('click', coverOn);
+    $('cover').addEventListener('click', coverOff);
+    $('cover').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') coverOff(); });
+    document.querySelectorAll('.scale input').forEach(function (i) { i.addEventListener('change', refreshNotes); });
+    resetIdle();
+  }
 
   // WIRE UP
   $('prevBtn').addEventListener('click', goPrev);
@@ -1627,6 +2187,8 @@
   renderNeeds();
   renderStep(false);
   updateShareLinks();
+
+  initGate();
 
   var savedLang = 'en';
   try { savedLang = localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'en'; } catch (_) {}

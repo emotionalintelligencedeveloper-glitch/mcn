@@ -12,7 +12,7 @@
       --card: #ffffff;
       --text: #1a2218;
       --muted: #4a5848;
-      --hint: #6f866d;
+      --hint: #566a54;
       --border: #c8d8c0;
       --brand: #3a6a48;
       --brand-light: #e8f2ec;
@@ -28,7 +28,7 @@
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --support: #e8702a;
+      --support: #b8501a;
       --urgent-bg: #fff0f0;
       --urgent-border: #f5a0a0;
       --urgent-text: #8b1a1a;
@@ -45,7 +45,7 @@
       font-size: 16px;
     }
 
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
+    .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
 
     .header, .card, .footer {
       background: var(--card);
@@ -220,6 +220,69 @@
       border: 1.5px solid var(--border); border-radius: 99px; padding: 8px 14px; min-height: 44px; cursor: pointer;
     }
     .lang-bar select:focus-visible { outline: 3px solid var(--slate); outline-offset: 2px; }
+
+    /* ---------- added: heat check, guided worried path, news and home sections, step flow ---------- */
+    .scale { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .scale label { position: relative; }
+    .scale input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    .scale span { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; min-height: 42px; border: 1.5px solid var(--brand-mid); border-radius: var(--radius-sm); background: #fff; font-size: 15px; color: var(--text); }
+    .heat label[data-band="a"] span { background: #e4f0e6; }
+    .heat label[data-band="b"] span { background: #fdf0d8; border-color: #e6c88a; }
+    .heat label[data-band="c"] span { background: #fbe0c8; border-color: #eaa77a; }
+    .heat label[data-band="d"] span { background: #f8d0d0; border-color: #e89a9a; }
+    .heat label[data-band="a"] input:checked + span { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .heat label[data-band="b"] input:checked + span { background: #8a5a0f; border-color: #8a5a0f; color: #fff; }
+    .heat label[data-band="c"] input:checked + span { background: #b8501a; border-color: #b8501a; color: #fff; }
+    .heat label[data-band="d"] input:checked + span { background: #8b1a1a; border-color: #8b1a1a; color: #fff; }
+    .scale input:focus-visible + span { outline: 3px solid var(--slate); outline-offset: 2px; }
+    .scale-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 10px; max-width: 520px; }
+    .soft-note { display: none; background: #fff8ee; border: 1px solid #f0c48a; border-radius: var(--radius-md); padding: 12px 14px; font-size: 15px; color: #6b3a08; line-height: 1.6; margin: 10px 0; }
+    .soft-note p { margin-bottom: 8px; }
+    .soft-note .btn { margin: 4px 8px 0 0; }
+    .hn { display: none; }
+    .hn.on { display: block; }
+    .after-heat { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--slate-mid); }
+    .after-heat .field-label { font-style: normal; font-weight: bold; color: var(--slate); }
+
+    .w-out { display: none; border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; background: #fff; border: 1px solid var(--slate-mid); }
+    .w-out.on { display: block; }
+    .w-out.w-yes { background: var(--urgent-bg); border-color: var(--urgent-border); color: var(--urgent-text); }
+    .w-out.w-yes strong { color: var(--urgent-text); }
+    .w-out h4 { font-size: 15px; font-weight: bold; margin: 10px 0 4px; color: var(--slate); }
+    .w-out h4:first-child { margin-top: 0; }
+    .w-out ul { margin: 0 0 8px 20px; font-size: 15px; }
+    .w-doubt { display: none; font-weight: bold; margin-bottom: 8px; }
+    .w-doubt.on { display: block; }
+    .w-q { margin-top: 14px; }
+    .panel-news { background: var(--brand-light); border: 1.5px solid var(--brand-mid); }
+    .panel-news h3 { color: var(--brand); }
+    .panel-store { background: var(--warm); border: 1.5px solid #d8c9a8; }
+    .panel-store h3 { color: #6b4e12; }
+    .panel a.inline, .next-quiet a { color: var(--brand); text-decoration: underline; }
+
+    .rstep { display: none; }
+    .rstep.on { display: block; }
+    .wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 8px; }
+    .wiz-mid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .wdots { display: flex; gap: 8px; }
+    .wdot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand-mid); opacity: .55; }
+    .wdot.past { background: var(--brand); opacity: .85; }
+    .wdot.on { background: var(--brand); opacity: 1; transform: scale(1.25); }
+    .wiz-count { font-size: 12px; color: var(--hint); letter-spacing: .04em; }
+    .linkbtn { background: none; border: 0; padding: 6px 0; font-family: Georgia, serif; font-size: 13px; color: var(--brand); text-decoration: underline; cursor: pointer; min-height: 36px; }
+    .away-field { margin-bottom: 14px; }
+    .save-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); margin: 10px 0 4px; cursor: pointer; }
+    .save-row input { width: 20px; height: 20px; }
+    .name-note { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+    .next-box { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--brand-mid); }
+    .next-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .next-link { display: inline-flex; align-items: center; background: #fff; border: 1.5px solid var(--brand-mid); border-radius: 99px; padding: 8px 16px; font-size: 14px; color: var(--brand); text-decoration: none; line-height: 1.3; min-height: 40px; }
+    .next-link:hover { border-color: var(--brand); text-decoration: underline; }
+    .next-quiet { font-size: 13px; color: var(--muted); margin-top: 10px; }
+    .footer-share { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .footer-share-label { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+    .footer-share-row { justify-content: center; }
+    .btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--slate-mid); }
   </style>
 </head>
 <body>
@@ -277,6 +340,35 @@
     </div>
   </section>
 
+  <!-- HEAT CHECK -->
+  <section class="card" id="heatCard" aria-labelledby="heat-heading">
+    <p class="card-title" id="heat-heading" data-i18n>Heat check</p>
+    <p class="card-sub" data-i18n>How hot is it right now? 0 is calm. 10 is about to explode. You can skip this. Your rating is never saved.</p>
+    <div class="scale heat" role="radiogroup" aria-label="How hot it is right now, from 0 to 10" data-i18n-attr="aria-label">
+      <label data-band="a"><input type="radio" name="heatBefore" value="0"><span>0</span></label>
+      <label data-band="a"><input type="radio" name="heatBefore" value="1"><span>1</span></label>
+      <label data-band="a"><input type="radio" name="heatBefore" value="2"><span>2</span></label>
+      <label data-band="a"><input type="radio" name="heatBefore" value="3"><span>3</span></label>
+      <label data-band="b"><input type="radio" name="heatBefore" value="4"><span>4</span></label>
+      <label data-band="b"><input type="radio" name="heatBefore" value="5"><span>5</span></label>
+      <label data-band="b"><input type="radio" name="heatBefore" value="6"><span>6</span></label>
+      <label data-band="c"><input type="radio" name="heatBefore" value="7"><span>7</span></label>
+      <label data-band="c"><input type="radio" name="heatBefore" value="8"><span>8</span></label>
+      <label data-band="d"><input type="radio" name="heatBefore" value="9"><span>9</span></label>
+      <label data-band="d"><input type="radio" name="heatBefore" value="10"><span>10</span></label>
+    </div>
+    <div class="scale-ends"><span data-i18n>0 = calm</span><span data-i18n>10 = about to explode</span></div>
+    <div class="soft-note" id="heatNote" role="status">
+      <div class="hn" data-band="a"><p data-i18n>You are in a calm place. This is a good time to check in, or to make a plan for harder moments.</p></div>
+      <div class="hn" data-band="b"><p data-i18n>It is rising. Take 60 seconds before you say or do anything. Breathe out longer than you breathe in.</p></div>
+      <div class="hn" data-band="c"><p data-i18n>This is hot. Step away now. Do not message, argue or decide anything yet. Use the 60 second calm down.</p>
+        <button type="button" class="btn btn-slate" data-scroll="groundingCard" data-i18n>Do the 60 second calm down</button></div>
+      <div class="hn" data-band="d"><p data-i18n>This is very hot. Leave the situation now. Go where other people are and put distance between you and anything that could hurt someone. Tell one person. If you think you might act on a thought, call your local emergency number now.</p>
+        <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Talk to someone now</a>
+        <button type="button" class="btn btn-slate" data-scroll="groundingCard" data-i18n>Do the 60 second calm down</button></div>
+    </div>
+  </section>
+
   <!-- PAUSE PANEL -->
   <section class="panel panel-pause" id="panelPause" aria-labelledby="pause-heading">
     <h3 id="pause-heading" data-i18n>Pause. You are not alone, and you have a choice.</h3>
@@ -287,7 +379,7 @@
       <div class="three-step"><strong data-i18n>2. Tell one person</strong><span data-i18n>A parent, relative, friend, teacher, pastor, coach or counsellor. Say: "I am in a bad place and I need help right now."</span></div>
       <div class="three-step"><strong data-i18n>3. Get support</strong><span data-i18n>Talk to a helpline. They listen without judging, and it is free. If you feel you might act on a thought, call emergency services now.</span></div>
     </div>
-    <p><strong data-i18n>Why reaching out is the stronger choice:</strong> <span data-i18n>it protects other people, it protects your future, and it protects the people who love you. Most people who ask for help are met with care, not punishment.</span></p>
+    <p><strong data-i18n>Why reaching out is the stronger choice:</strong> <span data-i18n>it protects other people, it protects your future, and it protects the people who love you. Many people who ask for help are met with care, not punishment.</span></p>
     <div class="btn-row">
       <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Talk to someone now</a>
       <button type="button" class="btn btn-slate" data-scroll="groundingCard" data-i18n>Do the 60 second calm down</button>
@@ -304,14 +396,39 @@
       <li data-i18n>Sudden anger, obsession with revenge, or pulling away from everyone</li>
       <li data-i18n>Saying goodbye, giving things away, or "they will all be sorry" type comments</li>
     </ul>
-    <p><strong data-i18n>What you can do:</strong></p>
-    <ul>
-      <li data-i18n>Stay calm. Listen and let them talk. Do not argue or shame them.</li>
+    <p class="w-q"><strong data-i18n>Is there a weapon, a threat, or a plan to hurt someone?</strong></p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-urgent" id="wYes" aria-pressed="false" data-i18n>Yes</button>
+      <button type="button" class="btn btn-slate" id="wNo" aria-pressed="false" data-i18n>No</button>
+      <button type="button" class="btn btn-outline" id="wUnsure" aria-pressed="false" data-i18n>I am not sure</button>
+    </div>
+    <div class="w-out w-yes" id="worriedYes" role="status">
+      <p><strong data-i18n>Call your local emergency number now.</strong></p>
+      <p data-i18n>Do not confront the person or try to handle this alone. Tell the dispatcher what you know: who, where, what weapon, and what was said. Then tell a trusted adult.</p>
+      <a class="btn btn-urgent" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline near me</a>
+    </div>
+    <div class="w-out" id="worriedNo" role="status">
+      <p class="w-doubt" id="worriedDoubt" data-i18n>When in doubt, treat it as a yes. It is always okay to call emergency services or tell a trusted adult.</p>
+      <h4 data-i18n>What to say</h4>
+      <ul>
       <li data-i18n>Say what you have noticed: "I am worried about you. I care about you."</li>
-      <li data-i18n>Ask a trusted adult, school staff, faith leader or family member to help.</li>
-      <li data-i18n>If there is a weapon or a threat, call emergency services right away.</li>
-    </ul>
-    <p style="font-size:14px;font-style:italic;" data-i18n>Telling someone is not betrayal. It can be the thing that keeps everyone safe, including the person you are worried about.</p>
+      <li data-i18n>Ask an open question, like "What has been going on?", then listen without arguing.</li>
+      </ul>
+      <h4 data-i18n>What to avoid</h4>
+      <p data-i18n>Do not argue, shame or joke about it. Do not promise to keep it secret if someone could get hurt.</p>
+      <h4 data-i18n>Who to tell</h4>
+      <p data-i18n>A trusted adult, school staff, a faith leader, a family member, or a helpline.</p>
+      <h4 data-i18n>Words you can copy and send</h4>
+      <div class="script-box" id="wscript1" data-i18n>I have noticed you seem really low and angry lately. I care about you. Can we talk?</div>
+      <div class="script-box" id="wscript2" data-i18n>I am not here to judge you. I am worried about what you said. Who could we talk to together?</div>
+      <div class="script-box" id="wscript3" data-i18n>I do not want to keep this secret, because I am scared someone could get hurt. I am going to ask a trusted adult for help.</div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-slate" data-copy="wscript1" data-i18n>Copy message 1</button>
+        <button type="button" class="btn btn-slate" data-copy="wscript2" data-i18n>Copy message 2</button>
+        <button type="button" class="btn btn-slate" data-copy="wscript3" data-i18n>Copy message 3</button>
+      </div>
+    </div>
+    <p style="font-size:14px;font-style:italic;margin-top:10px;" data-i18n>Telling someone is not betrayal. It can be the thing that keeps everyone safe, including the person you are worried about.</p>
   </section>
 
   <!-- TEEN SECTION -->
@@ -322,7 +439,7 @@
     <div class="insight"><strong data-i18n>Feelings pass. Actions do not.</strong><span data-i18n>The worst moment feels like it will last forever, but it does not. Hurting someone stays forever, for them, for you and for both families.</span></div>
     <div class="insight"><strong data-i18n>Asking for help is a power move.</strong><span data-i18n>It takes more courage to say "I am struggling" than to act out of anger. You stay in control of your own life.</span></div>
     <div class="insight"><strong data-i18n>You protect your future.</strong><span data-i18n>Your goals, your friends and your freedom are all still ahead of you. One violent act can end all of it.</span></div>
-    <div class="insight"><strong data-i18n>Adults usually respond with care.</strong><span data-i18n>Most people want to help once they know. You do not need the perfect words. You just need to start.</span></div>
+    <div class="insight"><strong data-i18n>Adults usually respond with care.</strong><span data-i18n>Many people want to help once they know. You do not need the perfect words. You just need to start.</span></div>
     <div class="insight"><strong data-i18n>You are not the only one.</strong><span data-i18n>Many young people carry dark thoughts and anger. Telling someone is how it gets lighter.</span></div>
 
     <p style="margin-top:12px;"><strong data-i18n>Need words? Copy one and send it:</strong></p>
@@ -342,31 +459,82 @@
     </div>
   </section>
 
+  <!-- NEWS PANEL -->
+  <section class="panel panel-news" id="panelNews" aria-labelledby="news-heading">
+    <h3 id="news-heading" data-i18n>When violence in the news is getting to you</h3>
+    <p data-i18n>Feeling anxious, angry, numb or on edge after violence is a normal response. It does not mean you are weak.</p>
+    <ul>
+      <li data-i18n>Choose when you check the news, and turn off alerts. Try not to scroll before bed.</li>
+      <li data-i18n>Look away from graphic images and videos. Seeing them again and again can raise your stress.</li>
+      <li data-i18n>Keep your routines: sleep, food, movement and time with people you trust.</li>
+      <li data-i18n>Do one small thing for someone else. It can ease the helpless feeling.</li>
+    </ul>
+    <ul>
+      <li data-i18n>If a child is worried, ask what they have heard and listen first.</li>
+      <li data-i18n>Use simple, honest words. Tell them the adults are working to keep them safe.</li>
+      <li data-i18n>Keep the news off around young children, and watch for changes in sleep, appetite or mood.</li>
+    </ul>
+    <p data-i18n>If the distress stays strong for weeks, or it affects your sleep, eating or work, please talk to a doctor or counsellor.</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-slate" data-scroll="groundingCard" data-i18n>Do the 60 second calm down</button>
+      <a class="btn btn-outline" href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline</a>
+    </div>
+  </section>
+
+  <!-- SAFER AT HOME PANEL -->
+  <section class="panel panel-store" id="panelStorage" aria-labelledby="store-heading">
+    <h3 id="store-heading" data-i18n>Making things safer at home</h3>
+    <p data-i18n>This is for anyone who lives with a firearm, or knows one is nearby. It is about safety, not blame.</p>
+    <ul>
+      <li data-i18n>The safest choice is no gun in the home. If there is one, store it unloaded and locked.</li>
+      <li data-i18n>Lock ammunition away separately from the gun.</li>
+      <li data-i18n>Keep keys and codes away from children, and away from anyone who is in crisis.</li>
+      <li data-i18n>If someone at home is angry, in crisis or thinking of suicide, ask a trusted friend or relative to hold the firearm for a while. Local rules differ, so check what is allowed where you live.</li>
+      <li data-i18n>Teach children never to touch a gun, and to tell an adult at once if they find one.</li>
+    </ul>
+    <p><strong data-i18n>In many places, a large share of gun deaths are suicides. Creating distance between a person in crisis and a firearm can save a life.</strong></p>
+    <p style="font-size:14px;"><span data-i18n>If you are having thoughts of ending your life:</span> <a class="inline" href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/Suicide-Prevention-and-Emotional-Support-Tool.html" target="_blank" rel="noopener noreferrer" data-i18n>Suicide Prevention and Emotional Support Tool</a></p>
+  </section>
+
   <!-- CHECK-IN -->
   <section class="card" aria-labelledby="checkin-heading">
     <p class="card-title" id="checkin-heading" data-i18n>Quick check-in</p>
     <p class="card-sub" data-i18n>Three short steps. Tap what fits.</p>
 
-    <div class="step-block">
-      <div class="step-meta" data-i18n>Step 1 of 3: How are you feeling?</div>
+    <div class="step-block rstep" data-step="1">
+      <div class="step-meta" data-i18n>How are you feeling?</div>
       <div class="chip-wrap" id="emotionChips" role="group" aria-label="Feeling options" data-i18n-attr="aria-label"></div>
     </div>
 
-    <div class="step-block">
-      <div class="step-meta" data-i18n>Step 2 of 3: What is making this feel heavy?</div>
+    <div class="step-block rstep" data-step="2">
+      <div class="step-meta" data-i18n>What is making this feel heavy?</div>
       <div class="chip-wrap" id="heavyChips" role="group" aria-label="Heavy factors" data-i18n-attr="aria-label"></div>
       <label class="field-label" for="heavyOther" data-i18n>Optional: add anything in your own words</label>
       <textarea id="heavyOther" maxlength="600" placeholder="Write a few words about what feels hardest right now..." data-i18n-attr="placeholder"></textarea>
     </div>
 
-    <div class="step-block">
-      <div class="step-meta" data-i18n>Step 3 of 3: What do you need most?</div>
+    <div class="step-block rstep" data-step="3">
+      <div class="step-meta" data-i18n>What do you need most?</div>
       <div class="chip-wrap" id="needChips" role="group" aria-label="Need options" data-i18n-attr="aria-label"></div>
       <p class="next-step-hint" id="nextStepHint">Pick a need to see a suggested next step.</p>
       <div class="next-step-box" id="nextStepBox">Your suggested next step will appear here.</div>
     </div>
 
+    <div class="wiz-nav">
+      <button type="button" class="btn btn-outline" id="wizBack" data-i18n>Back</button>
+      <div class="wiz-mid"><div class="wdots" id="wizDots" aria-hidden="true"></div><div class="wiz-count" id="wizCount" aria-live="polite"></div></div>
+      <button type="button" class="btn btn-primary" id="wizNext">Next</button>
+    </div>
+    <div id="toSummaryWrap" style="text-align:center;"><button type="button" class="linkbtn" id="toSummary" data-i18n>Skip to my summary</button></div>
+
+    <div id="actionsBlock">
     <div class="result-box" id="resultBox" aria-live="polite"></div>
+
+    <label class="save-row">
+      <input type="checkbox" id="discreetPdf" />
+      <span data-i18n>Make this PDF discreet</span>
+    </label>
+    <p class="name-note" data-i18n>A discreet PDF has a neutral title, no logo, and only the support contact. Your own written words still appear in it.</p>
 
     <div class="section-label" style="margin-top:18px;" data-i18n>Actions</div>
     <div class="btn-row" style="margin-bottom:6px;">
@@ -374,6 +542,7 @@
       <button type="button" class="btn btn-slate" id="saveBtn" data-i18n>Save on this device</button>
       <button type="button" class="btn btn-outline" id="pdfBtn" data-i18n>Download PDF</button>
       <button type="button" class="btn btn-danger" id="resetBtn" data-i18n>Reset</button>
+    </div>
     </div>
   </section>
 
@@ -390,21 +559,38 @@
       </div>
       <p class="grounding-tip" data-i18n>5-4-3-2-1: name 5 things you can see, 4 you can feel, 3 you can hear, 2 you can smell, 1 you can taste.</p>
     </div>
+    <div class="after-heat">
+      <label class="field-label" data-i18n>How hot is it now?</label>
+      <p class="card-sub" style="margin-bottom:8px;" data-i18n>After the calm down, rate it again. Your rating is never saved.</p>
+      <div class="scale heat" role="radiogroup" aria-label="How hot it is now, from 0 to 10" data-i18n-attr="aria-label">
+      <label data-band="a"><input type="radio" name="heatAfter" value="0"><span>0</span></label>
+      <label data-band="a"><input type="radio" name="heatAfter" value="1"><span>1</span></label>
+      <label data-band="a"><input type="radio" name="heatAfter" value="2"><span>2</span></label>
+      <label data-band="a"><input type="radio" name="heatAfter" value="3"><span>3</span></label>
+      <label data-band="b"><input type="radio" name="heatAfter" value="4"><span>4</span></label>
+      <label data-band="b"><input type="radio" name="heatAfter" value="5"><span>5</span></label>
+      <label data-band="b"><input type="radio" name="heatAfter" value="6"><span>6</span></label>
+      <label data-band="c"><input type="radio" name="heatAfter" value="7"><span>7</span></label>
+      <label data-band="c"><input type="radio" name="heatAfter" value="8"><span>8</span></label>
+      <label data-band="d"><input type="radio" name="heatAfter" value="9"><span>9</span></label>
+      <label data-band="d"><input type="radio" name="heatAfter" value="10"><span>10</span></label>
+      </div>
+      <div class="scale-ends"><span data-i18n>0 = calm</span><span data-i18n>10 = about to explode</span></div>
+      <div class="soft-note" id="shiftBox" role="status"></div>
+    </div>
   </section>
 
-  <!-- SHARE -->
-  <section class="card" aria-labelledby="share-heading">
-    <p class="card-title" id="share-heading" data-i18n>Share this tool</p>
-    <p class="card-sub" data-i18n>Someone you know might need this today. Sharing can help prevent a bad situation.</p>
-    <div class="btn-row">
-      <button type="button" class="btn btn-share" id="copyLinkBtn" data-i18n>Copy link</button>
-      <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
-      <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
-      <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener">Telegram</a>
-      <a class="btn btn-share" id="mailShare" data-i18n>Email</a>
-      <button type="button" class="btn btn-share" id="nativeShare" style="display:none;" data-i18n>More options</button>
-    </div>
+  <!-- STEP-AWAY PLAN -->
+  <section class="card" aria-labelledby="away-heading">
+    <p class="card-title" id="away-heading" data-i18n>My step-away plan</p>
+    <p class="card-sub" data-i18n>Decide this now, while you are calm. If things heat up, you will not have to think. It prints in your PDF.</p>
+    <div class="away-field"><label class="field-label" for="stepPlace" data-i18n>Where I will go</label>
+      <input type="text" id="stepPlace" maxlength="80" placeholder="Outside, another room, a relative's home..." data-i18n-attr="placeholder" autocomplete="off" /></div>
+    <div class="away-field"><label class="field-label" for="stepPerson" data-i18n>Who I will call or text</label>
+      <input type="text" id="stepPerson" maxlength="80" placeholder="A name and number" data-i18n-attr="placeholder" autocomplete="off" /></div>
+    <div class="away-field"><label class="field-label" for="stepDo" data-i18n>One thing I will do to cool down</label>
+      <input type="text" id="stepDo" maxlength="80" placeholder="Slow breathing, a walk, cold water..." data-i18n-attr="placeholder" autocomplete="off" /></div>
+    <p class="name-note" data-i18n>Nothing here is saved. It stays on this page and in your PDF.</p>
   </section>
 
   <!-- COURSE -->
@@ -429,6 +615,19 @@
   <footer class="footer" aria-label="Footer" data-i18n-attr="aria-label">
     <p class="footer-support-text" data-i18n>This platform is free for everyone. If it helped you, consider supporting it.</p>
     <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; <span data-i18n>Support this website</span></a>
+
+    <div class="footer-share">
+      <p class="footer-share-label" data-i18n>Know someone who might need this? Share it.</p>
+      <div class="btn-row footer-share-row">
+        <button type="button" class="btn btn-share" id="copyLinkBtn" data-i18n>Copy link</button>
+        <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+        <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener">Telegram</a>
+        <a class="btn btn-share" id="mailShare" data-i18n>Email</a>
+        <button type="button" class="btn btn-share" id="nativeShare" style="display:none;" data-i18n>More options</button>
+      </div>
+    </div>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" data-i18n>More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" data-i18n>Recommended audio books</a>
@@ -513,7 +712,7 @@
     '3. Get support': '3. Busca apoyo',
     'Talk to a helpline. They listen without judging, and it is free. If you feel you might act on a thought, call emergency services now.': 'Habla con una línea de ayuda. Te escuchan sin juzgar, y es gratis. Si sientes que podrías actuar según un pensamiento, llama ya a los servicios de emergencia.',
     'Why reaching out is the stronger choice:': 'Por qué pedir ayuda es la opción más fuerte:',
-    'it protects other people, it protects your future, and it protects the people who love you. Most people who ask for help are met with care, not punishment.': 'protege a otras personas, protege tu futuro y protege a quienes te quieren. La mayoría de quienes piden ayuda reciben cuidado, no castigo.',
+    'it protects other people, it protects your future, and it protects the people who love you. Many people who ask for help are met with care, not punishment.': 'protege a otras personas, protege tu futuro y protege a quienes te quieren. Muchas personas que piden ayuda reciben cuidado, no castigo.',
     'Talk to someone now': 'Habla con alguien ahora',
     'Do the 60 second calm down': 'Hacer la calma de 60 segundos',
 
@@ -539,7 +738,7 @@
     'You protect your future.': 'Proteges tu futuro.',
     'Your goals, your friends and your freedom are all still ahead of you. One violent act can end all of it.': 'Tus metas, tus amistades y tu libertad siguen por delante. Un solo acto violento puede acabar con todo eso.',
     'Adults usually respond with care.': 'Las personas adultas suelen responder con cuidado.',
-    'Most people want to help once they know. You do not need the perfect words. You just need to start.': 'La mayoría quiere ayudar cuando se entera. No necesitas las palabras perfectas. Solo necesitas empezar.',
+    'Many people want to help once they know. You do not need the perfect words. You just need to start.': 'Muchas personas quieren ayudar cuando se enteran. No necesitas las palabras perfectas. Solo necesitas empezar.',
     'You are not the only one.': 'No eres la única persona a la que le pasa.',
     'Many young people carry dark thoughts and anger. Telling someone is how it gets lighter.': 'Muchas personas jóvenes llevan pensamientos oscuros y enojo. Contárselo a alguien es cómo se aligera.',
     'Need words? Copy one and send it:': '¿Necesitas palabras? Copia una y envíala:',
@@ -686,7 +885,7 @@
     'A simple plan when emotions run high': 'Un plan sencillo cuando las emociones suben',
     '1. Step away from the situation and put distance between you and anything that could hurt someone. 2. Tell one trusted person how you feel. 3. Contact a helpline or your local emergency services. Strong feelings pass. Actions cannot be undone, and asking for help can always be done.': '1. Aléjate de la situación y pon distancia entre tú y cualquier cosa que pueda hacerle daño a alguien. 2. Cuéntale a una persona de confianza cómo te sientes. 3. Contacta a una línea de ayuda o a los servicios de emergencia de tu zona. Las emociones fuertes pasan. Las acciones no se pueden deshacer, y pedir ayuda siempre se puede hacer.',
     'Why reaching out is the stronger choice': 'Por qué pedir ayuda es la opción más fuerte',
-    'Asking for help protects other people, protects your future and protects the people who care about you. It takes courage, and most people respond with care. You do not need perfect words. You only need to start.': 'Pedir ayuda protege a otras personas, protege tu futuro y protege a quienes se preocupan por ti. Hace falta valentía, y la mayoría responde con cuidado. No necesitas palabras perfectas. Solo necesitas empezar.',
+    'Asking for help protects other people, protects your future and protects the people who care about you. It takes courage, and many people respond with care. You do not need perfect words. You only need to start.': 'Pedir ayuda protege a otras personas, protege tu futuro y protege a quienes se preocupan por ti. Hace falta valentía, y muchas personas responden con cuidado. No necesitas palabras perfectas. Solo necesitas empezar.',
     'If you are worried about someone else': 'Si te preocupa otra persona',
     'Take talk of harming others seriously. Stay calm, listen, tell a trusted adult or authority, and call emergency services if there is a threat or a weapon. Speaking up early can keep everyone safe.': 'Toma en serio las palabras sobre hacerles daño a otras personas. Mantén la calma, escucha, díselo a una persona adulta de confianza o a una autoridad, y llama a los servicios de emergencia si hay una amenaza o un arma. Hablar pronto puede mantener a salvo a todas las personas.',
     'More free resources': 'Más recursos gratuitos',
@@ -695,7 +894,121 @@
     'Free tools:': 'Herramientas gratuitas:',
     'Support this project:': 'Apoya este proyecto:',
     'Find a helpline:': 'Encuentra una línea de ayuda:',
-    'We are not medical professionals. If you are in immediate danger, contact emergency services now.': 'No somos profesionales de la salud. Si estás en peligro inmediato, llama ahora a los servicios de emergencia.'
+    'We are not medical professionals. If you are in immediate danger, contact emergency services now.': 'No somos profesionales de la salud. Si estás en peligro inmediato, llama ahora a los servicios de emergencia.',
+
+    /* ===== Added in the prevention upgrade ===== */
+    "I want to make things safer at home": "Quiero hacer mi casa más segura",
+    "Heat check": "Termómetro de la rabia",
+    "How hot is it right now? 0 is calm. 10 is about to explode. You can skip this. Your rating is never saved.": "¿Qué tan caliente está todo ahora mismo? 0 es calma. 10 es a punto de explotar. Puedes omitirlo. Tu valoración nunca se guarda.",
+    "How hot it is right now, from 0 to 10": "Qué tan caliente está todo ahora mismo, de 0 a 10",
+    "0 = calm": "0 = calma",
+    "10 = about to explode": "10 = a punto de explotar",
+    "You are in a calm place. This is a good time to check in, or to make a plan for harder moments.": "Estás en un momento de calma. Es un buen momento para conectar contigo, o para hacer un plan para los momentos más difíciles.",
+    "It is rising. Take 60 seconds before you say or do anything. Breathe out longer than you breathe in.": "Está subiendo. Tómate 60 segundos antes de decir o hacer nada. Exhala más tiempo del que inhalas.",
+    "This is hot. Step away now. Do not message, argue or decide anything yet. Use the 60 second calm down.": "Está muy caliente. Aléjate ahora. No escribas, no discutas ni decidas nada todavía. Usa la calma en 60 segundos.",
+    "This is very hot. Leave the situation now. Go where other people are and put distance between you and anything that could hurt someone. Tell one person. If you think you might act on a thought, call your local emergency number now.": "Está ardiendo. Sal de la situación ahora. Ve donde haya otras personas y pon distancia entre tú y cualquier cosa que pueda hacerle daño a alguien. Cuéntaselo a una persona. Si crees que podrías actuar según un pensamiento, llama ahora al número de emergencias de tu zona.",
+    "How hot is it now?": "¿Qué tan caliente está ahora?",
+    "After the calm down, rate it again. Your rating is never saved.": "Después de calmarte, valóralo de nuevo. Tu valoración nunca se guarda.",
+    "How hot it is now, from 0 to 10": "Qué tan caliente está ahora, de 0 a 10",
+    "You rated the heat at {0} now. A rating is only a snapshot, and you can come back at any time.": "Valoraste el calor actual en {0}. Una valoración es solo una instantánea, y puedes volver cuando quieras.",
+    "It went from {0} to {1}. That is what a minute of slow breathing can do. Keep going if you need to.": "Pasó de {0} a {1}. Eso es lo que puede lograr un minuto de respiración lenta. Sigue si lo necesitas.",
+    "It stayed at {0}. That is okay. Try the calm down again, or step away and tell one person.": "Se mantuvo en {0}. Está bien. Repite la calma, o aléjate y cuéntaselo a una persona.",
+    "It went from {0} to {1}. Please step away from the situation now and tell one person. If you think you might hurt someone, call your local emergency number.": "Pasó de {0} a {1}. Aléjate ahora de la situación y cuéntaselo a una persona. Si crees que podrías hacerle daño a alguien, llama al número de emergencias de tu zona.",
+    "{0} / 10 at the start, {1} / 10 now": "{0} / 10 al empezar, {1} / 10 ahora",
+    "{0} / 10 at the start": "{0} / 10 al empezar",
+    "{0} / 10 now": "{0} / 10 ahora",
+    "How hot it felt": "Qué tan caliente se sintió",
+    "Is there a weapon, a threat, or a plan to hurt someone?": "¿Hay un arma, una amenaza o un plan para hacerle daño a alguien?",
+    "Yes": "Sí",
+    "I am not sure": "No estoy seguro o segura",
+    "Call your local emergency number now.": "Llama ahora al número de emergencias de tu zona.",
+    "Do not confront the person or try to handle this alone. Tell the dispatcher what you know: who, where, what weapon, and what was said. Then tell a trusted adult.": "No te enfrentes a la persona ni intentes manejarlo en soledad. Cuéntale a quien te atienda lo que sabes: quién, dónde, qué arma y qué se dijo. Después, díselo a una persona adulta de confianza.",
+    "When in doubt, treat it as a yes. It is always okay to call emergency services or tell a trusted adult.": "Si tienes dudas, trátalo como un sí. Siempre está bien llamar a emergencias o contárselo a una persona adulta de confianza.",
+    "What to say": "Qué decir",
+    "Ask an open question, like \"What has been going on?\", then listen without arguing.": "Haz una pregunta abierta, como \"¿Qué ha estado pasando?\", y escucha sin discutir.",
+    "What to avoid": "Qué evitar",
+    "Do not argue, shame or joke about it. Do not promise to keep it secret if someone could get hurt.": "No discutas, no avergüences ni bromees con esto. No prometas guardar el secreto si alguien podría salir herido.",
+    "Who to tell": "A quién contárselo",
+    "A trusted adult, school staff, a faith leader, a family member, or a helpline.": "Una persona adulta de confianza, el personal de la escuela, una persona líder religiosa, alguien de la familia o una línea de ayuda.",
+    "Words you can copy and send": "Palabras que puedes copiar y enviar",
+    "I have noticed you seem really low and angry lately. I care about you. Can we talk?": "He notado que estás muy decaído o decaída y con mucha rabia últimamente. Me importas. ¿Podemos hablar?",
+    "I am not here to judge you. I am worried about what you said. Who could we talk to together?": "No estoy aquí para juzgarte. Me preocupa lo que dijiste. ¿Con quién podríamos hablar juntos o juntas?",
+    "I do not want to keep this secret, because I am scared someone could get hurt. I am going to ask a trusted adult for help.": "No quiero guardar este secreto, porque temo que alguien pueda salir herido. Voy a pedirle ayuda a una persona adulta de confianza.",
+    "When violence in the news is getting to you": "Cuando la violencia en las noticias te afecta",
+    "Feeling anxious, angry, numb or on edge after violence is a normal response. It does not mean you are weak.": "Sentir ansiedad, rabia, entumecimiento o tensión después de la violencia es una respuesta normal. No significa que seas débil.",
+    "Choose when you check the news, and turn off alerts. Try not to scroll before bed.": "Elige cuándo ver las noticias y desactiva las alertas. Intenta no deslizar el dedo por las redes antes de dormir.",
+    "Look away from graphic images and videos. Seeing them again and again can raise your stress.": "Evita las imágenes y los videos explícitos. Verlos una y otra vez puede aumentar tu estrés.",
+    "Keep your routines: sleep, food, movement and time with people you trust.": "Mantén tus rutinas: sueño, comida, movimiento y tiempo con personas de confianza.",
+    "Do one small thing for someone else. It can ease the helpless feeling.": "Haz algo pequeño por otra persona. Puede aliviar la sensación de impotencia.",
+    "If a child is worried, ask what they have heard and listen first.": "Si una niña o un niño está preocupado, pregunta qué ha oído y escucha primero.",
+    "Use simple, honest words. Tell them the adults are working to keep them safe.": "Usa palabras sencillas y sinceras. Dile que las personas adultas están trabajando para mantenerle a salvo.",
+    "Keep the news off around young children, and watch for changes in sleep, appetite or mood.": "Evita las noticias cuando haya niñas y niños pequeños cerca, y observa cambios en el sueño, el apetito o el ánimo.",
+    "If the distress stays strong for weeks, or it affects your sleep, eating or work, please talk to a doctor or counsellor.": "Si el malestar sigue siendo fuerte durante semanas, o afecta tu sueño, tu alimentación o tu trabajo, habla con un médico o con un profesional de la consejería.",
+    "Making things safer at home": "Hacer tu casa más segura",
+    "This is for anyone who lives with a firearm, or knows one is nearby. It is about safety, not blame.": "Esto es para quien vive con un arma de fuego, o sabe que hay una cerca. Se trata de seguridad, no de culpa.",
+    "The safest choice is no gun in the home. If there is one, store it unloaded and locked.": "Lo más seguro es no tener un arma en casa. Si hay una, guárdala descargada y bajo llave.",
+    "Lock ammunition away separately from the gun.": "Guarda la munición bajo llave y aparte del arma.",
+    "Keep keys and codes away from children, and away from anyone who is in crisis.": "Mantén las llaves y los códigos lejos de niñas y niños, y de cualquier persona que esté en crisis.",
+    "If someone at home is angry, in crisis or thinking of suicide, ask a trusted friend or relative to hold the firearm for a while. Local rules differ, so check what is allowed where you live.": "Si alguien en casa está furioso, en crisis o pensando en el suicidio, pide a una amistad o a un familiar de confianza que guarde el arma por un tiempo. Las normas locales son distintas, así que consulta qué está permitido donde vives.",
+    "Teach children never to touch a gun, and to tell an adult at once if they find one.": "Enseña a niñas y niños a no tocar nunca un arma, y a avisar de inmediato a una persona adulta si encuentran una.",
+    "In many places, a large share of gun deaths are suicides. Creating distance between a person in crisis and a firearm can save a life.": "En muchos lugares, una gran parte de las muertes por arma de fuego son suicidios. Poner distancia entre una persona en crisis y un arma puede salvar una vida.",
+    "If you are having thoughts of ending your life:": "Si estás teniendo pensamientos de quitarte la vida:",
+    "Suicide Prevention and Emotional Support Tool": "Herramienta de prevención del suicidio y apoyo emocional",
+    "My step-away plan": "Mi plan para alejarme",
+    "Decide this now, while you are calm. If things heat up, you will not have to think. It prints in your PDF.": "Decídelo ahora, mientras estás en calma. Si todo se calienta, no tendrás que pensar. Se imprime en tu PDF.",
+    "Where I will go": "Adónde iré",
+    "Outside, another room, a relative's home...": "Afuera, otra habitación, la casa de un familiar...",
+    "Who I will call or text": "A quién llamaré o escribiré",
+    "A name and number": "Un nombre y un número",
+    "One thing I will do to cool down": "Una cosa que haré para calmarme",
+    "Slow breathing, a walk, cold water...": "Respirar lento, caminar, agua fría...",
+    "Nothing here is saved. It stays on this page and in your PDF.": "Nada de esto se guarda. Se queda en esta página y en tu PDF.",
+    "Where I will go:": "Adónde iré:",
+    "Who I will call or text:": "A quién llamaré o escribiré:",
+    "One thing I will do to cool down:": "Una cosa que haré para calmarme:",
+    "How are you feeling?": "¿Cómo te sientes?",
+    "What is making this feel heavy?": "¿Qué hace que esto pese tanto?",
+    "What do you need most?": "¿Qué es lo que más necesitas?",
+    "Step {0} of {1}": "Paso {0} de {1}",
+    "Back": "Atrás",
+    "Next": "Siguiente",
+    "Skip": "Omitir",
+    "Skip to my summary": "Ir directo a mi resumen",
+    "Make this PDF discreet": "Hacer este PDF discreto",
+    "A discreet PDF has a neutral title, no logo, and only the support contact. Your own written words still appear in it.": "Un PDF discreto tiene un título neutro, no lleva logotipo y solo incluye el contacto de apoyo. Lo que tú escribiste sí aparece en él.",
+    "Where to go next": "A dónde ir después",
+    "Free tools that match what you chose. Pick one, or none. There is no rush.": "Herramientas gratuitas que encajan con lo que elegiste. Elige una, o ninguna. No hay prisa.",
+    "Distress Tolerance Coping Tool": "Herramienta de afrontamiento y tolerancia al malestar",
+    "Emotional Trigger Mapping Tool": "Mapa de desencadenantes emocionales",
+    "Hard Conversation Preparation Tool": "Herramienta para preparar conversaciones difíciles",
+    "Positive Strength Map Tool": "Mapa de fortalezas positivas",
+    "Visual Grounding and Emotional Reset Tool": "Anclaje visual y reinicio emocional",
+    "Wellbeing Journey: Quick Check and Reset": "Camino de bienestar: revisión y reinicio",
+    "Know someone who might need this? Share it.": "¿Conoces a alguien que podría necesitar esto? Compártelo.",
+    "My notes": "Mis notas",
+    "Personal notes": "Notas personales",
+    "Support contacts": "Contactos de apoyo",
+    "Talk to someone right now": "Habla con alguien ahora mismo",
+    "Free and private. You can just talk. In an emergency, call your local emergency number.": "Gratis y privado. Puedes simplemente hablar. En una emergencia, llama al número de emergencias de tu zona.",
+    "Free and private. You can just talk. If you or someone else is in danger, call your local emergency number now.": "Gratis y privado. Puedes simplemente hablar. Si tú u otra persona están en peligro, llama ahora al número de emergencias de tu zona.",
+    "Any country: findahelpline.com": "Cualquier país: findahelpline.com",
+    "If you are worried about someone planning to hurt others: call emergency services, or tell a trusted adult right away.": "Si te preocupa alguien que planea hacerles daño a otras personas: llama a emergencias, o díselo de inmediato a una persona adulta de confianza.",
+    "If you are having thoughts of ending your life: findahelpline.com lists crisis lines for your country.": "Si estás teniendo pensamientos de quitarte la vida: findahelpline.com reúne líneas de crisis de tu país.",
+    "Before": "Antes",
+    "After": "Después",
+    "Not rated": "Sin valorar",
+    "Who I could tell": "A quién podría contárselo",
+    "One honest line to one person is enough. You do not need to explain everything.": "Una frase sincera a una persona es suficiente. No necesitas explicarlo todo.",
+    "Name:": "Nombre:",
+    "Number:": "Número:",
+    "What I could say:": "Lo que podría decir:",
+    "Words you can copy": "Palabras que puedes copiar",
+    "If there is a weapon, a threat or a plan to hurt someone: call your local emergency number now. Do not confront the person or handle this alone. Tell the dispatcher who, where, what weapon and what was said.": "Si hay un arma, una amenaza o un plan para hacerle daño a alguien: llama ahora al número de emergencias de tu zona. No te enfrentes a la persona ni lo manejes en soledad. Cuéntale a quien te atienda quién, dónde, qué arma y qué se dijo.",
+    "If not, or if you are not sure:": "Si no, o si no estás seguro o segura:",
+    "Research by the US Secret Service on targeted violence has found that people who plan violence often show concerning behaviour first, and others often notice. That is why speaking up early matters.": "Las investigaciones del Servicio Secreto de EE. UU. sobre la violencia dirigida han encontrado que las personas que planean violencia suelen mostrar antes conductas preocupantes, y que otras personas suelen darse cuenta. Por eso es importante hablar a tiempo.",
+    "Where this comes from": "De dónde viene esto",
+    "Page": "Página",
+    "of": "de"
   };
 
   function t(s) {
@@ -734,6 +1047,7 @@
     applyStatic();
     document.querySelectorAll('.chip').forEach(c => { if (c._en !== undefined) c.textContent = t(c._en); });
     $('breathPrompt').textContent = t(breathKey);
+    refreshExtras();
     updateNextStep();
     togglePanels();
     renderHistory();
@@ -751,6 +1065,7 @@
     { label: 'I feel angry or have thoughts of hurting someone', value: 'pause' },
     { label: 'I am worried about someone else', value: 'worried' },
     { label: 'Violence or the news is affecting me', value: 'affected' },
+    { label: 'I want to make things safer at home', value: 'storage' },
     { label: 'I just want to check in', value: 'checkin' }
   ];
 
@@ -787,6 +1102,8 @@
     $('panelPause').classList.toggle('show', state.paths.includes('pause'));
     $('panelWorried').classList.toggle('show', state.paths.includes('worried'));
     $('teenSection').classList.toggle('show', state.age === 'teen');
+    $('panelNews').classList.toggle('show', state.paths.includes('affected'));
+    $('panelStorage').classList.toggle('show', state.paths.includes('storage'));
 
     const n = displayName();
     $('pauseGreeting').textContent = greet('Having angry or dark thoughts does not make you a bad person. It means you are hurting and something needs to change. What matters is what you do next.', n);
@@ -868,7 +1185,7 @@
       [t('Your notes'), state.heavyOther || t('None')],
       [t('What you need most'), state.needs.map(x => t(x)).join(', ') || t('Not selected')],
       [t('Your next step'), state.nextStep ? t(state.nextStep) : t('Not chosen yet')]
-    ];
+    ].concat(heatLine() ? [[t('How hot it felt'), heatLine()]] : []);
   }
 
   function showSummary(quiet) {
@@ -878,6 +1195,7 @@
       html += '<div class="result-row"><div class="result-row-label">' + esc(label) + '</div><div class="result-row-value">' + esc(value) + '</div></div>';
     });
     html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">' + t('You do not have to carry this alone. One small step, one moment at a time.') + '</div>';
+    html += nextBoxHtml();
     const box = $('resultBox');
     box.innerHTML = html;
     box.style.display = 'block';
@@ -932,6 +1250,7 @@
     $('heavyOther').value = '';
     document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
     $('resultBox').style.display = 'none';
+    resetExtras();
     updateNextStep();
     togglePanels();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1006,83 +1325,372 @@
   async function downloadPDF() {
     const PDF = jsPDF();
     if (!PDF) { showToast(t('PDF library unavailable. Please retry.')); return; }
+    const discreet = $('discreetPdf').checked;
     const rows = summaryRows();
+    const before = ratingOf('heatBefore'), after = ratingOf('heatAfter');
     showToast(t('Preparing your PDF...'));
 
     const doc = new PDF({ unit: 'pt', format: 'a4' });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
-    const margin = 40;
+    const margin = 40, W = pageW - margin * 2, bottomLimit = pageH - 56;
     let y = margin;
+    const BRAND = [58, 106, 72], SLATE = [74, 90, 112], INK = [26, 34, 24], MUTED = [74, 88, 72], LINE = [168, 200, 176];
 
+    const safe = s => String(s).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-').replace(/…/g, '...');
+    const color = c => doc.setTextColor(c[0], c[1], c[2]);
+    const ensure = h => { if (y + h > bottomLimit) { doc.addPage(); y = margin; } };
+    function heading(text, need) {
+      ensure(need || 34);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); color(BRAND);
+      doc.text(safe(text), margin, y); y += 15;
+    }
+    function para(text, size, style, c) {
+      doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size || 9.4); color(c || INK);
+      const lines = doc.splitTextToSize(safe(text), W);
+      const lh = (size || 9.4) * 1.25;
+      lines.forEach(ln => { ensure(lh); doc.text(ln, margin, y); y += lh; });
+      y += 4;
+    }
+    function bullets(items, size) {
+      items.forEach(i => {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(size || 9.2); color(INK);
+        const lines = doc.splitTextToSize(safe(i), W - 14);
+        const lh = (size || 9.2) * 1.25;
+        ensure(lines.length * lh + 2);
+        doc.text('-', margin + 2, y);
+        lines.forEach(ln => { doc.text(ln, margin + 12, y); y += lh; });
+        y += 2;
+      });
+      y += 2;
+    }
+    function rule() {
+      ensure(20);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.6);
+      doc.line(margin, y, pageW - margin, y); y += 11;
+    }
+    function fillLine(label, filled) {
+      ensure(24);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.6); color(INK);
+      const lab = safe(label);
+      doc.text(lab, margin, y);
+      const lw = doc.getTextWidth(lab);
+      if (filled) {
+        doc.setFont('helvetica', 'bold');
+        const fl = doc.splitTextToSize(safe(filled), W - lw - 10);
+        doc.text(fl, margin + lw + 6, y);
+        y += fl.length * 12 + 6;
+      } else {
+        doc.setDrawColor(MUTED[0], MUTED[1], MUTED[2]); doc.setLineWidth(0.5);
+        doc.line(margin + lw + 6, y + 1.5, pageW - margin, y + 1.5);
+        y += 22;
+      }
+    }
+    function bar(label, val, rgb) {
+      const x0 = margin + 70, tw = W - 70 - 64;
+      ensure(24);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); color(INK);
+      doc.text(safe(label), margin, y + 10);
+      doc.setFillColor(226, 236, 222);
+      doc.roundedRect(x0, y, tw, 14, 7, 7, 'F');
+      if (val !== null) {
+        doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+        doc.roundedRect(x0, y, Math.max(8, tw * (val / 10)), 14, 7, 7, 'F');
+      }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); color(INK);
+      doc.text(val === null ? safe(t('Not rated')) : (val + ' / 10'), x0 + tw + 8, y + 11);
+      y += 22;
+    }
+
+    /* ----- Header ----- */
     doc.setFillColor(232, 242, 236);
-    doc.roundedRect(margin, y, pageW - margin * 2, 70, 6, 6, 'F');
-    try {
-      const logoData = await imageToDataUrl(LOGO_URL);
-      doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
-    } catch (_) {}
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(26, 34, 24);
-    doc.text(t('Gun Violence Awareness Support'), margin + 76, y + 26);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 88, 72);
-    doc.text(state.name ? t('Personal reflection for') + ' ' + state.name : t('Personal reflection summary'), margin + 76, y + 41);
-    doc.text('emotionalintelligencedeveloper.com', margin + 76, y + 56);
+    doc.roundedRect(margin, y, W, 70, 6, 6, 'F');
+    let textX = margin + 14;
+    if (!discreet) {
+      try {
+        const logoData = await imageToDataUrl(LOGO_URL);
+        doc.addImage(logoData, 'JPEG', margin + 10, y + 7, 54, 54);
+        textX = margin + 76;
+      } catch (_) {}
+    }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(15); color(INK);
+    doc.text(safe(t(discreet ? 'My notes' : 'Gun Violence Awareness Support')), textX, y + 26);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); color(MUTED);
+    doc.text(safe(state.name ? t('Personal reflection for') + ' ' + state.name : t(discreet ? 'Personal notes' : 'Personal reflection summary')), textX, y + 41);
+    doc.text('emotionalintelligencedeveloper.com', textX, y + 56);
     y += 86;
 
-    rows.forEach(([label, value]) => {
-      if (y > pageH - 80) { doc.addPage(); y = margin; }
-      doc.setFillColor(232, 242, 236);
-      const lines = doc.splitTextToSize(value, pageW - margin * 2 - 22);
+    /* ----- Talk to someone right now (top of page 1) ----- */
+    const stripTitle = t(discreet ? 'Support contacts' : 'Talk to someone right now');
+    const stripIntro = t(discreet
+      ? 'Free and private. You can just talk. In an emergency, call your local emergency number.'
+      : 'Free and private. You can just talk. If you or someone else is in danger, call your local emergency number now.');
+    const stripLines = (discreet ? [
+      'Any country: findahelpline.com'
+    ] : [
+      'Any country: findahelpline.com',
+      'If you are worried about someone planning to hurt others: call emergency services, or tell a trusted adult right away.',
+      'If you are having thoughts of ending your life: findahelpline.com lists crisis lines for your country.'
+    ]).map(l => t(l));
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    const introL = doc.splitTextToSize(safe(stripIntro), W - 24);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.2);
+    let listL = [];
+    stripLines.forEach(l => { listL = listL.concat(doc.splitTextToSize(safe(l), W - 30)); });
+    doc.setFont('helvetica', 'normal');
+    const sh = 32 + introL.length * 12 + 4 + listL.length * 12 + 8;
+    doc.setFillColor(255, 240, 240); doc.setDrawColor(245, 160, 160); doc.setLineWidth(0.8);
+    doc.roundedRect(margin, y, W, sh, 5, 5, 'FD');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(139, 26, 26);
+    doc.text(safe(stripTitle), margin + 12, y + 18);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2); doc.setTextColor(110, 20, 20);
+    let sy = y + 33;
+    doc.text(introL, margin + 12, sy); sy += introL.length * 12 + 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text(listL, margin + 12, sy);
+    y += sh + 14;
+
+    /* ----- Heat bars ----- */
+    if (before !== null || after !== null) {
+      heading(t('How hot it felt'));
+      bar(t('Before'), before, [184, 80, 26]);
+      bar(t('After'), after, BRAND);
+      const hl = heatLine();
+      if (hl) { y += 2; para(hl, 10); }
+    }
+
+    /* ----- Summary rows ----- */
+    rows.filter(r => r[0] !== t('How hot it felt') && !(discreet && r[0] === t('What brought you here'))).forEach(([label, value]) => {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+      const lines = doc.splitTextToSize(safe(value), W - 22);
       const bh = lines.length * 12 + 28;
-      doc.roundedRect(margin, y, pageW - margin * 2, bh, 4, 4, 'F');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(58, 106, 72);
-      doc.text(label.toUpperCase(), margin + 10, y + 14);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(26, 34, 24);
+      ensure(bh + 8);
+      doc.setFillColor(232, 242, 236);
+      doc.roundedRect(margin, y, W, bh, 4, 4, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); color(BRAND);
+      doc.text(safe(label).toUpperCase(), margin + 10, y + 14);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); color(INK);
       doc.text(lines, margin + 10, y + 26);
       y += bh + 8;
     });
+    y += 4;
 
-    function block(title, body) {
-      if (y > pageH - 90) { doc.addPage(); y = margin; }
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(58, 106, 72);
-      doc.text(title, margin, y); y += 13;
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3); doc.setTextColor(26, 34, 24);
-      const lines = doc.splitTextToSize(body, pageW - margin * 2);
-      doc.text(lines, margin, y);
-      y += lines.length * 11.5 + 12;
+    /* ----- My step-away plan (both modes) ----- */
+    rule();
+    heading(t('My step-away plan'), 90);
+    fillLine(t('Where I will go:') + ' ', $('stepPlace').value.trim());
+    fillLine(t('Who I will call or text:') + ' ', $('stepPerson').value.trim());
+    fillLine(t('One thing I will do to cool down:') + ' ', $('stepDo').value.trim());
+
+    if (!discreet) {
+      rule();
+      heading(t('A simple plan when emotions run high'), 70);
+      para(t('1. Step away from the situation and put distance between you and anything that could hurt someone. 2. Tell one trusted person how you feel. 3. Contact a helpline or your local emergency services. Strong feelings pass. Actions cannot be undone, and asking for help can always be done.'));
+      heading(t('Why reaching out is the stronger choice'), 60);
+      para(t('Asking for help protects other people, protects your future and protects the people who care about you. It takes courage, and many people respond with care. You do not need perfect words. You only need to start.'));
+
+      rule();
+      heading(t('Who I could tell'), 100);
+      para(t('One honest line to one person is enough. You do not need to explain everything.'), 9.2, 'italic', MUTED);
+      fillLine(t('Name:') + ' ');
+      fillLine(t('Number:') + ' ');
+      fillLine(t('What I could say:') + ' ');
+      heading(t('Words you can copy'), 70);
+      bullets(SCRIPTS_SELF.map(s => t(s)));
+
+      rule();
+      heading(t('If you are worried about someone else'), 90);
+      para(t('Trust your gut. You do not need to be sure to speak up. Acting early can prevent harm and help someone get support.'));
+      para(t('If there is a weapon, a threat or a plan to hurt someone: call your local emergency number now. Do not confront the person or handle this alone. Tell the dispatcher who, where, what weapon and what was said.'), 9.4, 'bold');
+      para(t('If not, or if you are not sure:'), 9.4, 'bold');
+      bullets(W_SAY.map(s => t(s)).concat([t(W_AVOID), t(W_WHO)]));
+      para(t('Research by the US Secret Service on targeted violence has found that people who plan violence often show concerning behaviour first, and others often notice. That is why speaking up early matters.'), 9.2, 'italic', MUTED);
+
+      rule();
+      heading(t('Making things safer at home'), 100);
+      para(t('This is for anyone who lives with a firearm, or knows one is nearby. It is about safety, not blame.'), 9.2, 'italic', MUTED);
+      bullets(STORE_ITEMS.map(s => t(s)));
+      para(t('In many places, a large share of gun deaths are suicides. Creating distance between a person in crisis and a firearm can save a life.'), 9.2, 'bold');
+
+      rule();
+      heading(t('When violence in the news is getting to you'), 90);
+      bullets(NEWS_ITEMS.map(s => t(s)).concat(NEWS_KIDS.map(s => t(s))));
+
+      rule();
+      heading(t('Where to go next'), 90);
+      para(t('Free tools that match what you chose. Pick one, or none. There is no rush.'), 9.2, 'italic', MUTED);
+      nextToolKeys().forEach(k => para(t(TOOLS[k][1]) + ': ' + TOOL_BASE.replace('https://', '') + TOOLS[k][0], 9, 'normal'));
+      para(t('If you are having thoughts of ending your life:') + ' ' + t(TOOLS.t1[1]) + ': ' + TOOL_BASE.replace('https://', '') + TOOLS.t1[0], 9, 'normal');
+
+      rule();
+      heading(t('Where this comes from'), 80);
+      [
+        'US Secret Service, National Threat Assessment Center (2019). Protecting America\'s Schools: A U.S. Secret Service Analysis of Targeted School Violence.',
+        'American Academy of Pediatrics (2022). Safe storage of firearms.',
+        'Johns Hopkins Center for Gun Violence Solutions (2025). Child access prevention laws reduce youth gun suicide rates.'
+      ].forEach(l => para(l, 8.6, 'normal', MUTED));
+
+      rule();
+      heading(t('More free resources'));
+      [
+        t('This tool:') + ' ' + TOOL_URL,
+        t('Free tools:') + ' emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
+        t('Support this project:') + ' emotionalintelligencedeveloper.com/support-this-website/',
+        t('Find a helpline:') + ' findahelpline.com'
+      ].forEach(l => para(l, 9, 'normal'));
     }
 
-    y += 6;
-    doc.setDrawColor(168, 200, 176); doc.line(margin, y, pageW - margin, y); y += 16;
+    /* ----- Footer on every page ----- */
+    const total = doc.getNumberOfPages();
+    for (let i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(0.6);
+      doc.line(margin, pageH - 38, pageW - margin, pageH - 38);
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(8); color(MUTED);
+      doc.text(safe(t('We are not medical professionals. If you are in immediate danger, contact emergency services now.')), margin, pageH - 26);
+      doc.setFont('helvetica', 'normal');
+      doc.text('emotionalintelligencedeveloper.com', margin, pageH - 14);
+      doc.text(t('Page') + ' ' + i + ' ' + t('of') + ' ' + total, pageW - margin, pageH - 14, { align: 'right' });
+    }
 
-    block(t('A simple plan when emotions run high'),
-      t('1. Step away from the situation and put distance between you and anything that could hurt someone. 2. Tell one trusted person how you feel. 3. Contact a helpline or your local emergency services. Strong feelings pass. Actions cannot be undone, and asking for help can always be done.'));
-    block(t('Why reaching out is the stronger choice'),
-      t('Asking for help protects other people, protects your future and protects the people who care about you. It takes courage, and most people respond with care. You do not need perfect words. You only need to start.'));
-    block(t('If you are worried about someone else'),
-      t('Take talk of harming others seriously. Stay calm, listen, tell a trusted adult or authority, and call emergency services if there is a threat or a weapon. Speaking up early can keep everyone safe.'));
-
-    if (y > pageH - 100) { doc.addPage(); y = margin; }
-    doc.setDrawColor(168, 200, 176); doc.line(margin, y, pageW - margin, y); y += 14;
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(58, 106, 72);
-    doc.text(t('More free resources'), margin, y); y += 13;
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(26, 34, 24);
-    [
-      t('This tool:') + ' ' + TOOL_URL,
-      t('Main site:') + ' emotionalintelligencedeveloper.com',
-      t('Free tools:') + ' emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
-      t('Support this project:') + ' emotionalintelligencedeveloper.com/support-this-website/',
-      t('Find a helpline:') + ' findahelpline.com'
-    ].forEach(line => {
-      const l = doc.splitTextToSize(line, pageW - margin * 2);
-      doc.text(l, margin, y); y += l.length * 12 + 1;
-    });
-
-    doc.setDrawColor(168, 200, 176); doc.line(margin, pageH - 36, pageW - margin, pageH - 36);
-    doc.setFont('helvetica', 'italic'); doc.setFontSize(8.5); doc.setTextColor(111, 134, 109);
-    doc.text(t('We are not medical professionals. If you are in immediate danger, contact emergency services now.'), margin, pageH - 22);
-
-    doc.save('gun-violence-awareness-support.pdf');
+    const tag = (state.name || '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    doc.save((discreet ? 'my-notes' : 'gun-violence-awareness-support') + (tag ? '-' + tag : '') + '.pdf');
     showToast(t('PDF downloaded.'));
+  }
+
+  const STORE_ITEMS = ["The safest choice is no gun in the home. If there is one, store it unloaded and locked.", "Lock ammunition away separately from the gun.", "Keep keys and codes away from children, and away from anyone who is in crisis.", "If someone at home is angry, in crisis or thinking of suicide, ask a trusted friend or relative to hold the firearm for a while. Local rules differ, so check what is allowed where you live.", "Teach children never to touch a gun, and to tell an adult at once if they find one."], NEWS_ITEMS = ["Choose when you check the news, and turn off alerts. Try not to scroll before bed.", "Look away from graphic images and videos. Seeing them again and again can raise your stress.", "Keep your routines: sleep, food, movement and time with people you trust.", "Do one small thing for someone else. It can ease the helpless feeling."], NEWS_KIDS = ["If a child is worried, ask what they have heard and listen first.", "Use simple, honest words. Tell them the adults are working to keep them safe.", "Keep the news off around young children, and watch for changes in sleep, appetite or mood."], W_SAY = ["Say what you have noticed: \"I am worried about you. I care about you.\"", "Ask an open question, like \"What has been going on?\", then listen without arguing."], SCRIPTS_SELF = ["I am not okay and I need to talk. Can you stay with me for a bit?", "I have been having really angry thoughts and I need help. Please do not judge me.", "Something is going on and I am scared of what I might do. Can you help me get support?"];
+  const W_AVOID = "Do not argue, shame or joke about it. Do not promise to keep it secret if someone could get hurt.", W_WHO = "A trusted adult, school staff, a faith leader, a family member, or a helpline.";
+  /* ======== Added: heat check, guided worried path, step flow, next tools ======== */
+  const TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+  const TOOLS = {
+    t1: ['Suicide-Prevention-and-Emotional-Support-Tool.html', 'Suicide Prevention and Emotional Support Tool'],
+    t5: ['distress-tolerance-coping-tool.html', 'Distress Tolerance Coping Tool'],
+    t8: ['emotional-trigger-mapping-tool.html', 'Emotional Trigger Mapping Tool'],
+    t11: ['hard-conversation-preparation-tool.html', 'Hard Conversation Preparation Tool'],
+    t18: ['positive-strengths-map-tool.html', 'Positive Strength Map Tool'],
+    t21: ['visual-grounding-emotional-reset-tool.html', 'Visual Grounding and Emotional Reset Tool'],
+    t25: ['wellbeing-journey-tool.html', 'Wellbeing Journey: Quick Check and Reset']
+  };
+  const NEXT_BY_FEELING = {
+    Angry: ['t5', 't8'], Anxious: ['t21', 't5'], Overwhelmed: ['t5', 't25'], Sad: ['t25', 't21'], Numb: ['t21', 't25'],
+    Scared: ['t21', 't5'], Tense: ['t5', 't21'], Confused: ['t8', 't25'], Hopeful: ['t18', 't25']
+  };
+  const NEXT_BY_PATH = { worried: ['t11', 't25'], affected: ['t21', 't25'], pause: ['t5', 't11'] };
+
+  const tf2 = (k, ...a) => a.reduce((s, v, i) => s.split('{' + i + '}').join(v), t(k));
+  const ratingOf = name => { const r = document.querySelector('input[name="' + name + '"]:checked'); return r ? parseInt(r.value, 10) : null; };
+
+  function nextToolKeys() {
+    const out = [];
+    const add = k => { if (!out.includes(k)) out.push(k); };
+    state.paths.forEach(p => (NEXT_BY_PATH[p] || []).forEach(add));
+    state.feelings.forEach(f => (NEXT_BY_FEELING[f] || []).forEach(add));
+    return out.length ? out.slice(0, 3) : ['t5', 't21', 't25'];
+  }
+  function nextBoxHtml() {
+    let h = '<div class="next-box"><div class="result-row-label">' + esc(t('Where to go next')) + '</div>';
+    h += '<div style="font-size:14px;color:var(--muted);">' + esc(t('Free tools that match what you chose. Pick one, or none. There is no rush.')) + '</div><div class="next-links">';
+    nextToolKeys().forEach(k => {
+      h += '<a class="next-link" href="' + TOOL_BASE + TOOLS[k][0] + '" target="_blank" rel="noopener noreferrer">' + esc(t(TOOLS[k][1])) + '</a>';
+    });
+    h += '</div><div class="next-quiet">' + esc(t('If you are having thoughts of ending your life:')) + ' <a href="' + TOOL_BASE + TOOLS.t1[0] + '" target="_blank" rel="noopener noreferrer">' + esc(t(TOOLS.t1[1])) + '</a></div></div>';
+    return h;
+  }
+
+  /* ----- Heat check ----- */
+  function heatBand(v) { return v <= 3 ? 'a' : v <= 6 ? 'b' : v <= 8 ? 'c' : 'd'; }
+  function heatLine() {
+    const b = ratingOf('heatBefore'), a = ratingOf('heatAfter');
+    if (b === null && a === null) return null;
+    if (b !== null && a !== null) return tf2('{0} / 10 at the start, {1} / 10 now', b, a);
+    if (b !== null) return tf2('{0} / 10 at the start', b);
+    return tf2('{0} / 10 now', a);
+  }
+  function renderHeatNote() {
+    const v = ratingOf('heatBefore'), box = $('heatNote');
+    if (v === null) { box.style.display = 'none'; return; }
+    const band = heatBand(v);
+    box.querySelectorAll('.hn').forEach(n => n.classList.toggle('on', n.dataset.band === band));
+    box.style.display = 'block';
+  }
+  function renderHeatShift() {
+    const b = ratingOf('heatBefore'), a = ratingOf('heatAfter'), box = $('shiftBox');
+    box.innerHTML = '';
+    if (a === null) { box.style.display = 'none'; return; }
+    let msg;
+    if (b === null) msg = tf2('You rated the heat at {0} now. A rating is only a snapshot, and you can come back at any time.', a);
+    else if (a < b) msg = tf2('It went from {0} to {1}. That is what a minute of slow breathing can do. Keep going if you need to.', b, a);
+    else if (a === b) msg = tf2('It stayed at {0}. That is okay. Try the calm down again, or step away and tell one person.', a);
+    else msg = tf2('It went from {0} to {1}. Please step away from the situation now and tell one person. If you think you might hurt someone, call your local emergency number.', b, a);
+    const p = document.createElement('div');
+    p.textContent = msg;
+    box.appendChild(p);
+    if (a >= 7 || (b !== null && a > b)) {
+      const link = document.createElement('a');
+      link.className = 'btn btn-urgent'; link.href = 'https://findahelpline.com/'; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = t('Talk to someone now');
+      box.appendChild(link);
+    }
+    box.style.display = 'block';
+  }
+
+  /* ----- Worried about someone: guided path ----- */
+  let worried = '';
+  function renderWorried() {
+    $('worriedYes').classList.toggle('on', worried === 'yes');
+    $('worriedNo').classList.toggle('on', worried === 'no' || worried === 'unsure');
+    $('worriedDoubt').classList.toggle('on', worried === 'unsure');
+    [['wYes', 'yes'], ['wNo', 'no'], ['wUnsure', 'unsure']].forEach(([id, v]) => $(id).setAttribute('aria-pressed', String(worried === v)));
+  }
+
+  /* ----- One step at a time check-in ----- */
+  const WIZ_N = 3;
+  let wizStep = 1, wizSkipped = false;
+  function wizStepEmpty(n) {
+    readInputs();
+    if (n === 1) return !state.feelings.length;
+    if (n === 2) return !state.heavy.length && !state.heavyOther;
+    return !state.needs.length;
+  }
+  function renderWiz() {
+    document.querySelectorAll('.rstep').forEach(s => s.classList.toggle('on', parseInt(s.dataset.step, 10) === wizStep));
+    $('wizBack').style.visibility = wizStep === 1 ? 'hidden' : 'visible';
+    const nx = $('wizNext');
+    nx.style.display = wizStep >= WIZ_N ? 'none' : '';
+    nx.textContent = t(wizStepEmpty(wizStep) ? 'Skip' : 'Next');
+    $('wizCount').textContent = tf2('Step {0} of {1}', wizStep, WIZ_N);
+    document.querySelectorAll('#wizDots .wdot').forEach((d, i) => { d.classList.toggle('on', i + 1 === wizStep); d.classList.toggle('past', i + 1 < wizStep); });
+    const done = wizStep >= WIZ_N || wizSkipped;
+    $('actionsBlock').style.display = done ? 'block' : 'none';
+    $('toSummaryWrap').style.display = done ? 'none' : 'block';
+  }
+  function setWiz(n, scroll) {
+    wizStep = Math.max(1, Math.min(WIZ_N, n));
+    renderWiz();
+    if (scroll) $('checkin-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function refreshExtras() { renderHeatNote(); renderHeatShift(); renderWorried(); renderWiz(); }
+  function resetExtras() {
+    document.querySelectorAll('.scale input').forEach(i => { i.checked = false; });
+    ['stepPlace', 'stepPerson', 'stepDo'].forEach(id => { $(id).value = ''; });
+    $('discreetPdf').checked = false;
+    worried = ''; wizStep = 1; wizSkipped = false;
+    refreshExtras();
+  }
+  function initExtras() {
+    const dots = $('wizDots');
+    for (let i = 0; i < WIZ_N; i++) { const s = document.createElement('span'); s.className = 'wdot'; dots.appendChild(s); }
+    $('wizBack').addEventListener('click', () => setWiz(wizStep - 1, true));
+    $('wizNext').addEventListener('click', () => setWiz(wizStep + 1, true));
+    $('toSummary').addEventListener('click', () => { wizSkipped = true; renderWiz(); showSummary(); });
+    document.querySelectorAll('.scale input').forEach(i => i.addEventListener('change', () => { renderHeatNote(); renderHeatShift(); }));
+    ['heavyOther'].forEach(id => $(id).addEventListener('input', renderWiz));
+    ['emotionChips', 'heavyChips', 'needChips'].forEach(id => $(id).addEventListener('click', renderWiz));
+    $('wYes').addEventListener('click', () => { worried = 'yes'; renderWorried(); });
+    $('wNo').addEventListener('click', () => { worried = 'no'; renderWorried(); });
+    $('wUnsure').addEventListener('click', () => { worried = 'unsure'; renderWorried(); });
+    renderWiz();
   }
 
   // Events
@@ -1124,6 +1732,7 @@
   renderHistory();
   setupShare();
   togglePanels();
+  initExtras();
 
   $('langSelect').addEventListener('change', () => {
     applyLang($('langSelect').value);

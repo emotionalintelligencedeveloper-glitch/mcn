@@ -11,20 +11,20 @@
       --card: #ffffff;
       --text: #1a1e2e;
       --muted: #4a5068;
-      --hint: #8a90a8;
+      --hint: #5a6180;
       --border: #d0d4e8;
       --brand: #4a5aaa;
       --brand-light: #eaecf8;
       --brand-mid: #b0b8e0;
       --accent: #6a7acc;
-      --teal: #3a8a7a;
+      --teal: #2a6f61;
       --teal-light: #e4f2ee;
       --teal-mid: #a0c8c0;
       --warm: #f8f6f2;
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --support: #e8702a;
+      --support: #b8501a;
       --chip-bg: #eaecf8;
       --alert-bg: #fff4ea;
       --alert-border: #f0c8a0;
@@ -424,6 +424,46 @@
     .lang-bar label { font-size: 13px; color: var(--muted); }
     .lang-bar select { width: auto; min-width: 140px; padding: 8px 34px 8px 12px; font-size: 14px; }
     html[lang="es"] .chip { text-transform: none; }
+    .container { max-width: 860px; }
+    .stk { display: inline-block; color: var(--brand); flex: none; line-height: 0; }
+    .stk svg { display: block; }
+    .step-head { display: flex; gap: 14px; align-items: center; margin-bottom: 8px; }
+    .step-head .stk { width: 64px; }
+    .step-head .step-tip { margin-bottom: 0; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .two-col .field { margin-bottom: 0; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } .step-head .stk { width: 48px; } }
+    .linkbtn { background: none; border: 0; padding: 6px 0; font-family: Georgia, serif; font-size: 13px; color: var(--brand); text-decoration: underline; cursor: pointer; min-height: 36px; }
+    .step-dot:disabled { cursor: default; }
+    .step-dot:disabled:not(.active) { opacity: .5; }
+    .calm-link-wrap { text-align: center; margin: -6px 0 12px; }
+    .calm-page-top { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+    .calm-page-top .stk { width: 64px; color: var(--teal); }
+    .bodymap { display: grid; grid-template-columns: 200px 1fr; gap: 18px; align-items: center; background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; }
+    @media (max-width: 520px) { .bodymap { grid-template-columns: 1fr; justify-items: center; } }
+    .bodymap svg { width: 180px; height: auto; color: var(--brand); overflow: visible; }
+    .ba-hl { fill: var(--accent); fill-opacity: 0; stroke: var(--brand); stroke-width: 1.4; stroke-dasharray: 3 3; stroke-opacity: .5; cursor: pointer; transition: fill-opacity .15s; }
+    .ba-hl.on { fill-opacity: .55; stroke-opacity: 1; stroke-dasharray: none; }
+    .ba-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ba-pill { font-family: Georgia, serif; font-size: 14px; padding: 8px 14px; min-height: 40px; border-radius: 99px; border: 1.5px solid var(--brand-mid); background: #fff; color: var(--text); cursor: pointer; }
+    .ba-pill[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .bodymap-hint { grid-column: 1 / -1; font-size: 13px; color: var(--muted); font-style: italic; }
+    .wait-card { display: flex; gap: 14px; align-items: center; background: var(--teal-light); border: 1px solid var(--teal-mid); border-radius: var(--radius-md); padding: 14px; margin: 6px 0 14px; }
+    .wait-card .stk { width: 64px; color: var(--teal); }
+    .wait-card p { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+    .wait-card label { font-size: 14px; display: flex; gap: 8px; align-items: flex-start; }
+    .wait-card input { accent-color: var(--teal); margin-top: 5px; }
+    .after-pdf { display: none; background: var(--teal-light); border: 1px solid var(--teal-mid); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
+    .after-pdf .ap-title { font-size: 15px; color: var(--teal); font-weight: bold; margin-bottom: 4px; }
+    .after-pdf .ap-sub { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+    .next-links { display: grid; gap: 8px; }
+    .next-link { display: block; padding: 11px 14px; border: 1.5px solid var(--teal-mid); border-radius: 12px; background: #fff; color: var(--text); text-decoration: none; font-size: 14px; }
+    .next-link:hover { border-color: var(--teal); }
+    .next-quiet { font-size: 13px; color: var(--muted); margin-top: 10px; }
+    .next-quiet a { color: var(--brand); }
+    .insights-box { white-space: pre-wrap; }
+    .btn-share { white-space: nowrap; }
+    .card, .step-card { scroll-margin-top: 150px; }
   </style>
 </head>
 <body>
@@ -458,16 +498,19 @@
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
     <div class="step-dots" id="stepDots"></div>
   </div>
+  <div class="calm-link-wrap" id="calmLinkWrap"><button type="button" class="linkbtn" id="openCalm" data-i18n>Need a calm minute first?</button></div>
 
   <!-- STEP 1 -->
   <div class="step-card active" data-step="1">
-    <p class="step-title" data-i18n>Step 1: Your name, emotion and intensity</p>
-    <p class="step-tip" data-i18n>Start with the closest emotion, not the perfect one. You can always refine it later.</p>
+    <div class="step-head"><span class="stk" data-pose="wave"></span><div>
+      <p class="step-title" data-i18n>Step 1: Your name, emotion and intensity</p>
+      <p class="step-tip" data-i18n>Start with the closest emotion, not the perfect one. You can always refine it later.</p>
+    </div></div>
 
     <div class="name-block">
-      <label class="field-label" for="userName" data-i18n>Your name (this goes on your PDF)</label>
+      <label class="field-label" for="userName" data-i18n>Your name (optional, it goes on your PDF)</label>
       <input type="text" id="userName" maxlength="60" data-i18n-ph placeholder="Type your name" autocomplete="name" />
-      <p class="field-hint" style="margin:8px 0 0;" data-i18n>Your name stays on this device. It is only used to put your name on your summary and PDF.</p>
+      <p class="field-hint" style="margin:8px 0 0;" data-i18n>Your name stays on this device. It is only used to put your name on your summary and PDF. You can leave it empty.</p>
       <p class="greeting" id="greeting"></p>
     </div>
 
@@ -489,6 +532,7 @@
 
     <div class="support-note" id="supportNote" role="note">
       <span data-i18n>This sounds like a lot to carry. Please think about reaching out to someone you trust, or a local helpline.</span> <a href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>findahelpline.com</a> <span data-i18n>lists free support in your country. If you are in immediate danger, contact your local emergency number.</span>
+      <div><button type="button" class="linkbtn" id="calmFromNote" data-i18n>Take a calm minute first</button></div>
     </div>
 
     <div class="field">
@@ -509,8 +553,10 @@
 
   <!-- STEP 2 -->
   <div class="step-card" data-step="2">
-    <p class="step-title" data-i18n>Step 2: Trigger map and boundary</p>
-    <p class="step-tip" data-i18n>Separate the event from your interpretation. Naming the trigger type helps you communicate more clearly.</p>
+    <div class="step-head"><span class="stk" data-pose="think"></span><div>
+      <p class="step-title" data-i18n>Step 2: Trigger map and boundary</p>
+      <p class="step-tip" data-i18n>Separate the event from your interpretation. Naming the trigger type helps you communicate more clearly.</p>
+    </div></div>
 
     <div class="field">
       <label class="field-label" for="triggerText" data-i18n>What happened right before the emotional reaction?</label>
@@ -536,8 +582,19 @@
 
   <!-- STEP 3 -->
   <div class="step-card" data-step="3">
-    <p class="step-title" data-i18n>Step 3: Body signals and stress</p>
-    <p class="step-tip" data-i18n>Your earliest body signal is often your best early warning. Catching it sooner helps prevent emotional flooding.</p>
+    <div class="step-head"><span class="stk" data-pose="chest"></span><div>
+      <p class="step-title" data-i18n>Step 3: Body signals and stress</p>
+      <p class="step-tip" data-i18n>Your earliest body signal is often your best early warning. Catching it sooner helps prevent emotional flooding.</p>
+    </div></div>
+
+    <div class="field">
+      <label class="field-label" data-i18n>Where do you feel it in your body?</label>
+      <div class="bodymap">
+        <div id="bodyMapSvg"></div>
+        <div class="ba-pills" id="bodyPills" role="group" data-i18n-aria aria-label="Body areas"></div>
+        <p class="bodymap-hint" data-i18n>Tap a spot on the figure or a word. Tap again to remove it. You can skip this.</p>
+      </div>
+    </div>
 
     <div class="field">
       <label class="field-label" data-i18n>Which body signals are you noticing?</label>
@@ -574,13 +631,23 @@
 
   <!-- STEP 4 -->
   <div class="step-card" data-step="4">
-    <p class="step-title" data-i18n>Step 4: Mind story and reframe</p>
-    <p class="step-tip" data-i18n>Naming a thinking pattern creates space between the thought and your reaction. You do not have to believe every thought that arrives under stress.</p>
+    <div class="step-head"><span class="stk" data-pose="story"></span><div>
+      <p class="step-title" data-i18n>Step 4: Mind story and reframe</p>
+      <p class="step-tip" data-i18n>Naming a thinking pattern creates space between the thought and your reaction. You do not have to believe every thought that arrives under stress.</p>
+    </div></div>
 
-    <div class="field">
-      <label class="field-label" for="thoughtText" data-i18n>What is the automatic thought or story your mind is telling?</label>
+    <div class="two-col">
+      <div class="field">
+        <label class="field-label" for="factsText" data-i18n>The facts: what actually happened?</label>
+        <p class="field-hint" data-i18n>Only what a camera would have recorded. No guesses.</p>
+        <textarea id="factsText" maxlength="600" data-i18n-ph placeholder="e.g. He said the report was late. I felt my chest tighten."></textarea>
+      </div>
+      <div class="field">
+      <label class="field-label" for="thoughtText" data-i18n>The story: what is your mind telling you?</label>
       <textarea id="thoughtText" maxlength="600" data-i18n-ph placeholder="e.g. 'I always mess this up' or 'No one understands me'..."></textarea>
+      </div>
     </div>
+    <div style="height:14px;"></div>
 
     <div class="field">
       <label class="field-label" for="distortionSelect" data-i18n>Does this thought fit a common pattern? (optional)</label>
@@ -614,8 +681,10 @@
 
   <!-- STEP 5 -->
   <div class="step-card" data-step="5">
-    <p class="step-title" data-i18n>Step 5: Needs and smallest next action</p>
-    <p class="step-tip" data-i18n>Needs are not weakness. Turning one need into a tiny action is a practical path to calm.</p>
+    <div class="step-head"><span class="stk" data-pose="reach"></span><div>
+      <p class="step-title" data-i18n>Step 5: Needs and smallest next action</p>
+      <p class="step-tip" data-i18n>Needs are not weakness. Turning one need into a tiny action is a practical path to calm.</p>
+    </div></div>
 
     <div class="field">
       <label class="field-label" data-i18n>What do you need right now?</label>
@@ -642,8 +711,10 @@
 
   <!-- STEP 6 -->
   <div class="step-card" data-step="6">
-    <p class="step-title" data-i18n>Step 6: Response plan</p>
-    <p class="step-tip" data-i18n>A complete response covers four parts: regulate your nervous system, communicate your need, repair if needed, and prevent repeats.</p>
+    <div class="step-head"><span class="stk" data-pose="plan"></span><div>
+      <p class="step-title" data-i18n>Step 6: Response plan</p>
+      <p class="step-tip" data-i18n>A complete response covers four parts: regulate your nervous system, communicate your need, repair if needed, and prevent repeats.</p>
+    </div></div>
 
     <div class="field">
       <label class="field-label" data-i18n>Pick a plan to start with</label>
@@ -671,6 +742,14 @@
       <textarea id="preventPlan" maxlength="500" data-i18n-ph placeholder="e.g. Set a meeting agenda, schedule recovery breaks, reduce sensory load..."></textarea>
     </div>
 
+    <div class="wait-card">
+      <span class="stk" data-pose="wait"></span>
+      <div>
+        <p data-i18n>Before you reply to anyone: give your body time to settle. A common guideline is at least 20 minutes, longer if your heart is still racing.</p>
+        <label><input type="checkbox" id="waitCheck" /><span data-i18n>I will wait before I reply</span></label>
+      </div>
+    </div>
+
     <div class="step-nav">
       <button type="button" class="btn btn-outline" id="prev6" data-i18n>Back</button>
       <button type="button" class="btn btn-primary" id="next6" data-i18n>Next: Review and save</button>
@@ -679,8 +758,10 @@
 
   <!-- STEP 7 -->
   <div class="step-card" data-step="7">
-    <p class="step-title" data-i18n>Step 7: Review, save and export</p>
-    <p class="step-tip" data-i18n>Your summary is for learning your patterns, not for being perfect. Save often to see your recurring triggers over time.</p>
+    <div class="step-head"><span class="stk" data-pose="cheer"></span><div>
+      <p class="step-title" data-i18n>Step 7: Review, save and export</p>
+      <p class="step-tip" data-i18n>Your summary is for learning your patterns, not for being perfect. Save often to see your recurring triggers over time.</p>
+    </div></div>
 
     <div class="summary-box" id="summaryBox">Your summary will appear here.</div>
     <div class="insights-box" id="insightsBox">Pattern insights will appear after you save entries.</div>
@@ -691,6 +772,7 @@
       <button type="button" class="btn btn-teal" id="downloadPdfBtn" data-i18n>Download PDF</button>
       <button type="button" class="btn btn-outline" id="copySummary" data-i18n>Copy summary</button>
     </div>
+    <div class="after-pdf" id="afterPdf" aria-live="polite"></div>
 
     <div class="step-nav">
       <button type="button" class="btn btn-outline" id="prev7" data-i18n>Back</button>
@@ -699,8 +781,11 @@
   </div>
 
   <!-- REGULATION TOOLS -->
-  <div class="card">
-    <p class="card-title" data-i18n>Regulation tools</p>
+  <div class="card" id="calmPage" style="display:none;">
+    <div class="calm-page-top"><span class="stk" data-pose="calm"></span><div>
+      <p class="card-title" data-i18n>Regulation tools</p>
+      <p class="step-tip" style="margin-bottom:0;" data-i18n>Take a minute for your body. Your answers are kept. When you are done, we take you straight back.</p>
+    </div></div>
     <div class="reg-grid">
       <div class="reg-tool">
         <p class="reg-tool-title" data-i18n>5-4-3-2-1 grounding</p>
@@ -725,10 +810,11 @@
         <button type="button" class="btn btn-outline btn-small" id="copyBoundary" data-i18n>Copy script</button>
       </div>
     </div>
+    <div class="step-nav"><button type="button" class="btn btn-primary" id="calmDone" data-i18n>Done, take me back</button></div>
   </div>
 
   <!-- HISTORY -->
-  <div class="card">
+  <div class="card" id="historyCard" style="display:none;">
     <p class="card-title" data-i18n>Your saved entries</p>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;font-style:italic;" data-i18n>Saved only on this device. Keeps your latest 20 entries.</p>
     <div class="history-list" id="historyList"></div>
@@ -752,6 +838,8 @@
       <a class="btn btn-share" id="waShare" target="_blank" rel="noopener" data-i18n>WhatsApp</a>
       <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener" data-i18n>Facebook</a>
       <a class="btn btn-share" id="xShare" target="_blank" rel="noopener" data-i18n>X</a>
+      <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener" data-i18n>Telegram</a>
+      <a class="btn btn-share" id="mailShare" data-i18n>Email</a>
     </div>
 
     <p class="footer-credit">
@@ -760,12 +848,6 @@
     </p>
   </footer>
 
-</div>
-
-<!-- STICKY BAR -->
-<div class="sticky-bar" role="toolbar" data-i18n-aria aria-label="Quick actions">
-  <button type="button" class="btn btn-primary" id="stickySave" data-i18n>Save entry</button>
-  <button type="button" class="btn btn-teal" id="stickyPdf" data-i18n>Download PDF</button>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -893,7 +975,10 @@
       regulatePlan: '',
       communicatePlan: '',
       repairPlan: '',
-      preventPlan: ''
+      preventPlan: '',
+      bodyAreas: [],
+      factsText: '',
+      waitPledge: false
     };
   }
 
@@ -1264,7 +1349,80 @@
     [`Find a helpline: `, `Encuentra una línea de ayuda: `],
     [`Reflection and self-awareness only. Not a diagnosis or a substitute for professional support.`, `Solo para reflexión y autoconocimiento. No es un diagnóstico ni sustituye el apoyo profesional.`],
     [`Page {i} of {n}`, `Página {i} de {n}`],
-    [`emotional-trigger-map`, `mapa-de-detonantes-emocionales`]
+    [`emotional-trigger-map`, `mapa-de-detonantes-emocionales`],
+    [`Need a calm minute first?`, `¿Necesitas un minuto de calma primero?`],
+    [`Your name (optional, it goes on your PDF)`, `Tu nombre (opcional, aparece en tu PDF)`],
+    [`Your name stays on this device. It is only used to put your name on your summary and PDF. You can leave it empty.`, `Tu nombre se queda en este dispositivo. Solo se usa para poner tu nombre en tu resumen y en tu PDF. Puedes dejarlo vacío.`],
+    [`Take a calm minute first`, `Tómate primero un minuto de calma`],
+    [`Where do you feel it in your body?`, `¿Dónde lo sientes en tu cuerpo?`],
+    [`Body areas`, `Zonas del cuerpo`],
+    [`Tap a spot on the figure or a word. Tap again to remove it. You can skip this.`, `Toca un punto de la figura o una palabra. Vuelve a tocar para quitarlo. Puedes omitir esto.`],
+    [`Head`, `Cabeza`],
+    [`Jaw`, `Mandíbula`],
+    [`Throat`, `Garganta`],
+    [`Chest`, `Pecho`],
+    [`Stomach`, `Estómago`],
+    [`Hands`, `Manos`],
+    [`Legs`, `Piernas`],
+    [`The facts: what actually happened?`, `Los hechos: ¿qué pasó en realidad?`],
+    [`Only what a camera would have recorded. No guesses.`, `Solo lo que habría grabado una cámara. Sin suposiciones.`],
+    [`e.g. He said the report was late. I felt my chest tighten.`, `p. ej. Dijo que el informe estaba atrasado. Sentí que se me apretaba el pecho.`],
+    [`The story: what is your mind telling you?`, `La historia: ¿qué te dice tu mente?`],
+    [`Before you reply to anyone: give your body time to settle. A common guideline is at least 20 minutes, longer if your heart is still racing.`, `Antes de responderle a alguien: dale tiempo a tu cuerpo para asentarse. Una pauta común es esperar al menos 20 minutos, más si tu corazón sigue acelerado.`],
+    [`I will wait before I reply`, `Esperaré antes de responder`],
+    [`Take a minute for your body. Your answers are kept. When you are done, we take you straight back.`, `Dedica un minuto a tu cuerpo. Tus respuestas se conservan. Cuando termines, te llevamos de vuelta.`],
+    [`Done, take me back`, `Listo, llévame de vuelta`],
+    [`Telegram`, `Telegram`],
+    [`Email`, `Correo`],
+    [`Your PDF is ready. Keep it somewhere safe.`, `Tu PDF está listo. Guárdalo en un lugar seguro.`],
+    [`Where to go next: free tools that match what you chose. Pick one, or none. There is no rush.`, `A dónde ir después: herramientas gratuitas que encajan con lo que elegiste. Elige una o ninguna. No hay prisa.`],
+    [`If you are having thoughts of ending your life:`, `Si tienes pensamientos de acabar con tu vida:`],
+    [`Suicide Prevention and Emotional Support`, `Prevención del suicidio y apoyo emocional`],
+    [`Boundary Builder`, `Constructor de límites`],
+    [`Distress Tolerance Coping Tool`, `Herramienta de tolerancia al malestar`],
+    [`Hard Conversation Preparation`, `Preparación para conversaciones difíciles`],
+    [`People-Pleaser Recovery`, `Recuperarte de complacer a todos`],
+    [`Positive Strengths Map`, `Mapa de fortalezas positivas`],
+    [`Threat and Emotional Regulation`, `Amenaza y regulación emocional`],
+    [`Visual Grounding and Emotional Reset`, `Anclaje visual y reinicio emocional`],
+    [`Wellbeing Journey: Quick Check and Reset`, `Camino de bienestar: chequeo rápido y reinicio`],
+    [`My top triggers: from your last {n} saved entry`, `Mis principales detonantes, a partir de tu última entrada guardada`],
+    [`My top triggers: from your last {n} saved entries`, `Mis principales detonantes, a partir de tus últimas {n} entradas guardadas`],
+    [`Trigger tags that come up most: `, `Etiquetas de detonante más frecuentes: `],
+    [`Emotions that come up most: `, `Emociones más frecuentes: `],
+    [`Body areas that come up most: `, `Zonas del cuerpo más frecuentes: `],
+    [`Body signals that come up most: `, `Señales del cuerpo más frecuentes: `],
+    [`Earliest signals you wrote: `, `Primeras señales que escribiste: `],
+    [`Needs that come up most: `, `Necesidades más frecuentes: `],
+    [`Where I feel it: `, `Dónde lo siento: `],
+    [`The facts: `, `Los hechos: `],
+    [`The story my mind tells: `, `La historia que me cuenta mi mente: `],
+    [`Before I reply: `, `Antes de responder: `],
+    [`I will wait at least 20 minutes before I reply.`, `Esperaré al menos 20 minutos antes de responder.`],
+    [`Where I feel it`, `Dónde lo siento`],
+    [`The facts`, `Los hechos`],
+    [`The story my mind tells`, `La historia que me cuenta mi mente`],
+    [`Before I reply`, `Antes de responder`],
+    [`Personal reflection summary`, `Resumen de reflexión personal`],
+    [`Talk to someone right now`, `Habla con alguien ahora mismo`],
+    [`Need to talk to someone?`, `¿Necesitas hablar con alguien?`],
+    [`Free and private. You can just talk. If you or someone else is in danger, call your local emergency number now.`, `Gratis y privado. Solo puedes hablar. Si tú u otra persona están en peligro, llama ahora a tu número local de emergencias.`],
+    [`Any country: findahelpline.com`, `Cualquier país: findahelpline.com`],
+    [`If you are having thoughts of ending your life: findahelpline.com lists crisis lines for your country.`, `Si tienes pensamientos de acabar con tu vida: findahelpline.com tiene líneas de crisis de tu país.`],
+    [`My earliest body signal`, `Mi primera señal del cuerpo`],
+    [`What sets me off`, `Lo que me detona`],
+    [`What I can say`, `Lo que puedo decir`],
+    [`My first small step`, `Mi primer paso pequeño`],
+    [`MY EARLY WARNING CARD`, `MI TARJETA DE ALERTA TEMPRANA`],
+    [`MY PATTERNS SO FAR`, `MIS PATRONES HASTA AHORA`],
+    [`Where this comes from`, `De dónde viene esto`],
+    [`A free tool I found useful`, `Una herramienta gratuita que me resultó útil`],
+    [`An emotional trigger is anything (a word, a tone, a situation or a memory) that sets off an emotional reaction bigger than the present moment calls for. Research in affective neuroscience, including the work of Joseph LeDoux, suggests that the amygdala can start an emotional response before the thinking parts of the brain have fully assessed the situation. Scientists still debate the details, but it helps explain why emotional reactions can feel faster than conscious thought. That is not a sign of weakness. It is how the nervous system is wired.`, `Un detonante emocional es cualquier cosa (una palabra, un tono, una situación o un recuerdo) que provoca una reacción emocional mayor de lo que pide el momento presente. La investigación en neurociencia afectiva, incluido el trabajo de Joseph LeDoux, sugiere que la amígdala puede iniciar una respuesta emocional antes de que las partes del cerebro que piensan hayan evaluado del todo la situación. Los científicos aún debaten los detalles, pero esto ayuda a explicar por qué las reacciones emocionales pueden sentirse más rápidas que el pensamiento consciente. Eso no es una señal de debilidad. Así funciona el sistema nervioso.`],
+    [`Somatic therapy and polyvagal theory (developed by Stephen Porges, and still debated by researchers) describe the body as a first responder to perceived threat. Many people notice physical signals such as a tight chest, a clenched jaw or a dropping stomach before they can name the emotion. Mapping these signals builds a personal early warning system, so you can step in earlier, before you feel flooded.`, `La terapia somática y la teoría polivagal (desarrollada por Stephen Porges, y todavía debatida por los investigadores) describen el cuerpo como una primera respuesta ante una amenaza percibida. Muchas personas notan señales físicas como el pecho apretado, la mandíbula tensa o el estómago encogido antes de poder ponerle nombre a la emoción. Mapear estas señales crea tu propio sistema de alerta temprana, para que puedas intervenir más pronto, antes de que la emoción te desborde.`],
+    [`Cognitive Behavioural Therapy (CBT), pioneered by Aaron Beck and Albert Ellis, identifies recurring patterns of thinking that make emotional distress worse, such as all-or-nothing thinking, catastrophizing and mind reading. Studies suggest that putting feelings into words can lower their emotional intensity, and many people find that naming a thinking pattern gives them space before reacting.`, `La Terapia Cognitivo-Conductual (TCC), impulsada por Aaron Beck y Albert Ellis, identifica patrones de pensamiento recurrentes que empeoran el malestar emocional, como el pensamiento de todo o nada, catastrofizar y la lectura de mente. Los estudios sugieren que poner los sentimientos en palabras puede bajar su intensidad, y a muchas personas les ayuda ponerle nombre a un patrón de pensamiento para ganar espacio antes de reaccionar.`],
+    [`Many therapists and communication trainers teach a sequence: calm first, then speak. Trying to communicate at peak activation often goes worse than pausing to settle. The approach in this tool draws on ideas from Dialectical Behaviour Therapy (DBT) and non-violent communication (NVC). Relationship researcher John Gottman suggests waiting at least 20 minutes before returning to a heated conversation, so your body can settle.`, `Muchos terapeutas y formadores en comunicación enseñan una secuencia: primero calmarte, después hablar. Intentar comunicarte en el punto máximo de activación suele salir peor que hacer una pausa para asentarte. El enfoque de esta herramienta se apoya en ideas de la Terapia Dialéctico-Conductual (TDC) y de la comunicación no violenta (CNV). El investigador de relaciones John Gottman sugiere esperar al menos 20 minutos antes de volver a una conversación acalorada, para que tu cuerpo se asiente.`],
+    [`Work by Marc Brackett at the Yale Center for Emotional Intelligence suggests that regular reflection on emotions can help build emotional regulation over time. Seeing which situations, people or times of day produce your strongest reactions lets you prepare ahead instead of only reacting. Saving entries regularly is not journaling for its own sake. It builds a personal record of your emotional patterns.`, `El trabajo de Marc Brackett, del Yale Center for Emotional Intelligence, sugiere que reflexionar con regularidad sobre las emociones puede ayudar a desarrollar la regulación emocional con el tiempo. Ver qué situaciones, personas u horas del día provocan tus reacciones más fuertes te permite prepararte con antelación en lugar de solo reaccionar. Guardar entradas con regularidad no es escribir un diario por escribir. Es crear un registro personal de tus patrones emocionales.`],
+
   ];
   const ES = Object.create(null);
   ES_PAIRS.forEach(p => { ES[p[0]] = p[1]; });
@@ -1341,6 +1499,7 @@
     buildBodyGrid();
     buildNeedsGrid();
     buildPlanChoices();
+    buildBodyMap();
     restoreChoices();
     applyStaticText();
     updateGreeting();
@@ -1391,7 +1550,7 @@
     $('stepDots').innerHTML = stepNames.map((name, i) => {
       const n = i + 1;
       const cls = n === currentStep ? 'active' : n < currentStep ? 'done' : '';
-      return `<button type="button" class="step-dot ${cls}" data-goto="${n}" aria-label="${tr('Go to step {n}: {name}', { n: n, name: tr(name) })}">${n}</button>`;
+      return `<button type="button" class="step-dot ${cls}" data-goto="${n}"${n >= currentStep ? ' disabled' : ''} aria-label="${tr('Go to step {n}: {name}', { n: n, name: tr(name) })}">${n}</button>`;
     }).join('');
   }
 
@@ -1401,14 +1560,19 @@
     $('stepLabel').textContent = tr('Step {n} of 7: {name}', { n: currentStep, name: tr(stepNames[currentStep - 1]) });
     $('stepCount').textContent = currentStep + '/7';
     $$('.step-card').forEach(card => {
-      card.classList.toggle('active', parseInt(card.dataset.step, 10) === currentStep);
+      card.classList.toggle('active', parseInt(card.dataset.step, 10) === currentStep && !calmOpen);
     });
+    $('calmPage').style.display = calmOpen ? 'block' : 'none';
+    $('historyCard').style.display = (currentStep === 7 && !calmOpen) ? 'block' : 'none';
+    $('calmLinkWrap').style.display = (currentStep < 7 && !calmOpen) ? '' : 'none';
     buildStepDots();
-    if (currentStep === 7) { buildSummary(); renderInsights(); }
+    if (currentStep === 7 && !calmOpen) { buildSummary(); renderInsights(); }
+    renderAfterPdf();
   }
 
   function goTo(n) {
     readForm();
+    if (n !== 7) pdfDone = false;
     currentStep = Math.max(1, Math.min(7, n));
     updateProgress();
     saveDraftSoon();
@@ -1439,6 +1603,8 @@
     state.communicatePlan = $('communicatePlan').value.trim();
     state.repairPlan = $('repairPlan').value.trim();
     state.preventPlan = $('preventPlan').value.trim();
+    state.factsText = $('factsText').value.trim();
+    state.waitPledge = $('waitCheck').checked;
   }
 
   function applyStateToForm() {
@@ -1460,6 +1626,8 @@
     $('communicatePlan').value = state.communicatePlan || '';
     $('repairPlan').value = state.repairPlan || '';
     $('preventPlan').value = state.preventPlan || '';
+    $('factsText').value = state.factsText || '';
+    $('waitCheck').checked = !!state.waitPledge;
 
     $$('.emotion-card').forEach(c => {
       const active = c.dataset.emotion === state.selectedEmotion;
@@ -1471,6 +1639,7 @@
     $$('.need-check').forEach(c => { c.checked = (state.needs || []).includes(c.value); });
     $$('input[name="planTemplate"]').forEach(r => { r.checked = r.value === state.planTemplate; });
 
+    renderBodyMap();
     updateIntensity();
     updateStress();
     updateGreeting();
@@ -1559,13 +1728,15 @@
       tr('Boundary crossed: ') + (state.boundaryText || NA),
       '',
       tr('BODY SIGNALS'),
+      tr('Where I feel it: ') + (trList(state.bodyAreas) || NA),
       tr('Signals: ') + (trList(state.bodySignals) || NA),
       tr('Stress level: ') + state.stressLevel + '/10 (' + stressText(state.stressLevel) + ')',
       tr('Earliest signal: ') + (state.earliestSignal || NA),
       tr('Body notes: ') + (state.bodyText || NA),
       '',
       tr('MIND STORY'),
-      tr('Automatic thought: ') + (state.thoughtText || NA),
+      tr('The facts: ') + (state.factsText || NA),
+      tr('The story my mind tells: ') + (state.thoughtText || NA),
       tr('Thinking pattern: ') + (state.distortion ? tr(state.distortion) : NA),
       tr('Balanced thought: ') + (state.balancedThought || NA),
       '',
@@ -1581,6 +1752,7 @@
       tr('Repair: ') + (state.repairPlan || NA),
       tr('Prevent: ') + (state.preventPlan || NA)
     ];
+    if (state.waitPledge) lines.push(tr('Before I reply: ') + tr('I will wait at least 20 minutes before I reply.'));
     if (high) {
       lines.push('', tr('SUPPORT NOTE'), tr('Your levels were very high. Please reach out to someone you trust or visit findahelpline.com for free support.'));
     }
@@ -1655,29 +1827,8 @@
   }
 
   function renderInsights() {
-    const list = getHistory();
-    if (!list.length) {
-      $('insightsBox').textContent = tr('Pattern insights will appear after you save entries.');
-      return;
-    }
-    const count = items => {
-      const map = {};
-      items.forEach(v => { if (v && v !== 'Not selected') map[v] = (map[v] || 0) + 1; });
-      const top = Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => tr(k) + ' (' + v + 'x)').join(', ');
-      return top || tr('Not enough data yet');
-    };
-    const avg = key => {
-      const vals = list.map(e => e.data && typeof e.data[key] === 'number' ? e.data[key] : null).filter(v => v !== null);
-      return vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) + '/10' : tr('Not enough data yet');
-    };
-    $('insightsBox').textContent = [
-      tr(list.length === 1 ? 'Pattern insights from your last {n} saved entry' : 'Pattern insights from your last {n} saved entries', { n: list.length }),
-      tr('Top emotions: ') + count(list.map(e => e.emotion)),
-      tr('Top trigger tags: ') + count(list.flatMap(e => e.tags || [])),
-      tr('Top body signals: ') + count(list.flatMap(e => e.bodySignals || [])),
-      tr('Average intensity: ') + avg('intensity'),
-      tr('Average stress: ') + avg('stressLevel')
-    ].join('\n');
+    const lines = insightLines();
+    $('insightsBox').textContent = lines.length ? lines.join('\n') : tr('Pattern insights will appear after you save entries.');
   }
 
   // ---------- Breathing ----------
@@ -1747,12 +1898,6 @@
     const PDF = jsPDF();
     if (!PDF) { showToast(tr('PDF library is not ready. Please try again.')); return; }
     readForm();
-    if (!state.userName) {
-      goTo(1);
-      setTimeout(() => $('userName').focus(), 300);
-      showToast(tr('Add your name first, then download your PDF.'));
-      return;
-    }
     showToast(tr('Preparing your PDF...'));
 
     const doc = new PDF({ unit: 'pt', format: 'a4' });
@@ -1779,7 +1924,7 @@
     doc.text(tr('Emotional Trigger Mapping Tool'), margin + 80, y + 26);
     doc.setFontSize(12);
     doc.setTextColor(74, 90, 170);
-    doc.text(tr('Prepared for: ') + state.userName, margin + 80, y + 45, { maxWidth: innerW - 92 });
+    doc.text(state.userName ? tr('Prepared for: ') + state.userName : tr('Personal reflection summary'), margin + 80, y + 45, { maxWidth: innerW - 92 });
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9.5);
     doc.setTextColor(74, 80, 104);
@@ -1794,7 +1939,7 @@
     doc.roundedRect(margin, y, innerW, snapH, 6, 6, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
-    doc.setTextColor(58, 138, 122);
+    doc.setTextColor(42, 111, 97);
     doc.text(tr('YOUR SNAPSHOT'), margin + 12, y + 16);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10.5);
@@ -1822,19 +1967,67 @@
     doc.text(snapLines, margin + 12, y + 70);
     y += snapH + 12;
 
-    // Support note
-    if (state.intensity >= 9 || state.stressLevel >= 9) {
-      const note = doc.splitTextToSize(tr('Your levels were very high when you wrote this. Please reach out to someone you trust, or visit findahelpline.com for free support in your country.'), innerW - 24);
-      const nh = note.length * 12 + 16;
-      doc.setFillColor(255, 244, 234);
-      doc.setDrawColor(240, 200, 160);
-      doc.roundedRect(margin, y, innerW, nh, 6, 6, 'FD');
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.3);
-      doc.setTextColor(26, 30, 46);
-      doc.text(note, margin + 12, y + 16);
-      y += nh + 12;
-    }
+    // Talk to someone strip (top of page 1)
+    const high = state.intensity >= 9 || state.stressLevel >= 9;
+    const stripTitle = tr(high ? 'Talk to someone right now' : 'Need to talk to someone?');
+    const stripIntro = tr('Free and private. You can just talk. If you or someone else is in danger, call your local emergency number now.');
+    const stripLines = ['Any country: findahelpline.com', 'If you are having thoughts of ending your life: findahelpline.com lists crisis lines for your country.'].map(l => tr(l));
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    const introL = doc.splitTextToSize(stripIntro, innerW - 24);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.2);
+    let listL = [];
+    stripLines.forEach(l => { listL = listL.concat(doc.splitTextToSize(l, innerW - 30)); });
+    const sh = 32 + introL.length * 12 + 4 + listL.length * 12 + 8;
+    if (high) { doc.setFillColor(255, 240, 240); doc.setDrawColor(245, 160, 160); } else { doc.setFillColor(255, 244, 234); doc.setDrawColor(240, 200, 160); }
+    doc.setLineWidth(0.8);
+    doc.roundedRect(margin, y, innerW, sh, 5, 5, 'FD');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5);
+    if (high) doc.setTextColor(139, 26, 26); else doc.setTextColor(122, 62, 12);
+    doc.text(stripTitle, margin + 12, y + 18);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.2);
+    if (high) doc.setTextColor(110, 20, 20); else doc.setTextColor(90, 50, 14);
+    let sy = y + 33;
+    doc.text(introL, margin + 12, sy); sy += introL.length * 12 + 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text(listL, margin + 12, sy);
+    y += sh + 12;
+    doc.setLineWidth(0.2);
+
+    // My early warning card (the part people keep)
+    const clip = (v, n) => { const t0 = String(v || '').replace(/\s+/g, ' ').trim(); return t0.length > n ? t0.slice(0, n - 3) + '...' : t0; };
+    const ewItems = [
+      [tr('My earliest body signal'), clip(state.earliestSignal || trList((state.bodySignals || []).slice(0, 2)), 110) || NA],
+      [tr('What sets me off'), clip(state.triggerText, 110) || NA],
+      [tr('What I can say'), clip(state.communicatePlan, 110) || tr("I'm not able to do that right now.")],
+      [tr('My first small step'), clip(state.smallAction, 110) || NA]
+    ];
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.4);
+    const ewLines = ewItems.map(it => doc.splitTextToSize(it[1], innerW - 96));
+    const ewH = 30 + ewLines.reduce((a, l) => a + l.length * 11.5 + 15, 0);
+    ensureSpace(ewH + 10);
+    doc.setFillColor(234, 236, 248);
+    doc.roundedRect(margin, y, innerW, ewH, 6, 6, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(74, 90, 170);
+    doc.text(tr('MY EARLY WARNING CARD'), margin + 12, y + 16);
+    // simple stick figure, arms up
+    const sx = margin + 14, sy2 = y + 30, k = 0.8;
+    doc.setDrawColor(74, 90, 170); doc.setLineWidth(1.6); doc.setLineCap('round');
+    doc.circle(sx + 22 * k, sy2 + 10 * k, 8 * k, 'S');
+    doc.line(sx + 22 * k, sy2 + 18 * k, sx + 22 * k, sy2 + 44 * k);
+    doc.line(sx + 22 * k, sy2 + 44 * k, sx + 10 * k, sy2 + 66 * k);
+    doc.line(sx + 22 * k, sy2 + 44 * k, sx + 34 * k, sy2 + 66 * k);
+    doc.line(sx + 22 * k, sy2 + 26 * k, sx + 8 * k, sy2 + 14 * k);
+    doc.line(sx + 22 * k, sy2 + 26 * k, sx + 36 * k, sy2 + 14 * k);
+    doc.setLineWidth(0.2);
+    let ey = y + 32;
+    ewItems.forEach((it, idx) => {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(74, 90, 170);
+      doc.text(it[0].toUpperCase(), margin + 78, ey);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.4); doc.setTextColor(26, 30, 46);
+      doc.text(ewLines[idx], margin + 78, ey + 12);
+      ey += ewLines[idx].length * 11.5 + 15;
+    });
+    y += ewH + 18;
 
     // Row drawer that can split across pages
     const drawRow = (label, value) => {
@@ -1852,7 +2045,7 @@
         if (first) {
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(8.5);
-          doc.setTextColor(106, 122, 204);
+          doc.setTextColor(74, 90, 170);
           doc.text(label.toUpperCase(), margin + 8, y + 13);
         }
         doc.setFont('helvetica', 'normal');
@@ -1879,13 +2072,15 @@
         [tr('Boundary crossed'), state.boundaryText || NA]
       ]],
       [tr('Body signals'), [
+        [tr('Where I feel it'), trList(state.bodyAreas) || NA],
         [tr('Signals'), trList(state.bodySignals) || NA],
         [tr('Stress level'), state.stressLevel + '/10 (' + stressText(state.stressLevel) + ')'],
         [tr('Earliest signal'), state.earliestSignal || NA],
         [tr('Body notes'), state.bodyText || NA]
       ]],
       [tr('Mind story'), [
-        [tr('Automatic thought'), state.thoughtText || NA],
+        [tr('The facts'), state.factsText || NA],
+        [tr('The story my mind tells'), state.thoughtText || NA],
         [tr('Thinking pattern'), state.distortion ? tr(state.distortion) : NA],
         [tr('Balanced thought'), state.balancedThought || NA]
       ]],
@@ -1900,7 +2095,7 @@
         [tr('Communicate'), state.communicatePlan || NA],
         [tr('Repair'), state.repairPlan || NA],
         [tr('Prevent'), state.preventPlan || NA]
-      ]]
+      ].concat(state.waitPledge ? [[tr('Before I reply'), tr('I will wait at least 20 minutes before I reply.')]] : [])]
     ];
 
     sections.forEach(([sectionTitle, rows]) => {
@@ -1917,18 +2112,32 @@
       y += 8;
     });
 
+    // My patterns so far (only when there are at least 2 saved entries)
+    const patLines = getHistory().length >= 2 ? insightLines() : [];
+    if (patLines.length) {
+      ensureSpace(60 + patLines.length * 13);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(74, 90, 170);
+      doc.text(tr('MY PATTERNS SO FAR'), margin, y);
+      y += 8;
+      doc.setDrawColor(176, 184, 224); doc.line(margin, y, pageW - margin, y);
+      y += 14;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3); doc.setTextColor(26, 30, 46);
+      patLines.forEach(l => doc.splitTextToSize(l, innerW).forEach(ln => { ensureSpace(13); doc.text(ln, margin, y); y += 12.5; }));
+      y += 10;
+    }
+
     // Educational section
     const educational = [
       ['What an emotional trigger actually is',
-        'An emotional trigger is anything (a word, a tone, a situation or a memory) that sets off an emotional reaction bigger than the present moment calls for. Research in affective neuroscience, including the work of Joseph LeDoux, shows that the amygdala can start an emotional response before the prefrontal cortex has had time to assess the situation. This means emotional reactions are often faster than conscious thought. That is not a sign of weakness. It is how the nervous system is wired.'],
+        'An emotional trigger is anything (a word, a tone, a situation or a memory) that sets off an emotional reaction bigger than the present moment calls for. Research in affective neuroscience, including the work of Joseph LeDoux, suggests that the amygdala can start an emotional response before the thinking parts of the brain have fully assessed the situation. Scientists still debate the details, but it helps explain why emotional reactions can feel faster than conscious thought. That is not a sign of weakness. It is how the nervous system is wired.'],
       ['The body as an early warning system',
-        'Somatic therapy and polyvagal theory (developed by Stephen Porges) describe the body as the first responder to perceived threat. Physical signals such as a tight chest, a clenched jaw or a dropping stomach often appear several seconds before you are aware of the emotion. Mapping these signals builds a personal early warning system, so you can step in earlier, before you feel flooded.'],
+        'Somatic therapy and polyvagal theory (developed by Stephen Porges, and still debated by researchers) describe the body as a first responder to perceived threat. Many people notice physical signals such as a tight chest, a clenched jaw or a dropping stomach before they can name the emotion. Mapping these signals builds a personal early warning system, so you can step in earlier, before you feel flooded.'],
       ['Thinking patterns and stress',
-        'Cognitive Behavioural Therapy (CBT), pioneered by Aaron Beck and Albert Ellis, identifies recurring patterns of thinking that make emotional distress worse, such as all-or-nothing thinking, catastrophizing and mind reading. Studies suggest that simply naming a pattern, even without solving it, can reduce its emotional weight. Labelling a thought engages the prefrontal cortex and can interrupt automatic reactions.'],
+        'Cognitive Behavioural Therapy (CBT), pioneered by Aaron Beck and Albert Ellis, identifies recurring patterns of thinking that make emotional distress worse, such as all-or-nothing thinking, catastrophizing and mind reading. Studies suggest that putting feelings into words can lower their emotional intensity, and many people find that naming a thinking pattern gives them space before reacting.'],
       ['The regulate, communicate, repair, prevent model',
-        'Trauma-informed practice and crisis communication research both support a sequence: calm first, then speak. Trying to communicate at peak activation usually goes worse than pausing to regulate. The approach in this tool draws on ideas from Dialectical Behaviour Therapy (DBT) and non-violent communication (NVC), which both show that a regulated nervous system leads to clearer and more productive conversations.'],
+        'Many therapists and communication trainers teach a sequence: calm first, then speak. Trying to communicate at peak activation often goes worse than pausing to settle. The approach in this tool draws on ideas from Dialectical Behaviour Therapy (DBT) and non-violent communication (NVC). Relationship researcher John Gottman suggests waiting at least 20 minutes before returning to a heated conversation, so your body can settle.'],
       ['Pattern tracking and emotional intelligence growth',
-        'Work by Marc Brackett at the Yale Center for Emotional Intelligence points to regular reflection on emotions as an effective way to build emotional regulation over time. Seeing which situations, people or times of day produce your strongest reactions lets you prepare ahead instead of only reacting. Saving entries regularly is not journaling for its own sake. It builds a personal record of your emotional patterns.']
+        'Work by Marc Brackett at the Yale Center for Emotional Intelligence suggests that regular reflection on emotions can help build emotional regulation over time. Seeing which situations, people or times of day produce your strongest reactions lets you prepare ahead instead of only reacting. Saving entries regularly is not journaling for its own sake. It builds a personal record of your emotional patterns.']
     ];
 
     ensureSpace(60);
@@ -1959,6 +2168,25 @@
       y += 10;
     });
 
+    // Sources
+    const sourceList = [
+      'LeDoux, J. (1996). The Emotional Brain. Simon & Schuster.',
+      'Porges, S. W. (2011). The Polyvagal Theory. W. W. Norton.',
+      'Beck, A. T. (1976). Cognitive Therapy and the Emotional Disorders. International Universities Press.',
+      'Lieberman, M. D. et al. (2007). Putting feelings into words. Psychological Science, 18(5), 421-428.',
+      'Linehan, M. M. (2015). DBT Skills Training Manual (2nd ed.). Guilford Press.',
+      'Rosenberg, M. B. (2003). Nonviolent Communication (2nd ed.). PuddleDancer Press.',
+      'Gottman, J. M. (1999). The Seven Principles for Making Marriage Work. Crown.',
+      'Brackett, M. (2019). Permission to Feel. Celadon Books.'
+    ];
+    ensureSpace(30 + sourceList.length * 11);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(74, 90, 170);
+    doc.text(tr('Where this comes from'), margin, y);
+    y += 14;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.6); doc.setTextColor(60, 66, 90);
+    sourceList.forEach(l => doc.splitTextToSize(l, innerW).forEach(ln => { ensureSpace(11); doc.text(ln, margin, y); y += 11; }));
+    y += 8;
+
     // Resources
     ensureSpace(90);
     doc.setDrawColor(176, 184, 224);
@@ -1988,15 +2216,18 @@
       doc.line(margin, pageH - 40, pageW - margin, pageH - 40);
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(8);
-      doc.setTextColor(138, 144, 168);
+      doc.setTextColor(90, 97, 128);
       doc.text(tr('Reflection and self-awareness only. Not a diagnosis or a substitute for professional support.'), margin, pageH - 26);
       doc.setFont('helvetica', 'normal');
-      doc.text(state.userName + '  |  ' + tr('Page {i} of {n}', { i: i, n: pages }), pageW - margin, pageH - 26, { align: 'right', maxWidth: 200 });
+      doc.text((state.userName ? state.userName + '  |  ' : '') + tr('Page {i} of {n}', { i: i, n: pages }), pageW - margin, pageH - 26, { align: 'right', maxWidth: 200 });
     }
 
     const slug = slugify(state.userName);
     doc.save(tr('emotional-trigger-map') + (slug ? '-' + slug : '') + '.pdf');
     showToast(tr('PDF downloaded.'));
+    pdfDone = true;
+    renderAfterPdf();
+    $('afterPdf').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function updateShareLinks() {
@@ -2005,6 +2236,8 @@
     $('waShare').href = 'https://wa.me/?text=' + msg + url;
     $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
     $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+    $('tgShare').href = 'https://t.me/share/url?url=' + url + '&text=' + msg;
+    $('mailShare').href = 'mailto:?subject=' + encodeURIComponent(tr('A free tool I found useful')) + '&body=' + msg + url;
   }
 
   function copyText(text, okMsg) {
@@ -2013,6 +2246,144 @@
     } else {
       showToast(tr('Could not copy. Please copy it by hand.'));
     }
+  }
+
+  // ---------- Stick figures: simple and still, to keep each step friendly ----------
+  function stick(pose, w) {
+    const ARMS = {
+      wave: [[[60,62],[48,76],[44,92]], [[60,62],[78,52],[88,38]]],
+      think: [[[60,62],[46,76],[72,80]], [[60,62],[76,72],[68,50]]],
+      chest: [[[60,62],[46,72],[58,74]], [[60,62],[74,72],[62,74]]],
+      story: [[[60,62],[46,76],[72,80]], [[60,62],[76,72],[68,50]]],
+      reach: [[[60,62],[48,76],[44,92]], [[60,62],[80,64],[100,58]]],
+      plan: [[[60,62],[48,74],[54,84]], [[60,62],[72,74],[66,84]]],
+      cheer: [[[60,62],[44,52],[36,36]], [[60,62],[76,52],[84,36]]],
+      calm: [[[60,62],[46,78],[44,94]], [[60,62],[74,78],[76,94]]],
+      wait: [[[60,62],[48,76],[44,92]], [[60,62],[76,72],[68,50]]]
+    };
+    const size = w || 64;
+    let s = '<svg viewBox="0 0 120 140" width="' + size + '" height="' + Math.round(size * 140 / 120) + '" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'
+      + '<line x1="30" y1="132" x2="90" y2="132" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>'
+      + '<g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<line x1="60" y1="52" x2="60" y2="92"/><polyline points="60,92 46,126"/><polyline points="60,92 74,126"/>';
+    (ARMS[pose] || ARMS.wave).forEach(a => { s += '<polyline points="' + a.map(p => p.join(',')).join(' ') + '"/>'; });
+    s += '<circle cx="60" cy="34" r="18"/>';
+    if (pose === 'calm') {
+      s += '<path d="M48 32 Q53 36 58 32" stroke-width="2.4"/><path d="M62 32 Q67 36 72 32" stroke-width="2.4"/><path d="M54 42 Q60 46 66 42" stroke-width="2.4"/>'
+        + '<path d="M82 36 q6 -4 12 0" stroke-width="2.2"/><path d="M84 44 q6 -4 12 0" stroke-width="2.2"/>';
+    } else {
+      s += '<circle cx="53" cy="31" r="2.2" fill="currentColor" stroke="none"/><circle cx="67" cy="31" r="2.2" fill="currentColor" stroke="none"/>';
+      s += (pose === 'think' || pose === 'story' || pose === 'wait') ? '<path d="M53 43 L67 43" stroke-width="2.6"/>' : '<path d="M52 40 Q60 48 68 40" stroke-width="2.6"/>';
+    }
+    if (pose === 'wave') s += '<path d="M96 30 q6 5 0 12" stroke-width="2.2"/><path d="M102 26 q9 9 0 20" stroke-width="2.2"/>';
+    if (pose === 'plan') s += '<rect x="48" y="80" width="24" height="28" rx="3" fill="#fff" fill-opacity=".9"/><line x1="53" y1="88" x2="67" y2="88" stroke-width="2"/><line x1="53" y1="94" x2="67" y2="94" stroke-width="2"/><line x1="53" y1="100" x2="62" y2="100" stroke-width="2"/>';
+    if (pose === 'chest') s += '<path d="M76 62 q4 -5 8 0 t8 0" stroke-width="2.2"/>';
+    if (pose === 'wait') s += '<circle cx="98" cy="30" r="13" stroke-width="2.4"/><polyline points="98,22 98,30 104,34" stroke-width="2.4"/>';
+    s += '</g>';
+    if (pose === 'think') s += '<text x="86" y="26" font-size="20" font-style="italic" font-family="Georgia,serif" fill="currentColor">?</text>';
+    if (pose === 'story') s += '<circle cx="84" cy="24" r="2.6" fill="currentColor"/><circle cx="92" cy="16" r="3.6" fill="currentColor"/><text x="96" y="12" font-size="18" font-family="Georgia,serif" fill="currentColor">...</text>';
+    if (pose === 'reach') s += '<text x="94" y="46" font-size="16" font-style="italic" font-family="Georgia,serif" fill="currentColor">&lt;3</text>';
+    return s + '</svg>';
+  }
+  function renderStick() { $$('.stk[data-pose]').forEach(e => { e.innerHTML = stick(e.dataset.pose, parseInt(e.dataset.w || '64', 10)); }); }
+
+  // ---------- Body map: tap where you feel it ----------
+  const BODY_AREAS = [
+    { key: 'Head', pts: [[60, 24]], r: 13 },
+    { key: 'Jaw', pts: [[60, 44]], r: 8 },
+    { key: 'Throat', pts: [[60, 56]], r: 7 },
+    { key: 'Chest', pts: [[60, 71]], r: 11 },
+    { key: 'Stomach', pts: [[60, 90]], r: 11 },
+    { key: 'Hands', pts: [[44, 96], [76, 96]], r: 8 },
+    { key: 'Legs', pts: [[50, 118], [70, 118]], r: 9 }
+  ];
+  function buildBodyMap() {
+    let svg = '<svg viewBox="0 0 120 140" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'
+      + '<line x1="30" y1="132" x2="90" y2="132" stroke="currentColor" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>'
+      + '<g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<line x1="60" y1="52" x2="60" y2="92"/><polyline points="60,92 46,126"/><polyline points="60,92 74,126"/>'
+      + '<polyline points="60,62 46,78 44,94"/><polyline points="60,62 74,78 76,94"/><circle cx="60" cy="34" r="18"/>'
+      + '<circle cx="53" cy="31" r="2.2" fill="currentColor" stroke="none"/><circle cx="67" cy="31" r="2.2" fill="currentColor" stroke="none"/><path d="M54 42 L66 42" stroke-width="2.4"/></g>';
+    BODY_AREAS.forEach(a => a.pts.forEach(p => { svg += '<circle class="ba-hl" data-area="' + a.key + '" cx="' + p[0] + '" cy="' + p[1] + '" r="' + a.r + '"/>'; }));
+    $('bodyMapSvg').innerHTML = svg + '</svg>';
+    $('bodyPills').innerHTML = BODY_AREAS.map(a => '<button type="button" class="ba-pill" data-area="' + a.key + '" aria-pressed="false">' + esc(tr(a.key)) + '</button>').join('');
+    renderBodyMap();
+  }
+  function renderBodyMap() {
+    const sel = state.bodyAreas || [];
+    $$('.ba-hl').forEach(c => c.classList.toggle('on', sel.includes(c.dataset.area)));
+    $$('.ba-pill').forEach(c => c.setAttribute('aria-pressed', String(sel.includes(c.dataset.area))));
+  }
+  function toggleArea(key) {
+    const cur = state.bodyAreas || [];
+    state.bodyAreas = cur.includes(key) ? cur.filter(x => x !== key) : cur.concat(key);
+    renderBodyMap();
+  }
+
+  // ---------- Calm minute: a side page that brings you back to the same step ----------
+  let calmOpen = false;
+  function openCalm() { readForm(); calmOpen = true; updateProgress(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  function closeCalm() { stopBreath(); calmOpen = false; updateProgress(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+  // ---------- Where to go next: only after the PDF has been downloaded ----------
+  const TOOL_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+  const TOOLS = {
+    t1: ['Suicide-Prevention-and-Emotional-Support-Tool.html', 'Suicide Prevention and Emotional Support'],
+    t3: ['boundary-builder-tool.html', 'Boundary Builder'],
+    t5: ['distress-tolerance-coping-tool.html', 'Distress Tolerance Coping Tool'],
+    t11: ['hard-conversation-preparation-tool.html', 'Hard Conversation Preparation'],
+    t17: ['people-pleaser-recovery-tool.html', 'People-Pleaser Recovery'],
+    t18: ['positive-strengths-map-tool.html', 'Positive Strengths Map'],
+    t19: ['threat-and-emotional-regulation-tool.html', 'Threat and Emotional Regulation'],
+    t21: ['visual-grounding-emotional-reset-tool.html', 'Visual Grounding and Emotional Reset'],
+    t25: ['wellbeing-journey-tool.html', 'Wellbeing Journey: Quick Check and Reset']
+  };
+  const NEXT_BY_EMOTION = { Anger: ['t11', 't5'], Anxiety: ['t21', 't5'], Sadness: ['t25', 't21'], Shame: ['t18', 't25'], Overwhelm: ['t5', 't19'], Lonely: ['t25', 't18'], Joy: ['t18'], Calm: ['t25'] };
+  const NEXT_BY_TAG = { social: ['t3'], work: ['t11', 't3'], identity: ['t18'], sensory: ['t21'], family: ['t11', 't3'], 'time pressure': ['t5'], financial: ['t25'], health: ['t25'], 'digital overload': ['t21'] };
+  function nextToolKeys() {
+    const out = [];
+    const add = k => { if (!out.includes(k)) out.push(k); };
+    (NEXT_BY_EMOTION[state.selectedEmotion] || []).forEach(add);
+    (state.selectedTags || []).forEach(g => (NEXT_BY_TAG[g] || []).forEach(add));
+    if (state.boundaryText) add('t3');
+    return out.length ? out.slice(0, 3) : ['t5', 't21', 't25'];
+  }
+  let pdfDone = false;
+  function renderAfterPdf() {
+    const b = $('afterPdf');
+    if (!pdfDone) { b.style.display = 'none'; b.innerHTML = ''; return; }
+    let h = '<p class="ap-title">' + esc(tr('Your PDF is ready. Keep it somewhere safe.')) + '</p>'
+      + '<p class="ap-sub">' + esc(tr('Where to go next: free tools that match what you chose. Pick one, or none. There is no rush.')) + '</p><div class="next-links">';
+    nextToolKeys().forEach(k => { h += '<a class="next-link" href="' + TOOL_BASE + TOOLS[k][0] + '" target="_blank" rel="noopener noreferrer">' + esc(tr(TOOLS[k][1])) + '</a>'; });
+    h += '</div><p class="next-quiet">' + esc(tr('If you are having thoughts of ending your life:')) + ' <a href="' + TOOL_BASE + TOOLS.t1[0] + '" target="_blank" rel="noopener noreferrer">' + esc(tr(TOOLS.t1[1])) + '</a></p>';
+    b.innerHTML = h; b.style.display = 'block';
+  }
+
+  // ---------- Patterns across saved entries ----------
+  function insightLines() {
+    const list = getHistory();
+    if (!list.length) return [];
+    const count = (items, n) => {
+      const map = {};
+      items.forEach(v => { if (v && v !== 'Not selected') map[v] = (map[v] || 0) + 1; });
+      return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, n || 3).map(([k, v]) => tr(k) + ' (' + v + 'x)').join(', ') || tr('Not enough data yet');
+    };
+    const avg = key => {
+      const vals = list.map(e => e.data && typeof e.data[key] === 'number' ? e.data[key] : null).filter(v => v !== null);
+      return vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) + '/10' : tr('Not enough data yet');
+    };
+    const signal = list.map(e => e.data && e.data.earliestSignal ? e.data.earliestSignal : '').filter(Boolean);
+    return [
+      tr(list.length === 1 ? 'My top triggers: from your last {n} saved entry' : 'My top triggers: from your last {n} saved entries', { n: list.length }),
+      tr('Trigger tags that come up most: ') + count(list.flatMap(e => e.tags || [])),
+      tr('Emotions that come up most: ') + count(list.map(e => e.emotion)),
+      tr('Body areas that come up most: ') + count(list.flatMap(e => (e.data && e.data.bodyAreas) || [])),
+      tr('Body signals that come up most: ') + count(list.flatMap(e => e.bodySignals || [])),
+      tr('Earliest signals you wrote: ') + count(signal, 3),
+      tr('Needs that come up most: ') + count(list.flatMap(e => (e.data && e.data.needs) || [])),
+      tr('Average intensity: ') + avg('intensity'),
+      tr('Average stress: ') + avg('stressLevel')
+    ];
   }
 
   // ---------- Events ----------
@@ -2040,7 +2411,11 @@
     }
 
     const dot = t.closest('.step-dot');
-    if (dot && dot.dataset.goto) goTo(parseInt(dot.dataset.goto, 10));
+    if (dot && dot.dataset.goto && parseInt(dot.dataset.goto, 10) < currentStep) goTo(parseInt(dot.dataset.goto, 10));
+    const areaEl = t.closest('[data-area]');
+    if (areaEl) toggleArea(areaEl.dataset.area);
+    if (t.id === 'openCalm' || t.id === 'calmFromNote') openCalm();
+    if (t.id === 'calmDone') closeCalm();
 
     const id = t.id;
     const nextMap = { next1: 2, next2: 3, next3: 4, next4: 5, next5: 6, next6: 7 };
@@ -2058,8 +2433,8 @@
       }
     }
 
-    if (id === 'saveEntry' || id === 'stickySave') saveEntry();
-    if (id === 'downloadPdfBtn' || id === 'stickyPdf') downloadPDF();
+    if (id === 'saveEntry') saveEntry();
+    if (id === 'downloadPdfBtn') downloadPDF();
     if (id === 'copySummary') copyText(buildSummary(), tr('Summary copied.'));
     if (id === 'startBreath') startBreath();
     if (id === 'stopBreath') stopBreath();
@@ -2125,6 +2500,8 @@
   buildBodyGrid();
   buildNeedsGrid();
   buildPlanChoices();
+  buildBodyMap();
+  renderStick();
 
   const restored = restoreDraft();
   if (!state.userName) state.userName = lsGet(NAME_KEY) || '';
@@ -2136,10 +2513,10 @@
   if (restored) showToast(state.userName ? tr('Welcome back, {name}. Your draft was restored.', { name: state.userName }) : tr('Welcome back. Your draft was restored.'));
 }());
 </script>
-<!-- ===== EID "Explore All 26 Tools" button and popup (add-on) =====
+<!-- ===== EID "Explore All 27 Tools" button and popup (add-on) =====
      Place this whole block at the very end of the tool, just before the closing body line or the end-of-tool comment line.
      It does not touch any existing tool code. It finds the footer, adds one button above the support area,
-     and opens a popup of all 26 tools grouped by category. English and Spanish follow the tool's own language switcher. =====
+     and opens a popup of all 27 tools grouped by category. English and Spanish follow the tool's own language switcher. =====
 -->
 <script>
 (function(){
@@ -2163,7 +2540,7 @@ var CFG = {
   var BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
   var SUPPORT_URL = 'https://emotionalintelligencedeveloper.com/support-this-website/';
 
-  /* ---------- The 26 tools, by category ---------- */
+  /* ---------- The 27 tools, by category ---------- */
   var CATS = [
     {en:'Crisis and Safety', es:'Crisis y seguridad', tools:[
       ['Suicide Prevention and Emotional Support','Prevención del suicidio y apoyo emocional', BASE+'Suicide-Prevention-and-Emotional-Support-Tool.html'],
@@ -2187,7 +2564,8 @@ var CFG = {
       ['Emotional Trigger Mapping','Mapa de desencadenantes emocionales', BASE+'emotional-trigger-mapping-tool.html'],
       ['Inner vs Outer Alignment Reflection','Reflexión: alineación interior y exterior', BASE+'inner-outer-alignment-tool.html'],
       ['Values Quiz and Growth Report','Test de valores e informe de crecimiento', BASE+'values-quiz-widget.html'],
-      ['Finding Yourself (Identity Reflection)','Encontrarte a ti (reflexión sobre identidad)', BASE+'Finding-Yourself-Gender-Identity-Reflection-Tool.html']
+      ['Finding Yourself (Identity Reflection)','Encontrarte a ti (reflexión sobre identidad)', BASE+'Finding-Yourself-Gender-Identity-Reflection-Tool.html'],
+      ['I\'m Stuck: Decision Support','Tengo un bloqueo: apoyo para decidir', BASE+'decision-support-tool.html']
     ]},
     {en:'Strength and Courage', es:'Fortaleza y valentía', tools:[
       ['Courage in the Face of Fear','Valentía ante el miedo', BASE+'courage-in-the-face-of-fear-tool.html'],
@@ -2208,14 +2586,14 @@ var CFG = {
   ];
 
   var UI = {
-    en:{btn:'Explore All 26 Tools', title:'26 Free Wellbeing Tools', sub:'No app and no sign-up needed. Works on your phone and computer.',
+    en:{btn:'Explore All 27 Tools', title:'27 Free Wellbeing Tools', sub:'No app and no sign-up needed. Works on your phone and computer.',
         note:'Your support keeps these tools free and means they keep being updated and upgraded. It is our free way of fighting back against a world that harms our wellbeing, from the pressure on young people to social media addiction and more. If these tools help you, please use the support button at the bottom of the page.',
-        tip:'Tip: bookmark the tool you like most. You can open this menu from it any time to find all 26.',
+        tip:'Tip: bookmark the tool you like most. You can open this menu from it any time to find all 27.',
         close:'Close', here:'You are here', open:'Opens in a new tab',
         supText:'This platform is free for everyone. If it helped you, consider supporting it.', supBtn:'♥ Support this website'},
-    es:{btn:'Explorar las 26 herramientas', title:'26 herramientas gratuitas de bienestar', sub:'Sin app y sin registro. Funcionan en tu teléfono y en tu computadora.',
+    es:{btn:'Explorar las 27 herramientas', title:'27 herramientas gratuitas de bienestar', sub:'Sin app y sin registro. Funcionan en tu teléfono y en tu computadora.',
         note:'Tu apoyo mantiene estas herramientas gratis y hace que se sigan actualizando y mejorando. Es nuestra forma gratuita de hacer frente a un mundo que daña nuestro bienestar, desde la presión sobre los jóvenes hasta la adicción a las redes sociales y más. Si estas herramientas te ayudan, usa el botón de apoyo al final de la página.',
-        tip:'Consejo: guarda en favoritos la herramienta que más te guste. Desde ella puedes abrir este menú cuando quieras para encontrar las 26.',
+        tip:'Consejo: guarda en favoritos la herramienta que más te guste. Desde ella puedes abrir este menú cuando quieras para encontrar las 27.',
         close:'Cerrar', here:'Estás aquí', open:'Se abre en una pestaña nueva',
         supText:'Esta plataforma es gratis para todos. Si te ayudó, considera apoyarla.', supBtn:'♥ Apoya este sitio web'}
   };
@@ -2232,10 +2610,15 @@ var CFG = {
   }
 
   /* ---------- Styles ---------- */
-  var FF = 'Georgia,"Times New Roman",serif';
+  var TH = CFG.theme || {};
+  var FF = TH.font || 'Georgia,"Times New Roman",serif';
+  var T = {btnBg: TH.btnBg || '#fff', boxBg: TH.boxBg || '#f2f4f8', boxInk: TH.boxInk || '#1a1e2a', boxBorder: TH.boxBorder || '#d0d8e8',
+           linkBg: TH.linkBg || '#fff', linkBorder: TH.linkBorder || '#d0d8e8', noteBg: TH.noteBg || '#fff4ea', noteBorder: TH.noteBorder || '#f0c8a0',
+           noteInk: TH.noteInk || '#5a3a1a', headBg: TH.headBg || CFG.accent};
   var css = ''
   + '.eidhub-wrap{text-align:center;margin:6px 0 0;padding-bottom:22px;border-bottom:1px solid ' + CFG.line + ';}'
-  + '.eidhub-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:' + FF + ';font-size:15px;line-height:1.3;cursor:pointer;min-height:46px;padding:10px 20px;border-radius:99px;background:#fff;color:' + CFG.ink + ';border:1.5px solid ' + CFG.accent + ';-webkit-tap-highlight-color:transparent;transition:background .15s,transform .1s;max-width:100%;}'
+  + '.eidhub-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:' + FF + ';font-size:15px;line-height:1.3;cursor:pointer;min-height:46px;padding:10px 20px;border-radius:99px;background:' + T.btnBg + ';color:' + CFG.ink + ';border:1.5px solid ' + CFG.accent + ';-webkit-tap-highlight-color:transparent;transition:background .15s,transform .1s;max-width:100%;}'
+  + '.eidhub-wrap.eidhub-bare{margin:4px 0;padding:0;border-bottom:none;}'
   + '.eidhub-btn:hover{background:' + CFG.light + ';}'
   + '.eidhub-btn:active{transform:scale(.97);}'
   + '.eidhub-btn:focus-visible,.eidhub-x:focus-visible,.eidhub-link:focus-visible,.eidhub-sup-btn:focus-visible{outline:3px solid ' + CFG.here + ';outline-offset:2px;}'
@@ -2244,19 +2627,19 @@ var CFG = {
   + '.eidhub-quiet .eidhub-btn:hover{background:none;}'
   + '.eidhub-ov{display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:' + (CFG.zIndex || 99999) + ';background:rgba(26,30,42,.6);align-items:center;justify-content:center;padding:12px 12px ' + (12 + (CFG.bottomGap || 0)) + 'px;font-family:' + FF + ';}'
   + '.eidhub-ov.eidhub-show{display:flex;}'
-  + '.eidhub-box{background:#f2f4f8;color:#1a1e2a;width:100%;max-width:680px;max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:16px;border:1px solid #d0d8e8;box-shadow:0 10px 40px rgba(0,0,0,.3);line-height:1.6;font-size:15px;}'
-  + '.eidhub-head{position:sticky;top:0;background:' + CFG.accent + ';color:#fff;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border-radius:16px 16px 0 0;z-index:1;}'
+  + '.eidhub-box{background:' + T.boxBg + ';color:' + T.boxInk + ';width:100%;max-width:680px;max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:16px;border:1px solid ' + T.boxBorder + ';box-shadow:0 10px 40px rgba(0,0,0,.3);line-height:1.6;font-size:15px;}'
+  + '.eidhub-head{position:sticky;top:0;background:' + T.headBg + ';color:#fff;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border-radius:16px 16px 0 0;z-index:1;}'
   + '.eidhub-head-t{flex:1;}'
   + '.eidhub-title{font-size:1.2rem;line-height:1.3;margin:0;font-weight:normal;color:#fff;}'
   + '.eidhub-sub{font-size:13px;opacity:.92;margin:2px 0 0;color:#fff;}'
   + '.eidhub-x{flex-shrink:0;min-width:44px;min-height:44px;border-radius:99px;border:1.5px solid rgba(255,255,255,.7);background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer;font-family:Arial,sans-serif;}'
   + '.eidhub-x:hover{background:rgba(255,255,255,.15);}'
   + '.eidhub-body{padding:14px 14px 18px;}'
-  + '.eidhub-note{background:#fff4ea;border:1px solid #f0c8a0;border-radius:12px;padding:12px 14px;font-size:14px;color:#5a3a1a;margin-bottom:10px;}'
+  + '.eidhub-note{background:' + T.noteBg + ';border:1px solid ' + T.noteBorder + ';border-radius:12px;padding:12px 14px;font-size:14px;color:' + T.noteInk + ';margin-bottom:10px;}'
   + '.eidhub-tip{background:' + CFG.tipBg + ';border:1px solid ' + CFG.tipBorder + ';border-radius:12px;padding:10px 14px;font-size:13px;color:' + CFG.ink + ';font-style:italic;margin-bottom:14px;}'
   + '.eidhub-cat{font-size:12px;font-weight:bold;color:' + CFG.cat + ';text-transform:uppercase;letter-spacing:.07em;margin:16px 0 8px;}'
   + '.eidhub-grid{display:grid;grid-template-columns:1fr;gap:8px;}'
-  + '.eidhub-link{display:flex;align-items:center;min-height:48px;padding:10px 14px;background:#fff;border:1.5px solid #d0d8e8;border-radius:12px;color:#1a1e2a;text-decoration:none;font-size:14px;line-height:1.4;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s;}'
+  + '.eidhub-link{display:flex;align-items:center;min-height:48px;padding:10px 14px;background:' + T.linkBg + ';border:1.5px solid ' + T.linkBorder + ';border-radius:12px;color:' + T.boxInk + ';text-decoration:none;font-size:14px;line-height:1.4;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s;}'
   + '.eidhub-link:hover{border-color:' + CFG.accent + ';background:' + CFG.light + ';}'
   + '.eidhub-link.eidhub-here{border-color:' + CFG.here + ';background:' + CFG.hereBg + ';}'
   + '.eidhub-badge{margin-left:auto;padding-left:10px;font-size:11px;color:' + CFG.cat + ';white-space:nowrap;font-style:italic;}'
@@ -2296,6 +2679,15 @@ var CFG = {
     if(spot && spot.parentNode){ spot.parentNode.insertBefore(wrap, spot); placed = true; }
   }
   if(!placed) document.body.appendChild(wrap);
+  var btns = [btn];
+  (CFG.extraSpots || []).forEach(function(sel){
+    var el = document.querySelector(sel);
+    if(!el || !el.parentNode) return;
+    var c = wrap.cloneNode(true);
+    c.className += ' eidhub-bare';
+    el.parentNode.insertBefore(c, el);
+    btns.push(c.querySelector('.eidhub-btn'));
+  });
 
   /* ---------- Support block (only for tools that have no orange Support button of their own) ---------- */
   var supT = null, supB = null;
@@ -2364,7 +2756,7 @@ var CFG = {
   }
   function labelButton(){
     var U = UI[lang()];
-    btn.querySelector('.eidhub-btn-t').textContent = U.btn;
+    Array.prototype.forEach.call(document.querySelectorAll('.eidhub-btn-t'), function(t){ t.textContent = U.btn; });
     if(supT){ supT.textContent = U.supText; supB.textContent = U.supBtn; }
   }
   function render(){
@@ -2405,12 +2797,12 @@ var CFG = {
     document.documentElement.style.overflow = '';
     if(lastFocus && lastFocus.focus) lastFocus.focus(); else btn.focus();
   }
-  btn.addEventListener('click', openHub);
+  btns.forEach(function(b){ b.addEventListener('click', openHub); });
   xBtn.addEventListener('click', closeHub);
   ov.addEventListener('click', function(e){ if(e.target === ov) closeHub(); });
   document.addEventListener('keydown', function(e){
     if(ov.className.indexOf('eidhub-show') < 0) return;
-    if(e.key === 'Escape' || e.key === 'Esc'){ e.preventDefault(); closeHub(); return; }
+    if(e.key === 'Escape' || e.key === 'Esc'){ e.preventDefault(); if(CFG.escStops) e.stopPropagation(); closeHub(); return; }
     if(e.key === 'Tab'){
       var f = box.querySelectorAll('a[href],button');
       if(!f.length) return;
@@ -2418,7 +2810,7 @@ var CFG = {
       if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
       else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
     }
-  });
+  }, !!CFG.escStops);
 
   /* keep the button text in step with the tool's language switcher */
   document.addEventListener('change', function(){ setTimeout(function(){ labelButton(); if(ov.className.indexOf('eidhub-show') > -1) render(); }, 60); });
@@ -2429,7 +2821,7 @@ var CFG = {
   try{ new MutationObserver(function(){ labelButton(); if(ov.className.indexOf('eidhub-show') > -1) render(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']}); }catch(e){}
 })();
 </script>
-<!-- ===== End "Explore All 26 Tools" add-on ===== -->
+<!-- ===== End "Explore All 27 Tools" add-on ===== -->
 
 </body>
 </html>

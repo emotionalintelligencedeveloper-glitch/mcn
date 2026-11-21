@@ -291,6 +291,14 @@
     .pdf-check .pc-label { flex: 1; }
     .pdf-check .linkbtn { flex: none; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .pg-off { display: none !important; }
+    .part-bar { position: sticky; top: 0; z-index: 5; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line, #d6ddd4); padding: 8px 4px 10px; margin: 0 0 12px; }
+    .pb-text { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--slate); margin-bottom: 6px; }
+    .pb-track { height: 6px; border-radius: 999px; background: #e3e8e1; overflow: hidden; }
+    .pb-fill { height: 100%; background: #3a6a48; border-radius: 999px; transition: width .3s ease; }
+    .flow-nav { display: flex; justify-content: space-between; gap: 12px; margin: 4px 0 18px; }
+    .flow-nav .btn { min-width: 140px; }
+    .card, .panel { scroll-margin-top: 72px; }
     .btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--slate-mid); }
   </style>
 </head>
@@ -327,6 +335,8 @@
   </header>
 
   <!-- ABOUT YOU -->
+  <div class="part-bar" id="partBar" role="status" aria-live="polite"><div class="pb-text" id="pbText"></div><div class="pb-track" aria-hidden="true"><div class="pb-fill" id="pbFill"></div></div></div>
+
   <section class="card" aria-labelledby="about-heading">
     <p class="card-title" id="about-heading" data-i18n>Let's start</p>
     <p class="card-sub" data-i18n>Everything here is optional. You can skip anything.</p>
@@ -510,12 +520,12 @@
       <button type="button" class="btn btn-primary" id="wizNext">Next</button>
       <button type="button" class="btn btn-primary" id="toCalm" style="display:none;" data-i18n>Next: calm down</button>
     </div>
-    <div id="toSummaryWrap" style="text-align:center;"><button type="button" class="linkbtn" id="toSummary" data-i18n>Skip to my summary</button></div>
   </section>
 
   <!-- GROUNDING -->
   <section class="card" aria-labelledby="grounding-heading" id="groundingCard">
     <p class="part-tag" data-i18n>Part 3 of 5</p>
+    <div class="soft-note" id="detourNote" style="margin-bottom:12px;"><p data-i18n>You came here from your heat check. When you are done, we will take you back so you can finish the rest.</p></div>
     <p class="card-title" id="grounding-heading" data-i18n>Calm down in 60 seconds</p>
     <p class="card-sub" data-i18n>Breathe slowly and let the prompts guide you.</p>
     <div class="grounding-card">
@@ -614,6 +624,12 @@
       <button type="button" class="btn btn-teen" id="teenDone" data-i18n>Done, take me back</button>
     </div>
   </section>
+
+
+  <div class="flow-nav" id="flowNav">
+    <button type="button" class="btn btn-outline" id="flowBack" data-i18n>Back</button>
+    <button type="button" class="btn btn-primary" id="flowNext"></button>
+  </div>
 
   <!-- COURSE -->
   <section class="card" aria-labelledby="course-heading">
@@ -1051,7 +1067,13 @@
     "Done, take me back": "Listo, llévame de vuelta",
     "Welcome back. Your teen section will be in your PDF.": "Bienvenido de nuevo. Tu sección para adolescentes estará en tu PDF.",
     "Your PDF is missing {0} of {1} parts. You can add them first, or download it as it is.": "A tu PDF le faltan {0} de {1} partes. Puedes añadirlas primero o descargarlo así.",
-    "Feelings pass. Actions do not. Asking for help is a power move. Pick one of these, copy it and send it to a trusted person today:": "Los sentimientos pasan. Los actos no. Pedir ayuda es un acto de fuerza. Elige uno de estos, cópialo y envíaselo hoy a una persona de confianza:"
+    "Feelings pass. Actions do not. Asking for help is a power move. Pick one of these, copy it and send it to a trusted person today:": "Los sentimientos pasan. Los actos no. Pedir ayuda es un acto de fuerza. Elige uno de estos, cópialo y envíaselo hoy a una persona de confianza:",
+    "Next: check-in": "Siguiente: chequeo",
+    "Next: my step-away plan": "Siguiente: mi plan para alejarme",
+    "Next: my summary": "Siguiente: mi resumen",
+    "Back to my summary": "Volver a mi resumen",
+    "Done, back to check-in": "Listo, volver al chequeo",
+    "You came here from your heat check. When you are done, we will take you back so you can finish the rest.": "Llegaste aquí desde tu termómetro de la rabia. Cuando termines, te llevaremos de vuelta para que completes el resto."
   };
 
   function t(s) {
@@ -1704,14 +1726,85 @@
   }
   function renderWiz() {
     document.querySelectorAll('.rstep').forEach(s => s.classList.toggle('on', parseInt(s.dataset.step, 10) === wizStep));
-    $('wizBack').style.visibility = wizStep === 1 ? 'hidden' : 'visible';
     const nx = $('wizNext');
     nx.style.display = wizStep >= WIZ_N ? 'none' : '';
     nx.textContent = t(wizStepEmpty(wizStep) ? 'Skip' : 'Next');
     $('wizCount').textContent = tf2('Step {0} of {1}', wizStep, WIZ_N);
     document.querySelectorAll('#wizDots .wdot').forEach((d, i) => { d.classList.toggle('on', i + 1 === wizStep); d.classList.toggle('past', i + 1 < wizStep); });
     $('toCalm').style.display = wizStep >= WIZ_N ? '' : 'none';
+    $('toCalm').textContent = t(toSummaryAfter ? 'Back to my summary' : 'Next: calm down');
+    $('wizBack').style.visibility = 'visible';
     renderPdfCheck();
+  }
+
+
+  /* ----- One part at a time ----- */
+  const PARTS_N = 5;
+  let part = 1, detourFrom = 0, toSummaryAfter = false, teenOpen = false, teenFrom = 1, prevAge = '';
+  const pageOf = () => ({
+    1: ['aboutCardEl', 'heatCard', 'panelPause', 'panelWorried', 'panelNews', 'panelStorage', 'historyCardEl'],
+    2: ['checkinCard'], 3: ['groundingCard'], 4: ['awayCard'], 5: ['finalCard', 'courseCardEl']
+  });
+  function tagEls() {
+    const q = s => document.querySelector(s);
+    const a = q('[aria-labelledby="about-heading"]'); if (a) a.id = 'aboutCardEl';
+    const h = q('[aria-labelledby="history-heading"]'); if (h) h.id = 'historyCardEl';
+    const c = q('[aria-labelledby="course-heading"]'); if (c) c.id = 'courseCardEl';
+  }
+  function renderFlow() {
+    const pg = pageOf();
+    Object.keys(pg).forEach(k => pg[k].forEach(id => { const e = $(id); if (e) e.classList.toggle('pg-off', teenOpen || parseInt(k, 10) !== part); }));
+    $('teenSection').classList.toggle('pg-off', !teenOpen);
+    $('pbText').textContent = teenOpen ? t('For teens') : t('Part ' + part + ' of ' + PARTS_N);
+    $('pbFill').style.width = (teenOpen ? (part / PARTS_N) : (part / PARTS_N)) * 100 + '%';
+    $('detourNote').style.display = (part === 3 && detourFrom) ? 'block' : 'none';
+    const nav = $('flowNav'), nx = $('flowNext'), bk = $('flowBack');
+    nav.style.display = (teenOpen || part === 2) ? 'none' : 'flex';
+    bk.style.visibility = part === 1 ? 'hidden' : 'visible';
+    nx.style.display = part === 5 ? 'none' : '';
+    let label = 'Next: check-in';
+    if (part === 3) label = detourFrom ? 'Done, back to check-in' : 'Next: my step-away plan';
+    if (part === 4) label = 'Next: my summary';
+    if (toSummaryAfter && part !== 5 && !detourFrom) label = 'Back to my summary';
+    nx.textContent = t(label);
+  }
+  function goPart(n, where) {
+    teenOpen = false;
+    part = Math.max(1, Math.min(PARTS_N, n));
+    if (part === 5) toSummaryAfter = false;
+    renderFlow(); renderPdfCheck(); renderWiz();
+    const target = where ? $(where) : $('partBar');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function flowNext() {
+    if (part === 3 && detourFrom) { const to = detourFrom === 1 ? 2 : detourFrom; detourFrom = 0; goPart(to); return; }
+    if (toSummaryAfter) { goPart(5); return; }
+    goPart(part + 1);
+  }
+  function flowBack() {
+    if (part === 3 && detourFrom) { const to = detourFrom; detourFrom = 0; goPart(to); return; }
+    if (part === 3) setWiz(WIZ_N);
+    goPart(part - 1);
+  }
+  function startDetour() { detourFrom = part; goPart(3); }
+  function openTeen(from) {
+    teenFrom = from || part; teenOpen = true;
+    renderFlow();
+    $('partBar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function closeTeen() {
+    teenRead = true; teenOpen = false;
+    renderFlow(); renderPdfCheck();
+    showToast(t('Welcome back. Your teen section will be in your PDF.'));
+    $('partBar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function goTo(id) {
+    toSummaryAfter = true;
+    if (id === 'heatCard') goPart(1, 'heatCard');
+    else if (id === 'checkinCard') { setWiz(1, false); goPart(2); }
+    else if (id === 'afterHeat') goPart(3, 'afterHeat');
+    else if (id === 'awayCard') goPart(4);
+    else if (id === 'teenSection') openTeen(5);
   }
 
   /* ----- What is in the PDF: a tick list with a way back to each part ----- */
@@ -1741,10 +1834,7 @@
         const b = document.createElement('button'); b.type = 'button'; b.className = 'linkbtn';
         b.textContent = t('Add');
         b.setAttribute('aria-label', t('Add') + ': ' + t(p.label));
-        b.addEventListener('click', () => {
-          if (p.go === 'checkinCard') setWiz(1, false);
-          $(p.go).scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
+        b.addEventListener('click', () => goTo(p.go));
         li.appendChild(b);
       } else {
         const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = ' ' + t('is in your PDF');
@@ -1760,22 +1850,26 @@
     if (scroll) $('checkin-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function refreshExtras() { renderHeatNote(); renderHeatShift(); renderWorried(); renderWiz(); }
+  function refreshExtras() { renderHeatNote(); renderHeatShift(); renderWorried(); renderWiz(); renderFlow(); }
   function resetExtras() {
     document.querySelectorAll('.scale input').forEach(i => { i.checked = false; });
     ['stepPlace', 'stepPerson', 'stepDo'].forEach(id => { $(id).value = ''; });
     $('discreetPdf').checked = false;
-    worried = ''; wizStep = 1; wizSkipped = false; teenRead = false;
+    worried = ''; wizStep = 1; wizSkipped = false; teenRead = false; part = 1; detourFrom = 0; toSummaryAfter = false; teenOpen = false; prevAge = '';
     refreshExtras();
   }
   function initExtras() {
     const dots = $('wizDots');
     for (let i = 0; i < WIZ_N; i++) { const s = document.createElement('span'); s.className = 'wdot'; dots.appendChild(s); }
-    $('wizBack').addEventListener('click', () => setWiz(wizStep - 1, true));
+    tagEls();
+    $('wizBack').addEventListener('click', () => { if (wizStep === 1) goPart(1); else setWiz(wizStep - 1, true); });
+    $('flowNext').addEventListener('click', flowNext);
+    $('flowBack').addEventListener('click', flowBack);
     $('wizNext').addEventListener('click', () => setWiz(wizStep + 1, true));
-    $('toSummary').addEventListener('click', () => { wizSkipped = true; renderWiz(); $('finalCard').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-    $('toCalm').addEventListener('click', () => { $('groundingCard').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-    $('teenDone').addEventListener('click', () => { teenRead = true; renderPdfCheck(); $('heatCard').scrollIntoView({ behavior: 'smooth', block: 'start' }); showToast(t('Welcome back. Your teen section will be in your PDF.')); });
+    $('toCalm').addEventListener('click', () => goPart(toSummaryAfter ? 5 : 3));
+    $('teenDone').addEventListener('click', closeTeen);
+    $('ageChips').addEventListener('click', () => { if (state.age === 'teen' && prevAge !== 'teen') openTeen(part); prevAge = state.age; });
+    document.querySelectorAll('[data-scroll="groundingCard"]').forEach(b => b.addEventListener('click', e => { e.stopImmediatePropagation(); startDetour(); }, true));
     document.querySelectorAll('.scale input').forEach(i => i.addEventListener('change', () => { renderHeatNote(); renderHeatShift(); renderPdfCheck(); }));
     ['heavyOther', 'stepPlace', 'stepPerson', 'stepDo'].forEach(id => $(id).addEventListener('input', renderWiz));
     ['emotionChips', 'heavyChips', 'needChips', 'ageChips'].forEach(id => $(id).addEventListener('click', renderWiz));
@@ -1783,6 +1877,7 @@
     $('wNo').addEventListener('click', () => { worried = 'no'; renderWorried(); });
     $('wUnsure').addEventListener('click', () => { worried = 'unsure'; renderWorried(); });
     renderWiz();
+    renderFlow();
   }
 
   // Events

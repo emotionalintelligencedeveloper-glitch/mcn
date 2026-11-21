@@ -594,6 +594,7 @@
       <button type="button" class="btn btn-outline" id="pdfBtn" data-i18n>Download PDF</button>
       <button type="button" class="btn btn-danger" id="resetBtn" data-i18n>Reset</button>
     </div>
+    <div class="result-box" id="afterPdf" aria-live="polite"></div>
   </section>
 
   <!-- TEEN SECTION -->
@@ -1073,7 +1074,8 @@
     "Next: my summary": "Siguiente: mi resumen",
     "Back to my summary": "Volver a mi resumen",
     "Done, back to check-in": "Listo, volver al chequeo",
-    "You came here from your heat check. When you are done, we will take you back so you can finish the rest.": "Llegaste aquí desde tu termómetro de la rabia. Cuando termines, te llevaremos de vuelta para que completes el resto."
+    "You came here from your heat check. When you are done, we will take you back so you can finish the rest.": "Llegaste aquí desde tu termómetro de la rabia. Cuando termines, te llevaremos de vuelta para que completes el resto.",
+    "Your PDF is ready. Keep it somewhere safe.": "Tu PDF está listo. Guárdalo en un lugar seguro."
   };
 
   function t(s) {
@@ -1260,7 +1262,6 @@
       html += '<div class="result-row"><div class="result-row-label">' + esc(label) + '</div><div class="result-row-value">' + esc(value) + '</div></div>';
     });
     html += '<div style="font-size:14px;color:var(--brand);font-style:italic;margin-top:12px;">' + t('You do not have to carry this alone. One small step, one moment at a time.') + '</div>';
-    html += nextBoxHtml();
     const box = $('resultBox');
     box.innerHTML = html;
     box.style.display = 'block';
@@ -1627,6 +1628,8 @@
 
     const tag = (state.name || '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     doc.save((discreet ? 'my-notes' : 'gun-violence-awareness-support') + (tag ? '-' + tag : '') + '.pdf');
+    pdfDone = true; renderAfterPdf();
+    const ap = $('afterPdf'); if (ap) ap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     showToast(t('PDF downloaded.'));
   }
 
@@ -1658,6 +1661,14 @@
     state.paths.forEach(p => (NEXT_BY_PATH[p] || []).forEach(add));
     state.feelings.forEach(f => (NEXT_BY_FEELING[f] || []).forEach(add));
     return out.length ? out.slice(0, 3) : ['t5', 't21', 't25'];
+  }
+  let pdfDone = false;
+  function renderAfterPdf() {
+    const b = $('afterPdf');
+    if (!b) return;
+    if (!pdfDone) { b.style.display = 'none'; b.innerHTML = ''; return; }
+    b.innerHTML = '<div class="result-title">' + esc(t('Your PDF is ready. Keep it somewhere safe.')) + '</div>' + nextBoxHtml();
+    b.style.display = 'block';
   }
   function nextBoxHtml() {
     let h = '<div class="next-box"><div class="result-row-label">' + esc(t('Where to go next')) + '</div>';
@@ -1850,12 +1861,12 @@
     if (scroll) $('checkin-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function refreshExtras() { renderHeatNote(); renderHeatShift(); renderWorried(); renderWiz(); renderFlow(); }
+  function refreshExtras() { renderAfterPdf(); renderHeatNote(); renderHeatShift(); renderWorried(); renderWiz(); renderFlow(); }
   function resetExtras() {
     document.querySelectorAll('.scale input').forEach(i => { i.checked = false; });
     ['stepPlace', 'stepPerson', 'stepDo'].forEach(id => { $(id).value = ''; });
     $('discreetPdf').checked = false;
-    worried = ''; wizStep = 1; wizSkipped = false; teenRead = false; part = 1; detourFrom = 0; toSummaryAfter = false; teenOpen = false; prevAge = '';
+    pdfDone = false; worried = ''; wizStep = 1; wizSkipped = false; teenRead = false; part = 1; detourFrom = 0; toSummaryAfter = false; teenOpen = false; prevAge = '';
     refreshExtras();
   }
   function initExtras() {

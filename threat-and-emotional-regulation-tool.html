@@ -7,10 +7,10 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
-  --bg:#f4f2f8;--card:#fff;--text:#1e1a2e;--muted:#5a5470;--hint:#8a82a6;--border:#d8d0e8;
+  --bg:#f4f2f8;--card:#fff;--text:#1e1a2e;--muted:#5a5470;--hint:#6b6488;--border:#d8d0e8;
   --brand:#6a5aaa;--brand-light:#f0ecf8;--brand-mid:#c0b0e0;--accent-light:#e8e4f8;
   --teal:#3a7a7a;--gold:#7a6a30;--gold-light:#f7f2e4;--gold-mid:#d8c878;
-  --warm:#f8f6f2;--support:#e8702a;
+  --warm:#f8f6f2;--support:#b3501a;
   --danger-bg:#fff0f0;--danger-border:#f5a0a0;--danger-text:#8b1a1a;
   --r-sm:10px;--r-md:14px;--r-lg:20px;
 }
@@ -180,6 +180,34 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
 @media(prefers-reduced-motion:reduce){.aura{transition:none!important}html{scroll-behavior:auto}}
 .lang-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 12px;font-size:14px;color:var(--muted)}
 .lang-bar select{width:auto;appearance:auto;-webkit-appearance:menulist;background-color:#fff;padding:8px 14px;min-height:44px;border-radius:99px;border:1.5px solid var(--border);font-family:inherit;font-size:14px;color:var(--text);cursor:pointer}
+/* ---- upgrade v5 ---- */
+[hidden]{display:none!important}
+.quick-exit{min-height:44px}
+.pstep[disabled]{cursor:default;opacity:.75}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 14px}
+.pill{background:#fff;border:1.5px solid var(--brand-mid);border-radius:99px;padding:10px 18px;min-height:44px;font:inherit;font-size:15px;color:var(--text);cursor:pointer}
+.pill.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.fig-row{display:flex;justify-content:center;gap:18px;margin:4px 0 14px;color:var(--brand)}
+.fig-row .stk{width:52px;height:86px}
+.card-note{background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--r-md);padding:13px 16px;font-size:15px;color:var(--text);margin:0 0 16px;line-height:1.6}
+.card-note.calm{background:var(--brand-light);border-color:var(--brand-mid)}
+.card-note strong{display:block;margin-bottom:4px;color:var(--danger-text)}
+.card-note.calm strong{color:var(--brand)}
+.card-note a{color:var(--brand);font-weight:bold}
+.safe-card{background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger-text)}
+.safe-card a{color:var(--danger-text)}
+.small-hint{font-size:13.5px;color:var(--muted);margin:0 0 12px;font-style:italic}
+.tick{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.tick input{width:22px;height:22px;accent-color:var(--brand);flex-shrink:0;margin-top:2px}
+.tick.done span{color:var(--text)}
+.opt-row{display:flex;gap:12px;align-items:flex-start;background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;cursor:pointer}
+.opt-row input{width:22px;height:22px;accent-color:var(--brand);flex-shrink:0;margin-top:2px}
+.opt-row small{display:block;font-size:13.5px;color:var(--muted)}
+.next-box{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:16px;margin-top:16px}
+.next-box h3{font-size:1.05rem;font-weight:normal;color:var(--brand);margin-bottom:6px}
+.next-box a{display:block;background:#fff;border:1px solid var(--brand-mid);border-radius:var(--r-sm);padding:11px 14px;margin-top:10px;text-decoration:none;color:var(--text)}
+.next-box a b{display:block;color:var(--brand);font-weight:bold}
+.next-box a span{font-size:14px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -224,8 +252,27 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
 
   <nav class="progress" id="progress" aria-label="Progress" data-i18n-attr="aria-label"></nav>
 
+  <!-- STEP 0: privacy -->
+  <section class="card step active" id="s0" aria-labelledby="h0s">
+    <div class="card-head">
+      <div>
+        <div class="step-label" data-i18n>Before you start</div>
+        <h3 class="card-title" id="h0s" tabindex="-1" data-i18n>A quick privacy check</h3>
+      </div>
+    </div>
+    <div class="fig-row" aria-hidden="true"><svg class="stk" viewBox="0 0 60 100"><use href="#sm-man"/></svg><svg class="stk" viewBox="0 0 60 100"><use href="#sm-woman"/></svg></div>
+    <p class="card-intro" data-i18n>Can anyone else see your screen or use this device?</p>
+    <div class="pills" id="privPills" role="group">
+      <button type="button" class="pill" data-priv="alone" data-i18n>Only me</button>
+      <button type="button" class="pill" data-priv="maybe" data-i18n>Someone else might see</button>
+      <button type="button" class="pill" data-priv="unsure" data-i18n>I am not sure</button>
+    </div>
+    <div class="card-note calm" id="privCard" hidden></div>
+    <p class="small-hint" data-i18n>You can skip this. If you do, safer mode stays on. Quick exit: press Escape three times, or tap the Quick exit button, to leave this page right away.</p>
+  </section>
+
   <!-- STEP 1 -->
-  <section class="card step active" id="s1" aria-labelledby="h1s">
+  <section class="card step" id="s1" aria-labelledby="h1s">
     <div class="card-head">
       <div>
         <div class="step-label" data-i18n>Step 1 of 4</div>
@@ -234,6 +281,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
       <svg class="stk fig-md" viewBox="0 0 60 100" aria-hidden="true"><use href="#sm-woman"/></svg>
     </div>
     <p class="card-intro" data-i18n>Choose any one of these three tools, or skip straight on. You do not need to do all of them.</p>
+    <div class="card-note calm" id="wbCard" hidden></div>
 
     <div class="three-panel">
       <div class="mini-panel">
@@ -305,6 +353,12 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
     </div>
     <p class="card-intro" data-i18n>Choose any that apply. There are no wrong answers.</p>
     <div class="chip-wrap" id="threatChips" role="group" aria-label="Threat type options" data-i18n-attr="aria-label"></div>
+    <div class="card-note safe-card" hidden>
+      <strong data-i18n>Your safety comes first</strong>
+      <span data-i18n>If you are not safe right now, contact your local emergency services. You can also find a free helpline for your country at findahelpline.com. If someone at home could see this screen, use Quick exit and switch on the private PDF in the last step.</span><br>
+      <a href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline in your country</a> &nbsp;|&nbsp;
+      <a href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/domestic-violence-warning-and-safety-tool.html" target="_blank" rel="noopener" data-i18n>Domestic Violence Awareness Tool (opens in a new tab)</a>
+    </div>
     <div class="field">
       <label class="field-label" for="otherThreat" data-i18n>Something else (optional)</label>
       <input type="text" id="otherThreat" maxlength="150" placeholder="Another type of threat" data-i18n-attr="placeholder" autocomplete="off" />
@@ -360,8 +414,15 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
       <br><a href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline in your country</a>
     </div>
 
+    <div class="card-note safe-card" hidden>
+      <strong data-i18n>Your safety comes first</strong>
+      <span data-i18n>If you are not safe right now, contact your local emergency services. You can also find a free helpline for your country at findahelpline.com. If someone at home could see this screen, use Quick exit and switch on the private PDF in the last step.</span><br>
+      <a href="https://findahelpline.com/" target="_blank" rel="noopener" data-i18n>Find a helpline in your country</a> &nbsp;|&nbsp;
+      <a href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/domestic-violence-warning-and-safety-tool.html" target="_blank" rel="noopener" data-i18n>Domestic Violence Awareness Tool (opens in a new tab)</a>
+    </div>
     <div class="plan-intro-box" id="planIntro">Your calm plan will appear here.</div>
 
+    <p class="small-hint" data-i18n>Tick each step when you try it. Missed one? Pick it up next time.</p>
     <div class="plan-columns">
       <div class="plan-col"><div class="plan-col-title" data-i18n>3 regulation steps</div><ul class="plan-list" id="regulationList"></ul></div>
       <div class="plan-col"><div class="plan-col-title" data-i18n>Communication options</div><ul class="plan-list" id="commList"></ul></div>
@@ -381,6 +442,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
       <span class="field-label" id="aftLabel" data-i18n>How do you feel now, after your pause?</span>
       <div class="faces" id="facesAfter" role="radiogroup" aria-labelledby="aftLabel"></div>
     </div>
+    <div class="card-note calm" id="shiftBox" hidden></div>
 
     <div class="name-box">
       <label class="field-label" for="userName" data-i18n>Your name for the PDF (optional)</label>
@@ -388,13 +450,16 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
       <input type="text" id="userName" maxlength="60" placeholder="First name is fine" data-i18n-attr="placeholder" autocomplete="given-name" />
     </div>
 
+    <label class="opt-row"><input type="checkbox" id="discPdf"><span><span data-i18n>Make my PDF private</span><small data-i18n>No logo, website or name, and your own words are left out. Plain file name.</small></span></label>
     <div class="section-label" data-i18n>Actions</div>
     <div class="btn-row" style="margin-bottom:6px">
       <button type="button" class="btn btn-primary" id="downloadPdfBtn" data-i18n>Download PDF</button>
       <button type="button" class="btn btn-outline" id="saveLocalBtn" data-i18n>Save on this device</button>
       <button type="button" class="btn btn-outline" id="newReflectionBtn" data-i18n>Save and new reflection</button>
+      <button type="button" class="btn btn-outline" id="freshBtn" data-i18n hidden>Start a new reflection</button>
       <button type="button" class="btn btn-danger" id="resetBtn" data-i18n>Reset all</button>
     </div>
+    <div class="next-box" id="nextBox" hidden></div>
   </section>
 
   <div class="nav" id="nav">
@@ -403,7 +468,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
   </div>
 
   <!-- HISTORY -->
-  <section class="card" aria-labelledby="history-heading">
+  <section class="card" id="historyCard" aria-labelledby="history-heading">
     <h3 class="card-title" id="history-heading" style="margin-bottom:6px" data-i18n>My past check-ins</h3>
     <p class="field-hint" style="font-style:italic" data-i18n>Saved only on this device. If others use this device, clear your history when you are done.</p>
     <div id="historyList"></div>
@@ -436,6 +501,9 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
         <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
         <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+        <a class="btn btn-share" id="liShare" target="_blank" rel="noopener" data-i18n>LinkedIn</a>
+        <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener" data-i18n>Telegram</a>
+        <a class="btn btn-share" id="emShare" target="_blank" rel="noopener" data-i18n>Email</a>
       </div>
     </div>
 
@@ -484,7 +552,7 @@ var NEED_STEPS = {
 var DEFAULT_COMM = ['I am feeling overwhelmed. Can we pause?', 'I want to talk, but I need a calmer moment.', 'I am not okay right now. I need support.'];
 var DEFAULT_BOUND = ['I am stepping away for 10 minutes.', 'Please do not raise your voice at me.', 'I am available to talk when we can be respectful.'];
 
-var state = { step: 1, threats: [], body: [], plan: null, before: '', after: '' };
+var state = { step: 0, threats: [], body: [], plan: null, before: '', after: '', priv: '', privSeen: false, ticks: [0, 0, 0], pdfDone: false, didBreath: false };
 var breath = { timer: null, pattern: 'sigh', l: null, s: null, n: null };
 var toastTimer = null;
 
@@ -707,7 +775,7 @@ var TR_ES = {
  "What you wrote sounds really heavy. You do not have to carry it alone. Please reach out to someone you trust or a helpline now (findahelpline.com). If you might act on these thoughts, contact your local emergency services right away.": "Lo que escribiste suena muy pesado. No tienes que cargarlo en soledad. Por favor, acude ahora a alguien de confianza o a una línea de ayuda (findahelpline.com). Si piensas que podrías actuar según esos pensamientos, llama de inmediato a los servicios de emergencia de tu zona.",
  "Your 3 regulation steps": "Tus 3 pasos para regularte",
  "What the research says": "Lo que dice la investigación",
- "Reviewed October 2026. Plain language summaries, not medical advice.": "Revisado en octubre de 2026. Resúmenes en lenguaje sencillo, no consejo médico.",
+ "Reviewed November 2026. Plain language summaries, not medical advice.": "Revisado en noviembre de 2026. Resúmenes en lenguaje sencillo, no consejo médico.",
  "Sources": "Fuentes",
  "More free wellbeing resources": "Más recursos gratuitos de bienestar",
  "Find a helpline: findahelpline.com": "Encuentra una línea de ayuda: findahelpline.com",
@@ -728,6 +796,48 @@ var TR_ES = {
  "When to reach for more support": "Cuándo buscar más apoyo",
  "Self-help tools can steady a hard moment, but they do not replace a counsellor, doctor or trusted person. Please seek support if the feeling keeps coming back, if memories of past harm keep intruding, or if you feel unsafe with someone. If you are in danger, contact your local emergency services. Helplines in many countries: findahelpline.com": "Las herramientas de autoayuda pueden estabilizar un momento difícil, pero no sustituyen a la consejería profesional, a la atención médica ni a una persona de confianza. Busca apoyo si la sensación sigue volviendo, si siguen apareciendo recuerdos de un daño pasado o si te sientes en peligro con alguien. Si estás en peligro, llama a los servicios de emergencia de tu zona. Líneas de ayuda en muchos países: findahelpline.com"
 };
+Object.assign(TR_ES, {
+ "A quick privacy check": "Una revisión rápida de privacidad",
+ "Before you start": "Antes de empezar",
+ "Can anyone else see your screen or use this device?": "¿Alguien más puede ver tu pantalla o usar este dispositivo?",
+ "Only me": "Solo yo",
+ "Someone else might see": "Alguien más podría verlo",
+ "I am not sure": "No estoy seguro o segura",
+ "You can skip this. If you do, safer mode stays on. Quick exit: press Escape three times, or tap the Quick exit button, to leave this page right away.": "Puedes omitir esto. Si lo haces, el modo más seguro queda activado. Salida rápida: pulsa Escape tres veces, o toca el botón Salida rápida, para salir de esta página de inmediato.",
+ "Safer mode is on. Nothing is saved on this device, and the private PDF option is switched on for you.": "El modo más seguro está activado. No se guarda nada en este dispositivo y la opción de PDF privado está activada para ti.",
+ "Skip": "Omitir",
+ "Skip and make my plan": "Omitir y crear mi plan",
+ "Welcome back. Your last check-in was on {d}.": "Qué bueno verte de nuevo. Tu último chequeo fue el {d}.",
+ "You felt {a}, then {b}.": "Te sentiste {a}, y luego {b}.",
+ "How are you today? A one minute reset below is a good place to start.": "¿Cómo estás hoy? Un reinicio de un minuto aquí abajo es un buen punto de partida.",
+ "Your safety comes first": "Tu seguridad es lo primero",
+ "If you are not safe right now, contact your local emergency services. You can also find a free helpline for your country at findahelpline.com. If someone at home could see this screen, use Quick exit and switch on the private PDF in the last step.": "Si ahora no estás a salvo, contacta con los servicios de emergencia de tu zona. También puedes encontrar una línea de ayuda gratuita para tu país en findahelpline.com. Si alguien en casa pudiera ver esta pantalla, usa la Salida rápida y activa el PDF privado en el último paso.",
+ "Domestic Violence Awareness Tool (opens in a new tab)": "Herramienta de conciencia sobre violencia doméstica (se abre en otra pestaña)",
+ "Tick each step when you try it.": "Marca cada paso cuando lo pruebes.",
+ "Then and now": "Antes y ahora",
+ "You moved from {a} to {b}. Your body listened to your pause. Notice what helped and use it again.": "Pasaste de {a} a {b}. Tu cuerpo escuchó tu pausa. Fíjate en lo que ayudó y vuelve a usarlo.",
+ "You feel about the same: {a}. That is okay. A pause does not always shift things in one go. You could try another round, a different reset, or reach out to someone you trust.": "Te sientes más o menos igual: {a}. Está bien. Una pausa no siempre cambia las cosas de una vez. Puedes probar otra ronda, un reinicio distinto o hablar con alguien de confianza.",
+ "It feels heavier now: {b}. That can happen. Be gentle with yourself, try the reset once more, or contact someone you trust or a helpline (findahelpline.com).": "Ahora se siente más pesado: {b}. Puede pasar. Sé amable contigo, prueba el reinicio una vez más o contacta con alguien de confianza o con una línea de ayuda (findahelpline.com).",
+ "Rate how you feel after your pause above to see what changed.": "Valora cómo te sientes después de tu pausa, arriba, para ver qué cambió.",
+ "Come back any time. Even a one minute reset counts.": "Vuelve cuando quieras. Incluso un reinicio de un minuto cuenta.",
+ "Make my PDF private": "Hacer mi PDF privado",
+ "No logo, website or name, and your own words are left out. Plain file name.": "Sin logotipo, sitio web ni nombre, y sin tus propias palabras. Nombre de archivo sencillo.",
+ "Start a new reflection": "Empezar una reflexión nueva",
+ "Where to go next": "A dónde ir después",
+ "Your PDF is ready. These free tools may help with what came up.": "Tu PDF está listo. Estas herramientas gratuitas pueden ayudarte con lo que salió.",
+ "LinkedIn": "LinkedIn",
+ "Telegram": "Telegram",
+ "Email": "Correo",
+ "My calm plan": "Mi plan de calma",
+ "Something felt threatening": "Algo se sintió amenazante",
+ "Before and after your pause": "Antes y después de tu pausa",
+ "If today feels heavy or unsafe, you can talk to someone right now. Find a free helpline for your country at findahelpline.com. If you are in danger, call your local emergency number.": "Si hoy se siente pesado o inseguro, puedes hablar con alguien ahora mismo. Encuentra una línea de ayuda gratuita para tu país en findahelpline.com. Si estás en peligro, llama a tu número de emergencias.",
+ "Reviewed November 2026. Plain language summaries, not medical advice.": "Revisado en noviembre de 2026. Resúmenes en lenguaje sencillo, no consejo médico.",
+ "Felt: {a}, then {b}": "Sensación: {a}, y luego {b}",
+ "Tick each step when you try it. Missed one? Pick it up next time.": "Marca cada paso cuando lo pruebes. ¿Se te pasó uno? Retómalo la próxima vez."
+});
+var T19_NT = {"dv": ["Domestic Violence Awareness Tool", "Herramienta de conciencia sobre violencia doméstica", "domestic-violence-warning-and-safety-tool.html", "A gentle private starting point for safety and support.", "Un punto de partida suave y privado para la seguridad y el apoyo."], "dist": ["Distress Tolerance Coping Tool", "Herramienta de tolerancia al malestar", "distress-tolerance-coping-tool.html", "Skills for getting through intense moments.", "Habilidades para pasar los momentos intensos."], "ground": ["Visual Grounding and Emotional Reset", "Anclaje visual y reinicio emocional", "visual-grounding-emotional-reset-tool.html", "A calm visual reset when your mind is racing.", "Un reinicio visual y tranquilo cuando tu mente va a toda prisa."], "trig": ["Emotional Trigger Mapping", "Mapa de desencadenantes emocionales", "emotional-trigger-mapping-tool.html", "See what sets off your reactions and what you need.", "Mira qué activa tus reacciones y qué necesitas."], "hard": ["Hard Conversation Preparation", "Preparación para conversaciones difíciles", "hard-conversation-preparation-tool.html", "Plan what to say to someone you trust.", "Planea qué decirle a alguien de confianza."], "bound": ["Boundary Builder", "Constructor de límites", "boundary-builder-tool.html", "Find your words and set a clear limit.", "Encuentra tus palabras y pon un límite claro."], "pleaser": ["People-Pleaser Recovery", "Recuperación del complacer a todos", "people-pleaser-recovery-tool.html", "Notice your patterns and find your words.", "Nota tus patrones y encuentra tus palabras."]};
+var T19_BY = {"Unsafe environment": ["dv", "dist", "ground"], "Fear for my safety at home": ["dv", "dist", "ground"], "Past memory triggered": ["trig", "dist", "ground"], "Online harassment": ["bound", "dist", "ground"], "Feeling judged / embarrassed": ["bound", "pleaser", "hard"], "Workplace pressure": ["bound", "pleaser", "hard"], "Conflict / argument": ["hard", "bound", "trig"], "Relationship tension": ["hard", "bound", "trig"]};
 function tr(s) { return (toolLang === 'es' && typeof s === 'string' && Object.prototype.hasOwnProperty.call(TR_ES, s)) ? TR_ES[s] : s; }
 function tp(s, v) { return tr(s).replace(/\{(\w+)\}/g, function (m, k) { return Object.prototype.hasOwnProperty.call(v, k) ? String(v[k]) : m; }); }
 function andWord() { return toolLang === 'es' ? ' y ' : ' and '; }
@@ -764,44 +874,139 @@ function applyLang(l) {
   if (state.before) markFaces('facesBefore', state.before);
   if (state.after) markFaces('facesAfter', state.after);
   renderProgress();
-  $('nextBtn').textContent = tr(state.step === 3 ? 'Make my calm plan' : 'Next');
+  updateNext();
   refreshBody(); renderHistory();
   $('breathLabel').textContent = tr(breath.l || 'Ready');
   if (breath.n != null && breath.timer) setBreathSec(breath.n); else $('breathSec').textContent = tr(breath.s || 'Press start when you are ready.');
   if (state.plan || state.step === 4) generatePlan(); else $('planIntro').textContent = tr('Your calm plan will appear here.');
   updateShareLinks();
+  renderPriv(); renderWb(); renderShift(); renderNext(); renderSafe();
 }
 
 /* ---------- steps ---------- */
+/* ================= TOOL 19 UPGRADE CORE ================= */
+var T19_BASE = 'https://emotionalintelligencedeveloper-glitch.github.io/mcn/';
+var T19_ESC = 0, T19_ESC_T = null;
+function safer() { return state.priv !== 'alone'; }
+function faceLbl(v) { return tr(FACE_LABELS[(+v) - 1] || ''); }
+function hasRisk() { return state.threats.indexOf('Unsafe environment') > -1 || state.threats.indexOf('Fear for my safety at home') > -1; }
+function renderSafe() { document.querySelectorAll('.safe-card').forEach(function (e) { e.hidden = !hasRisk(); }); }
+
+function renderPriv() {
+  document.querySelectorAll('#privPills .pill').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-priv') === state.priv); });
+  var c = $('privCard');
+  if (!state.priv || state.priv === 'alone') { c.hidden = true; return; }
+  c.hidden = false; c.textContent = tr('Safer mode is on. Nothing is saved on this device, and the private PDF option is switched on for you.');
+}
+function applyPriv() {
+  var s = safer();
+  $('saveLocalBtn').hidden = s; $('newReflectionBtn').hidden = s; $('freshBtn').hidden = !s;
+  $('historyCard').hidden = s;
+  $('discPdf').checked = s;
+  refreshRestore(); renderWb(); renderNext();
+}
+function renderWb() {
+  var b = $('wbCard'); b.hidden = true; b.textContent = '';
+  if (safer()) return;
+  var l = getHistory(); if (!l.length) return;
+  var it = l[l.length - 1];
+  var t = tp('Welcome back. Your last check-in was on {d}.', { d: it.timestamp });
+  if (it.bf && it.af) t += ' ' + tp('You felt {a}, then {b}.', { a: faceLbl(it.bf).toLowerCase(), b: faceLbl(it.af).toLowerCase() });
+  t += ' ' + tr('How are you today? A one minute reset below is a good place to start.');
+  b.textContent = t; b.hidden = false;
+}
+
+function fillTicks(steps) {
+  var ul = $('regulationList'); ul.innerHTML = '';
+  steps.forEach(function (t, i) {
+    var li = document.createElement('li'), lab = document.createElement('label');
+    lab.className = 'tick' + (state.ticks[i] ? ' done' : '');
+    var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!state.ticks[i];
+    var sp = document.createElement('span'); sp.textContent = t;
+    cb.addEventListener('change', function () { state.ticks[i] = cb.checked ? 1 : 0; lab.classList.toggle('done', cb.checked); });
+    lab.appendChild(cb); lab.appendChild(sp); li.appendChild(lab); ul.appendChild(li);
+  });
+}
+
+function shiftPlain() {
+  var bf = +state.before, af = +state.after;
+  if (!(bf && af)) return '';
+  var a = faceLbl(bf).toLowerCase(), c = faceLbl(af).toLowerCase();
+  if (af < bf) return tp('You moved from {a} to {b}. Your body listened to your pause. Notice what helped and use it again.', { a: a, b: c });
+  if (af === bf) return tp('You feel about the same: {a}. That is okay. A pause does not always shift things in one go. You could try another round, a different reset, or reach out to someone you trust.', { a: c });
+  return tp('It feels heavier now: {b}. That can happen. Be gentle with yourself, try the reset once more, or contact someone you trust or a helpline (findahelpline.com).', { b: c });
+}
+function renderShift() {
+  var b = $('shiftBox');
+  var msg = shiftPlain() || tr('Rate how you feel after your pause above to see what changed.');
+  b.innerHTML = '<strong>' + esc(tr('Then and now')) + '</strong><p>' + esc(msg) + '</p><p>' + esc(tr('Come back any time. Even a one minute reset counts.')) + '</p>';
+  b.hidden = false;
+}
+
+function ntList() {
+  var keys = [];
+  state.threats.forEach(function (t) { (T19_BY[t] || []).forEach(function (k) { if (keys.indexOf(k) < 0) keys.push(k); }); });
+  ['dist', 'trig', 'ground'].forEach(function (k) { if (keys.indexOf(k) < 0) keys.push(k); });
+  return keys.slice(0, 3).map(function (k) { return T19_NT[k]; });
+}
+function renderNext() {
+  var box = $('nextBox');
+  if (!state.pdfDone || $('discPdf').checked || state.step < 4) { box.hidden = true; box.innerHTML = ''; return; }
+  var h = '<h3>' + esc(tr('Where to go next')) + '</h3><p class="small-hint" style="margin:0">' + esc(tr('Your PDF is ready. These free tools may help with what came up.')) + '</p>';
+  ntList().forEach(function (t) {
+    h += '<a href="' + T19_BASE + t[2] + '" target="_blank" rel="noopener"><b>' + esc(toolLang === 'es' ? t[1] : t[0]) + '</b><span>' + esc(toolLang === 'es' ? t[4] : t[3]) + '</span></a>';
+  });
+  box.innerHTML = h; box.hidden = false;
+}
+
+function used1() { return state.didBreath || state.body.length > 0 || document.querySelectorAll('.ground-item.checked').length > 0; }
+function hasWords() { return !!(state.before || $('happened').value.trim() || $('story').value.trim() || $('need').value); }
+function updateNext() {
+  var n = state.step, b = $('nextBtn'), label = 'Next', skip = false;
+  if (n === 1 && !used1()) { label = 'Skip'; skip = true; }
+  else if (n === 2 && !(state.threats.length || $('otherThreat').value.trim())) { label = 'Skip'; skip = true; }
+  else if (n === 3) { label = hasWords() ? 'Make my calm plan' : 'Skip and make my plan'; skip = !hasWords(); }
+  b.textContent = tr(label);
+  b.classList.toggle('btn-outline', skip); b.classList.toggle('btn-primary', !skip);
+}
+
 function renderProgress() {
   var html = '';
   for (var i = 1; i <= 4; i++) {
     var cls = i < state.step ? 'done' : (i === state.step ? 'current' : '');
-    html += '<button type="button" class="pstep ' + cls + '" data-step="' + i + '"' + (i === state.step ? ' aria-current="step"' : '') + '><span class="pbar"></span><span class="plabel">' + i + '. ' + tr(STEP_NAMES[i - 1]) + '</span></button>';
+    html += '<button type="button" class="pstep ' + cls + '" data-step="' + i + '"' + (i === state.step ? ' aria-current="step"' : '') + (i > state.step ? ' disabled' : '') + '><span class="pbar"></span><span class="plabel">' + i + '. ' + tr(STEP_NAMES[i - 1]) + '</span></button>';
   }
   $('progress').innerHTML = html;
-  var btns = $('progress').querySelectorAll('.pstep');
+  var btns = $('progress').querySelectorAll('.pstep:not([disabled])');
   for (var j = 0; j < btns.length; j++) {
     btns[j].addEventListener('click', function () { goStep(parseInt(this.getAttribute('data-step'), 10)); });
   }
 }
 
 function goStep(n, noScroll) {
-  if (n < 1) n = 1; if (n > 4) n = 4;
+  if (n < 0) n = 0; if (n > 4) n = 4;
   state.step = n;
-  for (var i = 1; i <= 4; i++) $('s' + i).classList.toggle('active', i === n);
+  for (var i = 0; i <= 4; i++) $('s' + i).classList.toggle('active', i === n);
   if (n === 4) generatePlan();
   if (n !== 1) stopBreath(true);
+  $('progress').hidden = n === 0;
   renderProgress();
-  $('backBtn').style.visibility = n === 1 ? 'hidden' : 'visible';
+  $('backBtn').style.visibility = n === 0 ? 'hidden' : 'visible';
   $('nextBtn').style.display = n === 4 ? 'none' : '';
-  $('nextBtn').textContent = tr(n === 3 ? 'Make my calm plan' : (n === 1 ? 'Next' : 'Next'));
   $('nav').style.justifyContent = n === 4 ? 'flex-start' : 'space-between';
+  renderSafe(); renderPriv(); renderShift(); renderNext(); updateNext();
+  if (n === 1) renderWb();
   if (!noScroll) {
-    var head = $('progress');
+    var head = n === 0 ? $('s0') : $('progress');
     head.scrollIntoView({ behavior: 'smooth', block: 'start' });
     var h = $('h' + n + 's'); if (h) h.focus({ preventScroll: true });
   }
+}
+
+function quickExit() {
+  try { ['otherThreat', 'happened', 'story', 'userName'].forEach(function (id) { $(id).value = ''; }); } catch (e) {}
+  state.threats = []; state.body = []; state.plan = null;
+  try { window.location.replace('https://www.google.com/'); } catch (e) { window.location.href = 'https://www.google.com/'; }
 }
 
 /* ---------- faces ---------- */
@@ -816,7 +1021,7 @@ function buildFaces(containerId, name, key) {
   var inputs = wrap.querySelectorAll('input');
   for (var k = 0; k < inputs.length; k++) {
     inputs[k].addEventListener('change', function () {
-      state[key] = this.value; markFaces(containerId, this.value);
+      state[key] = this.value; markFaces(containerId, this.value); renderShift(); updateNext();
     });
   }
 }
@@ -845,6 +1050,7 @@ function buildThreatChips() {
   });
 }
 function refreshChips() {
+  if (typeof renderSafe === 'function') { renderSafe(); updateNext(); }
   var chips = $('threatChips').querySelectorAll('.chip');
   for (var i = 0; i < chips.length; i++) {
     var on = state.threats.indexOf(chips[i].getAttribute('data-key')) > -1;
@@ -857,6 +1063,7 @@ function toggleBody(area) {
   refreshBody();
 }
 function refreshBody() {
+  if (typeof updateNext === 'function') updateNext();
   var els = document.querySelectorAll('[data-body]');
   for (var i = 0; i < els.length; i++) {
     var on = state.body.indexOf(els[i].getAttribute('data-body')) > -1;
@@ -879,7 +1086,7 @@ function initBody() {
 function initGround() {
   ['g5', 'g4', 'g3', 'g2', 'g1'].forEach(function (id) {
     var el = $(id);
-    el.querySelector('input').addEventListener('change', function (e) { el.classList.toggle('checked', e.target.checked); });
+    el.querySelector('input').addEventListener('change', function (e) { el.classList.toggle('checked', e.target.checked); updateNext(); });
   });
 }
 
@@ -896,6 +1103,7 @@ function setPattern(p) {
 }
 function startBreath() {
   stopBreath(true);
+  state.didBreath = true; updateNext();
   var seq = PATTERNS[breath.pattern], cycle = 0, i;
   for (i = 0; i < seq.length; i++) cycle += seq[i][1];
   var total = 60, t = 0, aura = $('aura');
@@ -966,7 +1174,7 @@ function generatePlan() {
   bound = uniq(bound.concat(DEFAULT_BOUND)).slice(0, 3);
 
   steps = steps.map(tr); comm = comm.map(tr); bound = bound.map(tr);
-  fillList('regulationList', steps); fillList('commList', comm.map(q)); fillList('boundList', bound.map(q));
+  fillTicks(steps); fillList('commList', comm.map(q)); fillList('boundList', bound.map(q));
 
   var crisis = /(suicid|kill myself|end my life|want to die|hurt myself|self[\s-]?harm|don'?t want to be here|no reason to live|matarme|quitarme la vida|acabar con mi vida|terminar con mi vida|quiero morir|no quiero vivir|hacerme da[ñn]o|lastimarme|autolesi|autoagred|no quiero estar aqu[ií]|raz[oó]n para vivir)/i.test(happened + ' ' + story + ' ' + other);
   $('crisisBox').classList.toggle('show', crisis);
@@ -980,7 +1188,7 @@ function generatePlan() {
     body: state.body.join(', ') || 'Not selected', bodyArr: state.body.slice(),
     happened: happened || 'Not entered', story: story || 'Not entered', need: need || 'Not selected',
     steps: steps, comm: comm, bound: bound, crisis: crisis,
-    before: state.before, after: state.after, needRaw: need
+    before: state.before, after: state.after, needRaw: need, ticks: state.ticks.slice(0, steps.length)
   };
 }
 function q(s) { return '"' + s + '"'; }
@@ -993,6 +1201,7 @@ function fillList(id, items) {
 function currentPlan() { generatePlan(); state.plan.after = state.after; return state.plan; }
 
 function saveLocal() {
+  if (safer()) return;
   var p = currentPlan();
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); showToast('Saved to this device.'); refreshRestore(); }
   catch (e) { showToast('Could not save. Storage may be full or blocked.'); }
@@ -1007,12 +1216,12 @@ function renderHistory() {
   var list = getHistory(), box = $('historyList');
   if (!list.length) { box.innerHTML = '<p class="field-hint" style="font-style:italic">' + tr('No check-ins saved yet.') + '</p>'; return; }
   box.innerHTML = list.slice().reverse().map(function (it) {
-    return '<div class="history-item"><div class="history-date">' + esc(it.timestamp) + '</div><div class="history-label">' + esc(tr(it.label)) + '</div></div>';
+    return '<div class="history-item"><div class="history-date">' + esc(it.timestamp) + '</div><div class="history-label">' + esc(tr(it.label)) + '</div>' + (it.bf && it.af ? '<div class="history-date">' + esc(tp('Felt: {a}, then {b}', { a: faceLbl(it.bf).toLowerCase(), b: faceLbl(it.af).toLowerCase() })) + '</div>' : '') + '</div>';
   }).join('');
 }
 function refreshRestore() {
   var has = false; try { has = !!localStorage.getItem(STORAGE_KEY); } catch (e) {}
-  $('restoreBtn').style.display = has ? '' : 'none';
+  $('restoreBtn').style.display = (has && !safer()) ? '' : 'none';
 }
 function restoreSaved() {
   var d = null; try { d = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
@@ -1024,13 +1233,14 @@ function restoreSaved() {
   $('story').value = d.story && d.story !== 'Not entered' ? d.story : '';
   $('need').value = d.needRaw || (d.need && d.need !== 'Not selected' ? d.need : '');
   $('userName').value = d.name || '';
-  state.before = d.before || ''; state.after = d.after || '';
+  state.before = d.before || ''; state.after = d.after || ''; state.ticks = (d.ticks || [0, 0, 0]).slice();
   if (state.before) markFaces('facesBefore', state.before);
   if (state.after) markFaces('facesAfter', state.after);
   refreshChips(); refreshBody(); goStep(4);
 }
 function clearInputs() {
   state.threats = []; state.body = []; state.plan = null; state.before = ''; state.after = '';
+  state.ticks = [0, 0, 0]; state.pdfDone = false; state.didBreath = false;
   stopBreath(true);
   ['otherThreat', 'happened', 'story', 'userName'].forEach(function (id) { $(id).value = ''; });
   $('need').value = '';
@@ -1048,6 +1258,9 @@ function updateShareLinks() {
   $('waShare').href = 'https://wa.me/?text=' + msg + url;
   $('fbShare').href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
   $('xShare').href = 'https://twitter.com/intent/tweet?text=' + msg + url;
+  $('liShare').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
+  $('tgShare').href = 'https://t.me/share/url?url=' + url + '&text=' + msg;
+  $('emShare').href = 'mailto:?subject=' + encodeURIComponent(tr('Threat & Emotional Regulation Tool')) + '&body=' + msg + url;
   if (navigator.share) $('nativeShareBtn').style.display = '';
 }
 function copyLink() {
@@ -1123,6 +1336,7 @@ function downloadPDF() {
 }
 
 function buildPdf(PDF, plan, logo) {
+  var disc = $('discPdf').checked;
   var doc = new PDF({ unit: 'pt', format: 'a4' });
   var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
   var M = 44, CW = W - M * 2, y = M;
@@ -1143,25 +1357,38 @@ function buildPdf(PDF, plan, logo) {
 
   /* header band */
   doc.setFillColor(240, 236, 248); doc.roundedRect(M, y, CW, 88, 8, 8, 'F');
-  if (logo) { try { doc.addImage(logo, 'JPEG', M + 12, y + 16, 56, 56); } catch (e) {} }
-  setText(15, true, INK); doc.text(tr('Threat & Emotional Regulation'), M + 82, y + 30);
-  doc.text(tr('Your Calm Plan'), M + 82, y + 48);
+  var tx = M + 14;
+  if (!disc) {
+    tx = M + 82;
+    if (logo) { try { doc.addImage(logo, 'JPEG', M + 12, y + 16, 56, 56); } catch (e) {} }
+  }
+  setText(15, true, INK);
+  if (disc) { doc.text(tr('My calm plan'), tx, y + 36); }
+  else { doc.text(tr('Threat & Emotional Regulation'), tx, y + 30); doc.text(tr('Your Calm Plan'), tx, y + 48); }
   setText(10, false, MUTE);
-  doc.text(plan.name ? tp('Prepared for {x}', { x: clean(plan.name) }) : tr('Personal reflection summary'), M + 82, y + 63);
-  doc.text('emotionalintelligencedeveloper.com', M + 82, y + 77);
+  doc.text((plan.name && !disc) ? tp('Prepared for {x}', { x: clean(plan.name) }) : tr('Personal reflection summary'), tx, y + (disc ? 54 : 63));
+  if (!disc) doc.text('emotionalintelligencedeveloper.com', tx, y + 77);
   doc.setDrawColor(106, 90, 170);
   pdfFig(doc, W - M - 108, y + 12, 0.64, 'man'); pdfFig(doc, W - M - 62, y + 12, 0.64, 'woman');
-  y += 106;
+  y += 102;
+
+  /* gentle support strip */
+  setText(9.5, false, INK);
+  var gs = doc.splitTextToSize(clean(tr('If today feels heavy or unsafe, you can talk to someone right now. Find a free helpline for your country at findahelpline.com. If you are in danger, call your local emergency number.')), CW - 24);
+  var gh = gs.length * 12 + 14;
+  doc.setFillColor(248, 246, 242); doc.setDrawColor(192, 176, 224);
+  doc.roundedRect(M, y, CW, gh, 4, 4, 'FD');
+  doc.text(gs, M + 12, y + 17);
+  y += gh + 12;
 
   /* summary */
   var rows = [[tr('Date'), plan.timestamp]];
-  if (plan.name) rows.push([tr('Prepared for'), plan.name]);
-  rows.push([tr('What feels threatening'), plan.threatsArr.map(tr).concat(plan.other ? [plan.other] : []).join(', ') || tr('Not specified')]);
+  if (plan.name && !disc) rows.push([tr('Prepared for'), plan.name]);
+  rows.push([tr('What feels threatening'), disc ? (plan.threatsArr.length || plan.other ? tr('Something felt threatening') : tr('Not specified')) : (plan.threatsArr.map(tr).concat(plan.other ? [plan.other] : []).join(', ') || tr('Not specified'))]);
   rows.push([tr('Body tension noticed'), plan.bodyArr.map(tr).join(', ') || tr('Not selected')]);
   if (plan.before) rows.push([tr('How strong it felt at the start'), tp('{n} of 5 ({l})', { n: plan.before, l: tr(FACE_LABELS[plan.before - 1]) })]);
-  rows.push([tr('What happened'), tr(plan.happened)]);
-  rows.push([tr('The story my mind is telling me'), tr(plan.story)]);
-  rows.push([tr('What I need most'), tr(plan.need)]);
+  if (!disc) { rows.push([tr('What happened'), tr(plan.happened)]); rows.push([tr('The story my mind is telling me'), tr(plan.story)]); }
+  if (!(disc && plan.needRaw === 'Safety')) rows.push([tr('What I need most'), tr(plan.need)]);
   if (plan.after) rows.push([tr('How I felt after my pause'), tp('{n} of 5 ({l})', { n: plan.after, l: tr(FACE_LABELS[plan.after - 1]) })]);
   rows.forEach(function (r) {
     setText(10, false, INK);
@@ -1174,7 +1401,10 @@ function buildPdf(PDF, plan, logo) {
     y += bh + 8;
   });
 
-  if (plan.crisis) {
+  var sh = shiftPlain();
+  if (sh) { heading(tr('Before and after your pause')); para(sh, 10.5, 14, INK); y += 4; }
+
+  if (plan.crisis && !disc) {
     var cmsg = 'What you wrote sounds really heavy. You do not have to carry it alone. Please reach out to someone you trust or a helpline now (findahelpline.com). If you might act on these thoughts, contact your local emergency services right away.';
     setText(10, true, [139, 26, 26]);
     var cl = doc.splitTextToSize(clean(tr(cmsg)), CW - 24), ch = cl.length * 13 + 16;
@@ -1183,25 +1413,43 @@ function buildPdf(PDF, plan, logo) {
   }
 
   heading(tr('Your 3 regulation steps'));
-  plan.steps.forEach(function (s, i) { para((i + 1) + '. ' + s, 10.5, 14, INK); y += 4; });
+  var stepsP = plan.steps, commP = plan.comm, boundP = plan.bound;
+  if (disc) {
+    var tailored = [];
+    Object.keys(TAILORED).forEach(function (k) { if (TAILORED[k].reg) tailored.push(tr(TAILORED[k].reg)); });
+    tailored.push(tr(NEED_STEPS['Safety']));
+    stepsP = plan.steps.filter(function (s) { return tailored.indexOf(s) < 0; });
+    commP = DEFAULT_COMM.map(tr); boundP = DEFAULT_BOUND.map(tr);
+  }
+  stepsP.forEach(function (s, i) {
+    setText(10.5, false, INK);
+    var lines = doc.splitTextToSize(clean((i + 1) + '. ' + s), CW - 24);
+    ensure(lines.length * 14 + 8);
+    doc.setDrawColor(106, 90, 170); doc.setLineWidth(1); doc.rect(M, y - 9, 11, 11, 'S');
+    if (plan.ticks && plan.ticks[i]) { doc.setLineWidth(1.6); doc.line(M + 2, y - 3, M + 4.5, y), doc.line(M + 4.5, y, M + 9, y - 7); }
+    doc.setLineWidth(0.8);
+    lines.forEach(function (ln) { doc.text(ln, M + 20, y); y += 14; });
+    y += 4;
+  });
 
   heading(tr('Communication options'));
-  plan.comm.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
+  commP.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
 
   heading(tr('Boundary options'));
-  plan.bound.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
+  boundP.forEach(function (s) { para(s, 10.5, 14, INK); y += 3; });
 
   heading(tr('If you are scared to talk'));
   ['Text a trusted person one line: "Could you check in with me today?"',
    'Ask for company without explaining everything: "Can you stay with me for a bit?"',
    'Write your thoughts first, then share only what feels safe.'].forEach(function (s) { para(tr(s), 10.5, 14, INK); y += 3; });
 
+  if (!disc) {
   /* education */
   ensure(70); y += 10;
   doc.setFillColor(240, 236, 248); doc.roundedRect(M, y, CW, 40, 6, 6, 'F');
   pdfFig(doc, M + 10, y + 3, 0.34, 'wave');
   setText(12, true, BRAND); doc.text(tr('What the research says'), M + 40, y + 18);
-  setText(9, false, MUTE); doc.text(tr('Reviewed October 2026. Plain language summaries, not medical advice.'), M + 40, y + 31);
+  setText(9, false, MUTE); doc.text(tr('Reviewed November 2026. Plain language summaries, not medical advice.'), M + 40, y + 31);
   y += 56;
   EDU.forEach(function (e) {
     ensure(60);
@@ -1213,11 +1461,22 @@ function buildPdf(PDF, plan, logo) {
   para('Balban MY et al. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. Cell Reports Medicine 4(1):100895. | Lieberman MD et al. (2007). Putting feelings into words. Psychological Science 18(5):421-428. | Burklund LJ et al. (2014). The common and distinct neural bases of affect labeling and reappraisal in healthy adults. Frontiers in Psychology 5:221. | Neuhuber WL and Berthoud HR (2022). Polyvagal theory and the anatomy of the vagus. Autonomic Neuroscience. | Grossman P (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. Biological Psychology. | Gollwitzer PM and Sheeran P (2006). Implementation intentions and goal achievement: a meta-analysis. Advances in Experimental Social Psychology 38.', 8.5, 11.5, MUTE);
   y += 6;
 
+  heading(tr('Where to go next'));
+  ntList().forEach(function (nt) {
+    ensure(34);
+    setText(10, true, BRAND); doc.textWithLink(clean(toolLang === 'es' ? nt[1] : nt[0]), M, y, { url: T19_BASE + nt[2] }); y += 12;
+    setText(9.5, false, MUTE); doc.text(clean(toolLang === 'es' ? nt[4] : nt[3]), M, y); y += 16;
+  });
+  y += 4;
   heading(tr('More free wellbeing resources'));
   ['Find a helpline: findahelpline.com',
    'Main site: emotionalintelligencedeveloper.com',
    'Free tools: emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/',
    'Support this project: emotionalintelligencedeveloper.com/support-this-website/'].forEach(function (s) { para(tr(s), 9.8, 13, INK); });
+  } else {
+    heading(tr('More free wellbeing resources'));
+    para(tr('Find a helpline: findahelpline.com'), 9.8, 13, INK);
+  }
 
   /* footer on every page */
   var n = doc.getNumberOfPages();
@@ -1225,10 +1484,11 @@ function buildPdf(PDF, plan, logo) {
     doc.setPage(p);
     doc.setDrawColor(192, 176, 224); doc.setLineWidth(0.8); doc.line(M, H - 38, W - M, H - 38);
     doc.setFont('helvetica', 'italic'); doc.setFontSize(8); doc.setTextColor(120, 112, 150);
-    doc.text(tr('Reflection support only. Not a replacement for professional care.') + ' emotionalintelligencedeveloper.com', M, H - 24);
+    doc.text(tr('Reflection support only. Not a replacement for professional care.') + (disc ? '' : ' emotionalintelligencedeveloper.com'), M, H - 24);
     doc.setFont('helvetica', 'normal'); doc.text(tp('Page {p} of {n}', { p: p, n: n }), W - M, H - 24, { align: 'right' });
   }
-  doc.save(toolLang === 'es' ? 'plan-de-regulacion-emocional.pdf' : 'threat-emotional-regulation-plan.pdf');
+  doc.save(disc ? 'my-notes-' + new Date().toISOString().slice(0, 10) + '.pdf' : (toolLang === 'es' ? 'plan-de-regulacion-emocional.pdf' : 'threat-emotional-regulation-plan.pdf'));
+  state.pdfDone = true; renderNext();
   showToast('PDF downloaded!');
 }
 
@@ -1238,9 +1498,24 @@ function initTool() {
   buildThreatChips(); initBody(); initGround();
   buildFaces('facesBefore', 'faceBefore', 'before');
   buildFaces('facesAfter', 'faceAfter', 'after');
-  renderHistory(); refreshRestore(); updateShareLinks(); goStep(1, true);
+  renderHistory(); refreshRestore(); updateShareLinks(); goStep(0, true); applyPriv();
 
-  $('nextBtn').addEventListener('click', function () { goStep(state.step + 1); });
+  $('nextBtn').addEventListener('click', function () {
+    if (state.step === 0) { state.privSeen = true; applyPriv(); }
+    goStep(state.step + 1);
+  });
+  document.querySelectorAll('#privPills .pill').forEach(function (b) {
+    b.addEventListener('click', function () { state.priv = b.getAttribute('data-priv'); applyPriv(); renderPriv(); });
+  });
+  ['otherThreat', 'happened', 'story'].forEach(function (id) { $(id).addEventListener('input', updateNext); });
+  $('need').addEventListener('change', updateNext);
+  $('discPdf').addEventListener('change', renderNext);
+  $('freshBtn').addEventListener('click', function () { clearInputs(); goStep(1); showToast('Reset complete.'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    T19_ESC++; clearTimeout(T19_ESC_T); T19_ESC_T = setTimeout(function () { T19_ESC = 0; }, 1500);
+    if (T19_ESC >= 3) quickExit();
+  });
   $('backBtn').addEventListener('click', function () { goStep(state.step - 1); });
   $('startBreathBtn').addEventListener('click', startBreath);
   $('stopBreathBtn').addEventListener('click', function () { stopBreath(false); });
@@ -1251,10 +1526,10 @@ function initTool() {
   $('restoreBtn').addEventListener('click', restoreSaved);
   $('copyLinkBtn').addEventListener('click', copyLink);
   $('nativeShareBtn').addEventListener('click', nativeShare);
-  $('quickExitBtn').addEventListener('click', function () { window.location.replace('https://www.google.com/'); });
+  $('quickExitBtn').addEventListener('click', quickExit);
   $('newReflectionBtn').addEventListener('click', function () {
     var p = currentPlan();
-    addToHistory({ timestamp: p.timestamp, label: p.label });
+    addToHistory({ timestamp: p.timestamp, label: p.threatsArr[0] || 'Reflection', bf: p.before, af: p.after });
     clearInputs(); goStep(1); showToast('Saved to history. Starting a new reflection.');
   });
   $('resetBtn').addEventListener('click', function () {

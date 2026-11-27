@@ -7,19 +7,19 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg:#f3f4f8; --card:#fff; --text:#1a1e2e; --muted:#4a5068; --hint:#8a90a8; --border:#d0d4e8;
+      --bg:#f3f4f8; --card:#fff; --text:#1a1e2e; --muted:#4a5068; --hint:#5f6580; --border:#d0d4e8;
       --brand:#4a5aaa; --brand-light:#eaecf8; --brand-mid:#b0b8e0;
-      --teal:#3a8a7a; --teal-light:#e4f2ee; --teal-mid:#a0c8c0;
-      --gold:#b07a20; --gold-light:#fdf6e8; --gold-mid:#e0c878;
-      --support:#e8702a;
-      --good:#3a8a5a; --good-light:#e8f5ee; --good-mid:#a0c8b0;
+      --teal:#2f7567; --teal-light:#e4f2ee; --teal-mid:#a0c8c0;
+      --gold:#8a5f10; --gold-light:#fdf6e8; --gold-mid:#e0c878;
+      --support:#b3501a;
+      --good:#2d7249; --good-light:#e8f5ee; --good-mid:#a0c8b0;
       --twist:#9a6a10; --twist-light:#fdf3dc; --twist-mid:#e8cf8a;
       --r-sm:12px; --r-md:16px; --r-lg:22px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:Georgia,"Times New Roman",serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:17px;padding-bottom:30px;-webkit-text-size-adjust:100%}
-    .container{max-width:720px;margin:0 auto;padding:16px 14px}
+    .container{max-width:960px;margin:0 auto;padding:16px 14px}
     .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 18px;margin-bottom:16px}
     .header{text-align:center}
     .logo-wrap{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
@@ -115,6 +115,29 @@
     .lang-bar select{width:auto;appearance:auto;-webkit-appearance:menulist;background-image:none;background-color:#fff;padding:8px 14px;min-height:44px;border-radius:99px;border:1.5px solid var(--border);font-family:inherit;font-size:14px;color:var(--text);cursor:pointer}
     .lang-bar select:focus-visible{outline:3px solid rgba(74,90,170,.4);outline-offset:2px}
     @media print{.lang-bar,.eid-credit{display:none!important}}
+
+    /* ---- upgrade v5 ---- */
+    [hidden]{display:none!important}
+    .fig{display:flex;justify-content:center;gap:10px;color:var(--brand);margin:6px 0 10px}
+    .fig svg{height:78px;width:auto}
+    .fig-q{float:right;margin:0 0 6px 10px}
+    .fig-q svg{height:64px}
+    .stk-sm{height:34px;width:auto;vertical-align:middle;color:#fff}
+    .milestone{background:var(--teal-light);border:1px solid var(--teal-mid);color:var(--teal);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:12px;font-size:15px;text-align:center}
+    .grown{background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--r-md);padding:12px 16px;margin:0 0 16px;font-size:15px;color:#4a3208;line-height:1.6}
+    .mission-list{display:grid;gap:8px;margin:10px 0 16px}
+    .mission{background:#fff;border:2px solid var(--gold-mid);border-radius:var(--r-sm);padding:10px 14px;font-family:inherit;font-size:15px;color:var(--text);text-align:left;cursor:pointer;min-height:48px}
+    .mission.on{background:var(--gold);border-color:var(--gold);color:#fff}
+    .next-box{background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--r-md);padding:16px;margin:16px 0}
+    .next-box h2{margin-bottom:4px}
+    .next-box a{display:block;background:#fff;border:1px solid var(--brand-mid);border-radius:var(--r-sm);padding:11px 14px;margin-top:10px;text-decoration:none;color:var(--text)}
+    .next-box a b{display:block;color:var(--brand);font-weight:bold}
+    .next-box a span{font-size:14px;color:var(--muted)}
+    .lesson .listen{color:inherit;text-decoration:underline;margin:8px 0 0;display:block}
+    @media(min-width:860px){.opts{grid-template-columns:repeat(3,1fr)}.mission-list{grid-template-columns:1fr 1fr}}
+    .stats{gap:6px}.stat{min-width:0;padding:8px 4px}.stat small{font-size:10px;overflow-wrap:anywhere}
+    @media(max-width:430px){.result-stars{font-size:1.25rem;letter-spacing:1px}}
+    @media print{.fig,.grown,.milestone,.next-box,.mission-list{display:none!important}}
   </style>
 </head>
 <body>
@@ -141,6 +164,8 @@
 
   <!-- START -->
   <section class="card screen active" id="scrStart">
+    <div class="fig" id="figStart"></div>
+    <p class="tagline" style="text-align:center;margin-bottom:10px" data-i18n>Two cases, 20 tricky questions in all. Case 2 has brand new questions.</p>
     <h2 data-i18n>How to play</h2>
     <div class="intro-list">
       <div class="intro-item"><b data-i18n>1. Pick an answer.</b> <span data-i18n>Go with your first gut feeling.</span></div>
@@ -149,7 +174,8 @@
       <div class="intro-item"><b data-i18n>4. Collect stars.</b> <span data-i18n>You earn a star when your first pick is the smartest move. Everyone finishes with new ideas.</span></div>
     </div>
     <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="startBtn" data-i18n>Start the case</button>
+      <button type="button" class="btn btn-primary" id="startBtn" data-i18n>Start Case 1</button>
+      <button type="button" class="btn btn-gold" id="start2Btn" data-i18n>Start Case 2: 10 new questions</button>
     </div>
   </section>
 
@@ -159,6 +185,7 @@
       <div class="stat"><small data-i18n>Question</small><b id="stQ">1/10</b></div>
       <div class="stat"><small data-i18n>Stars</small><b id="stStars">0</b></div>
       <div class="stat"><small data-i18n>Clues read</small><b id="stClues">0</b></div>
+      <div class="stat"><small data-i18n>Clue badges</small><b id="stBadges">0</b></div>
     </div>
     <div class="bar"><i id="barFill"></i></div>
     <div id="qBody"></div>
@@ -166,9 +193,15 @@
 
   <!-- RESULT -->
   <section class="card screen" id="scrResult">
+    <div class="fig" id="figRes"></div>
     <div class="result-stars" id="resStars"></div>
     <div class="result-title" id="resTitle"></div>
     <p class="result-msg" id="resMsg"></p>
+    <p class="result-msg" id="resBadges" style="margin-top:-8px"></p>
+    <div class="grown" id="grownStrip" data-i18n>If a feeling ever feels too big, tell a trusted grown-up, like a parent, teacher, or school counsellor. You can also find a free helpline for your country at findahelpline.com.</div>
+    <h2 data-i18n>Pick one idea to try this week</h2>
+    <p class="result-msg" style="text-align:left;margin-bottom:6px;font-size:14px" data-i18n>Tap the one you want to try. It goes in your PDF with a box to tick each day.</p>
+    <div class="mission-list" id="missionList"></div>
     <div class="name-box">
       <label for="nameInput" data-i18n>Add your name to your fun PDF badge (optional)</label>
       <input type="text" id="nameInput" maxlength="30" placeholder="Type your name here" data-i18n-attr="placeholder" autocomplete="off" />
@@ -177,10 +210,12 @@
         <button type="button" class="btn btn-gold" id="pdfBtn" data-i18n>Download my detective PDF</button>
       </div>
     </div>
+    <div class="next-box" id="nextBox" hidden></div>
     <h2 data-i18n>Your 10 take-home ideas</h2>
     <div class="take-list" id="takeList"></div>
     <div class="btn-row">
       <button type="button" class="btn btn-primary" id="againBtn" data-i18n>Play again with new order</button>
+      <button type="button" class="btn btn-gold" id="otherBtn">Start Case 2: 10 new questions</button>
       <button type="button" class="btn btn-outline" id="printBtn" data-i18n>Print my ideas</button>
     </div>
   </section>
@@ -220,7 +255,7 @@
 
   <footer class="card footer">
     <p style="font-size:14px;color:var(--muted);font-style:italic;margin-bottom:12px" data-i18n>This platform is free for everyone. If it helped you or your class, consider supporting it.</p>
-    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener">&#9829; <span data-i18n>Support this website</span></a>
+    <a class="btn btn-support" href="https://emotionalintelligencedeveloper.com/support-this-website/" target="_blank" rel="noopener"><svg viewBox="0 0 60 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="stk-sm"><g transform="translate(0,0)"><circle cx="30" cy="12" r="8"/><path d="M26 14.5q4 3 8 0" stroke-width="1.6"/><line x1="30" y1="20" x2="30" y2="46"/><line x1="30" y1="27" x2="17" y2="13"/><line x1="30" y1="27" x2="43" y2="13"/><line x1="30" y1="46" x2="22" y2="68"/><line x1="30" y1="46" x2="38" y2="68"/></g></svg> <span data-i18n>Support this website</span> <svg viewBox="0 0 60 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="stk-sm"><g transform="translate(0,0)"><circle cx="30" cy="12" r="8"/><path d="M26 14.5q4 3 8 0" stroke-width="1.6"/><line x1="30" y1="20" x2="30" y2="46"/><line x1="30" y1="27" x2="17" y2="13"/><line x1="30" y1="27" x2="43" y2="13"/><line x1="30" y1="46" x2="22" y2="68"/><line x1="30" y1="46" x2="38" y2="68"/></g></svg></a>
     <div class="footer-links">
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/wellbeing-and-self-help-tools/" target="_blank" rel="noopener" data-i18n>More free tools</a>
       <a class="footer-link" href="https://emotionalintelligencedeveloper.com/recommended-books/" target="_blank" rel="noopener" data-i18n>Recommended audio books</a>
@@ -232,6 +267,9 @@
       <a class="btn btn-share" id="waShare" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-share" id="fbShare" target="_blank" rel="noopener">Facebook</a>
       <a class="btn btn-share" id="xShare" target="_blank" rel="noopener">X</a>
+      <a class="btn btn-share" id="liShare" target="_blank" rel="noopener" data-i18n>LinkedIn</a>
+      <a class="btn btn-share" id="tgShare" target="_blank" rel="noopener" data-i18n>Telegram</a>
+      <a class="btn btn-share" id="emShare" target="_blank" rel="noopener" data-i18n>Email</a>
     </div>
     <p class="credit"><span data-i18n>Created by</span> <a class="footer-link" href="https://emotionalintelligencedeveloper.com/">Emotional Intelligence Developer</a></p>
   </footer>
@@ -239,7 +277,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- EID credit footer. Paste just before </body> in each tool, or at the end of the tool's HTML. -->
-<div class="eid-credit" style="max-width:720px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
+<div class="eid-credit" style="max-width:960px;margin:32px auto 16px;padding:12px 16px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5b6470;border-top:1px solid rgba(128,128,128,0.25);">
   <span data-i18n>Created by Clive Ngwenya (M.C.N) for</span>
   <a href="https://emotionalintelligencedeveloper.com" target="_blank" rel="noopener" style="color:inherit;font-weight:600;text-decoration:underline;">Emotional Intelligence Developer</a>.
   <span data-i18n>Free to use under the MIT License.</span>
@@ -248,7 +286,7 @@
 </div>
 
 <script>
-const QUESTIONS = [
+const CASE1 = [
   { tag:"Trick question", q:"Is anger a bad feeling?",
     take:"Feelings are never bad. What we do with them is what counts.",
     opts:[
@@ -321,6 +359,9 @@ const QUESTIONS = [
     ]}
 ];
 
+const CASE2 = [{"tag": "Trick question", "q": "You feel jealous of a friend. What does jealousy usually tell you?", "take": "Jealousy points to something you want. It is a clue, not a crime.", "opts": [{"t": "That I am a bad person.", "lesson": "Many people think this, but it is a twist. Everyone feels jealous sometimes. The feeling is not a flaw. It simply shows that something matters to you."}, {"t": "That I want something, like attention, a skill, or a chance.", "lesson": "Yes. Jealousy is a clue about what you want. You can say, \"I felt jealous, so I want to practise that too,\" and turn it into a goal.", "best": true}, {"t": "That my friend did something wrong.", "lesson": "Good try, but the twist is that your friend may have done nothing wrong at all. Feelings can show up even when nobody is to blame."}]}, {"tag": "Brain trick", "q": "You keep worrying about something that might happen. What can help?", "take": "Worries shrink when we share them and take one small step.", "opts": [{"t": "Keep thinking about it until it stops.", "lesson": "This is understandable, but going round and round usually makes worry grow, like a hamster wheel. Try something that changes what you do."}, {"t": "Tell someone, breathe slowly, and pick one small step.", "lesson": "Great move. Saying a worry out loud makes it lighter, slow breathing calms the body, and one small step turns a big cloud into something you can handle.", "best": true}, {"t": "Pretend you are not worried.", "lesson": "The twist is that pretending keeps the worry hidden, where it can feel bigger. Telling a trusted person is braver and works better."}]}, {"tag": "Real life", "q": "Someone says, \"You cannot play with us.\" What is a good first move?", "take": "Feeling left out hurts. Finding one kind person and telling a trusted adult helps.", "opts": [{"t": "Hurt is silly. I should laugh it off.", "lesson": "Hurt is never silly. Feeling left out is one of the hardest feelings. It is okay to feel it, even if you look calm on the outside."}, {"t": "It is okay to feel hurt. I can find a kind person to play with and tell a trusted adult.", "lesson": "Yes. Your feelings make sense. Finding one kind person helps, and telling a trusted adult is smart, especially if it keeps happening.", "best": true}, {"t": "Say something mean back.", "lesson": "It is a natural reaction, but the twist is that it often makes things bigger and leaves you feeling worse. Walking away or asking for help is stronger."}]}, {"tag": "Myth buster", "q": "True or false: if I am happy, I should never feel sad.", "take": "People can feel more than one feeling at the same time.", "opts": [{"t": "True. Happy and sad cannot happen together.", "lesson": "This is a very common myth. People can feel excited and nervous together, or happy and sad together, like on the last day of school."}, {"t": "False. We can feel more than one feeling at the same time.", "lesson": "Correct. Feelings are mixed, like colours. Naming each one, such as \"happy and a bit sad,\" gives you a clearer picture.", "best": true}, {"t": "True. Sad feelings mean something is wrong with me.", "lesson": "The twist is that sadness is a normal feeling. It shows we care. It does not mean anything is wrong with you."}]}, {"tag": "Kindness check", "q": "A friend teases you in a way that hurts and says it is a joke. What is a strong move?", "take": "A joke that hurts is not a good joke. You can say so, and you can ask for help.", "opts": [{"t": "Laugh along so they like me.", "lesson": "Many of us do this to feel safe. The twist is that laughing hides your real feeling and the teasing can continue. It is okay to be honest."}, {"t": "Say, \"That hurt. Please stop.\" and tell a trusted adult if it keeps happening.", "lesson": "Strong and clear. You can say how it felt without being unkind. If it keeps happening, a trusted adult can help. You never have to handle it alone.", "best": true}, {"t": "Tease them back harder.", "lesson": "A natural urge, but the twist is that it can turn into a fight and make everyone feel worse. Clear words and help from an adult work better."}]}, {"tag": "Word trick", "q": "Which is the best way to say how you feel when plans are cancelled?", "take": "An \"I feel\" sentence helps people hear you.", "opts": [{"t": "\"You always ruin everything!\"", "lesson": "That sentence sounds loud and blames. The twist is that the word \"always\" is rarely true, and the other person may stop listening."}, {"t": "\"I feel disappointed because I was looking forward to it.\"", "lesson": "Yes. This names the feeling and the reason without blaming. It is much easier for people to listen to.", "best": true}, {"t": "\"Whatever. I do not care.\"", "lesson": "This can feel safer, but the twist is that it hides your real feeling. Being disappointed is okay, and you can say so."}]}, {"tag": "Empathy test", "q": "Your friend made a mistake and feels ashamed. What helps most?", "take": "Kindness helps us fix mistakes. Shame makes us hide.", "opts": [{"t": "Tell them it was a silly mistake.", "lesson": "You may mean well, but the twist is that this can make the shame bigger. People feel safer when we are gentle."}, {"t": "Say, \"Everyone makes mistakes. I am here.\"", "lesson": "Lovely. Hearing that mistakes are normal helps people feel safe enough to fix things and try again.", "best": true}, {"t": "Pretend you did not notice.", "lesson": "Sometimes giving space is kind, but ignoring completely can leave your friend feeling alone. A small kind word goes a long way."}]}, {"tag": "Real life", "q": "You feel very angry and your body is hot and tight. What is the best first step?", "take": "Pause first. Big feelings calm down when the body slows down.", "opts": [{"t": "Say exactly what you think, right now.", "lesson": "It is hard to wait, but the twist is that words said in the heat of anger can be hard to take back. A short pause helps you choose better words."}, {"t": "Pause, breathe out slowly, and move away for a few minutes.", "lesson": "Yes. A pause lets the thinking part of your brain catch up. After a few calm breaths, you can use words instead of fists or shouting.", "best": true}, {"t": "Hold it all in and say nothing, ever.", "lesson": "Quiet can be a good pause, but the twist is that holding it in forever makes it heavier. Come back later and share how you felt."}]}, {"tag": "Kindness check", "q": "True or false: asking for help means you are weak.", "take": "Asking for help is a brave and smart thing to do.", "opts": [{"t": "True. Strong people do everything alone.", "lesson": "This is a myth. Even the strongest people ask for help. Teams, teachers, and families exist so we can share the load."}, {"t": "False. Asking for help is brave and smart.", "lesson": "Correct. Knowing when to ask is a skill. A trusted grown-up, teacher, or friend can help you find a way.", "best": true}, {"t": "True, so I should wait until it is too late.", "lesson": "The twist is that waiting often makes a problem bigger. Asking early is easier than asking late."}]}, {"tag": "Brain trick", "q": "At the end of a hard day, what can help you feel a little better?", "take": "Noticing one good thing, however small, helps balance a hard day.", "opts": [{"t": "Think only about everything that went wrong.", "lesson": "Hard moments matter, but the twist is that dwelling on them can make the whole day feel worse. Your brain needs a fair look at the day."}, {"t": "Name one thing that went okay, and one thing I am grateful for.", "lesson": "Yes. Noticing a small good thing does not erase the hard parts. It gives your brain a fairer picture and often helps you feel steadier.", "best": true}, {"t": "Tell myself I am just unlucky.", "lesson": "A natural thought, but the twist is that it is a big story that is not always true. Looking for one good thing is a gentle way to test it."}]}];
+const SHORTS2 = ["Jealousy", "Worry", "Left out", "Mixed feelings", "Teasing", "I feel", "Mistakes", "Hot anger", "Asking for help", "Good things"];
+const NT13 = [["Mental Game: Find 40 Wellbeing Words", "Juego mental: encuentra 40 palabras de bienestar", "find-40-wellbeing-words.html", "Learn feeling words and get a 7 day plan.", "Aprende palabras de sentimientos y recibe un plan de 7 días."], ["Positive Strengths Map", "Mapa de fortalezas positivas", "positive-strengths-map-tool.html", "Find your top emotional strengths.", "Descubre tus principales fortalezas emocionales."], ["Visual Grounding and Emotional Reset", "Anclaje visual y reinicio emocional", "visual-grounding-emotional-reset-tool.html", "A calm visual reset when your mind is racing.", "Un reinicio visual y tranquilo cuando tu mente va a toda prisa."]];
 const ENCOURAGE = [
   [0,"Curious Detective","You looked at the clues and learned a lot. Play again to see how the ideas stick."],
   [4,"Sharp Detective","Great instincts, and you are building real skills. Keep reading those clues."],
@@ -329,6 +370,7 @@ const ENCOURAGE = [
 ];
 
 const $ = id => document.getElementById(id);
+let QUESTIONS = CASE1, caseNo = 1, badges = 0, collected = {}, pickText = {}, mission = -1, pdfDone = false;
 let order=[], idx=0, stars=0, clues=0, picked=false, seenInQ={}, firstPick=null, speaking=false, results=[];
 
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -566,6 +608,7 @@ const ES = {
   'Always thoughts': 'Siempre y nunca'
 };
 
+Object.assign(ES, {"You feel jealous of a friend. What does jealousy usually tell you?": "Sientes celos de un amigo o amiga. ¿Qué suelen decirte los celos?", "Jealousy points to something you want. It is a clue, not a crime.": "Los celos señalan algo que quieres. Son una pista, no un delito.", "That I am a bad person.": "Que soy una mala persona.", "Many people think this, but it is a twist. Everyone feels jealous sometimes. The feeling is not a flaw. It simply shows that something matters to you.": "Mucha gente piensa esto, pero es una trampa. Todos sentimos celos a veces. El sentimiento no es un defecto. Solo muestra que algo te importa.", "That I want something, like attention, a skill, or a chance.": "Que quiero algo, como atención, una habilidad o una oportunidad.", "Yes. Jealousy is a clue about what you want. You can say, \"I felt jealous, so I want to practise that too,\" and turn it into a goal.": "Sí. Los celos son una pista de lo que quieres. Puedes decir: \"Sentí celos, así que quiero practicar eso también\", y convertirlo en una meta.", "That my friend did something wrong.": "Que mi amigo o amiga hizo algo malo.", "Good try, but the twist is that your friend may have done nothing wrong at all. Feelings can show up even when nobody is to blame.": "Buen intento, pero la trampa es que tu amigo o amiga quizá no hizo nada malo. Los sentimientos pueden aparecer aunque nadie tenga la culpa.", "You keep worrying about something that might happen. What can help?": "Sigues preocupándote por algo que podría pasar. ¿Qué puede ayudar?", "Worries shrink when we share them and take one small step.": "Las preocupaciones se hacen más pequeñas cuando las compartimos y damos un paso pequeño.", "Keep thinking about it until it stops.": "Seguir pensando en ello hasta que pare.", "This is understandable, but going round and round usually makes worry grow, like a hamster wheel. Try something that changes what you do.": "Es comprensible, pero dar vueltas y vueltas suele hacer crecer la preocupación, como una rueda de hámster. Prueba algo que cambie lo que haces.", "Tell someone, breathe slowly, and pick one small step.": "Contárselo a alguien, respirar despacio y elegir un paso pequeño.", "Great move. Saying a worry out loud makes it lighter, slow breathing calms the body, and one small step turns a big cloud into something you can handle.": "Gran jugada. Decir una preocupación en voz alta la hace más ligera, respirar despacio calma el cuerpo y un paso pequeño convierte una nube grande en algo que puedes manejar.", "Pretend you are not worried.": "Hacer como si no estuviera preocupado o preocupada.", "The twist is that pretending keeps the worry hidden, where it can feel bigger. Telling a trusted person is braver and works better.": "La trampa es que fingir mantiene la preocupación escondida, donde puede sentirse más grande. Contárselo a alguien de confianza es más valiente y funciona mejor.", "Someone says, \"You cannot play with us.\" What is a good first move?": "Alguien dice: \"No puedes jugar con nosotros\". ¿Cuál es una buena primera jugada?", "Feeling left out hurts. Finding one kind person and telling a trusted adult helps.": "Sentirse excluido duele. Buscar a una persona amable y contárselo a un adulto de confianza ayuda.", "Hurt is silly. I should laugh it off.": "El dolor es una tontería. Debería tomármelo a risa.", "Hurt is never silly. Feeling left out is one of the hardest feelings. It is okay to feel it, even if you look calm on the outside.": "El dolor nunca es una tontería. Sentirse excluido es uno de los sentimientos más difíciles. Está bien sentirlo, aunque por fuera te veas tranquilo o tranquila.", "It is okay to feel hurt. I can find a kind person to play with and tell a trusted adult.": "Está bien sentir dolor. Puedo buscar a alguien amable para jugar y contárselo a un adulto de confianza.", "Yes. Your feelings make sense. Finding one kind person helps, and telling a trusted adult is smart, especially if it keeps happening.": "Sí. Lo que sientes tiene sentido. Buscar a una persona amable ayuda, y contárselo a un adulto de confianza es inteligente, sobre todo si sigue pasando.", "Say something mean back.": "Responder con algo hiriente.", "It is a natural reaction, but the twist is that it often makes things bigger and leaves you feeling worse. Walking away or asking for help is stronger.": "Es una reacción natural, pero la trampa es que suele hacer todo más grande y te deja peor. Alejarte o pedir ayuda es más fuerte.", "True or false: if I am happy, I should never feel sad.": "Verdadero o falso: si estoy feliz, nunca debería sentirme triste.", "People can feel more than one feeling at the same time.": "Las personas podemos sentir más de un sentimiento al mismo tiempo.", "True. Happy and sad cannot happen together.": "Verdadero. Feliz y triste no pueden pasar juntos.", "This is a very common myth. People can feel excited and nervous together, or happy and sad together, like on the last day of school.": "Este es un mito muy común. Podemos sentirnos emocionados y nerviosos a la vez, o felices y tristes a la vez, como el último día de clases.", "False. We can feel more than one feeling at the same time.": "Falso. Podemos sentir más de un sentimiento a la vez.", "Correct. Feelings are mixed, like colours. Naming each one, such as \"happy and a bit sad,\" gives you a clearer picture.": "Correcto. Los sentimientos se mezclan, como los colores. Ponerle nombre a cada uno, como \"feliz y un poco triste\", te da una imagen más clara.", "True. Sad feelings mean something is wrong with me.": "Verdadero. Los sentimientos tristes significan que algo anda mal conmigo.", "The twist is that sadness is a normal feeling. It shows we care. It does not mean anything is wrong with you.": "La trampa es que la tristeza es un sentimiento normal. Muestra que nos importa algo. No significa que algo ande mal contigo.", "A friend teases you in a way that hurts and says it is a joke. What is a strong move?": "Un amigo o amiga se burla de ti de una forma que duele y dice que es una broma. ¿Cuál es una jugada fuerte?", "A joke that hurts is not a good joke. You can say so, and you can ask for help.": "Una broma que duele no es una buena broma. Puedes decirlo y puedes pedir ayuda.", "Laugh along so they like me.": "Reírme también para caerle bien.", "Many of us do this to feel safe. The twist is that laughing hides your real feeling and the teasing can continue. It is okay to be honest.": "Muchos lo hacemos para sentirnos a salvo. La trampa es que reír esconde lo que sientes de verdad y las burlas pueden seguir. Está bien ser honesto u honesta.", "Say, \"That hurt. Please stop.\" and tell a trusted adult if it keeps happening.": "Decir: \"Eso me dolió. Por favor para\", y contárselo a un adulto de confianza si sigue pasando.", "Strong and clear. You can say how it felt without being unkind. If it keeps happening, a trusted adult can help. You never have to handle it alone.": "Fuerte y claro. Puedes decir cómo te sentiste sin ser cruel. Si sigue pasando, un adulto de confianza puede ayudar. Nunca tienes que manejarlo solo o sola.", "Tease them back harder.": "Burlarme de él o ella más fuerte.", "A natural urge, but the twist is that it can turn into a fight and make everyone feel worse. Clear words and help from an adult work better.": "Es un impulso natural, pero la trampa es que puede acabar en pelea y hacer que todos se sientan peor. Las palabras claras y la ayuda de un adulto funcionan mejor.", "Which is the best way to say how you feel when plans are cancelled?": "¿Cuál es la mejor forma de decir cómo te sientes cuando cancelan los planes?", "An \"I feel\" sentence helps people hear you.": "Una frase que empieza con \"yo siento\" ayuda a que te escuchen.", "\"You always ruin everything!\"": "\"¡Siempre lo arruinas todo!\"", "That sentence sounds loud and blames. The twist is that the word \"always\" is rarely true, and the other person may stop listening.": "Esa frase suena fuerte y culpa. La trampa es que la palabra \"siempre\" casi nunca es cierta, y la otra persona puede dejar de escuchar.", "\"I feel disappointed because I was looking forward to it.\"": "\"Me siento decepcionado o decepcionada porque tenía muchas ganas.\"", "Yes. This names the feeling and the reason without blaming. It is much easier for people to listen to.": "Sí. Esto nombra el sentimiento y la razón sin culpar. Es mucho más fácil de escuchar.", "\"Whatever. I do not care.\"": "\"Da igual. No me importa.\"", "This can feel safer, but the twist is that it hides your real feeling. Being disappointed is okay, and you can say so.": "Esto puede sentirse más seguro, pero la trampa es que esconde lo que sientes de verdad. Estar decepcionado está bien, y puedes decirlo.", "Your friend made a mistake and feels ashamed. What helps most?": "Tu amigo o amiga cometió un error y siente vergüenza. ¿Qué ayuda más?", "Kindness helps us fix mistakes. Shame makes us hide.": "La amabilidad nos ayuda a arreglar los errores. La vergüenza nos hace escondernos.", "Tell them it was a silly mistake.": "Decirle que fue un error tonto.", "You may mean well, but the twist is that this can make the shame bigger. People feel safer when we are gentle.": "Puede que lo hagas con buena intención, pero la trampa es que esto puede hacer la vergüenza más grande. Las personas se sienten más seguras cuando somos amables.", "Say, \"Everyone makes mistakes. I am here.\"": "Decir: \"Todos cometemos errores. Aquí estoy\".", "Lovely. Hearing that mistakes are normal helps people feel safe enough to fix things and try again.": "Qué bonito. Oír que los errores son normales ayuda a sentirse lo bastante seguro para arreglar las cosas y volver a intentarlo.", "Pretend you did not notice.": "Hacer como si no lo hubieras notado.", "Sometimes giving space is kind, but ignoring completely can leave your friend feeling alone. A small kind word goes a long way.": "A veces dar espacio es amable, pero ignorar del todo puede dejar a tu amigo o amiga sintiéndose solo o sola. Una pequeña palabra amable ayuda mucho.", "You feel very angry and your body is hot and tight. What is the best first step?": "Sientes mucha rabia y tu cuerpo está caliente y tenso. ¿Cuál es el mejor primer paso?", "Pause first. Big feelings calm down when the body slows down.": "Haz una pausa primero. Los sentimientos grandes se calman cuando el cuerpo va más despacio.", "Say exactly what you think, right now.": "Decir exactamente lo que piensas, ahora mismo.", "It is hard to wait, but the twist is that words said in the heat of anger can be hard to take back. A short pause helps you choose better words.": "Es difícil esperar, pero la trampa es que las palabras dichas en el calor de la rabia son difíciles de retirar. Una pausa corta te ayuda a elegir mejores palabras.", "Pause, breathe out slowly, and move away for a few minutes.": "Hacer una pausa, soltar el aire despacio y alejarte unos minutos.", "Yes. A pause lets the thinking part of your brain catch up. After a few calm breaths, you can use words instead of fists or shouting.": "Sí. Una pausa deja que la parte pensante de tu cerebro te alcance. Tras unas respiraciones tranquilas, puedes usar palabras en lugar de puños o gritos.", "Hold it all in and say nothing, ever.": "Aguantarlo todo y no decir nada, nunca.", "Quiet can be a good pause, but the twist is that holding it in forever makes it heavier. Come back later and share how you felt.": "Callar puede ser una buena pausa, pero la trampa es que guardarlo para siempre lo hace más pesado. Vuelve más tarde y cuenta cómo te sentiste.", "True or false: asking for help means you are weak.": "Verdadero o falso: pedir ayuda significa que eres débil.", "Asking for help is a brave and smart thing to do.": "Pedir ayuda es algo valiente e inteligente.", "True. Strong people do everything alone.": "Verdadero. Las personas fuertes lo hacen todo solas.", "This is a myth. Even the strongest people ask for help. Teams, teachers, and families exist so we can share the load.": "Esto es un mito. Hasta las personas más fuertes piden ayuda. Los equipos, los maestros y las familias existen para repartir la carga.", "False. Asking for help is brave and smart.": "Falso. Pedir ayuda es valiente e inteligente.", "Correct. Knowing when to ask is a skill. A trusted grown-up, teacher, or friend can help you find a way.": "Correcto. Saber cuándo pedir ayuda es una habilidad. Un adulto de confianza, un maestro o un amigo pueden ayudarte a encontrar una salida.", "True, so I should wait until it is too late.": "Verdadero, así que debería esperar hasta que sea demasiado tarde.", "The twist is that waiting often makes a problem bigger. Asking early is easier than asking late.": "La trampa es que esperar suele hacer el problema más grande. Pedir ayuda pronto es más fácil que pedirla tarde.", "At the end of a hard day, what can help you feel a little better?": "Al final de un día difícil, ¿qué puede ayudarte a sentirte un poco mejor?", "Noticing one good thing, however small, helps balance a hard day.": "Fijarte en una cosa buena, por pequeña que sea, ayuda a equilibrar un día difícil.", "Think only about everything that went wrong.": "Pensar solo en todo lo que salió mal.", "Hard moments matter, but the twist is that dwelling on them can make the whole day feel worse. Your brain needs a fair look at the day.": "Los momentos difíciles importan, pero la trampa es que darles vueltas puede hacer que todo el día se sienta peor. Tu cerebro necesita una mirada justa al día.", "Name one thing that went okay, and one thing I am grateful for.": "Nombrar una cosa que salió bien y una cosa por la que estoy agradecido o agradecida.", "Yes. Noticing a small good thing does not erase the hard parts. It gives your brain a fairer picture and often helps you feel steadier.": "Sí. Fijarte en algo bueno pequeño no borra lo difícil. Le da a tu cerebro una imagen más justa y a menudo te ayuda a sentirte más estable.", "Tell myself I am just unlucky.": "Decirme que simplemente tengo mala suerte.", "A natural thought, but the twist is that it is a big story that is not always true. Looking for one good thing is a gentle way to test it.": "Es un pensamiento natural, pero la trampa es que es una historia grande que no siempre es cierta. Buscar una cosa buena es una forma suave de ponerla a prueba.", "Start Case 1": "Empezar el Caso 1", "Start Case 2: 10 new questions": "Empezar el Caso 2: 10 preguntas nuevas", "Play Case 1": "Jugar el Caso 1", "Two cases, 20 tricky questions in all. Case 2 has brand new questions.": "Dos casos, 20 preguntas con trampa en total. El Caso 2 tiene preguntas totalmente nuevas.", "Skip this one": "Omitir esta", "Skipped": "Omitida", "Clue badges": "Insignias de pistas", "Clue collector! You read every clue.": "¡Coleccionista de pistas! Leíste todas las pistas.", "Halfway, detective! Five questions done.": "¡A mitad de camino, detective! Cinco preguntas hechas.", "Last question coming up. You are doing brilliantly.": "Viene la última pregunta. Lo estás haciendo genial.", "Case {c}, question {n} of {m}": "Caso {c}, pregunta {n} de {m}", "If a feeling ever feels too big, tell a trusted grown-up, like a parent, teacher, or school counsellor. You can also find a free helpline for your country at findahelpline.com.": "Si algún sentimiento se siente demasiado grande, cuéntaselo a un adulto de confianza, como tu mamá, papá, maestro o consejero escolar. También puedes encontrar una línea de ayuda gratuita para tu país en findahelpline.com.", "Clue collector badges: {n}": "Insignias de coleccionista de pistas: {n}", "Pick one idea to try this week": "Elige una idea para probar esta semana", "Tap the one you want to try. It goes in your PDF with a box to tick each day.": "Toca la que quieras probar. Va en tu PDF con una casilla para marcar cada día.", "Listen to this clue": "Escuchar esta pista", "My 10 lessons": "Mis 10 lecciones", "I picked:": "Elegí:", "Smartest move:": "La jugada más inteligente:", "I skipped this one.": "Omití esta.", "My mission this week": "Mi misión de esta semana", "Choose one idea from your take-home list and try it this week.": "Elige una idea de tu lista y pruébala esta semana.", "Tick a box each day you try it.": "Marca una casilla cada día que lo pruebes.", "Day {n}": "Día {n}", "Talk about it": "Hablen de ello", "Which clue surprised you most, and why?": "¿Qué pista te sorprendió más, y por qué?", "When did something like this happen to you or someone you know?": "¿Cuándo te pasó algo así a ti o a alguien que conoces?", "What could you try this week?": "¿Qué podrías probar esta semana?", "My notes": "Mis notas", "Where to go next": "A dónde ir después", "Your PDF is ready. Here are some free things to try next.": "Tu PDF está listo. Aquí tienes algunas cosas gratuitas para probar después.", "Page {p} of {n}": "Página {p} de {n}", "Case {n}": "Caso {n}", "Clue badges: {n}": "Insignias de pistas: {n}", "LinkedIn": "LinkedIn", "Telegram": "Telegram", "Email": "Correo", "Skipped: {n}": "Omitidas: {n}", "Jealousy": "Celos", "Worry": "Preocupación", "Left out": "Excluido", "Mixed feelings": "Sentimientos mezclados", "Teasing": "Burlas", "I feel": "Yo siento", "Mistakes": "Errores", "Hot anger": "Rabia", "Asking for help": "Pedir ayuda", "Good things": "Cosas buenas", "Mental Game: Find 40 Wellbeing Words": "Juego mental: encuentra 40 palabras de bienestar", "Learn feeling words and get a 7 day plan.": "Aprende palabras de sentimientos y recibe un plan de 7 días.", "Positive Strengths Map": "Mapa de fortalezas positivas", "Find your top emotional strengths.": "Descubre tus principales fortalezas emocionales.", "Visual Grounding and Emotional Reset": "Anclaje visual y reinicio emocional", "A calm visual reset when your mind is racing.": "Un reinicio visual y tranquilo cuando tu mente va a toda prisa."});
 function tr(s){ return (lang === 'es' && typeof s === 'string' && Object.prototype.hasOwnProperty.call(ES, s)) ? ES[s] : s; }
 function tp(s, v){ return tr(s).replace(/\{(\w+)\}/g, (m, k) => Object.prototype.hasOwnProperty.call(v, k) ? String(v[k]) : m); }
 
@@ -582,11 +625,41 @@ function applyStatic(){
   });
 }
 
+
+/* ---------- stickmen ---------- */
+const POSES = {"calm": [[30, 20, 30, 46], [30, 27, 19, 39], [30, 27, 41, 39], [30, 46, 22, 68], [30, 46, 38, 68]], "cheer": [[30, 20, 30, 46], [30, 27, 17, 13], [30, 27, 43, 13], [30, 46, 22, 68], [30, 46, 38, 68]], "think": [[30, 20, 30, 46], [30, 27, 19, 40], [30, 27, 40, 30], [40, 30, 32, 22], [30, 46, 22, 68], [30, 46, 38, 68]]};
+function fig(list){
+  const w = 60*list.length + 10*(list.length-1);
+  let s = '<svg viewBox="0 0 '+w+' 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">';
+  list.forEach((p,i)=>{
+    s += '<g transform="translate('+(i*70)+',0)"><circle cx="30" cy="12" r="8"/><path d="M26 14.5q4 3 8 0" stroke-width="1.6"/>';
+    POSES[p].forEach(l=>{ s += '<line x1="'+l[0]+'" y1="'+l[1]+'" x2="'+l[2]+'" y2="'+l[3]+'"/>'; });
+    s += '</g>';
+  });
+  return s+'</svg>';
+}
+function nextList(){ return NT13; }
+function renderNext(){
+  const box = $('nextBox');
+  if(!pdfDone){ box.hidden = true; box.innerHTML=''; return; }
+  let h = '<h2>'+esc(tr('Where to go next'))+'</h2><p style="font-size:14px;color:var(--muted)">'+esc(tr('Your PDF is ready. Here are some free things to try next.'))+'</p>';
+  NT13.forEach(n=>{ h += '<a href="https://emotionalintelligencedeveloper-glitch.github.io/mcn/'+n[2]+'" target="_blank" rel="noopener"><b>'+esc(lang==='es'?n[1]:n[0])+'</b><span>'+esc(lang==='es'?n[4]:n[3])+'</span></a>'; });
+  box.innerHTML = h; box.hidden = false;
+}
+function renderMission(){
+  const box = $('missionList');
+  box.innerHTML = QUESTIONS.map((q,i)=>'<button type="button" class="mission'+(mission===i?' on':'')+'" data-m="'+i+'" aria-pressed="'+(mission===i)+'">'+esc(tr(q.take))+'</button>').join('');
+  box.querySelectorAll('.mission').forEach(b=>b.addEventListener('click',()=>{ mission = +b.dataset.m; renderMission(); }));
+}
+
 function drawLesson(o, q){
   const L = $('lesson');
   L.className = 'lesson ' + (o.best ? 'best' : 'twist');
   L.innerHTML = '<b class="label">' + esc(tr(o.best ? 'Smartest move' : 'Good try, here is the twist')) + '</b>' + esc(tr(o.lesson)) +
-    '<div class="takeaway">' + esc(tp('Remember: {x}', { x: tr(q.take) })) + '</div>';
+    '<div class="takeaway">' + esc(tp('Remember: {x}', { x: tr(q.take) })) + '</div>' +
+    '<button type="button" class="listen" id="listenClue">&#128266; ' + esc(tr('Listen to this clue')) + '</button>';
+  $('listenClue').addEventListener('click', () => speak(tr(o.lesson) + ' ' + tp('Remember: {x}', { x: tr(q.take) })));
+  const f = $('figQ'); if (f) f.innerHTML = fig([o.best ? 'cheer' : 'calm']);
 }
 
 function restoreQ(q){
@@ -604,6 +677,7 @@ function restoreQ(q){
     drawLesson(q.opts[curPick], q);
   }
   $('nextBtn').disabled = false; $('explore').style.display = 'block';
+  const sb = $('skipBtn'); if (sb) sb.style.display = 'none';
 }
 
 function fillResult(){
@@ -612,7 +686,11 @@ function fillResult(){
   $('resStars').textContent = '★'.repeat(stars) + '☆'.repeat(QUESTIONS.length - stars);
   $('resTitle').textContent = tp('{t}: {n} of {m} stars', { t: tr(t[1]), n: stars, m: QUESTIONS.length });
   $('resMsg').textContent = tr(t[2]);
+  $('resBadges').textContent = tp('Clue collector badges: {n}', { n: badges });
+  $('figRes').innerHTML = fig(['cheer', 'calm']);
   $('takeList').innerHTML = QUESTIONS.map(q => '<div class="take-item">' + esc(tr(q.take)) + '</div>').join('');
+  $('otherBtn').textContent = tr(caseNo === 1 ? 'Start Case 2: 10 new questions' : 'Play Case 1');
+  renderMission(); renderNext();
 }
 
 function applyLang(l){
@@ -624,11 +702,14 @@ function applyLang(l){
   shareLinks();
   if ($('scrGame').classList.contains('active') && order.length) renderQ(true);
   if ($('scrResult').classList.contains('active')) fillResult();
+  $('figStart').innerHTML = fig(['think','cheer']);
 }
 
-function startGame(){
+function startGame(c){
+  caseNo = (c === 2) ? 2 : 1;
+  QUESTIONS = caseNo === 2 ? CASE2 : CASE1;
   order = shuffle(QUESTIONS.map((q,i)=>i));
-  idx=0; stars=0; clues=0; results=[];
+  idx=0; stars=0; clues=0; results=[]; badges=0; collected={}; pickText={}; mission=-1; pdfDone=false;
   show('scrGame'); renderQ();
 }
 
@@ -638,13 +719,17 @@ function renderQ(keep){
   $('stQ').textContent = (idx+1)+'/'+QUESTIONS.length;
   $('stStars').textContent = stars;
   $('stClues').textContent = clues;
+  $('stBadges').textContent = badges;
   $('barFill').style.width = (idx/QUESTIONS.length*100)+'%';
   const opts = (keep && curOpts) ? curOpts : shuffle(q.opts.map((o,i)=>i));
   curOpts = opts;
   $('qBody').innerHTML =
+    (idx===5 ? '<div class="milestone">'+esc(tr('Halfway, detective! Five questions done.'))+'</div>' : '') +
+    (idx===QUESTIONS.length-1 ? '<div class="milestone">'+esc(tr('Last question coming up. You are doing brilliantly.'))+'</div>' : '') +
     '<div class="q-card">'+
+      '<div class="fig fig-q" id="figQ">'+fig(['think'])+'</div>'+
       '<span class="q-tag">'+esc(tr(q.tag))+'</span>'+
-      '<div class="q-num">'+esc(tp('Question {n} of {m}',{n:idx+1,m:QUESTIONS.length}))+'</div>'+
+      '<div class="q-num">'+esc(tp('Case {c}, question {n} of {m}',{c:caseNo,n:idx+1,m:QUESTIONS.length}))+'</div>'+
       '<div class="q-text">'+esc(tr(q.q))+'</div>'+
       '<button type="button" class="listen" id="listenBtn">&#128266; '+esc(tr('Listen to this question'))+'</button>'+
       '<div class="opts" id="opts">'+
@@ -653,10 +738,11 @@ function renderQ(keep){
       '<div class="lesson" id="lesson" aria-live="polite"></div>'+
       '<div class="explore" id="explore">'+esc(tr('Tap the other answers to read what each one teaches.'))+'</div>'+
     '</div>'+
-    '<div class="btn-row"><button type="button" class="btn btn-primary" id="nextBtn" disabled>'+esc(tr(idx===QUESTIONS.length-1?'See my results':'Next question'))+'</button></div>';
+    '<div class="btn-row"><button type="button" class="btn btn-primary" id="nextBtn" disabled>'+esc(tr(idx===QUESTIONS.length-1?'See my results':'Next question'))+'</button><button type="button" class="btn btn-outline" id="skipBtn">'+esc(tr('Skip this one'))+'</button></div>';
 
   document.querySelectorAll('#opts .opt').forEach(b=>b.addEventListener('click',()=>pick(b,q)));
   $('nextBtn').addEventListener('click',next);
+  $('skipBtn').addEventListener('click',()=>{ results[order[idx]] = null; next(); });
   $('listenBtn').addEventListener('click',()=>speak(tr(q.q)+'. '+q.opts.map((o,n)=>tp('Option {n}: {t}',{n:n+1,t:tr(o.t)})).join('. ')));
   if(keep && picked) restoreQ(q);
 }
@@ -666,10 +752,12 @@ function pick(btn,q){
   curPick = i;
   if(firstPick===null){
     firstPick=i;
-    results[order[idx]] = !!o.best;
+    results[order[idx]] = !!o.best; pickText[order[idx]] = i;
     if(o.best){ stars++; $('stStars').textContent=stars; }
   }
   if(!seenInQ[i]){ seenInQ[i]=true; clues++; $('stClues').textContent=clues; }
+  if(Object.keys(seenInQ).length===q.opts.length && !collected[order[idx]]){ collected[order[idx]]=true; badges++; $('stBadges').textContent=badges; toast(tr('Clue collector! You read every clue.')); }
+  { const sb=$('skipBtn'); if(sb) sb.style.display='none'; }
   document.querySelectorAll('#opts .opt').forEach(b=>b.classList.remove('current'));
   btn.classList.add('current', o.best?'seen-best':'seen-twist');
   const L=$('lesson');
@@ -773,10 +861,15 @@ async function downloadPDF(){
   const name=($('nameInput').value||'').trim().slice(0,30) || tr('Super Detective');
   const doc=new P({unit:'pt',format:'a4'});
   const W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
+  const GREY=[95,101,128], GOLD=[138,95,16], BLUE=[74,90,170], INK=[26,30,46];
+  const shorts = caseNo===2 ? SHORTS2 : SHORTS;
+  const paper = () => { doc.setFillColor(253,250,242); doc.rect(0,0,W,H,'F'); };
+  let y = 0;
+  const ensure = h => { if (y + h > H - 60) { doc.addPage(); paper(); y = 50; } };
+  const heading = txt => { ensure(40); doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]); doc.text(txt,40,y); doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,y+6,W-40,y+6); y += 24; };
 
-  // paper background
-  doc.setFillColor(253,250,242); doc.rect(0,0,W,H,'F');
-  // header band with bubbles
+  // ---- page 1
+  paper();
   doc.setFillColor(74,90,170); doc.rect(0,0,W,112,'F');
   doc.setFillColor(106,122,204);
   [[W-60,30,34],[W-130,88,16],[W-30,96,12],[160,100,10],[W/2+40,18,9]].forEach(c=>doc.circle(c[0],c[1],c[2],'F'));
@@ -784,74 +877,125 @@ async function downloadPDF(){
   doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(24);
   doc.text(tr('Feelings Detective Course'),112,56);
   doc.setFont('helvetica','normal'); doc.setFontSize(11);
-  doc.text(tr('Course complete! Here is your detective badge.'),112,78);
+  doc.text(tr('Course complete! Here is your detective badge.')+'  ('+tp('Case {n}',{n:caseNo})+')',112,78);
   doc.setFontSize(9.5);
   const linkTop=tr('Take the free course:')+' '+COURSE_URL;
   doc.textWithLink(linkTop,112,98,{url:COURSE_URL});
   doc.setDrawColor(255,255,255); doc.setLineWidth(.6);
   doc.line(112,100,112+doc.getTextWidth(linkTop),100);
 
-  // name block
   doc.setFillColor(253,246,232); doc.setDrawColor(224,200,120); doc.setLineWidth(1.5);
   doc.roundedRect(40,128,W-80,92,10,10,'FD');
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(176,122,32);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]);
   doc.text(tr('THIS COURSE BADGE BELONGS TO'),W/2,148,{align:'center'});
-  doc.setFontSize(name.length>18?20:27); doc.setTextColor(74,90,170);
+  doc.setFontSize(name.length>18?20:27); doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
   doc.text(name,W/2,184,{align:'center'});
-  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(138,144,168);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(GREY[0],GREY[1],GREY[2]);
   doc.text(new Date().toLocaleDateString(lang==='es'?'es-ES':'en-GB',{day:'numeric',month:'long',year:'numeric'}),W/2,208,{align:'center'});
 
-  // stars row
   const gap=34, startX=(W-9*gap)/2;
-  for(let k=0;k<QUESTIONS.length;k++){
-    pdfStar(doc,startX+k*gap,250,12,k<stars?[240,180,40]:[222,224,234]);
-  }
+  for(let k=0;k<QUESTIONS.length;k++){ pdfStar(doc,startX+k*gap,250,12,k<stars?[240,180,40]:[222,224,234]); }
   let t=ENCOURAGE[0]; ENCOURAGE.forEach(e=>{ if(stars>=e[0]) t=e; });
-  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(26,30,46);
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(INK[0],INK[1],INK[2]);
   doc.text(tp('{n} of {m} stars: {t}',{n:stars,m:QUESTIONS.length,t:tr(t[1])}),W/2,284,{align:'center'});
   doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(74,80,104);
   doc.text(doc.splitTextToSize(tr(t[2]),W-120),W/2,301,{align:'center'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]);
+  doc.text(tp('Clue collector badges: {n}',{n:badges}),W/2,322,{align:'center'});
 
-  // stick figure team
-  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(74,90,170);
-  doc.text(tr('Your detective team'),40,334);
-  doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,340,W-40,340);
+  // grown-up strip
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  const gl=doc.splitTextToSize(tr('If a feeling ever feels too big, tell a trusted grown-up, like a parent, teacher, or school counsellor. You can also find a free helpline for your country at findahelpline.com.'),W-80-24);
+  const gh=gl.length*12+14;
+  doc.setFillColor(253,246,232); doc.setDrawColor(224,200,120); doc.setLineWidth(1);
+  doc.roundedRect(40,336,W-80,gh,6,6,'FD');
+  doc.setTextColor(74,50,8); doc.text(gl,52,353);
+
+  const teamTop = 336+gh+30;
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
+  doc.text(tr('Your detective team'),40,teamTop);
+  doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,teamTop+6,W-40,teamTop+6);
   const cellW=(W-80)/5;
   for(let n=0;n<QUESTIONS.length;n++){
     const r=Math.floor(n/5), c=n%5;
-    const cx=40+cellW*c+cellW/2, top=372+r*122;
+    const cx=40+cellW*c+cellW/2, top=teamTop+38+r*118;
     const star=results[n]===true;
     stick(doc,cx,top,n%2===1,FIG_COLS[n%FIG_COLS.length],star?'up':'think',HAIR_COLS[n%HAIR_COLS.length]);
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(26,30,46);
-    doc.text((lang==='es'?'P':'Q')+(n+1)+': '+tr(SHORTS[n]),cx,top+88,{align:'center'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(INK[0],INK[1],INK[2]);
+    doc.text((lang==='es'?'P':'Q')+(n+1)+': '+tr(shorts[n]),cx,top+88,{align:'center'});
     doc.setFont('helvetica','normal'); doc.setFontSize(8);
-    if(star){ doc.setTextColor(58,138,90); doc.text(tr('Star earned!'),cx,top+99,{align:'center'}); }
-    else { doc.setTextColor(176,122,32); doc.text(tr('Learned a twist!'),cx,top+99,{align:'center'}); }
+    if(results[n]===null||results[n]===undefined){ doc.setTextColor(GREY[0],GREY[1],GREY[2]); doc.text(tr('Skipped'),cx,top+99,{align:'center'}); }
+    else if(star){ doc.setTextColor(45,114,73); doc.text(tr('Star earned!'),cx,top+99,{align:'center'}); }
+    else { doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]); doc.text(tr('Learned a twist!'),cx,top+99,{align:'center'}); }
   }
 
-  // take-home ideas
-  let y=626;
-  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(74,90,170);
-  doc.text(tr('My 10 take-home ideas'),40,y);
-  doc.setDrawColor(176,184,224); doc.line(40,y+6,W-40,y+6); y+=22;
-  doc.setFont('helvetica','normal'); doc.setFontSize(8.8); doc.setTextColor(26,30,46);
-  QUESTIONS.forEach(q=>{
-    const lines=doc.splitTextToSize(tr(q.take),W-80-16);
-    doc.setFillColor(240,180,40); doc.circle(46,y-3,2.4,'F');
-    doc.text(lines,56,y);
-    y+=lines.length*10.5+4.5;
+  // ---- page 2: lessons
+  doc.addPage(); paper(); y = 54;
+  heading(tr('My 10 lessons'));
+  QUESTIONS.forEach((q,n)=>{
+    const best = q.opts.find(o=>o.best);
+    const pk = pickText[n];
+    const l1 = doc.splitTextToSize((lang==='es'?'P':'Q')+(n+1)+'. '+tr(q.q),W-80);
+    const l2 = doc.splitTextToSize((pk===undefined ? tr('I skipped this one.') : tr('I picked:')+' '+tr(q.opts[pk].t)),W-100);
+    const l3 = doc.splitTextToSize(tr('Smartest move:')+' '+tr(best.t),W-100);
+    const l4 = doc.splitTextToSize(tr(q.take),W-100);
+    ensure((l1.length+l2.length+l3.length+l4.length)*11.5+18);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(INK[0],INK[1],INK[2]); doc.text(l1,40,y); y+=l1.length*11.5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(GREY[0],GREY[1],GREY[2]); doc.text(l2,52,y); y+=l2.length*11.5;
+    doc.setTextColor(45,114,73); doc.text(l3,52,y); y+=l3.length*11.5;
+    doc.setFont('helvetica','italic'); doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]); doc.text(l4,52,y); y+=l4.length*11.5+9;
   });
 
-  // footer
-  doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,H-44,W-40,H-44);
-  const linkBot=tr('Take the free course:')+' '+COURSE_URL;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,90,170);
-  doc.textWithLink(linkBot,(W-doc.getTextWidth(linkBot))/2,H-30,{url:COURSE_URL});
-  doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(138,144,168);
-  doc.text(tr('Share this PDF with a friend, a class, or your family. A learning and reflection activity, not a replacement for professional care.'),W/2,H-17,{align:'center'});
+  // ---- page 3: mission, talk, next
+  doc.addPage(); paper(); y = 54;
+  heading(tr('My mission this week'));
+  doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(INK[0],INK[1],INK[2]);
+  const ml = doc.splitTextToSize(mission>=0 ? tr(QUESTIONS[mission].take) : tr('Choose one idea from your take-home list and try it this week.'),W-100);
+  doc.setFillColor(253,246,232); doc.setDrawColor(224,200,120);
+  doc.roundedRect(40,y-6,W-80,ml.length*14+16,8,8,'FD');
+  doc.text(ml,52,y+10); y += ml.length*14+30;
+  doc.setFontSize(9.5); doc.setTextColor(GREY[0],GREY[1],GREY[2]); doc.text(tr('Tick a box each day you try it.'),40,y); y+=16;
+  for(let d=0;d<7;d++){
+    const bx=40+d*((W-80)/7);
+    doc.setDrawColor(BLUE[0],BLUE[1],BLUE[2]); doc.setLineWidth(1.2); doc.rect(bx+8,y,22,22,'S');
+    doc.setFontSize(8); doc.setTextColor(GREY[0],GREY[1],GREY[2]); doc.text(tp('Day {n}',{n:d+1}),bx+19,y+36,{align:'center'});
+  }
+  y += 62;
+  heading(tr('Talk about it'));
+  ['Which clue surprised you most, and why?','When did something like this happen to you or someone you know?','What could you try this week?'].forEach(s=>{
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(INK[0],INK[1],INK[2]);
+    doc.text('•  '+tr(s),46,y); y+=16;
+  });
+  y += 8;
+  heading(tr('My notes'));
+  doc.setDrawColor(200,204,224); doc.setLineWidth(.7);
+  for(let k=0;k<4;k++){ doc.line(40,y+14,W-40,y+14); y+=26; }
+  y += 6;
+  heading(tr('Where to go next'));
+  NT13.forEach(n=>{
+    ensure(36);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
+    doc.textWithLink(lang==='es'?n[1]:n[0],40,y,{url:'https://emotionalintelligencedeveloper-glitch.github.io/mcn/'+n[2]}); y+=12;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(GREY[0],GREY[1],GREY[2]);
+    doc.text(lang==='es'?n[4]:n[3],40,y); y+=18;
+  });
+
+  // ---- footer on every page
+  const np = doc.getNumberOfPages();
+  for(let p=1;p<=np;p++){
+    doc.setPage(p);
+    doc.setDrawColor(176,184,224); doc.setLineWidth(1); doc.line(40,H-44,W-40,H-44);
+    const linkBot=tr('Take the free course:')+' '+COURSE_URL;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
+    doc.textWithLink(linkBot,(W-doc.getTextWidth(linkBot))/2,H-30,{url:COURSE_URL});
+    doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(GREY[0],GREY[1],GREY[2]);
+    doc.text(tr('Share this PDF with a friend, a class, or your family. A learning and reflection activity, not a replacement for professional care.'),W/2,H-17,{align:'center'});
+    doc.setFont('helvetica','normal'); doc.text(tp('Page {p} of {n}',{p:p,n:np}),W-40,H-30,{align:'right'});
+  }
 
   const safe=name.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'detective';
   doc.save('feelings-detective-course-'+safe+'.pdf');
+  pdfDone = true; renderNext();
   toast(tr('PDF downloaded!'));
 }
 
@@ -860,10 +1004,16 @@ function shareLinks(){
   $('waShare').href='https://wa.me/?text='+m+u;
   $('fbShare').href='https://www.facebook.com/sharer/sharer.php?u='+u;
   $('xShare').href='https://twitter.com/intent/tweet?text='+m+u;
+  $('liShare').href='https://www.linkedin.com/sharing/share-offsite/?url='+u;
+  $('tgShare').href='https://t.me/share/url?url='+u+'&text='+m;
+  $('emShare').href='mailto:?subject='+encodeURIComponent(tr('Feelings Detective Course'))+'&body='+m+u;
 }
 
-$('startBtn').addEventListener('click',startGame);
-$('againBtn').addEventListener('click',startGame);
+$('startBtn').addEventListener('click',()=>startGame(1));
+$('start2Btn').addEventListener('click',()=>startGame(2));
+$('againBtn').addEventListener('click',()=>startGame(caseNo));
+$('otherBtn').addEventListener('click',()=>startGame(caseNo===1?2:1));
+$('figStart').innerHTML = fig(['think','cheer']);
 $('printBtn').addEventListener('click',()=>window.print());
 $('pdfBtn').addEventListener('click',downloadPDF);
 $('copyBtn').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(location.href); toast(tr('Link copied!')); }catch(e){ toast(tr('Copy from your address bar.')); } });
